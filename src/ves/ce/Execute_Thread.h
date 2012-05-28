@@ -53,15 +53,15 @@ public:
     virtual ~Execute_Thread();
 
     virtual int svc();
-    virtual int close(u_long flags=0);
-    int lock ();
+    virtual int close( u_long flags = 0 );
+    int lock();
     int unlock();
     int needexecute();
 
 private:
     Body::Unit_var _mod;
     bool _is_exec;
-    ves::ce::Body_AMH_Executive_i *_executive;
+    ves::ce::Body_AMH_Executive_i* _executive;
     ACE_Thread_Mutex _mutex;
     bool m_isRunning;
 };

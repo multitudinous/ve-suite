@@ -107,7 +107,7 @@ void TextureBasedClipPlaneEventHandler::_operateOnNode( XMLObjectPtr veXMLObject
                     maxAlpha );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid TextureDataSet!!" << std::endl;
         std::cout << "TextureBasedClipPlaneEventHandler::_operateOnNode()" << std::endl;

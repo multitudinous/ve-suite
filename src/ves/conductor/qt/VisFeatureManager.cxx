@@ -56,7 +56,7 @@ vprSingletonImp( VisFeatureManager );
 ////////////////////////////////////////////////////////////////////////////////
 VisFeatureManager::VisFeatureManager()
     :
-    m_logger( Poco::Logger::get("conductor.VisFeatureManager") ),
+    m_logger( Poco::Logger::get( "conductor.VisFeatureManager" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     CONNECTSIGNALS_0( "%ResyncFromDatabase", void(),
@@ -88,7 +88,7 @@ ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const st
     // If found, call the factory method of the associated ProertySet to get a
     // new set of that type.
     std::map< std::string, PropertySetPtr >::const_iterator iter =
-            m_featureTypeToSetPtrMap.find( featureType );
+        m_featureTypeToSetPtrMap.find( featureType );
     if( iter != m_featureTypeToSetPtrMap.end() )
     {
         return iter->second->CreateNew();
@@ -106,7 +106,7 @@ void VisFeatureManager::ResyncFromDatabase()
     PropertySetPtr propSet;
 
     std::map< std::string, PropertySetPtr >::const_iterator iter =
-            m_featureTypeToSetPtrMap.begin();
+        m_featureTypeToSetPtrMap.begin();
     while( iter != m_featureTypeToSetPtrMap.end() )
     {
         propSet = iter->second->CreateNew();
@@ -134,7 +134,7 @@ VisFeatureManager::GetNameIDPairsForFeature( const std::string& featureType )
     using namespace ves::xplorer::data;
 
     std::map< std::string, PropertySetPtr >::const_iterator iter =
-            m_featureTypeToSetPtrMap.find( featureType );
+        m_featureTypeToSetPtrMap.find( featureType );
     if( iter != m_featureTypeToSetPtrMap.end() )
     {
         ids = DatabaseManager::instance()->GetStringVector( iter->second->GetTableName(), "uuid" );
@@ -154,8 +154,8 @@ VisFeatureManager::GetNameIDPairsForFeature( const std::string& featureType )
         return nameIDPairs;
     }
 
-    LOG_WARNING( "GetNameIDPairsForFeature: We do not have a " + 
-                featureType + " vis feature registered yet." );
+    LOG_WARNING( "GetNameIDPairsForFeature: We do not have a " +
+                 featureType + " vis feature registered yet." );
 
     return nameIDPairs;
 }

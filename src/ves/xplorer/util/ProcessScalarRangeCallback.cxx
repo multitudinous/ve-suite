@@ -87,7 +87,7 @@ void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
             {
                 tempRange[ 0 ] = 0.0f;
             }
-            
+
             scalarRangeInfo = m_scalarRanges.find( array->GetName() );
             if( scalarRangeInfo == m_scalarRanges.end() )
             {
@@ -102,11 +102,11 @@ void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
                 {
                     scalarRangeInfo->second[ 0 ] = tempRange[ 0 ];
                 }
-                
+
                 if( scalarRangeInfo->second[ 1 ] < tempRange[ 1 ] )
                 {
                     scalarRangeInfo->second[ 1 ] = tempRange[ 1 ];
-                }                
+                }
             }
         }
     }
@@ -142,11 +142,11 @@ void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
                 {
                     scalarRangeInfo->second[ 0 ] = tempRange[ 0 ];
                 }
-                
+
                 if( scalarRangeInfo->second[ 1 ] < tempRange[ 1 ] )
                 {
                     scalarRangeInfo->second[ 1 ] = tempRange[ 1 ];
-                }                
+                }
             }
         }
     }
@@ -167,7 +167,7 @@ void ProcessScalarRangeCallback::GetScalarRange( const std::string& scalarName, 
         range[0] = scalarRangeInfo->second[0];
         range[1] = scalarRangeInfo->second[1];
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid scalar specified: " << scalarName << std::endl;
         std::cout << "ProcessScalarRangeCallback::GetScalarRange" << std::endl;

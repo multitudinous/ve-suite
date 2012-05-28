@@ -41,7 +41,7 @@ using namespace ves::open::xml;
 //Constructor                                     //
 ////////////////////////////////////////////////////
 TwoDIntArray::TwoDIntArray( unsigned int nElements )
-        : XMLObject()
+    : XMLObject()
 {
     mNElements  = nElements;
     // These should match the schema for min and max occurances
@@ -58,7 +58,7 @@ TwoDIntArray::~TwoDIntArray()
 }
 ///////////////////////////////////////////
 TwoDIntArray::TwoDIntArray( const TwoDIntArray& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mNElements  = input.mNElements;
     for( size_t i = 0; i < input.mOneDArray.size(); ++i )
@@ -119,10 +119,10 @@ long TwoDIntArray::GetElement( unsigned int i, unsigned int j )
     {
         return mOneDArray.at( i )->GetArray().at( j );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << " ERROR!!! " << std::endl
-        << " Invalid index: " << i << "," << j << " in TwoDIntArray::GetElement!!!" << std::endl;
+                  << " Invalid index: " << i << "," << j << " in TwoDIntArray::GetElement!!!" << std::endl;
         return 0;
     }
 }
@@ -180,7 +180,7 @@ void TwoDIntArray::SetObjectFromXMLData( DOMNode* xmlInput )
         if( mMinIndex > numNodes )
         {
             std::cerr << " ERROR : TwoDIntArray::SetObjectFromXMLData :" <<
-            " This node has too few or too many children." << std::endl;
+                      " This node has too few or too many children." << std::endl;
         }
 
         // This for loop may be wrong since the the text node and
@@ -199,7 +199,7 @@ void TwoDIntArray::SetObjectFromXMLData( DOMNode* xmlInput )
     else
     {
         std::cerr << " ERROR : TwoDIntArray::SetObjectFromXMLData :" <<
-        " This node has no children which means there is probably a problem." << std::endl;
+                  " This node has no children which means there is probably a problem." << std::endl;
     }
 }
 

@@ -50,7 +50,7 @@
 #include <osg/Group>
 namespace osgbCollision
 {
-    class Chart;
+class Chart;
 }
 
 namespace osg
@@ -107,13 +107,13 @@ public:
 
     ///Get the data display chart
     osgbCollision::Chart* GetChart();
-    
+
     ///Set the title for the dialog
     void SetTitle( const std::string& title );
-    
+
     ///Get the title for the dialog
     const std::string& GetTitle();
-    
+
     ///Get texture geode
     osg::Geode* GetTextureGeode();
 
@@ -144,20 +144,20 @@ protected:
 
     ///The title for the dialog
     std::string m_title;
-    
+
     ///The body text
     osg::ref_ptr< osgText::Text > m_bodyText;
 
     ///The title text
     osg::ref_ptr< osgText::Text > m_titleText;
-    
+
     ///The texture we create
     osg::ref_ptr< osg::Texture2D > _texture;
 
     //The update callback
     //osg::ref_ptr< TextUpdateCallback > _ttUpdateCallback;
     osgbCollision::Chart* m_chartSurface;
-    
+
     ///The texture geode for the texture
     osg::ref_ptr< osg::Geode > m_textureGeode;
 };

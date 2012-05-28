@@ -89,11 +89,11 @@ int Network::parse( std::string xmlNetwork )
     std::vector< XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
     mSystemPtr = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
-        
+
     if( !mSystemPtr )
     {
         std::cerr << "Improperly formated ves file."
-            << "VES File Read Error" << std::endl;
+                  << "VES File Read Error" << std::endl;
         return 0;
     }
 
@@ -146,7 +146,9 @@ int Network::GetModuleIndex( Module* mod )
     for( size_t i = 0; i < _module_ptrs.size(); ++i )
     {
         if( mod->get_id() == _module_ptrs[i]->get_id() )
+        {
             return i;
+        }
     }
     return -1;
 }
@@ -158,7 +160,7 @@ Module* Network::GetModule( int idx )
     {
         return _module_ptrs.at( idx );
     }
-    catch ( ... )
+    catch( ... )
     {
         return NULL;
     }
@@ -171,7 +173,9 @@ int Network::moduleIdx( int id )
     for( size_t i = 0; i < _module_ptrs.size(); ++i )
     {
         if( id == int( _module_ptrs[ i ]->get_id() ) )
+        {
             return i;
+        }
     }
     return -1;
 }

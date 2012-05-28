@@ -222,9 +222,9 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraPlacementToolUIDialog::CameraPlacementToolUIDialog( 
+CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
     wxWindow* parent,
-    int id, 
+    int id,
     ves::conductor::util::CORBAServiceList* service )
     :
     UIDialog( parent, id, wxT( "Camera Placement Tool" ) ),
@@ -245,29 +245,29 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
 
     mServiceList = service;
 
-    m_resolutionMap[ "640 x 480 (VGA)" ] = 
+    m_resolutionMap[ "640 x 480 (VGA)" ] =
         std::make_pair< unsigned int, unsigned int >( 640, 480 );
-    m_resolutionMap[ "800 x 600 (SVGA)" ] = 
+    m_resolutionMap[ "800 x 600 (SVGA)" ] =
         std::make_pair< unsigned int, unsigned int >( 800, 600 );
-    m_resolutionMap[ "1024 x 768 (XGA)" ] = 
+    m_resolutionMap[ "1024 x 768 (XGA)" ] =
         std::make_pair< unsigned int, unsigned int >( 1024, 768 );
-    m_resolutionMap[ "1280 x 720 (HD ready)" ] = 
+    m_resolutionMap[ "1280 x 720 (HD ready)" ] =
         std::make_pair< unsigned int, unsigned int >( 1280, 720 );
-    m_resolutionMap[ "1280 x 800 (WXGA)" ] = 
+    m_resolutionMap[ "1280 x 800 (WXGA)" ] =
         std::make_pair< unsigned int, unsigned int >( 1280, 800 );
-    m_resolutionMap[ "1280 x 1024 (SXGA)" ] = 
+    m_resolutionMap[ "1280 x 1024 (SXGA)" ] =
         std::make_pair< unsigned int, unsigned int >( 1280, 1024 );
-    m_resolutionMap[ "1440 x 900 (WSXGA)" ] = 
+    m_resolutionMap[ "1440 x 900 (WSXGA)" ] =
         std::make_pair< unsigned int, unsigned int >( 1440, 900 );
-    m_resolutionMap[ "1600 x 900 (HD+)" ] = 
+    m_resolutionMap[ "1600 x 900 (HD+)" ] =
         std::make_pair< unsigned int, unsigned int >( 1600, 900 );
-    m_resolutionMap[ "1680 x 1050 (WSXGA+)" ] = 
+    m_resolutionMap[ "1680 x 1050 (WSXGA+)" ] =
         std::make_pair< unsigned int, unsigned int >( 1680, 1050 );
-    m_resolutionMap[ "1600 x 1200 (UXGA)" ] = 
+    m_resolutionMap[ "1600 x 1200 (UXGA)" ] =
         std::make_pair< unsigned int, unsigned int >( 1600, 1200 );
-    m_resolutionMap[ "1920 x 1080 (HD-1080)" ] = 
+    m_resolutionMap[ "1920 x 1080 (HD-1080)" ] =
         std::make_pair< unsigned int, unsigned int >( 1920, 1080 );
-    m_resolutionMap[ "1920 x 1200 (WUXGA)" ] = 
+    m_resolutionMap[ "1920 x 1200 (WUXGA)" ] =
         std::make_pair< unsigned int, unsigned int >( 1920, 1200 );
 
     BuildGUI();
@@ -278,15 +278,15 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolUIDialog::~CameraPlacementToolUIDialog()
 {
-	m_cameraManagerButton->
-        Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
-        wxCommandEventHandler( CameraPlacementToolUIDialog::OnCameraManagerEvent ), NULL, this );
-	m_pictureModeButton->
-        Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
-        wxCommandEventHandler( CameraPlacementToolUIDialog::OnPictureModeEvent ), NULL, this );
-	m_autoComputeFarButton->
-        Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
-        wxCommandEventHandler( CameraPlacementToolUIDialog::OnAutoComputerFarPlane ), NULL, this );
+    m_cameraManagerButton->
+    Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED,
+                wxCommandEventHandler( CameraPlacementToolUIDialog::OnCameraManagerEvent ), NULL, this );
+    m_pictureModeButton->
+    Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED,
+                wxCommandEventHandler( CameraPlacementToolUIDialog::OnPictureModeEvent ), NULL, this );
+    m_autoComputeFarButton->
+    Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED,
+                wxCommandEventHandler( CameraPlacementToolUIDialog::OnAutoComputerFarPlane ), NULL, this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraPlacementToolUIDialog::TransferDataFromWindow()
@@ -308,7 +308,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 {
     SetSizeHints( wxDefaultSize, wxDefaultSize );
     SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+                 wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 
     wxBoxSizer* mainSizer;
     mainSizer = new wxBoxSizer( wxVERTICAL );
@@ -326,32 +326,32 @@ void CameraPlacementToolUIDialog::BuildGUI()
     mainPanelSizer = new wxBoxSizer( wxVERTICAL );
 
     wxStaticBoxSizer* managementSettingsSizer;
-    managementSettingsSizer = new wxStaticBoxSizer( new wxStaticBox( mainPanel, wxID_ANY, wxT("Management Settings") ), wxVERTICAL );
+    managementSettingsSizer = new wxStaticBoxSizer( new wxStaticBox( mainPanel, wxID_ANY, wxT( "Management Settings" ) ), wxVERTICAL );
 
     wxBoxSizer* cameraManagmentSizer;
     cameraManagmentSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    m_addCameraButton = new wxButton( mainPanel, CPT_ADD_CAMERA_BUTTON, wxT("Add Camera"), wxDefaultPosition, wxDefaultSize, 0 );
-    cameraManagmentSizer->Add( m_addCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_addCameraButton = new wxButton( mainPanel, CPT_ADD_CAMERA_BUTTON, wxT( "Add Camera" ), wxDefaultPosition, wxDefaultSize, 0 );
+    cameraManagmentSizer->Add( m_addCameraButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_prevCameraButton = new wxBitmapButton(
         mainPanel, CPT_PREV_CAMERA_BUTTON, wxBitmap( PrevCameraButton_xpm ),
         wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-    cameraManagmentSizer->Add( m_prevCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    cameraManagmentSizer->Add( m_prevCameraButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    m_cameraComboBox = new wxComboBox( mainPanel, CPT_CAMERA_COMBO_BOX, wxT("Select a Camera"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxTE_PROCESS_ENTER ); 
-    cameraManagmentSizer->Add( m_cameraComboBox, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_cameraComboBox = new wxComboBox( mainPanel, CPT_CAMERA_COMBO_BOX, wxT( "Select a Camera" ), wxDefaultPosition, wxDefaultSize, 0, NULL, wxTE_PROCESS_ENTER );
+    cameraManagmentSizer->Add( m_cameraComboBox, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_nextCameraButton = new wxBitmapButton(
         mainPanel, CPT_NEXT_CAMERA_BUTTON, wxBitmap( NextCameraButton_xpm ),
         wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-    cameraManagmentSizer->Add( m_nextCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    cameraManagmentSizer->Add( m_nextCameraButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    m_deleteCameraButton = new wxButton( mainPanel, CPT_DELETE_CAMERA_BUTTON, wxT("Delete Camera"), wxDefaultPosition, wxDefaultSize, 0 );
-    cameraManagmentSizer->Add( m_deleteCameraButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_deleteCameraButton = new wxButton( mainPanel, CPT_DELETE_CAMERA_BUTTON, wxT( "Delete Camera" ), wxDefaultPosition, wxDefaultSize, 0 );
+    cameraManagmentSizer->Add( m_deleteCameraButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    m_removeAllCamerasButton = new wxButton( mainPanel, CPT_REMOVE_ALL_CAMERAS_BUTTON, wxT("Remove All"), wxDefaultPosition, wxDefaultSize, 0 );
-    cameraManagmentSizer->Add( m_removeAllCamerasButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_removeAllCamerasButton = new wxButton( mainPanel, CPT_REMOVE_ALL_CAMERAS_BUTTON, wxT( "Remove All" ), wxDefaultPosition, wxDefaultSize, 0 );
+    cameraManagmentSizer->Add( m_removeAllCamerasButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     managementSettingsSizer->Add( cameraManagmentSizer, 0, wxEXPAND, 5 );
 
@@ -361,19 +361,19 @@ void CameraPlacementToolUIDialog::BuildGUI()
     wxBoxSizer* imageManagementSizer;
     imageManagementSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    m_saveImageButton = new wxButton( mainPanel, CPT_SAVE_IMAGE_BUTTON, wxT("Save Image"), wxDefaultPosition, wxDefaultSize, 0 );
-    imageManagementSizer->Add( m_saveImageButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_saveImageButton = new wxButton( mainPanel, CPT_SAVE_IMAGE_BUTTON, wxT( "Save Image" ), wxDefaultPosition, wxDefaultSize, 0 );
+    imageManagementSizer->Add( m_saveImageButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    m_saveAllImagesButton = new wxButton( mainPanel, CPT_SAVE_ALL_IMAGES_BUTTON, wxT("Save All Images"), wxDefaultPosition, wxDefaultSize, 0 );
-    imageManagementSizer->Add( m_saveAllImagesButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_saveAllImagesButton = new wxButton( mainPanel, CPT_SAVE_ALL_IMAGES_BUTTON, wxT( "Save All Images" ), wxDefaultPosition, wxDefaultSize, 0 );
+    imageManagementSizer->Add( m_saveAllImagesButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxStaticText* imageDirectoryText;
-    imageDirectoryText = new wxStaticText( mainPanel, wxID_ANY, wxT("Directory:"), wxDefaultPosition, wxDefaultSize, 0 );
+    imageDirectoryText = new wxStaticText( mainPanel, wxID_ANY, wxT( "Directory:" ), wxDefaultPosition, wxDefaultSize, 0 );
     imageDirectoryText->Wrap( -1 );
-    imageManagementSizer->Add( imageDirectoryText, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    imageManagementSizer->Add( imageDirectoryText, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    m_imageDirPickerCtrl = new wxDirPickerCtrl( mainPanel, CPT_IMAGE_DIR_PICKER_CTRL, ::wxGetCwd(), wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE );
-    imageManagementSizer->Add( m_imageDirPickerCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_imageDirPickerCtrl = new wxDirPickerCtrl( mainPanel, CPT_IMAGE_DIR_PICKER_CTRL, ::wxGetCwd(), wxT( "Select a folder" ), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE );
+    imageManagementSizer->Add( m_imageDirPickerCtrl, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     managementSettingsSizer->Add( imageManagementSizer, 0, wxEXPAND, 5 );
 
@@ -381,51 +381,51 @@ void CameraPlacementToolUIDialog::BuildGUI()
     managementSettingsSeparator1 = new wxStaticLine( mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
     managementSettingsSizer->Add( managementSettingsSeparator1, 0, wxEXPAND | wxALL, 5 );
 
-	wxBoxSizer* cameraManagerSettingsSizer;
-	cameraManagerSettingsSizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* cameraManagerSettingsSizer;
+    cameraManagerSettingsSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    wxString m_cameraManagerButtonChoices[] = { wxT("Off"), wxT("On") };
+    wxString m_cameraManagerButtonChoices[] = { wxT( "Off" ), wxT( "On" ) };
     int m_cameraManagerButtonNChoices = sizeof( m_cameraManagerButtonChoices ) / sizeof( wxString );
-    m_cameraManagerButton = new wxRadioBox( mainPanel, wxID_ANY, wxT("Camera Manager"), wxDefaultPosition, wxDefaultSize, m_cameraManagerButtonNChoices, m_cameraManagerButtonChoices, 1, wxRA_SPECIFY_ROWS );
+    m_cameraManagerButton = new wxRadioBox( mainPanel, wxID_ANY, wxT( "Camera Manager" ), wxDefaultPosition, wxDefaultSize, m_cameraManagerButtonNChoices, m_cameraManagerButtonChoices, 1, wxRA_SPECIFY_ROWS );
     m_cameraManagerButton->SetSelection( 0 );
     cameraManagerSettingsSizer->Add( m_cameraManagerButton, 0, 0, 5 );
 
-	wxString m_pictureModeButtonChoices[] = { wxT("Off"), wxT("On") };
-	int m_pictureModeButtonNChoices = sizeof( m_pictureModeButtonChoices ) / sizeof( wxString );
-	m_pictureModeButton = new wxRadioBox( mainPanel, wxID_ANY, wxT("Picture Mode"), wxDefaultPosition, wxDefaultSize, m_pictureModeButtonNChoices, m_pictureModeButtonChoices, 1, wxRA_SPECIFY_ROWS );
-	m_pictureModeButton->SetSelection( 0 );
-	cameraManagerSettingsSizer->Add( m_pictureModeButton, 0, wxLEFT|wxRIGHT, 5 );
-	
-	managementSettingsSizer->Add( cameraManagerSettingsSizer, 1, wxEXPAND, 5 );
-    
-    mainPanelSizer->Add( managementSettingsSizer, 0, wxALL|wxEXPAND, 10 );
+    wxString m_pictureModeButtonChoices[] = { wxT( "Off" ), wxT( "On" ) };
+    int m_pictureModeButtonNChoices = sizeof( m_pictureModeButtonChoices ) / sizeof( wxString );
+    m_pictureModeButton = new wxRadioBox( mainPanel, wxID_ANY, wxT( "Picture Mode" ), wxDefaultPosition, wxDefaultSize, m_pictureModeButtonNChoices, m_pictureModeButtonChoices, 1, wxRA_SPECIFY_ROWS );
+    m_pictureModeButton->SetSelection( 0 );
+    cameraManagerSettingsSizer->Add( m_pictureModeButton, 0, wxLEFT | wxRIGHT, 5 );
+
+    managementSettingsSizer->Add( cameraManagerSettingsSizer, 1, wxEXPAND, 5 );
+
+    mainPanelSizer->Add( managementSettingsSizer, 0, wxALL | wxEXPAND, 10 );
 
     wxStaticBoxSizer* highlightToolSettingsSizer;
-    highlightToolSettingsSizer = new wxStaticBoxSizer( new wxStaticBox( mainPanel, wxID_ANY, wxT("Highlight Tool Settings") ), wxHORIZONTAL );
+    highlightToolSettingsSizer = new wxStaticBoxSizer( new wxStaticBox( mainPanel, wxID_ANY, wxT( "Highlight Tool Settings" ) ), wxHORIZONTAL );
 
-    m_toggleHighlightToolButton = new wxToggleButton( mainPanel, CPT_TOGGLE_HIGHLIGHT_TOOL_BUTTON, wxT("Toggle On/Off"), wxDefaultPosition, wxDefaultSize, 0 );
-    highlightToolSettingsSizer->Add( m_toggleHighlightToolButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_toggleHighlightToolButton = new wxToggleButton( mainPanel, CPT_TOGGLE_HIGHLIGHT_TOOL_BUTTON, wxT( "Toggle On/Off" ), wxDefaultPosition, wxDefaultSize, 0 );
+    highlightToolSettingsSizer->Add( m_toggleHighlightToolButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_prevMarkerButton = new wxBitmapButton( mainPanel, CPT_PREV_MARKER_BUTTON, wxBitmap( PrevMarkerButton_xpm ), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-    highlightToolSettingsSizer->Add( m_prevMarkerButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    highlightToolSettingsSizer->Add( m_prevMarkerButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    m_markerComboBox = new wxComboBox( mainPanel, CPT_MARKER_COMBO_BOX, wxT("Select a Marker"), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-    highlightToolSettingsSizer->Add( m_markerComboBox, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_markerComboBox = new wxComboBox( mainPanel, CPT_MARKER_COMBO_BOX, wxT( "Select a Marker" ), wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
+    highlightToolSettingsSizer->Add( m_markerComboBox, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_nextMarkerButton = new wxBitmapButton( mainPanel, CPT_NEXT_MARKER_BUTTON, wxBitmap( NextMarkerButton_xpm ), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
-    highlightToolSettingsSizer->Add( m_nextMarkerButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    highlightToolSettingsSizer->Add( m_nextMarkerButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    m_deleteMarkerButton = new wxButton( mainPanel, CPT_DELETE_MARKER_BUTTON, wxT("Delete Marker"), wxDefaultPosition, wxDefaultSize, 0 );
-    highlightToolSettingsSizer->Add( m_deleteMarkerButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_deleteMarkerButton = new wxButton( mainPanel, CPT_DELETE_MARKER_BUTTON, wxT( "Delete Marker" ), wxDefaultPosition, wxDefaultSize, 0 );
+    highlightToolSettingsSizer->Add( m_deleteMarkerButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    m_removeAllMarkersButton = new wxButton( mainPanel, CPT_REMOVE_ALL_MARKERS_BUTTON, wxT("Remove All"), wxDefaultPosition, wxDefaultSize, 0 );
-    highlightToolSettingsSizer->Add( m_removeAllMarkersButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    m_removeAllMarkersButton = new wxButton( mainPanel, CPT_REMOVE_ALL_MARKERS_BUTTON, wxT( "Remove All" ), wxDefaultPosition, wxDefaultSize, 0 );
+    highlightToolSettingsSizer->Add( m_removeAllMarkersButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    mainPanelSizer->Add( highlightToolSettingsSizer, 0, wxALL|wxEXPAND, 10 );
+    mainPanelSizer->Add( highlightToolSettingsSizer, 0, wxALL | wxEXPAND, 10 );
 
     wxStaticBoxSizer* displaySettingsSizer;
     displaySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
-        mainPanel, wxID_ANY, wxT( "Display Settings" ) ), wxVERTICAL );
+                mainPanel, wxID_ANY, wxT( "Display Settings" ) ), wxVERTICAL );
 
     wxBoxSizer* depthOfFieldEffectOnOffSizer;
     depthOfFieldEffectOnOffSizer = new wxBoxSizer( wxVERTICAL );
@@ -440,7 +440,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
         wxRA_SPECIFY_ROWS );
     mDepthOfFieldEffectOnOff->SetSelection( 0 );
     mDepthOfFieldEffectOnOff->SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+                                           wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 
     depthOfFieldEffectOnOffSizer->Add( mDepthOfFieldEffectOnOff, 0, wxALL, 5 );
 
@@ -461,7 +461,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
         mProjectionEffectOnOffChoices, 1, wxRA_SPECIFY_ROWS );
     mProjectionEffectOnOff->SetSelection( 0 );
     mProjectionEffectOnOff->SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+                                         wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 
     projectionEffectOnOffSizer->Add( mProjectionEffectOnOff, 0, wxALL, 5 );
 
@@ -511,7 +511,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
         mCameraWindowOnOffChoices, 1, wxRA_SPECIFY_ROWS );
     mCameraWindowOnOff->SetSelection( 1 );
     mCameraWindowOnOff->SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+                                     wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 
     cameraWindowOnOffSizer->Add( mCameraWindowOnOff, 0, wxALL, 5 );
 
@@ -552,7 +552,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
         mDepthHelperWindowOnOffChoices, 1, wxRA_SPECIFY_ROWS );
     mDepthHelperWindowOnOff->SetSelection( 1 );
     mDepthHelperWindowOnOff->SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+                                          wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 
     depthHelperWindowOnOffSizer->Add( mDepthHelperWindowOnOff, 0, wxALL, 5 );
 
@@ -581,7 +581,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     displaySettingsSizer->Add( depthHelperWindowSizer, 0, wxEXPAND, 5 );
 
-    mainPanelSizer->Add( displaySettingsSizer, 0, wxALL|wxEXPAND, 10 );
+    mainPanelSizer->Add( displaySettingsSizer, 0, wxALL | wxEXPAND, 10 );
 
     mainPanel->SetSizer( mainPanelSizer );
     mainPanel->Layout();
@@ -598,7 +598,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     wxStaticBoxSizer* geometrySettingsSizer;
     geometrySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
-        cameraPanel, wxID_ANY, wxT( "Geometry Settings" ) ), wxHORIZONTAL );
+                cameraPanel, wxID_ANY, wxT( "Geometry Settings" ) ), wxHORIZONTAL );
 
     wxBoxSizer* cameraGeometryOnOffSizer;
     cameraGeometryOnOffSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -612,7 +612,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
         mCameraGeometryOnOffChoices, 1, wxRA_SPECIFY_ROWS );
     mCameraGeometryOnOff->SetSelection( 1 );
     mCameraGeometryOnOff->SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+                                       wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 
     cameraGeometryOnOffSizer->Add( mCameraGeometryOnOff, 0, wxALL, 5 );
 
@@ -630,17 +630,17 @@ void CameraPlacementToolUIDialog::BuildGUI()
         mFrustumGeometryOnOffChoices, 1, wxRA_SPECIFY_ROWS );
     mFrustumGeometryOnOff->SetSelection( 1 );
     mFrustumGeometryOnOff->SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+                                        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 
     frustumGeometryOnOffSizer->Add( mFrustumGeometryOnOff, 0, wxALL, 5 );
 
     geometrySettingsSizer->Add( frustumGeometryOnOffSizer, 0, wxALL, 5 );
 
-    cameraPanelSizer->Add( geometrySettingsSizer, 0, wxALL|wxEXPAND, 10 );
+    cameraPanelSizer->Add( geometrySettingsSizer, 0, wxALL | wxEXPAND, 10 );
 
     wxStaticBoxSizer* projectionSettingsSizer;
     projectionSettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
-        cameraPanel, wxID_ANY, wxT( "Projection Settings" ) ), wxVERTICAL );
+                cameraPanel, wxID_ANY, wxT( "Projection Settings" ) ), wxVERTICAL );
 
     wxBoxSizer* fieldOfViewSizer;
     fieldOfViewSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -731,22 +731,22 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     projectionSettingsSizer->Add( aspectRatioSizer, 0, wxALL | wxEXPAND, 5 );
 
-    wxString choice1Choices[] = { wxT("640 x 480 (VGA)"), wxT("800 x 600 (SVGA)"), wxT("1024 x 768 (XGA)"), wxT("1280 x 720 (HD ready)"), wxT("1280 x 800 (WXGA)"), wxT("1280 x 1024 (SXGA)"), wxT("1440 x 900 (WSXGA)"), wxT("1600 x 900 (HD+)"), wxT("1680 x 1050 (WSXGA+)"), wxT("1600 x 1200 (UXGA)"), wxT("1920 x 1080 (HD-1080)"), wxT("1920 x 1200 (WUXGA)") };
+    wxString choice1Choices[] = { wxT( "640 x 480 (VGA)" ), wxT( "800 x 600 (SVGA)" ), wxT( "1024 x 768 (XGA)" ), wxT( "1280 x 720 (HD ready)" ), wxT( "1280 x 800 (WXGA)" ), wxT( "1280 x 1024 (SXGA)" ), wxT( "1440 x 900 (WSXGA)" ), wxT( "1600 x 900 (HD+)" ), wxT( "1680 x 1050 (WSXGA+)" ), wxT( "1600 x 1200 (UXGA)" ), wxT( "1920 x 1080 (HD-1080)" ), wxT( "1920 x 1200 (WUXGA)" ) };
     int choice1NChoices = sizeof( choice1Choices ) / sizeof( wxString );
     m_aspectRatioChoice = new wxChoice( cameraPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, choice1NChoices, choice1Choices, 0 );
     m_aspectRatioChoice->SetSelection( 3 );
     projectionSettingsSizer->Add( m_aspectRatioChoice, 0, wxALL, 5 );
-    
+
     wxBoxSizer* autoComputerFarPlaneSizer;
     autoComputerFarPlaneSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    wxString m_autoComputeFarButtonChoices[] = { wxT("Off"), wxT("On") };
+    wxString m_autoComputeFarButtonChoices[] = { wxT( "Off" ), wxT( "On" ) };
     int m_autoComputeFarButtonNChoices =
         sizeof( m_autoComputeFarButtonChoices ) / sizeof( wxString );
     m_autoComputeFarButton =
-        new wxRadioBox( cameraPanel, wxID_ANY, wxT("Auto Compute Far Plane"),
-        wxDefaultPosition, wxDefaultSize, m_autoComputeFarButtonNChoices, 
-        m_autoComputeFarButtonChoices, 1, wxRA_SPECIFY_ROWS );
+        new wxRadioBox( cameraPanel, wxID_ANY, wxT( "Auto Compute Far Plane" ),
+                        wxDefaultPosition, wxDefaultSize, m_autoComputeFarButtonNChoices,
+                        m_autoComputeFarButtonChoices, 1, wxRA_SPECIFY_ROWS );
     m_autoComputeFarButton->SetSelection( 1 );
     autoComputerFarPlaneSizer->Add( m_autoComputeFarButton, 0, 0, 5 );
 
@@ -794,7 +794,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     nearPlaneSizer->Add( nearPlaneSliderSizer, 1, wxALIGN_BOTTOM, 5 );
 
-    projectionSettingsSizer->Add( nearPlaneSizer, 0, wxALL|wxEXPAND, 5 );
+    projectionSettingsSizer->Add( nearPlaneSizer, 0, wxALL | wxEXPAND, 5 );
 
     wxBoxSizer* farPlaneSizer;
     farPlaneSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -833,17 +833,17 @@ void CameraPlacementToolUIDialog::BuildGUI()
     mFarPlaneSlider = new wxSlider(
         cameraPanel, CPT_FAR_PLANE_SLIDER, mProjectionData[ 3 ] * 10, 0, 10000,
         wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
-    farPlaneSliderSizer->Add( mFarPlaneSlider, 0, wxEXPAND|wxLEFT|wxRIGHT, 5 );
+    farPlaneSliderSizer->Add( mFarPlaneSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
 
     farPlaneSizer->Add( farPlaneSliderSizer, 1, wxALIGN_BOTTOM, 5 );
 
-    projectionSettingsSizer->Add( farPlaneSizer, 0, wxALL|wxEXPAND, 5 );
+    projectionSettingsSizer->Add( farPlaneSizer, 0, wxALL | wxEXPAND, 5 );
 
-    cameraPanelSizer->Add( projectionSettingsSizer, 0, wxALL|wxEXPAND, 10 );
+    cameraPanelSizer->Add( projectionSettingsSizer, 0, wxALL | wxEXPAND, 10 );
 
     wxStaticBoxSizer* depthOfFieldSettingsSizer;
     depthOfFieldSettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
-        cameraPanel, wxID_ANY, wxT( "Depth of Field Settings" ) ), wxVERTICAL );
+                cameraPanel, wxID_ANY, wxT( "Depth of Field Settings" ) ), wxVERTICAL );
 
     wxBoxSizer* focalDistanceSizer;
     focalDistanceSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -935,7 +935,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     focusRangeSizer->Add( focusRangeSliderSizer, 1, wxALIGN_BOTTOM, 5 );
 
-    depthOfFieldSettingsSizer->Add( focusRangeSizer, 0, wxALL|wxEXPAND, 5 );
+    depthOfFieldSettingsSizer->Add( focusRangeSizer, 0, wxALL | wxEXPAND, 5 );
 
     wxBoxSizer* maxCircleOfConfusionSizer;
     maxCircleOfConfusionSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -1020,9 +1020,9 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     // Connect Events
     m_autoComputeFarButton->
-        Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
-        wxCommandEventHandler( 
-        CameraPlacementToolUIDialog::OnAutoComputerFarPlane ), NULL, this );
+    Connect( wxEVT_COMMAND_RADIOBOX_SELECTED,
+             wxCommandEventHandler(
+                 CameraPlacementToolUIDialog::OnAutoComputerFarPlane ), NULL, this );
 
     //Turn off near/far plane sliders
     mNearPlaneSpinCtrl->Disable();
@@ -1031,19 +1031,19 @@ void CameraPlacementToolUIDialog::BuildGUI()
     mFarPlaneSlider->Disable();
 
     m_cameraManagerButton->
-        Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
-        wxCommandEventHandler( 
-        CameraPlacementToolUIDialog::OnCameraManagerEvent ), NULL, this );
-    
+    Connect( wxEVT_COMMAND_RADIOBOX_SELECTED,
+             wxCommandEventHandler(
+                 CameraPlacementToolUIDialog::OnCameraManagerEvent ), NULL, this );
+
     m_pictureModeButton->
-        Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, 
-        wxCommandEventHandler( 
-        CameraPlacementToolUIDialog::OnPictureModeEvent ), NULL, this );
-        
+    Connect( wxEVT_COMMAND_RADIOBOX_SELECTED,
+             wxCommandEventHandler(
+                 CameraPlacementToolUIDialog::OnPictureModeEvent ), NULL, this );
+
     m_aspectRatioChoice->
-        Connect( wxEVT_COMMAND_CHOICE_SELECTED, 
-        wxCommandEventHandler( 
-        CameraPlacementToolUIDialog::OnAspectRatioChoice ), NULL, this );
+    Connect( wxEVT_COMMAND_CHOICE_SELECTED,
+             wxCommandEventHandler(
+                 CameraPlacementToolUIDialog::OnAspectRatioChoice ), NULL, this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::ClearInstructions()
@@ -1054,7 +1054,7 @@ void CameraPlacementToolUIDialog::ClearInstructions()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::SendCommandsToXplorer()
 {
-    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
 
     for( size_t i = 0; i < mInstructions.size(); ++i )
     {
@@ -1102,7 +1102,7 @@ void CameraPlacementToolUIDialog::OnAddCameraButton(
     wxCommandEvent& WXUNUSED( event ) )
 {
     wxString cameraName(
-        _("Camera") +
+        _( "Camera" ) +
         wxString::Format( wxT( "%i" ), m_cameraNameNum ) );
     m_currentCameraSelection = m_cameraComboBox->Append( cameraName );
     m_cameraComboBox->SetStringSelection( cameraName );
@@ -1219,7 +1219,7 @@ void CameraPlacementToolUIDialog::OnNextCameraButton(
 
     m_currentCameraSelection = m_cameraComboBox->GetSelection();
     if( m_currentCameraSelection == -1 ||
-        m_currentCameraSelection == int( count - 1 ) )
+            m_currentCameraSelection == int( count - 1 ) )
     {
         m_currentCameraSelection = 0;
     }
@@ -1361,21 +1361,21 @@ void CameraPlacementToolUIDialog::OnImageDirPickerCtrl(
     if( saveImageDir == wxEmptyString )
     {
         wxMessageDialog msgDialog(
-                                  this,
-                                  wxT( "Please select a directory to save images to." ),
-                                  wxT( "Error" ),
-                                  wxOK );
+            this,
+            wxT( "Please select a directory to save images to." ),
+            wxT( "Error" ),
+            wxOK );
         msgDialog.ShowModal();
-        
+
         return;
     }
-    
+
     mCommandName = "CHANGE_IMAGE_DIRECTORY";
     ves::open::xml::DataValuePairSharedPtr dvp(
         new ves::open::xml::DataValuePair() );
     dvp->SetData( "saveImageDirectory", ConvertUnicode( saveImageDir.c_str() ) );
     mInstructions.push_back( dvp );
-    
+
     SendCommandsToXplorer();
     ClearInstructions();
 }
@@ -1483,7 +1483,7 @@ void CameraPlacementToolUIDialog::OnNextMarkerButton(
 
     m_currentMarkerSelection = m_markerComboBox->GetSelection();
     if( m_currentMarkerSelection == -1 ||
-        m_currentMarkerSelection == int( count - 1 ) )
+            m_currentMarkerSelection == int( count - 1 ) )
     {
         m_currentMarkerSelection = 0;
     }
@@ -1698,7 +1698,7 @@ void CameraPlacementToolUIDialog::OnFieldOfViewSlider(
     mProjectionData[ 0 ] =
         static_cast< double >( mFieldOfViewSlider->GetValue() ) / 10.0;
     mFieldOfViewSpinCtrl->SetValue( mProjectionData[ 0 ] );
-    
+
     ProjectionUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1724,7 +1724,7 @@ void CameraPlacementToolUIDialog::OnAspectRatioSlider(
     //mProjectionData[ 1 ] =
     //    static_cast< double >( mAspectRatioSlider->GetValue() ) / 10.0;
     //mAspectRatioSpinCtrl->SetValue( mProjectionData[ 1 ] );
-    
+
     ProjectionUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1826,7 +1826,7 @@ void CameraPlacementToolUIDialog::OnFocalDistanceSlider(
     mDepthOfFieldData[ 0 ] =
         static_cast< double >( mFocalDistanceSlider->GetValue() ) / 10.0;
     mFocalDistanceSpinCtrl->SetValue( mDepthOfFieldData[ 0 ] );
-    
+
     FocalDistanceUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1847,7 +1847,7 @@ void CameraPlacementToolUIDialog::OnFocalRangeSlider(
     mDepthOfFieldData[ 1 ] =
         static_cast< double >( mFocalRangeSlider->GetValue() ) / 10.0;
     mFocalRangeSpinCtrl->SetValue( mDepthOfFieldData[ 1 ] );
-    
+
     FocalRangeUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1977,7 +1977,7 @@ void CameraPlacementToolUIDialog::UpdateFarPlaneControls()
     else
     {
         mFarPlaneSlider->SetValue(
-        static_cast< int >( farPlaneValue * 10 ) );
+            static_cast< int >( farPlaneValue * 10 ) );
     }
 
     mProjectionData[ 2 ] = mNearPlaneSpinCtrl->GetValue();
@@ -2016,8 +2016,8 @@ void CameraPlacementToolUIDialog::UpdateMaxCircleOfConfusionControls()
 void CameraPlacementToolUIDialog::ProjectionUpdate()
 {
     std::pair< unsigned int, unsigned int > resolution = m_resolutionMap[ ConvertUnicode( m_aspectRatioChoice->GetStringSelection().c_str() ) ];
-    mProjectionData[ 1 ] = double(resolution.first)/double(resolution.second);
-    
+    mProjectionData[ 1 ] = double( resolution.first ) / double( resolution.second );
+
     mCommandName = std::string( "PROJECTION_UPDATE" );
 
     ves::open::xml::DataValuePairSharedPtr projectionFieldOfViewDVP(
@@ -2035,7 +2035,7 @@ void CameraPlacementToolUIDialog::ProjectionUpdate()
     ves::open::xml::DataValuePairSharedPtr projectionNearPlaneDVP(
         new ves::open::xml::DataValuePair() );
     projectionNearPlaneDVP->SetData(
-        "projectionNearPlane", mProjectionData[ 2 ]  );
+        "projectionNearPlane", mProjectionData[ 2 ] );
     mInstructions.push_back( projectionNearPlaneDVP );
 
     ves::open::xml::DataValuePairSharedPtr projectionFarPlaneDVP(
@@ -2059,7 +2059,7 @@ void CameraPlacementToolUIDialog::ProjectionUpdate()
         new ves::open::xml::DataValuePair() );
     yDVP->SetData( "projectionYImageResolution", resolution.second );
     mInstructions.push_back( yDVP );
-    
+
     SendCommandsToXplorer();
     ClearInstructions();
 }
@@ -2219,8 +2219,8 @@ void CameraPlacementToolUIDialog::OnAutoComputerFarPlane( wxCommandEvent& WXUNUS
 
     mCommandName = "AUTO_COMPUTER_NEAR_FAR_PLANE";
 
-    ves::open::xml::DataValuePairSharedPtr 
-        tempDVP( new ves::open::xml::DataValuePair() );
+    ves::open::xml::DataValuePairSharedPtr
+    tempDVP( new ves::open::xml::DataValuePair() );
     tempDVP->SetData( "autoComputeNearFarPlane", selection );
     mInstructions.push_back( tempDVP );
 
@@ -2231,14 +2231,14 @@ void CameraPlacementToolUIDialog::OnAutoComputerFarPlane( wxCommandEvent& WXUNUS
 void CameraPlacementToolUIDialog::OnCameraManagerEvent( wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int selection = m_cameraManagerButton->GetSelection();
-    
+
     mCommandName = "CAMERA_MANAGER_ON_OFF";
-    
-    ves::open::xml::DataValuePairSharedPtr 
-        tempDVP( new ves::open::xml::DataValuePair() );
+
+    ves::open::xml::DataValuePairSharedPtr
+    tempDVP( new ves::open::xml::DataValuePair() );
     tempDVP->SetData( "cameraManagerOnOff", selection );
     mInstructions.push_back( tempDVP );
-    
+
     SendCommandsToXplorer();
     ClearInstructions();
 }
@@ -2246,7 +2246,7 @@ void CameraPlacementToolUIDialog::OnCameraManagerEvent( wxCommandEvent& WXUNUSED
 void CameraPlacementToolUIDialog::OnPictureModeEvent( wxCommandEvent& WXUNUSED( event ) )
 {
     unsigned int selection = m_pictureModeButton->GetSelection();
-    
+
     if( selection )
     {
         m_addCameraButton->Disable();
@@ -2266,12 +2266,12 @@ void CameraPlacementToolUIDialog::OnPictureModeEvent( wxCommandEvent& WXUNUSED( 
         m_removeAllCamerasButton->Enable();
     }
     mCommandName = "PICTURE_ON_OFF";
-    
-    ves::open::xml::DataValuePairSharedPtr 
-        tempDVP( new ves::open::xml::DataValuePair() );
+
+    ves::open::xml::DataValuePairSharedPtr
+    tempDVP( new ves::open::xml::DataValuePair() );
     tempDVP->SetData( "pictureModeOnOff", selection );
     mInstructions.push_back( tempDVP );
-    
+
     SendCommandsToXplorer();
     ClearInstructions();
 }

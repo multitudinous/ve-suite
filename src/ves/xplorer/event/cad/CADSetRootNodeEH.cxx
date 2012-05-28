@@ -45,11 +45,11 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADSetRootNodeEventHandler::CADSetRootNodeEventHandler()
-        : ves::xplorer::event::CADEventHandler()
+    : ves::xplorer::event::CADEventHandler()
 {}
 ///////////////////////////////////////////////////////////////////////////////////////
 CADSetRootNodeEventHandler::CADSetRootNodeEventHandler( const CADSetRootNodeEventHandler& rhs )
-        : ves::xplorer::event::CADEventHandler( rhs )
+    : ves::xplorer::event::CADEventHandler( rhs )
 {}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
@@ -69,7 +69,7 @@ CADSetRootNodeEventHandler& CADSetRootNodeEventHandler::operator=( const CADSetR
 //////////////////////////////////////////////////////////////////////////
 void CADSetRootNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
-    if(!m_cadHandler)
+    if( !m_cadHandler )
     {
         std::cout << "|\tCADSetRootNodeEventHandler::_operateOnNode Invalide CADModelHandler!!" << std::endl;
         return;
@@ -78,7 +78,7 @@ void CADSetRootNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     try
     {
         CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
-        DataValuePairPtr newRootNode = 
+        DataValuePairPtr newRootNode =
             command->GetDataValuePair( "Root Node ID" );
 
         std::string rootNodeID;
@@ -92,7 +92,7 @@ void CADSetRootNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     catch( ... )
     {
         std::cout << "Error!!" << std::endl;
-        std::cout << "---CADSetRootNodeEventHandler::_operateOnNode---" 
-            << std::endl;
+        std::cout << "---CADSetRootNodeEventHandler::_operateOnNode---"
+                  << std::endl;
     }
 }

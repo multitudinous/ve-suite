@@ -54,8 +54,8 @@ vprSingletonImp( EventManager );
 
 ////////////////////////////////////////////////////////////////////////////////
 EventManager::EventManager():
-    mMonotonicID(0),
-    m_logger( Poco::Logger::get("xplorer.EventManager") )
+    mMonotonicID( 0 ),
+    m_logger( Poco::Logger::get( "xplorer.EventManager" ) )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
 
@@ -65,12 +65,12 @@ EventManager::EventManager():
     Poco::Data::SQLite::Connector::registerConnector();
     mSession = new Poco::Data::Session( "SQLite", ":memory:" );
     ( *mSession ) << "CREATE TABLE signals (id INTEGER PRIMARY KEY, name TEXT, type INTEGER)",
-            Poco::Data::now;
+                  Poco::Data::now;
 
     // Create a table to store slots that have requested connection to a certain signal
     // or signal pattern that hasn't been registered yet
     ( *mSession ) << "CREATE TABLE slots (id INTEGER PRIMARY KEY, mapID INTEGER, pattern TEXT, type INTEGER, priority INTEGER)",
-            Poco::Data::now;
+                  Poco::Data::now;
 }
 ////////////////////////////////////////////////////////////////////////////////
 EventManager::~EventManager()
@@ -84,7 +84,7 @@ EventManager::~EventManager()
 
         while( iter != max )
         {
-            delete ( iter->second );
+            delete( iter->second );
             ++iter;
         }
     }
@@ -96,7 +96,7 @@ EventManager::~EventManager()
 
         while( iter != max )
         {
-            delete ( iter->second );
+            delete( iter->second );
             ++iter;
         }
     }
@@ -123,9 +123,9 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
     {
         bool exists = false;
         ( *mSession ) << "SELECT 1 FROM signals WHERE name=:name",
-                Poco::Data::use( sigName ),
-                Poco::Data::into( exists ),
-                Poco::Data::now;
+                      Poco::Data::use( sigName ),
+                      Poco::Data::into( exists ),
+                      Poco::Data::now;
 
         if( exists )
         {
@@ -133,23 +133,23 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
             std::string warning( "RegisterSignal: " );
 
             ( *mSession ) << "UPDATE signals SET type=:type WHERE name=:name",
-                    Poco::Data::use( sigType ),
-                    Poco::Data::use( sigName ),
-                    Poco::Data::now;
+                          Poco::Data::use( sigType ),
+                          Poco::Data::use( sigName ),
+                          Poco::Data::now;
         }
         else
         {
             LOG_DEBUG( "RegisterSignal: Registering new signal " << sigName );
 
             ( *mSession ) << "INSERT INTO signals (name, type) VALUES (:name,:type)",
-                    Poco::Data::use( sigName ),
-                    Poco::Data::use( sigType ),
-                    Poco::Data::now;
+                          Poco::Data::use( sigName ),
+                          Poco::Data::use( sigType ),
+                          Poco::Data::now;
         }
     }
     catch( Poco::Data::DataException& ex )
     {
-         LOG_ERROR( ex.displayText() );
+        LOG_ERROR( ex.displayText() );
     }
 
     // Store the signal in the signal map
@@ -173,11 +173,11 @@ void EventManager::ConnectToPreviousSlots( const std::string& sigName )
     {
         SlotWrapperBase* slot = mExactSlotMap[ *idsIter ];
         weak_ptr< ScopedConnectionList > wConnectionsPtr
-                = mExactSlotConnections[ *idsIter ];
+            = mExactSlotConnections[ *idsIter ];
 
         if( shared_ptr< ScopedConnectionList > sConnectionsPtr = wConnectionsPtr.lock() )
         {
-           _ConnectSignal( sigName, slot, *(sConnectionsPtr.get()), *prioritiesIter, false );
+            _ConnectSignal( sigName, slot, *( sConnectionsPtr.get() ), *prioritiesIter, false );
         }
         else
         {
@@ -187,8 +187,8 @@ void EventManager::ConnectToPreviousSlots( const std::string& sigName )
             try
             {
                 ( *mSession ) << "DELETE FROM slots WHERE mapID=:id",
-                        Poco::Data::use( *idsIter ),
-                        Poco::Data::now;
+                              Poco::Data::use( *idsIter ),
+                              Poco::Data::now;
             }
             catch( Poco::Data::DataException& ex )
             {
@@ -198,7 +198,7 @@ void EventManager::ConnectToPreviousSlots( const std::string& sigName )
             // We can also remove this entry from mExactSlotMap and free up
             // associated memory
             std::map< int, SlotWrapperBase* >::iterator slotIter =
-                    mExactSlotMap.find( *idsIter );
+                mExactSlotMap.find( *idsIter );
             if( slotIter != mExactSlotMap.end() )
             {
                 delete( slotIter->second );
@@ -219,10 +219,10 @@ void EventManager::ConnectSignal( const std::string& sigName,
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EventManager::_ConnectSignal( const std::string& sigName,
-                                  SlotWrapperBase* slot,
-                                  ScopedConnectionList& connections,
-                                  int priority,
-                                  bool store )
+                                   SlotWrapperBase* slot,
+                                   ScopedConnectionList& connections,
+                                   int priority,
+                                   bool store )
 {
     LOG_TRACE( "_ConnectSignal" );
     // Find the appropriate SignalWrapperBase
@@ -230,7 +230,7 @@ void EventManager::_ConnectSignal( const std::string& sigName,
     if( iter != mSignals.end() )
     {
         LOG_DEBUG( "_ConnectSignal: Connecting " << slot << " to signal "
-                << sigName << " (" << iter->second->GetSignalAddress() << ")" );
+                   << sigName << " (" << iter->second->GetSignalAddress() << ")" );
         // Tell the SignalWrapper to connect its signal to this slot
         SignalWrapperBase* signalWrapper = iter->second;
         if( signalWrapper->ConnectSlot( slot, connections, priority ) )
@@ -247,7 +247,7 @@ void EventManager::_ConnectSignal( const std::string& sigName,
                 if( shared_ptr< ConnectionMonopoly > monopoly = mIter->second.lock() )
                 {
                     shared_ptr< shared_connection_block >
-                            blocker( new shared_connection_block( *( connections.GetLastConnection() ) ) );
+                    blocker( new shared_connection_block( *( connections.GetLastConnection() ) ) );
                     monopoly->AddBlocker( blocker );
                 }
                 else
@@ -312,15 +312,15 @@ void EventManager::StoreSlot( const std::string& sigName,
     try
     {
         ( *mSession ) << "INSERT INTO slots (mapID, pattern, type, priority) VALUES (:id,:pattern,:type,:priority)",
-                Poco::Data::use( mMonotonicID ),
-                Poco::Data::use( sigName ),
-                Poco::Data::use( type ),
-                Poco::Data::use( priority ),
-                Poco::Data::now;
+                      Poco::Data::use( mMonotonicID ),
+                      Poco::Data::use( sigName ),
+                      Poco::Data::use( type ),
+                      Poco::Data::use( priority ),
+                      Poco::Data::now;
     }
     catch( Poco::Data::DataException& ex )
     {
-         LOG_ERROR( ex.displayText() );
+        LOG_ERROR( ex.displayText() );
     }
 
     // Increment the ID so we never have name clashes when things get deleted
@@ -335,11 +335,11 @@ void EventManager::GetMatches( const std::string stringToMatch, SignalType sigTy
     {
         Poco::Data::Statement statement( *mSession );
         statement << "SELECT name FROM signals WHERE name LIKE :name",
-                Poco::Data::use( stringToMatch );
+                  Poco::Data::use( stringToMatch );
         if( sigType != any_SignalType )
         {
             statement << " AND type=:type",
-                    Poco::Data::use( sigType );
+                      Poco::Data::use( sigType );
         }
         statement, Poco::Data::into( names );
         statement.execute();
@@ -358,22 +358,22 @@ void EventManager::GetSlotMatches( const std::string& sigName, std::vector< int 
     {
         Poco::Data::Statement statement( *mSession );
         statement << "SELECT mapID FROM slots WHERE :pattern LIKE pattern",
-                Poco::Data::use( sigName ),
-                Poco::Data::into( ids );
+                  Poco::Data::use( sigName ),
+                  Poco::Data::into( ids );
         statement.execute();
         int priority = 3;
         for( size_t count = 0; count < ids.size(); ++count )
         {
             ( *mSession ) << "SELECT priority FROM slots WHERE mapID=:id",
-            Poco::Data::use( ids.at( count ) ),
-            Poco::Data::into( priority ),
-            Poco::Data::now;
+                          Poco::Data::use( ids.at( count ) ),
+                          Poco::Data::into( priority ),
+                          Poco::Data::now;
             priorities.push_back( priority );
         }
     }
     catch( Poco::Data::DataException& ex )
     {
-         LOG_ERROR( ex.displayText() );
+        LOG_ERROR( ex.displayText() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -413,7 +413,7 @@ shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionWeak( shared_
                 if( sCurrentConnection != connection )
                 {
                     shared_ptr< shared_connection_block >
-                            blocker( new shared_connection_block( *sCurrentConnection ) );
+                    blocker( new shared_connection_block( *sCurrentConnection ) );
                     monopoly->AddBlocker( blocker );
                 }
 

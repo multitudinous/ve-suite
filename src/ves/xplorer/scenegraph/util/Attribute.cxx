@@ -55,15 +55,15 @@ using namespace ves::open::xml::shader;
 ///Constructor      //
 //////////////////////
 Attribute::Attribute()
-        :
-        osg::StateSet()
+    :
+    osg::StateSet()
 {
     ;
 }
 //////////////////////////////////////////////////////////
 Attribute::Attribute( const Attribute& veAttribute,
                       const osg::CopyOp& copyop )
-        : osg::StateSet( veAttribute, copyop )
+    : osg::StateSet( veAttribute, copyop )
 {}
 ///////////////////////
 Attribute::~Attribute()

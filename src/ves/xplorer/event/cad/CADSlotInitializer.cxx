@@ -51,59 +51,59 @@ CADSlotInitializer::CADSlotInitializer()
     using namespace ves::xplorer::event::cad;
 
     CONNECTSIGNALS_STATIC( "%TransformCADNode",
-                      void ( const std::string&, const std::vector< double >& ),
-                      &TransformCADNode,
-                      m_connections, any_SignalType, normal_Priority );
+                           void ( const std::string&, const std::vector< double >& ),
+                           &TransformCADNode,
+                           m_connections, any_SignalType, normal_Priority );
 
 
     CONNECTSIGNALS_STATIC( "%SetOpacityOnCADNode",
-                      void( const std::string&, double ),
-                      &SetOpacityOnCADNode,
-                      m_connections, any_SignalType, normal_Priority );
+                           void( const std::string&, double ),
+                           &SetOpacityOnCADNode,
+                           m_connections, any_SignalType, normal_Priority );
 
 
     CONNECTSIGNALS_STATIC( "%ToggleCADNode",
-                      void( const std::string&, bool const& ),
-                      &ToggleCADNode,
-                      m_connections, any_SignalType, normal_Priority );
+                           void( const std::string&, bool const& ),
+                           &ToggleCADNode,
+                           m_connections, any_SignalType, normal_Priority );
 
 
     CONNECTSIGNALS_STATIC( "%SetCADPhysicsMesh",
-                      void( const std::string&,
-                            const std::vector<std::string>& ),
-                      &SetCADPhysicsMesh,
-                      m_connections, any_SignalType, normal_Priority );
+                           void( const std::string&,
+                                 const std::vector<std::string>& ),
+                           &SetCADPhysicsMesh,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%DeleteCADNode",
-                      void( const std::string&, const std::string&,
-                            const std::string&),
-                      &DeleteCADNode,
-                      m_connections, any_SignalType, normal_Priority );
+                           void( const std::string&, const std::string&,
+                                 const std::string& ),
+                           &DeleteCADNode,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%SetCADCulling",
-                      void( const std::string&, std::string ),
-                      &ControlOcclusionQuery,
-                      m_connections, any_SignalType, normal_Priority );
+                           void( const std::string&, std::string ),
+                           &ControlOcclusionQuery,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%SetPhysicsOnCADNode",
-                      void( const std::string&, const bool& ),
-                      &SetPhysicsOnCADNode,
-                      m_connections, any_SignalType, normal_Priority );
+                           void( const std::string&, const bool& ),
+                           &SetPhysicsOnCADNode,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%SetMassOnCADNode",
-                      void( const std::string&, const double& ),
-                      &SetMassOnCADNode,
-                      m_connections, any_SignalType, normal_Priority );
+                           void( const std::string&, const double& ),
+                           &SetMassOnCADNode,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%SetFrictionOnCADNode",
-                      void( const std::string&, const double& ),
-                      &SetFrictionOnCADNode,
-                      m_connections, any_SignalType, normal_Priority );
+                           void( const std::string&, const double& ),
+                           &SetFrictionOnCADNode,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%SetRestitutionOnCADNode",
-                      void( const std::string&, const double& ),
-                      &SetRestitutionOnCADNode,
-                      m_connections, any_SignalType, normal_Priority );
+                           void( const std::string&, const double& ),
+                           &SetRestitutionOnCADNode,
+                           m_connections, any_SignalType, normal_Priority );
 }
 
 } // namespace cad

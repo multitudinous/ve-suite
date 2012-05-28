@@ -55,7 +55,7 @@ NoiseTexture2D::NoiseTexture2D( unsigned int x, unsigned int y )
     _resolution[0] = x;
     _resolution[1] = y;
     _noiseData = new unsigned char[_resolution[0]*_resolution[1]];
-    srand(( unsigned )time( NULL ) );
+    srand( ( unsigned )time( NULL ) );
     //float fData = 0;
     int index = 0;
     unsigned int data[256];
@@ -63,7 +63,7 @@ NoiseTexture2D::NoiseTexture2D( unsigned int x, unsigned int y )
     {
         data[i] = rand() % 256;
     }
-    for( unsigned int i = 0; i < _resolution[0]*_resolution[1];++i )
+    for( unsigned int i = 0; i < _resolution[0]*_resolution[1]; ++i )
     {
 
         index = ( 1. / ( float )_resolution[0] ) * 255. * rand() / ( float )RAND_MAX;
@@ -92,9 +92,9 @@ NoiseTexture2D::NoiseTexture2D( const NoiseTexture2D& rhs )
     _resolution[0] = rhs._resolution[0];
     _resolution[1] = rhs._resolution[1];
     _noiseData = new unsigned char[_resolution[0]*_resolution[1]];
-    for( unsigned int i = 0; i < _resolution[0]*_resolution[1];++i )
+    for( unsigned int i = 0; i < _resolution[0]*_resolution[1]; ++i )
     {
-        _noiseData[i] = 
+        _noiseData[i] =
             boost::lexical_cast< unsigned char >( 255. * rand() / float( RAND_MAX ) );
     }
     _noiseTexture = new osg::Texture2D( *rhs._noiseTexture.get() );
@@ -107,9 +107,9 @@ NoiseTexture2D& NoiseTexture2D::operator=( const NoiseTexture2D& rhs )
         _resolution[0] = rhs._resolution[0];
         _resolution[1] = rhs._resolution[1];
         _noiseData = new unsigned char[_resolution[0]*_resolution[1]];
-        for( unsigned int i = 0; i < _resolution[0]*_resolution[1];++i )
+        for( unsigned int i = 0; i < _resolution[0]*_resolution[1]; ++i )
         {
-            _noiseData[i] = 
+            _noiseData[i] =
                 boost::lexical_cast< unsigned char >( 255. * rand() / float( RAND_MAX ) );
         }
         _noiseTexture = new osg::Texture2D( *rhs._noiseTexture.get() );

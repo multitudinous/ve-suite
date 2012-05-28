@@ -58,25 +58,25 @@ class reiParticles
 public:
     reiParticles( void );
     ~reiParticles( void );
-    reiParticles( reiParticles * );
+    reiParticles( reiParticles* );
 
     void writeParticlePolyData( void );
     void readPPLOT1( void );
     void readPPLOT3( void );
     void readParticleParamFile( void );
 
-    typedef std::vector< Particle * > Particles;
+    typedef std::vector< Particle* > Particles;
     Particles particles;
     int nsl;
     int nps;
 
-    vtkPolyDataWriter          *writer;
-    vtkPolyData                *polydata;
-    vtkPoints                  *points;
-    vtkCellArray               *lines;
-    vtkFloatArray              **parameterData;
-    vtkTransform               *transform;
-    vtkTransformPolyDataFilter *transFilter;
+    vtkPolyDataWriter*          writer;
+    vtkPolyData*                polydata;
+    vtkPoints*                  points;
+    vtkCellArray*               lines;
+    vtkFloatArray**              parameterData;
+    vtkTransform*               transform;
+    vtkTransformPolyDataFilter* transFilter;
     //typedef std::vector< int > IntList;
     //IntList whichParticles;
 };

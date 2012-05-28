@@ -52,8 +52,8 @@ namespace eventmanager
 class SignalWrapperBase
 {
 public:
-    SignalWrapperBase(){}
-    virtual ~SignalWrapperBase(){}
+    SignalWrapperBase() {}
+    virtual ~SignalWrapperBase() {}
 
     /// Connects slot held in SlotWrapper to the signal owned by derived SignalWrapper<>
     /// instance.
@@ -63,8 +63,8 @@ public:
     /// @param priority The priority with which slot should be connected to this
     /// signal. This priority is a raw integer rather than one of the enumerated
     /// priorities from EventManager so that this class need not depend on EventManager.h
-    virtual bool ConnectSlot( SlotWrapperBase* slot, 
-                              ScopedConnectionList& connections, 
+    virtual bool ConnectSlot( SlotWrapperBase* slot,
+                              ScopedConnectionList& connections,
                               int priority ) = 0;
 
     /// Returns the list of scoped_connection objects referring to all slots

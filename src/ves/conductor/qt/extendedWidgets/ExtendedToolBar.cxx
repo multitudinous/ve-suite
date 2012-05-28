@@ -37,7 +37,7 @@ namespace ves
 namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
-ExtendedToolBar::ExtendedToolBar( QWidget *parent )
+ExtendedToolBar::ExtendedToolBar( QWidget* parent )
     :
     QToolBar( parent )
 {

@@ -108,7 +108,7 @@ Wand::Wand()
     m_wandEvents( new ves::xplorer::behavior::WandEvents ),
     m_triggerWandMove( true ),
     m_shutdown( false ),
-    m_logger( Poco::Logger::get("xplorer.wand.EventDebug") ),
+    m_logger( Poco::Logger::get( "xplorer.wand.EventDebug" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) ),
     m_buttonMoveState( 0 ),
     m_periodicWandMove( false ),
@@ -116,60 +116,60 @@ Wand::Wand()
 {
     m_wand.init( "VJWand" );
     head.init( "VJHead" );
-    
+
     // Connect to Juggler's new event handling interface
-    m_wandButton0DoubleClickEventInterface.setClickTime(300);
-    m_wandButton0DoubleClickEventInterface.init("VJButton0");
-    m_wandButton0DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton0DoubleClick, this, _1));
-    
-    m_wandButton1DoubleClickEventInterface.setClickTime(300);
-    m_wandButton1DoubleClickEventInterface.init("VJButton1");
-    m_wandButton1DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton1DoubleClick, this, _1));
+    m_wandButton0DoubleClickEventInterface.setClickTime( 300 );
+    m_wandButton0DoubleClickEventInterface.init( "VJButton0" );
+    m_wandButton0DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>( boost::bind( &Wand::OnWandButton0DoubleClick, this, _1 ) );
 
-    m_wandButton2DoubleClickEventInterface.setClickTime(300);
-    m_wandButton2DoubleClickEventInterface.init("VJButton2");
-    m_wandButton2DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton2DoubleClick, this, _1));
+    m_wandButton1DoubleClickEventInterface.setClickTime( 300 );
+    m_wandButton1DoubleClickEventInterface.init( "VJButton1" );
+    m_wandButton1DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>( boost::bind( &Wand::OnWandButton1DoubleClick, this, _1 ) );
 
-    m_wandButton3DoubleClickEventInterface.setClickTime(300);
-    m_wandButton3DoubleClickEventInterface.init("VJButton3");
-    m_wandButton3DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton3DoubleClick, this, _1));
+    m_wandButton2DoubleClickEventInterface.setClickTime( 300 );
+    m_wandButton2DoubleClickEventInterface.init( "VJButton2" );
+    m_wandButton2DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>( boost::bind( &Wand::OnWandButton2DoubleClick, this, _1 ) );
 
-    m_wandButton4DoubleClickEventInterface.setClickTime(300);
-    m_wandButton4DoubleClickEventInterface.init("VJButton4");
-    m_wandButton4DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton4DoubleClick, this, _1));
+    m_wandButton3DoubleClickEventInterface.setClickTime( 300 );
+    m_wandButton3DoubleClickEventInterface.init( "VJButton3" );
+    m_wandButton3DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>( boost::bind( &Wand::OnWandButton3DoubleClick, this, _1 ) );
 
-    m_wandButton5DoubleClickEventInterface.setClickTime(300);
-    m_wandButton5DoubleClickEventInterface.init("VJButton5");
-    m_wandButton5DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(boost::bind(&Wand::OnWandButton5DoubleClick, this, _1));
+    m_wandButton4DoubleClickEventInterface.setClickTime( 300 );
+    m_wandButton4DoubleClickEventInterface.init( "VJButton4" );
+    m_wandButton4DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>( boost::bind( &Wand::OnWandButton4DoubleClick, this, _1 ) );
 
-    
-    m_wandButton0EventInterface.init("VJButton0");
-    m_wandButton0EventInterface.addCallback(boost::bind(&Wand::OnWandButton0Event, this, _1));
+    m_wandButton5DoubleClickEventInterface.setClickTime( 300 );
+    m_wandButton5DoubleClickEventInterface.init( "VJButton5" );
+    m_wandButton5DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>( boost::bind( &Wand::OnWandButton5DoubleClick, this, _1 ) );
 
-    m_wandButton1EventInterface.init("VJButton1");
-    m_wandButton1EventInterface.addCallback(boost::bind(&Wand::OnWandButton1Event, this, _1));
 
-    m_wandButton2EventInterface.init("VJButton2");
-    m_wandButton2EventInterface.addCallback(boost::bind(&Wand::OnWandButton2Event, this, _1));
+    m_wandButton0EventInterface.init( "VJButton0" );
+    m_wandButton0EventInterface.addCallback( boost::bind( &Wand::OnWandButton0Event, this, _1 ) );
 
-    m_wandButton3EventInterface.init("VJButton3");
-    m_wandButton3EventInterface.addCallback(boost::bind(&Wand::OnWandButton3Event, this, _1));
+    m_wandButton1EventInterface.init( "VJButton1" );
+    m_wandButton1EventInterface.addCallback( boost::bind( &Wand::OnWandButton1Event, this, _1 ) );
 
-    m_wandButton4EventInterface.init("VJButton4");
-    m_wandButton4EventInterface.addCallback(boost::bind(&Wand::OnWandButton4Event, this, _1));
+    m_wandButton2EventInterface.init( "VJButton2" );
+    m_wandButton2EventInterface.addCallback( boost::bind( &Wand::OnWandButton2Event, this, _1 ) );
 
-    m_wandButton5EventInterface.init("VJButton5");
-    m_wandButton5EventInterface.addCallback(boost::bind(&Wand::OnWandButton5Event, this, _1));
+    m_wandButton3EventInterface.init( "VJButton3" );
+    m_wandButton3EventInterface.addCallback( boost::bind( &Wand::OnWandButton3Event, this, _1 ) );
 
-    m_wandButton6EventInterface.init("VJButton6");
-    m_wandButton6EventInterface.addCallback(boost::bind(&Wand::OnWandButton6Event, this, _1));
-    
+    m_wandButton4EventInterface.init( "VJButton4" );
+    m_wandButton4EventInterface.addCallback( boost::bind( &Wand::OnWandButton4Event, this, _1 ) );
+
+    m_wandButton5EventInterface.init( "VJButton5" );
+    m_wandButton5EventInterface.addCallback( boost::bind( &Wand::OnWandButton5Event, this, _1 ) );
+
+    m_wandButton6EventInterface.init( "VJButton6" );
+    m_wandButton6EventInterface.addCallback( boost::bind( &Wand::OnWandButton6Event, this, _1 ) );
+
     ///Setup the ves signals generated from the VR Juggler events
     m_wandButtonPressSignalMap["Wand.ButtonPress0"] = new WandButtonPressSignal_type;
     m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"] = new WandButtonReleaseSignal_type;
     m_wandButtonOnSignalMap["Wand.ButtonOn0"] = new WandButtonOnSignal_type;
     m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick0"] = new WandDoubleClickSignal_type;
-    
+
     m_wandButtonPressSignalMap["Wand.ButtonPress1"] = new WandButtonPressSignal_type;
     m_wandButtonReleaseSignalMap["Wand.ButtonRelease1"] = new WandButtonReleaseSignal_type;
     m_wandButtonOnSignalMap["Wand.ButtonOn1"] = new WandButtonOnSignal_type;
@@ -202,66 +202,66 @@ Wand::Wand()
 
     eventmanager::EventManager* evm = eventmanager::EventManager::instance();
     using eventmanager::SignalWrapper;
-    
+
     ///Setup Button Press
-    for( WandButtonPressSignalMapType::const_iterator 
-        iter = m_wandButtonPressSignalMap.begin(); 
-        iter != m_wandButtonPressSignalMap.end(); ++iter)
+    for( WandButtonPressSignalMapType::const_iterator
+            iter = m_wandButtonPressSignalMap.begin();
+            iter != m_wandButtonPressSignalMap.end(); ++iter )
     {
         evm->RegisterSignal(
             new SignalWrapper< WandButtonPressSignal_type >( iter->second ),
-            iter->first, 
+            iter->first,
             eventmanager::EventManager::button_SignalType );
     }
 
     ///Setup Button Release
-    for( WandButtonReleaseSignalMapType::const_iterator 
-        iter = m_wandButtonReleaseSignalMap.begin(); 
-        iter != m_wandButtonReleaseSignalMap.end(); ++iter)
+    for( WandButtonReleaseSignalMapType::const_iterator
+            iter = m_wandButtonReleaseSignalMap.begin();
+            iter != m_wandButtonReleaseSignalMap.end(); ++iter )
     {
         evm->RegisterSignal(
             new SignalWrapper< WandButtonReleaseSignal_type >( iter->second ),
-            iter->first, 
+            iter->first,
             eventmanager::EventManager::button_SignalType );
     }
-    
+
     ///Setup Button On
-    for( WandButtonOnSignalMapType::const_iterator 
-        iter = m_wandButtonOnSignalMap.begin(); 
-        iter != m_wandButtonOnSignalMap.end(); ++iter)
+    for( WandButtonOnSignalMapType::const_iterator
+            iter = m_wandButtonOnSignalMap.begin();
+            iter != m_wandButtonOnSignalMap.end(); ++iter )
     {
         evm->RegisterSignal(
             new SignalWrapper< WandButtonOnSignal_type >( iter->second ),
-            iter->first, 
+            iter->first,
             eventmanager::EventManager::button_SignalType );
     }
-    
+
     ///Setup Button Double Click
-    for( WandDoubleClickSignalMapType::const_iterator 
-        iter = m_wandDoubleClickSignalMap.begin(); 
-        iter != m_wandDoubleClickSignalMap.end(); ++iter)
+    for( WandDoubleClickSignalMapType::const_iterator
+            iter = m_wandDoubleClickSignalMap.begin();
+            iter != m_wandDoubleClickSignalMap.end(); ++iter )
     {
         evm->RegisterSignal(
             new SignalWrapper< WandDoubleClickSignal_type >( iter->second ),
-            iter->first, 
+            iter->first,
             eventmanager::EventManager::button_SignalType );
     }
 
     evm->RegisterSignal(
         new SignalWrapper< StartEndPointSignal_type >( &m_startEndPointSignal ),
         "Wand.StartEndPoint", eventmanager::EventManager::unspecified_SignalType );
-    
+
     evm->RegisterSignal(
         new SignalWrapper< WandMoveSignal_type >( &m_wandMove ),
         "Wand.WandMove", eventmanager::EventManager::mouse_SignalType );
-    
+
     // Register signal(s) with EventManager
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_updateData ),
-        "Wand.UpdateData");
-    
+        "Wand.UpdateData" );
+
     CONNECTSIGNAL_0( "App.LatePreFrame", void(), &Wand::LatePreFrameUpdate,
-                    m_connections, highest_Priority );
+                     m_connections, highest_Priority );
 
     //m_hideShowUI =
     //    reinterpret_cast< eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
@@ -269,9 +269,9 @@ Wand::Wand()
     //    ->mSignal;
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_hideShowUI ),
-        "Wand.HideShowUI");
-    
-    
+        "Wand.HideShowUI" );
+
+
     // trigger (and top right button) used for the selection line
     digital[ 0 ].init( "VJButton0" );
     // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
@@ -304,13 +304,13 @@ void Wand::Initialize()
         //loc[ i ] + dir[ i ] * cursorLen;
         objLoc[ i ] = cursorLoc[ i ];
     }
-    
+
     MakeWandLine();
 
     if( !m_sceneManager.IsDesktopMode() )
     {
-        Poco::Util::TimerTask::Ptr moveTask = 
-            new Poco::Util::TimerTaskAdapter<Wand>(*this, &Wand::OnWandMoveTimer);
+        Poco::Util::TimerTask::Ptr moveTask =
+            new Poco::Util::TimerTaskAdapter<Wand>( *this, &Wand::OnWandMoveTimer );
         m_wandMoveTimer.schedule( moveTask, 500, 250 );
     }
 }
@@ -322,8 +322,8 @@ Wand::~Wand()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
 {
-    vprDEBUG( vesDBG, 3 ) << "|\tWand::ProcessEvents" 
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tWand::ProcessEvents"
+                          << std::endl << vprDEBUG_FLUSH;
     /*ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
     if( !activeDCS )
@@ -342,7 +342,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     //Update the wand direction every frame
     //UpdateWandLocalDirection();
     //UpdateWandGlobalLocation();
-    
+
     buttonData[ 0 ] = digital[ 0 ]->getData();
     buttonData[ 1 ] = digital[ 1 ]->getData();
     buttonData[ 2 ] = digital[ 2 ]->getData();
@@ -389,11 +389,11 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     }
     else if( !newCommand.compare( "Z_GREATER_THAN_ZERO" ) )
     {
-		Device::SetSubZeroFlag( cfdIso_value );
+    	Device::SetSubZeroFlag( cfdIso_value );
     }
-	else if( !newCommand.compare( "Z_EQUALS_ZERO" ) )
+    else if( !newCommand.compare( "Z_EQUALS_ZERO" ) )
     {
-		Device::SetZEqualsZeroFlag( cfdIso_value );
+    	Device::SetZEqualsZeroFlag( cfdIso_value );
     }
     else if( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )
     {
@@ -413,7 +413,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
 
     ///Check and see if the cpt is enabled so that we can handle
     ///button events differently
-    ves::xplorer::scenegraph::camera::CameraManager& cameraManager = 
+    ves::xplorer::scenegraph::camera::CameraManager& cameraManager =
         m_sceneManager.GetCameraManager();
     bool cptEnabled = cameraManager.IsCPTEnabled();
 
@@ -432,10 +432,10 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             unsigned int activeNum = 0;
             if( activeCamera )
             {
-                activeNum = cameraManager.getChildIndex( 
+                activeNum = cameraManager.getChildIndex(
                     static_cast< osg::Group* >( activeCamera ) );
             }
-            
+
             ves::xplorer::DeviceHandler::instance()->UnselectObjects();
 
             if( activeNum + 1 < cameraManager.getNumChildren() )
@@ -446,33 +446,33 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             {
                 activeNum = 0;
             }
-            
-            ves::xplorer::scenegraph::camera::CameraObject* newCameraObject = 
-                static_cast< ves::xplorer::scenegraph::camera::CameraObject* >( 
+
+            ves::xplorer::scenegraph::camera::CameraObject* newCameraObject =
+                static_cast< ves::xplorer::scenegraph::camera::CameraObject* >(
                 cameraManager.getChild( activeNum ) );
             cameraManager.SetActiveCameraObject( newCameraObject, true );
-            
+
             //Right now we are saying you must have a DCS
             scenegraph::DCS& selectedDCS = newCameraObject->GetDCS();
             gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
-            
+
             //Set the connection between the scene manipulator and the selected dcs
             //sceneManipulator->Connect( &selectedDCS );
-            
+
             //If dcs is from a camera object, we want to rotate about local zero point
             //osg::Vec3d center( 0.0, 0.0, 0.0 );
             //center = center * osg::Matrixd( selectedMatrix.mData );
             //sceneManipulator->SetPosition( center );
-            
+
             //We need to transform center point into camera space
             //In the future the center point will be in world coordinates
             //center = center * osg::Matrixd( sceneManager.GetNavDCS()->GetMat().mData );
             //gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
             //deviceHandler.SetCenterPoint( &tempCenter );
-            
+
             //Set the selected DCS
             ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( &selectedDCS );
-            
+
             //Need to do this for multi-pass techniques
             if( m_sceneManager.IsRTTOn() )
             {
@@ -482,19 +482,19 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             {
                 selectedDCS.SetTechnique( "Select" );
             }
-            
+
             //Hand the node we are interested in off to the animation engine
             NavigationAnimationEngine& nae =
                 *(NavigationAnimationEngine::instance());
             nae.SetDCS( m_sceneManager.GetNavDCS() );
-            
+
             //Hand our created end points off to the animation engine
             selectedMatrix = gmtl::invert( selectedMatrix );
             const gmtl::Matrix44d tempHeadMatrix = m_sceneManager.GetHeadMatrix();
             const gmtl::AxisAngled myAxisAngle( gmtl::Math::deg2Rad( double( -90 ) ), 1, 0, 0 );
             gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
             selectedMatrix = tempHeadMatrix * myMat * selectedMatrix;
-            
+
             gmtl::Vec3d navToPoint =
                 gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
             gmtl::Quatd rotationPoint =
@@ -502,7 +502,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             nae.SetAnimationEndPoints( navToPoint, rotationPoint );
             return;
         }
-        
+
         if( !cptEnabled )
         {
             if( ves::xplorer::NavigationAnimationEngine::instance()->IsActive() )
@@ -572,7 +572,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             {
                 return;
             }
-        
+
             if( cameraManager.IsPictureMode() )
             {
                 std::string tempDir;
@@ -604,7 +604,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
     else if( buttonData[ 4 ] == gadget::Digital::TOGGLE_ON ||
               buttonData[ 4 ] == gadget::Digital::ON )
     {
-        if( m_cadSelectionMode && 
+        if( m_cadSelectionMode &&
            ( buttonData[ 4 ] == gadget::Digital::TOGGLE_ON ) )
         {
             if( m_unselectedCADFiles.size() )
@@ -614,7 +614,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             }
             return;
         }
-        
+
         if( !m_cadSelectionMode )
         {
             m_buttonPushed = true;
@@ -634,7 +634,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
             m_characterController.StepForward( false );
         }
     }
-    
+
     ///If we actually pushed a button then move things
     if( m_buttonPushed && !m_characterController.IsEnabled() )
     {
@@ -648,7 +648,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         m_worldQuat *= m_rotIncrement;
 
         gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        Device::EnsureCameraStaysAboveGround( vjHeadMat, m_worldTrans, 
+        Device::EnsureCameraStaysAboveGround( vjHeadMat, m_worldTrans,
             m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
 
         activeDCS->SetTranslationArray( m_worldTrans );
@@ -662,9 +662,9 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         {
             m_worldTrans[ i ] = -m_worldTrans[ i ];
         }
-        
+
         m_worldQuat *= m_rotIncrement;
-        
+
         gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
         Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
 
@@ -679,7 +679,7 @@ void Wand::ProcessEvents( ves::open::xml::CommandPtr command )
         {
             m_characterController.Rotate( 0., osg::DegreesToRadians( rotationStepSize ) );
         }
-        
+
         if( buttonData[ 2 ] == gadget::Digital::TOGGLE_ON ||
            buttonData[ 2 ] == gadget::Digital::ON )
         {
@@ -701,7 +701,7 @@ void Wand::SetHeadRotationFlag( int input )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateSelectionLine( bool drawLine )
-{    
+{
     if( drawLine )
     {
         m_wandPAT->setNodeMask( 1 );
@@ -717,38 +717,38 @@ void Wand::ProcessHit()
 {
     osgUtil::LineSegmentIntersector::Intersections& intersections =
         scenegraph::TestForIntersections( *m_beamLineSegment.get(),
-                                     *m_sceneManager.GetModelRoot() );
-    
+                                          *m_sceneManager.GetModelRoot() );
+
     //Unselect the previous selected DCS
     DeviceHandler::instance()->UnselectObjects();
-    
+
     //Now find the new selected DCS
     if( intersections.empty() )
     {
         vprDEBUG( vesDBG, 1 )
-        << "|\tWand::ProcessHit No object selected"
-        << std::endl << vprDEBUG_FLUSH;
-        
+                << "|\tWand::ProcessHit No object selected"
+                << std::endl << vprDEBUG_FLUSH;
+
         return;
     }
 
     //Search for first item that is not the laser
     osg::Node* objectHit( NULL );
-    for( osgUtil::LineSegmentIntersector::Intersections::iterator itr = 
-        intersections.begin(); itr != intersections.end(); ++itr )
+    for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+                intersections.begin(); itr != intersections.end(); ++itr )
     {
         objectHit = *( itr->nodePath.rbegin() );
         if( objectHit->getName() != "Laser" &&
-           objectHit->getName() != "Root Node" )
+                objectHit->getName() != "Root Node" )
         {
             break;
         }
-    }        
-    
+    }
+
     if( !objectHit )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tWand::ProcessHit No object selected"
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
             ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
@@ -756,7 +756,7 @@ void Wand::ProcessHit()
         return;
     }
 
-    ves::xplorer::scenegraph::camera::CameraManager& cameraManager = 
+    ves::xplorer::scenegraph::camera::CameraManager& cameraManager =
         ves::xplorer::scenegraph::SceneManager::instance()->GetCameraManager();
     bool cptEnabled = cameraManager.IsCPTEnabled();
     if( cptEnabled )
@@ -764,21 +764,21 @@ void Wand::ProcessHit()
         scenegraph::highlight::HighlightManager& highlightManager =
             m_sceneManager.GetHighlightManager();
         if( m_cameraManager.Handle( scenegraph::camera::Event::RELEASE,
-            *m_beamLineSegment.get() ) )
+                                    *m_beamLineSegment.get() ) )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tWand::ProcessHit Selected a Camera"
-                << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
         }
         else if( highlightManager.IsToggled() )
-        {            
+        {
             //If we found a low level node
             osg::NodePath nodePath = intersections.begin()->nodePath;
             osg::Node* node = nodePath[ nodePath.size() - 1 ];
-            
+
             highlightManager.CreateHighlightCircle( node, nodePath );
             return;
         }
-    }    
+    }
 
     if( m_cadSelectionMode )
     {
@@ -796,14 +796,14 @@ void Wand::ProcessHit()
     {
         scenegraph::DCS* newSelectedDCS =
             static_cast< scenegraph::DCS* >( parentNode.get() );
-        
+
         vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
-            << parentNode->getName() << std::endl << vprDEBUG_FLUSH;
+                              << parentNode->getName() << std::endl << vprDEBUG_FLUSH;
 
         vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
-            << parentNode->getDescriptions().at( 1 )
-            << std::endl << vprDEBUG_FLUSH;
-            
+                              << parentNode->getDescriptions().at( 1 )
+                              << std::endl << vprDEBUG_FLUSH;
+
         if( ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
         {
             newSelectedDCS->SetTechnique( "Glow" );
@@ -813,29 +813,29 @@ void Wand::ProcessHit()
             newSelectedDCS->SetTechnique( "Select" );
         }
         DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
-        
+
         //Set the connection between the scene manipulator and the selected dcs
         scenegraph::manipulator::TransformManipulator* sceneManipulator =
             m_manipulatorManager.GetSceneManipulator();
         sceneManipulator->Connect( newSelectedDCS );
-        
+
         //Move the scene manipulator to the center point
         scenegraph::LocalToWorldNodePath nodePath(
             newSelectedDCS, m_sceneManager.GetModelRoot() );
         scenegraph::LocalToWorldNodePath::NodeAndPathList npl =
-        nodePath.GetLocalToWorldNodePath();
+            nodePath.GetLocalToWorldNodePath();
         scenegraph::LocalToWorldNodePath::NodeAndPath nap = npl.at( 0 );
         osg::Matrixd localToWorld = osg::computeLocalToWorld( nap.second );
         osg::Vec3d newCenter = newSelectedDCS->getBound().center() * localToWorld;
         sceneManipulator->SetPosition( newCenter );
         vprDEBUG( vesDBG, 1 ) << "|\tEnd Selection "
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
     }
     else
     {
         vprDEBUG( vesDBG, 1 ) << "|\tObject does not have name parent name "
-            << objectHit->getParents().front()->getName()
-            << std::endl << vprDEBUG_FLUSH;
+                              << objectHit->getParents().front()->getName()
+                              << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
             ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
@@ -849,16 +849,16 @@ void Wand::DrawLine( const osg::Vec3d&, const osg::Vec3d& )
     const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
-    
+                                    gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+
     ///Transform from juggler space to world space
-    vrjWandMat = 
+    vrjWandMat =
         ves::xplorer::scenegraph::SceneManager::instance()->
         GetInvertedNavMatrix() * myMat * vrjWandMat * zUpMatrix;
 
     const osg::Matrixd tempOsgMatrix( vrjWandMat.getData() );
     m_wandPAT->setMatrix( tempOsgMatrix );
-    
+
     //UpdateForwardAndUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -870,43 +870,43 @@ void Wand::UpdateObjectHandler()
 {
     //Update the juggler location of the wand
     if( digital[ 0 ]->getData() == gadget::Digital::ON )
-    {        
+    {
         UpdateSelectionLine( true );
 
         ///Push the FOCUS event if we are using manipulators and a dragger is not
         ///active
-        if( m_manipulatorManager.IsEnabled() && 
-            !m_manipulatorManager.LeafDraggerIsActive() )
+        if( m_manipulatorManager.IsEnabled() &&
+                !m_manipulatorManager.LeafDraggerIsActive() )
         {
-            osg::ref_ptr< osg::StateSet > stateset = 
+            osg::ref_ptr< osg::StateSet > stateset =
                 m_wandPAT->getOrCreateStateSet();
             if( m_manipulatorManager.Handle( scenegraph::manipulator::Event::FOCUS,
-                m_beamLineSegment.get() ) )
+                                             m_beamLineSegment.get() ) )
             {
-                
-                stateset->setRenderBinDetails( 11, std::string( "RenderBin" ) );                
+
+                stateset->setRenderBinDetails( 11, std::string( "RenderBin" ) );
                 stateset->setMode(
-                                  GL_DEPTH_TEST,
-                                  osg::StateAttribute::OFF |
-                                  osg::StateAttribute::OVERRIDE );
+                    GL_DEPTH_TEST,
+                    osg::StateAttribute::OFF |
+                    osg::StateAttribute::OVERRIDE );
                 m_wandPAT->setCullingActive( false );
             }
             else
             {
                 stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
                 stateset->setMode(
-                                  GL_DEPTH_TEST,
-                                  osg::StateAttribute::ON |
-                                  osg::StateAttribute::OVERRIDE );
+                    GL_DEPTH_TEST,
+                    osg::StateAttribute::ON |
+                    osg::StateAttribute::OVERRIDE );
                 m_wandPAT->setCullingActive( true );
             }
         }
 
-        if( m_manipulatorManager.IsEnabled() && 
-           m_manipulatorManager.LeafDraggerIsActive() )
+        if( m_manipulatorManager.IsEnabled() &&
+                m_manipulatorManager.LeafDraggerIsActive() )
         {
             if( m_manipulatorManager.Handle(
-                scenegraph::manipulator::Event::DRAG ) )
+                        scenegraph::manipulator::Event::DRAG ) )
             {
                 return;
             }
@@ -916,15 +916,15 @@ void Wand::UpdateObjectHandler()
     else if( digital[ 0 ]->getData() == gadget::Digital::TOGGLE_OFF )
     {
         UpdateSelectionLine( false );
-        if( m_manipulatorManager.IsEnabled() && 
-           m_manipulatorManager.LeafDraggerIsActive() )
+        if( m_manipulatorManager.IsEnabled() &&
+                m_manipulatorManager.LeafDraggerIsActive() )
         {
-            bool success = m_manipulatorManager.Handle( 
-                scenegraph::manipulator::Event::RELEASE );
+            bool success = m_manipulatorManager.Handle(
+                               scenegraph::manipulator::Event::RELEASE );
             if( success )
             {
-                 vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully released a dragger." 
-                    << std::endl << vprDEBUG_FLUSH;
+                vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully released a dragger."
+                                      << std::endl << vprDEBUG_FLUSH;
                 return;
             }
         }
@@ -932,15 +932,15 @@ void Wand::UpdateObjectHandler()
         if( m_manipulatorManager.IsEnabled() )
         {
             bool success = m_manipulatorManager.Handle(
-                                        scenegraph::manipulator::Event::PUSH,
-                                        m_beamLineSegment.get() );
-            vprDEBUG( vesDBG, 2 ) << "|\tTrying to push a dragger " 
-                << success << "." 
-                << std::endl << vprDEBUG_FLUSH;
+                               scenegraph::manipulator::Event::PUSH,
+                               m_beamLineSegment.get() );
+            vprDEBUG( vesDBG, 2 ) << "|\tTrying to push a dragger "
+                                  << success << "."
+                                  << std::endl << vprDEBUG_FLUSH;
             if( m_manipulatorManager.LeafDraggerIsActive() )
             {
-                vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully pushed a dragger." 
-                    << std::endl << vprDEBUG_FLUSH;
+                vprDEBUG( vesDBG, 2 ) << "|\tSuccessfully pushed a dragger."
+                                      << std::endl << vprDEBUG_FLUSH;
                 return;
             }
         }
@@ -970,9 +970,9 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
     //gmtl::Quatd tempQuat;
     //tempQuat.set( m_rotIncrement[ 0 ], m_rotIncrement[ 1 ], m_rotIncrement[ 2 ], m_rotIncrement[ 3 ] );
     //gmtl::AxisAngled axisAngle = gmtl::makeRot< gmtl::AxisAngled >( tempQuat );
-    
-    m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( osg::DegreesToRadians( m_rotationDirection * rotationStepSize ), 
-        osg::Vec3d( 0.0, 0.0, 1.0 ) );
+
+    m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( osg::DegreesToRadians( m_rotationDirection * rotationStepSize ),
+            osg::Vec3d( 0.0, 0.0, 1.0 ) );
     return;
 
     ves::xplorer::scenegraph::DCS* const activeDCS =
@@ -1027,7 +1027,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
         //Rotate about z-up axis
         tempVec.set( 0, 0, wandQuat[ 1 ] );
     }
-    
+
     tempVec.normalize();
     //Create rotation increment
     m_rotIncrement =
@@ -1035,8 +1035,8 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
     //Now make it a 4 x 4
     gmtl::Matrix44d rotMatTemp = gmtl::make< gmtl::Matrix44d >
                                  ( gmtl::Quat< double >( m_rotIncrement[ 0 ],
-                                                         m_rotIncrement[ 1 ], m_rotIncrement[ 2 ],
-                                                         m_rotIncrement[ 3 ] ) );
+                                         m_rotIncrement[ 1 ], m_rotIncrement[ 2 ],
+                                         m_rotIncrement[ 3 ] ) );
 
     gmtl::Vec4d newGlobalHeadPointVec;
     newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
@@ -1100,18 +1100,18 @@ void Wand::MakeWandLine()
     beamVertices->push_back(
         osg::Vec3( start[ 0 ] + 0.05, start[ 1 ], start[ 2 ] - 0.05 ) );
     beamVertices->push_back(
-        osg::Vec3(   end[ 0 ] + 0.05,   end[ 1 ],   end[ 2 ] - 0.05 ) );
+        osg::Vec3( end[ 0 ] + 0.05,   end[ 1 ],   end[ 2 ] - 0.05 ) );
     beamVertices->push_back(
-        osg::Vec3(   end[ 0 ] - 0.05,   end[ 1 ],   end[ 2 ] - 0.05 ) );
+        osg::Vec3( end[ 0 ] - 0.05,   end[ 1 ],   end[ 2 ] - 0.05 ) );
     ///Top
     beamVertices->push_back(
         osg::Vec3( start[ 0 ] - 0.05, start[ 1 ], start[ 2 ] + 0.05 ) );
     beamVertices->push_back(
         osg::Vec3( start[ 0 ] + 0.05, start[ 1 ], start[ 2 ] + 0.05 ) );
     beamVertices->push_back(
-        osg::Vec3(   end[ 0 ] + 0.05,   end[ 1 ],   end[ 2 ] + 0.05 ) );
+        osg::Vec3( end[ 0 ] + 0.05,   end[ 1 ],   end[ 2 ] + 0.05 ) );
     beamVertices->push_back(
-        osg::Vec3(   end[ 0 ] - 0.05,   end[ 1 ],   end[ 2 ] + 0.05 ) );
+        osg::Vec3( end[ 0 ] - 0.05,   end[ 1 ],   end[ 2 ] + 0.05 ) );
 
     beamGeometry->setVertexArray( beamVertices.get() );
 
@@ -1177,7 +1177,7 @@ void Wand::MakeWandLine()
     m_wandPAT->setNodeMask( 0 );
     m_wandPAT->addChild( beamGeode.get() );
     ves::xplorer::DeviceHandler::instance()->
-        GetDeviceGroup()->addChild( m_wandPAT );
+    GetDeviceGroup()->addChild( m_wandPAT );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetCADSelectionMode( bool cadSelectionMode )
@@ -1197,29 +1197,29 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     m_triggerWandMove = false;
 
     PreProcessNav();
-    
+
     //SetupStartEndPoint( m_startPoint, m_endPoint );
     m_startEndPointSignal( m_startPoint, m_endPoint );
 
     ///For now we are going to map Wand button 0 to Mouse button 1
-    switch(event) 
+    switch( event )
     {
     case gadget::DigitalState::ON:
     {
         //LOG_INFO( "OnWandButton0Event: DigitalState::ON" );
         UpdateSelectionLine( true );
 
-        (*(m_wandButtonOnSignalMap["Wand.ButtonOn0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn0"] ) )( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
 
         //m_buttonMoveState = gadget::KEY_DOWN|gadget::BUTTON1_MASK;
-        m_wandMove( 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
-        
+        m_wandMove( 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
+
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
         //LOG_INFO( "OnWandButton0Event: DigitalState::TOGGLE_ON" );
-        (*(m_wandButtonPressSignalMap["Wand.ButtonPress0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress0"] ) )( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
@@ -1227,9 +1227,9 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
         //LOG_INFO( "OnWandButton0Event: DigitalState::TOGGLE_OFF" );
         UpdateSelectionLine( false );
 
-        (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"]))( gadget::MBUTTON1, 0, 0, gadget::KEY_UP );
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"] ) )( gadget::MBUTTON1, 0, 0, gadget::KEY_UP );
         m_triggerWandMove = true;
-        
+
         //m_buttonMoveState = 0;
         break;
     }
@@ -1244,42 +1244,42 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     m_triggerWandMove = false;
 
     PreProcessNav();
-    
+
     ///For now we are going to map Wand button 1 to Mouse button 2
-    switch(event) 
+    switch( event )
     {
-        case gadget::DigitalState::ON:
-        {
-            (*(m_wandButtonOnSignalMap["Wand.ButtonOn1"]))( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN|gadget::BUTTON2_MASK );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_ON:
-        {
-            (*(m_wandButtonPressSignalMap["Wand.ButtonPress1"]))( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN|gadget::BUTTON2_MASK );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_OFF:
-        {
-            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease1"]))( gadget::MBUTTON2, 0, 0, gadget::KEY_UP );
-            m_triggerWandMove = true;
-            break;
-        }
-        default:
-            break;
+    case gadget::DigitalState::ON:
+    {
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn1"] ) )( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN | gadget::BUTTON2_MASK );
+        break;
     }
-    
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress1"] ) )( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN | gadget::BUTTON2_MASK );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease1"] ) )( gadget::MBUTTON2, 0, 0, gadget::KEY_UP );
+        m_triggerWandMove = true;
+        break;
+    }
+    default:
+        break;
+    }
+
 
     ///Check and see if the cpt is enabled so that we can handle
     ///button events differently
-    ves::xplorer::scenegraph::camera::CameraManager& cameraManager = 
-    m_sceneManager.GetCameraManager();
+    ves::xplorer::scenegraph::camera::CameraManager& cameraManager =
+        m_sceneManager.GetCameraManager();
     bool cptEnabled = cameraManager.IsCPTEnabled();
-    if(( event == gadget::DigitalState::TOGGLE_ON ) ||
-       ( event == gadget::DigitalState::ON ) )
+    if( ( event == gadget::DigitalState::TOGGLE_ON ) ||
+            ( event == gadget::DigitalState::ON ) )
     {
         if( cptEnabled && ( event == gadget::DigitalState::TOGGLE_ON ) )
         {
@@ -1290,18 +1290,18 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
                 cameraManager.DisplayProjectionEffect( true, true );
                 return;
             }
-            
+
             if( !m_sceneManager.IsMasterNode() )
             {
                 return;
             }
-            
+
             open::xml::DataValuePairPtr dvp( new open::xml::DataValuePair() );
             unsigned int addFlag = 1;
             dvp->SetData( "AddCameraObject", addFlag );
             cameraManager.UpdateConductorData( dvp );
         }
-        
+
         if( !cptEnabled )
         {
             if( ves::xplorer::NavigationAnimationEngine::instance()->IsActive() )
@@ -1327,12 +1327,12 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
                 cameraManager.GetActiveCameraObject()->
                 SetPictureFrameProjection( false );
             }
-            
+
             if( !m_sceneManager.IsMasterNode() )
             {
                 return;
             }
-            
+
             if( cameraManager.IsPictureMode() )
             {
                 std::string tempDir( "." );
@@ -1341,7 +1341,7 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
             }
         }
     }
-    
+
     PostProcessNav();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1355,38 +1355,38 @@ void Wand::OnWandButton2Event( gadget::DigitalState::State event )
     m_triggerWandMove = false;
 
     PreProcessNav();
-    
+
     ///For now we are going to map Wand button 2 to Mouse button 3
-    switch(event) 
+    switch( event )
     {
-        case gadget::DigitalState::ON:
-        {
-            (*(m_wandButtonOnSignalMap["Wand.ButtonOn2"]))( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN|gadget::BUTTON3_MASK );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_ON:
-        {
-            (*(m_wandButtonPressSignalMap["Wand.ButtonPress2"]))( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN|gadget::BUTTON3_MASK );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_OFF:
-        {
-            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease2"]))( gadget::MBUTTON3, 0, 0, gadget::KEY_UP );
-            m_triggerWandMove = true;
-            break;
-        }
-        default:
-            break;
+    case gadget::DigitalState::ON:
+    {
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn2"] ) )( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN | gadget::BUTTON3_MASK );
+        break;
     }
-    
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress2"] ) )( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN | gadget::BUTTON3_MASK );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease2"] ) )( gadget::MBUTTON3, 0, 0, gadget::KEY_UP );
+        m_triggerWandMove = true;
+        break;
+    }
+    default:
+        break;
+    }
+
     if( event == gadget::DigitalState::TOGGLE_ON ||
-       event == gadget::DigitalState::ON )
-    {        
+            event == gadget::DigitalState::ON )
+    {
         m_buttonPushed = true;
-        m_sceneManager.GetMxCoreViewMatrix().moveLiteral( 
+        m_sceneManager.GetMxCoreViewMatrix().moveLiteral(
             osg::Vec3d( m_worldTrans[ 0 ], m_worldTrans[ 1 ], m_worldTrans[ 2 ] ) );
     }
-    
+
     PostProcessNav();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1400,36 +1400,36 @@ void Wand::OnWandButton3Event( gadget::DigitalState::State event )
     m_triggerWandMove = false;
 
     PreProcessNav();
-    
-    switch(event) 
+
+    switch( event )
     {
-        case gadget::DigitalState::ON:
-        {
-            (*(m_wandButtonOnSignalMap["Wand.ButtonOn3"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_ON:
-        {
-            (*(m_wandButtonPressSignalMap["Wand.ButtonPress3"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_OFF:
-        {
-            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease3"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
-            m_triggerWandMove = true;
-            break;
-        }
-        default:
-            break;
+    case gadget::DigitalState::ON:
+    {
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn3"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+        break;
     }
-    
-    if (( event == gadget::DigitalState::TOGGLE_ON ) ||
-        ( event == gadget::DigitalState::ON ) )
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress3"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease3"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+        m_triggerWandMove = true;
+        break;
+    }
+    default:
+        break;
+    }
+
+    if( ( event == gadget::DigitalState::TOGGLE_ON ) ||
+            ( event == gadget::DigitalState::ON ) )
     {
         m_buttonPushed = true;
         FreeRotateAboutWand( false );
     }
-    
+
     PostProcessNav();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1443,34 +1443,34 @@ void Wand::OnWandButton4Event( gadget::DigitalState::State event )
     m_triggerWandMove = false;
 
     PreProcessNav();
-    
-    switch(event) 
+
+    switch( event )
     {
-        case gadget::DigitalState::ON:
-        {
-            (*(m_wandButtonOnSignalMap["Wand.ButtonOn4"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_ON:
-        {
-            (*(m_wandButtonPressSignalMap["Wand.ButtonPress4"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_OFF:
-        {
-            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease4"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
-            m_triggerWandMove = true;
-            break;
-        }
-        default:
-            break;
+    case gadget::DigitalState::ON:
+    {
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn4"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+        break;
     }
-    
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress4"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease4"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+        m_triggerWandMove = true;
+        break;
+    }
+    default:
+        break;
+    }
+
     if( event == gadget::DigitalState::TOGGLE_ON ||
             event == gadget::DigitalState::ON )
     {
-        if( m_cadSelectionMode && 
-           ( event == gadget::DigitalState::TOGGLE_ON ) )
+        if( m_cadSelectionMode &&
+                ( event == gadget::DigitalState::TOGGLE_ON ) )
         {
             if( m_unselectedCADFiles.size() )
             {
@@ -1479,7 +1479,7 @@ void Wand::OnWandButton4Event( gadget::DigitalState::State event )
             }
             return;
         }
-        
+
         if( !m_cadSelectionMode )
         {
             m_buttonPushed = true;
@@ -1494,7 +1494,7 @@ void Wand::OnWandButton4Event( gadget::DigitalState::State event )
             }
         }
     }
-    
+
     PostProcessNav();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1504,41 +1504,41 @@ void Wand::OnWandButton5Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     m_triggerWandMove = false;
 
     PreProcessNav();
-    
-    switch(event) 
+
+    switch( event )
     {
-        case gadget::DigitalState::ON:
-        {
-            (*(m_wandButtonOnSignalMap["Wand.ButtonOn5"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_ON:
-        {
-            (*(m_wandButtonPressSignalMap["Wand.ButtonPress5"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_OFF:
-        {
-            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease5"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
-            m_triggerWandMove = true;
-            break;
-        }
-        default:
-            break;
+    case gadget::DigitalState::ON:
+    {
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn5"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+        break;
     }
-    
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress5"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease5"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+        m_triggerWandMove = true;
+        break;
+    }
+    default:
+        break;
+    }
+
 
     ///Check and see if the cpt is enabled so that we can handle
     ///button events differently
-    ves::xplorer::scenegraph::camera::CameraManager& cameraManager = 
-    m_sceneManager.GetCameraManager();
+    ves::xplorer::scenegraph::camera::CameraManager& cameraManager =
+        m_sceneManager.GetCameraManager();
     bool cptEnabled = cameraManager.IsCPTEnabled();
     if( ( event == gadget::DigitalState::TOGGLE_ON ) ||
-       ( event == gadget::DigitalState::ON ) )
+            ( event == gadget::DigitalState::ON ) )
     {
         if( cptEnabled && ( event == gadget::DigitalState::TOGGLE_ON ) )
         {
@@ -1547,16 +1547,16 @@ void Wand::OnWandButton5Event( gadget::DigitalState::State event )
                 return;
             }
             ves::xplorer::scenegraph::camera::CameraObject* activeCamera =
-            cameraManager.GetActiveCameraObject();
+                cameraManager.GetActiveCameraObject();
             unsigned int activeNum = 0;
             if( activeCamera )
             {
-                activeNum = cameraManager.getChildIndex( 
-                                                        static_cast< osg::Group* >( activeCamera ) );
+                activeNum = cameraManager.getChildIndex(
+                                static_cast< osg::Group* >( activeCamera ) );
             }
-            
+
             ves::xplorer::DeviceHandler::instance()->UnselectObjects();
-            
+
             if( activeNum + 1 < cameraManager.getNumChildren() )
             {
                 activeNum += 1;
@@ -1565,33 +1565,33 @@ void Wand::OnWandButton5Event( gadget::DigitalState::State event )
             {
                 activeNum = 0;
             }
-            
-            ves::xplorer::scenegraph::camera::CameraObject* newCameraObject = 
-            static_cast< ves::xplorer::scenegraph::camera::CameraObject* >( 
-                                                                           cameraManager.getChild( activeNum ) );
+
+            ves::xplorer::scenegraph::camera::CameraObject* newCameraObject =
+                static_cast< ves::xplorer::scenegraph::camera::CameraObject* >(
+                    cameraManager.getChild( activeNum ) );
             cameraManager.SetActiveCameraObject( newCameraObject, true );
-            
+
             //Right now we are saying you must have a DCS
             scenegraph::DCS& selectedDCS = newCameraObject->GetDCS();
             gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
-            
+
             //Set the connection between the scene manipulator and the selected dcs
             //sceneManipulator->Connect( &selectedDCS );
-            
+
             //If dcs is from a camera object, we want to rotate about local zero point
             //osg::Vec3d center( 0.0, 0.0, 0.0 );
             //center = center * osg::Matrixd( selectedMatrix.mData );
             //sceneManipulator->SetPosition( center );
-            
+
             //We need to transform center point into camera space
             //In the future the center point will be in world coordinates
             //center = center * osg::Matrixd( sceneManager.GetNavDCS()->GetMat().mData );
             //gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
             //deviceHandler.SetCenterPoint( &tempCenter );
-            
+
             //Set the selected DCS
             ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( &selectedDCS );
-            
+
             //Need to do this for multi-pass techniques
             if( m_sceneManager.IsRTTOn() )
             {
@@ -1601,27 +1601,27 @@ void Wand::OnWandButton5Event( gadget::DigitalState::State event )
             {
                 selectedDCS.SetTechnique( "Select" );
             }
-            
+
             //Hand the node we are interested in off to the animation engine
             NavigationAnimationEngine& nae =
-            *(NavigationAnimationEngine::instance());
+                *( NavigationAnimationEngine::instance() );
             nae.SetDCS( m_sceneManager.GetNavDCS() );
-            
+
             //Hand our created end points off to the animation engine
             selectedMatrix = gmtl::invert( selectedMatrix );
             const gmtl::Matrix44d tempHeadMatrix = m_sceneManager.GetHeadMatrix();
             const gmtl::AxisAngled myAxisAngle( gmtl::Math::deg2Rad( double( -90 ) ), 1, 0, 0 );
             gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
             selectedMatrix = tempHeadMatrix * myMat * selectedMatrix;
-            
+
             gmtl::Vec3d navToPoint =
-            gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
+                gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
             gmtl::Quatd rotationPoint =
-            gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
+                gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
             nae.SetAnimationEndPoints( navToPoint, rotationPoint );
             return;
         }
-        
+
         if( !cptEnabled )
         {
             if( ves::xplorer::NavigationAnimationEngine::instance()->IsActive() )
@@ -1644,31 +1644,31 @@ void Wand::OnWandButton6Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     m_triggerWandMove = false;
 
-    switch(event) 
+    switch( event )
     {
-        case gadget::DigitalState::ON:
-        {
-            (*(m_wandButtonOnSignalMap["Wand.ButtonOn6"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_ON:
-        {
-            m_hideShowUI();
-            
-            (*(m_wandButtonPressSignalMap["Wand.ButtonPress6"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_OFF:
-        {
-            (*(m_wandButtonReleaseSignalMap["Wand.ButtonRelease6"]))( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
-            m_triggerWandMove = true;
-            break;
-        }
-        default:
-            break;
+    case gadget::DigitalState::ON:
+    {
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn6"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        m_hideShowUI();
+
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress6"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease6"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+        m_triggerWandMove = true;
+        break;
+    }
+    default:
+        break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1678,9 +1678,9 @@ void Wand::OnWandButton0DoubleClick( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     //LOG_INFO( "OnWandButton0DoubleClick: DigitalState::ON" );
-    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick0"]))( gadget::MBUTTON1, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON1_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick0"] ) )( gadget::MBUTTON1, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton1DoubleClick( gadget::DigitalState::State event )
@@ -1690,7 +1690,7 @@ void Wand::OnWandButton1DoubleClick( gadget::DigitalState::State event )
         return;
     }
 
-    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick1"]))( gadget::MBUTTON2, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON2_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick1"] ) )( gadget::MBUTTON2, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON2_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton2DoubleClick( gadget::DigitalState::State event )
@@ -1700,7 +1700,7 @@ void Wand::OnWandButton2DoubleClick( gadget::DigitalState::State event )
         return;
     }
 
-    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick2"]))( gadget::MBUTTON3, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON3_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick2"] ) )( gadget::MBUTTON3, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON3_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton3DoubleClick( gadget::DigitalState::State event )
@@ -1710,7 +1710,7 @@ void Wand::OnWandButton3DoubleClick( gadget::DigitalState::State event )
         return;
     }
 
-    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick3"]))( gadget::MBUTTON4, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON4_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick3"] ) )( gadget::MBUTTON4, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON4_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton4DoubleClick( gadget::DigitalState::State event )
@@ -1720,7 +1720,7 @@ void Wand::OnWandButton4DoubleClick( gadget::DigitalState::State event )
         return;
     }
 
-    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick4"]))( gadget::MBUTTON5, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON5_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick4"] ) )( gadget::MBUTTON5, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON5_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton5DoubleClick( gadget::DigitalState::State event )
@@ -1730,7 +1730,7 @@ void Wand::OnWandButton5DoubleClick( gadget::DigitalState::State event )
         return;
     }
 
-    (*(m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick5"]))( gadget::MBUTTON6, 0, 0, 0, gadget::KEY_DOWN|gadget::BUTTON6_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick5"] ) )( gadget::MBUTTON6, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON6_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::PreProcessNav()
@@ -1740,9 +1740,9 @@ void Wand::PreProcessNav()
     {
         return;
     }
-    
+
     m_buttonPushed = false;
-    
+
     //Update the wand direction every frame
     //UpdateWandLocalDirection();
     //UpdateWandGlobalLocation();
@@ -1760,19 +1760,19 @@ void Wand::PreProcessNav()
     buttonData[ 3 ] = digital[ 3 ]->getData();
     buttonData[ 4 ] = digital[ 4 ]->getData();
     buttonData[ 5 ] = digital[ 5 ]->getData();
-    
+
     m_rotIncrement.set( 0, 0, 0, 1 );
     m_worldTrans[ 0 ] = 0.;
     m_worldTrans[ 1 ] = 0.;
     m_worldTrans[ 2 ] = 0.;
-    
+
     UpdateForwardAndUp();
-    
+
     //const gmtl::Matrix44d tempHeadMatrix = m_sceneManager.GetGlobalViewMatrix();
     //std::cout << " head " << std::endl << m_sceneManager.GetHeadMatrix() << std::endl << m_sceneManager.GetInvertedNavMatrix() << std::endl;
     const gmtl::Point4d tempHeadMatrix = m_sceneManager.GetInvertedNavMatrix() * gmtl::makeTrans< gmtl::Point4d >( m_sceneManager.GetHeadMatrix() );
     //std::cout << tempHeadMatrix << std::endl;
-    m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( 
+    m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
         osg::Vec3d( tempHeadMatrix.mData[0], tempHeadMatrix.mData[1], tempHeadMatrix.mData[2] ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1798,15 +1798,15 @@ void Wand::PostProcessNav()
         tempQuat.set( m_rotIncrement[ 0 ], m_rotIncrement[ 1 ], m_rotIncrement[ 2 ], m_rotIncrement[ 3 ] );
         gmtl::AxisAngled axisAngle = gmtl::makeRot< gmtl::AxisAngled >( tempQuat );
 
-        m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( axisAngle[ 0 ], 
+        m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( axisAngle[ 0 ],
             osg::Vec3d( axisAngle[ 1 ], axisAngle[ 2 ], axisAngle[ 3 ] ) );*/
 
         m_updateData( true );
 
         //m_worldQuat *= m_rotIncrement;
-        
+
         //gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        //Device::EnsureCameraStaysAboveGround( vjHeadMat, m_worldTrans, 
+        //Device::EnsureCameraStaysAboveGround( vjHeadMat, m_worldTrans,
         //    m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
     }
     /*else if( m_characterController.IsEnabled() )
@@ -1817,27 +1817,27 @@ void Wand::PostProcessNav()
         {
             m_worldTrans[ i ] = -m_worldTrans[ i ];
         }
-        
+
         m_worldQuat *= m_rotIncrement;
-        
+
         gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( head->getData() );
-        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans, 
+        Device::EnsureCameraStaysAboveGround ( vjHeadMat, m_worldTrans,
             m_worldQuat, m_subzeroFlag, m_zEqualsZeroFlag );
-        
+
         m_activeDCS->SetTranslationArray( m_worldTrans );
         m_activeDCS->SetQuat( m_worldQuat );
         //If the z axis is positive then rotate by a specific dz
         if( m_rotIncrement[ 3 ] > 0 )
         {
-            m_characterController.Rotate( 0., 
+            m_characterController.Rotate( 0.,
                 osg::DegreesToRadians( -rotationStepSize ) );
         }
         else
         {
-            m_characterController.Rotate( 0., 
+            m_characterController.Rotate( 0.,
                 osg::DegreesToRadians( rotationStepSize ) );
         }
-        
+
         if( buttonData[ 2 ] == gadget::Digital::TOGGLE_ON ||
            buttonData[ 2 ] == gadget::Digital::ON )
         {
@@ -1848,7 +1848,7 @@ void Wand::PostProcessNav()
 ////////////////////////////////////////////////////////////////////////////////
 osg::MatrixTransform& Wand::GetWandTransform()
 {
-    return *(m_wandPAT.get());
+    return *( m_wandPAT.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::LatePreFrameUpdate()
@@ -1884,7 +1884,7 @@ void Wand::OnWandMoveTimer( Poco::Util::TimerTask& task )
 bool Wand::WandMoveUpdate()
 {
     gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_wand->getData() );
-    ///If our wand is not moving let the keyboard potentially interface with 
+    ///If our wand is not moving let the keyboard potentially interface with
     ///the ui. We may need a better way to handle this.
     bool triggerWandMove = false;
     if( m_previousWandMat != vrjWandMat )
@@ -1903,33 +1903,33 @@ void Wand::UpdateForwardAndUp()
     {
         return;
     }
-    
+
     gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_wand->getData() );
 
     //LOG_INFO( "Wand::UpdateForwardAndUp " << std::endl << vrjWandMat );
 
     const gmtl::Vec3d x_axis( 1., 0., 0. );
-    const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( 
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( 90. ), x_axis ) );
+    const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >(
+                                      gmtl::AxisAngled( gmtl::Math::deg2Rad( 90. ), x_axis ) );
     gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( 270. ), x_axis ) );
-    
+                                    gmtl::AxisAngled( gmtl::Math::deg2Rad( 270. ), x_axis ) );
+
     vrjWandMat = myMat * vrjWandMat * zUpMatrix;
-    
+
     gmtl::Point4d tempWandPoint = gmtl::makeTrans< gmtl::Point4d >( vrjWandMat );
     tempWandPoint = m_sceneManager.GetInvertedNavMatrix() * tempWandPoint;
 
-    m_startPoint.set( tempWandPoint.mData[ 0 ], 
-                     tempWandPoint.mData[ 1 ], 
-                     tempWandPoint.mData[ 2 ] );
-    
+    m_startPoint.set( tempWandPoint.mData[ 0 ],
+                      tempWandPoint.mData[ 1 ],
+                      tempWandPoint.mData[ 2 ] );
+
     gmtl::Vec3d vjVec;
     vjVec.set( 0.0f, 0.0f, 1.0f );
     gmtl::xform( vjVec, vrjWandMat, vjVec );
     gmtl::normalize( vjVec );
     osg::Vec3d upVec( vjVec.mData[ 0 ], vjVec.mData[ 1 ], vjVec.mData[ 2 ] );
     //m_sceneManager.GetMxCoreViewMatrix().setUp( upVec );
-    
+
     vjVec.set( 0.0f, 1.0f, 0.0f );
     gmtl::xform( vjVec, vrjWandMat, vjVec );
     gmtl::normalize( vjVec );
@@ -1945,15 +1945,15 @@ void Wand::UpdateForwardAndUp()
     vjVec = m_sceneManager.GetInvertedNavMatrix() * vjVec;
     //m_sceneManager.GetMxCoreViewMatrix().setDir( dirVec );
     //std::cout << " wand dir " << vjVec << std::endl;
-    
+
 
     //vjVec.set( m_sceneManager.GetMxCoreViewMatrix().getDir().ptr() );
     m_worldTrans[ 0 ] = vjVec.mData[ 0 ] * translationStepSize;
     m_worldTrans[ 1 ] = vjVec.mData[ 1 ] * translationStepSize;
     m_worldTrans[ 2 ] = vjVec.mData[ 2 ] * translationStepSize;
-    
-    m_endPoint.set( tempWandPoint.mData[ 0 ] + vjVec.mData[ 0 ] * m_distance, 
-                   tempWandPoint.mData[ 1 ] + vjVec.mData[ 1 ] * m_distance, 
-                   tempWandPoint.mData[ 2 ] + vjVec.mData[ 2 ] * m_distance );
+
+    m_endPoint.set( tempWandPoint.mData[ 0 ] + vjVec.mData[ 0 ] * m_distance,
+                    tempWandPoint.mData[ 1 ] + vjVec.mData[ 1 ] * m_distance,
+                    tempWandPoint.mData[ 2 ] + vjVec.mData[ 2 ] * m_distance );
 }
 ////////////////////////////////////////////////////////////////////////////////

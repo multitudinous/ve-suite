@@ -50,13 +50,13 @@
 #include <string>
 
 ////////////////////////////////////////////////////////////////////////////////
-OSGStreamlineStage::OSGStreamlineStage(void)
+OSGStreamlineStage::OSGStreamlineStage( void )
     :
     m_particleDiameter( 1 )
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
-OSGStreamlineStage::~OSGStreamlineStage(void)
+OSGStreamlineStage::~OSGStreamlineStage( void )
 {
     ;
 }
@@ -68,7 +68,7 @@ void OSGStreamlineStage::createSLPoint( osg::Geometry& geom, int nInstances, con
     osg::Vec3Array* v = new osg::Vec3Array;
     v->resize( 1 );
     geom.setVertexArray( v );
-    (*v)[ 0 ] = position;
+    ( *v )[ 0 ] = position;
 
     // Streamline color. Blending is non-saturating, so it never
     // reaches full intensity white. Alpha is modulated with the
@@ -78,7 +78,7 @@ void OSGStreamlineStage::createSLPoint( osg::Geometry& geom, int nInstances, con
     c->resize( 1 );
     geom.setColorArray( c );
     geom.setColorBinding( osg::Geometry::BIND_OVERALL );
-    (*c)[ 0 ] = color;
+    ( *c )[ 0 ] = color;
 
     geom.addPrimitiveSet( new osg::DrawArrays( GL_POINTS, 0, 1, nInstances ) );
 
@@ -93,20 +93,20 @@ void OSGStreamlineStage::createSLPoint( osg::Geometry& geom, int nInstances, con
     ss->setAttributeAndModes( point );
 
     // Turn on point sprites and specigy the point sprite texture.
-    osg::PointSprite *sprite = new osg::PointSprite();
+    osg::PointSprite* sprite = new osg::PointSprite();
     ss->setTextureAttributeAndModes( 1, sprite, osg::StateAttribute::ON );
-    osg::Texture2D *tex = new osg::Texture2D();
+    osg::Texture2D* tex = new osg::Texture2D();
     tex->setImage( osgDB::readImageFile( "splotch.png" ) );
     ss->setTextureAttributeAndModes( 1, tex, osg::StateAttribute::ON );
     ss->addUniform( new osg::Uniform( "tex", 1 ) );
-    ss->addUniform( new osg::Uniform( "texUnit", (unsigned int)1 ) );
+    ss->addUniform( new osg::Uniform( "texUnit", ( unsigned int )1 ) );
     // Keep pixels with a significant alpha value (discard low-alpha pixels).
     osg::AlphaFunc* af = new osg::AlphaFunc( osg::AlphaFunc::GREATER, 0.05f );
     ss->setAttributeAndModes( af );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData, 
-    ves::xplorer::scenegraph::Geode* geode, int mult, const char* scalarName)
+void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
+        ves::xplorer::scenegraph::Geode* geode, int mult, const char* scalarName )
 {
     vtkPointData* pointData = polyData->GetPointData();
     vtkDataArray* scalarArray = pointData->GetScalars( scalarName );
@@ -117,21 +117,21 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
     x[ 0 ] = 0.;
     x[ 1 ] = 0.;
     x[ 2 ] = 0.;
-    osg::Vec3 loc(x[0], x[1], x[2] );
+    osg::Vec3 loc( x[0], x[1], x[2] );
 
     size_t numStreamLines = m_streamlineList.size();
     for( size_t i = 0; i < numStreamLines; ++i )
     {
         std::deque< ves::xplorer::scenegraph::VTKStreamlineTextureCreator::Point > tempLine = m_streamlineList.at( i );
-        
-        osg::ref_ptr< ves::xplorer::scenegraph::VTKStreamlineTextureCreator > rawVTKData = 
+
+        osg::ref_ptr< ves::xplorer::scenegraph::VTKStreamlineTextureCreator > rawVTKData =
             new ves::xplorer::scenegraph::VTKStreamlineTextureCreator();
         rawVTKData->SetPolyData( polyData );
         rawVTKData->SetActiveVectorAndScalar( m_activeVector, scalarName );
         rawVTKData->SetPointQueue( tempLine );
         rawVTKData->SetPointMultiplier( mult );
         rawVTKData->loadData();
-        
+
         osg::Geometry* geom = new osg::Geometry();
         // Note:
         // Display Lists and draw instanced are mutually exclusive. Disable
@@ -139,13 +139,13 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
         geom->setUseDisplayList( false );
         geom->setUseVertexBufferObjects( true );
         int totalNumberOfPoints = rawVTKData->getDataCount();
-        createSLPoint( *geom, totalNumberOfPoints, loc, osg::Vec4( .5, 1., .6, 1.) );
+        createSLPoint( *geom, totalNumberOfPoints, loc, osg::Vec4( .5, 1., .6, 1. ) );
         geode->addDrawable( geom );
-        
+
         // Note:
         // OSG has no idea where our vertex shader will render the points. For proper culling
         // and near/far computation, set an approximate initial bounding box.
-        geom->setInitialBound(  rawVTKData->getBoundingBox() );
+        geom->setInitialBound( rawVTKData->getBoundingBox() );
 
         osg::StateSet* ss = geom->getOrCreateStateSet();
 
@@ -183,12 +183,12 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             "{ \n"
             "    float p1 = fiid / (sizes.x*sizes.y); \n"
             "    float t1 = fract( p1 ) * sizes.y; \n"
-            
+
             "    vec3 tC; \n"
             "    tC.s = fract( t1 ); \n"
             "    tC.t = floor( t1 ) / sizes.y; \n"
             "    tC.p = floor( p1 ) / sizes.z; \n"
-            
+
             "    return( tC ); \n"
             "} \n"
             //Main
@@ -197,11 +197,11 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             // Using the instance ID, generate "texture coords" for this instance.
             "   float fInstance = gl_InstanceID; \n"
             "   vec3 tC = generateTexCoord( fInstance ); \n"
-        
+
             // Get position from the texture.
             "   vec4 pos = texture3D( texPos, tC ); \n"
             //Set to 0 to have proper addition with gl_Vertex
-            "   pos.w = 0.; \n" 
+            "   pos.w = 0.; \n"
             "   vec4 newPos = vec4( gl_Vertex.xyz + pos.xyz, 1.0 );\n"
             "   vec4 v = gl_ModelViewMatrix * newPos; \n"
             "   gl_Position = gl_ProjectionMatrix * v; \n"
@@ -215,12 +215,12 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             "   float timeOffset = ( fInstance / (totalInstances - 1) ) * repeatTime; \n"
             "   float repTimer = mod( ( osg_SimulationTime - timeOffset ), repeatTime ); \n"
             "   float alpha = (fadeTime - min( repTimer, fadeTime ))/fadeTime; \n"
-        
+
             "   // Scalar texture containg key to color table. \n"
             "   vec4 activeScalar = texture3D( scalar, tC );\n"
             "   float normScalarVal = 0.;\n"
             "   normScalarVal = (activeScalar.a - scalarMinMax.x) / (scalarMinMax.y - scalarMinMax.x);\n"
-            
+
             "   if( normScalarVal < 0. )\n"
             "   {\n"
             "       normScalarVal = 0.;\n"
@@ -234,7 +234,7 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             "   gl_FrontColor = color; \n"
             "} \n";
 
-///New shader for animation control
+        ///New shader for animation control
 
         std::string vertexSource2 =
             //Setup the color control textures
@@ -270,12 +270,12 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             "{ \n"
             "    float p1 = fiid / (sizes.x*sizes.y); \n"
             "    float t1 = fract( p1 ) * sizes.y; \n"
-            
+
             "    vec3 tC; \n"
             "    tC.s = fract( t1 ); \n"
             "    tC.t = floor( t1 ) / sizes.y; \n"
             "    tC.p = floor( p1 ) / sizes.z; \n"
-            
+
             "    return( tC ); \n"
             "} \n"
             "\n"
@@ -326,7 +326,7 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             "    vec4 activeScalar = texture3D( scalar, tC );\n"
             "    float normScalarVal = 0.;\n"
             "    normScalarVal = (activeScalar.a - scalarMinMax.x) / (scalarMinMax.y - scalarMinMax.x);\n"
-            
+
             "    if( normScalarVal < 0. )\n"
             "    {\n"
             "        normScalarVal = 0.;\n"
@@ -339,27 +339,27 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             "    color[3]=alpha; \n"
             "    gl_FrontColor = color; \n"
             "}\n";
-        
+
         osg::ref_ptr< osg::Program > program = new osg::Program();
         {
             osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
             vertexShader->setType( osg::Shader::VERTEX );
             vertexShader->setShaderSource( vertexSource );
-            
+
             program->addShader( vertexShader.get() );
         }
 
         {
             ///The uniform tex is bound up when the instances are created for
             ///the splotch texture
-            osg::ref_ptr< osg::Program > program = 
+            osg::ref_ptr< osg::Program > program =
                 ves::xplorer::scenegraph::SceneManager::instance()->
                 GetNullGlowTextureProgram();
-            
+
             ss->setAttributeAndModes( program.get(),
-                osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                      osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         }
-        
+
         // Note:
         // We will render the streamline points with depth test on and depth write disabled,
         // with an order independent blend. This means we need to draw the streamlines last
@@ -380,7 +380,7 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
                 new osg::Uniform( "sizes", osg::Vec3( float( ts.x() ), float( ts.y() ), float( ts.z() ) ) );
             ss->addUniform( sizesUniform.get() );
         }
-        
+
         {
             // Tell the shader the total number of instances: tm * tn.
             // Required for animation based on the instance ID.
@@ -420,7 +420,7 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
         // Leave the depth test enabled, but mask off depth writes (4th param is false).
         // This allows us to render the streamline points in any order, front to back
         // or back to front, and not lose any points by depth testing against themselves.
-        osg::ref_ptr< osg::Depth > depth = 
+        osg::ref_ptr< osg::Depth > depth =
             new osg::Depth( osg::Depth::LESS, 0., 1., false );
         ss->setAttributeAndModes( depth.get() );
 
@@ -440,10 +440,10 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
             //NOTE: Texture slot 1 is used by the splotch.png image
             ss->setTextureAttribute( 0, rawVTKData->getPositionTexture() );
             osg::ref_ptr< osg::Uniform > texPosUniform =
-            new osg::Uniform( "texPos", 0 );
+                new osg::Uniform( "texPos", 0 );
             ss->addUniform( texPosUniform.get() );
         }
-        
+
         {
             //send down rgb using texture
             //NOTE: Texture slot 1 is used by the splotch.png image
@@ -452,40 +452,40 @@ void OSGStreamlineStage::createStreamLines( vtkPolyData* polyData,
                 new osg::Uniform( "scalar", 2 );
             ss->addUniform( texScaUniform.get() );
         }
-        
+
         {
-            double dataRange[2]; 
-            scalarArray->GetRange(dataRange);
-            
+            double dataRange[2];
+            scalarArray->GetRange( dataRange );
+
             // Pass the min/max for the scalar range into the shader as a uniform.
             osg::Vec2 ts( dataRange[ 0 ], dataRange[ 1 ] );
             osg::ref_ptr< osg::Uniform > scalarMinMaxUniform =
                 new osg::Uniform( "scalarMinMax",
-                             osg::Vec2( (float)ts.x(), (float)ts.y() ) );
+                                  osg::Vec2( ( float )ts.x(), ( float )ts.y() ) );
             ss->addUniform( scalarMinMaxUniform.get() );
-            
+
             // Set up the color spectrum.
-            osg::Texture1D* texCS = 
+            osg::Texture1D* texCS =
                 new osg::Texture1D( rawVTKData->CreateColorTextures( dataRange ) );
-            texCS->setFilter( osg::Texture::MIN_FILTER, osg::Texture2D::LINEAR);
+            texCS->setFilter( osg::Texture::MIN_FILTER, osg::Texture2D::LINEAR );
             texCS->setFilter( osg::Texture::MAG_FILTER, osg::Texture2D::LINEAR );
             texCS->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
-            
+
             ss->setTextureAttribute( 3, texCS );
-            osg::ref_ptr< osg::Uniform > texCSUniform = 
+            osg::ref_ptr< osg::Uniform > texCSUniform =
                 new osg::Uniform( "texCS", 3 );
-            ss->addUniform( texCSUniform.get() );        
-        }        
+            ss->addUniform( texCSUniform.get() );
+        }
     }
-   
+
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::Geode* OSGStreamlineStage::createInstanced( 
+ves::xplorer::scenegraph::Geode* OSGStreamlineStage::createInstanced(
     vtkPolyData* polyData, int mult, const char* scalarName, const std::string& activeVector )
 {
     m_activeVector = activeVector;
-    
-    if( polyData==NULL )
+
+    if( polyData == NULL )
     {
         std::cout << "pd is null " << std::endl;
         return NULL;
@@ -500,27 +500,27 @@ ves::xplorer::scenegraph::Geode* OSGStreamlineStage::createInstanced(
     vtkPolyData* streamlinePD = cleanPD->GetOutput();
 
     vtkPointData* pointData = streamlinePD->GetPointData();
-    if( pointData==NULL )
+    if( pointData == NULL )
     {
         std::cout << " pd point data is null " << std::endl;
         return NULL;
     }
     //pointData->Update();
 
-    vtkPoints* points = streamlinePD->GetPoints();    
-    if( points==NULL )
+    vtkPoints* points = streamlinePD->GetPoints();
+    if( points == NULL )
     {
         std::cout << " points are null " << std::endl;
         return NULL;
     }
-    
+
     //vtkXMLPolyDataWriter *writer = vtkXMLPolyDataWriter::New();
     //writer->SetInput( streamlinePD );
     //writer->SetFileName( "outPut.vtk" );
     //writer->SetDataModeToAscii();
     //writer->Write();
     //writer->Delete();
-     
+
     // Essentially a top level Group, a single Geode child, and the
     // Geode contains a single Geometry to draw a sinalg point (but
     // uses a draw instanced PrimitiveSet).
@@ -530,13 +530,13 @@ ves::xplorer::scenegraph::Geode* OSGStreamlineStage::createInstanced(
     //    grp->addChild( geode );
 
     ProcessStreamLines( streamlinePD );
-    
+
     //Now needs to create streams line with the passed in polyData line data
-    createStreamLines( streamlinePD, geode, mult, scalarName);
-    
+    createStreamLines( streamlinePD, geode, mult, scalarName );
+
     cleanPD->Delete();
     m_streamlineList.clear();
-    
+
     return geode;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -553,50 +553,50 @@ bool OSGStreamlineStage::IsStreamlineBackwards( vtkIdType cellId, vtkPolyData* p
     points->GetPoint( 0, x1 );
     vtkIdType globalPointId1 = polydata->FindPoint( x1 );
     points->GetPoint( 1, x2 );
-    
+
     //Create a vector along the streamline from point 0 to point 1
     double xComp = x2[ 0 ] - x1[ 0 ];
     double yComp = x2[ 1 ] - x1[ 1 ];
     double zComp = x2[ 2 ] - x1[ 2 ];
-    
+
     polydata->GetPointData()->GetVectors( m_activeVector.c_str() )->GetTuple( globalPointId1, x1 );
     //GetVectors( GetActiveDataSet()->GetActiveVectorName().c_str() )->
     //GetTuple( globalPointId1, x1 );
-    
+
     bool isBackwards = true;
-    if( ((x1[ 0 ] * xComp) >= 0) && ((x1[ 1 ] * yComp) >= 0) && ((x1[ 2 ] * zComp) >= 0) )
+    if( ( ( x1[ 0 ] * xComp ) >= 0 ) && ( ( x1[ 1 ] * yComp ) >= 0 ) && ( ( x1[ 2 ] * zComp ) >= 0 ) )
     {
         isBackwards = false;
     }
-    
+
     return isBackwards;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
-{    
+{
     vprDEBUG( vesDBG, 1 )
-        << "|\tNumber of Cells : " << polydata->GetNumberOfCells()
-        << std::endl << vprDEBUG_FLUSH;
+            << "|\tNumber of Cells : " << polydata->GetNumberOfCells()
+            << std::endl << vprDEBUG_FLUSH;
     vprDEBUG( vesDBG, 1 )
-        << "|\tNumber of Lines : " << polydata->GetNumberOfLines()
-        << std::endl << vprDEBUG_FLUSH;
+            << "|\tNumber of Lines : " << polydata->GetNumberOfLines()
+            << std::endl << vprDEBUG_FLUSH;
     vprDEBUG( vesDBG, 1 )
-        << "|\tNumber of Points : " << polydata->GetNumberOfPoints()
-        << std::endl << vprDEBUG_FLUSH;
-    
+            << "|\tNumber of Points : " << polydata->GetNumberOfPoints()
+            << std::endl << vprDEBUG_FLUSH;
+
     int numberOfStreamLines = polydata->GetNumberOfLines();
     if( numberOfStreamLines == 0 )
     {
         std::cout << "|\tVTKStreamlineTextureCreator::ProcessStreamLines : Number of streamlines is 0 " << std::endl;
         return;
     }
-    
+
     std::vector< vtkIdList* > streamlineCells;
     for( vtkIdType cellId = 0; cellId < numberOfStreamLines; ++cellId )
     {
         vtkIdList* origVertList = polydata->GetCell( cellId )->GetPointIds();
         streamlineCells.push_back( vtkIdList::New() );
-        streamlineCells.back()->DeepCopy( origVertList ); 
+        streamlineCells.back()->DeepCopy( origVertList );
         vtkIdList* tempVertList = streamlineCells.back();
         //bool backwards = IsStreamlineBackwards( cellId, polydata );
         //std::cout << "Is a backwards streamline " << backwards << std::endl;
@@ -605,11 +605,11 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
         //    std::cout << " " << tempVertList->GetId( i );
         //}
         //std::cout << std::endl;
-        
+
         bool foundMatch = false;
         vtkIdList* oldVertList = 0;
         vtkIdList* newComboVertList = vtkIdList::New();
-        for(size_t i = 0; i < streamlineCells.size() - 1; ++ i )
+        for( size_t i = 0; i < streamlineCells.size() - 1; ++ i )
         {
             oldVertList = streamlineCells.at( i );
             vtkIdType matchId = oldVertList->IsId( tempVertList->GetId( 0 ) );
@@ -623,7 +623,7 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
                 //std::cout << std::endl;
                 foundMatch = true;
                 vtkIdType numVerts = tempVertList->GetNumberOfIds();
-                for( vtkIdType j = numVerts-1; j >= 0; --j )
+                for( vtkIdType j = numVerts - 1; j >= 0; --j )
                 {
                     //std::cout << " " << tempVertList->GetId( j );
                     //oldVertList->InsertId( 0, tempVertList->GetId( j ) );
@@ -636,14 +636,14 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
                     newComboVertList->InsertNextId( oldVertList->GetId( j ) );
                 }
                 //std::cout << std::endl;
-                
-                //std::cout << "Streamline " <<  m_streamlineCells.size() - 1 
-                //    << " has a point in line " << i << " at index " 
+
+                //std::cout << "Streamline " <<  m_streamlineCells.size() - 1
+                //    << " has a point in line " << i << " at index "
                 //    << matchId << std::endl;
                 break;
             }
         }
-        
+
         if( foundMatch )
         {
             //std::cout << "Is a backwards streamline " << backwards << std::endl;
@@ -652,16 +652,16 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
             //    std::cout << " " << newComboVertList->GetId( i );
             //}
             //std::cout << std::endl;
-            
+
             oldVertList->DeepCopy( newComboVertList );
             tempVertList->Delete();
             newComboVertList->Delete();
             streamlineCells.pop_back();
             continue;
         }
-        
+
         newComboVertList->Delete();
-        
+
         //If it is a standalone backwards line then reorder the points
         if( IsStreamlineBackwards( cellId, polydata ) )
         {
@@ -673,14 +673,14 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
         }
     }
     //std::cout << "number of combined lines " << m_streamlineCells.size() << std::endl;
-    
+
     double* x = 0;
     vtkIdList* tempVertList = 0;
     vtkPoints* points = polydata->GetPoints();
     for( size_t i = 0; i < streamlineCells.size(); ++i )
     {
         std::deque< ves::xplorer::scenegraph::VTKStreamlineTextureCreator::Point > tempQueue;
-        
+
         //cellId = m_streamlines.at( i ).first;
         // For forward integrated points
         //if( cellId != -1 )
@@ -688,14 +688,14 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
             tempVertList = streamlineCells.at( i );
             vtkIdType numVerts = tempVertList->GetNumberOfIds();
             vprDEBUG( vesDBG, 1 )
-            << "|\t\tNumber of Forward points = " << numVerts
-            << std::endl << vprDEBUG_FLUSH;
+                    << "|\t\tNumber of Forward points = " << numVerts
+                    << std::endl << vprDEBUG_FLUSH;
             for( vtkIdType j = 0; j < numVerts; ++j )
             {
                 x = points->GetPoint( tempVertList->GetId( j ) );
                 vprDEBUG( vesDBG, 3 )
-                << "|\t\tx[ " << j << " ] = " << x[ 0 ] << " : "
-                << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
+                        << "|\t\tx[ " << j << " ] = " << x[ 0 ] << " : "
+                        << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
                 ves::xplorer::scenegraph::VTKStreamlineTextureCreator::Point tempPoint;
                 tempPoint.x[ 0 ] = x[ 0 ];
                 tempPoint.x[ 1 ] = x[ 1 ];
@@ -706,17 +706,17 @@ void OSGStreamlineStage::ProcessStreamLines( vtkPolyData* polydata )
         }
         m_streamlineList.push_back( tempQueue );
     }
-    
+
     for( size_t i = 0; i < streamlineCells.size(); ++i )
     {
         streamlineCells.at( i )->Delete();
     }
     streamlineCells.clear();
-    /*vprDEBUG( vesDBG, 1 ) << "|\t\tmaxNpts = " 
+    /*vprDEBUG( vesDBG, 1 ) << "|\t\tmaxNpts = "
      << m_maxNPts << std::endl << vprDEBUG_FLUSH;
-     vprDEBUG( vesDBG, 1 ) << "|\t\tminNpts = " 
+     vprDEBUG( vesDBG, 1 ) << "|\t\tminNpts = "
      << minNpts << std::endl << vprDEBUG_FLUSH;*/
-    
+
     vprDEBUG( vesDBG, 1 ) << "|\tExiting cfdStreamers Update " << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////

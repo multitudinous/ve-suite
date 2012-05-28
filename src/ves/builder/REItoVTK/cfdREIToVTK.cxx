@@ -54,7 +54,7 @@ cfdREItoVTK::~cfdREItoVTK()
 {}
 ////////////////////////////////////////////////////////////////////////////////
 void cfdREItoVTK::REIPreTranslateCbk::Preprocess( int argc, char** argv,
-                                                  VE_Builder::cfdTranslatorToVTK* toVTK )
+        VE_Builder::cfdTranslatorToVTK* toVTK )
 {
     VE_Builder::cfdREItoVTK* reiToVTK =
         dynamic_cast<VE_Builder::cfdREItoVTK*>( toVTK );
@@ -98,7 +98,7 @@ void cfdREItoVTK::REIPreTranslateCbk::Preprocess( int argc, char** argv,
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdREItoVTK::REITranslateCbk::Translate( vtkDataSet*& outputDataset,
-                                              VE_Builder::cfdTranslatorToVTK* toVTK )
+        VE_Builder::cfdTranslatorToVTK* toVTK )
 {
     VE_Builder::cfdREItoVTK* reiToVTK =
         dynamic_cast<VE_Builder::cfdREItoVTK*>( toVTK );

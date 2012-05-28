@@ -80,7 +80,7 @@ public:
 
     ///Set/Get threshold values
     ///\param ????
-    void SetThreshHoldValues( double * );
+    void SetThreshHoldValues( double* );
     double* GetThreshHoldValues( void );
 
     ///Update function
@@ -104,14 +104,14 @@ public:
 
 protected:
     void CreateArbSurface();
-    
+
     vtkGlyph3D* glyph;
     vtkPolyDataMapper*   mapper;
     vtkMaskPoints*       ptmask;
     vtkTriangleFilter*   tris;
     vtkStripper*         strip;
     vtkThresholdPoints*  tfilter;
-    
+
     void SetGlyphWithThreshold();
     void SetGlyphAttributes();
     float GetVectorScaleFactor();

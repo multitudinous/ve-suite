@@ -43,19 +43,22 @@ namespace ves
 namespace conductor
 {
 /**
- * NetworkLoader unifies the logic to load a network. This logic was previously 
+ * NetworkLoader unifies the logic to load a network. This logic was previously
  * spread across AppFrame, Canvas, Network, AvailableModules, and UIPluginBase.
  * This class is intended to be completely separate of the UI, and should compile,
  * link, and be functional even in the absence of a UI library (Qt, Wx, etc.)
 **/
-class NetworkLoader 
+class NetworkLoader
 {
 public:
     // This is the replacement constructor for this object. It is not possible
     // to create an instance on the stack. It must be created on the heap.
     // Notice the destructor is private too. This oject autodeletes when it is
     // done processing.
-    static NetworkLoader* createNetworkLoader(){ return new NetworkLoader; }
+    static NetworkLoader* createNetworkLoader()
+    {
+        return new NetworkLoader;
+    }
 
     /**
      * Load the .ves file specified by @c fileName

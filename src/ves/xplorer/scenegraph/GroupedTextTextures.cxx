@@ -97,7 +97,7 @@ void GroupedTextTextures::SetFont( std::string fontFile )
 void GroupedTextTextures::MakeTextureActive( const std::string& tempKey )
 {
     std::map< std::string, osg::ref_ptr< DCS > >::iterator iter = m_groupedTextures.find( tempKey );
-    
+
     if( iter != m_groupedTextures.end() )
     {
         MakeTextureActive( static_cast< TextTexture* >( iter->second->getChild( 0 ) ) );
@@ -113,15 +113,15 @@ void GroupedTextTextures::MakeTextureActive( const TextTexture* tempKey )
         osg::Group* tempGroup = const_cast< osg::Group* >( tempKey->getParent( 0 ) );
         ves::xplorer::scenegraph::DCS* tempParent =
             static_cast< ves::xplorer::scenegraph::DCS* >( tempGroup );
-        std::list< DCS* >::iterator listIter = 
-            std::find( m_transformList.begin(), m_transformList.end(), 
-            tempParent );
-        for( listIter = m_transformList.begin(); 
-            listIter != m_transformList.end(); 
-            ++listIter )
+        std::list< DCS* >::iterator listIter =
+            std::find( m_transformList.begin(), m_transformList.end(),
+                       tempParent );
+        for( listIter = m_transformList.begin();
+                listIter != m_transformList.end();
+                ++listIter )
         {
             //std::cout << tempParent << " " << (*listIter) << std::endl;
-            if( tempParent == (*listIter) )
+            if( tempParent == ( *listIter ) )
             {
                 //std::cout << " found DCS " << std::endl;
                 break;
@@ -137,12 +137,12 @@ void GroupedTextTextures::MakeTextureActive( const TextTexture* tempKey )
         if( m_animateTextures )
         {
             m_selectedTexture = tempParent;
-            m_currentTexture = (*m_transformList.begin());
+            m_currentTexture = ( *m_transformList.begin() );
             m_animationComplete = false;
             m_yStartLocation = 0.0f;
             static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
-                GetTextureGeode()->getStateSet()->
-                getUniform( "ignoreWhite" )->set( false );
+            GetTextureGeode()->getStateSet()->
+            getUniform( "ignoreWhite" )->set( false );
         }
         else
         {
@@ -170,16 +170,16 @@ void GroupedTextTextures::MakeTextureActive( const ves::xplorer::scenegraph::DCS
         //osg::Group* tempGroup = const_cast< osg::Group* >( tempKey->getParent( 0 ) );
         //ves::xplorer::scenegraph::DCS* tempParent =
         //static_cast< ves::xplorer::scenegraph::DCS* >( tempGroup );
-        std::list< DCS* >::iterator listIter = 
-        std::find( m_transformList.begin(), m_transformList.end(), 
-                  tempKey );
+        std::list< DCS* >::iterator listIter =
+            std::find( m_transformList.begin(), m_transformList.end(),
+                       tempKey );
         if( listIter == m_transformList.end() )
         {
             std::cout << "Not in list " << std::endl;
             //return;
         }
-        /*for( listIter = m_transformList.begin(); 
-            listIter != m_transformList.end(); 
+        /*for( listIter = m_transformList.begin();
+            listIter != m_transformList.end();
             ++listIter )
         {
             std::cout << tempKey << " " << (*listIter) << " " << (*listIter)->getName() << std::endl;
@@ -194,22 +194,22 @@ void GroupedTextTextures::MakeTextureActive( const ves::xplorer::scenegraph::DCS
                 break;
             }
         }*/
-        
+
         if( listIter == m_transformList.end() )
         {
             std::cout << "Not in list " << std::endl;
             return;
         }
-        
+
         if( m_animateTextures )
         {
-            m_selectedTexture = (*listIter);
-            m_currentTexture = (*m_transformList.begin());
+            m_selectedTexture = ( *listIter );
+            m_currentTexture = ( *m_transformList.begin() );
             m_animationComplete = false;
             m_yStartLocation = 0.0f;
             static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
-                GetTextureGeode()->getStateSet()->
-                getUniform( "ignoreWhite" )->set( false );
+            GetTextureGeode()->getStateSet()->
+            getUniform( "ignoreWhite" )->set( false );
         }
         else
         {
@@ -243,18 +243,18 @@ void GroupedTextTextures::AddTextTexture( const std::string& tempKey, TextTextur
 ////////////////////////////////////////////////////////////////////////////////
 void GroupedTextTextures::UpdateListPositions()
 {
-    for( std::list< DCS* >::iterator iter = m_transformList.begin(); 
-        iter != m_transformList.end(); ++iter)
+    for( std::list< DCS* >::iterator iter = m_transformList.begin();
+            iter != m_transformList.end(); ++iter )
     {
         size_t i = std::distance( m_transformList.begin(), iter );
-        UpdateDCSPosition( (*iter), i );
+        UpdateDCSPosition( ( *iter ), i );
         if( i > 3 )
         {
-            (*iter)->setNodeMask( 0 );
+            ( *iter )->setNodeMask( 0 );
         }
         else
         {
-            (*iter)->setNodeMask( 1 );
+            ( *iter )->setNodeMask( 1 );
         }
     }
 }
@@ -268,21 +268,21 @@ void GroupedTextTextures::UpdateDCSPosition( DCS* tempDCS, size_t i )
     double deltaX = 1.0f;
     double y = 0.0f;
     double z = 0.0f;
-    i+=1;
+    i += 1;
     //x = i * -0.30f;
-    y = (i * deltaX) + m_yStartLocation;
+    y = ( i * deltaX ) + m_yStartLocation;
     x = y * -0.30f;
-    z = (a * y) + b;
-    
+    z = ( a * y ) + b;
+
     double pos[ 3 ];
     /*if( SceneManager::instance()->IsDesktopMode() )
     {
-        GLTransformInfoPtr tempContextInfo = 
+        GLTransformInfoPtr tempContextInfo =
             SceneManager::instance()->GetGLTransformInfo( vrj::ViewportPtr() );
         //const gmtl::Matrix44d vpw = tempContextInfo->GetVPWMatrix();
         //gmtl::Point3d worldPoint( x, y, z );
         //gmtl::Point3d screenPoint = vpw * worldPoint;
-        
+
         //double farPlane = tempContextInfo->GetFarFrustum();
         //double nearPlane = tempContextInfo->GetNearFrustum();
         z = double(i) / double(m_transformList.size());//(z - nearPlane)/(farPlane - nearPlane);
@@ -296,7 +296,7 @@ void GroupedTextTextures::UpdateDCSPosition( DCS* tempDCS, size_t i )
         //textureDraw->dirtyBound();
         pos[ 0 ] = 0.0f;
         pos[ 1 ] = 0.0f + i;
-        pos[ 2 ] = -z;        
+        pos[ 2 ] = -z;
     }
     else*/
     {
@@ -324,7 +324,7 @@ void GroupedTextTextures::RemoveTextTextures( const std::string& tempKey )
 const std::string& GroupedTextTextures::GetKeyForTexture( const ves::xplorer::scenegraph::DCS* tempKey )
 {
     for( std::map< std::string, osg::ref_ptr< DCS > >::iterator iter =
-        m_groupedTextures.begin(); iter != m_groupedTextures.end(); ++iter )
+                m_groupedTextures.begin(); iter != m_groupedTextures.end(); ++iter )
     {
         if( iter->second == tempKey )
         {
@@ -337,7 +337,7 @@ const std::string& GroupedTextTextures::GetKeyForTexture( const ves::xplorer::sc
 ////////////////////////////////////////////////////////////////////////////////
 void GroupedTextTextures::AnimateTextureMovement()
 {
-    osg::StateSet* stateset = 
+    osg::StateSet* stateset =
         static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
         GetTextureGeode()->getStateSet();
 
@@ -349,40 +349,40 @@ void GroupedTextTextures::AnimateTextureMovement()
     {
         std::list< DCS* >::iterator listIter = m_transformList.begin();
         //shift textures around in the list
-        m_transformList.push_back( (*listIter) );
+        m_transformList.push_back( ( *listIter ) );
         m_transformList.pop_front();
         //Now the current one is on the back so reset it
         stateset->getUniform( "ignoreWhite" )->set( true );
         stateset->getUniform( "opacityVal" )->set( float( 0.85 ) );
         float tempColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
         static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
-            SetTextColor( tempColor );
-        
-        m_currentTexture = (*m_transformList.begin());
+        SetTextColor( tempColor );
+
+        m_currentTexture = ( *m_transformList.begin() );
 
         m_yStartLocation = 0.0f;
         static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
-            GetTextureGeode()->getStateSet()->
-            getUniform( "ignoreWhite" )->set( false );
+        GetTextureGeode()->getStateSet()->
+        getUniform( "ignoreWhite" )->set( false );
         static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
-            GetTextureGeode()->getStateSet()->
-            getUniform( "opacityVal" )->set( float( 0.85 ) );
+        GetTextureGeode()->getStateSet()->
+        getUniform( "opacityVal" )->set( float( 0.85 ) );
         tempColor[ 3 ] = 0.85;
         static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
-            SetTextColor( tempColor );
-        
+        SetTextColor( tempColor );
+
         if( m_selectedTexture == m_currentTexture )
         {
-            osg::StateSet* stateset = 
-            static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
+            osg::StateSet* stateset =
+                static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
                 GetTextureGeode()->getStateSet();
-            
+
             stateset->getUniform( "ignoreWhite" )->set( true );
             stateset->getUniform( "opacityVal" )->set( float( 0.85 ) );
             float tempColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
             static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
-                SetTextColor( tempColor );
-            
+            SetTextColor( tempColor );
+
             //stop moving things
             m_animationComplete = true;
         }
@@ -390,16 +390,16 @@ void GroupedTextTextures::AnimateTextureMovement()
     //if not then just continue to animate things
     else
     {
-        float tempOpacity = 0.85 + (m_yStartLocation*0.85);
+        float tempOpacity = 0.85 + ( m_yStartLocation * 0.85 );
         stateset->getUniform( "opacityVal" )->set( tempOpacity );
         float tempColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
         tempColor[ 3 ] = tempOpacity;
         static_cast< TextTexture* >( m_currentTexture->getChild( 0 ) )->
-            SetTextColor( tempColor );
+        SetTextColor( tempColor );
     }
     //tag all of the textures before the texture of interest
     //figure out when those textures are in front
-    
+
     //move them
     //figure out when to move them back
     //move it forward - pass in dt to move things forward

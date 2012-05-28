@@ -56,12 +56,12 @@ namespace data
 
 ////////////////////////////////////////////////////////////////////////////////
 CADPropertySet::CADPropertySet()
-{ 
+{
     mTableName = "CADPropertySet";
 
     std::string prependTag( mTableName );
-    prependTag.append(" ");
-    std::string tag = boost::any_cast<std::string>(GetPropertyValue("NameTag"));
+    prependTag.append( " " );
+    std::string tag = boost::any_cast<std::string>( GetPropertyValue( "NameTag" ) );
     SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
 
     ///Tie up the animation controls
@@ -71,7 +71,7 @@ CADPropertySet::CADPropertySet()
             ( eventmanager::EventFactory::instance()->GetSignal( "CADPropertySet.CADAnimation" ) )
             ->mSignal;
     }
-    
+
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ void CADPropertySet::CreateSkeleton()
     SetPropertyAttribute( "Transform_Translation_X", "DisplayPrecision", 4 );
     SetPropertyAttribute( "Transform_Translation_Y", "DisplayPrecision", 4 );
     SetPropertyAttribute( "Transform_Translation_Z", "DisplayPrecision", 4 );
-    
+
     AddProperty( "Transform_Rotation", boost::any(), "Rotation" );
     SetPropertyAttribute( "Transform_Rotation", "isUIGroupOnly", true );
 
@@ -124,19 +124,19 @@ void CADPropertySet::CreateSkeleton()
     SetPropertyAttribute( "Transform_Scale_X", "DisplayPrecision", 6 );
     SetPropertyAttribute( "Transform_Scale_Y", "DisplayPrecision", 6 );
     SetPropertyAttribute( "Transform_Scale_Z", "DisplayPrecision", 6 );
-    GetProperty("Transform_Scale_X")->
-        SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
-    GetProperty("Transform_Scale_Y")->
-        SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
-    GetProperty("Transform_Scale_Z")->
-        SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
+    GetProperty( "Transform_Scale_X" )->
+    SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
+    GetProperty( "Transform_Scale_Y" )->
+    SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
+    GetProperty( "Transform_Scale_Z" )->
+    SignalValueChanged.connect( boost::bind( &CADPropertySet::Scale, this, _1 ) );
 
 
 
     AddProperty( "Physics", boost::any(), "Physics" );
     SetPropertyAttribute( "Physics", "isUIGroupOnly", true );
     SetPropertyAttribute( "Physics", "setExpanded", false );
-    
+
     AddProperty( "Physics_Mass", 1.00, "Mass" );
     AddProperty( "Physics_Friction", 0.00, "Coeff. of Friction" );
     AddProperty( "Physics_Restitution", 0.00, "Coeff. of Restitution" );
@@ -175,16 +175,16 @@ void CADPropertySet::CreateSkeleton()
 
     AddProperty( "Physics_Enable", false, "Enable Physics" );
 
-//    std::vector< PropertyPtr > physicsLink;
-//    physicsLink.push_back( GetProperty("Physics_MotionType") );
-//    physicsLink.push_back( GetProperty("Physics_LODType") );
-//    physicsLink.push_back( GetProperty("Physics_MeshType") );
-//    physicsLink.push_back( GetProperty("Physics_MeshDecimation") );
-//    p = MakeLiveBasePtr(new MakeLiveLinked< std::string >(
-//            mUUIDString,
-//            physicsLink,
-//            "SetCADPhysicsMesh"));
-//    mLiveObjects.push_back(p);
+    //    std::vector< PropertyPtr > physicsLink;
+    //    physicsLink.push_back( GetProperty("Physics_MotionType") );
+    //    physicsLink.push_back( GetProperty("Physics_LODType") );
+    //    physicsLink.push_back( GetProperty("Physics_MeshType") );
+    //    physicsLink.push_back( GetProperty("Physics_MeshDecimation") );
+    //    p = MakeLiveBasePtr(new MakeLiveLinked< std::string >(
+    //            mUUIDString,
+    //            physicsLink,
+    //            "SetCADPhysicsMesh"));
+    //    mLiveObjects.push_back(p);
 
     AddProperty( "Culling", 0, "Occlusion Culling" );
     enumValues.clear();
@@ -206,13 +206,13 @@ void CADPropertySet::CreateSkeleton()
     AddProperty( "GPS_Latitude", 0.0 );
 
     std::string emptyString;
-    AddProperty( "NodePath", emptyString, "Not visible in UI"  );
+    AddProperty( "NodePath", emptyString, "Not visible in UI" );
     SetPropertyAttribute( "NodePath", "userVisible", false );
-    
-    AddProperty( "DynamicAnalysisData", std::string("null"), "Multi-body Dynamics Data" );
+
+    AddProperty( "DynamicAnalysisData", std::string( "null" ), "Multi-body Dynamics Data" );
     SetPropertyAttribute( "DynamicAnalysisData", "isFilePath", true );
     mPropertyMap["DynamicAnalysisData"]->
-        SignalValueChanged.connect( boost::bind( &CADPropertySet::AddDynamicAnalysisData, this, _1 ) );
+    SignalValueChanged.connect( boost::bind( &CADPropertySet::AddDynamicAnalysisData, this, _1 ) );
 
     AddProperty( "Filename", emptyString, "Filename: not visible in UI" );
     SetPropertyAttribute( "Filename", "userVisible", false );
@@ -224,7 +224,7 @@ void CADPropertySet::Scale( PropertyPtr& property )
     if( uniform )
     {
         double scale = boost::any_cast<double>( property->GetValue() );
-        std::string name = boost::any_cast<std::string>(property->GetAttribute("nameInSet"));
+        std::string name = boost::any_cast<std::string>( property->GetAttribute( "nameInSet" ) );
         if( name == "Transform_Scale_X" )
         {
             SetPropertyValue( "Transform_Scale_Y", scale );
@@ -245,13 +245,13 @@ void CADPropertySet::Scale( PropertyPtr& property )
 ////////////////////////////////////////////////////////////////////////////////
 void CADPropertySet::AddDynamicAnalysisData( PropertyPtr& )
 {
-    std::string const fileName = 
+    std::string const fileName =
         boost::any_cast<std::string>( GetPropertyValue( "DynamicAnalysisData" ) );
     std::string const nodeType = "Part";
     std::string const modeID = GetUUIDAsString();
-    
+
     m_animateCAD->operator()( nodeType, fileName, modeID );
-    
+
     // All properties here are live; save to db whenever they change.
     WriteToDatabase();
 }
@@ -276,14 +276,14 @@ void CADPropertySet::EnableLiveProperties( bool live )
         MakeLiveBasePtr p;
 
         p = MakeLiveBasePtr( new MakeLive<bool>( mUUIDString,
-                                                GetProperty("SurfaceData"),
-                                                "UseAsSurfaceData") );
-        mLiveObjects.push_back(p);
+                             GetProperty( "SurfaceData" ),
+                             "UseAsSurfaceData" ) );
+        mLiveObjects.push_back( p );
 
-        p = MakeLiveBasePtr(new MakeLive<bool const&>( mUUIDString,
-                                                     GetProperty("Visible"),
-                                                     "ToggleCADNode" ));
-        mLiveObjects.push_back(p);
+        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
+                             GetProperty( "Visible" ),
+                             "ToggleCADNode" ) );
+        mLiveObjects.push_back( p );
 
         // Link up all the transform properties so that a single signal named
         // "TransformCADNode" is fired whenever any of the values changes.
@@ -297,58 +297,58 @@ void CADPropertySet::EnableLiveProperties( bool live )
         transformLink.push_back( GetProperty( "Transform_Scale_X" ) );
         transformLink.push_back( GetProperty( "Transform_Scale_Y" ) );
         transformLink.push_back( GetProperty( "Transform_Scale_Z" ) );
-        p = MakeLiveBasePtr(new MakeLiveLinked< double >(
-                mUUIDString,
-                transformLink,
-                "TransformCADNode"));
-        mLiveObjects.push_back(p);
+        p = MakeLiveBasePtr( new MakeLiveLinked< double >(
+                                 mUUIDString,
+                                 transformLink,
+                                 "TransformCADNode" ) );
+        mLiveObjects.push_back( p );
 
-        p = MakeLiveBasePtr(new MakeLive<double>( mUUIDString,
-                                                     GetProperty("Opacity"),
-                                                     "SetOpacityOnCADNode" ));
-        mLiveObjects.push_back(p);
+        p = MakeLiveBasePtr( new MakeLive<double>( mUUIDString,
+                             GetProperty( "Opacity" ),
+                             "SetOpacityOnCADNode" ) );
+        mLiveObjects.push_back( p );
 
         {
-            p = MakeLiveBasePtr(new MakeLive<const bool&>( mUUIDString,
-                                                          GetProperty("Physics_Enable"),
-                                                          "SetPhysicsOnCADNode" ));
-            mLiveObjects.push_back(p);
-            
-            
-            p = MakeLiveBasePtr(new MakeLive<const double&>( mUUIDString,
-                                                            GetProperty("Physics_Mass"),
-                                                            "SetMassOnCADNode" ));
-            mLiveObjects.push_back(p);
-            
-            
-            p = MakeLiveBasePtr(new MakeLive<const double&>( mUUIDString,
-                                                            GetProperty("Physics_Friction"),
-                                                            "SetFrictionOnCADNode" ));
-            mLiveObjects.push_back(p);
-            
-            
-            p = MakeLiveBasePtr(new MakeLive<const double&>( mUUIDString,
-                                                            GetProperty("Physics_Restitution"),
-                                                            "SetRestitutionOnCADNode" ));
-            mLiveObjects.push_back(p);
-            
-            
+            p = MakeLiveBasePtr( new MakeLive<const bool&>( mUUIDString,
+                                 GetProperty( "Physics_Enable" ),
+                                 "SetPhysicsOnCADNode" ) );
+            mLiveObjects.push_back( p );
+
+
+            p = MakeLiveBasePtr( new MakeLive<const double&>( mUUIDString,
+                                 GetProperty( "Physics_Mass" ),
+                                 "SetMassOnCADNode" ) );
+            mLiveObjects.push_back( p );
+
+
+            p = MakeLiveBasePtr( new MakeLive<const double&>( mUUIDString,
+                                 GetProperty( "Physics_Friction" ),
+                                 "SetFrictionOnCADNode" ) );
+            mLiveObjects.push_back( p );
+
+
+            p = MakeLiveBasePtr( new MakeLive<const double&>( mUUIDString,
+                                 GetProperty( "Physics_Restitution" ),
+                                 "SetRestitutionOnCADNode" ) );
+            mLiveObjects.push_back( p );
+
+
             std::vector< PropertyPtr > physicsLink;
-            physicsLink.push_back( GetProperty("Physics_MotionType") );
-            physicsLink.push_back( GetProperty("Physics_LODType") );
-            physicsLink.push_back( GetProperty("Physics_MeshType") );
-            physicsLink.push_back( GetProperty("Physics_MeshDecimation") );
-            p = MakeLiveBasePtr(new MakeLiveLinked< std::string >(
-                                                                  mUUIDString,
-                                                                  physicsLink,
-                                                                  "SetCADPhysicsMesh"));
-            mLiveObjects.push_back(p);
+            physicsLink.push_back( GetProperty( "Physics_MotionType" ) );
+            physicsLink.push_back( GetProperty( "Physics_LODType" ) );
+            physicsLink.push_back( GetProperty( "Physics_MeshType" ) );
+            physicsLink.push_back( GetProperty( "Physics_MeshDecimation" ) );
+            p = MakeLiveBasePtr( new MakeLiveLinked< std::string >(
+                                     mUUIDString,
+                                     physicsLink,
+                                     "SetCADPhysicsMesh" ) );
+            mLiveObjects.push_back( p );
         }
 
-        p = MakeLiveBasePtr(new MakeLive< std::string >( mUUIDString,
-                                                              GetProperty( "Culling" ),
-                                                              "SetCADCulling"));
-        mLiveObjects.push_back(p);
+        p = MakeLiveBasePtr( new MakeLive< std::string >( mUUIDString,
+                             GetProperty( "Culling" ),
+                             "SetCADCulling" ) );
+        mLiveObjects.push_back( p );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

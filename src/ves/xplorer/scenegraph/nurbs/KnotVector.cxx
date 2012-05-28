@@ -107,7 +107,7 @@ bool KnotVector::HasInteriorKnots()
 {
     if( _knotMultiplicityMap.size() > 2 )
     {
-       return true;
+        return true;
     }
     return false;
 }
@@ -170,7 +170,9 @@ double KnotVector::Knot( unsigned int index )
 {
 
     if( !index )
+    {
         return _knotMultiplicityMap.begin()->first;
+    }
 
     unsigned int currentIndex = 0;
     unsigned int multiplicity = 1;

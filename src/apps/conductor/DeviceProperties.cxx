@@ -57,8 +57,8 @@ END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceProperties::DeviceProperties( wxWindow* parent )
-        : wxDialog( parent, -1, _( "Device Interface" ), wxDefaultPosition, wxDefaultSize,
-                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX )&~wxSTAY_ON_TOP )
+    : wxDialog( parent, -1, _( "Device Interface" ), wxDefaultPosition, wxDefaultSize,
+                ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX )&~wxSTAY_ON_TOP )
 {
     device_splitter = NULL;
 
@@ -121,7 +121,7 @@ void DeviceProperties::SendCommandsToXplorer()
     CommandPtr command( new Command() );
     command->SetCommandName( "DEVICE_PROPERTIES" );
 
-    for( size_t i = 0;i < instructions.size();i++ )
+    for( size_t i = 0; i < instructions.size(); i++ )
     {
         command->AddDataValuePair( instructions.at( i ) );
     }

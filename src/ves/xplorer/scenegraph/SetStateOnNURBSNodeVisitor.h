@@ -66,7 +66,7 @@ public:
     SetStateOnNURBSNodeVisitor( osg::Node* node,
                                 bool selectedState, bool dragState,
                                 std::pair< double, double > mousePoint,
-                               std::pair< double, double > mouseDelta );
+                                std::pair< double, double > mouseDelta );
 
     ///Destructor
     virtual ~SetStateOnNURBSNodeVisitor( void );

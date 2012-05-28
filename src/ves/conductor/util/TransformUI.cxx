@@ -57,7 +57,7 @@ BEGIN_EVENT_TABLE( TransformUI, wxPanel )
 END_EVENT_TABLE()
 
 TransformUI::TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml::TransformPtr transform )
-        : wxPanel( parent, TRANSFORM_PANEL_ID, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL )
+    : wxPanel( parent, TRANSFORM_PANEL_ID, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL )
 {
     this->transform = transform;
 
@@ -163,7 +163,7 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml:
         {
             m_uniformScale->SetValue( false );
         }
-        
+
         //Set the rotation values
         _xRotationCtrl->SetValue( transform->GetRotationArray()->GetElement( 0 ) );
         _yRotationCtrl->SetValue( transform->GetRotationArray()->GetElement( 1 ) );
@@ -183,7 +183,7 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml:
     tempX = 1.0;
     tempY = 1.0;
     tempZ = 1.0;
-//   paramBlock = 0;
+    //   paramBlock = 0;
 }
 ///////////////////////////////////////////////////////////////////
 TransformUI::~TransformUI( void )
@@ -242,7 +242,7 @@ void TransformUI::UpdateTransform( wxSpinEvent& WXUNUSED( event ) )
         tempX = _xScaleCtrl->GetValue();
         tempY = _yScaleCtrl->GetValue();
         tempZ = _zScaleCtrl->GetValue();
-        
+
         temp.clear();
         temp.push_back( _xRotationCtrl->GetValue() );
         temp.push_back( _yRotationCtrl->GetValue() );
@@ -272,7 +272,7 @@ void TransformUI::UpdateTransform( wxSpinEvent& WXUNUSED( event ) )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TransformUI::UpdateUniformScale( wxCommandEvent &event )
+void TransformUI::UpdateUniformScale( wxCommandEvent& event )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 void TransformUI::SetParamBlockTransform( ves::open::xml::TransformPtr transform )

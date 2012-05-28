@@ -55,34 +55,34 @@ namespace conductor
  * This class is used to create a dialog of all available OPC variables.
  */
 class OPCDlg : public wxDialog
-{       
+{
 public:
 
     ///Constructor
-    OPCDlg(wxWindow *parent, wxWindowID id = 1,
-        const wxString &title = wxT("OPCDialog"),
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxDefaultSize,
-        long style = wxDIALOG_NO_PARENT | wxCLOSE_BOX | wxCAPTION |
-        wxCLOSE_BOX | wxSYSTEM_MENU);
+    OPCDlg( wxWindow* parent, wxWindowID id = 1,
+            const wxString& title = wxT( "OPCDialog" ),
+            const wxPoint& pos = wxDefaultPosition,
+            const wxSize& size = wxDefaultSize,
+            long style = wxDIALOG_NO_PARENT | wxCLOSE_BOX | wxCAPTION |
+                         wxCLOSE_BOX | wxSYSTEM_MENU );
 
     ///Destructor
     virtual ~OPCDlg();
-    
-    ///???
-    void SetParentPlugin( DSPlugin * parent );
 
-private:    
-    wxButton *WxButton4;
-    wxButton *WxButton3;
-    wxButton *WxButton2;
-    wxButton *WxButton1;
-    wxListBox *WxListBox3;
-    wxListBox *WxListBox1;
+    ///???
+    void SetParentPlugin( DSPlugin* parent );
+
+private:
+    wxButton* WxButton4;
+    wxButton* WxButton3;
+    wxButton* WxButton2;
+    wxButton* WxButton1;
+    wxListBox* WxListBox3;
+    wxListBox* WxListBox1;
     wxArrayString m_availableVariables;
     wxArrayString m_selectedVariables;
-    DSPlugin * m_parentPlugin;
-    
+    DSPlugin* m_parentPlugin;
+
     enum
     {
         ID_WXBUTTON4 = 1008,
@@ -93,25 +93,25 @@ private:
         ID_WXLISTBOX1 = 1001,
         ID_DUMMY_VALUE_
     };
-    
+
     ///???
-    void OnClose(wxCloseEvent& event);
-    
+    void OnClose( wxCloseEvent& event );
+
     ///???
     void CreateGUIControls();
-    
+
     ///???
     void OnSaveButton( wxCommandEvent& event );
-    
+
     ///???
     void OnCancelButton( wxCommandEvent& event );
-    
+
     ///???
     void OnAddButton( wxCommandEvent& event );
-    
+
     ///???
     void OnRemoveButton( wxCommandEvent& event );
-    
+
     ///???
     bool SearchArrayList( wxArrayString arrayList, wxString entry );
 

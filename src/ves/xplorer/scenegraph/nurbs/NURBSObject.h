@@ -115,9 +115,9 @@ public:
 
     ///Interpolate the NURBS object.
     virtual void Interpolate() = 0;
-    
+
     ///Update the information associated with the selected/moving ControlPoint\n
-    ///\param index The index of the currently selected ControlPoint 
+    ///\param index The index of the currently selected ControlPoint
     void SetMovingControlPoint( unsigned int index );
 
     ///Get the NURBSObject::Type
@@ -141,7 +141,7 @@ public:
 
     ///Get the minimum degree of the NURBSObject
     unsigned int GetMinimumDegree();
-    
+
     //Get the indecies of the verticies that need updating after\n
     //moving a ControlPoint
     std::vector<unsigned int> GetChangedTessellatedVertexIndecies();
@@ -189,7 +189,7 @@ public:
         {
             for( unsigned int u = 0; u < nCtrlPtsU; u++ )
             {
-                os << "(" << nurbsObject.GetControlPoint( v*nCtrlPtsU + u ) << ") ";
+                os << "(" << nurbsObject.GetControlPoint( v * nCtrlPtsU + u ) << ") ";
             }
             os << std::endl;
         }
@@ -217,9 +217,9 @@ protected:
     ///\param spanIndex The current span index in the vector
     ///\param addToSpan Flag to update the current span vector
     void _calculateBasisFunctionsAndDerivatives( double parameter,
-                                                 unsigned int spanIndex,
-                                                 std::string direction,
-                                                 bool addToSpan = true);
+            unsigned int spanIndex,
+            std::string direction,
+            bool addToSpan = true );
 
     ///Find the nearest parameter index in a given direction
     ///\param direction "U" or "V" direction
@@ -239,7 +239,7 @@ protected:
     ///\param vmin The min v param to interpolate between
     ///\param vmax The max v param to interpolate between
     //virtual void _interpolateWithinRange( double umin, double umax,
-                                          //double vmin, double vmax ) = 0;
+    //double vmin, double vmax ) = 0;
     virtual void _interpolateWithinModifiedRange( ) = 0;
 
     Type _type; ///<The NURBSObject type.
@@ -267,8 +267,8 @@ protected:
 
     std::map<std::string, ves::xplorer::scenegraph::nurbs::KnotVector> _knotVectors;///<The raw u/v knot vectors
 
-    std::map<std::string, std::map< unsigned int, std::map< double,std::vector<double> > > > _knotDifferences;///<Knot differences
-    std::map<std::string, std::map< unsigned int, std::map< double,std::vector<double> > > > _derivativeBasisFunctions;///<The u/v derivatives of basis functions
+    std::map<std::string, std::map< unsigned int, std::map< double, std::vector<double> > > > _knotDifferences; ///<Knot differences
+    std::map<std::string, std::map< unsigned int, std::map< double, std::vector<double> > > > _derivativeBasisFunctions; ///<The u/v derivatives of basis functions
 
     std::map<unsigned int, std::vector<double> > _uBasisFunctionsDerivatives;///<The kth derivative u basis functions
     std::map<unsigned int, std::vector<double> > _vBasisFunctionsDerivatives;///<The kth derivative v basis functions
@@ -276,7 +276,7 @@ protected:
     std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > _controlPoints;///<The raw ControlPoint data
     std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::Point> > _interpolatedPoints;///<The tesselated points.
     std::vector< ves::xplorer::scenegraph::nurbs::Point > m_uvParameters;///< The u v parameter values for each point.
-   
+
 };
 }
 }

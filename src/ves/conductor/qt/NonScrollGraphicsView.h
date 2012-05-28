@@ -45,12 +45,12 @@ class VE_CONDUCTOR_QTUI_EXPORTS NonScrollGraphicsView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit NonScrollGraphicsView(QWidget *parent = 0);
-    NonScrollGraphicsView(QGraphicsScene* scene, QWidget *parent = 0);
+    explicit NonScrollGraphicsView( QWidget* parent = 0 );
+    NonScrollGraphicsView( QGraphicsScene* scene, QWidget* parent = 0 );
 
 protected:
     // Override this method from QAbstractScrollArea to sink the scroll directive
-    virtual void scrollContentsBy ( int dx, int dy );
+    virtual void scrollContentsBy( int dx, int dy );
 };
 
 }

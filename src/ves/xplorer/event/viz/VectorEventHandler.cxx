@@ -53,15 +53,15 @@ using namespace ves::xplorer::event;
 
 ////////////////////////////////////////////////////////////////////////////////
 VectorEventHandler::VectorEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VectorEventHandler::VectorEventHandler( const VectorEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler( rhs )
+    :
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -87,21 +87,21 @@ void VectorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObjec
     }
 
     graphicsObject = ves::xplorer::SteadyStateVizHandler::instance()->
-        GetGraphicsObjectsOfType( Y_VECTOR );
+                     GetGraphicsObjectsOfType( Y_VECTOR );
     if( !graphicsObject.empty() )
     {
         ProcessVectorCommand( graphicsObject, veXMLObject );
     }
 
     graphicsObject = ves::xplorer::SteadyStateVizHandler::instance()->
-        GetGraphicsObjectsOfType( X_VECTOR );
+                     GetGraphicsObjectsOfType( X_VECTOR );
     if( !graphicsObject.empty() )
     {
         ProcessVectorCommand( graphicsObject, veXMLObject );
     }
 
     graphicsObject = ves::xplorer::SteadyStateVizHandler::instance()->
-        GetGraphicsObjectsOfType( BY_SURFACE );
+                     GetGraphicsObjectsOfType( BY_SURFACE );
     if( !graphicsObject.empty() )
     {
         ProcessVectorCommand( graphicsObject, veXMLObject );
@@ -118,19 +118,19 @@ VectorEventHandler& VectorEventHandler::operator=( const VectorEventHandler& rhs
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VectorEventHandler::UpdateGeodeUniform( 
-    const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject, 
-    ves::open::xml::DataValuePairPtr, 
+void VectorEventHandler::UpdateGeodeUniform(
+    const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject,
+    ves::open::xml::DataValuePairPtr,
     const std::string& uniformName, double valueFactor )
 {
     unsigned int numdraw = 0;
     osg::ref_ptr< osg::Uniform > activeUniform;
     osg::ref_ptr< ves::xplorer::scenegraph::Geode > geode;
-    
+
     for( size_t i = 0; i < graphicsObject.size(); ++i )
     {
-        std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
-            geodes = graphicsObject.at( i )->GetGeodes();
+        std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >
+        geodes = graphicsObject.at( i )->GetGeodes();
         for( size_t j = 0; j < geodes.size(); ++j )
         {
             geode = geodes.at( j );
@@ -138,7 +138,7 @@ void VectorEventHandler::UpdateGeodeUniform(
             for( size_t k = 0; k < numdraw; ++k )
             {
                 activeUniform = geode->getDrawable( k )->
-                    getStateSet()->getUniform( uniformName );
+                                getStateSet()->getUniform( uniformName );
                 if( activeUniform.valid() )
                 {
                     activeUniform->set( static_cast< float >( valueFactor ) );
@@ -152,17 +152,17 @@ void VectorEventHandler::ProcessVectorCommand(
     const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject,
     const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    ves::open::xml::CommandPtr command = 
+    ves::open::xml::CommandPtr command =
         boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
-    ves::open::xml::DataValuePairPtr scaleDVP = 
+    ves::open::xml::DataValuePairPtr scaleDVP =
         command->GetDataValuePair( "Vector Scale" );
-    ves::open::xml::DataValuePairPtr ratioDVP = 
+    ves::open::xml::DataValuePairPtr ratioDVP =
         command->GetDataValuePair( "Vector Ratio" );
-    ves::open::xml::DataValuePairPtr minValueDVP = 
+    ves::open::xml::DataValuePairPtr minValueDVP =
         command->GetDataValuePair( "minValue" );
-    ves::open::xml::DataValuePairPtr maxValueDVP = 
+    ves::open::xml::DataValuePairPtr maxValueDVP =
         command->GetDataValuePair( "maxValue" );
-    
+
     if( scaleDVP )
     {
         double size;
@@ -186,13 +186,13 @@ void VectorEventHandler::ProcessVectorCommand(
         double opacityVal = 0;
         for( size_t i = 0; i < graphicsObject.size(); ++i )
         {
-            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >
             geodes = graphicsObject.at( i )->GetGeodes();
             for( size_t j = 0; j < geodes.size(); ++j )
             {
                 osg::ref_ptr< osg::Uniform > warpScaleUniform =
-                geodes.at( j )->getDrawable( 0 )->
-                getStateSet()->getUniform( "scalarMinMax" );
+                    geodes.at( j )->getDrawable( 0 )->
+                    getStateSet()->getUniform( "scalarMinMax" );
                 if( warpScaleUniform.valid() )
                 {
                     osg::Vec2 opacityValVec;
@@ -211,5 +211,5 @@ void VectorEventHandler::ProcessVectorCommand(
                 }
             }
         }
-    }    
+    }
 }

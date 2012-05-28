@@ -52,23 +52,32 @@ class NodeSelect : public QWidget
 {
     Q_OBJECT
 public:
-    NodeSelect(QWidget *parent = 0);
-    void setFilePath(const QString &filePath) { if (theLineEdit->text() != filePath) theLineEdit->setText(filePath); }
-    QString filePath() const { return theLineEdit->text(); }
+    NodeSelect( QWidget* parent = 0 );
+    void setFilePath( const QString& filePath )
+    {
+        if( theLineEdit->text() != filePath )
+        {
+            theLineEdit->setText( filePath );
+        }
+    }
+    QString filePath() const
+    {
+        return theLineEdit->text();
+    }
 signals:
-    void filePathChanged(const QString &filePath);
+    void filePathChanged( const QString& filePath );
     void nodeSelectedQSignal( const std::string nodePath );
 protected:
-    void focusInEvent(QFocusEvent *e);
-    void focusOutEvent(QFocusEvent *e);
-    void keyPressEvent(QKeyEvent *e);
-    void keyReleaseEvent(QKeyEvent *e);
+    void focusInEvent( QFocusEvent* e );
+    void focusOutEvent( QFocusEvent* e );
+    void keyPressEvent( QKeyEvent* e );
+    void keyReleaseEvent( QKeyEvent* e );
 private slots:
     void buttonClicked();
     void onNodeSelected( const std::string& nodePath );
     void onNodeSelectedQueued( const std::string nodePath );
 private:
-    QLineEdit *theLineEdit;
+    QLineEdit* theLineEdit;
 
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 

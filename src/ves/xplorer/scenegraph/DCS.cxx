@@ -109,10 +109,10 @@ DCS::DCS()
         "Select",
         new technique::SelectTechnique(
             new osg::StateSet( *getOrCreateStateSet() ) ) );
-            
+
     AddTechnique(
-                 "Glow",
-                 new technique::GlowTechnique( new osg::StateSet( *getOrCreateStateSet() ) ) );
+        "Glow",
+        new technique::GlowTechnique( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( double* scale, double* trans, double* rot )
@@ -133,8 +133,8 @@ DCS::DCS( double* scale, double* trans, double* rot )
             new osg::StateSet( *getOrCreateStateSet() ) ) );
 
     AddTechnique(
-                 "Glow",
-                 new technique::GlowTechnique( new osg::StateSet( *getOrCreateStateSet() ) ) );    
+        "Glow",
+        new technique::GlowTechnique( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
@@ -153,8 +153,8 @@ DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
             new osg::StateSet( *getOrCreateStateSet() ) ) );
 
     AddTechnique(
-                 "Glow",
-                 new technique::GlowTechnique( new osg::StateSet( *getOrCreateStateSet() ) ) );    
+        "Glow",
+        new technique::GlowTechnique( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS()
@@ -227,13 +227,13 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
     rotateMat.makeRotate( osg::DegreesToRadians( rotArray[0] ), yaw,
                          osg::DegreesToRadians( rotArray[1] ), pitch,
                          osg::DegreesToRadians( rotArray[2] ), roll );
-    
+
     osg::Quat quat;
     quat = rotateMat.getRotate();
     setAttitude( quat );
     setPivotPoint( osg::Vec3d( 0, 0, 0 ) );*/
 
-    
+
     // We now have h, p, and r angles. Build a Quat to affect these rotatiions.
     // We do this by creating a Matrix that contains correctly-oriented x, y, and
     // z axes. Then we create the Quat from the Matrix.
@@ -254,10 +254,10 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
     z = qRoll * z;
     // Use x, y, and z axes to create an orientation matrix.
     osg::Matrix m( x[0], x[1], x[2], 0.,
-                  y[0], y[1], y[2], 0.,
-                  z[0], z[1], z[2], 0.,
-                  0., 0., 0., 1. );
-    
+                   y[0], y[1], y[2], 0.,
+                   z[0], z[1], z[2], 0.,
+                   0., 0., 0., 1. );
+
     osg::Quat quat;
     quat.set( m );
     setAttitude( quat );
@@ -273,7 +273,7 @@ void DCS::SetScaleArray( std::vector< double > scaleArray )
     if( scaleArray[0] != 1 )
     {
         ves::xplorer::scenegraph::util::NormalizeVisitor normVis( this, true );
-        
+
     }
     else
     {
@@ -335,7 +335,7 @@ gmtl::Matrix44d DCS::GetMat()
     else
     {
         std::cout << "Invalid matrix: " << getName() << std::endl
-            << "DCS::GetMat()" << std::endl;
+                  << "DCS::GetMat()" << std::endl;
     }
 
     return _vjMatrix;
@@ -498,7 +498,7 @@ void DCS::UpdatePhysicsTransform()
         mPhysicsRigidBody->setLinearVelocity( btVector3( 0, 0, 0 ) );
         mPhysicsRigidBody->setAngularVelocity( btVector3( 0, 0, 0 ) );
     }
-*/
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetPhysicsRigidBody( PhysicsRigidBody* )
@@ -538,7 +538,7 @@ ves::open::xml::cad::CADNodePtr DCS::GetCADPart()
     temp[ 0 ] = getScale()[ 0 ];
     temp[ 1 ] = getScale()[ 1 ];
     temp[ 2 ] = getScale()[ 2 ];
-    
+
     m_partVEOpenData->GetTransform()->SetScale( temp );
     GetRotationArray();
     temp[ 0 ] = m_Rotation[ 0 ];

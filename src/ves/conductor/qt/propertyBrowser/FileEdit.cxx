@@ -44,27 +44,27 @@ namespace ves
 namespace conductor
 {
 
-FileEdit::FileEdit(QWidget *parent)
-    : QWidget(parent),
-    m_fileDialog( 0 )
+FileEdit::FileEdit( QWidget* parent )
+    : QWidget( parent ),
+      m_fileDialog( 0 )
 {
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(0);
-    layout->setSpacing(0);
-    theLineEdit = new QLineEdit(this);
-    theLineEdit->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred));
-    QToolButton *button = new QToolButton(this);
-    button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));
-    button->setText(QLatin1String("..."));
-    layout->addWidget(theLineEdit);
-    layout->addWidget(button);
-    setFocusProxy(theLineEdit);
-    setFocusPolicy(Qt::StrongFocus);
-    setAttribute(Qt::WA_InputMethodEnabled);
-    connect(theLineEdit, SIGNAL(textEdited(const QString &)),
-                this, SIGNAL(filePathChanged(const QString &)));
-    connect(button, SIGNAL(clicked()),
-                this, SLOT(buttonClicked()));
+    QHBoxLayout* layout = new QHBoxLayout( this );
+    layout->setMargin( 0 );
+    layout->setSpacing( 0 );
+    theLineEdit = new QLineEdit( this );
+    theLineEdit->setSizePolicy( QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred ) );
+    QToolButton* button = new QToolButton( this );
+    button->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred ) );
+    button->setText( QLatin1String( "..." ) );
+    layout->addWidget( theLineEdit );
+    layout->addWidget( button );
+    setFocusProxy( theLineEdit );
+    setFocusPolicy( Qt::StrongFocus );
+    setAttribute( Qt::WA_InputMethodEnabled );
+    connect( theLineEdit, SIGNAL( textEdited( const QString& ) ),
+             this, SIGNAL( filePathChanged( const QString& ) ) );
+    connect( button, SIGNAL( clicked() ),
+             this, SLOT( buttonClicked() ) );
 }
 
 void FileEdit::buttonClicked()
@@ -84,10 +84,10 @@ void FileEdit::buttonClicked()
 
     //m_fileDialog->setNameFilters( theFilter );
 
-    connect( m_fileDialog, SIGNAL(fileSelected(const QString &)),
-                      this, SLOT(onFileSelected(const QString&)) );
-    connect( m_fileDialog, SIGNAL(rejected()), this,
-                      SLOT( onFileCancelled() ) );
+    connect( m_fileDialog, SIGNAL( fileSelected( const QString& ) ),
+             this, SLOT( onFileSelected( const QString& ) ) );
+    connect( m_fileDialog, SIGNAL( rejected() ), this,
+             SLOT( onFileCancelled() ) );
 
     tabs->ActivateTab( tabs->AddTab( m_fileDialog, "Select File" ) );
 }
@@ -101,7 +101,7 @@ void FileEdit::onFileSelected( const QString& filePath )
 
     ves::conductor::UITabs::instance()->RemoveTab( m_fileDialog );
 
-    if ( m_fileDialog != 0 )
+    if( m_fileDialog != 0 )
     {
         m_fileDialog->close();
         m_fileDialog = 0;
@@ -114,36 +114,37 @@ void FileEdit::onFileCancelled()
 {
     ves::conductor::UITabs::instance()->RemoveTab( m_fileDialog );
 
-    if ( m_fileDialog != 0 )
+    if( m_fileDialog != 0 )
     {
         m_fileDialog->close();
         m_fileDialog = 0;
     }
 }
 
-void FileEdit::focusInEvent(QFocusEvent *e)
+void FileEdit::focusInEvent( QFocusEvent* e )
 {
-    theLineEdit->event(e);
-    if (e->reason() == Qt::TabFocusReason || e->reason() == Qt::BacktabFocusReason) {
+    theLineEdit->event( e );
+    if( e->reason() == Qt::TabFocusReason || e->reason() == Qt::BacktabFocusReason )
+    {
         theLineEdit->selectAll();
     }
-    QWidget::focusInEvent(e);
+    QWidget::focusInEvent( e );
 }
 
-void FileEdit::focusOutEvent(QFocusEvent *e)
+void FileEdit::focusOutEvent( QFocusEvent* e )
 {
-    theLineEdit->event(e);
-    QWidget::focusOutEvent(e);
+    theLineEdit->event( e );
+    QWidget::focusOutEvent( e );
 }
 
-void FileEdit::keyPressEvent(QKeyEvent *e)
+void FileEdit::keyPressEvent( QKeyEvent* e )
 {
-    theLineEdit->event(e);
+    theLineEdit->event( e );
 }
 
-void FileEdit::keyReleaseEvent(QKeyEvent *e)
+void FileEdit::keyReleaseEvent( QKeyEvent* e )
 {
-    theLineEdit->event(e);
+    theLineEdit->event( e );
 }
 
 }

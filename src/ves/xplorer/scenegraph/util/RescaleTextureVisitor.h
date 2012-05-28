@@ -44,7 +44,7 @@ RescaleTextureVisitor API
 #include <osg/NodeVisitor>
 namespace osg
 {
-    class StateSet;
+class StateSet;
 }
 namespace ves
 {
@@ -62,10 +62,10 @@ public:
 
     virtual void apply( osg::Geode& node );
     virtual void apply( osg::Node& node );
-    
+
     void apply( osg::StateSet& stateset );
     void apply( osg::Texture& texture );
-    
+
 private:
 };
 }

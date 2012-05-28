@@ -84,7 +84,7 @@ cfdPresetVector::cfdPresetVector( cfdPresetVector const& src )
     numSteps( src.numSteps ),
     cuttingPlane( 0 )
 {
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdPresetVector::~cfdPresetVector()
@@ -100,14 +100,14 @@ cfdObjects* cfdPresetVector::CreateCopy()
 void cfdPresetVector::Update( void )
 {
     vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::ActiveDataSet = "
-        << this->GetActiveDataSet()
-        << std::endl << vprDEBUG_FLUSH;
+                          << this->GetActiveDataSet()
+                          << std::endl << vprDEBUG_FLUSH;
 
     if( GetObjectType() != BY_SURFACE )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector "<< this->cursorType
-            << " : " << usePreCalcData
-            << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector " << this->cursorType
+                              << " : " << usePreCalcData
+                              << std::endl << vprDEBUG_FLUSH;
 
         if( this->usePreCalcData && ( xyz < 3 ) )
         {
@@ -116,21 +116,21 @@ void cfdPresetVector::Update( void )
             if( !precomputedPlanes )
             {
                 vprDEBUG( vesDBG, 0 )
-                << "|\tDataset contains no precomputed vector planes."
-                << std::endl << vprDEBUG_FLUSH;
+                        << "|\tDataset contains no precomputed vector planes."
+                        << std::endl << vprDEBUG_FLUSH;
                 ves::xplorer::communication::CommunicationHandler::instance()
                 ->SendConductorMessage( "Dataset contains no precomputed vector planes.\n" );
                 return;
             }
 
-            vtkPolyData * preCalcData = 
+            vtkPolyData* preCalcData =
                 precomputedPlanes->GetClosestPlane( requestedValue );
 
             if( preCalcData == NULL )
             {
                 vprDEBUG( vesDBG, 0 )
-                << "|\t\tcfdPresetVector: no precalculated data available"
-                << std::endl << vprDEBUG_FLUSH;
+                        << "|\t\tcfdPresetVector: no precalculated data available"
+                        << std::endl << vprDEBUG_FLUSH;
                 this->updateFlag = false;
                 return;
             }
@@ -150,26 +150,26 @@ void cfdPresetVector::Update( void )
             mapper->SetScalarModeToUsePointFieldData();
             mapper->UseLookupTableScalarRangeOn();
             mapper->SelectColorArray( GetActiveDataSet()->
-                GetActiveScalarName().c_str() );
+                                      GetActiveScalarName().c_str() );
             mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
             mapper->Update();
-        
+
             //tempPipe->Delete();
             vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector::Update Yes Precalc : "
-                << this->cursorType << " : " << usePreCalcData
-                << std::endl << vprDEBUG_FLUSH;
+                                  << this->cursorType << " : " << usePreCalcData
+                                  << std::endl << vprDEBUG_FLUSH;
         }
         else
         {
             vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
             if( xyz < 3 )
             {
-                this->cuttingPlane = 
-                    new cfdCuttingPlane( GetActiveDataSet()->GetBounds(), 
-                    xyz, numSteps );
+                this->cuttingPlane =
+                    new cfdCuttingPlane( GetActiveDataSet()->GetBounds(),
+                                         xyz, numSteps );
                 // insure that we are using correct bounds for the given data set...
                 this->cuttingPlane->SetBounds(
-                                              this->GetActiveDataSet()->GetBounds() );
+                    this->GetActiveDataSet()->GetBounds() );
                 this->cuttingPlane->Advance( requestedValue );
                 vtkCutter* cutter = vtkCutter::New();
                 cutter->SetInput( GetActiveDataSet()->GetDataSet() );
@@ -204,21 +204,21 @@ void cfdPresetVector::Update( void )
                 writer->SetFileName( "testvecglyphs.vtp" );
                 writer->Write();
                 writer->Delete();
-            }*/      
-        
+            }*/
+
             mapper->SetInputConnection( glyph->GetOutputPort() );
             mapper->SetScalarModeToUsePointFieldData();
             mapper->UseLookupTableScalarRangeOn();
             mapper->SelectColorArray( GetActiveDataSet()->
-                GetActiveScalarName().c_str() );
+                                      GetActiveScalarName().c_str() );
             mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
             mapper->Update();
 
 
             c2p->Delete();
             vprDEBUG( vesDBG, 1 )
-                << "|\t\tNo Precalc : " << this->cursorType << " : " << usePreCalcData
-                << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
+                    << "|\t\tNo Precalc : " << this->cursorType << " : " << usePreCalcData
+                    << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
         }
     }
     else
@@ -237,10 +237,10 @@ void cfdPresetVector::Update( void )
         vtkActor* temp = vtkActor::New();
         temp->SetMapper( this->mapper );
         temp->GetProperty()->SetSpecularPower( 20.0f );
-        
+
         try
         {
-            osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = 
+            osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode =
                 new ves::xplorer::scenegraph::Geode();
             tempGeode->TranslateToGeode( temp );
             geodes.push_back( tempGeode.get() );
@@ -251,7 +251,7 @@ void cfdPresetVector::Update( void )
             mapper->Delete();
             mapper = vtkPolyDataMapper::New();
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
-            << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
         }
         temp->Delete();
     }
@@ -261,17 +261,17 @@ void cfdPresetVector::Update( void )
         try
         {
             OSGVectorStage* tempStage = new OSGVectorStage();
-            
-            osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = 
-                tempStage->createInstanced( ptmask->GetOutput(), 
-                GetActiveDataSet()->GetActiveVectorName(),  
-                GetActiveDataSet()->GetActiveScalarName(), scaleFactor );
+
+            osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode =
+                tempStage->createInstanced( ptmask->GetOutput(),
+                                            GetActiveDataSet()->GetActiveVectorName(),
+                                            GetActiveDataSet()->GetActiveScalarName(), scaleFactor );
             delete tempStage;
 
             osg::ref_ptr< osg::Uniform > warpScaleUniform =
                 tempGeode->getDrawable( 0 )->
                 getStateSet()->getUniform( "scalarMinMax" );
-            double scalarRange[ 2 ] = {0,0};
+            double scalarRange[ 2 ] = {0, 0};
             GetActiveDataSet()->GetUserRange( scalarRange );
             osg::Vec2 opacityValVec;
             warpScaleUniform->get( opacityValVec );
@@ -280,8 +280,8 @@ void cfdPresetVector::Update( void )
             warpScaleUniform->set( opacityValVec );
 
             geodes.push_back( tempGeode.get() );
-#if WRITE_IMAGE_DATA            
-            osgDB::writeNodeFile( *(tempGeode.get()), "gpu_vector_field.ive" );
+#if WRITE_IMAGE_DATA
+            osgDB::writeNodeFile( *( tempGeode.get() ), "gpu_vector_field.ive" );
 #endif
             this->updateFlag = true;
         }
@@ -290,8 +290,8 @@ void cfdPresetVector::Update( void )
             mapper->Delete();
             mapper = vtkPolyDataMapper::New();
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
-                << std::endl << vprDEBUG_FLUSH;
-        }        
+                                  << std::endl << vprDEBUG_FLUSH;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

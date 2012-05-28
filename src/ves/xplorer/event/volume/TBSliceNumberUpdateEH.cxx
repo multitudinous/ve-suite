@@ -78,7 +78,7 @@ void TextureBasedSliceNumberUpdateEventHandler::_operateOnNode( XMLObjectPtr veX
         isovalue->GetData( value );
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateNumberOfSlicePlanes( value );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid TextureDataSet!!" << std::endl;
         std::cout << "TextureBasedSliceNumberUpdateEventHandler::_operateOnNode()" << std::endl;

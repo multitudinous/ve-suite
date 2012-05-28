@@ -44,34 +44,46 @@
 
 #include <string>
 
-namespace Minerva { namespace Core { namespace Layers { class RasterLayer; } } }
+namespace Minerva
+{
+namespace Core
+{
+namespace Layers
+{
+class RasterLayer;
+}
+}
+}
 
-namespace ves {
-namespace xplorer {
-namespace minerva {
+namespace ves
+{
+namespace xplorer
+{
+namespace minerva
+{
 
-  class MinervaManager;
-  class ModelWrapper;
+class MinervaManager;
+class ModelWrapper;
 
 class EventHandler
 {
 public:
 
-  typedef ves::open::xml::CommandPtr CommandPtr;
-  typedef Minerva::Core::Layers::RasterLayer RasterLayer;
+    typedef ves::open::xml::CommandPtr CommandPtr;
+    typedef Minerva::Core::Layers::RasterLayer RasterLayer;
 
-  EventHandler();
-  virtual ~EventHandler();
+    EventHandler();
+    virtual ~EventHandler();
 
-  virtual void Execute ( CommandPtr command, MinervaManager& manager ) = 0;
+    virtual void Execute( CommandPtr command, MinervaManager& manager ) = 0;
 
 protected:
 
-  ModelWrapper* GetOrCreateModel ( const std::string& guid, MinervaManager& manager );
+    ModelWrapper* GetOrCreateModel( const std::string& guid, MinervaManager& manager );
 
-  static RasterLayer* _createRasterLayerFromCommand ( CommandPtr command );
-  static RasterLayer* _createWMSLayerFromCommand ( CommandPtr command );
-  static RasterLayer* _createFileSystemLayerFromCommand ( CommandPtr command );
+    static RasterLayer* _createRasterLayerFromCommand( CommandPtr command );
+    static RasterLayer* _createWMSLayerFromCommand( CommandPtr command );
+    static RasterLayer* _createFileSystemLayerFromCommand( CommandPtr command );
 };
 
 

@@ -94,6 +94,6 @@ private:
     Body_VEXplorer_i* m_xplorer;
 };
 }
-}    
+}
 }
 #endif //COMMAND_HANDLER_H

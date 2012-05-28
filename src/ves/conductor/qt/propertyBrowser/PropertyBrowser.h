@@ -137,7 +137,7 @@ public:
 
 
 Q_SIGNALS:
-    public Q_SLOTS :
+public Q_SLOTS :
     ///
     /// Internal slot that catches valueChanged signal from QtProperty bool types
     /// and attempts to synchronize the value of the underlying Property
@@ -156,7 +156,7 @@ Q_SIGNALS:
     ///
     /// Internal slot that catches valueChanged signal from QtProperty string types
     /// and attempts to synchronize the value of the underlying Property
-    void StringValueChanged( QtProperty* item, const QString & value );
+    void StringValueChanged( QtProperty* item, const QString& value );
 
     void FilePathValueChanged( QtProperty* item, const QString& value );
     void NodePathValueChanged( QtProperty* item, const QString& value );

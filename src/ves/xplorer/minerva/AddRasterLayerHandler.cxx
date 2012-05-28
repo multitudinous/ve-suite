@@ -73,11 +73,11 @@ AddRasterLayerHandler::~AddRasterLayerHandler()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void AddRasterLayerHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void AddRasterLayerHandler::Execute( CommandPtr command, MinervaManager& manager )
 {
-  Minerva::Core::Layers::RasterLayer::RefPtr layer ( EventHandler::_createRasterLayerFromCommand ( command ) );
-  if ( layer.valid() )
-  {
-    manager.AddRasterLayer ( layer.get() );
-  }
+    Minerva::Core::Layers::RasterLayer::RefPtr layer( EventHandler::_createRasterLayerFromCommand( command ) );
+    if( layer.valid() )
+    {
+        manager.AddRasterLayer( layer.get() );
+    }
 }

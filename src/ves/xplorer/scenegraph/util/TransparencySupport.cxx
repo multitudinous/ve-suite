@@ -44,7 +44,9 @@
 bool isTransparent( const osg::StateSet* stateSet )
 {
     if( stateSet == NULL )
+    {
         return( false );
+    }
 
     const bool hasBlendColor = ( stateSet->getAttribute( osg::StateAttribute::BLENDCOLOR ) != NULL );
     const bool hasBlendFunc = ( stateSet->getAttribute( osg::StateAttribute::BLENDFUNC ) != NULL );
@@ -58,7 +60,7 @@ bool isTransparent( const osg::StateSet* stateSet )
 
 
 ProtectTransparencyVisitor::ProtectTransparencyVisitor()
-  : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
+    : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
 {
 }
 
@@ -73,7 +75,7 @@ void ProtectTransparencyVisitor::apply( osg::Geode& geode )
     protectTransparent( geode.getStateSet() );
 
     unsigned int idx;
-    for( idx=0; idx<geode.getNumDrawables(); idx++ )
+    for( idx = 0; idx < geode.getNumDrawables(); idx++ )
     {
         protectTransparent( geode.getDrawable( idx )->getStateSet() );
     }
@@ -94,11 +96,15 @@ void ProtectTransparencyVisitor::protectTransparent( osg::StateSet* stateSet ) c
 
         osg::BlendColor* bc = dynamic_cast< osg::BlendColor* >( stateSet->getAttribute( osg::StateAttribute::BLENDCOLOR ) );
         if( bc != NULL )
+        {
             stateSet->setAttributeAndModes( bc, stateSet->getMode( GL_BLEND ) | osg::StateAttribute::PROTECTED );
+        }
 
         osg::BlendFunc* bf = dynamic_cast< osg::BlendFunc* >( stateSet->getAttribute( osg::StateAttribute::BLENDFUNC ) );
         if( bf != NULL )
+        {
             stateSet->setAttributeAndModes( bf, stateSet->getMode( GL_BLEND ) | osg::StateAttribute::PROTECTED );
+        }
     }
 }
 
@@ -108,36 +114,36 @@ bool ProtectTransparencyVisitor::isTransparentInternal( const osg::StateSet* sta
     bool hasTranslucentTexture = false;
     bool hasBlendFunc = ( stateSet->getAttribute( osg::StateAttribute::BLENDFUNC ) != 0 );
     bool hasTransparentRenderingHint = stateSet->getRenderingHint() == osg::StateSet::TRANSPARENT_BIN;
-    bool hasDepthSortBin = ( stateSet->getRenderBinMode() == osg::StateSet::USE_RENDERBIN_DETAILS ) ? 
-        ( stateSet->getBinName()=="DepthSortedBin" ) : false;
+    bool hasDepthSortBin = ( stateSet->getRenderBinMode() == osg::StateSet::USE_RENDERBIN_DETAILS ) ?
+                           ( stateSet->getBinName() == "DepthSortedBin" ) : false;
 
     // search for the existence of any texture object attributes
-    for( unsigned int i=0;i<stateSet->getTextureAttributeList().size();++i )
+    for( unsigned int i = 0; i < stateSet->getTextureAttributeList().size(); ++i )
     {
         const osg::Texture* texture = dynamic_cast< const osg::Texture* >(
-            stateSet->getTextureAttribute( i, osg::StateAttribute::TEXTURE ) );
+                                          stateSet->getTextureAttribute( i, osg::StateAttribute::TEXTURE ) );
         if( texture != NULL )
         {
-            for( unsigned int im=0;im<texture->getNumImages();++im )
+            for( unsigned int im = 0; im < texture->getNumImages(); ++im )
             {
-                const osg::Image* image = texture->getImage(im);
-                if (image && image->isImageTranslucent())
+                const osg::Image* image = texture->getImage( im );
+                if( image && image->isImageTranslucent() )
                 {
-                    hasTranslucentTexture = true;   
+                    hasTranslucentTexture = true;
                 }
             }
         }
     }
-    
+
     return( blendEnabled &&
-        ( hasTranslucentTexture || hasBlendFunc || hasTransparentRenderingHint || hasDepthSortBin ) );
+            ( hasTranslucentTexture || hasBlendFunc || hasTransparentRenderingHint || hasDepthSortBin ) );
 }
 
 
 
 
 RestoreOpacityVisitor::RestoreOpacityVisitor()
-  : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
+    : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
 {
 }
 
@@ -154,7 +160,7 @@ void RestoreOpacityVisitor::apply( osg::Geode& geode )
     transparentDisable( &geode );
 
     unsigned int idx;
-    for( idx=0; idx<geode.getNumDrawables(); idx++ )
+    for( idx = 0; idx < geode.getNumDrawables(); idx++ )
     {
         transparentDisable( geode.getDrawable( idx ) );
     }

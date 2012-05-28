@@ -42,21 +42,24 @@
 
 #include "ves/xplorer/minerva/EventHandler.h"
 
-namespace ves {
-namespace xplorer {
-namespace minerva {
+namespace ves
+{
+namespace xplorer
+{
+namespace minerva
+{
 
 
 class RemoveEarthHandler : public EventHandler
 {
-  typedef EventHandler BaseClass;
+    typedef EventHandler BaseClass;
 
 public:
 
-  RemoveEarthHandler();
-  virtual ~RemoveEarthHandler();
+    RemoveEarthHandler();
+    virtual ~RemoveEarthHandler();
 
-  virtual void Execute ( CommandPtr command, MinervaManager& manager );
+    virtual void Execute( CommandPtr command, MinervaManager& manager );
 };
 
 

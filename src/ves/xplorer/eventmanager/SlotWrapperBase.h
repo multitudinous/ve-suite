@@ -51,8 +51,8 @@ namespace eventmanager
 class SlotWrapperBase
 {
 public:
-    SlotWrapperBase( ){}
-    virtual ~SlotWrapperBase( ){}
+    SlotWrapperBase( ) {}
+    virtual ~SlotWrapperBase( ) {}
 private:
 
 };

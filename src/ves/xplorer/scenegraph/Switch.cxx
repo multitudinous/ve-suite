@@ -110,8 +110,8 @@ void Switch::SetName( std::string name )
 int Switch::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 {
     return replaceChild(
-        dynamic_cast< Node* >( childToBeReplaced ),
-        dynamic_cast< Node* >( newChild ) );
+               dynamic_cast< Node* >( childToBeReplaced ),
+               dynamic_cast< Node* >( newChild ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Switch::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )

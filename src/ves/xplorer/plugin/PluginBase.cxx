@@ -82,23 +82,23 @@ namespace plugin
 
 ////////////////////////////////////////////////////////////////////////////////
 PluginBase::PluginBase():
-        mOnSceneGraph( false ),
-        mCursor( 0 ),
-        mDevice( 0 ),
-        mModelHandler( 0 ),
-        mModel( 0 ),
-        mSceneManager( 0 ),
-        mEnvironmentHandler( 0 ),
-        mResourceManager( 0 ),
-        mCommunicationHandler( 0 ),
-        mXmlModel( ves::open::xml::model::ModelPtr() ),
-        mPhysicsSimulator( 0 ),
-        m_graphicalPluginManager( 0 ),
+    mOnSceneGraph( false ),
+    mCursor( 0 ),
+    mDevice( 0 ),
+    mModelHandler( 0 ),
+    mModel( 0 ),
+    mSceneManager( 0 ),
+    mEnvironmentHandler( 0 ),
+    mResourceManager( 0 ),
+    mCommunicationHandler( 0 ),
+    mXmlModel( ves::open::xml::model::ModelPtr() ),
+    mPhysicsSimulator( 0 ),
+    m_graphicalPluginManager( 0 ),
 #ifdef VE_SOUND
-        mSoundManager( 0 ),
+    mSoundManager( 0 ),
 #endif
-        mDCS( 0 ),
-        mWorldDCS( 0 )
+    mDCS( 0 ),
+    mWorldDCS( 0 )
 {
     //This needs to match the name of the gui plugin.
     //It is used in cfdVEPluginLoader::CreateObject. The name used is the name
@@ -115,7 +115,7 @@ PluginBase::~PluginBase()
 void PluginBase::InitializeNode( osg::Group* veworldDCS )
 {
     mDCS = new ves::xplorer::scenegraph::DCS();
-    std::string name("Plugin_");
+    std::string name( "Plugin_" );
     name += GetName();
     mDCS->SetName( name );
     mWorldDCS = veworldDCS;
@@ -129,7 +129,7 @@ void PluginBase::AddSelfToSG()
     {
         return;
     }
-    
+
     mOnSceneGraph = true;
     mWorldDCS->addChild( mDCS.get() );
 }
@@ -292,8 +292,8 @@ void PluginBase::SetModuleResults( const std::string& network )
         return;
     }
 
-    ves::open::xml::CommandPtr tempCommand = 
-        boost::dynamic_pointer_cast< ves::open::xml::Command >( 
+    ves::open::xml::CommandPtr tempCommand =
+        boost::dynamic_pointer_cast< ves::open::xml::Command >(
             objectVector.at( 0 ) );
     size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numDVP; ++i )
@@ -334,7 +334,7 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
     {
         mModel->SetModelData( mXmlModel );
     }
- 
+
     {
         bool hasID = false;
         osg::Node::DescriptionList descriptList;
@@ -349,13 +349,13 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
                 break;
             }
         }
-        
+
         if( !hasID )
         {
-            //Add this descriptor so that the whole "plugin" 
+            //Add this descriptor so that the whole "plugin"
             //can be turned "off" easily
-            mDCS->addDescription( "VE_XPLORER_PLUGIN_ID" );   
-            mDCS->addDescription( mXmlModel->GetID() );   
+            mDCS->addDescription( "VE_XPLORER_PLUGIN_ID" );
+            mDCS->addDescription( mXmlModel->GetID() );
         }
     }
 
@@ -365,7 +365,7 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
             mXmlModel->GetGeometry() );
     if( cadNodeData )
     {
-        ves::open::xml::DataValuePairPtr cadNode( 
+        ves::open::xml::DataValuePairPtr cadNode(
             new ves::open::xml::DataValuePair() );
         cadNode->SetDataType( std::string( "XMLOBJECT" ) );
         cadNode->SetData( "New Node", cadNodeData );
@@ -384,12 +384,12 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
     //process the information blocks
     if( mXmlModel->GetNumberOfInformationPackets() > 0 )
     {
-        ves::open::xml::DataValuePairPtr modelNode( 
+        ves::open::xml::DataValuePairPtr modelNode(
             new ves::open::xml::DataValuePair() );
         modelNode->SetDataType( std::string( "XMLOBJECT" ) );
         modelNode->SetData( "CREATE_NEW_DATASETS",
-                            ves::open::xml::model::ModelPtr( 
-                            new ves::open::xml::model::Model( *mXmlModel ) ) );
+                            ves::open::xml::model::ModelPtr(
+                                new ves::open::xml::model::Model( *mXmlModel ) ) );
 
         ves::open::xml::CommandPtr dataCommand( new ves::open::xml::Command() );
         dataCommand->AddDataValuePair( modelNode );
@@ -399,12 +399,12 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
         ves::open::xml::ParameterBlockPtr parameterBlock =
             mXmlModel->GetInformationPacket( 0 );
         ves::open::xml::DataValuePairPtr dataSetName(
-                     new ves::open::xml::DataValuePair() );
+            new ves::open::xml::DataValuePair() );
         ves::open::xml::DataValuePairPtr dataSetDVP = parameterBlock->GetProperty( "VTK_DATA_FILE" );
         if( dataSetDVP )
         {
-            dataSetName->SetData( "VTK_DATASET_NAME", 
-                                 dataSetDVP->GetDataString() );
+            dataSetName->SetData( "VTK_DATASET_NAME",
+                                  dataSetDVP->GetDataString() );
             dataCommand->AddDataValuePair( dataSetName );
             //Process the vtk data
             ves::xplorer::event::AddVTKDataSetEventHandler addVTKEH;
@@ -445,7 +445,7 @@ void PluginBase::SetCurrentCommands( std::vector< ves::open::xml::CommandPtr > c
     if( commands.size() > 0 )
     {
         vprDEBUG( vesDBG, 4 ) << commands.at( 0 )->GetCommandName() << std::endl
-        << vprDEBUG_FLUSH;
+                              << vprDEBUG_FLUSH;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

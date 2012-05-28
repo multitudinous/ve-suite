@@ -183,7 +183,7 @@ public:
     ///Get physics decimation value
     ///\return The decimation value
     const std::string& GetPhysicsDecimationValue();
-    
+
     ///Get the transform of this CAD node.
     ves::open::xml::TransformPtr GetTransform();
 
@@ -215,19 +215,19 @@ public:
     bool GetTransparentFlag() const;
     ///Set the mode of how to treat this node when vis is selected
     void SetTransparentFlag( bool transparent );
-    
+
     ///Set/get the longitude value.
-    void SetLongitude ( double );
+    void SetLongitude( double );
     double GetLongitude() const;
 
     ///Set/get the latitude value.
-    void SetLatitude ( double );
+    void SetLatitude( double );
     double GetLatitude() const;
 
     ///Set occlusion culling variable
     ///\param occlusionSetting The setting for the occlusion culling
     void SetOcclusionSettings( const std::string& occlusionSetting );
-    
+
     ///Get occlusion culling variable
     ///\return The setting for the occlusion culling
     const std::string& GetOcclusionSettings() const;
@@ -241,10 +241,10 @@ protected:
     ///\param rhs The CADNode to copy
     ///\param clone Create a clone of this node
     CADNode( const CADNode& rhs, bool clone = false );
-    
+
     ///Equal operator
     CADNode& operator=( const CADNode& rhs );
-        
+
     ///Internally update the XML data for this element.
     ///\param input The XML element information
     virtual void _updateVEElement( const std::string& input );
@@ -298,7 +298,7 @@ protected:
     bool mMakeTransparentOnVis;
     ///Set what level of culling
     std::string m_occlusionCulling;
-    
+
     double m_longitude;
     double m_latitude;
 };

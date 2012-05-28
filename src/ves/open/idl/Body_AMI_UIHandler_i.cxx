@@ -49,7 +49,7 @@ void Body_AMI_UIHandler_i::UpdateNetwork( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateNetwork_excep(
-    ::Messaging::ExceptionHolder * 
+    ::Messaging::ExceptionHolder *
 )
 {
     // Add your implementation here
@@ -63,7 +63,7 @@ void Body_AMI_UIHandler_i::UpdateModuleUI( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleUI_excep(
-    ::Messaging::ExceptionHolder * 
+    ::Messaging::ExceptionHolder *
 )
 {
     // Add your implementation here
@@ -77,7 +77,7 @@ void Body_AMI_UIHandler_i::UpdateModuleResult( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleResult_excep(
-    ::Messaging::ExceptionHolder * 
+    ::Messaging::ExceptionHolder *
 )
 {
     // Add your implementation here
@@ -119,7 +119,7 @@ void Body_AMI_UIHandler_i::SetXplorerData()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetXplorerData_excep(
-    ::Messaging::ExceptionHolder * 
+    ::Messaging::ExceptionHolder *
 )
 {
     // Add your implementation here
@@ -127,16 +127,16 @@ void Body_AMI_UIHandler_i::SetXplorerData_excep(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetCommand()
-{ 
+{
     /*this->response_handler_->SetCommand();
-    
+
     std::cout << "inner_callback_i deactivating self" << std::endl;
     PortableServer::ObjectId_var oid = this->poa_->servant_to_id(this);
     this->poa_->deactivate_object (oid.in());*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_AMI_UIHandler_i::SetCommand_excep( 
-    ::Messaging::ExceptionHolder * )
+void Body_AMI_UIHandler_i::SetCommand_excep(
+    ::Messaging::ExceptionHolder* )
 {
     throw CORBA::NO_IMPLEMENT();
 }

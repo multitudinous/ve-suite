@@ -58,13 +58,13 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 WireframeEventHandler::WireframeEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 WireframeEventHandler::WireframeEventHandler( const WireframeEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -100,7 +100,7 @@ void WireframeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         std::cout << "Invalid object passed to WireframeEventHandler::SetGlobalBaseObject!" << std::endl;
@@ -110,20 +110,20 @@ void WireframeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
 void WireframeEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
-    DataValuePairPtr activeModelDVP = 
+    DataValuePairPtr activeModelDVP =
         command->GetDataValuePair( "Wire Frame State" );
     unsigned int state = 0;
     activeModelDVP->GetData( state );
 
-    std::string datasetName = 
+    std::string datasetName =
         command->GetDataValuePair( "Active Dataset" )->GetDataString();
-    std::string scalarName = 
+    std::string scalarName =
         command->GetDataValuePair( "Active Scalar" )->GetDataString();
 
     if( _activeModel )
     {
-        DataSet* dataSet = _activeModel->GetCfdDataSet( 
-            _activeModel->GetIndexOfDataSet( datasetName ) );
+        DataSet* dataSet = _activeModel->GetCfdDataSet(
+                               _activeModel->GetIndexOfDataSet( datasetName ) );
         _activeModel->SetActiveDataSet( dataSet );
         dataSet->SetActiveScalar( scalarName );
         dataSet->SetWireframeState( state );

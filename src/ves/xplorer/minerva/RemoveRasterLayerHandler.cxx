@@ -76,13 +76,13 @@ RemoveRasterLayerHandler::~RemoveRasterLayerHandler()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void RemoveRasterLayerHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void RemoveRasterLayerHandler::Execute( CommandPtr command, MinervaManager& manager )
 {
-  ves::open::xml::DataValuePairPtr guidData ( command->GetDataValuePair ( ves::util::names::UNIQUE_ID ) );
+    ves::open::xml::DataValuePairPtr guidData( command->GetDataValuePair( ves::util::names::UNIQUE_ID ) );
 
-  std::string guid;
-  guidData->GetData ( guid );
+    std::string guid;
+    guidData->GetData( guid );
 
-  manager.RemoveRasterLayer ( guid );
+    manager.RemoveRasterLayer( guid );
 
 }

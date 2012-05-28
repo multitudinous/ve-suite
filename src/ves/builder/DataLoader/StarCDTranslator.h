@@ -50,7 +50,7 @@ public:
     ///Display help for the StarCD translator
     virtual void DisplayHelp( void );
 
-class VE_USER_BUILDER_EXPORTS StarCDTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    class VE_USER_BUILDER_EXPORTS StarCDTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
     {
     public:
         StarCDTranslateCbk()
@@ -62,12 +62,12 @@ class VE_USER_BUILDER_EXPORTS StarCDTranslateCbk: public ves::builder::cfdTransl
         //appropriately by the translate callback.      //
         //////////////////////////////////////////////////
         virtual void Translate( vtkDataObject*& outputDataset,
-                               cfdTranslatorToVTK* toVTK,
-                               vtkAlgorithm*& dataReader );
+                                cfdTranslatorToVTK* toVTK,
+                                vtkAlgorithm*& dataReader );
 
     protected:
     };
-class VE_USER_BUILDER_EXPORTS StarCDPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    class VE_USER_BUILDER_EXPORTS StarCDPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
     {
     public:
         StarCDPreTranslateCbk()

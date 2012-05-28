@@ -58,14 +58,14 @@ STLTranslator::~STLTranslator()
 {}
 
 void STLTranslator::STLPreTranslateCbk::Preprocess( int argc, char** argv,
-                                                          cfdTranslatorToVTK* toVTK )
+        cfdTranslatorToVTK* toVTK )
 {
     PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 
 void STLTranslator::STLTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                      cfdTranslatorToVTK* toVTK,
-                                                      vtkAlgorithm*& dataReader )
+        cfdTranslatorToVTK* toVTK,
+        vtkAlgorithm*& dataReader )
 {
     STLTranslator* stlToVTK =
         static_cast< STLTranslator* >( toVTK );
@@ -73,7 +73,7 @@ void STLTranslator::STLTranslateCbk::Translate( vtkDataObject*& outputDataset,
     {
         return;
     }
-    
+
     //check and see if data file is present with cas file
     std::string casFile = stlToVTK->GetFile( 0 );
     //now convert cas and dat file
@@ -86,7 +86,7 @@ void STLTranslator::STLTranslateCbk::Translate( vtkDataObject*& outputDataset,
     {
         outputDataset = vtkPolyData::New();
     }
-    
+
     outputDataset->ShallowCopy( reader->GetOutput() );
     outputDataset->Update();
     reader->Delete();
@@ -95,6 +95,6 @@ void STLTranslator::STLTranslateCbk::Translate( vtkDataObject*& outputDataset,
 void STLTranslator::DisplayHelp( void )
 {
     std::cout << "|\tSTL Translator Usage:" << std::endl
-        << "\t -singleFile <filename_to_load> -o <output_dir> "
-        << "-outFileName <output_filename> -loader stl -w file" << std::endl;
+              << "\t -singleFile <filename_to_load> -o <output_dir> "
+              << "-outFileName <output_filename> -loader stl -w file" << std::endl;
 }

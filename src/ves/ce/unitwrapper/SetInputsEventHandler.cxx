@@ -42,7 +42,7 @@ using namespace VE_CE;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 SetInputsEventHandler::SetInputsEventHandler()
-        : VE_CE::EventHandler()
+    : VE_CE::EventHandler()
 {
     baseModel = ves::open::xml::model::ModelPtr();
 }
@@ -63,7 +63,7 @@ void SetInputsEventHandler::SetBaseObject( ves::open::xml::XMLObjectPtr model )
             baseModel = boost::dynamic_pointer_cast<ves::open::xml::model::Model>( model );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         baseModel = ves::open::xml::model::ModelPtr();
         std::cout << "Invalid object passed to SetInputsEventHandler::SetGlobalBaseObject!" << std::endl;
@@ -98,7 +98,7 @@ std::string SetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObje
             }*/
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cerr << " ERROR : SetInputsEventHandler::Execute " << std::endl;
     }

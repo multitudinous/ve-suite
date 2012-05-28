@@ -63,7 +63,9 @@ osg::ref_ptr<osg::Group> ves::xplorer::volume::CreateAdvectionSubGraph( cfdTextu
         float )
 {
     if( !tm )
+    {
         return 0;
+    }
 
     osg::ref_ptr<osg::Geode> geode = new osg::Geode();
 

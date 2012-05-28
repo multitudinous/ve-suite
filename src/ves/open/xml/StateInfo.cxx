@@ -43,7 +43,7 @@ using namespace ves::open::xml;
 
 //////////////////////////
 StateInfo::StateInfo()
-        : XMLObject()
+    : XMLObject()
 {
     SetObjectType( "StateInfo" );
 }
@@ -134,12 +134,12 @@ std::vector< CommandPtr > StateInfo::GetStateVector( void )
 {
     std::vector< CommandPtr > tempVec;
     std::copy( mStateInfo.begin(), mStateInfo.end(),
-              std::back_inserter( tempVec ) );
+               std::back_inserter( tempVec ) );
     return tempVec;
 }
 /////////////////////////////////////////////////////
 StateInfo::StateInfo( const StateInfo& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     for( size_t i = 0; i < input.mStateInfo.size(); i++ )
     {

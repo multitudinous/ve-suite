@@ -53,7 +53,7 @@ TextureBasedUpdateSolutionEventHandler::TextureBasedUpdateSolutionEventHandler()
 ///////////////////////////////////////////////////////////////////
 TextureBasedUpdateSolutionEventHandler
 ::TextureBasedUpdateSolutionEventHandler( const TextureBasedUpdateSolutionEventHandler& ceh )
-: ves::xplorer::event::TextureBasedEventHandler( ceh )
+    : ves::xplorer::event::TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedUpdateSolutionEventHandler::~TextureBasedUpdateSolutionEventHandler()
@@ -124,7 +124,7 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode( XMLObjectPtr veXMLO
             }
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid TextureDataSet!!" << std::endl;
         std::cout << "TextureBasedUpdateSolutionEventHandler::_operateOnNode()" << std::endl;

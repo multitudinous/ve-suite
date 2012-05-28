@@ -113,17 +113,17 @@ UIManager::UIManager() :
     mMinimizeXOffset( 10.0f ),
     mMoveElement( 0 ),
     mMouseInsideUI( true ), // We start out true, since no Qt events will happen
-                            // if we start out false. And that means no UI would
-                            // ever appear.
-    m_lineSegmentIntersector( new osgUtil::LineSegmentIntersector( 
-        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
+    // if we start out false. And that means no UI would
+    // ever appear.
+    m_lineSegmentIntersector( new osgUtil::LineSegmentIntersector(
+                                  osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
     m_selectedUIElement( 0 ),
     m_updateBBoxes( false ),
     m_bringToFront( 0 ),
     m_isDesktopMode( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() ),
     m_isWandIntersection( false ),
     m_useRegionDamaging( false ),
-    m_logger( Poco::Logger::get("conductor.EventDebug") ),
+    m_logger( Poco::Logger::get( "conductor.EventDebug" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     // Register signals
@@ -131,71 +131,71 @@ UIManager::UIManager() :
     using ves::xplorer::eventmanager::SignalWrapper;
 
     evm->RegisterSignal(
-            new SignalWrapper< voidBoolSignalType >( &mUIEnterLeaveSignal ),
-            "UIManager.EnterLeaveUI" );
+        new SignalWrapper< voidBoolSignalType >( &mUIEnterLeaveSignal ),
+        "UIManager.EnterLeaveUI" );
 
     CONNECTSIGNALS_2( "%.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &UIManager::SetStartEndPoint,
-                     mConnections, any_SignalType, normal_Priority );
-    
+                      mConnections, any_SignalType, normal_Priority );
+
     //CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &UIManager::SetStartEndPoint,
     //                 m_connections, any_SignalType, normal_Priority );
-                     
+
     // Connect slots to external signals
     CONNECTSIGNALS_0( "%HideShowUI%", void (), &UIManager::ToggleVisibility, mConnections,
-                      any_SignalType, highest_Priority);
+                      any_SignalType, highest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool ( int, int, int, int ),
-                     ves::xplorer::eventmanager::BooleanPropagationCombiner,
-                     &UIManager::MouseMoveEvent, mInputConnections,
-                     any_SignalType,highest_Priority );
+                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               &UIManager::MouseMoveEvent, mInputConnections,
+                               any_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonPress%",bool ( gadget::Keys, int, int, int ),
-                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
+    CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonPress%", bool ( gadget::Keys, int, int, int ),
+                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               &UIManager::ButtonPressEvent, mInputConnections,
+                               button_SignalType, highest_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonRelease%", bool ( gadget::Keys, int, int, int ),
+                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               &UIManager::ButtonReleaseEvent, mInputConnections,
+                               button_SignalType, highest_Priority );
+
+    CONNECTSIGNALS_5_COMBINER( "%Mouse.DoubleClick%", bool( gadget::Keys, int, int, int, int ),
+                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               &UIManager::MouseDoubleClickEvent, mInputConnections,
+                               button_SignalType, highest_Priority );
+
+    CONNECTSIGNALS_3_COMBINER( "%KeyPress%", bool ( gadget::Keys, int, char ),
+                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               &UIManager::KeyPressEvent, mInputConnections,
+                               keyboard_SignalType, highest_Priority );
+
+    CONNECTSIGNALS_3_COMBINER( "%KeyRelease%", bool ( gadget::Keys, int, char ),
+                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               &UIManager::KeyReleaseEvent, mInputConnections,
+                               keyboard_SignalType, highest_Priority );
+
+    CONNECTSIGNALS_5_COMBINER( "%Mouse.Scroll%", bool ( int, int, int, int, int ),
+                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               &UIManager::MouseScrollEvent, mInputConnections,
+                               input_SignalType, highest_Priority );
+
+    ///Setup the wand now
+    CONNECTSIGNALS_4( "%Wand.ButtonPress%", void( gadget::Keys, int, int, int ),
                       &UIManager::ButtonPressEvent, mInputConnections,
                       button_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonRelease%",bool ( gadget::Keys, int, int, int ),
-                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
+    CONNECTSIGNALS_4( "%Wand.ButtonRelease%", void( gadget::Keys, int, int, int ),
                       &UIManager::ButtonReleaseEvent, mInputConnections,
                       button_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_5_COMBINER( "%Mouse.DoubleClick%", bool( gadget::Keys, int, int, int, int ),
-                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
+    CONNECTSIGNALS_5( "%Wand.DoubleClick%", void( gadget::Keys, int, int, int, int ),
                       &UIManager::MouseDoubleClickEvent, mInputConnections,
                       button_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_3_COMBINER( "%KeyPress%", bool ( gadget::Keys, int, char ),
-                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
-                      &UIManager::KeyPressEvent, mInputConnections,
-                      keyboard_SignalType, highest_Priority );
-
-    CONNECTSIGNALS_3_COMBINER( "%KeyRelease%", bool ( gadget::Keys, int, char ),
-                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
-                      &UIManager::KeyReleaseEvent, mInputConnections,
-                      keyboard_SignalType, highest_Priority );
-
-    CONNECTSIGNALS_5_COMBINER( "%Mouse.Scroll%", bool ( int, int, int, int, int ),
-                      ves::xplorer::eventmanager::BooleanPropagationCombiner,
-                      &UIManager::MouseScrollEvent, mInputConnections,
-                      input_SignalType, highest_Priority );
-           
-    ///Setup the wand now
-    CONNECTSIGNALS_4( "%Wand.ButtonPress%", void( gadget::Keys, int, int, int ),
-                              &UIManager::ButtonPressEvent, mInputConnections,
-                              button_SignalType, highest_Priority );
-    
-    CONNECTSIGNALS_4( "%Wand.ButtonRelease%", void( gadget::Keys, int, int, int ),
-                              &UIManager::ButtonReleaseEvent, mInputConnections,
-                              button_SignalType, highest_Priority );
-    
-    CONNECTSIGNALS_5( "%Wand.DoubleClick%", void( gadget::Keys, int, int, int, int ),
-                              &UIManager::MouseDoubleClickEvent, mInputConnections,
-                              button_SignalType, highest_Priority );
-
     CONNECTSIGNALS_4( "Wand.WandMove", void( int, int, int, int ),
-                              &UIManager::MouseMoveEvent, mInputConnections,
-                              any_SignalType,highest_Priority );
-    
+                      &UIManager::MouseMoveEvent, mInputConnections,
+                      any_SignalType, highest_Priority );
+
     // Force input signal monopoly to agree with default state of mMouseInsideUI
     _monopolizeInput( mMouseInsideUI );
 }
@@ -308,14 +308,14 @@ void UIManager::Update()
         //UpdateElementBoundingBoxes();
         m_updateBBoxes = false;
     }
-    
+
     // Update the UI's rectangle if it has been dirtied.
     if( mRectangleDirty )
     {
         //mProjection->setMatrix( osg::Matrix::ortho2D( mLeft, mRight,
         //                                              mBottom, mTop ) );
         //mProjection->setMatrix( mTempProj );
-        
+
         mRectangleDirty = false;
     }
 
@@ -426,7 +426,7 @@ void UIManager::Initialize( osg::Group* )
             "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
             "gl_FrontColor = gl_Color;\n"
             "} \n";
-        
+
         vertexShader->setType( osg::Shader::VERTEX );
         vertexShader->setShaderSource( vertexSource );
         vertexShader->setName( "VS UI Quad Vertex Shader" );
@@ -435,14 +435,14 @@ void UIManager::Initialize( osg::Group* )
 
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     std::string fragmentSource =
-    "uniform sampler2D baseMap;\n"
-    "uniform vec2 mousePoint;\n"
-    "uniform vec3 glowColor;\n"
-    "uniform float opacityVal;\n"
-    "uniform float aspectRatio;\n"
+        "uniform sampler2D baseMap;\n"
+        "uniform vec2 mousePoint;\n"
+        "uniform vec3 glowColor;\n"
+        "uniform float opacityVal;\n"
+        "uniform float aspectRatio;\n"
 
-    "void main()\n"
-    "{\n"
+        "void main()\n"
+        "{\n"
         "vec3 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ).rgb;\n"
 
         "vec2 v = abs( gl_TexCoord[ 0 ].st - mousePoint );\n"
@@ -455,13 +455,13 @@ void UIManager::Initialize( osg::Group* )
         //Equation of a circle: (x - h)^2 + (y - k)^2 = r^2
         "if( ( v2.s + v2.t ) <= r2 )\n"
         "{\n"
-            "float grad = smoothstep( 0.0, r2, v2.s + v2.t );\n"
-            "baseColor = mix( vec3( 1.0, 0.0, 0.0 ), baseColor, grad );\n"
+        "float grad = smoothstep( 0.0, r2, v2.s + v2.t );\n"
+        "baseColor = mix( vec3( 1.0, 0.0, 0.0 ), baseColor, grad );\n"
         "}\n"
 
         "gl_FragData[ 0 ] = vec4( baseColor, opacityVal );\n"
         "gl_FragData[ 1 ] = vec4( glowColor, opacityVal );\n"
-    "}\n";
+        "}\n";
 
     fragmentShader->setType( osg::Shader::FRAGMENT );
     fragmentShader->setShaderSource( fragmentSource );
@@ -485,7 +485,7 @@ void UIManager::Initialize( osg::Group* )
         postRenderCamera->setProjectionMatrix( osg::Matrix::identity() );
         ///This postRenderCamera is added to the scene graph in the
         ///void UIManager::AddUIToNode( osg::Group* node ) function. Again
-        ///this is only needed in desktop mode to correct the ui rendering 
+        ///this is only needed in desktop mode to correct the ui rendering
         ///problems.
         postRenderCamera->addChild( mUIGroup.get() );
     }
@@ -498,19 +498,19 @@ void UIManager::Initialize( osg::Group* )
         //stateset->setNestRenderBins( false );
         //Set depth test to always pass and don't write to the depth buffer
         stateset->setMode(
-                          GL_LIGHTING,
-                          osg::StateAttribute::OFF |
-                          osg::StateAttribute::OVERRIDE );
+            GL_LIGHTING,
+            osg::StateAttribute::OFF |
+            osg::StateAttribute::OVERRIDE );
         stateset->setMode(
-                          GL_DEPTH_TEST,
-                          osg::StateAttribute::OFF |
-                          osg::StateAttribute::OVERRIDE );
+            GL_DEPTH_TEST,
+            osg::StateAttribute::OFF |
+            osg::StateAttribute::OVERRIDE );
         /*osg::ref_ptr< osg::Depth > depth = new osg::Depth();
         depth->setFunction( osg::Depth::ALWAYS );
         depth->setWriteMask( true );
-        stateset->setAttributeAndModes( depth.get(), 
+        stateset->setAttributeAndModes( depth.get(),
             osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );*/
-            
+
         mUIGroup->setCullingActive( false );
     }
 
@@ -528,22 +528,22 @@ void UIManager::Initialize( osg::Group* )
     }
 
     {
-        m_mousePointUniform = 
+        m_mousePointUniform =
             new osg::Uniform( "mousePoint", osg::Vec2d( -1.0, -1.0 ) );
         stateset->addUniform( m_mousePointUniform.get() );
     }
 
     {
         float uiAspectRatio = 1.0;
-        m_aspectRatioUniform = 
+        m_aspectRatioUniform =
             new osg::Uniform( "aspectRatio", uiAspectRatio );
         stateset->addUniform( m_aspectRatioUniform.get() );
     }
 
     {
         osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
-        bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
-                        osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+        bf->setFunction( osg::BlendFunc::SRC_ALPHA,
+                         osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
         stateset->setMode( GL_BLEND, glModeValue );
         stateset->setAttributeAndModes( bf.get(), glModeValue );
     }
@@ -578,10 +578,10 @@ void UIManager::_insertNodesToAdd()
             osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
             UIElement* element = iter->second;
             osg::Image* img = new osg::Image;
-            img->allocateImage(element->GetImageWidth(), element->GetImageHeight(), 1, GL_RGB, GL_UNSIGNED_BYTE);
+            img->allocateImage( element->GetImageWidth(), element->GetImageHeight(), 1, GL_RGB, GL_UNSIGNED_BYTE );
             texture->setImage( img );
             texture->setSubloadCallback( m_subloaders[ element ].get() );
-            tempGeode->getOrCreateStateSet()->setTextureAttributeAndModes(0, texture.get(), osg::StateAttribute::ON);
+            tempGeode->getOrCreateStateSet()->setTextureAttributeAndModes( 0, texture.get(), osg::StateAttribute::ON );
         }
         else
         {
@@ -596,12 +596,12 @@ void UIManager::_insertNodesToAdd()
 void UIManager::_repaintChildren()
 {
     ///Update all of the elements and textures
-    for( std::list< UIElement* >::const_iterator z_order = m_zOrder.begin(); 
-        z_order != m_zOrder.end(); ++z_order )
+    for( std::list< UIElement* >::const_iterator z_order = m_zOrder.begin();
+            z_order != m_zOrder.end(); ++z_order )
     {
         // Check whether this element is currently switched as visible. If not,
         // no need to waste time rendering it.
-        UIElement* element = (*z_order);
+        UIElement* element = ( *z_order );
         if( element->IsVisible() )
         {
             float uiAspectRatio =
@@ -612,12 +612,12 @@ void UIManager::_repaintChildren()
             ///This code must be left here to correctly update the UI.
             osg::ref_ptr< osg::Image > image_Data = element->RenderElementToImage();
 
-            // Only reset the image if element tells us it has changed since 
+            // Only reset the image if element tells us it has changed since
             // last time
             if( element->IsDirty() )
             {
-                std::map< UIElement*, osg::ref_ptr< TextureSubloader > >::const_iterator 
-                    subIter = m_subloaders.find( element );
+                std::map< UIElement*, osg::ref_ptr< TextureSubloader > >::const_iterator
+                subIter = m_subloaders.find( element );
                 osg::ref_ptr< TextureSubloader > subloader = subIter->second.get();
                 if( !m_useRegionDamaging )
                 {
@@ -628,16 +628,16 @@ void UIManager::_repaintChildren()
                 else
                 {
                     std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > >
-                            regions = element->GetDamagedAreas();
+                    regions = element->GetDamagedAreas();
                     for( size_t index = 0; index < regions.size(); ++index )
                     {
                         std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > region =
-                                regions.at( index );
+                            regions.at( index );
                         subloader->AddUpdate( region.first.get(),
-                                                region.second.first,
-                                                region.second.second );
+                                              region.second.first,
+                                              region.second.second );
                     }
-                    
+
                     if( regions.empty() )
                     {
                         subloader->ClearData();
@@ -684,7 +684,7 @@ void UIManager::UpdateElementBoundingBoxes()
 {
     ElementMap_type::const_iterator map_iterator;
     for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-        ++map_iterator )
+            ++map_iterator )
     {
         mElementPositionsOrtho2D[ map_iterator->second ] = _computeMouseBoundsForElement( map_iterator->second );
     }
@@ -707,8 +707,8 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
     {
         if( TestWandIntersection() )
         {
-            ElementMap_type::const_iterator iter = 
-            mElements.find( m_selectedUINode->asGeode() );
+            ElementMap_type::const_iterator iter =
+                mElements.find( m_selectedUINode->asGeode() );
             if( iter != mElements.end() )
             {
                 m_selectedUIElement = iter->second;
@@ -718,7 +718,7 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
         return false;
         //return m_isWandIntersection;
     }
-    
+
     // Walk through every visible quad we own, in descending z-order,
     // and see if the point lies on it
     UIElement* tempElement = 0;
@@ -753,8 +753,8 @@ bool UIManager::Test3DPointerCoordinates( int& x, int& y )
     {
         if( TestWandIntersection() )
         {
-            ElementMap_type::const_iterator iter = 
-            mElements.find( m_selectedUINode->asGeode() );
+            ElementMap_type::const_iterator iter =
+                mElements.find( m_selectedUINode->asGeode() );
             if( iter != mElements.end() )
             {
                 m_selectedUIElement = iter->second;
@@ -852,8 +852,8 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
         element->SetMinimized( true );
 
         c1.setPosition( osg::Vec3f( mMinimizeXOffset, yPadding, 0.0f ) );
-        float xSize = downScale * (uiCorners[ 1 ] - uiCorners[ 0 ]);
-        float ySize = downScale * (uiCorners[ 3 ] - uiCorners[ 2 ]);
+        float xSize = downScale * ( uiCorners[ 1 ] - uiCorners[ 0 ] );
+        float ySize = downScale * ( uiCorners[ 3 ] - uiCorners[ 2 ] );
         c1.setScale( osg::Vec3f( xSize, ySize, 1.0 ) );
         osg::Matrixf tempMatrix;
         c1.getMatrix( tempMatrix );
@@ -888,14 +888,14 @@ void UIManager::_doMinMaxElement( UIElement* element, bool minimize )
         osg::Matrixf current;
         std::list< UIElement* >::iterator minElemIterator;
         for( minElemIterator = m_minimizedElements.begin();
-             minElemIterator != m_minimizedElements.end();
-             ++minElemIterator )
+                minElemIterator != m_minimizedElements.end();
+                ++minElemIterator )
         {
             if( after )
             {
-                current = (*minElemIterator)->GetUIMatrix();
-                (*minElemIterator)->PopUIMatrix();
-                (*minElemIterator)->PushUIMatrix( current * moveLeft );
+                current = ( *minElemIterator )->GetUIMatrix();
+                ( *minElemIterator )->PopUIMatrix();
+                ( *minElemIterator )->PushUIMatrix( current * moveLeft );
             }
 
             if( *minElemIterator == element )
@@ -946,12 +946,12 @@ osg::Vec4 UIManager::_computeMouseBoundsForElement( UIElement* element )
     //This function basically is creating the screen coordinates to do
     //mouse testing against to see if the mouse is over the ui
     osg::ref_ptr< osg::Geode > geode = element->GetGeode();
-    osg::Vec3Array* vertexArray = 
+    osg::Vec3Array* vertexArray =
         static_cast< osg::Vec3Array* >( geode->getDrawable( 0 )->asGeometry()->getVertexArray() );
     osg::Vec3& ll = vertexArray->at( 0 );
     osg::Vec3& ur = vertexArray->at( 2 );
 
-    osg::Matrixd const& windowMat = 
+    osg::Matrixd const& windowMat =
         ves::xplorer::scenegraph::SceneManager::instance()->
         GetCurrentGLTransformInfo()->GetWindowMatrixOSG();
     osg::Vec3 min = ll * windowMat;
@@ -1029,30 +1029,30 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
     {
         return false;
     }
-    
+
     bool visible = m_selectedUIElement->IsVisible();
     bool minimized = m_selectedUIElement->IsMinimized();
 
     // CTRL + Middle button toggles display of titlebar
-    if( (!minimized)
-        && (state & gadget::BUTTON2_MASK) && (state & gadget::CTRL_MASK) )
+    if( ( !minimized )
+            && ( state & gadget::BUTTON2_MASK ) && ( state & gadget::CTRL_MASK ) )
     {
         m_selectedUIElement->ToggleTitlebar();
         return false;
     }
 
     // Middle button without CTRL starts a move operation
-    if( (!mMoveElement) && (state & gadget::BUTTON2_MASK)
-        && (!minimized) && (!(state & gadget::CTRL_MASK))  )
+    if( ( !mMoveElement ) && ( state & gadget::BUTTON2_MASK )
+            && ( !minimized ) && ( !( state & gadget::CTRL_MASK ) ) )
     {
         mMoveElement = m_selectedUIElement;
     }
 
     // Bring element to top of z-order if it isn't already there
-    if( *(m_zOrder.begin()) != m_selectedUIElement )
+    if( *( m_zOrder.begin() ) != m_selectedUIElement )
     {
         // Tell the element that was previously on top that it has been lowered
-        (*(m_zOrder.begin()))->Lower();
+        ( *( m_zOrder.begin() ) )->Lower();
         // Move the new one to the top and tell it to raise
         m_zOrder.remove( m_selectedUIElement );
         m_zOrder.push_front( m_selectedUIElement );
@@ -1170,7 +1170,7 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
     }
 
     //Test3DPointerCoordinates( x, y );
-    
+
     // Store off coordinates and deltas
     mDxPointer = x - mCurrentXPointer;
     mDyPointer = y - mCurrentYPointer;
@@ -1214,13 +1214,13 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
     // a move operation already in progress. We duplicate the code rather than
     // moving the Ortho2DTestPointerCoordinates test before that code so that
     // we can avoid a somewhat expensive pointercoord test when it isn't necessary.
-//    if( (!mMoveElement) && (state & gadget::BUTTON2_MASK)
-//        && (!minimized) && (!(state & gadget::CTRL_MASK))  )
-//    {
-//        mMoveElement = m_selectedUIElement;
-//        mMoveElement->MoveCanvas( mDxPointer, mDyPointer );
-//        return false;
-//    }
+    //    if( (!mMoveElement) && (state & gadget::BUTTON2_MASK)
+    //        && (!minimized) && (!(state & gadget::CTRL_MASK))  )
+    //    {
+    //        mMoveElement = m_selectedUIElement;
+    //        mMoveElement->MoveCanvas( mDxPointer, mDyPointer );
+    //        return false;
+    //    }
 
     // Only send events if element is visible and not minimzed
     if( visible && ( !minimized ) )
@@ -1239,7 +1239,7 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
 bool UIManager::MouseDoubleClickEvent( gadget::Keys button, int x, int y, int z, int state )
 {
     boost::ignore_unused_variable_warning( z );
-    
+
     if( !_okayToSendEvent() )
     {
         return false;
@@ -1302,7 +1302,7 @@ bool UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
     {
         return false;
     }
-    
+
     bool visible = m_selectedUIElement->IsVisible();
     bool minimized = m_selectedUIElement->IsMinimized();
 
@@ -1340,7 +1340,7 @@ bool UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
     {
         return false;
     }
-    
+
     bool visible = m_selectedUIElement->IsVisible();
     bool minimized = m_selectedUIElement->IsMinimized();
 
@@ -1377,27 +1377,27 @@ void UIManager::_monopolizeInput( bool monopolize )
     {
         // Monopolize all key/button input events
         ves::xplorer::eventmanager::EventManager* evm =
-                ves::xplorer::eventmanager::EventManager::instance();
+            ves::xplorer::eventmanager::EventManager::instance();
 
         ves::xplorer::eventmanager::ScopedConnectionList::ConnectionList_type::iterator iter
-                = mInputConnections.GetBegin();
+            = mInputConnections.GetBegin();
 
         while( iter != mInputConnections.GetEnd() )
         {
             mInputMonopolies.push_back(
-                    evm->MonopolizeConnectionStrong( (*iter) ) );
+                evm->MonopolizeConnectionStrong( ( *iter ) ) );
             ++iter;
         }
     }
     else
     {
         // Release all key/button monopolies
-        std::vector< boost::shared_ptr<
-            ves::xplorer::eventmanager::ConnectionMonopoly >
-            >::iterator iter = mInputMonopolies.begin();
+        std::vector < boost::shared_ptr <
+        ves::xplorer::eventmanager::ConnectionMonopoly >
+        >::iterator iter = mInputMonopolies.begin();
         while( iter != mInputMonopolies.end() )
         {
-            (*iter).reset();
+            ( *iter ).reset();
             ++iter;
         }
     }
@@ -1405,7 +1405,7 @@ void UIManager::_monopolizeInput( bool monopolize )
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group& UIManager::GetUIRootNode() const
 {
-    return *(mUIGroup.get());
+    return *( mUIGroup.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::TestWandIntersection()
@@ -1417,7 +1417,7 @@ bool UIManager::TestWandIntersection()
     //Do an interesection test only on that node with the wand line
     osgUtil::LineSegmentIntersector::Intersections& intersections =
         ves::xplorer::scenegraph::TestForIntersections( *m_lineSegmentIntersector.get(), GetUIRootNode() );
-    
+
     m_selectedUINode = 0;
     m_selectedUIElement = 0;
     m_intersectionPoint = osg::Vec3d( -10000, -10000, -10000 );
@@ -1426,13 +1426,13 @@ bool UIManager::TestWandIntersection()
     {
         //Now do a test to determine where the wand ray is interesting the plane
         //of the UI texture so that we can translate that to an x,y location
-        osgUtil::LineSegmentIntersector::Intersection tempIntersection = 
-            *(intersections.begin());
+        osgUtil::LineSegmentIntersector::Intersection tempIntersection =
+            *( intersections.begin() );
         m_intersectionPoint = tempIntersection.getLocalIntersectPoint();
-        
-        m_selectedUINode = *(tempIntersection.nodePath.rbegin());
+
+        m_selectedUINode = *( tempIntersection.nodePath.rbegin() );
         //LOG_INFO( "UIManager::TestWandIntersection " << m_intersectionPoint.x() << " " << m_intersectionPoint.y() );
-        //std::cout << "Wand intersection at " << m_intersectionPoint 
+        //std::cout << "Wand intersection at " << m_intersectionPoint
         //    << " with the this UI node "
         //    << m_selectedUINode->getName() << std::endl;
         return true;
@@ -1482,25 +1482,25 @@ void UIManager::UpdateUIQuadPosition()
     {
         return;
     }
-    gmtl::Point3d headPoint = 
+    gmtl::Point3d headPoint =
         gmtl::makeTrans< gmtl::Point3d >( vxs::SceneManager::instance()->GetHeadMatrix() );
-    gmtl::Matrix44d worldMat = 
+    gmtl::Matrix44d worldMat =
         vxs::SceneManager::instance()->GetInvertedNavMatrix();//GetGlobalViewMatrix();
     gmtl::Point3d transformPoint = gmtl::Point3d( 0.0, 8.0, -2.0 );
     transformPoint += headPoint;
 
     transformPoint = worldMat * transformPoint;
-    
+
     gmtl::Quatd invertedQuat = gmtl::makeRot< gmtl::Quatd >( worldMat );
     osg::Quat quat;
     quat.set( invertedQuat.mData[ 0 ], invertedQuat.mData[ 1 ],
-             invertedQuat.mData[2],invertedQuat.mData[ 3 ]);
+              invertedQuat.mData[2], invertedQuat.mData[ 3 ] );
     m_rttQuadTransform->setAttitude( quat );
 
     m_rttQuadTransform->setPosition(
-        osg::Vec3d( transformPoint.mData[ 0 ], transformPoint.mData[ 1 ], 
-        transformPoint.mData[ 2 ] ) );
-    
+        osg::Vec3d( transformPoint.mData[ 0 ], transformPoint.mData[ 1 ],
+                    transformPoint.mData[ 2 ] ) );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

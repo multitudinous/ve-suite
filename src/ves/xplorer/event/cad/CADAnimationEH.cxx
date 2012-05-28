@@ -76,12 +76,12 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADAnimationEventHandler::CADAnimationEventHandler()
-        : ves::xplorer::event::CADEventHandler()
+    : ves::xplorer::event::CADEventHandler()
 {
     CONNECTSIGNALS_3( "%CADAnimation",
-                     void( std::string const&, std::string const&, std::string const& ),
-                     &CADAnimationEventHandler::CreateAnimatedCAD,
-                     m_connections, any_SignalType, normal_Priority );     
+                      void( std::string const&, std::string const&, std::string const& ),
+                      &CADAnimationEventHandler::CreateAnimatedCAD,
+                      m_connections, any_SignalType, normal_Priority );
     offDirx.clear();
     offDirx.push_back( 1 );
     offDirx.push_back( 1 );
@@ -89,7 +89,7 @@ CADAnimationEventHandler::CADAnimationEventHandler()
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADAnimationEventHandler::CADAnimationEventHandler( const CADAnimationEventHandler& rhs )
-        : ves::xplorer::event::CADEventHandler( rhs )
+    : ves::xplorer::event::CADEventHandler( rhs )
 {}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
@@ -122,10 +122,10 @@ void CADAnimationEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         dirSel->GetData( offDirx );
 
         const CADNodeAnimationPtr newAnim = boost::static_pointer_cast<CADNodeAnimation>( cadAnim->GetDataXMLObject() );
-        
-        CreateAnimatedCAD( nodeType->GetDataString(), 
-                          newAnim->GetAnimationFileName(), 
-                          nodeID->GetDataString() );
+
+        CreateAnimatedCAD( nodeType->GetDataString(),
+                           newAnim->GetAnimationFileName(),
+                           nodeID->GetDataString() );
     }
     catch( ... )
     {
@@ -135,16 +135,16 @@ void CADAnimationEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 //////////////////////////////////////////////////////////////////////////////////////////////////
 bool CADAnimationEventHandler::ReadData( std::string const& animFile )
 {
-	std::ifstream inputFile( animFile.c_str(), std::ios::in ); 
+    std::ifstream inputFile( animFile.c_str(), std::ios::in );
 
-    if (!inputFile)
+    if( !inputFile )
     {
-        std::cout<<"|\tModel reference file "<<animFile<<" could not be opened."<<std::endl;
+        std::cout << "|\tModel reference file " << animFile << " could not be opened." << std::endl;
         return false;
     }
     else
     {
-        std::cout << "|\tSuccessfully opened "<<animFile<<" file." <<std::endl;
+        std::cout << "|\tSuccessfully opened " << animFile << " file." << std::endl;
     }
 
     //char temp[1024];
@@ -161,43 +161,43 @@ bool CADAnimationEventHandler::ReadData( std::string const& animFile )
 
     float tempData[7];
     std::string testString;
-    while ( !inputFile.eof() )
+    while( !inputFile.eof() )
     {
-	    std::getline(inputFile, testString);
-        std::istringstream inputStream(testString);
-        
-        inputStream>>tempData[0]>>tempData[1]>>tempData[2]>>tempData[3]>>tempData[4]>>tempData[5]>>
-                        tempData[6];
+        std::getline( inputFile, testString );
+        std::istringstream inputStream( testString );
 
-	    time.push_back( tempData[0] );
+        inputStream >> tempData[0] >> tempData[1] >> tempData[2] >> tempData[3] >> tempData[4] >> tempData[5] >>
+                    tempData[6];
 
-	    seatX.push_back( tempData[1] * scale * offDirx.at(0) );
-	    seatY.push_back( tempData[2] * scale * offDirx.at(1) );
-	    seatZ.push_back( tempData[3] * scale * offDirx.at(2) );
-	    seatRoll.push_back( tempData[4] * roationConv );
-	    seatPitch.push_back( tempData[5] * roationConv );
-	    seatYaw.push_back( tempData[6] * roationConv );
+        time.push_back( tempData[0] );
+
+        seatX.push_back( tempData[1] * scale * offDirx.at( 0 ) );
+        seatY.push_back( tempData[2] * scale * offDirx.at( 1 ) );
+        seatZ.push_back( tempData[3] * scale * offDirx.at( 2 ) );
+        seatRoll.push_back( tempData[4] * roationConv );
+        seatPitch.push_back( tempData[5] * roationConv );
+        seatYaw.push_back( tempData[6] * roationConv );
     }
 
-	objectOne[ "time" ] = time;
-	//position and orientation Data
-	objectOne[ "seatX" ] = seatX;
-	objectOne[ "seatY" ] = seatY;
-	objectOne[ "seatZ" ] = seatZ;
-	objectOne[ "seatRoll" ] = seatRoll;
-	objectOne[ "seatPitch" ] = seatPitch;
-	objectOne[ "seatYaw" ] = seatYaw;
-    
+    objectOne[ "time" ] = time;
+    //position and orientation Data
+    objectOne[ "seatX" ] = seatX;
+    objectOne[ "seatY" ] = seatY;
+    objectOne[ "seatZ" ] = seatZ;
+    objectOne[ "seatRoll" ] = seatRoll;
+    objectOne[ "seatPitch" ] = seatPitch;
+    objectOne[ "seatYaw" ] = seatYaw;
+
     inputFile.close();
-    
+
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::AnimationPath* CADAnimationEventHandler::createAnimationPath(std::string component)
+osg::AnimationPath* CADAnimationEventHandler::createAnimationPath( std::string component )
 {
-    osg::AnimationPath* animationPath = 
+    osg::AnimationPath* animationPath =
         new ves::xplorer::scenegraph::util::AnimationNonInterpolatedPath();
-    animationPath->setLoopMode(osg::AnimationPath::NO_LOOPING);
+    animationPath->setLoopMode( osg::AnimationPath::NO_LOOPING );
 
     std::string x = component + "X";
     std::string y = component + "Y";
@@ -206,10 +206,10 @@ osg::AnimationPath* CADAnimationEventHandler::createAnimationPath(std::string co
     std::string pitch = component + "Pitch";
     std::string yaw = component + "Yaw";
 
-    osg::Vec3 scale(1,1,1);
-    osg::Vec3 xaxis(1,0,0);
-    osg::Vec3 yaxis(0,1,0);
-    osg::Vec3 zaxis(0,0,1);
+    osg::Vec3 scale( 1, 1, 1 );
+    osg::Vec3 xaxis( 1, 0, 0 );
+    osg::Vec3 yaxis( 0, 1, 0 );
+    osg::Vec3 zaxis( 0, 0, 1 );
     osg::Quat quat;
 
     osg::Vec3 trans;
@@ -218,37 +218,37 @@ osg::AnimationPath* CADAnimationEventHandler::createAnimationPath(std::string co
     activeObj = objectOne;
 
     unsigned int numTimeSteps = activeObj[ "time" ].size();
-    for( unsigned int i=0;i< numTimeSteps; ++i )
+    for( unsigned int i = 0; i < numTimeSteps; ++i )
     {
-      trans = osg::Vec3( activeObj[ x ].at( i ),
-                         activeObj[ y ].at( i ),
-                         activeObj[ z ].at( i ));
-      
-      quat = osg::Quat( osg::DegreesToRadians( activeObj[ roll ].at( i ) ),  xaxis,
-                        osg::DegreesToRadians( activeObj[ pitch ].at( i ) ), yaxis,
-                        osg::DegreesToRadians( activeObj[ yaw ].at( i ) ),   zaxis );
-      float time = activeObj[ "time" ].at( i );
-      animationPath->insert( time, osg::AnimationPath::ControlPoint(trans,quat,scale) );
+        trans = osg::Vec3( activeObj[ x ].at( i ),
+                           activeObj[ y ].at( i ),
+                           activeObj[ z ].at( i ) );
+
+        quat = osg::Quat( osg::DegreesToRadians( activeObj[ roll ].at( i ) ),  xaxis,
+                          osg::DegreesToRadians( activeObj[ pitch ].at( i ) ), yaxis,
+                          osg::DegreesToRadians( activeObj[ yaw ].at( i ) ),   zaxis );
+        float time = activeObj[ "time" ].at( i );
+        animationPath->insert( time, osg::AnimationPath::ControlPoint( trans, quat, scale ) );
     }
     std::cout << "|\tRead " << numTimeSteps << " timesteps." << std::endl;
 
     return animationPath;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADAnimationEventHandler::CreateAnimatedCAD( std::string const& nodeType, 
-    std::string const& filename, std::string const& nodeID )
+void CADAnimationEventHandler::CreateAnimatedCAD( std::string const& nodeType,
+        std::string const& filename, std::string const& nodeID )
 {
 #if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
     boost::filesystem::path correctedPath( filename );
     vprDEBUG( vesDBG, 1 ) << "|\t---" << filename << "---"
-        << correctedPath.string()
-        << std::endl << vprDEBUG_FLUSH;
+                          << correctedPath.string()
+                          << std::endl << vprDEBUG_FLUSH;
     const std::string animationFile = correctedPath.string();
 #else
     boost::filesystem::path correctedPath( filename, boost::filesystem::no_check );
     vprDEBUG( vesDBG, 1 ) << "|\t---" << filename << "---"
-        << correctedPath.native_file_string()
-        << std::endl << vprDEBUG_FLUSH;
+                          << correctedPath.native_file_string()
+                          << std::endl << vprDEBUG_FLUSH;
     const std::string animationFile = correctedPath.native_file_string();
 #endif
     if( !ReadData( animationFile ) )

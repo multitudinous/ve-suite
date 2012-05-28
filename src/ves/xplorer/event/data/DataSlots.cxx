@@ -54,38 +54,38 @@ namespace data
 ////////////////////////////////////////////////////////////////////////////////
 DataSet* GetSelectedDataset( std::string const& uuid )
 {
-    ves::xplorer::Model* activeModel = 
+    ves::xplorer::Model* activeModel =
         ModelHandler::instance()->GetActiveModel();
 
     ves::xplorer::data::DatasetPropertySet set;
     set.SetUUID( uuid );
     set.LoadFromDatabase();
-    const std::string& datasetName = 
-        boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
-    
+    const std::string& datasetName =
+        boost::any_cast<std::string>( set.GetPropertyValue( "Filename" ) );
+
     DataSet* dataSet = activeModel->GetCfdDataSet(
-        activeModel->GetIndexOfDataSet( datasetName ) );
+                           activeModel->GetIndexOfDataSet( datasetName ) );
     return dataSet;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SetContourPlaneGreyscale( std::string const& uuid, std::vector< bool > const& greyscaleflag )
 {
-    vprDEBUG( vesDBG, 2 ) 
-        << "|\tDataSlots::SetContourPlaneGreyscale : uuid " << uuid
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 2 )
+            << "|\tDataSlots::SetContourPlaneGreyscale : uuid " << uuid
+            << std::endl << vprDEBUG_FLUSH;
 
     if( ModelHandler::instance()->GetActiveModel() == NULL )
     {
         return;
     }
-    
+
     if( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() == NULL )
     {
         return;
     }
 
     ModelHandler::instance()->GetActiveModel()->
-        GetActiveDataSet()->SetGreyscaleFlag( greyscaleflag[0] );
+    GetActiveDataSet()->SetGreyscaleFlag( greyscaleflag[0] );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TransformDatasetNode( const std::string& uuid, const std::vector< double >& transform )
@@ -107,7 +107,7 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
         // separate translation, rotation, and scale pieces.
         std::vector<double>::const_iterator start = transform.begin();
         std::vector<double>::const_iterator stop = transform.begin() + 3;
-        std::vector<double> translation( start, stop  );
+        std::vector<double> translation( start, stop );
         std::vector<double> rotation( start + 3, stop + 3 );
         std::vector<double> scale( start + 6, stop + 6 );
 
@@ -119,9 +119,9 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
 ////////////////////////////////////////////////////////////////////////////////
 void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap )
 {
-    vprDEBUG( vesDBG, 2 ) 
-        << "|\tDataSlots::SetDatasetSurfaceWrap : uuid " << uuid
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 2 )
+            << "|\tDataSlots::SetDatasetSurfaceWrap : uuid " << uuid
+            << std::endl << vprDEBUG_FLUSH;
 
     DataSet* dataSet = GetSelectedDataset( uuid );
 
@@ -135,27 +135,27 @@ void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap )
 ////////////////////////////////////////////////////////////////////////////////
 void AddTextureDataset( std::string const&, std::string const& dirName )
 {
-    ves::xplorer::Model* activeModel = 
+    ves::xplorer::Model* activeModel =
         ModelHandler::instance()->GetActiveModel();
     activeModel->CreateTextureDataSet();
-    
+
     activeModel->AddDataSetToTextureDataSet( 0, dirName );
     //std::ostringstream textId;
     //textId << "VTK_SURFACE_DIR_PATH_" << j;
     //DataSet* dataSet = GetSelectedDataset( uuid );
-    //dataSet->SetUUID( textId.str(), 
+    //dataSet->SetUUID( textId.str(),
     //  tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" )->GetID() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ToggleCADNode( const std::string& nodeID, bool const& visible )
 {
     DataSet* dataSet = GetSelectedDataset( nodeID );
-    
+
     if( !dataSet )
     {
         return;
     }
-    
+
     dataSet->GetDCS()->ToggleDisplay( visible );
 }
 ////////////////////////////////////////////////////////////////////////////////

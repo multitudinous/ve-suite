@@ -46,30 +46,30 @@ namespace ves
 namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
-RecentFiles::RecentFiles(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::RecentFiles),
+RecentFiles::RecentFiles( QWidget* parent ) :
+    QDialog( parent ),
+    ui( new Ui::RecentFiles ),
     m_lastChanged( 0 ),
     block( false ),
-    m_logger( Poco::Logger::get("conductor.RecentFiles") ),
+    m_logger( Poco::Logger::get( "conductor.RecentFiles" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
-    ui->setupUi(this);
+    ui->setupUi( this );
 
-    QPushButton* clearButton = new QPushButton( tr("Clear List") );
-    connect( clearButton, SIGNAL(clicked()), this, SLOT(Clear()) );
+    QPushButton* clearButton = new QPushButton( tr( "Clear List" ) );
+    connect( clearButton, SIGNAL( clicked() ), this, SLOT( Clear() ) );
     ui->buttonBox->addButton( clearButton, QDialogButtonBox::ResetRole );
 
-    QPushButton* openButton = new QPushButton( tr("Open Project...") );
-    connect( openButton, SIGNAL(clicked()), this, SIGNAL(openProject()) );
+    QPushButton* openButton = new QPushButton( tr( "Open Project..." ) );
+    connect( openButton, SIGNAL( clicked() ), this, SIGNAL( openProject() ) );
     ui->buttonBox->addButton( openButton, QDialogButtonBox::ActionRole );
 
-    QPushButton* newButton = new QPushButton( tr("New Project...") );
-    connect( newButton, SIGNAL(clicked()), this, SIGNAL(newProject()) );
+    QPushButton* newButton = new QPushButton( tr( "New Project..." ) );
+    connect( newButton, SIGNAL( clicked() ), this, SIGNAL( newProject() ) );
     ui->buttonBox->addButton( newButton, QDialogButtonBox::ActionRole );
 
-    connect( ui->m_recentFilesList, SIGNAL(	itemClicked(QListWidgetItem*)),
-             this, SLOT(onFileListItemAccepted(QListWidgetItem*)) );
+    connect( ui->m_recentFilesList, SIGNAL(	itemClicked( QListWidgetItem* ) ),
+             this, SLOT( onFileListItemAccepted( QListWidgetItem* ) ) );
 
     RefreshFiles();
 
@@ -80,12 +80,13 @@ RecentFiles::~RecentFiles()
     delete ui;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RecentFiles::changeEvent(QEvent *e)
+void RecentFiles::changeEvent( QEvent* e )
 {
-    QDialog::changeEvent(e);
-    switch (e->type()) {
+    QDialog::changeEvent( e );
+    switch( e->type() )
+    {
     case QEvent::LanguageChange:
-        ui->retranslateUi(this);
+        ui->retranslateUi( this );
         break;
     default:
         break;
@@ -95,32 +96,32 @@ void RecentFiles::changeEvent(QEvent *e)
 void RecentFiles::RefreshFiles()
 {
     QSettings settings( QSettings::IniFormat, QSettings::UserScope,
-                            "VE Suite", "VE Xplorer" );
+                        "VE Suite", "VE Xplorer" );
     settings.setFallbacksEnabled( false );
 
     LOG_INFO( "Pulling recent files list from: " << settings.fileName().toStdString() );
 
-    QStringList files = settings.value("recentProjectList").toStringList();
+    QStringList files = settings.value( "recentProjectList" ).toStringList();
     QListWidget* recent = ui->m_recentFilesList;
     recent->clear();
 
-    recent->addItem( tr("Recent Projects") );
+    recent->addItem( tr( "Recent Projects" ) );
     QFont font = recent->item( 0 )->font();
     font.setPointSize( font.pointSize() + 2 );
     font.setWeight( QFont::Bold );
-    recent->item(0)->setFont( font );
+    recent->item( 0 )->setFont( font );
     recent->addItems( files );
 
-    files = settings.value("recentCADList").toStringList();
-    recent->addItem( tr("") );
-    recent->addItem( tr("Recent CAD") );
-    recent->item( (recent->count() - 1) )->setFont( font );
+    files = settings.value( "recentCADList" ).toStringList();
+    recent->addItem( tr( "" ) );
+    recent->addItem( tr( "Recent CAD" ) );
+    recent->item( ( recent->count() - 1 ) )->setFont( font );
     recent->addItems( files );
 
-    files = settings.value("recentDataList").toStringList();
-    recent->addItem( tr("") );
-    recent->addItem( tr("Recent Datasets") );
-    recent->item( (recent->count() - 1) )->setFont( font );
+    files = settings.value( "recentDataList" ).toStringList();
+    recent->addItem( tr( "" ) );
+    recent->addItem( tr( "Recent Datasets" ) );
+    recent->item( ( recent->count() - 1 ) )->setFont( font );
     recent->addItems( files );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,9 +137,9 @@ void RecentFiles::onFileListItemAccepted( QListWidgetItem* selected )
     QString selectedFile = "";
     if( selected )
     {
-        selectedFile = selected->data(0).toString();
+        selectedFile = selected->data( 0 ).toString();
         if( selectedFile == "Recent Projects" || selectedFile == "Recent CAD"
-            || selectedFile == "Recent Datasets" )
+                || selectedFile == "Recent Datasets" )
         {
             return;
         }
@@ -149,9 +150,9 @@ void RecentFiles::onFileListItemAccepted( QListWidgetItem* selected )
 void RecentFiles::Clear()
 {
     QSettings settings( QSettings::IniFormat, QSettings::UserScope,
-                            "VE Suite", "VE Xplorer" );
+                        "VE Suite", "VE Xplorer" );
     settings.setFallbacksEnabled( false );
-    QStringList files = settings.value("recentFileList").toStringList();
+    QStringList files = settings.value( "recentFileList" ).toStringList();
     files.clear();
     settings.setValue( "recentProjectList", files );
     settings.setValue( "recentCADList", files );
@@ -170,17 +171,17 @@ void RecentFiles::on_m_recentFilesList_itemEntered( QListWidgetItem* item )
         QFont font = m_lastChanged->font();
         font.setUnderline( false );
         m_lastChanged->setFont( font );
-        m_lastChanged->setForeground( QBrush(QColor(0,0,0)) );
+        m_lastChanged->setForeground( QBrush( QColor( 0, 0, 0 ) ) );
         m_lastChanged = 0;
     }
 
     if( item->text() != "Recent Projects" && item->text() != "Recent CAD" &&
-        item->text() != "Recent Datasets" )
+            item->text() != "Recent Datasets" )
     {
         QFont font = item->font();
         font.setUnderline( true );
         item->setFont( font );
-        item->setForeground( QBrush(QColor(0,0,255)) );
+        item->setForeground( QBrush( QColor( 0, 0, 255 ) ) );
         m_lastChanged = item;
     }
 }

@@ -55,18 +55,20 @@ class App;
  *
  * @since 2.3.6
  */
-@interface VESDelegate : VRJBasicDelegate
+@interface VESDelegate :
+VRJBasicDelegate
 {
-   ves::xplorer::App* m_app;
+    ves::xplorer::App* m_app;
 }
-   //-(BOOL) ves_sendEvent:( NSEvent* ) event;
-   
-   -(void) preRun;
-  
-   -(void) runLoop;
-   
-   -(void) setApp:( ves::xplorer::App* ) app;
- 
+//-(BOOL) ves_sendEvent:( NSEvent* ) event;
+
+-( void ) preRun;
+
+-( void ) runLoop;
+
+-( void ) setApp:
+( ves::xplorer::App* ) app;
+
 @end
 
 //extern NSString* VRJMaxRecentFiles;

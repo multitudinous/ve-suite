@@ -54,11 +54,11 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADTransformEventHandler::CADTransformEventHandler()
-        : ves::xplorer::event::CADEventHandler()
+    : ves::xplorer::event::CADEventHandler()
 {}
 ///////////////////////////////////////////////////////////////////////////////////////
 CADTransformEventHandler::CADTransformEventHandler( const CADTransformEventHandler& rhs )
-        : ves::xplorer::event::CADEventHandler( rhs )
+    : ves::xplorer::event::CADEventHandler( rhs )
 {}
 /////////////////////////////////////////////////////
 ///Destructor                                      //

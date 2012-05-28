@@ -44,9 +44,9 @@ namespace conductor
 ////////////////////////////////////////////////////////////////////////////////
 IconStack::IconStack( QWidget* positionParent, QWidget* parent )
     :
-    QToolBar(parent),
-    mPositionParent(positionParent),
-    mPersistent(false)
+    QToolBar( parent ),
+    mPositionParent( positionParent ),
+    mPersistent( false )
 {
     setOrientation( Qt::Vertical );
     setMovable( false );
@@ -59,17 +59,17 @@ IconStack::IconStack( QWidget* positionParent, QWidget* parent )
 ////////////////////////////////////////////////////////////////////////////////
 void IconStack::SetExtendedToolBarParent( QToolBar* parent )
 {
-    connect( parent, SIGNAL(leaveSignal()), this, SLOT( Hide() ) );
+    connect( parent, SIGNAL( leaveSignal() ), this, SLOT( Hide() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IconStack::Show()
 {
     if( mPositionParent )
     {
-         QPoint pos( 0, mPositionParent->height() );
-         QPoint gPos = mPositionParent->mapToGlobal( pos );  
-         QPoint mPos = parentWidget()->mapFromGlobal( gPos );
-         move( mPos );
+        QPoint pos( 0, mPositionParent->height() );
+        QPoint gPos = mPositionParent->mapToGlobal( pos );
+        QPoint mPos = parentWidget()->mapFromGlobal( gPos );
+        move( mPos );
     }
     show();
     raise();
@@ -104,14 +104,14 @@ QAction* IconStack::AddAction( const QString& text, const QObject* receiver, con
 ////////////////////////////////////////////////////////////////////////////////
 QAction* IconStack::AddAction( const QIcon& icon, const QString& text, const QObject* receiver, const char* member )
 {
-   return  _connectAction( addAction( icon, text, receiver, member ) );
+    return  _connectAction( addAction( icon, text, receiver, member ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 QAction* IconStack::_connectAction( QAction* action )
 {
     if( !mPersistent )
     {
-        QObject::connect( action, SIGNAL(triggered(bool)), SLOT(hide()) );
+        QObject::connect( action, SIGNAL( triggered( bool ) ), SLOT( hide() ) );
     }
     return action;
 }
@@ -131,7 +131,7 @@ void IconStack::Hide()
     // Wait 100 milliseconds before executing _hide. This allows time for the
     // current mouse position to be updated to show whether it is now over
     // the stack.
-    QTimer::singleShot( 100, this, SLOT(_hide()) );
+    QTimer::singleShot( 100, this, SLOT( _hide() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IconStack::_hide()

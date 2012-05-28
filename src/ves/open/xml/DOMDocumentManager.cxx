@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-//This header must be first because the loki stuff includes headers that 
+//This header must be first because the loki stuff includes headers that
 // conflict with xerces DOMDocument
 #include <ves/open/xml/XMLObject.h>
 //All other headers can start here
@@ -110,8 +110,8 @@ void DOMDocumentManager::_readInputString( const std::string& xmlString )
     }
 
     std::string system_id( "input.xml" );
-    MemBufInputSource inputXML(( const XMLByte* )xmlString.c_str(),
-                               static_cast< const unsigned int >( xmlString.size() ), system_id.c_str() );
+    MemBufInputSource inputXML( ( const XMLByte* )xmlString.c_str(),
+                                static_cast< const unsigned int >( xmlString.size() ), system_id.c_str() );
     mParser->parse( inputXML );
 }
 ////////////////////////////////////////////////////////////
@@ -184,7 +184,7 @@ void DOMDocumentManager::Load( const std::string& inputCommand )
         }
 
     }
-    catch ( const XMLException& toCatch )
+    catch( const XMLException& toCatch )
     {
         message = XMLString::transcode( toCatch.getMessage() );
         std::cerr << "Exception message is: \n" << message << "\n";
@@ -196,7 +196,7 @@ void DOMDocumentManager::Load( const std::string& inputCommand )
 
         return;
     }
-    catch ( const DOMException& toCatch )
+    catch( const DOMException& toCatch )
     {
         message = XMLString::transcode( toCatch.msg );
         std::cerr << "Exception message is: \n" << message << "\n";
@@ -208,10 +208,10 @@ void DOMDocumentManager::Load( const std::string& inputCommand )
 
         return;
     }
-    catch ( ... )
+    catch( ... )
     {
-        std::cerr << "DOMDocumentManager::Load Unexpected Exception" 
-            << std::endl << inputCommand  << std::endl;
+        std::cerr << "DOMDocumentManager::Load Unexpected Exception"
+                  << std::endl << inputCommand  << std::endl;
         delete mParser;
         mParser = 0;
         delete mErrHandler;
@@ -240,41 +240,41 @@ void DOMDocumentManager::UnLoadParser( void )
 void DOMDocumentManager::CreateCommandDocument( const std::string& type )
 {
     DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(
-                              Convert( "LS" ).toXMLString() );
+                                  Convert( "LS" ).toXMLString() );
 
     char* message = 0;
     try
     {
-        typedef std::map<
-                         std::string,
-                         std::pair< std::string, std::string > >
-                         ::iterator map_iter_type;
+        typedef std::map <
+        std::string,
+            std::pair< std::string, std::string > >
+            ::iterator map_iter_type;
 
         map_iter_type iter = mDocumentType.find( type );
 
         std::string tempDoc = iter->second.second;
         mCommandDocument = impl->createDocument( 0,
-                                                Convert( tempDoc ).toXMLString(),
-                                                0 );
+                           Convert( tempDoc ).toXMLString(),
+                           0 );
 
     }
-    catch ( const XMLException &toCatch )
+    catch( const XMLException& toCatch )
     {
         message = XMLString::transcode( toCatch.getMessage() );
         std::cerr << "XMLException Exception message is: \n"
-        << message << std::endl;
+                  << message << std::endl;
         XMLString::release( &message );
         return;
     }
-    catch ( const DOMException& toCatch )
+    catch( const DOMException& toCatch )
     {
         message = XMLString::transcode( toCatch.msg );
         std::cout << "DOMException Exception message is: \n"
-        << message << std::endl;
+                  << message << std::endl;
         XMLString::release( &message );
         return;
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cerr << " ERROR : not a vaild document type : " << type << std::endl;
         return;
@@ -289,17 +289,17 @@ void DOMDocumentManager::CreateCommandDocument( const std::string& type )
     DOMElement* root_elem = mCommandDocument->getDocumentElement(); //This is the root element
 
     root_elem->setAttribute( Convert( "name" ).toXMLString(),
-               Convert( mDocumentType[ type ].first ).toXMLString() );
+                             Convert( mDocumentType[ type ].first ).toXMLString() );
 
     root_elem->setAttribute( Convert( "xmlns:xsi" ).toXMLString(),
-         Convert( "http://www.w3.org/2001/XMLSchema-instance" ).toXMLString() );
+                             Convert( "http://www.w3.org/2001/XMLSchema-instance" ).toXMLString() );
     //root_elem->setAttribute(
     //           Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
     //           Convert( "verg.xsd" ).toXMLString() );
 
     root_elem->setAttribute(
-               Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
-               Convert( "verg_model.xsd" ).toXMLString() );
+        Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
+        Convert( "verg_model.xsd" ).toXMLString() );
 
     //root_elem->setAttribute(
     //           Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
@@ -313,12 +313,12 @@ void DOMDocumentManager::CreateCommandDocument( const std::string& type )
 const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
 {
     DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(
-                              Convert( "LS" ).toXMLString() );
+                                  Convert( "LS" ).toXMLString() );
 #if _XERCES_VERSION >= 30001
     DOMLSSerializer* theSerializer = static_cast< DOMImplementationLS* >( impl )->createLSSerializer();
     DOMLSOutput* theOutputDesc = static_cast< DOMImplementationLS* >( impl )->createLSOutput();
     theOutputDesc->setEncoding( Convert( "ISO-8859-1" ).toXMLString() );
-    DOMConfiguration* serializerConfig=theSerializer->getDomConfig();
+    DOMConfiguration* serializerConfig = theSerializer->getDomConfig();
 #else
     DOMWriter* theSerializer = static_cast< DOMImplementationLS* >( impl )->createDOMWriter();
 #endif
@@ -335,8 +335,8 @@ const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
             LocalFileFormatTarget outputXML( mOutputXMLFile.c_str() );
 #if _XERCES_VERSION >= 30001
             theOutputDesc->setByteStream( &outputXML );
-            serializerConfig->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
-            theSerializer->write( mCommandDocument, theOutputDesc  );
+            serializerConfig->setParameter( XMLUni::fgDOMWRTFormatPrettyPrint, true );
+            theSerializer->write( mCommandDocument, theOutputDesc );
 #else
             theSerializer->setFeature( XMLUni::fgDOMWRTFormatPrettyPrint, true );
             theSerializer->writeNode( &outputXML, *mCommandDocument );
@@ -347,8 +347,8 @@ const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
             // do the serialization through DOMWriter::writeNode();
 #if _XERCES_VERSION >= 30001
             XMLCh* xXml = theSerializer->writeToString( mCommandDocument );
-#else 
-            XMLCh* xXml = theSerializer->writeToString( (*mCommandDocument) );
+#else
+            XMLCh* xXml = theSerializer->writeToString( ( *mCommandDocument ) );
 #endif
             tempResultString = XMLString::transcode( xXml );
             result = tempResultString;
@@ -356,25 +356,25 @@ const std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
             XMLString::release( &xXml );
         }
     }
-    catch ( const XMLException& toCatch )
+    catch( const XMLException& toCatch )
     {
         message = XMLString::transcode( toCatch.getMessage() );
         std::cout << "Exception message is: \n"
-        << message << std::endl;
+                  << message << std::endl;
         XMLString::release( &message );
         //rv=false;
         return NULL;
     }
-    catch ( const DOMException& toCatch )
+    catch( const DOMException& toCatch )
     {
         message = XMLString::transcode( toCatch.msg );
         std::cout << "Exception message is: \n"
-        << message << std::endl;
+                  << message << std::endl;
         XMLString::release( &message );
         //rv=false;
         return NULL;
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Unexpected Exception " << std::endl;
         //rv=false;

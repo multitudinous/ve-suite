@@ -89,15 +89,15 @@ scenegraph::GLTransformInfoPtr const SceneGLTransformInfo::GetGLTransformInfo(
     vrj::ViewportPtr const viewport )
 {
     GLTransformInfoMap::const_iterator itr =
-        (*m_glTransformInfoMap).find( viewport );
-    if( itr != (*m_glTransformInfoMap).end() )
+        ( *m_glTransformInfoMap ).find( viewport );
+    if( itr != ( *m_glTransformInfoMap ).end() )
     {
         return itr->second;
     }
     else
     {
         vprDEBUG( vesDBG, 1 ) << "SceneGLTransformInfo::GetGLTransformInfo - "
-                  << "Not initialized yet." << std::endl << vprDEBUG_FLUSH;
+                              << "Not initialized yet." << std::endl << vprDEBUG_FLUSH;
 
         return scenegraph::GLTransformInfoPtr();
     }
@@ -169,19 +169,19 @@ void SceneGLTransformInfo::Initialize()
         glTransformInfo->UpdateViewportValues(
             viewportOriginX, viewportOriginY, viewportWidth, viewportHeight );
         glTransformInfo->UpdateWindowValues( windowWidth, windowHeight );
-        (*m_glTransformInfoMap)[ viewport ] = glTransformInfo;
+        ( *m_glTransformInfoMap )[ viewport ] = glTransformInfo;
         sceneManager->PushBackGLTransformInfo( viewport, glTransformInfo );
     }
-    
+
     if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
         ves::xplorer::scenegraph::SceneManager::instance()->
-            SetCurrentGLTransformInfo( 
+        SetCurrentGLTransformInfo(
             GetGLTransformInfo( display->getViewport( 0 ) ) );
     }
-                                                                                      
+
     vprDEBUG( vesDBG, 1 ) << "SceneGLTransformInfo::Initialize - "
-        << "GLTransformInfo is initialized." << std::endl << vprDEBUG_FLUSH;
+                          << "GLTransformInfo is initialized." << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneGLTransformInfo::CalculateCenterViewMatrix( vrj::ProjectionPtr const projection )
@@ -189,7 +189,7 @@ void SceneGLTransformInfo::CalculateCenterViewMatrix( vrj::ProjectionPtr const p
     /*
     vrj::DisplayManager* displayManager =
         vrj::DisplayManager::instance();
-    const std::vector< vrj::DisplayPtr >& displays = 
+    const std::vector< vrj::DisplayPtr >& displays =
         displayManager->getActiveDisplays();
     vrj::opengl::DrawManager* glDrawManager =
         vrj::opengl::DrawManager::instance();
@@ -203,7 +203,7 @@ void SceneGLTransformInfo::CalculateCenterViewMatrix( vrj::ProjectionPtr const p
             vrj::ViewportPtr viewport = display->getViewport( j );
             vrj::ProjectionPtr proj = viewport->getLeftProj();
 
-            gmtl::Matrix44f cur_head_pos = 
+            gmtl::Matrix44f cur_head_pos =
                 viewport->getUser()->getHeadPosProxy()->getData( positionScale );
 
             const gmtl::Point3f left_eye_pos(
@@ -216,23 +216,23 @@ void SceneGLTransformInfo::CalculateCenterViewMatrix( vrj::ProjectionPtr const p
     */
     //vrj::ProjectionPtr proj = viewport->getLeftProj();
     vrj::ViewportPtr viewport = projection->getViewport();
-    const float positionScale = 
+    const float positionScale =
         vrj::opengl::DrawManager::instance()->getApp()->getDrawScaleFactor();
-    gmtl::Matrix44f cur_head_pos = 
+    gmtl::Matrix44f cur_head_pos =
         viewport->getUser()->getHeadPosProxy()->getData( positionScale );
-    
+
     const gmtl::Point3f center_pos( cur_head_pos * gmtl::Point3f( 0, 0, 0 ) );
     projection->calcViewMatrix( gmtl::MAT_IDENTITY44F, center_pos, positionScale );
-    const gmtl::Matrix44d& viewMatrix = 
+    const gmtl::Matrix44d& viewMatrix =
         gmtl::convertTo< double >( projection->getViewMatrix() ) * GetZUpMatrix();
     scenegraph::GLTransformInfoPtr glTI = GetGLTransformInfo( viewport );
     glTI->UpdateCenterViewMatrix( viewMatrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
 vrj::Frustum SceneGLTransformInfo::CalculateFrustum( vrj::ViewportPtr const viewport,
-                                                    gmtl::Point3f const& eyePoint )
+        gmtl::Point3f const& eyePoint )
 {
-    vrj::SurfaceViewportPtr surfaceViewport = 
+    vrj::SurfaceViewportPtr surfaceViewport =
         boost::static_pointer_cast< vrj::SurfaceViewport >( viewport );
 
     /*if( !surfaceViewport )
@@ -248,27 +248,27 @@ vrj::Frustum SceneGLTransformInfo::CalculateFrustum( vrj::ViewportPtr const view
 
     surfaceViewport->getCorners( llCorner, lrCorner, urCorner, ulCorner );
 
-    const float positionScale = 
+    const float positionScale =
         vrj::opengl::DrawManager::instance()->getApp()->getDrawScaleFactor();
-    
-    gmtl::Matrix44f viewMatrix = 
+
+    gmtl::Matrix44f viewMatrix =
         gmtl::convertTo< float >( scenegraph::SceneManager::instance()->GetPureNavMatrix() );
 
-    const float invScale = 1./positionScale;
+    const float invScale = 1. / positionScale;
     viewMatrix.mData[ 12 ] = viewMatrix.mData[ 12 ] * invScale;
     viewMatrix.mData[ 13 ] = viewMatrix.mData[ 13 ] * invScale;
     viewMatrix.mData[ 14 ] = viewMatrix.mData[ 14 ] * invScale;
-    
+
     llCorner = viewMatrix * llCorner;
     lrCorner = viewMatrix * lrCorner;
     urCorner = viewMatrix * urCorner;
     ulCorner = viewMatrix * ulCorner;
 
     vrj::SurfaceProjectionPtr tempProjection;
-        //vrj::SurfaceProjection::create( llCorner, lrCorner, urCorner, ulCorner );
-    
+    //vrj::SurfaceProjection::create( llCorner, lrCorner, urCorner, ulCorner );
+
     tempProjection->calcViewMatrix( gmtl::MAT_IDENTITY44F, eyePoint, positionScale );
-    
+
     return tempProjection->getFrustum();
 }
 ////////////////////////////////////////////////////////////////////////////////

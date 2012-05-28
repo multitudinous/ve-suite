@@ -98,7 +98,7 @@ VjObs_i::VjObs_i()
     bufferCommand =  CommandPtr( new Command() );
     bufferCommand->AddDataValuePair( DataValuePairPtr( new DataValuePair() ) );
     bufferCommand->SetCommandName( "NULL" );
-    
+
     m_commandTimer->startTiming();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,18 +110,18 @@ void VjObs_i::Cleanup()
     //Now send the data to xplorer
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
-    
+
     // New need to destroy document and send it
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
     for( size_t i = 0; i < dataLoggerCommandVectorQueue.size(); ++i )
     {
         nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( dataLoggerCommandVectorQueue.at( i ), "vecommand" ) );
     }
-    
+
     std::string xmlDocument( "returnString" );
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
     m_commandStringRecorder.push_back( xmlDocument );
-    
+
     if( m_storeCommands )
     {
         std::cout << "Writing VE movie file." << std::endl;
@@ -174,7 +174,7 @@ void VjObs_i::InitCluster( void )
     this->mStates->clusterFrameNumber = 0;
     this->mStates->clusterQuatCamIncrement = 0.0f;
 
-    for( int i = 0;i < 16;i++ )
+    for( int i = 0; i < 16; i++ )
     {
         this->mStates->clusterMatrix[i] = 0.0f;
     }
@@ -204,8 +204,8 @@ VjObs::Model* VjObs_i::GetModel( const char* modelID )
         tempCfdModel = ModelHandler::instance()->GetModel( i );
         if( tempCfdModel->GetID() == std::string( modelID ) )
         {
-            vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel Found model: " 
-                << modelID << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel Found model: "
+                                  << modelID << std::endl << vprDEBUG_FLUSH;
             break;
         }
         tempCfdModel = 0;
@@ -214,15 +214,15 @@ VjObs::Model* VjObs_i::GetModel( const char* modelID )
     // if we didn't find it then...
     if( tempCfdModel == 0 )
     {
-        vprDEBUG( vesDBG, 0 ) << "|\tVjObs_i::GetModel Did not find model: " 
-            << modelID << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\tVjObs_i::GetModel Did not find model: "
+                              << modelID << std::endl << vprDEBUG_FLUSH;
         return tempModel._retn();
     }
 
     // now lets pass the model back
     CORBA::ULong numDatasets = tempCfdModel->GetNumberOfCfdDataSets();
-    vprDEBUG( vesDBG, 0 ) << "|\tVjObs_i::GetModel numDatasets = " 
-        << numDatasets << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\tVjObs_i::GetModel numDatasets = "
+                          << numDatasets << std::endl << vprDEBUG_FLUSH;
     if( numDatasets > 0 )
     {
         //tempModel->dataVector = VjObs::Datasets( numDatasets );
@@ -248,20 +248,20 @@ VjObs::Model* VjObs_i::GetModel( const char* modelID )
             tempModel->dataVector[ j ].vectornames.length( totalNumberOfVectors );
         }
         vprDEBUG( vesDBG, 0 )
-            << "|\tVjObs_i::GetModel totalNumberOfScalars: " << totalNumberOfScalars
-            << std::endl << vprDEBUG_FLUSH;
+                << "|\tVjObs_i::GetModel totalNumberOfScalars: " << totalNumberOfScalars
+                << std::endl << vprDEBUG_FLUSH;
 
         vprDEBUG( vesDBG, 0 )
-            << "|\tVjObs_i::GetModel totalNumberOfVectors: " << totalNumberOfVectors
-            << std::endl << vprDEBUG_FLUSH;
+                << "|\tVjObs_i::GetModel totalNumberOfVectors: " << totalNumberOfVectors
+                << std::endl << vprDEBUG_FLUSH;
 
         for( CORBA::ULong j = 0; j < numDatasets; j++ )
         {
             tempModel->dataVector[ j ].datasetname = CORBA::string_dup(
-                                                         tempCfdModel->GetCfdDataSet( j )->GetFileName().c_str() );
+                        tempCfdModel->GetCfdDataSet( j )->GetFileName().c_str() );
             vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel dataset_name:   "
-                << tempModel->dataVector[ j ].datasetname.in()
-                << std::endl << vprDEBUG_FLUSH;
+                                  << tempModel->dataVector[ j ].datasetname.in()
+                                  << std::endl << vprDEBUG_FLUSH;
 
             tempModel->datasettypes[ j ] = tempCfdModel->GetCfdDataSet( j )->GetType();
 
@@ -277,7 +277,7 @@ VjObs::Model* VjObs_i::GetModel( const char* modelID )
                     CORBA::string_dup(
                         tempCfdModel->GetCfdDataSet( j )->GetScalarName( k ).c_str() );
                 // Then get scalar range for a particular scalar
-                tempCfdModel->GetCfdDataSet( j )->SetActiveScalar(( int )k );
+                tempCfdModel->GetCfdDataSet( j )->SetActiveScalar( ( int )k );
                 double* range = tempCfdModel->GetCfdDataSet( j )->GetRange();
                 // Allocate
                 tempModel->dataVector[ j ].scalarVector[ k ].scalarrange =
@@ -289,11 +289,11 @@ VjObs::Model* VjObs_i::GetModel( const char* modelID )
                 tempModel->dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ] =
                     range[ 1 ];
                 vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel scl_name : "
-                << tempModel->dataVector[ j ].scalarVector[ k ].scalarnames.in()
-                << tempModel->dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ]
-                << " : "
-                << tempModel->dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ]
-                << std::endl << vprDEBUG_FLUSH;
+                                      << tempModel->dataVector[ j ].scalarVector[ k ].scalarnames.in()
+                                      << tempModel->dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ]
+                                      << " : "
+                                      << tempModel->dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ]
+                                      << std::endl << vprDEBUG_FLUSH;
             }
 
             CORBA::Short num_vectors = tempCfdModel->GetCfdDataSet( j )
@@ -303,18 +303,18 @@ VjObs::Model* VjObs_i::GetModel( const char* modelID )
             for( CORBA::ULong k = 0; k < ( unsigned int )num_vectors; k++ )
             {
                 tempModel->dataVector[ j ].vectornames[ k ] = CORBA::string_dup(
-                                                                  tempCfdModel->GetCfdDataSet( j )->GetVectorName( k ).c_str() );
+                            tempCfdModel->GetCfdDataSet( j )->GetVectorName( k ).c_str() );
                 vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel vec_name : "
-                    << tempModel->dataVector[ j ].vectornames[ k ].in()
-                    << std::endl << vprDEBUG_FLUSH;
+                                      << tempModel->dataVector[ j ].vectornames[ k ].in()
+                                      << std::endl << vprDEBUG_FLUSH;
             }
         }
     }
     CORBA::ULong numGeoArrays = tempCfdModel->GetNumberOfGeomDataSets();
     vprDEBUG( vesDBG, 0 )
-        << "|\tVjObs_i::GetModel Number of geometries to be transfered to the client: "
-        << numGeoArrays
-        << std::endl << vprDEBUG_FLUSH;
+            << "|\tVjObs_i::GetModel Number of geometries to be transfered to the client: "
+            << numGeoArrays
+            << std::endl << vprDEBUG_FLUSH;
     if( numGeoArrays > 0 )
     {
         //(*_models)[ i ].geometrynames = VjObs::scalar_p(50);
@@ -322,10 +322,10 @@ VjObs::Model* VjObs_i::GetModel( const char* modelID )
         for( CORBA::ULong j = 0; j < numGeoArrays; j++ )
         {
             vprDEBUG( vesDBG, 0 )
-                << "|\tVjObs_i::GetModel Geometry file ( "
-                << j << " ) = " 
-                << tempCfdModel->GetGeomDataSet( j )->GetFilename()
-                << std::endl << vprDEBUG_FLUSH;
+                    << "|\tVjObs_i::GetModel Geometry file ( "
+                    << j << " ) = "
+                    << tempCfdModel->GetGeomDataSet( j )->GetFilename()
+                    << std::endl << vprDEBUG_FLUSH;
             tempModel->geometrynames[ j ] = CORBA::string_dup(
                                                 tempCfdModel->GetGeomDataSet( j )->GetFilename().c_str() );
         }
@@ -354,13 +354,13 @@ void VjObs_i::CreateDatasetInfo( void )
         _models = new VjObs::Models( numberOfModels );
         _models->length( numberOfModels );
         vprDEBUG( vesDBG, 0 ) << "|\tVjObs_i::GetModel Number of Models = " << numberOfModels
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         for( CORBA::ULong i = 0; i < numberOfModels; i++ )
         {
             Model* temp = ModelHandler::instance()->GetModel( i );
             CORBA::ULong numDatasets = temp->GetNumberOfCfdDataSets();
             vprDEBUG( vesDBG, 0 ) << "|\tVjObs_i::GetModel numDatasets = " << numDatasets
-            << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
             if( numDatasets > 0 )
             {
                 ( *_models )[ i ].dataVector = VjObs::Datasets( numDatasets );
@@ -386,20 +386,20 @@ void VjObs_i::CreateDatasetInfo( void )
                     ( *_models )[ i ].dataVector[ j ].vectornames.length( totalNumberOfVectors );
                 }
                 vprDEBUG( vesDBG, 0 )
-                << "|\tVjObs_i::GetModel totalNumberOfScalars: " << totalNumberOfScalars
-                << std::endl << vprDEBUG_FLUSH;
+                        << "|\tVjObs_i::GetModel totalNumberOfScalars: " << totalNumberOfScalars
+                        << std::endl << vprDEBUG_FLUSH;
 
                 vprDEBUG( vesDBG, 0 )
-                << "|\tVjObs_i::GetModel totalNumberOfVectors: " << totalNumberOfVectors
-                << std::endl << vprDEBUG_FLUSH;
+                        << "|\tVjObs_i::GetModel totalNumberOfVectors: " << totalNumberOfVectors
+                        << std::endl << vprDEBUG_FLUSH;
 
                 for( CORBA::ULong j = 0; j < numDatasets; j++ )
                 {
                     ( *_models )[ i ].dataVector[ j ].datasetname = CORBA::string_dup(
-                                                                        temp->GetCfdDataSet( j )->GetFileName().c_str() );
+                                temp->GetCfdDataSet( j )->GetFileName().c_str() );
                     vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel dataset_name:   "
-                    << ( *_models )[ i ].dataVector[ j ].datasetname.in()
-                    << std::endl << vprDEBUG_FLUSH;
+                                          << ( *_models )[ i ].dataVector[ j ].datasetname.in()
+                                          << std::endl << vprDEBUG_FLUSH;
 
                     ( *_models )[ i ].datasettypes[ j ] = temp->GetCfdDataSet( j )->GetType();
 
@@ -414,7 +414,7 @@ void VjObs_i::CreateDatasetInfo( void )
                         ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarnames = CORBA::string_dup(
                                     temp->GetCfdDataSet( j )->GetScalarName( k ).c_str() );
                         // Then get scalar range for a particular scalar
-                        temp->GetCfdDataSet( j )->SetActiveScalar(( int )k );
+                        temp->GetCfdDataSet( j )->SetActiveScalar( ( int )k );
                         double* range = temp->GetCfdDataSet( j )->GetRange();
                         // Allocate
                         ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarrange = VjObs::obj_pd( 2 );
@@ -423,11 +423,11 @@ void VjObs_i::CreateDatasetInfo( void )
                         ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ] = range[ 0 ];
                         ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ] = range[ 1 ];
                         vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel scl_name : "
-                        << ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarnames.in()
-                        << ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ]
-                        << " : "
-                        << ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ]
-                        << std::endl << vprDEBUG_FLUSH;
+                                              << ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarnames.in()
+                                              << ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ]
+                                              << " : "
+                                              << ( *_models )[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ]
+                                              << std::endl << vprDEBUG_FLUSH;
                     }
 
                     CORBA::Short num_vectors = temp->GetCfdDataSet( j )
@@ -437,18 +437,18 @@ void VjObs_i::CreateDatasetInfo( void )
                     for( CORBA::ULong k = 0; k < ( unsigned int )num_vectors; k++ )
                     {
                         ( *_models )[ i ].dataVector[ j ].vectornames[ k ] = CORBA::string_dup(
-                                                                                 temp->GetCfdDataSet( j )->GetVectorName( k ).c_str() );
+                                    temp->GetCfdDataSet( j )->GetVectorName( k ).c_str() );
                         vprDEBUG( vesDBG, 1 ) << "|\tVjObs_i::GetModel vec_name : "
-                        << ( *_models )[ i ].dataVector[ j ].vectornames[ k ].in()
-                        << std::endl << vprDEBUG_FLUSH;
+                                              << ( *_models )[ i ].dataVector[ j ].vectornames[ k ].in()
+                                              << std::endl << vprDEBUG_FLUSH;
                     }
                 }
             }
             CORBA::ULong numGeoArrays = temp->GetNumberOfGeomDataSets();
             vprDEBUG( vesDBG, 0 )
-            << "|\tVjObs_i::GetModel Number of geometries to be transfered to the client: "
-            << numGeoArrays
-            << std::endl << vprDEBUG_FLUSH;
+                    << "|\tVjObs_i::GetModel Number of geometries to be transfered to the client: "
+                    << numGeoArrays
+                    << std::endl << vprDEBUG_FLUSH;
 
             if( numGeoArrays > 0 )
             {
@@ -457,27 +457,27 @@ void VjObs_i::CreateDatasetInfo( void )
                 for( CORBA::ULong j = 0; j < numGeoArrays; j++ )
                 {
                     vprDEBUG( vesDBG, 0 )
-                    << "|\tVjObs_i::GetModel Geometry file ( "
-                    << j << " ) = " << temp->GetGeomDataSet( j )->GetFilename()
-                    << std::endl << vprDEBUG_FLUSH;
+                            << "|\tVjObs_i::GetModel Geometry file ( "
+                            << j << " ) = " << temp->GetGeomDataSet( j )->GetFilename()
+                            << std::endl << vprDEBUG_FLUSH;
                     ( *_models )[ i ].geometrynames[ j ] = CORBA::string_dup(
-                                                               temp->GetGeomDataSet( j )->GetFilename().c_str() );
+                            temp->GetGeomDataSet( j )->GetFilename().c_str() );
                 }
             }
         }
     }
 
     vprDEBUG( vprDBG_ALL, 1 ) << "|\tleaving VjObs_i::CreateDatasetInfo()"
-    << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::CreateTeacherInfo( void )
 {
     CORBA::Short numTeacherArrays = EnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
     vprDEBUG( vesDBG, 0 )
-    << "|\tVjObs_i::CreateTeacherInfo Number of performer binary files to be transfered to the client: "
-    << numTeacherArrays
-    << std::endl << vprDEBUG_FLUSH;
+            << "|\tVjObs_i::CreateTeacherInfo Number of performer binary files to be transfered to the client: "
+            << numTeacherArrays
+            << std::endl << vprDEBUG_FLUSH;
 
     //this->setNumTeacherArrays( numTeacherArrays );
     if( numTeacherArrays > 0 )
@@ -573,16 +573,16 @@ void VjObs_i::GetCfdStateVariables( void )
     VPR_PROFILE_GUARD_HISTORY( "Set application data", 20 );
 
     vprDEBUG( vesDBG, 3 ) << "|\tVjObs_i::GetCfdStateVariables Cluster Mode "
-    << isCluster << std::endl << vprDEBUG_FLUSH;
+                          << isCluster << std::endl << vprDEBUG_FLUSH;
     if( !isCluster )
     {
         return;
     }
 
     vprDEBUG( vesDBG, 3 ) << "|\tVjObs_i::GetCfdStateVariables Node Local "
-    << mStates.isLocal() << " "
-    << vpr::System::getHostname()
-    << std::endl << vprDEBUG_FLUSH;
+                          << mStates.isLocal() << " "
+                          << vpr::System::getHostname()
+                          << std::endl << vprDEBUG_FLUSH;
     //Do for only the master
     if( !mStates.isLocal() )
     {
@@ -594,7 +594,7 @@ void VjObs_i::GetCfdStateVariables( void )
     gmtl::Matrix44d matrix = ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->GetMat();
 
     //std::cout << "master: " << std::endl << matrix << std::endl;
-    for( int i = 0;i < 16;i++ )
+    for( int i = 0; i < 16; i++ )
     {
         this->mStates->clusterMatrix[i] = matrix.mData[i];
     }
@@ -625,7 +625,7 @@ void VjObs_i::GetCfdStateVariables( void )
 void VjObs_i::GetUpdateClusterStateVariables( void )
 {
     vprDEBUG( vesDBG, 3 ) << "|\tVjObs_i::GetUpdateClusterStateVariables Cluster Mode "
-    << isCluster << std::endl << vprDEBUG_FLUSH;
+                          << isCluster << std::endl << vprDEBUG_FLUSH;
     if( !isCluster )
     {
         /*std::string commandString;
@@ -641,10 +641,10 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
     }
     VPR_PROFILE_GUARD_HISTORY( "Get application data", 20 );
     vprDEBUG( vesDBG, 3 ) << "|\tVjObs_i::GetUpdateClusterStateVariables Node Local "
-    << mStates.isLocal() << " "
-    << vpr::System::getHostname()
-    << " Size of data to process " << this->mStates->clusterXMLCommands.size()
-    << std::endl << vprDEBUG_FLUSH;
+                          << mStates.isLocal() << " "
+                          << vpr::System::getHostname()
+                          << " Size of data to process " << this->mStates->clusterXMLCommands.size()
+                          << std::endl << vprDEBUG_FLUSH;
 
     //Do for all the slaves
     if( this->mStates->clusterXMLCommands.size() > 0 )
@@ -661,7 +661,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
         //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
         gmtl::Matrix44d matrix;
 
-        for( int i = 0;i < 16;i++ )
+        for( int i = 0; i < 16; i++ )
         {
             matrix.mData[i] = this->mStates->clusterMatrix[i];
         }
@@ -762,16 +762,16 @@ void VjObs_i::CreatCommandVector( std::string commandString )
 
     for( size_t i = 0; i < objectVector.size(); ++i )
     {
-        commandVectorQueue.push_back(  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( i ) ) );
+        commandVectorQueue.push_back( boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( i ) ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::StoreCommands( const std::string& commandString )
 {
     m_commandTimer->stopTiming();
-    
+
     /*std::ostringstream commandtime;
-     commandtime << std::endl << "**time = " 
+     commandtime << std::endl << "**time = "
      << m_commandTimer->getLastTiming() << " ****" << std::endl;
      m_commandStringRecorder.push_back( commandtime.str() );*/
     // Create the command and data value pairs
@@ -780,20 +780,20 @@ void VjObs_i::StoreCommands( const std::string& commandString )
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Sleep" ) );
     veCommand->AddDataValuePair( dataValuePair );
-    
+
     dataLoggerCommandVectorQueue.push_back( veCommand );
-    
+
     XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( commandString, "Command", "vecommand" );
-    std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();    
-    
+    std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
+
     for( size_t i = 0; i < objectVector.size(); ++i )
     {
-        dataLoggerCommandVectorQueue.push_back(  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( i ) ) );
+        dataLoggerCommandVectorQueue.push_back( boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( i ) ) );
     }
-    
+
     m_commandTimer->reset();
     m_commandTimer->startTiming();
 }

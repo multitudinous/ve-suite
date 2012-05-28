@@ -69,7 +69,7 @@ wxPoint* Polygon::GetPoint( size_t i )
     {
         return &( poly.at( i ) );
     }
-    catch ( ... )
+    catch( ... )
     {
         poly.push_back( wxPoint() );
         return &( poly.at( i ) );
@@ -78,7 +78,7 @@ wxPoint* Polygon::GetPoint( size_t i )
 ////////////////////////////////////////////////
 void Polygon::SetPoint( wxPoint newPoint )
 {
-//std::cout << " set point " << std::endl;
+    //std::cout << " set point " << std::endl;
     poly.push_back( newPoint );
 }
 ////////////////////////////////////////////////
@@ -113,9 +113,11 @@ int Polygon::inside( wxPoint pt )
     for( i = 1; i <= numsides; i++ )
     {
         *( lp.GetPoint( 0 ) ) = poly[i];
-        *( lp.GetPoint( 1 ) ) = poly[i-1];
+        *( lp.GetPoint( 1 ) ) = poly[i - 1];
         if( intersect( lv, lp ) )
+        {
             return 1;
+        }
 
         *( lp.GetPoint( 1 ) ) = poly[i];
 
@@ -123,17 +125,22 @@ int Polygon::inside( wxPoint pt )
         {
             *( lp.GetPoint( 1 ) ) = poly[j];
             if( intersect( lp, lt ) )
+            {
                 count++;
-            else
-                if( i != j + 1 && (( ccw( lt.GetPoint( 0 ), lt.GetPoint( 1 ), &poly[j] )*( ccw( lt.GetPoint( 0 ), lt.GetPoint( 1 ), &poly[i] ) ) < 1 ) ) )
-                    count++;
+            }
+            else if( i != j + 1 && ( ( ccw( lt.GetPoint( 0 ), lt.GetPoint( 1 ), &poly[j] ) * ( ccw( lt.GetPoint( 0 ), lt.GetPoint( 1 ), &poly[i] ) ) < 1 ) ) )
+            {
+                count++;
+            }
 
             j = i;
         }
     }
 
     if( j != numsides && ccw( lt.GetPoint( 0 ), lt.GetPoint( 1 ), &poly[j] )*ccw( lt.GetPoint( 0 ), lt.GetPoint( 1 ), &poly[1] ) == 1 )
+    {
         count--;
+    }
 
     return count & 1;
 }
@@ -150,7 +157,9 @@ double Polygon::nearpnt( wxPoint pt, Polygon& Near )
     {
         int i2 = i + 1;
         if( i2 == numsides )
+        {
             i2 = 0;
+        }
 
         wxRealPoint p;
         wxRealPoint v( poly[i2].x - poly[i].x, poly[i2].y - poly[i].y );
@@ -173,26 +182,30 @@ double Polygon::nearpnt( wxPoint pt, Polygon& Near )
             p.y = poly[i].y + t * v.y;
         }
 
-        double d = computenorm( pt, wxPoint((( int ) p.x ), (( int ) p.y ) ) );
+        double d = computenorm( pt, wxPoint( ( ( int ) p.x ), ( ( int ) p.y ) ) );
         if( d < dist )
         {
             Near.GetPolygon()->clear();
             dist = d;
-            Near.GetPolygon()->push_back( wxPoint((( int ) p.x ), (( int ) p.y ) ) );
+            Near.GetPolygon()->push_back( wxPoint( ( ( int ) p.x ), ( ( int ) p.y ) ) );
         }
         else if( d == dist )
-            Near.GetPolygon()->push_back( wxPoint((( int ) p.x ), (( int ) p.y ) ) );
+        {
+            Near.GetPolygon()->push_back( wxPoint( ( ( int ) p.x ), ( ( int ) p.y ) ) );
+        }
     }
 
     return dist;
 }
 
 /////////////////////////////////////////////////////////////
-void Polygon::TransPoly( int x, int y, Polygon &newpoly )
+void Polygon::TransPoly( int x, int y, Polygon& newpoly )
 {
     newpoly.GetPolygon()->clear();
     for( size_t i = 0; i < poly.size(); ++i )
+    {
         newpoly.GetPolygon()->push_back( wxPoint( poly[i].x + x, poly[i].y + y ) );
+    }
 
 }
 ///////////////////////////////////////////////////////////////
@@ -203,8 +216,8 @@ int Polygon::intersect( Polygon l1, Polygon l2 )
     int ccw21 = ccw( l2.GetPoint( 0 ), l2.GetPoint( 1 ), l1.GetPoint( 0 ) );
     int ccw22 = ccw( l2.GetPoint( 0 ), l2.GetPoint( 1 ), l1.GetPoint( 1 ) );
 
-    return((( ccw11*ccw12 < 0 ) && ( ccw21*ccw22 < 0 ) ) ||
-           ( ccw11*ccw12*ccw21*ccw22 == 0 ) );
+    return( ( ( ccw11 * ccw12 < 0 ) && ( ccw21 * ccw22 < 0 ) ) ||
+            ( ccw11 * ccw12 * ccw21 * ccw22 == 0 ) );
 }
 ///////////////////////////////////////////////////////////////
 int Polygon::ccw( wxPoint* pt1, wxPoint* pt2, wxPoint* pt3 )
@@ -214,24 +227,32 @@ int Polygon::ccw( wxPoint* pt1, wxPoint* pt2, wxPoint* pt3 )
     double dy1 = pt2->y - pt1->y;
     double dy2 = pt3->y - pt1->y;
 
-    if( dx1*dy2 > dy1*dx2 )
+    if( dx1 * dy2 > dy1 * dx2 )
+    {
         return 1;
+    }
 
-    if( dx1*dy2 < dy1*dx2 )
+    if( dx1 * dy2 < dy1 * dx2 )
+    {
         return -1;
+    }
 
-    if( dx1*dy2 == dy1*dx2 )
-        if( dx1*dx2 < 0 || dy1*dy2 < 0 )
+    if( dx1 * dy2 == dy1 * dx2 )
+        if( dx1 * dx2 < 0 || dy1 * dy2 < 0 )
+        {
             return -1;
-        else if( dx1*dx1 + dy1*dy1 >= dx2*dx2 + dy2*dy2 )
+        }
+        else if( dx1 * dx1 + dy1 * dy1 >= dx2 * dx2 + dy2 * dy2 )
+        {
             return 0;
+        }
 
     return 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
 double Polygon::computenorm( wxPoint pt1, wxPoint pt2 )
 {
-    return std::sqrt( double(( pt1.x - pt2.x )*( pt1.x - pt2.x ) + ( pt1.y - pt2.y )*( pt1.y - pt2.y ) ) );
+    return std::sqrt( double( ( pt1.x - pt2.x ) * ( pt1.x - pt2.x ) + ( pt1.y - pt2.y ) * ( pt1.y - pt2.y ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Polygon::clear()
@@ -244,6 +265,6 @@ void Polygon::print()
     for( size_t i = 0; i < poly.size(); ++i )
     {
         std::cout << "Point " << i << " x= " << poly.at( i ).x
-        << " y= " << poly.at( i ).y << std::endl;
+                  << " y= " << poly.at( i ).y << std::endl;
     }
 }

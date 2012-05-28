@@ -58,7 +58,7 @@ public:
     RTTCameraImageCaptureCallback( const std::string& filename, osg::Texture2D* tex );
 
     virtual void operator()( osg::RenderInfo& ri ) const;
-    
+
 protected:
     std::string m_filename;
     osg::ref_ptr< osg::Texture2D > m_texture2D;

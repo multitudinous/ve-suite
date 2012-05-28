@@ -71,7 +71,7 @@ namespace model
  * Contains nodes for creating/managing a Model data.
  */
 class VE_MODEL_EXPORTS Model : public ves::open::xml::XMLObject,
-                               public boost::enable_shared_from_this<Model>
+    public boost::enable_shared_from_this<Model>
 {
 
 public:
@@ -161,7 +161,7 @@ public:
     ///Get results data
     ///\return The ith result stored as a command
     ves::open::xml::CommandPtr GetResult( const std::string& inputName );
-    
+
     ///Get results data
     ///\return The ith result stored as a command
     const std::vector< ves::open::xml::CommandPtr > GetResults();
@@ -186,13 +186,13 @@ public:
     ///Get input data
     ///\return The ith result stored as a command
     const std::vector< ves::open::xml::CommandPtr > GetInputs();
-    
+
     ///Allocate another input block for use
     ///\return The new input
-    ///This function should be replaced with SetInput in users code since 
+    ///This function should be replaced with SetInput in users code since
     ///ves is now using smart pointers
     //vesDEPRECATED( ves::open::xml::CommandPtr GetInput() );
-    
+
     ///Set the input for this models
     void SetInput( ves::open::xml::CommandPtr& input );
 
@@ -249,7 +249,7 @@ public:
     ///Add a geometry node and return it
     /// if there is already geometry then the function will return that pointer
     ves::open::xml::cad::CADNodePtr AddGeometry( void );
-    
+
     ///Delete the geometry for this model
     void DeleteGeometry( void );
 
@@ -292,33 +292,33 @@ public:
     friend std::ostream& operator<<( std::ostream& os, const ModelPtr model )
     {
         os << "***********(ves::open::xml::model::Model)***********" << std::endl
-            << "Model Name = " << model->mPluginName << std::endl
-            << "The Unit Name = " << model->mVendorUnit << std::endl
-            << "Unique Model ID (old) = " << model->mUniqueModelID << std::endl
-            << "GUID = " << model->mUuid << std::endl
-            << "Object Type = " << model->mObjectType << std::endl
-            << "Object Namespace = " << model->mObjectNamespace << std::endl
-            << "Number of Ports = " << model->mPorts.size() << std::endl
-            << "Number of Results = " << model->mResults.size() << std::endl
-            << "Number of Inputs = " << model->mInputs.size() << std::endl
-            << "Number of Info Packets = " 
-                <<  model->mInformationPackets.size() << std::endl
-            << "Icon Scale = " << model->mIconScale << std::endl
-            << "Icon Rotation = " << model->mIconRotation << std::endl
-            << "Icons Hidden Flag = " << model->mIconHiddenFlag << std::endl
-            << "Icon Mirror = " << model->mIconMirror << std::endl
-            << "Model Inputs are: " << std::endl;
-            
-            for( std::map< std::string, ves::open::xml::CommandPtr >::iterator 
-                iter = model->mInputs.begin(); 
+           << "Model Name = " << model->mPluginName << std::endl
+           << "The Unit Name = " << model->mVendorUnit << std::endl
+           << "Unique Model ID (old) = " << model->mUniqueModelID << std::endl
+           << "GUID = " << model->mUuid << std::endl
+           << "Object Type = " << model->mObjectType << std::endl
+           << "Object Namespace = " << model->mObjectNamespace << std::endl
+           << "Number of Ports = " << model->mPorts.size() << std::endl
+           << "Number of Results = " << model->mResults.size() << std::endl
+           << "Number of Inputs = " << model->mInputs.size() << std::endl
+           << "Number of Info Packets = "
+           <<  model->mInformationPackets.size() << std::endl
+           << "Icon Scale = " << model->mIconScale << std::endl
+           << "Icon Rotation = " << model->mIconRotation << std::endl
+           << "Icons Hidden Flag = " << model->mIconHiddenFlag << std::endl
+           << "Icon Mirror = " << model->mIconMirror << std::endl
+           << "Model Inputs are: " << std::endl;
+
+        for( std::map< std::string, ves::open::xml::CommandPtr >::iterator
+                iter = model->mInputs.begin();
                 iter != model->mInputs.end(); ++iter )
-            {
-                os << (iter->second);
-            }
-        
-            return os;
+        {
+            os << ( iter->second );
+        }
+
+        return os;
     }
-    
+
 
 protected:
     ///Internally update the data.

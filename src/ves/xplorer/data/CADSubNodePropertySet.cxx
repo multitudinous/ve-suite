@@ -55,12 +55,12 @@ namespace data
 CADSubNodePropertySet::CADSubNodePropertySet()
     :
     CADPropertySet()
-{ 
+{
     mTableName = "CADSubNodePropertySet";
 
     std::string prependTag( mTableName );
-    prependTag.append(" ");
-    std::string tag = boost::any_cast<std::string>(GetPropertyValue("NameTag"));
+    prependTag.append( " " );
+    std::string tag = boost::any_cast<std::string>( GetPropertyValue( "NameTag" ) );
     SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
 
     DisableSkeleton();
@@ -111,7 +111,7 @@ void CADSubNodePropertySet::DisableSkeleton()
     SetPropertyAttribute( "Transform_Translation_X", "DisplayPrecision", 4 );
     SetPropertyAttribute( "Transform_Translation_Y", "DisplayPrecision", 4 );
     SetPropertyAttribute( "Transform_Translation_Z", "DisplayPrecision", 4 );
-    
+
     AddProperty( "Transform_Rotation", boost::any(), "Rotation" );
     SetPropertyAttribute( "Transform_Rotation", "isUIGroupOnly", true );
 
@@ -181,16 +181,16 @@ void CADSubNodePropertySet::DisableSkeleton()
     enumValues.push_back( "High" );
     SetPropertyAttribute( "Physics_MeshDecimation", "enumValues", enumValues );
 
-//    std::vector< PropertyPtr > physicsLink;
-//    physicsLink.push_back( GetProperty("Physics_MotionType") );
-//    physicsLink.push_back( GetProperty("Physics_LODType") );
-//    physicsLink.push_back( GetProperty("Physics_MeshType") );
-//    physicsLink.push_back( GetProperty("Physics_MeshDecimation") );
-//    p = MakeLiveBasePtr(new MakeLiveLinked< std::string >(
-//            mUUIDString,
-//            physicsLink,
-//            "SetCADPhysicsMesh"));
-//    mLiveObjects.push_back(p);*/
+    //    std::vector< PropertyPtr > physicsLink;
+    //    physicsLink.push_back( GetProperty("Physics_MotionType") );
+    //    physicsLink.push_back( GetProperty("Physics_LODType") );
+    //    physicsLink.push_back( GetProperty("Physics_MeshType") );
+    //    physicsLink.push_back( GetProperty("Physics_MeshDecimation") );
+    //    p = MakeLiveBasePtr(new MakeLiveLinked< std::string >(
+    //            mUUIDString,
+    //            physicsLink,
+    //            "SetCADPhysicsMesh"));
+    //    mLiveObjects.push_back(p);*/
 
     SetPropertyAttribute( "Culling", "userVisible", false );
 
@@ -210,7 +210,7 @@ void CADSubNodePropertySet::DisableSkeleton()
 
 
     SetPropertyAttribute( "TransparencyFlag", "userVisible", false );
-    
+
     //AddProperty( "TransparencyFlag", false, "Make translucent when viz is active" );
 
     SetPropertyAttribute( "GPS", "userVisible", false );
@@ -223,7 +223,7 @@ void CADSubNodePropertySet::DisableSkeleton()
     /*std::string emptyString;
     AddProperty( "NodePath", emptyString, "Not visible in UI"  );
     SetPropertyAttribute( "NodePath", "userVisible", false );*/
-    
+
     /*AddProperty( "DynamicAnalysisData", std::string("null"), "Multi-body Dynamics Data" );
     SetPropertyAttribute( "DynamicAnalysisData", "isFilePath", true );
     mPropertyMap["DynamicAnalysisData"]->

@@ -54,15 +54,15 @@ using namespace ves::xplorer::event;
 
 ////////////////////////////////////////////////////////////////////////////////
 PolydataSurfaceEventHandler::PolydataSurfaceEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 PolydataSurfaceEventHandler::PolydataSurfaceEventHandler( const PolydataSurfaceEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler( rhs )
+    :
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -79,23 +79,23 @@ void PolydataSurfaceEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
 ////////////////////////////////////////////////////////////////////////////////
 void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    ves::open::xml::CommandPtr command = 
+    ves::open::xml::CommandPtr command =
         boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
-    ves::open::xml::DataValuePairPtr opacityDVP = 
+    ves::open::xml::DataValuePairPtr opacityDVP =
         command->GetDataValuePair( "opacity" );
-    ves::open::xml::DataValuePairPtr warpScaleDVP = 
+    ves::open::xml::DataValuePairPtr warpScaleDVP =
         command->GetDataValuePair( "warpScale" );
-    ves::open::xml::DataValuePairPtr minValueDVP = 
+    ves::open::xml::DataValuePairPtr minValueDVP =
         command->GetDataValuePair( "minValue" );
-    ves::open::xml::DataValuePairPtr maxValueDVP = 
+    ves::open::xml::DataValuePairPtr maxValueDVP =
         command->GetDataValuePair( "maxValue" );
-    ves::open::xml::DataValuePairPtr twoSidedLightingDVP = 
+    ves::open::xml::DataValuePairPtr twoSidedLightingDVP =
         command->GetDataValuePair( "twoSidedLighting" );
 
     std::vector< ves::xplorer::cfdGraphicsObject* > graphicsObject =
         ves::xplorer::SteadyStateVizHandler::instance()->
         GetGraphicsObjectsOfType( POLYDATA );
-    
+
     if( graphicsObject.empty() )
     {
         return;
@@ -109,8 +109,8 @@ void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
 
         for( size_t i = 0; i < graphicsObject.size(); ++i )
         {
-            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
-                geodes = graphicsObject.at( i )->GetGeodes();
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >
+            geodes = graphicsObject.at( i )->GetGeodes();
             for( size_t j = 0; j < geodes.size(); ++j )
             {
                 osg::ref_ptr< osg::Uniform > warpScaleUniform =
@@ -123,7 +123,7 @@ void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
             }
         }
     }
-    
+
     //Setup and change the opacity
     if( opacityDVP )
     {
@@ -132,8 +132,8 @@ void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
         opacityVal *= 0.01;
         for( size_t i = 0; i < graphicsObject.size(); ++i )
         {
-            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
-                geodes = graphicsObject.at( i )->GetGeodes();
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >
+            geodes = graphicsObject.at( i )->GetGeodes();
             for( size_t j = 0; j < geodes.size(); ++j )
             {
                 osg::ref_ptr< osg::Uniform > warpScaleUniform =
@@ -145,32 +145,32 @@ void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
                     if( opacityVal < 1.0 )
                     {
                         geodes.at( j )->getDrawable( 0 )->
-                            getStateSet()->
-                            setRenderBinDetails( 10, "DepthSortedBin" );
+                        getStateSet()->
+                        setRenderBinDetails( 10, "DepthSortedBin" );
                         geodes.at( j )->getDrawable( 0 )->
-                            getStateSet()->setNestRenderBins( false );
-                    }   
+                        getStateSet()->setNestRenderBins( false );
+                    }
                     else
                     {
                         geodes.at( j )->getDrawable( 0 )->
-                            getStateSet()->
-                            setRenderBinDetails( 0, "RenderBin" );
+                        getStateSet()->
+                        setRenderBinDetails( 0, "RenderBin" );
                         geodes.at( j )->getDrawable( 0 )->
-                            getStateSet()->setNestRenderBins( true );
+                        getStateSet()->setNestRenderBins( true );
                     }
                     //osgDB::writeNodeFile( *(geodes.at( j ).get()), "gpu_surface_test.ive" );
                 }
             }
         }
     }
-    
+
     //Setup scalar control
     if( minValueDVP || maxValueDVP )
     {
         double opacityVal = 0;
         for( size_t i = 0; i < graphicsObject.size(); ++i )
         {
-            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >
             geodes = graphicsObject.at( i )->GetGeodes();
             for( size_t j = 0; j < geodes.size(); ++j )
             {
@@ -196,16 +196,16 @@ void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
             }
         }
     }
-    
+
     //Setup scalar control
     if( twoSidedLightingDVP )
     {
         unsigned int twoSidedLightingVal = 0;
         twoSidedLightingDVP->GetData( twoSidedLightingVal );
-        
+
         for( size_t i = 0; i < graphicsObject.size(); ++i )
         {
-            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >
             geodes = graphicsObject.at( i )->GetGeodes();
             for( size_t j = 0; j < geodes.size(); ++j )
             {
@@ -228,7 +228,7 @@ void PolydataSurfaceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
                 }
             }
         }
-    }    
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 PolydataSurfaceEventHandler& PolydataSurfaceEventHandler::operator=( const PolydataSurfaceEventHandler& rhs )

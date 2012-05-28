@@ -98,7 +98,7 @@ public:
 
     ///Set wether to use two sided lighting
     void SetTwoSidedLighting( bool twoSided );
-    
+
     ///Equal operator
     ///\param rhs Right hand side.
     ShaderHelper& operator=( const ShaderHelper& rhs );

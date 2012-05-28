@@ -72,7 +72,7 @@ public:
 
     ///Slot for UI signal
     void UpdateCADSelectionMode( bool const& enable );
-    
+
 protected:
 
 };

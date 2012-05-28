@@ -62,7 +62,7 @@ namespace conductor
 class VE_GUIPLUGINS_EXPORTS GlobalParamDialog : public wxDialog
 {
 public:
-    GlobalParamDialog( wxWindow *parent, wxWindowID id );
+    GlobalParamDialog( wxWindow* parent, wxWindowID id );
     virtual ~GlobalParamDialog();
 
 protected:
@@ -87,11 +87,11 @@ protected:
 
     wxRadioButton* specify_a;
     wxRadioButton* specify_b;
-    wxButton * ok_b;
-    wxButton * cancel_b;
+    wxButton* ok_b;
+    wxButton* cancel_b;
 
-    void double2entry( wxTextCtrl* entry, double * value );
-    void entry2double( wxTextCtrl* entry, double * value );
+    void double2entry( wxTextCtrl* entry, double* value );
+    void entry2double( wxTextCtrl* entry, double* value );
     virtual bool TransferDataToWindow();
     virtual bool TransferDataFromWindow();
 public:
@@ -100,7 +100,7 @@ public:
 
     double plant_capacity_d;
 
-    void OnChange( wxCommandEvent &event );
+    void OnChange( wxCommandEvent& event );
 
     wxString year_costs_s;
     wxString cst_cur_dollar_s;

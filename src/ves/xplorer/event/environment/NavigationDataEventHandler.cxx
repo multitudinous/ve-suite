@@ -61,14 +61,14 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 NavigationDataEventHandler::NavigationDataEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 NavigationDataEventHandler::NavigationDataEventHandler( const NavigationDataEventHandler& rhs )
-        : 
-        ves::xplorer::event::EventHandler( rhs )
+    :
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -90,15 +90,15 @@ void NavigationDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& ve
     DataValuePairPtr quatPosition = command->GetDataValuePair( "QUAT_START_POSITION" );
     if( quatPosition )
     {
-        OneDDoubleArrayPtr data = boost::dynamic_pointer_cast<OneDDoubleArray>(  quatPosition->GetDataXMLObject() );
+        OneDDoubleArrayPtr data = boost::dynamic_pointer_cast<OneDDoubleArray>( quatPosition->GetDataXMLObject() );
         std::vector< double > tempQuat = data->GetArray();
         osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
         ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->SetQuat( quat );
 
         quatPosition = command->GetDataValuePair( "POSITION_START_POSITION" );
-        data = boost::dynamic_pointer_cast<OneDDoubleArray>(  quatPosition->GetDataXMLObject() );
+        data = boost::dynamic_pointer_cast<OneDDoubleArray>( quatPosition->GetDataXMLObject() );
         ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->SetTranslationArray( data->GetArray() );
-        
+
         std::vector< double > tempPos = data->GetArray();
         ves::xplorer::DeviceHandler::instance()->SetResetWorldPosition( quat, tempPos );
     }

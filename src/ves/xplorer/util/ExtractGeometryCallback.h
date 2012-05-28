@@ -53,7 +53,7 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS ExtractGeometryCallback:
-            public DataObjectHandler::DatasetOperatorCallback
+    public DataObjectHandler::DatasetOperatorCallback
 {
 public:
     ///Constructor
@@ -70,7 +70,7 @@ public:
     vtkDataObject* GetDataset();
     ///The polydata representing of a surface
     void SetPolyDataSurface( vtkPolyData* surface );
-    
+
 protected:
     ///THe multibblock dataset holding the sub sample
     vtkMultiBlockDataSet* m_dataset;

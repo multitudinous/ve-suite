@@ -141,8 +141,8 @@ void cfdOSGShaderManager::AddShaderProgram( std::string name, osg::ref_ptr<osg::
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdOSGShaderManager::_setupGLSLShaderProgram( osg::Program* glslProgram,
-                                                   const std::string pgName,
-                                                   bool override )
+        const std::string pgName,
+        bool override )
 {
     ///This is an old function!!!!!
     std::cout << "Depricated function!!!" << std::endl;
@@ -200,7 +200,7 @@ void cfdOSGShaderManager::SetShaderDirectory( std::string shadDir )
 ////////////////////////////////////////////////////////////////////////////////
 //not fully implemented!!!!!!!!!!!!!!!!!!!!!!!!!
 cfdOSGShaderManager& cfdOSGShaderManager::operator=( const
-                                                     cfdOSGShaderManager& sm )
+        cfdOSGShaderManager& sm )
 {
     if( this != &sm )
     {

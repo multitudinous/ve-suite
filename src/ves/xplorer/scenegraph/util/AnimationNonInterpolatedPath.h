@@ -41,7 +41,7 @@ namespace ves
 namespace xplorer
 {
 namespace scenegraph
-{    
+{
 namespace util
 {
 class VE_SCENEGRAPH_EXPORTS AnimationNonInterpolatedPath : public osg::AnimationPath
@@ -49,7 +49,7 @@ class VE_SCENEGRAPH_EXPORTS AnimationNonInterpolatedPath : public osg::Animation
 public:
     AnimationNonInterpolatedPath();
 
-    virtual bool getInterpolatedControlPoint(double time,ControlPoint& controlPoint) const;
+    virtual bool getInterpolatedControlPoint( double time, ControlPoint& controlPoint ) const;
 
 protected:
     virtual ~AnimationNonInterpolatedPath();

@@ -52,25 +52,25 @@ VolumeVisPropertySet::VolumeVisPropertySet()
 
     ///Signal to change the active dataset
     {
-        std::string name("VolumeVisPropertySet");
+        std::string name( "VolumeVisPropertySet" );
         name += boost::lexical_cast<std::string>( this );
         name += ".TBETUpdateScalarRange";
-        
+
         eventmanager::EventManager::instance()->RegisterSignal(
-           new SignalWrapper< ves::util::TwoDoubleSignal_type >( &m_updateTBETScalarRange ),
-           name, eventmanager::EventManager::unspecified_SignalType );
+            new SignalWrapper< ves::util::TwoDoubleSignal_type >( &m_updateTBETScalarRange ),
+            name, eventmanager::EventManager::unspecified_SignalType );
     }
     ///Signal to change the active dataset
     {
-        std::string name("VolumeVisPropertySet");
+        std::string name( "VolumeVisPropertySet" );
         name += boost::lexical_cast<std::string>( this );
         name += ".TBETUpdateScalar";
-        
+
         eventmanager::EventManager::instance()->RegisterSignal(
             new SignalWrapper< UpdateScalar_type >( &m_updateTBETScalar ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
-    
+
     mTableName = "VolumeVis";
 
     RegisterPropertySet( mTableName );
@@ -103,7 +103,7 @@ void VolumeVisPropertySet::UpdateScalarRange( PropertyPtr )
 
     PropertyPtr min = mPropertyMap["DataSet_ScalarRange_Min"];
     PropertyPtr max = mPropertyMap["DataSet_ScalarRange_Max"];
-    
+
     double castMin, castMax;
     castMax = boost::any_cast<double>( max->GetValue() );
     castMin = boost::any_cast<double>( min->GetValue() );
@@ -121,24 +121,24 @@ void VolumeVisPropertySet::UpdateScalar( PropertyPtr property )
     }
 
     std::string const currentScalar = boost::any_cast<std::string >
-        ( GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) );
+                                      ( GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) );
 
     PropertyPtr min = mPropertyMap["DataSet_ScalarRange_Min"];
     PropertyPtr max = mPropertyMap["DataSet_ScalarRange_Max"];
-    
+
     double castMin, castMax;
     castMax = boost::any_cast<double>( max->GetValue() );
     castMin = boost::any_cast<double>( min->GetValue() );
-    
+
     m_updateTBETScalar( currentScalar, "Scalar", castMin, castMax );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VolumeVisPropertySet::CreateSkeleton()
-{ 
+{
     {
         AddProperty( "Hide", false, "Toggle Viz Off" );
     }
-    
+
     AddProperty( "DataSet", 0, "Data Set" );
     PSVectorOfStrings enumValues;
 
@@ -169,7 +169,7 @@ void VolumeVisPropertySet::CreateSkeleton()
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
     mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );*/
-    
+
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
     // connections between DataSet and its subproperties would have been in
@@ -190,7 +190,7 @@ void VolumeVisPropertySet::CreateSkeleton()
 
     //Setup ROI bbox
     {
-        AddProperty( "ROIBounds", boost::any(), "Bounds");
+        AddProperty( "ROIBounds", boost::any(), "Bounds" );
         SetPropertyAttribute( "ROIBounds", "isUIGroupOnly", true );
         SetPropertyAttribute( "ROIBounds", "setExpanded", true );
         AddProperty( "ROIBounds_XMin",   0.0, "X Minimum" );
@@ -219,17 +219,17 @@ void VolumeVisPropertySet::CreateSkeleton()
         enumValues.clear();
         enumValues.push_back( "Select Scalar Data" );
         SetPropertyAttribute( "Isosurface_ColorByScalar", "enumValues", enumValues );
-        
+
         AddProperty( "Isosurface_ColorByScalar_ScalarRange", boost::any(), "Scalar Range" );
         SetPropertyAttribute( "Isosurface_ColorByScalar_ScalarRange", "isUIGroupOnly", true );
         SetPropertyAttribute( "Isosurface_ColorByScalar_ScalarRange", "setExpanded", true );
-        
+
         AddProperty( "Isosurface_ColorByScalar_ScalarRange_Min", 0.0, "Min" );
         //mPropertyMap["Isosurface_ColorByScalar_ScalarRange_Min"]->SetDisabled();
-        
+
         AddProperty( "Isosurface_ColorByScalar_ScalarRange_Max", 1.0, "Max" );
         //mPropertyMap["Isosurface_ColorByScalar_ScalarRange_Max"]->SetDisabled();
-        
+
         mPropertyMap["Isosurface_ColorByScalar"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
         mPropertyMap["Isosurface_ColorByScalar_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
         mPropertyMap["Isosurface_ColorByScalar_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
@@ -253,7 +253,7 @@ void VolumeVisPropertySet::CreateSkeleton()
         AddProperty( "PhongShading", false, "Phong Shading" );
     }
     ///How to control vis animations????
-    AddProperty( "AnimationControls", boost::any(), "Animation Controls");
+    AddProperty( "AnimationControls", boost::any(), "Animation Controls" );
     SetPropertyAttribute( "AnimationControls", "isUIGroupOnly", true );
     SetPropertyAttribute( "AnimationControls", "setExpanded", true );
     AddProperty( "AnimationControls_Controls", 0, "Controls" );
@@ -288,7 +288,7 @@ void VolumeVisPropertySet::CreateSkeleton()
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInY", "minimumValue",   0 );
     AddProperty( "SeedPoints_NumberOfPointsInZ", 1, "Number of Points in Z" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInZ", "minimumValue",   0 );
-*/
+    */
     // Link the three NumberOfPointsIn... properties together and have them
     // fire a signal with signature void( std::vector<int> ) whose tail is
     // named "UpdateSeedPointDimensions"
@@ -335,12 +335,12 @@ void VolumeVisPropertySet::CreateSkeleton()
     enumValues.clear();
     enumValues.push_back( "x" );
     SetPropertyAttribute( "CursorDirection", "enumValues", enumValues );
-    
+
     AddProperty( "CursortType", 0, "Cursor Type" );
     enumValues.clear();
     enumValues.push_back( "none" );
     SetPropertyAttribute( "CursortType", "enumValues", enumValues );
-    
+
     //AddProperty( "StreamlineSize", 0.5, "Streamline Size" );
     //AddProperty( "NumberOfPointsPerPlane", 2.0, "Number of Points Per Plane" );
 
@@ -370,7 +370,7 @@ void VolumeVisPropertySet::CreateSkeleton()
     SetPropertyAttribute( "Advanced_VectorRatio", "maximumValue", 200.0 );
 
     AddProperty( "Advanced_ScaleByVectorMagnitude", false, "Scale By Vector Magnitude" );
-    
+
     ///Mode controls
     AddProperty( "Mode", 0, "Mode" );
     enumValues.clear();
@@ -390,7 +390,7 @@ void VolumeVisPropertySet::CreateSkeleton()
 void VolumeVisPropertySet::EnableLiveProperties( bool live )
 {
     PropertySet::EnableLiveProperties( live );
-    
+
     if( !live )
     {
         // Clearing list will allow live objs to go out of scope and autodelete
@@ -405,13 +405,13 @@ void VolumeVisPropertySet::EnableLiveProperties( bool live )
     else
     {
         {
-            const std::string slotName = 
-            boost::lexical_cast<std::string>( this ) +".TBETHideVizFeature";
+            const std::string slotName =
+                boost::lexical_cast<std::string>( this ) + ".TBETHideVizFeature";
             std::vector< PropertyPtr > dataLink;
             dataLink.push_back( GetProperty( "Hide" ) );
-            MakeLiveBasePtr p( 
+            MakeLiveBasePtr p(
                 new MakeLiveLinked< bool >( mUUIDString, dataLink, slotName ) );
-            mLiveObjects.push_back( p );            
+            mLiveObjects.push_back( p );
         }
         {
             std::vector< PropertyPtr > numberOfPointsLink;
@@ -422,59 +422,59 @@ void VolumeVisPropertySet::EnableLiveProperties( bool live )
             numberOfPointsLink.push_back( GetProperty( "ROIBounds_ZMin" ) );
             numberOfPointsLink.push_back( GetProperty( "ROIBounds_ZMax" ) );
             MakeLiveBasePtr p( new MakeLiveLinked< double >(
-                mUUIDString, numberOfPointsLink, "TBETROIBoundUpdate" ) );
-            mLiveObjects.push_back( p );            
+                                   mUUIDString, numberOfPointsLink, "TBETROIBoundUpdate" ) );
+            mLiveObjects.push_back( p );
         }
         {
-            const std::string slotName = 
-            boost::lexical_cast<std::string>( this ) +".TBETEnableIsosurface";
+            const std::string slotName =
+                boost::lexical_cast<std::string>( this ) + ".TBETEnableIsosurface";
             std::vector< PropertyPtr > dataLink;
             dataLink.push_back( GetProperty( "Isosurface" ) );
-            MakeLiveBasePtr p( 
+            MakeLiveBasePtr p(
                 new MakeLiveLinked< bool >( mUUIDString, dataLink, slotName ) );
             mLiveObjects.push_back( p );
         }
         {
-            const std::string slotName = 
-            boost::lexical_cast<std::string>( this ) +".TBETIsosurfaceValue";
+            const std::string slotName =
+                boost::lexical_cast<std::string>( this ) + ".TBETIsosurfaceValue";
             std::vector< PropertyPtr > dataLink;
             dataLink.push_back( GetProperty( "Isosurface_IsosurfaceValue" ) );
-            MakeLiveBasePtr p( 
+            MakeLiveBasePtr p(
                 new MakeLiveLinked< double >( mUUIDString, dataLink, slotName ) );
             mLiveObjects.push_back( p );
         }
         {
-            const std::string slotName = 
-            boost::lexical_cast<std::string>( this ) +".TBETNumberOfSlicePlanes";
+            const std::string slotName =
+                boost::lexical_cast<std::string>( this ) + ".TBETNumberOfSlicePlanes";
             std::vector< PropertyPtr > dataLink;
             dataLink.push_back( GetProperty( "NumberOfSlicePlanes" ) );
-            MakeLiveBasePtr p( 
+            MakeLiveBasePtr p(
                 new MakeLiveLinked< int >( mUUIDString, dataLink, slotName ) );
             mLiveObjects.push_back( p );
         }
         {
-            const std::string slotName = 
-            boost::lexical_cast<std::string>( this ) +".TBETPhongShading";
+            const std::string slotName =
+                boost::lexical_cast<std::string>( this ) + ".TBETPhongShading";
             std::vector< PropertyPtr > dataLink;
             dataLink.push_back( GetProperty( "PhongShading" ) );
-            MakeLiveBasePtr p( 
+            MakeLiveBasePtr p(
                 new MakeLiveLinked< bool >( mUUIDString, dataLink, slotName ) );
-            mLiveObjects.push_back( p );            
+            mLiveObjects.push_back( p );
         }
         {
             std::vector< PropertyPtr > numberOfPointsLink;
             numberOfPointsLink.push_back( GetProperty( "AnimationControls_Duration" ) );
             MakeLiveBasePtr p( new MakeLiveLinked< double >(
-                mUUIDString, numberOfPointsLink, "TBETAnimationDuration" ) );
-            mLiveObjects.push_back( p );         
+                                   mUUIDString, numberOfPointsLink, "TBETAnimationDuration" ) );
+            mLiveObjects.push_back( p );
         }
         ///
         {
             std::vector< PropertyPtr > numberOfPointsLink;
             numberOfPointsLink.push_back( GetProperty( "AnimationControls_Controls" ) );
             MakeLiveBasePtr p( new MakeLiveLinked< std::string >(
-                mUUIDString, numberOfPointsLink, "TBETAnimationControls" ) );
-            mLiveObjects.push_back( p );         
+                                   mUUIDString, numberOfPointsLink, "TBETAnimationControls" ) );
+            mLiveObjects.push_back( p );
         }
     }
 }

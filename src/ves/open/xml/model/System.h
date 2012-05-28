@@ -61,7 +61,7 @@ namespace model
  * Class that manages the system network for conductor.
  */
 class VE_MODEL_EXPORTS System : public ves::open::xml::XMLObject,
-                               public boost::enable_shared_from_this<System>
+    public boost::enable_shared_from_this<System>
 {
 public:
     ///Constructor
@@ -110,11 +110,11 @@ public:
     bool RemoveModel( ModelPtr parent );
     ///Remove the model from the system
     bool RemoveModel( std::string const& modelId );
-    
+
     ///Set the DB reference string
     ///\param dbReference The reference to the DB
     void SetDBReference( const std::string& dbReference );
-    
+
     ///Get the DB reference string
     ///\return The DB reference
     const std::string& GetDBReference();

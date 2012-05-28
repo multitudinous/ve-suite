@@ -74,7 +74,7 @@ int DiscreteDynamicsWorld::stepSimulation(
     btScalar timeStep, int maxSubSteps, btScalar fixedTimeStep )
 {
     int const& numSimulationSubSteps = btDiscreteDynamicsWorld::stepSimulation(
-        timeStep, maxSubSteps, fixedTimeStep );
+                                           timeStep, maxSubSteps, fixedTimeStep );
 
 #ifdef VE_SOUND
     //Collision flags, mainly so that the door doesn't collide with the doorframe.
@@ -106,7 +106,7 @@ int DiscreteDynamicsWorld::stepSimulation(
         v[0] = osg::absolute< float >( v[ 0 ] );
         v[1] = osg::absolute< float >( v[ 1 ] );
         v[2] = osg::absolute< float >( v[ 2 ] );
-        
+
         BulletObjList::const_iterator it( g_movingList.find( co ) );
         if( ( v[ 0 ] > 0.9 ) || ( v[ 1 ] > 0.9 ) || ( v[ 2 ] > 0.9 ) )
         {
@@ -147,15 +147,15 @@ int DiscreteDynamicsWorld::stepSimulation(
             m_dispatcher1->getManifoldByIndexInternal( i ) );
 
         const btCollisionObject* obA( static_cast< const btCollisionObject* >(
-            contactManifold->getBody0() ) );
+                                          contactManifold->getBody0() ) );
         const btCollisionObject* obB( static_cast< const btCollisionObject* >(
-            contactManifold->getBody1() ) );
+                                          contactManifold->getBody1() ) );
 
         //Character controller is not a PhysicsRigidBody,
         //so does not have function GetSoundMaterial()
         //Need a better solution for this scenario in the future
         if( obA->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT ||
-            obB->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT )
+                obB->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT )
         {
             continue;
         }
@@ -196,9 +196,9 @@ int DiscreteDynamicsWorld::stepSimulation(
             else
             {
                 osg::Vec3 vA( osgbCollision::asOsgVec3(
-                    obA->getInterpolationLinearVelocity() ) );
+                                  obA->getInterpolationLinearVelocity() ) );
                 osg::Vec3 vB( osgbCollision::asOsgVec3(
-                    obB->getInterpolationLinearVelocity() ) );
+                                  obB->getInterpolationLinearVelocity() ) );
                 if( ( vA - vB ).length2() > 0.1 )
                 {
                     slide = true;

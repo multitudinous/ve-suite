@@ -89,14 +89,14 @@ Device::Device( const Device::Type& type )
     m_cameraManager( m_sceneManager.GetCameraManager() )
 {
     CONNECTSIGNALS_1( "%NavigationZEqual0Lock",
-                     void( bool const& enable ),
-                     &Device::UpdateZEqualZero,
-                     m_connections, any_SignalType, normal_Priority );    
-    
+                      void( bool const & enable ),
+                      &Device::UpdateZEqualZero,
+                      m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_1( "%NavigationZGreater0Lock",
-                     void( bool const& enable ),
-                     &Device::UpdateZGreaterZero,
-                     m_connections, any_SignalType, normal_Priority );    
+                      void( bool const & enable ),
+                      &Device::UpdateZGreaterZero,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Device::Device( const Device& device )
@@ -241,7 +241,7 @@ void Device::ProcessSelection()
 ////////////////////////////////////////////////////////////////////////////////
 bool Device::CheckCollisionsWithHead( osg::Vec3 headPositionInWorld )
 {
-    //Simple  box for the head/body 
+    //Simple  box for the head/body
     //Can make this a better represenation later
     //These objects can probably be moved to be members of this class
     osg::BoundingBox headBBox;
@@ -254,13 +254,13 @@ bool Device::CheckCollisionsWithHead( osg::Vec3 headPositionInWorld )
 
     osg::Polytope polytope;
     polytope.setToBoundingBox( headBBox );
-   
+
     osg::ref_ptr<osgUtil::PolytopeIntersector> headCollider =
-                         new osgUtil::PolytopeIntersector( polytope );
+        new osgUtil::PolytopeIntersector( polytope );
     osgUtil::IntersectionVisitor intersectionVisitor( headCollider.get() );
 
     m_sceneManager.GetActiveSwitchNode()->accept( intersectionVisitor );
-    if ( headCollider->containsIntersections() )
+    if( headCollider->containsIntersections() )
     {
         return true;
     }
@@ -310,32 +310,32 @@ void Device::SetZEqualsZeroFlag( int input )
 void Device::EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, double* worldTranslation, const osg::Quat& world_quat, int m_subzeroFlag, int m_zEqualsZeroFlag )
 {
 #ifdef MINERVA_GIS_SUPPORT
-    Minerva::Core::TileEngine::Body* tileEngineBody = 
-    ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody();
+    Minerva::Core::TileEngine::Body* tileEngineBody =
+        ves::xplorer::minerva::MinervaManager::instance()->GetTileEngineBody();
     if( tileEngineBody )
     {
-        Minerva::Core::TileEngine::LandModel* landModel = 
-        tileEngineBody->landModel();
-        
-        osg::Vec3d t ( -worldTranslation[0], -worldTranslation[1], -worldTranslation[2] );
-        osg::Vec3d position ( world_quat.inverse() * t );
-        
+        Minerva::Core::TileEngine::LandModel* landModel =
+            tileEngineBody->landModel();
+
+        osg::Vec3d t( -worldTranslation[0], -worldTranslation[1], -worldTranslation[2] );
+        osg::Vec3d position( world_quat.inverse() * t );
+
         double lat, lon, elevation;
-        landModel->xyzToLatLonHeight( position[0], position[1], 
-                                     position[2], lat, lon, elevation  );
+        landModel->xyzToLatLonHeight( position[0], position[1],
+                                      position[2], lat, lon, elevation );
         double earthElevation = tileEngineBody->elevationAtLatLong( lat, lon );
         gmtl::Point3d jugglerHeadPoint;
         jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( headMatrix );
         earthElevation += jugglerHeadPoint[ 1 ];
 
-        const double minimunDistanceAboveGround ( 2.0 );
+        const double minimunDistanceAboveGround( 2.0 );
         earthElevation += minimunDistanceAboveGround;
 
         if( earthElevation > elevation )
         {
             elevation = earthElevation;
-            landModel->latLonHeightToXYZ( lat, lon, elevation, position[0], 
-                                         position[1], position[2] );
+            landModel->latLonHeightToXYZ( lat, lon, elevation, position[0],
+                                          position[1], position[2] );
             position = world_quat * position;
             worldTranslation[0] = -position[0];
             worldTranslation[1] = -position[1];
@@ -347,19 +347,19 @@ void Device::EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, do
     boost::ignore_unused_variable_warning( headMatrix );
     boost::ignore_unused_variable_warning( world_quat );
 #endif
-	//If the GIS rendering engine is on then we do not want to lock to z > 0
-    
-	if( m_subzeroFlag )
-    {
-        if( worldTranslation[ 1 ] > 0 )
+        //If the GIS rendering engine is on then we do not want to lock to z > 0
+
+        if( m_subzeroFlag )
         {
-            worldTranslation[ 1 ] = 0;
+            if( worldTranslation[ 1 ] > 0 )
+            {
+                worldTranslation[ 1 ] = 0;
+            }
         }
+    if( m_zEqualsZeroFlag )
+    {
+        worldTranslation[ 1 ] = 0;
     }
-	if( m_zEqualsZeroFlag )
-	{
-            worldTranslation[ 1 ] = 0;
-	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::UpdateZEqualZero( bool const& enable )

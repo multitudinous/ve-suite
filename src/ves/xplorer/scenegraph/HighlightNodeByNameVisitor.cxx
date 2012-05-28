@@ -44,17 +44,17 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, bool addGlow, bool ignoreCase, osg::Vec3 glowColor )
-        :
-        NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-        mNodeName( nodeName ),
-        mAddGlow( addGlow ),
-        m_glowColor( glowColor ),
-        m_ignoreCase( ignoreCase )
+    :
+    NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+    mNodeName( nodeName ),
+    mAddGlow( addGlow ),
+    m_glowColor( glowColor ),
+    m_ignoreCase( ignoreCase )
 {
     if( m_ignoreCase )
     {
         boost::algorithm::to_lower( mNodeName );
-        //std::transform( mNodeName.begin(), mNodeName.end(), 
+        //std::transform( mNodeName.begin(), mNodeName.end(),
         //    mNodeName.begin(), std::tolower);
     }
     node->accept( *this );
@@ -73,7 +73,7 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
     if( m_ignoreCase )
     {
         boost::algorithm::to_lower( name );
-        //std::transform( name.begin(), name.end(), 
+        //std::transform( name.begin(), name.end(),
         //    name.begin(), std::tolower);
     }
 
@@ -89,11 +89,11 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
             {
                 //std::cout << drawable_stateset->getNumParents() << std::endl;
                 //std::cout << "StateSet is shared." << std::endl;
-                osg::ref_ptr< osg::StateSet > temp_stateset = 
-                    new osg::StateSet( *(geode_stateset.get()), osg::CopyOp::DEEP_COPY_ALL );
+                osg::ref_ptr< osg::StateSet > temp_stateset =
+                    new osg::StateSet( *( geode_stateset.get() ), osg::CopyOp::DEEP_COPY_ALL );
                 node.setStateSet( temp_stateset.get() );
             }
-            
+
             //Now highlight the node
             transparentDisable( &node );
 
@@ -108,7 +108,7 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
         osg::ref_ptr< osg::StateSet > geode_stateset = node.getStateSet();
         if( geode_stateset.valid() )
         {
-            osg::StateSet::UniformList uniList = 
+            osg::StateSet::UniformList uniList =
                 geode_stateset->getUniformList();
             if( uniList.size() )
             {

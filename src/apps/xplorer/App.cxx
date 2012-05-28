@@ -200,18 +200,18 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_logSplitter( splitter )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
-    LOG_INFO("Starting App");
+    LOG_INFO( "Starting App" );
 
     {
         //OSG specific settings
         osg::Referenced::setThreadSafeReferenceCounting( true );
         osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
-        
+
         mFrameStamp = new osg::FrameStamp();
         mUpdateVisitor = new osgUtil::UpdateVisitor();
         mFrameStamp->setReferenceTime( 0.0 );
         mFrameStamp->setFrameNumber( 0 );
-        
+
         ///Setup caching so that textures will be cached across files
         //enum  	CacheHintOptions {
         //CACHE_NONE = 0, CACHE_NODES = 1<<0, CACHE_IMAGES = 1<<1, CACHE_HEIGHTFIELDS = 1<<2,
@@ -229,7 +229,7 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
 #if defined( _DARWIN )
     m_loadingUILock.acquire();
 #endif
-    
+
     this->argc = argc;
     this->argv = argv;
 
@@ -254,10 +254,10 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     //Set the zUp transformation matrix
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+                                    gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
 
     m_sceneGLTransformInfo = SceneGLTransformInfoPtr( new SceneGLTransformInfo(
-        ortho2DMatrix, identityMatrix, zUpMatrix ) );
+                                 ortho2DMatrix, identityMatrix, zUpMatrix ) );
 
     ///Setup the event mapper to initialize the default signals
     ves::xplorer::eventmanager::EventMapper::instance();
@@ -275,7 +275,7 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     {
         std::cout << ec.what() << std::endl;
     }
-    char* logName = std::getenv("LOGNAME");
+    char* logName = std::getenv( "LOGNAME" );
     std::string logNameStr( "ves-" );
     if( !logName )
     {
@@ -287,9 +287,9 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     }
     tempPath /= logNameStr;
     // Create ves-LOGNAME subdir if needed
-    if( !boost::filesystem::exists(tempPath) )
+    if( !boost::filesystem::exists( tempPath ) )
     {
-        boost::filesystem::create_directory(tempPath);
+        boost::filesystem::create_directory( tempPath );
     }
     tempPath /= "ves.db";
     dbPath = tempPath.string();
@@ -306,16 +306,16 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
 
     // Register signal(s) with EventManager
     eventmanager::EventManager::instance()->RegisterSignal(
-    new eventmanager::SignalWrapper< latePreFrame_SignalType >( &mLatePreFrame ),
-    "App.LatePreFrame");
+        new eventmanager::SignalWrapper< latePreFrame_SignalType >( &mLatePreFrame ),
+        "App.LatePreFrame" );
 
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< exit_SignalType >( &m_exitSignal ),
-        "App.Exit");
+        "App.Exit" );
 
     CONNECTSIGNALS_2( "%NearFarRatio", void( bool const&, double const& ),
-                          &ves::xplorer::App::SetNearFarRatio,
-                          m_connections, any_SignalType, normal_Priority );  
+                      &ves::xplorer::App::SetNearFarRatio,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -337,7 +337,7 @@ App::~App()
 void App::exit()
 {
     m_exitApp = true;
-    m_exitSignal(m_exitApp);
+    m_exitSignal( m_exitApp );
 
 #if defined( _DARWIN )
     if( m_signalLock.test() )
@@ -399,13 +399,13 @@ void App::contextInit()
         *mViewportsChanged = false;
         m_sceneGLTransformInfo->Initialize();
         mSceneRenderToTexture->InitializeRTT();
-        
+
         //ves::conductor::UIManager::instance()->AddUIToNode( camera );
         m_numContexts += 1;
     }
 
     ( *sceneViewer ) = new_sv;
-    
+
 #ifdef _PBUFFER
     if( !_pbuffer )
     {
@@ -472,11 +472,11 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
         //newSceneViewer->getRenderStage()->setDrawBufferApplyMask( false );
         //newSceneViewer->getRenderStage()->setDrawBuffer( GL_NONE, false );
         //newSceneViewer->getCamera()->setReadBuffer(GL_BACK);
-        newSceneViewer->getCamera()->setInheritanceMask( 
-            newSceneViewer->getCamera()->getInheritanceMask() | 
+        newSceneViewer->getCamera()->setInheritanceMask(
+            newSceneViewer->getCamera()->getInheritanceMask() |
             osg::CullSettings::DRAW_BUFFER );
 #else
-        newSceneViewer->getCamera()->setDrawBuffer(GL_NONE);
+        newSceneViewer->getCamera()->setDrawBuffer( GL_NONE );
 #endif
         newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
     }
@@ -490,20 +490,20 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     //if( mRTT )
     {
         //newSceneViewer->setComputeNearFarMode(
-            //osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+        //osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
         //newSceneViewer->getCamera()->setCullingActive( false );
     }
     //else
     {
         //newSceneViewer->setComputeNearFarMode(
-            //osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+        //osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
     }
 
     //Set default viewport, projection matrix, and view matrix for each scene view
     newSceneViewer->setViewport( 0, 0, 1, 1 );
     newSceneViewer->setProjectionMatrix(
         m_sceneGLTransformInfo->GetIdentityMatrixOSG() );
-    newSceneViewer->setViewMatrix( 
+    newSceneViewer->setViewMatrix(
         m_sceneGLTransformInfo->GetIdentityMatrixOSG() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -540,9 +540,9 @@ void App::SetWrapper( VjObsWrapper* input )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::initScene()
-{        
+{
     vprDEBUG( vesDBG, 0 ) << "|App::initScene" << std::endl << vprDEBUG_FLUSH;
-    m_vrjHeadInterface.init("VJHead");
+    m_vrjHeadInterface.init( "VJHead" );
     m_startFrameInt = m_vrjHeadInterface->getTimeStamp();
 
     //Initialize all the XML objects
@@ -553,15 +553,15 @@ void App::initScene()
     //Check and see if we have osg plugins available
     {
         const std::string osgExtension( "osg" );
-        osgDB::ReaderWriter* osgReaderWriter = 
+        osgDB::ReaderWriter* osgReaderWriter =
             osgDB::Registry::instance()->getReaderWriterForExtension( osgExtension );
-        osgDB::Registry::ReaderWriterList readerlist = 
+        osgDB::Registry::ReaderWriterList readerlist =
             osgDB::Registry::instance()->getReaderWriterList();
-        if( (readerlist.size() == 0) || !osgReaderWriter )
+        if( ( readerlist.size() == 0 ) || !osgReaderWriter )
         {
-            std::cerr << 
-            "OpenSceneGraph plugins are not available. Please make sure the OSG loaders are in your path." 
-            << std::endl;
+            std::cerr <<
+                      "OpenSceneGraph plugins are not available. Please make sure the OSG loaders are in your path."
+                      << std::endl;
             exit();
         }
     }
@@ -596,7 +596,7 @@ void App::initScene()
     if( m_desktopMode )
     {
         EnvironmentHandler::instance()->
-            SetDesktopSize( m_screenWidth, m_screenHeight );
+        SetDesktopSize( m_screenWidth, m_screenHeight );
     }
 
     EnvironmentHandler::instance()->InitScene();
@@ -604,7 +604,7 @@ void App::initScene()
 
     //Tell scenemanager if we are the master node
     ves::xplorer::scenegraph::SceneManager::instance()->
-        SetMasterNode( m_vjobsWrapper->IsMaster() );
+    SetMasterNode( m_vjobsWrapper->IsMaster() );
 
     // create steady state visualization objects
     SteadyStateVizHandler::instance()->InitScene();
@@ -671,13 +671,13 @@ void App::latePreFrame()
     }
     ves::xplorer::command::CommandManager::instance()->LatePreFrameUpdate();
 
-    const ves::open::xml::CommandPtr tempCommandPtr = 
+    const ves::open::xml::CommandPtr tempCommandPtr =
         ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
 
     if( tempCommandPtr )
     {
         const std::string tempCommandName = tempCommandPtr->GetCommandName();
-        
+
         //Exit - must be called AFTER m_vjobsWrapper->PreFrameUpdate();
         if( tempCommandName == "EXIT_XPLORER" )
         {
@@ -710,7 +710,7 @@ void App::latePreFrame()
             mSceneRenderToTexture->SetImageCameraCallback( m_captureMovie, "" );
         }
     }
-    
+
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame Framerate Calculations", 20 );
         //float current_time = this->m_vjobsWrapper->GetSetAppTime( -1 );
@@ -745,7 +745,7 @@ void App::latePreFrame()
             if( mProfileCounter == 500 )
             {
                 vprDEBUG( vesDBG, 3 ) << " App::latePreFrame Profiling data for frame "
-                    << _frameNumber << " and time " << current_time << std::endl << vprDEBUG_FLUSH;
+                                      << _frameNumber << " and time " << current_time << std::endl << vprDEBUG_FLUSH;
                 VPR_PROFILE_RESULTS();
                 mProfileCounter = 0;
             }
@@ -756,8 +756,8 @@ void App::latePreFrame()
                 osgUtil::StatsVisitor stats;
                 getScene()->accept( stats );
                 stats.print( mStatsStream );
-                vprDEBUG( vesDBG, 3 ) << mStatsStream.str() << std::endl 
-                    << vprDEBUG_FLUSH;
+                vprDEBUG( vesDBG, 3 ) << mStatsStream.str() << std::endl
+                                      << vprDEBUG_FLUSH;
             }
         }
 
@@ -767,7 +767,7 @@ void App::latePreFrame()
         {
             osg::Referenced::getDeleteHandler()->flush();
             osg::Referenced::getDeleteHandler()->
-                setFrameNumber( mFrameStamp->getFrameNumber() );
+            setFrameNumber( mFrameStamp->getFrameNumber() );
         }
     }
     ///////////////////////
@@ -786,7 +786,7 @@ void App::latePreFrame()
         VPR_PROFILE_GUARD_HISTORY(
             "App::latePreFrame CharacterController::Move", 20 );
         //If the character controller is being used - manipulate the character
-        //by the keyboard, head, or wand first. This should affect the 
+        //by the keyboard, head, or wand first. This should affect the
         //character bullet matrix directly
         characterController.Move( mFrameDT );
     }
@@ -805,7 +805,7 @@ void App::latePreFrame()
         //based on what the character has done
         characterController.UpdateCamera();
         //Now that we are finished updating the view on the character and controller
-        //the update callback on the character will be called to update the 
+        //the update callback on the character will be called to update the
         //OSG rep for the character
     }
     ///////////////////////
@@ -865,7 +865,7 @@ void App::latePreFrame()
     ///////////////////////
     ///Grab nav data
     {
-        mNavPosition.set( 
+        mNavPosition.set(
             ves::xplorer::scenegraph::SceneManager::instance()->
             GetMxCoreViewMatrix().getInverseMatrix().ptr() );
         //std::cout << mNavPosition << std::endl;
@@ -880,14 +880,14 @@ void App::latePreFrame()
         tempVec = scenegraph::SceneManager::instance()->GetInvertedNavMatrix() * tempVec;
         osg::Vec4d position( tempVec[0], tempVec[1], tempVec[2], 0.0 );
         mSceneRenderToTexture->GetLight0()->setPosition( position );
-        
+
         //Sneaky way to set uniform defined in
         //Access to these types of uniforms needs to be discussed with Paul
         if( !mRTT )
         {
             backdropFX::Manager::instance()->setLightPosition( 0, position );
         }
-        /*gmtl::convertTo< double >( 
+        /*gmtl::convertTo< double >(
             ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveNavSwitchNode()->GetMat() )*/;
     }
@@ -902,11 +902,11 @@ void App::latePreFrame()
 #if !defined( _DARWIN )
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame update", 20 );
-        ///Because we do our event processing here for Qt we get automagical 
-        ///sync between the draw thread and the UI thread. This call 
-        ///essentially tells Qt to process all of its events at this moment. 
-        ///If this is changed in the future where this call is being run in a 
-        ///different thread then we may need to take more care in handling the 
+        ///Because we do our event processing here for Qt we get automagical
+        ///sync between the draw thread and the UI thread. This call
+        ///essentially tells Qt to process all of its events at this moment.
+        ///If this is changed in the future where this call is being run in a
+        ///different thread then we may need to take more care in handling the
         ///sync issues between our UI and the render thread.
         ///Note: On Mac the runLoop method is called by the NSApplication
         ///      delegate VESDelegate. On Mac the runLoop method is executed
@@ -920,7 +920,7 @@ void App::latePreFrame()
     ///method.
     if( m_uiInitialized )
     {
-        ///We need to guard these calls with a timer because on Mac unlike the 
+        ///We need to guard these calls with a timer because on Mac unlike the
         ///other platforms the runLoop does not completely control the event
         ///processing therefore we need to block events with this call as well.
         bool oneHertzUpdate = ( time_since_start - mLastQtLoopTime ) > 0.9999f;
@@ -929,7 +929,7 @@ void App::latePreFrame()
             //mLastQtLoopTime = time_since_start;
             m_signalLock.release();
             vprDEBUG( vesDBG, 3 ) << "|\tApp::latePreFrame process signals"
-                << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
             m_signalLock.acquire();
         }
     }
@@ -937,11 +937,11 @@ void App::latePreFrame()
     {
         m_loadingUILock.release();
         vprDEBUG( vesDBG, 3 ) << "|\tApp::latePreFrame Try loading the UI."
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         m_loadingUILock.acquire();
     }
-#endif 
-    
+#endif
+
     ///////////////////////
     //profile the update call
     {
@@ -963,7 +963,7 @@ void App::latePreFrame()
         const vrj::opengl::WindowPtr window = userData->getGlWindow();
         m_windowIsOpen = window->isOpen();
     }*/
-    
+
     vprDEBUG( vesDBG, 3 ) << "|End App::latePreFrame"
                           << std::endl << vprDEBUG_FLUSH;
 }
@@ -1027,13 +1027,13 @@ void App::contextPreDraw()
         m_windowIsOpen = window->isOpen();
     }
 
-    if( !(*mViewportsChanged) )
+    if( !( *mViewportsChanged ) )
     {
         if( jccl::ConfigManager::instance()->isPendingStale() && m_windowIsOpen )
         {
             {
                 vpr::Guard< vpr::Mutex > val_guard( mValueLock );
-                mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
+                mSceneRenderToTexture->InitScene( ( *sceneViewer )->getCamera() );
                 m_numInitialized += 1;
                 if( m_numInitialized == m_numContexts )
                 {
@@ -1063,7 +1063,7 @@ void App::contextPreDraw()
     ///by OSG's near/far ratio (which defaults to 0.0005).
     if( m_frameSetNearFarRatio == _frameNumber )
     {
-        (*sceneViewer)->setNearFarRatio( m_nearFarRatio );
+        ( *sceneViewer )->setNearFarRatio( m_nearFarRatio );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1081,7 +1081,7 @@ void App::draw()
         std::cout << "Cannot render yet." << std::endl;
         return;
     }
-    
+
     //std::cout << "----------Draw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::draw", 20 );
     glClear( GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
@@ -1115,7 +1115,7 @@ void App::draw()
     vrj::ProjectionPtr project = userData->getProjection();
     //const vrj::Frustum frustum = project->getFrustum();
     vrj::Frustum frustum = project->getFrustum();
-    
+
     //Get the frustum values
     double l = 0.0;//frustum[ vrj::Frustum::VJ_LEFT ];
     double r = 0.0;//frustum[ vrj::Frustum::VJ_RIGHT ];
@@ -1134,47 +1134,47 @@ void App::draw()
 
         float interocular_dist = viewport->getUser()->getInterocularDistance();
         interocular_dist *= positionScale; // Scale eye separation
-        
+
         // Distance to move eye.
-        const float eye_offset(interocular_dist * 0.5f);
-        
+        const float eye_offset( interocular_dist * 0.5f );
+
         // NOTE: Eye coord system is -z forward, x-right, y-up
         ///We remove the translation component from the head matrix because
         ///the position is accounted for in the MxCore matrix so we need to
         ///remove it here. It gets multiplied in through the UpdateViewMatrix
         ///function call.
         if( project->getEye() == vrj::Projection::LEFT )
-        {            
+        {
             gmtl::Point3f eyePoint( -eye_offset, 0, 0 );
             const gmtl::Point3f left_eye_point = eyePoint;
             project->calcViewMatrix( gmtl::MAT_IDENTITY44F, left_eye_point,
-                                      positionScale );
-            const gmtl::Matrix44d viewMatrix = 
-            scenegraph::SceneManager::instance()->GetFullMatrix();
+                                     positionScale );
+            const gmtl::Matrix44d viewMatrix =
+                scenegraph::SceneManager::instance()->GetFullMatrix();
             eyePoint = gmtl::convertTo< float >( viewMatrix ) * eyePoint;
-            const vrj::SurfaceProjectionPtr tempPtr = 
+            const vrj::SurfaceProjectionPtr tempPtr =
                 boost::dynamic_pointer_cast< vrj::SurfaceProjection >( project );
             if( tempPtr )
             {
-                //frustum = 
+                //frustum =
                 //    m_sceneGLTransformInfo->CalculateFrustum( viewport, eyePoint );
             }
         }
-        
+
         if( project->getEye() == vrj::Projection::RIGHT )
         {
             gmtl::Point3f eyePoint( eye_offset, 0, 0 );
             const gmtl::Point3f right_eye_point = eyePoint;
             project->calcViewMatrix( gmtl::MAT_IDENTITY44F, right_eye_point,
-                                       positionScale );
-            const gmtl::Matrix44d viewMatrix = 
-            scenegraph::SceneManager::instance()->GetFullMatrix();
+                                     positionScale );
+            const gmtl::Matrix44d viewMatrix =
+                scenegraph::SceneManager::instance()->GetFullMatrix();
             eyePoint = gmtl::convertTo< float >( viewMatrix ) * eyePoint;
-            const vrj::SurfaceProjectionPtr tempPtr = 
+            const vrj::SurfaceProjectionPtr tempPtr =
                 boost::dynamic_pointer_cast< vrj::SurfaceProjection >( project );
             if( tempPtr )
             {
-                //frustum = 
+                //frustum =
                 //    m_sceneGLTransformInfo->CalculateFrustum( viewport, eyePoint );
             }
         }
@@ -1199,7 +1199,7 @@ void App::draw()
         n = frustum[ vrj::Frustum::VJ_NEAR ];
         f = frustum[ vrj::Frustum::VJ_FAR ];
 
-        ///Remember that the VR Juggler near/far values are hard coded to 
+        ///Remember that the VR Juggler near/far values are hard coded to
         ///0.1 and 10000. With OSG set to auto compute the near and far planes
         ///these values are overriden. If we use GLTransformInfo just after
         ///these values are set the projection matrix will not reflect
@@ -1207,7 +1207,7 @@ void App::draw()
         glTI->UpdateFrustumValues( l, r, b, t, n, f );
         //Get the projection matrix
         const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
-                
+
         //Can't set viewport larger than fbo texture for rtt camera
         //We have to set the viewport for the frame buffer
         //Would like to inherit viewport from sv all way down but not possible
@@ -1217,7 +1217,7 @@ void App::draw()
         //If it is not absolute, Physics and Manipulators will be broken
         sv->setProjectionMatrix( projectionMatrixOSG );
         // osg::Matrix::identity() ); //
-        sv->setViewMatrix(viewMatrixOSG );
+        sv->setViewMatrix( viewMatrixOSG );
 
         if( mRTT )
         {
@@ -1276,26 +1276,26 @@ void App::draw()
 
     //GLenum errorEnum = glGetError();
     //vprDEBUG( vesDBG, 3 ) <<  << errorEnum & GL_NO_ERROR
-                          //<< std::endl << vprDEBUG_FLUSH;
+    //<< std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::update()
 {
     vprDEBUG( vesDBG, 3 ) <<  "|\tApp LatePreframe Update"
                           << std::endl << vprDEBUG_FLUSH;
-    /*const std::string tempCommandName = 
+    /*const std::string tempCommandName =
         m_vjobsWrapper->GetXMLCommand()->GetCommandName();
     // This code came from osgViewer::Viewer::setSceneData
     // The resize stuff is what is critical not sure how important it is
     if( !tempCommandName.compare( "veNetwork Update" ) )
     {
-        // make sure that existing scene graph objects are 
+        // make sure that existing scene graph objects are
         // allocated with thread safe ref/unref
         getScene()->setThreadSafeRefUnref(true);
-        
-        // update the scene graph so that it has enough GL object buffer 
+
+        // update the scene graph so that it has enough GL object buffer
         // memory for the graphics contexts that will be using it.
-        getScene()->resizeGLObjectBuffers( 
+        getScene()->resizeGLObjectBuffers(
             osg::DisplaySettings::instance()->getMaxNumberOfGraphicsContexts() );
     }*/
     // Update the frame stamp with information from this frame
@@ -1311,27 +1311,27 @@ void App::update()
     // call all node update callbacks and animations. This is equivalent to calling
     // SceneView::update
     //getScene()->accept( *mUpdateVisitor.get() );
-    
+
     //if( mRTT )
     {
-        mSceneRenderToTexture->Update( mUpdateVisitor.get(), 
-            ves::xplorer::command::CommandManager::instance()->GetXMLCommand() );
+        mSceneRenderToTexture->Update( mUpdateVisitor.get(),
+                                       ves::xplorer::command::CommandManager::instance()->GetXMLCommand() );
     }
     // now force a recompute of the bounding volume while we are still in
     // the read/write app phase, this should prevent the need to recompute
     // the bounding volumes from within the cull traversal which may be
     // multi-threaded.
     getScene()->getBound();
-    
+
     // Since the UI is directly under the root camera we need to manually update it
     //m_uiGroup->getBound();
-    
+
 #ifdef VE_SOUND
     m_listenerPosition.set( mNavPosition.getData() );
-    osgAudio::SoundManager::instance()->setListenerMatrix( m_listenerPosition );    
+    osgAudio::SoundManager::instance()->setListenerMatrix( m_listenerPosition );
 #endif
-    vprDEBUG( vesDBG, 3 ) <<  "|\tEnd App LatePreframe Update" 
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) <<  "|\tEnd App LatePreframe Update"
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::LoadUI()
@@ -1339,7 +1339,7 @@ void App::LoadUI()
     Poco::Logger& conductorLoggerInit = Poco::Logger::get( "conductor" );
     ves::xplorer::LogStreamPtr logStream;
     logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( conductorLoggerInit ) );
-    (*logStream).information() << "Initialized conductor logger" << std::endl;
+    ( *logStream ).information() << "Initialized conductor logger" << std::endl;
     //boost::ignore_unused_variable_warning( conductorLoggerInit );
 
     vprDEBUG( vesDBG, 2 ) << "|\tApp LoadUI" << std::endl << vprDEBUG_FLUSH;
@@ -1349,24 +1349,24 @@ void App::LoadUI()
                      m_connections, highest_Priority );
 
     // Create the Qt application event subsystem
-    QApplication::setDesktopSettingsAware(true);
-    
+    QApplication::setDesktopSettingsAware( true );
+
 #if !defined( _DARWIN )
     m_qtApp = new QApplication( argc, argv, 1 );
 #else
-    QApplication::setAttribute(Qt::AA_MacPluginApplication);
+    QApplication::setAttribute( Qt::AA_MacPluginApplication );
     m_qtApp = new ves::xplorer::VESQtApplication( argc, argv, this );
 #endif
 
 #ifdef VES_QT_RENDER_DEBUG
-    QPushButton*  button = new QPushButton("Test");
+    QPushButton*  button = new QPushButton( "Test" );
     button->show();
     m_uiInitialized = true;
     return;
 #endif
 
     // Equivalent to turning drag 'n' drop off for our application
-    m_qtApp->setStartDragDistance(10000);
+    m_qtApp->setStartDragDistance( 10000 );
 
     //Get or create UIManager
     ves::conductor::UIManager* m_UIManager =
@@ -1377,11 +1377,11 @@ void App::LoadUI()
         bool regionDamage = m_vm["RegionDamaging"].as<bool>();
         if( regionDamage )
         {
-            (*logStream).information() << "Turning region damaging on for the UI" << std::endl;
+            ( *logStream ).information() << "Turning region damaging on for the UI" << std::endl;
         }
         else
         {
-            (*logStream).information() << "Region damaging is off for the UI" << std::endl;
+            ( *logStream ).information() << "Region damaging is off for the UI" << std::endl;
         }
         m_UIManager->SetRegionDamaging( regionDamage );
     }
@@ -1389,25 +1389,28 @@ void App::LoadUI()
     // Wrap the widget in a UIElement
     ves::conductor::UIElementQt* element = new ves::conductor::UIElementQt();
     QWidget* mainUIWidget = new MainWindow( 0 );
-    static_cast<ves::conductor::MainWindow*>(mainUIWidget)->SetLogSplitter( m_logSplitter );
+    static_cast<ves::conductor::MainWindow*>( mainUIWidget )->SetLogSplitter( m_logSplitter );
 
     // Make UIManager's projection take up the entire viewable area of
     // the GL window
     // Now lets find out what we actually got back from the OS
     vrj::DisplayManager* displayManager = vrj::DisplayManager::instance();
-    const std::vector< vrj::DisplayPtr >& displays = 
+    const std::vector< vrj::DisplayPtr >& displays =
         displayManager->getActiveDisplays();
-    int originX = 0; int originY = 0; int width = 0; int height = 0;
+    int originX = 0;
+    int originY = 0;
+    int width = 0;
+    int height = 0;
     for( size_t i = 0; i < displays.size(); ++i )
     {
         vrj::DisplayPtr display = displays.at( i );
         display->getOriginAndSize( originX, originY, width, height );
     }
-    std::cout << "|\tWindow value: " << width << " " 
-        << height << std::endl << std::flush;
-    
+    std::cout << "|\tWindow value: " << width << " "
+              << height << std::endl << std::flush;
+
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
-    { 
+    {
         ///These values must match the values in UIElement on line 105
         width = 600;
         height = 967;
@@ -1419,7 +1422,7 @@ void App::LoadUI()
     element->SetInitialImageWidthAndHeight( 600, height );
     element->SetScreenDimensions( width, height );
     element->SetWidget( mainUIWidget );
-    
+
     m_UIManager->AddElement( element );
 
     // Start the main UI minimized
@@ -1481,7 +1484,7 @@ void App::runLoop()
 void App::SetNearFarRatio( bool const& enable, double const& nearFar )
 {
     m_frameSetNearFarRatio = _frameNumber + 1;
-    
+
     if( enable )
     {
         m_nearFarRatio = nearFar;

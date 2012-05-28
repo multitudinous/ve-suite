@@ -39,7 +39,7 @@ class Data
 public:
     Data( void );
     ~Data( void );
-    Data( Data * );
+    Data( Data* );
 
     float time;
     float IDLIM;
@@ -59,7 +59,7 @@ class Location : public Data
 public:
     Location( void );
     ~Location( void );
-    Location( Location * );
+    Location( Location* );
 
     float x;
     float y;
@@ -71,13 +71,13 @@ class Particle
 public:
     Particle( void );
     ~Particle( void );
-    Particle( Particle * );
+    Particle( Particle* );
 
     int pathIndex;
     int timeSteps;
     int particleNumber;
     int particleSize;
-    typedef std::vector< Location * > Locations;
+    typedef std::vector< Location* > Locations;
     Locations locations;
 };
 #endif

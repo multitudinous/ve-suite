@@ -47,7 +47,7 @@ namespace conductor
 
 
 class DefaultPlugin : public ves::conductor::UIPluginBase,
-                      public ves::conductor::UIPluginInterface
+    public ves::conductor::UIPluginInterface
 {
     Q_OBJECT
 

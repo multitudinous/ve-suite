@@ -75,23 +75,23 @@ AddElevationGroupHandler::~AddElevationGroupHandler()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void AddElevationGroupHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void AddElevationGroupHandler::Execute( CommandPtr command, MinervaManager& manager )
 {
-  if ( command )
-  {
-    const std::size_t numLayers ( command->GetNumberOfDataValuePairs() );
-    for ( std::size_t i = 0; i < numLayers; ++i )
+    if( command )
     {
-      ves::open::xml::DataValuePairPtr dvp ( command->GetDataValuePair ( i ) );
-      if ( dvp )
-      {
-        CommandPtr commandForLayer ( boost::dynamic_pointer_cast<ves::open::xml::Command> ( dvp->GetDataXMLObject() ) );
-        Minerva::Core::Layers::RasterLayer::RefPtr layer ( EventHandler::_createRasterLayerFromCommand ( commandForLayer ) );
-        if ( layer.valid() )
+        const std::size_t numLayers( command->GetNumberOfDataValuePairs() );
+        for( std::size_t i = 0; i < numLayers; ++i )
         {
-          manager.AddElevationLayer ( layer.get() );
+            ves::open::xml::DataValuePairPtr dvp( command->GetDataValuePair( i ) );
+            if( dvp )
+            {
+                CommandPtr commandForLayer( boost::dynamic_pointer_cast<ves::open::xml::Command> ( dvp->GetDataXMLObject() ) );
+                Minerva::Core::Layers::RasterLayer::RefPtr layer( EventHandler::_createRasterLayerFromCommand( commandForLayer ) );
+                if( layer.valid() )
+                {
+                    manager.AddElevationLayer( layer.get() );
+                }
+            }
         }
-      }
     }
-  }
 }

@@ -33,27 +33,29 @@ struct AnimationManagerFinder : public osg::NodeVisitor
 {
     AnimationManagerFinder()
         :
-        osg::NodeVisitor(osg::NodeVisitor::TRAVERSE_ALL_CHILDREN) 
+        osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
     {
         ;
     }
 
-    void apply(osg::Node& node) 
+    void apply( osg::Node& node )
     {
-        if (_am.valid())
-            return;
-        if (node.getUpdateCallback()) 
+        if( _am.valid() )
         {
-            osgAnimation::AnimationManagerBase* b = dynamic_cast<osgAnimation::AnimationManagerBase*>(node.getUpdateCallback());
-            if (b) 
+            return;
+        }
+        if( node.getUpdateCallback() )
+        {
+            osgAnimation::AnimationManagerBase* b = dynamic_cast<osgAnimation::AnimationManagerBase*>( node.getUpdateCallback() );
+            if( b )
             {
-                _am = new osgAnimation::BasicAnimationManager(*b);
+                _am = new osgAnimation::BasicAnimationManager( *b );
                 return;
             }
         }
-        traverse(node);
+        traverse( node );
     }
-    
+
     osg::ref_ptr<osgAnimation::BasicAnimationManager> _am;
 };
 

@@ -47,13 +47,13 @@
 #include <ves/builder/converter.h"      // for "letUsersAddParamsToField>
 #include <ves/builder/convertToUnstructuredGrid.h>
 
-void filterThePointData( vtkPointData * filteredPD, vtkPointData * unfilteredPD, const int * mapVector )
+void filterThePointData( vtkPointData* filteredPD, vtkPointData* unfilteredPD, const int* mapVector )
 {
     //cout << "in filterThePointData" << endl;
 
     for( int i = 0; i < unfilteredPD->GetNumberOfArrays(); i++ )
     {
-        vtkFloatArray *filteredData = vtkFloatArray::New();
+        vtkFloatArray* filteredData = vtkFloatArray::New();
         filteredData->SetNumberOfComponents( unfilteredPD->GetArray( i )->GetNumberOfComponents() );
         filteredData->SetName( unfilteredPD->GetArray( i )->GetName() );
 
@@ -62,7 +62,10 @@ void filterThePointData( vtkPointData * filteredPD, vtkPointData * unfilteredPD,
 
         for( int j = 0; j < numOriginalTuples; j++ )
         {
-            if( mapVector[j] == -1 ) continue;
+            if( mapVector[j] == -1 )
+            {
+                continue;
+            }
             filteredData->InsertTuple( mapVector[j], unfilteredPD->GetArray( i )->GetTuple( j ) );
         }
         filteredPD->AddArray( filteredData );
@@ -73,24 +76,27 @@ void filterThePointData( vtkPointData * filteredPD, vtkPointData * unfilteredPD,
     return;
 }
 
-vtkUnstructuredGrid * filterMeshByPointData( vtkUnstructuredGrid * unsGrid, vtkDataArray * filterData )
+vtkUnstructuredGrid* filterMeshByPointData( vtkUnstructuredGrid* unsGrid, vtkDataArray* filterData )
 {
     // Loop over the cells and locate non-wall cells...
     int pt, npts, ptId;
-    vtkIdList *pts = vtkIdList::New();
-    vtkPoints *nonWallPoints = vtkPoints::New();
-    vtkIdList *cellIds = vtkIdList::New();
-    vtkGenericCell *cell = vtkGenericCell::New();
-    vtkUnstructuredGrid *filteredMesh = vtkUnstructuredGrid::New();
-    double *x;
+    vtkIdList* pts = vtkIdList::New();
+    vtkPoints* nonWallPoints = vtkPoints::New();
+    vtkIdList* cellIds = vtkIdList::New();
+    vtkGenericCell* cell = vtkGenericCell::New();
+    vtkUnstructuredGrid* filteredMesh = vtkUnstructuredGrid::New();
+    double* x;
 
     int numCells = unsGrid->GetNumberOfCells();
     cout << "     The number of cells is " << numCells << endl;
 
     int numPoints = unsGrid->GetNumberOfPoints();
     cout << "     The number of points is " << numPoints << endl;
-    int * mapVector = new int [numPoints];
-    for( int i = 0; i < numPoints; i++ ) mapVector[i] = -1;
+    int* mapVector = new int [numPoints];
+    for( int i = 0; i < numPoints; i++ )
+    {
+        mapVector[i] = -1;
+    }
 
     filteredMesh->Allocate( numCells, numCells );
 
@@ -112,7 +118,10 @@ vtkUnstructuredGrid * filterMeshByPointData( vtkUnstructuredGrid * unsGrid, vtkD
             ptId = cell->GetPointId( i );
             float wallValue = filterData->GetComponent( ptId, 0 );
             //cout << ", ptId = " << ptId << ", wallValue = " << wallValue << endl;
-            if( wallValue == 8 ) isNonWallCell = 0;
+            if( wallValue == 8 )
+            {
+                isNonWallCell = 0;
+            }
         }
         //cout << "cell->GetCellType()=" << cell->GetCellType() << ", isNonWallCell = " << isNonWallCell << endl;
         if( isNonWallCell )
@@ -135,7 +144,10 @@ vtkUnstructuredGrid * filterMeshByPointData( vtkUnstructuredGrid * unsGrid, vtkD
                     mapVector[ptId] = pt;
                     //cout << "Inserted point " << pt << endl;
                 }
-                else pts->InsertId( i, mapVector[ptId] );
+                else
+                {
+                    pts->InsertId( i, mapVector[ptId] );
+                }
             }
             filteredMesh->InsertNextCell( cell->GetCellType(), pts );
         }
@@ -154,13 +166,13 @@ vtkUnstructuredGrid * filterMeshByPointData( vtkUnstructuredGrid * unsGrid, vtkD
     return filteredMesh;
 }
 
-vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
+vtkUnstructuredGrid* reiReader( char* reiFileName, int debug )
 {
-    vtkUnstructuredGrid * uGrid = NULL;
+    vtkUnstructuredGrid* uGrid = NULL;
 
-    FILE *s1;
+    FILE* s1;
     // open db file
-    if (( s1 = fopen( reiFileName, "r" ) ) == NULL )
+    if( ( s1 = fopen( reiFileName, "r" ) ) == NULL )
     {
         cout << "ERROR: can't open file \"" << reiFileName << "\", so exiting" << endl;
         return uGrid;
@@ -226,18 +238,30 @@ vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
         return uGrid;
     }
-    if( debug ) cout << "numScalars: \"" << numScalars << "\"" << endl;
-    if( debug ) cout << "numVectors: \"" << numVectors << "\"" << endl;
+    if( debug )
+    {
+        cout << "numScalars: \"" << numScalars << "\"" << endl;
+    }
+    if( debug )
+    {
+        cout << "numVectors: \"" << numVectors << "\"" << endl;
+    }
     int numParameters = numScalars + numVectors;
-    if( debug ) cout << "numParameters: \"" << numParameters << "\"" << endl;
+    if( debug )
+    {
+        cout << "numParameters: \"" << numParameters << "\"" << endl;
+    }
 
     // make space for scalar and vector names
-    char ** parameterNames = new char * [numParameters];
-    for( i = 0; i < numParameters; i++ ) parameterNames[i] = new char [9];
+    char** parameterNames = new char * [numParameters];
+    for( i = 0; i < numParameters; i++ )
+    {
+        parameterNames[i] = new char [9];
+    }
 
     // read and NULL terminate scalar names
     fseek( s1, 8L, SEEK_CUR );
-    for( i = 0;i < numScalars;i++ )
+    for( i = 0; i < numScalars; i++ )
     {
         if( parameterNames[i] == NULL )
         {
@@ -251,26 +275,28 @@ vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
 
     // read and NULL terminate vector names
     fseek( s1, 8L, SEEK_CUR );
-    for( i = 0;i < numVectors;i++ )
+    for( i = 0; i < numVectors; i++ )
     {
-        if( parameterNames[numScalars+i] == NULL )
+        if( parameterNames[numScalars + i] == NULL )
         {
             cerr << "ERROR: can't get memory for parameterNames, so exiting" << endl;
             return uGrid;
         }
-        parameterNames[numScalars+i][8] = '\0';
-        fread( parameterNames[numScalars+i], sizeof( char ), 8, s1 );
-        fileIO::StripTrailingSpaces( parameterNames[numScalars+i] );
+        parameterNames[numScalars + i][8] = '\0';
+        fread( parameterNames[numScalars + i], sizeof( char ), 8, s1 );
+        fileIO::StripTrailingSpaces( parameterNames[numScalars + i] );
     }
 
     if( debug )
     {
-        for( i = 0;i < numParameters;i++ )
+        for( i = 0; i < numParameters; i++ )
+        {
             cout << "parameterNames[" << i << "]: \t\"" << parameterNames[i] << "\"" << endl;
+        }
     }
 
     // make room for xCenters, yCenters, zCenters
-    float *xCenters = NULL, *yCenters = NULL, *zCenters = NULL;
+    float* xCenters = NULL, *yCenters = NULL, *zCenters = NULL;
     xCenters = new float [nx];
     yCenters = new float [ny];
     zCenters = new float [nz];
@@ -287,7 +313,10 @@ vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
         return uGrid;
     }
-    if( debug > 1 ) for( i = 0; i < nx; i++ ) cout << "xCenters[" << i << "] = " << xCenters[i] << endl;
+    if( debug > 1 ) for( i = 0; i < nx; i++ )
+        {
+            cout << "xCenters[" << i << "] = " << xCenters[i] << endl;
+        }
 
     // get yCenters
     fseek( s1, 8L, SEEK_CUR );
@@ -296,7 +325,10 @@ vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
         return uGrid;
     }
-    if( debug > 1 ) for( i = 0; i < ny; i++ ) cout << "yCenters[" << i << "] = " << yCenters[i] << endl;
+    if( debug > 1 ) for( i = 0; i < ny; i++ )
+        {
+            cout << "yCenters[" << i << "] = " << yCenters[i] << endl;
+        }
 
     // get zCenters
     fseek( s1, 8L, SEEK_CUR );
@@ -305,34 +337,45 @@ vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
         return uGrid;
     }
-    if( debug > 1 ) for( i = 0; i < nz; i++ ) cout << "zCenters[" << i << "] = " << zCenters[i] << endl;
+    if( debug > 1 ) for( i = 0; i < nz; i++ )
+        {
+            cout << "zCenters[" << i << "] = " << zCenters[i] << endl;
+        }
 
     // populate the vertex coordinate floatArrays with the center values
     // SetArray uses the actual array provided; it does not copy the data from the suppled array.
     // Set save to 1 to keep the class from deleting the array when it cleans up or reallocates memory.
 
     if( debug )
+    {
         cout << "DEBUG :: Allocating X_Centers float arrays " << endl;
+    }
 
-    vtkFloatArray *xCoords = vtkFloatArray::New();
+    vtkFloatArray* xCoords = vtkFloatArray::New();
     xCoords->SetArray( xCenters, nx, 0 );
 
     if( debug )
+    {
         cout << "DEBUG :: Allocating Y_Centers float arrays " << endl;
+    }
 
-    vtkFloatArray *yCoords = vtkFloatArray::New();
+    vtkFloatArray* yCoords = vtkFloatArray::New();
     yCoords->SetArray( yCenters, ny, 0 );
 
     if( debug )
+    {
         cout << "DEBUG :: Allocating Z_Centers float arrays " << endl;
+    }
 
-    vtkFloatArray *zCoords = vtkFloatArray::New();
+    vtkFloatArray* zCoords = vtkFloatArray::New();
     zCoords->SetArray( zCenters, nz, 0 );
 
     if( debug )
+    {
         cout << "DEBUG :: Allocating vtkRectilinearGrid " << endl;
+    }
 
-    vtkRectilinearGrid *rgrid = vtkRectilinearGrid::New();
+    vtkRectilinearGrid* rgrid = vtkRectilinearGrid::New();
     rgrid->SetDimensions( nx, ny, nz );
     rgrid->SetXCoordinates( xCoords );
     rgrid->SetYCoordinates( yCoords );
@@ -343,14 +386,16 @@ vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
     zCoords->Delete();
 
     if( debug )
+    {
         cout << "DEBUG :: Finished allocating float arrays " << endl;
+    }
 
     // convertToUnstructuredGrid will supply a new unstructured grid
     uGrid = convertToUnstructuredGrid( rgrid );
     rgrid->Delete();
 
     // set up arrays to store scalar and vector data over entire mesh...
-    vtkFloatArray ** parameterData = NULL;
+    vtkFloatArray** parameterData = NULL;
     parameterData = new vtkFloatArray * [numParameters];
     for( i = 0; i < numParameters; i++ )
     {
@@ -365,7 +410,7 @@ vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
     }
 
     // make room for each scalar data, we will use pointers to quickly create parameterData objects
-    float ** scalarData = new float * [numScalars];
+    float** scalarData = new float * [numScalars];
     for( i = 0; i < numScalars; i++ )
     {
         scalarData[i] = new float [num_verts];
@@ -396,23 +441,27 @@ vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
         if( debug > 1 )
         {
             for( j = 0; j < 4; j++ )
+            {
                 cout << "scalarData[" << i << "][" << j << "] = " << scalarData[i][j] << endl;
+            }
 
             cout << "                ..." << endl;
 
             for( j = num_verts - 4; j < num_verts; j++ )
+            {
                 cout << "scalarData[" << i << "][" << j << "] = " << scalarData[i][j] << endl;
+            }
 
             cout << endl;
         }
         else
             cout << "Reading scalarData[" << i + 1 << " of " << numScalars << "]:\t\""
-            << parameterNames[i] << "\"" << endl;
+                 << parameterNames[i] << "\"" << endl;
     }
 
     // make room for vector data
     int xyz;
-    float ** vectorData = new float * [3];
+    float** vectorData = new float * [3];
     for( xyz = 0; xyz < 3; xyz++ )
     {
         vectorData[xyz] = new float [num_verts];
@@ -429,7 +478,7 @@ vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
     for( i = 0; i < numVectors; i++ )
     {
         cout << "Reading vectorData[" << i + 1 << " of " << numVectors << "]:\t\""
-        << parameterNames[numScalars+i] << "\"" << endl;
+             << parameterNames[numScalars + i] << "\"" << endl;
         for( xyz = 0; xyz < 3; xyz++ )
         {
             fseek( s1, 8L, SEEK_CUR );
@@ -441,34 +490,42 @@ vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
                 return uGrid;
             }
 
-            parameterData[numScalars+i]->SetName( parameterNames[numScalars+i] );
-            parameterData[numScalars+i]->SetNumberOfComponents( 3 );
-            parameterData[numScalars+i]->SetNumberOfTuples( num_verts );
+            parameterData[numScalars + i]->SetName( parameterNames[numScalars + i] );
+            parameterData[numScalars + i]->SetNumberOfComponents( 3 );
+            parameterData[numScalars + i]->SetNumberOfTuples( num_verts );
             for( int tuple = 0; tuple < num_verts; tuple++ )
-                parameterData[numScalars+i]->SetComponent( tuple, xyz, vectorData[xyz][tuple] );
+            {
+                parameterData[numScalars + i]->SetComponent( tuple, xyz, vectorData[xyz][tuple] );
+            }
 
             // print begining and ending of vector data to screen...
             if( debug )
             {
                 for( j = 0; j < 20; j++ )
                     cout << "vectorData[" << i << "][" << xyz << "][" << j << "] = "
-                    << vectorData[xyz][j] << endl;
+                         << vectorData[xyz][j] << endl;
                 cout << "                ..." << endl;
                 for( j = num_verts - 20; j < num_verts; j++ )
                     cout << "vectorData[" << i << "][" << xyz << "][" << j << "] = "
-                    << vectorData[xyz][j] << endl;
+                         << vectorData[xyz][j] << endl;
                 cout << endl;
             }
         }
     }
 
     // doublecheck that you are finished: should see "end of file found after reading 1 more floats"
-    if( debug ) fileIO::readToFileEnd( s1 );
+    if( debug )
+    {
+        fileIO::readToFileEnd( s1 );
+    }
     fclose( s1 );
     cout << endl;
 
     //delete parameterNames
-    for( i = 0; i < numParameters; i++ ) delete parameterNames[i];
+    for( i = 0; i < numParameters; i++ )
+    {
+        delete parameterNames[i];
+    }
     delete [] parameterNames;
     parameterNames = 0;
 
@@ -494,12 +551,14 @@ vtkUnstructuredGrid * reiReader( char * reiFileName, int debug )
     vectorData = NULL;
 
     // remove all cells that have a wall value of 8 at any vertex
-    vtkUnstructuredGrid * filteredGrid = filterMeshByPointData( uGrid, parameterData[0] );
+    vtkUnstructuredGrid* filteredGrid = filterMeshByPointData( uGrid, parameterData[0] );
     uGrid->Delete();
 
     //delete parameterData
     for( i = 0; i < numParameters; i++ )
+    {
         parameterData[i]->Delete();
+    }
 
     delete [] parameterData;
     parameterData = NULL;

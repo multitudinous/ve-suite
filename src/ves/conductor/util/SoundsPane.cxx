@@ -62,10 +62,10 @@ END_EVENT_TABLE()
 //Constructor//
 ///////////////
 SoundsPane::SoundsPane( wxWindow* parent, ves::open::xml::model::ModelWeakPtr activeModel )
-        :
-        wxDialog( parent, -1, _( "Sounds Pane" ),
-                  wxDefaultPosition, wxDefaultSize,
-                  ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP )
+    :
+    wxDialog( parent, -1, _( "Sounds Pane" ),
+              wxDefaultPosition, wxDefaultSize,
+              ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP )
 {
     _soundCBox = 0;
     _loadButton = 0;
@@ -127,7 +127,7 @@ void SoundsPane::_onLoadAndUpdate( wxCommandEvent& WXUNUSED( event ) )
                          wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE | wxFD_PREVIEW,
                          wxDefaultPosition );
     dialog.CentreOnParent();
-    
+
     if( dialog.ShowModal() == wxID_OK )
     {
         wxArrayString fileNamesVector;
@@ -201,7 +201,9 @@ void SoundsPane::SetActiveModel( ves::open::xml::model::ModelWeakPtr model )
 void SoundsPane::_updateSoundsInformationFromModel()
 {
     if( !m_activeModel )
+    {
         return;
+    }
 
     _clearLoadedSounds();
 

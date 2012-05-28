@@ -55,9 +55,9 @@ PPConverter::~PPConverter()
 
 /*-----------------------------------------------------------------------*/
 
-void PPConverter::swap_4_range( char *mem_ptr1, int num )
+void PPConverter::swap_4_range( char* mem_ptr1, int num )
 {
-    char *pos;
+    char* pos;
 
     pos = mem_ptr1;
 
@@ -94,21 +94,33 @@ int PPConverter::makeVTK( std::string pp_file, std::string pd_file )
 
     // Read PPLOT1 for number of starting locations, sizes and particle counts
 
-    FILE *fptr;
+    FILE* fptr;
     fptr = fopen( pplot1_file.c_str(), "rt" );
 
-    if( fptr == NULL ) return 0;
-    else fclose( fptr );
+    if( fptr == NULL )
+    {
+        return 0;
+    }
+    else
+    {
+        fclose( fptr );
+    }
 
     fptr = fopen( pplot3_file.c_str(), "rt" );
-    if( fptr == NULL ) return 0;
-    else fclose( fptr );
+    if( fptr == NULL )
+    {
+        return 0;
+    }
+    else
+    {
+        fclose( fptr );
+    }
 
     pplot1.open( pplot1_file.c_str() );
 
     pplot1 >> nsl >> nps;
 
-    std::vector<int> particle_count( nsl*nps );
+    std::vector<int> particle_count( nsl * nps );
 
     total_particle_count = 0;
 
@@ -116,8 +128,8 @@ int PPConverter::makeVTK( std::string pp_file, std::string pd_file )
     {
         for( cps = 0; cps < nps; cps++ )
         {
-            pplot1 >> particle_count[csl*nps+cps];
-            total_particle_count += particle_count[csl*nps+cps];
+            pplot1 >> particle_count[csl * nps + cps];
+            total_particle_count += particle_count[csl * nps + cps];
         }
     }
 
@@ -151,22 +163,25 @@ int PPConverter::makeVTK( std::string pp_file, std::string pd_file )
     int   cnt, count = 0;
     float lx, ly, lz;
 
-    float *xpts = new float[total_particle_count];
-    float *ypts = new float[total_particle_count];
-    float *zpts = new float[total_particle_count];
+    float* xpts = new float[total_particle_count];
+    float* ypts = new float[total_particle_count];
+    float* zpts = new float[total_particle_count];
 
     //float **dpts = new (float*)[num_vars];
     //for(i=0; i<num_vars; i++)
     //  dpts[i] = new float[total_particle_count];
     std::vector<std::vector<float> > dpts( num_vars + 1 );
-    for( i = 0; i < num_vars + 1; i++ ) dpts[i].resize( total_particle_count );
+    for( i = 0; i < num_vars + 1; i++ )
+    {
+        dpts[i].resize( total_particle_count );
+    }
 
     /* Loop through all of the paths */
     for( csl = 0; csl < nsl; csl++ )
     {
         for( cps = 0; cps < nps; cps++ )
         {
-            if( particle_count[csl*nps+cps] > 0 )
+            if( particle_count[csl * nps + cps] > 0 )
             {
 
                 lx = ly = lz = -9999.9;
@@ -177,18 +192,20 @@ int PPConverter::makeVTK( std::string pp_file, std::string pd_file )
                 if( fcps != ( cps + 1 ) || fcsl != ( csl + 1 ) )
                 {
                     cerr << "Error in PPConverter\n"
-                    << "sizes: " << fcps << " != " << cps + 1 << endl
-                    << "locations: " << fcsl << " != " << csl + 1 << endl;
+                         << "sizes: " << fcps << " != " << cps + 1 << endl
+                         << "locations: " << fcsl << " != " << csl + 1 << endl;
                     exit( 0 );
                 }
 
-                for( i = 0, cnt = 0; i < particle_count[csl*nps+cps]; i++ )
+                for( i = 0, cnt = 0; i < particle_count[csl * nps + cps]; i++ )
                 {
 
                     pplot3 >> index >> xpts[count] >> ypts[count] >> zpts[count];
 
                     for( j = 0; j < num_vars; j++ )
+                    {
                         pplot3 >> dpts[j][count];
+                    }
 
                     dpts[j][count] = float( csl * nps + cps );
 
@@ -201,7 +218,7 @@ int PPConverter::makeVTK( std::string pp_file, std::string pd_file )
                         count++;
                     }
                 }
-                particle_count[csl*nps+cps] = cnt;
+                particle_count[csl * nps + cps] = cnt;
             }
         }
     }
@@ -211,9 +228,9 @@ int PPConverter::makeVTK( std::string pp_file, std::string pd_file )
     int floatSize = sizeof( float );
     int intSize = sizeof( int );
 
-    FILE *VTK_FILE;
+    FILE* VTK_FILE;
 
-    if (( VTK_FILE = fopen( pp_file.c_str(), "wb" ) ) == NULL )
+    if( ( VTK_FILE = fopen( pp_file.c_str(), "wb" ) ) == NULL )
     {
         cerr << "Failed to open " << pp_file << endl;
         exit( 0 );
@@ -225,16 +242,16 @@ int PPConverter::makeVTK( std::string pp_file, std::string pd_file )
     fprintf( VTK_FILE, "DATASET POLYDATA\n" );
 
     //# Assinine byte swapping for vtk
-    swap_4_range(( char* )xpts, count );
-    swap_4_range(( char* )ypts, count );
-    swap_4_range(( char* )zpts, count );
+    swap_4_range( ( char* )xpts, count );
+    swap_4_range( ( char* )ypts, count );
+    swap_4_range( ( char* )zpts, count );
 
     fprintf( VTK_FILE, "POINTS %d float\n", count );
     for( i = 0; i < count; i++ )
     {
-        fwrite(( char* )&xpts[i], floatSize, 1, VTK_FILE );
-        fwrite(( char* )&ypts[i], floatSize, 1, VTK_FILE );
-        fwrite(( char* )&zpts[i], floatSize, 1, VTK_FILE );
+        fwrite( ( char* )&xpts[i], floatSize, 1, VTK_FILE );
+        fwrite( ( char* )&ypts[i], floatSize, 1, VTK_FILE );
+        fwrite( ( char* )&zpts[i], floatSize, 1, VTK_FILE );
     }
 
     int line1 = 2, line2;
@@ -254,7 +271,10 @@ int PPConverter::makeVTK( std::string pp_file, std::string pd_file )
     cnt = 0;
     for( csl = 0; csl < nsl; csl++ )
         for( cps = 0; cps < nps; cps++ )
-            if( particle_count[csl*nps+cps] > 0 ) cnt++;
+            if( particle_count[csl * nps + cps] > 0 )
+            {
+                cnt++;
+            }
 
     fprintf( VTK_FILE, "\nLINES %d %d\n", cnt, cnt + count );// - 1);
 
@@ -263,18 +283,18 @@ int PPConverter::makeVTK( std::string pp_file, std::string pd_file )
     {
         for( cps = 0; cps < nps; cps++ )
         {
-            if( particle_count[csl*nps+cps] > 0 )
+            if( particle_count[csl * nps + cps] > 0 )
             {
-                line1 = particle_count[csl*nps+cps];
-                swap_4(( char* )&line1 );
-                fwrite(( char* )&line1, intSize, 1, VTK_FILE ); // how many points on path
-                for( i = cnt; i < cnt + particle_count[csl*nps+cps]; i++ )
+                line1 = particle_count[csl * nps + cps];
+                swap_4( ( char* )&line1 );
+                fwrite( ( char* )&line1, intSize, 1, VTK_FILE ); // how many points on path
+                for( i = cnt; i < cnt + particle_count[csl * nps + cps]; i++ )
                 {
                     line2 = i;
-                    swap_4(( char* )&line2 );
-                    fwrite(( char* )&line2, intSize, 1, VTK_FILE ); // point index
+                    swap_4( ( char* )&line2 );
+                    fwrite( ( char* )&line2, intSize, 1, VTK_FILE ); // point index
                 }
-                cnt += particle_count[csl*nps+cps];
+                cnt += particle_count[csl * nps + cps];
             }
         }
     }
@@ -284,14 +304,18 @@ int PPConverter::makeVTK( std::string pp_file, std::string pd_file )
     num_vars++;
     for( i = 0; i < num_vars; i++ )
         for( j = 0; j < total_particle_count; j++ )
-            swap_4(( char* )&dpts[i][j] );
+        {
+            swap_4( ( char* )&dpts[i][j] );
+        }
 
     for( i = 0; i < num_vars; i++ )
     {
         fprintf( VTK_FILE, "\nSCALARS scalar%d float 1\n", i );
         fprintf( VTK_FILE, "LOOKUP_TABLE default\n" );
         for( j = 0; j < count; j++ )
-            fwrite(( char* )&dpts[i][j], floatSize, 1, VTK_FILE );
+        {
+            fwrite( ( char* )&dpts[i][j], floatSize, 1, VTK_FILE );
+        }
     }
 
     fclose( VTK_FILE );
@@ -314,11 +338,20 @@ int PPConverter::makeVTK( std::string pp_file, std::string pd_file )
 
      fclose(VTK_FILE); */
 
-    if( xpts ) delete( xpts );
-    if( ypts ) delete( ypts );
-    if( zpts ) delete( zpts );
+    if( xpts )
+    {
+        delete( xpts );
+    }
+    if( ypts )
+    {
+        delete( ypts );
+    }
+    if( zpts )
+    {
+        delete( zpts );
+    }
 
-//  for(i=0; i<num_vars; i++)
+    //  for(i=0; i<num_vars; i++)
     //  if(dpts[i]) delete(dpts[i]);
     //if(dpts) delete(dpts);
 

@@ -63,13 +63,14 @@ namespace ves
 namespace conductor
 {
 class PropertyBrowser;
-    
+
 class Visualization : public QDialog
 {
     Q_OBJECT
 public:
     ///Constructor
-    Visualization( QWidget* parent = 0 );\
+    Visualization( QWidget* parent = 0 );
+    \
     ///Destructor
     ~Visualization();
 
@@ -101,7 +102,7 @@ protected Q_SLOTS:
     void on_NewFeatureButton_clicked(); // Automatic connection
     void on_DeleteFeatureButton_clicked(); // Automatic connection
     void on_FeaturesList_currentTextChanged( const QString& currentText ); // Automatic connection
-    void on_FeatureIDSelector_currentIndexChanged ( int index ); // Automatic connection
+    void on_FeatureIDSelector_currentIndexChanged( int index );  // Automatic connection
 
 
 private:

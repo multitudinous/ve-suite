@@ -96,48 +96,48 @@ CameraEvents::CameraEvents()
     m_manipulatorManager( m_sceneManager.GetManipulatorManager() ),
     m_cameraManager( m_sceneManager.GetCameraManager() ),
     m_lineSegmentIntersector( new osgUtil::LineSegmentIntersector(
-        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
+                                  osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
     m_currX( 0 ),
     m_currY( 0 ),
     m_pickedBody( 0 ),
     m_pickConstraint( 0 )
-{                         
+{
     //Setup connection to mouse events
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseMove,
-        m_connections, any_SignalType, highest_Priority );
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
-        m_connections, any_SignalType, highest_Priority );
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
-        m_connections, any_SignalType, highest_Priority );
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
-        m_connections, any_SignalType, highest_Priority );    
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseMove,
+                               m_connections, any_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
-        m_connections, any_SignalType, highest_Priority );
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease2%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
-        m_connections, any_SignalType, highest_Priority );
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease3%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
-        m_connections, any_SignalType, highest_Priority );
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
+                               m_connections, any_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), 
-        &CameraEvents::SetStartEndPoint,
-        m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
+                               m_connections, any_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), 
-        &CameraEvents::SetStartEndPoint,
-        m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
+                               m_connections, any_SignalType, highest_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
+                               m_connections, any_SignalType, highest_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease2%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
+                               m_connections, any_SignalType, highest_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease3%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
+                               m_connections, any_SignalType, highest_Priority );
+
+    CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ),
+                      &CameraEvents::SetStartEndPoint,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ),
+                      &CameraEvents::SetStartEndPoint,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraEvents::~CameraEvents()
@@ -146,7 +146,7 @@ CameraEvents::~CameraEvents()
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
-{        
+{
     m_currX = xPos;
     m_currY = yPos;
     return false;
@@ -154,79 +154,79 @@ bool CameraEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
-    if( (xPos > m_currX + 2) || (xPos < m_currX - 2) )
+    if( ( xPos > m_currX + 2 ) || ( xPos < m_currX - 2 ) )
     {
         return false;
     }
-    
-    if( (yPos > m_currY + 2) || (yPos < m_currY - 2) )
+
+    if( ( yPos > m_currY + 2 ) || ( yPos < m_currY - 2 ) )
     {
         return false;
     }
-    
+
     m_currX = xPos;
     m_currY = yPos;
 
     switch( buttonKey )
     {
-            //Left mouse button
-        case gadget::MBUTTON1:
+        //Left mouse button
+    case gadget::MBUTTON1:
+    {
+        if( m_cameraManager.IsEnabled() )
         {
-            if( m_cameraManager.IsEnabled() )
+            UpdateSelectionLine();
+            //If we found a camera
+            if( m_cameraManager.Handle(
+                        scenegraph::camera::Event::RELEASE,
+                        *m_lineSegmentIntersector.get() ) )
             {
-                UpdateSelectionLine();
-                //If we found a camera
-                if( m_cameraManager.Handle(
-                                           scenegraph::camera::Event::RELEASE,
-                                           *m_lineSegmentIntersector.get() ) )
-                {
-                    return true;
-                }
-                
-                 osgUtil::LineSegmentIntersector::Intersections& intersections =
+                return true;
+            }
+
+            osgUtil::LineSegmentIntersector::Intersections& intersections =
                 scenegraph::TestForIntersections(
-                                                 *m_lineSegmentIntersector.get(),
-                                                 *m_sceneManager.GetModelRoot() );
-                                                
-                break;
-            }
-                        
+                    *m_lineSegmentIntersector.get(),
+                    *m_sceneManager.GetModelRoot() );
+
             break;
         }
-            //Middle mouse button
-        case gadget::MBUTTON2:
+
+        break;
+    }
+    //Middle mouse button
+    case gadget::MBUTTON2:
+    {
+        if( m_cameraManager.IsEnabled() )
         {
-            if( m_cameraManager.IsEnabled() )
+            UpdateSelectionLine();
+            if( m_cameraManager.Handle(
+                        scenegraph::camera::Event::RELEASE,
+                        *m_lineSegmentIntersector.get() ) )
             {
-                UpdateSelectionLine();
-                if( m_cameraManager.Handle(
-                                           scenegraph::camera::Event::RELEASE,
-                                           *m_lineSegmentIntersector.get() ) )
-                {
-                    return true;
-                }
+                return true;
             }
-            break;
         }
-            //Right mouse button
-        case gadget::MBUTTON3:
+        break;
+    }
+    //Right mouse button
+    case gadget::MBUTTON3:
+    {
+        if( m_cameraManager.IsEnabled() )
         {
-            if( m_cameraManager.IsEnabled() )
+            UpdateSelectionLine();
+            if( m_cameraManager.Handle(
+                        scenegraph::camera::Event::RELEASE,
+                        *m_lineSegmentIntersector.get() ) )
             {
-                UpdateSelectionLine();
-                if( m_cameraManager.Handle(
-                                           scenegraph::camera::Event::RELEASE,
-                                           *m_lineSegmentIntersector.get() ) )
-                {
-                    return true;
-                }
+                return true;
             }
-            break;
         }
-        default:
-        {
-            ;
-        }
+        break;
+    }
+    default:
+    {
+        ;
+    }
     } //end switch( m_currKey )
     return false;
 }
@@ -239,8 +239,8 @@ bool CameraEvents::ProcessMouseMove( int xPos, int yPos, int zPos, int buttonSta
         {
             UpdateSelectionLine();
             if( m_cameraManager.Handle(
-                                       scenegraph::camera::Event::FOCUS,
-                                       *m_lineSegmentIntersector.get() ) )
+                        scenegraph::camera::Event::FOCUS,
+                        *m_lineSegmentIntersector.get() ) )
             {
                 return true;
             }
@@ -257,7 +257,7 @@ void CameraEvents::UpdateSelectionLine()
     m_lineSegmentIntersector->reset();
     m_lineSegmentIntersector->setStart( m_startPoint );
     m_lineSegmentIntersector->setEnd( m_endPoint );
-    
+
     //Used to debug the selection line
     //If working correctly, the line should show up as 1 red pixel where picked
     //DrawLine( startPoint, endPoint );

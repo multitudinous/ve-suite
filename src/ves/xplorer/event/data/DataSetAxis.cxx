@@ -57,7 +57,7 @@ using namespace ves::xplorer::scenegraph;
 DataSetAxis::DataSetAxis( void )
 {
     vprDEBUG( vesDBG, 2 ) << "constructing cfdScalarBarActor"
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
     bbox[ 0 ] = bbox[ 2 ] = bbox[ 4 ] = 0.0f;
     bbox[ 1 ] = bbox[ 3 ] = bbox[ 5 ] = 1.0f;
 
@@ -70,11 +70,11 @@ DataSetAxis::DataSetAxis( void )
 DataSetAxis::~DataSetAxis()
 {
     vprDEBUG( vesDBG, 2 ) << "deconstructing cfdScalarBarActor"
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     // may note need to delete anything
     vprDEBUG( vesDBG, 2 ) << "   finished deconstructing cfdScalarBarActor"
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSetAxis::SetBoundingBox( double* inBBox )

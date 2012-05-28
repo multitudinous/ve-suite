@@ -53,10 +53,10 @@ using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfd3DTextureCullCallback::cfd3DTextureCullCallback( osg::Node* subgraph,
-                                                    //osg::Texture3D* texture,
-                                                    unsigned int width,
-                                                    unsigned int height )
-        : _subgraph( subgraph )//,_textureToUpdate(texture)
+        //osg::Texture3D* texture,
+        unsigned int width,
+        unsigned int height )
+    : _subgraph( subgraph )//,_textureToUpdate(texture)
 {
     _w = width;
     _h = height;
@@ -81,9 +81,9 @@ cfd3DTextureCullCallback::~cfd3DTextureCullCallback()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfd3DTextureCullCallback::SetPingPongTextures( unsigned int tPingUint,
-                                                    osg::Node* ping,
-                                                    unsigned int tPongUint,
-                                                    osg::Node* pong )
+        osg::Node* ping,
+        unsigned int tPongUint,
+        osg::Node* pong )
 {
     _previous = ping;
     _current = pong;
@@ -113,7 +113,7 @@ cfdOSGPingPongTexture3D* cfd3DTextureCullCallback::GetPingPonger()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfd3DTextureCullCallback::operator()( osg::Node* node,
-                                           osg::NodeVisitor* nv )
+        osg::NodeVisitor* nv )
 {
     osgUtil::CullVisitor* cullVisitor = dynamic_cast<osgUtil::CullVisitor*>( nv );
     if( cullVisitor && _subgraph.valid() && _pingPonger )
@@ -136,7 +136,7 @@ void cfd3DTextureCullCallback::operator()( osg::Node* node,
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfd3DTextureCullCallback::preRender( osg::Node&,
-                                          osgUtil::CullVisitor& cv )
+        osgUtil::CullVisitor& cv )
 {
     const osg::BoundingSphere& bs = _subgraph->getBound();
     if( !bs.valid() )
@@ -185,7 +185,9 @@ void cfd3DTextureCullCallback::preRender( osg::Node&,
     zfar *= 1.1f;
 
     if( !_localState )
+    {
         _localState = new osg::StateSet;
+    }
 
     cv.pushStateSet( _localState.get() );
     {

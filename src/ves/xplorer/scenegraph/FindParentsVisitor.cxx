@@ -37,10 +37,10 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 FindParentsVisitor::FindParentsVisitor( osg::Node* node, osg::Node* rootNode )
-        :
-        NodeVisitor( TRAVERSE_PARENTS ),
-        parentNode( 0 ),
-        m_rootNode( rootNode )
+    :
+    NodeVisitor( TRAVERSE_PARENTS ),
+    parentNode( 0 ),
+    m_rootNode( rootNode )
 {
     node->accept( *this );
 }
@@ -74,7 +74,7 @@ void FindParentsVisitor::apply( osg::Node& node )
     {
         osg::Node::DescriptionList descriptorsList;
         descriptorsList = node.getDescriptions();
-        
+
         //Find the parent node and the id of this particular node
         for( size_t i = 0; i < descriptorsList.size(); i++ )
         {

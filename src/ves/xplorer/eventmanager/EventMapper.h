@@ -141,7 +141,7 @@ private:
 
     void EmitSyncGraphicsSignals();
 
-    const std::string getKeyName(const gadget::Keys keyId) const;
+    const std::string getKeyName( const gadget::Keys keyId ) const;
 
 private:
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;

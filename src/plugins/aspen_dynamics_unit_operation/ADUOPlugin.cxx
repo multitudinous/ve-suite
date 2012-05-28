@@ -129,7 +129,7 @@ void ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
         {
             //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
             parentTraverser = parentTraverser->GetParentModel();
-           // std::string tempFormat = "Blocks(\"" + compName + "\")";
+            // std::string tempFormat = "Blocks(\"" + compName + "\")";
             compName = parentTraverser->GetPluginName() + "." + compName;
 
         }
@@ -172,7 +172,7 @@ void ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
         std::vector< std::string > temp_vector;
         pair->GetData( temp_vector );
         params->SetData( wxString( temp_vector[0].c_str(), wxConvUTF8 ), wxString( temp_vector[1].c_str(), wxConvUTF8 ),
-            wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
+                         wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
         //params->SetData( wxString( temp_vector[0].c_str(), wxConvUTF8 ) );
     }
     params->UpdateSizes();
@@ -186,7 +186,7 @@ wxMenu* ADUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     {
         return baseMenu;
     }
-    
+
     //set the vendor name of the current plugin to the parents
     if( GetVEModel()->GetParentModel() )
     {
@@ -203,7 +203,7 @@ wxMenu* ADUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mAspenMenu->Append( ADUOPLUGIN_QUERY_DYNAMICS, _( "All Variables" ) );
     mAspenMenu->Enable( ADUOPLUGIN_QUERY_DYNAMICS, true );
     baseMenu->Insert( 0, ADUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), mAspenMenu,
-                    _( "Used in conjunction with Aspen" ) );
+                      _( "Used in conjunction with Aspen" ) );
     baseMenu->Enable( ADUOPLUGIN_ASPEN_MENU, true );
     return baseMenu;
 }
@@ -211,7 +211,7 @@ wxMenu* ADUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 void ADUOPlugin::DrawPlugin( wxDC* dc )
 {
     //if hidden
-    if(nameFlag)
+    if( nameFlag )
     {
         DrawIcon( dc );
         DrawID( dc );
@@ -225,7 +225,7 @@ void ADUOPlugin::DrawPlugin( wxDC* dc )
     //if highlighted
     if( highlightFlag )
     {
-        if(nameFlag)
+        if( nameFlag )
         {
             HighlightSelectedIcon( dc );
         }
@@ -250,16 +250,16 @@ void ADUOPlugin::DrawValue( wxDC* dc )
     x = x / n_pts;
     y = y / n_pts;
 
-    dc->GetTextExtent( wxString( m_monValue.c_str(), wxConvUTF8), &w, &h );
+    dc->GetTextExtent( wxString( m_monValue.c_str(), wxConvUTF8 ), &w, &h );
     dc->DrawText( wxString( m_monValue.c_str(), wxConvUTF8 ), int( x - w / 2 + xoff ), pos.y + int( y * 4.0 ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void ADUOPlugin::ReadValue( )
-{    
+{
     //This functions reads data through DynamicsDataBuffer
     //is it the active network ie is it being drawn
     if( m_canvas->GetActiveNetworkID() == m_network->GetNetworkID() )
-    {        
+    {
         const CommandPtr adData =
             DynamicsDataBuffer::instance()->GetCommand( "ADData" );
         if( adData->GetCommandName() == "NULL" )

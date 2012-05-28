@@ -127,7 +127,7 @@ public:
     //ves::conductor::util::Polygon* GetPolygon( void );
     ///This returns the UI dialog of the module
     virtual ves::conductor::UIDialog* UI( wxWindow* parent );
-    
+
     ///This returns the Result dialog of the module
     virtual UIDialog* Result( wxWindow* parent );
     ///This returns the PortData dialog of the module
@@ -181,7 +181,7 @@ public:
     void OnOptimizeCAD( wxCommandEvent& event );
 
     void MessageLog( const char* msg );
-    
+
     //To Get around the Memory allocation problem of windows dll
     //Add the calls for the size. So the main program can preallocate memory for it
 
@@ -202,7 +202,7 @@ public:
     virtual void ViewResultsVariables( void );
 
     ///Process left double click mouse events
-    void OnDClick( wxMouseEvent &event );
+    void OnDClick( wxMouseEvent& event );
     ///Set the network wxFrame that this plugin is associated with so that
     ///the plugin can draw and capture the appropriate events
     void SetCanvas( wxScrolledWindow* canvas );
@@ -233,10 +233,10 @@ public:
     ///Find how near the two points are
     double computenorm( wxPoint pt1, wxPoint pt2 );
 
-    void OnMRightDown( wxMouseEvent &event );
+    void OnMRightDown( wxMouseEvent& event );
     ///Sets the active model in Xplorer
     ///NOTE: Keep in mind that after a user submits a job that the active model
-    ///in xplorer is set to NULL. This means that in some use cases the 
+    ///in xplorer is set to NULL. This means that in some use cases the
     ///developer will have to set the active model manually from the derived
     ///dialog classes.
     ///\return Tell the user that the call to xplorer was successful
@@ -285,7 +285,7 @@ public:
     wxMenu* GetPopupMenu();
     ///Create the dialog for this plugin
     void CreateUserDialog( wxPoint extpos );
-    ///Send the id of this plugin to xplorer so that it is active for all 
+    ///Send the id of this plugin to xplorer so that it is active for all
     ///other xplorer events
     void SendActiveId();
     ///Make this plugin a hierarchy plugin
@@ -295,7 +295,7 @@ public:
     ///Set the plugin type for the ui plugin
     void SetPluginType( const std::string& pluginType );
     virtual bool ShowAvailable();
-        
+
 protected:
     ///Add a port to the model
     ///\param tempPoint The point where to place the port. This location
@@ -305,7 +305,7 @@ protected:
     ///Get the UIPluginBase poup menu
     ///\return The menu for this class
     wxMenu* SetupPluginBasePopupMenu();
-    
+
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
     void RegistVar( std::string vname, long* var );
@@ -374,7 +374,7 @@ protected:
     ves::conductor::util::CORBAServiceList* serviceList;
     ves::conductor::XMLDataBufferEngine* mDataBufferEngine;
     ves::conductor::UserPreferencesDataBuffer* mUserPrefBuffer;
-    
+
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
@@ -422,12 +422,12 @@ protected:
     ///This is the string version of the plugin name
     std::string m_pluginType;
     ///Number of points in the polygon
-    int n_pts;    
+    int n_pts;
     ///The outline polygon points list
-    wxPoint* poly; 
+    wxPoint* poly;
 
 private:
-    ///That's the for default implementation of the DrawIcon. 
+    ///That's the for default implementation of the DrawIcon.
     ///Not part of the general interface
 
     ///The pointer for the icon that will be rendered in conductor

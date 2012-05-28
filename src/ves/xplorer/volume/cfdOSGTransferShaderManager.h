@@ -117,7 +117,7 @@ public:
     ///Equal operator
     ///\param sm cfdOSGTransferShaderManager to set this equal to
     virtual cfdOSGTransferShaderManager& operator=( const
-                                                    cfdOSGTransferShaderManager& sm );
+            cfdOSGTransferShaderManager& sm );
 protected:
     ///Initialize the list of transfer functions
     virtual void _initTransferFunctions();

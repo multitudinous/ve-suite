@@ -56,14 +56,14 @@ SceneNode::SceneNode( const SceneNode& rhs )
     :
     mActiveTechnique( rhs.mActiveTechnique )
 {
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneNode::~SceneNode()
 {
     //Delete techniques in map
     std::map< std::string, technique::Technique* >::iterator itr;
-    for( itr =mTechniques.begin(); itr != mTechniques.end(); ++itr )
+    for( itr = mTechniques.begin(); itr != mTechniques.end(); ++itr )
     {
         technique::Technique* tempTech = itr->second;
 
@@ -107,7 +107,7 @@ technique::Technique* SceneNode::GetTechnique(
     {
         return itr->second;
     }
-    
+
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ technique::Technique* SceneNode::GetActiveTechnique() const
     {
         return itr->second;
     }
-    
+
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -97,7 +97,7 @@ void Technique::Traverse(
 
         //Traverse children as a Group would do
         sceneNode->InheritedTraverse( nv );
-        
+
         //Pop the StateSet if necessary
         if( cv )
         {

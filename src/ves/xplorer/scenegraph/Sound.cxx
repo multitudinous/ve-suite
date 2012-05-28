@@ -58,13 +58,13 @@ namespace scenegraph
 ////////////////////////////////////////////////////////////////////////////////
 Sound::Sound( const std::string& name,
               ves::xplorer::scenegraph::DCS* parentDCS )
-        :
-        m_soundManager( osgAudio::SoundManager::instance() ),
-        mDCS( new ves::xplorer::scenegraph::DCS() ),
-        m_soundGeode( new osg::Geode() ),
-        m_sample( 0 ),
-        m_soundState( new osgAudio::SoundState( name ) ),
-        m_soundNode( new osgAudio::SoundNode( m_soundState.get() ) )
+    :
+    m_soundManager( osgAudio::SoundManager::instance() ),
+    mDCS( new ves::xplorer::scenegraph::DCS() ),
+    m_soundGeode( new osg::Geode() ),
+    m_sample( 0 ),
+    m_soundState( new osgAudio::SoundState( name ) ),
+    m_soundNode( new osgAudio::SoundNode( m_soundState.get() ) )
 {
     parentDCS->AddChild( mDCS.get() );
     mDCS->addChild( m_soundNode.get() );
@@ -74,13 +74,13 @@ Sound::Sound( const std::string& name,
 Sound::Sound( const std::string& name,
               ves::xplorer::scenegraph::DCS* parentDCS,
               osgAudio::SoundManager* soundManager )
-        :
-        m_soundManager( soundManager ),
-        mDCS( new ves::xplorer::scenegraph::DCS() ),
-        m_soundGeode( new osg::Geode() ),
-        m_sample( 0 ),
-        m_soundState( new osgAudio::SoundState( name, m_soundManager ) ),
-        m_soundNode( new osgAudio::SoundNode( m_soundState.get(), m_soundManager ) )
+    :
+    m_soundManager( soundManager ),
+    mDCS( new ves::xplorer::scenegraph::DCS() ),
+    m_soundGeode( new osg::Geode() ),
+    m_sample( 0 ),
+    m_soundState( new osgAudio::SoundState( name, m_soundManager ) ),
+    m_soundNode( new osgAudio::SoundNode( m_soundState.get(), m_soundManager ) )
 {
     parentDCS->AddChild( mDCS.get() );
     mDCS->addChild( m_soundNode.get() );
@@ -93,7 +93,7 @@ Sound::~Sound()
     m_soundState->releaseSource();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Sound &Sound::operator=( const Sound &sound )
+Sound& Sound::operator=( const Sound& sound )
 {
     if( &sound != this )
     {
@@ -119,8 +119,8 @@ void Sound::Draw()
 
     osg::ref_ptr< osg::TessellationHints > hints = new osg::TessellationHints();
     hints->setDetailRatio( 0.5f );
-    m_soundGeode->addDrawable( new osg::ShapeDrawable( 
-        new osg::Sphere( osg::Vec3( 0.0f, 0.0f, 0.0f ), 10 ), hints.get() ) );
+    m_soundGeode->addDrawable( new osg::ShapeDrawable(
+                                   new osg::Sphere( osg::Vec3( 0.0f, 0.0f, 0.0f ), 10 ), hints.get() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Sound::LoadFile( const std::string fileName )
@@ -153,7 +153,7 @@ void Sound::LoadFile( const std::string fileName )
 ////////////////////////////////////////////////////////////////////////////////
 void Sound::PushSoundEvent( int priority )
 {
-    osg::ref_ptr< osgAudio::SoundState > temp = 
+    osg::ref_ptr< osgAudio::SoundState > temp =
         //new osgAudio::SoundState( "temp", m_soundManager );
         new osgAudio::SoundState( *m_soundState.get() );
     //temp->setSample( m_sample.get() );

@@ -65,7 +65,7 @@ namespace conductor
 {
 class VE_GUIPLUGINS_EXPORTS Polydata: public wxDialog
 {
-//    DECLARE_DYNAMIC_CLASS( Isosurfaces )
+    //    DECLARE_DYNAMIC_CLASS( Isosurfaces )
     DECLARE_EVENT_TABLE()
 
 public:
@@ -124,7 +124,7 @@ protected:
 
     ///Check box to control two sided lighting
     wxCheckBox* m_twoSidedLighting;
-    
+
     ///Check box to control particle viz
     wxCheckBox* m_particlesChk;
     ///Set the opacity warp control
@@ -132,7 +132,7 @@ protected:
 
     ///Set the opacity for the surface
     void OnPolydataOpacity( wxCommandEvent& event );
-    
+
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
     void _onWarpedSurface( wxCommandEvent& event );
 
@@ -148,7 +148,7 @@ protected:
     void OnScalarButton( wxCommandEvent& event );
 
     void OnTwoSidedLightingChk( wxCommandEvent& event );
-    
+
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );

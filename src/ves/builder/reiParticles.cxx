@@ -72,7 +72,7 @@ reiParticles::~reiParticles( void )
     transFilter->Delete();
 }
 
-reiParticles::reiParticles( reiParticles * )
+reiParticles::reiParticles( reiParticles* )
 {}
 
 void reiParticles::readPPLOT1( void )
@@ -92,7 +92,9 @@ void reiParticles::readPPLOT1( void )
     inPPLOT1file >> trash >> trash >> trash;
 
     for( i = 0; i < nsl * nps; i++ )
+    {
         inPPLOT1file >>  particles[i]->pathIndex;
+    }
     /*
        for(i = 0; i < particles.size(); i++ )
           std::cout << particles[i]->timeSteps << "  " << particles[i]->pathIndex << std::endl;
@@ -119,20 +121,20 @@ void reiParticles::readPPLOT3( void )
             particles[i]->locations.push_back( new Location() );
             counter = particles[i]->locations.size() - 1;
             inPPLOT3file >> lineNumber
-            >> particles[i]->locations[counter]->x
-            >> particles[i]->locations[counter]->y
-            >> particles[i]->locations[counter]->z
-            >> particles[i]->locations[counter]->time
-            >> particles[i]->locations[counter]->IDLIM
-            >> particles[i]->locations[counter]->particleCoalFraction
-            >> particles[i]->locations[counter]->particleCharFraction
-            >> particles[i]->locations[counter]->CPTREF
-            >> particles[i]->locations[counter]->particleTemperature
-            >> particles[i]->locations[counter]->gasTemperature
-            >> particles[i]->locations[counter]->particleSize
-            >> particles[i]->locations[counter]->particleCloudDispersion
-            >> particles[i]->locations[counter]->massOfChar
-            >> particles[i]->locations[counter]->moistureFraction;
+                         >> particles[i]->locations[counter]->x
+                         >> particles[i]->locations[counter]->y
+                         >> particles[i]->locations[counter]->z
+                         >> particles[i]->locations[counter]->time
+                         >> particles[i]->locations[counter]->IDLIM
+                         >> particles[i]->locations[counter]->particleCoalFraction
+                         >> particles[i]->locations[counter]->particleCharFraction
+                         >> particles[i]->locations[counter]->CPTREF
+                         >> particles[i]->locations[counter]->particleTemperature
+                         >> particles[i]->locations[counter]->gasTemperature
+                         >> particles[i]->locations[counter]->particleSize
+                         >> particles[i]->locations[counter]->particleCloudDispersion
+                         >> particles[i]->locations[counter]->massOfChar
+                         >> particles[i]->locations[counter]->moistureFraction;
             if( px == particles[i]->locations[counter]->x &&
                     py == particles[i]->locations[counter]->y &&
                     pz == particles[i]->locations[counter]->z )
@@ -154,19 +156,19 @@ void reiParticles::readPPLOT3( void )
         for( i = 0; i < ( int )particles.size(); i++ )
             for( int j = 0; j < ( int )particles[i]->locations.size(); j++ )
                 std::cout << particles[i]->locations[j]->x << "  "
-                << particles[i]->locations[j]->y << "  "
-                << particles[i]->locations[j]->z << "  "
-                << particles[i]->locations[j]->time << "  "
-                << particles[i]->locations[j]->IDLIM << "  "
-                << particles[i]->locations[j]->particleCoalFraction << "  "
-                << particles[i]->locations[j]->particleCharFraction << "  "
-                << particles[i]->locations[j]->CPTREF << "  "
-                << particles[i]->locations[j]->particleTemperature << "  "
-                << particles[i]->locations[j]->gasTemperature << "  "
-                << particles[i]->locations[j]->particleSize << "  "
-                << particles[i]->locations[j]->particleCloudDispersion << "  "
-                << particles[i]->locations[j]->massOfChar << "  "
-                << particles[i]->locations[j]->moistureFraction << std::endl;
+                          << particles[i]->locations[j]->y << "  "
+                          << particles[i]->locations[j]->z << "  "
+                          << particles[i]->locations[j]->time << "  "
+                          << particles[i]->locations[j]->IDLIM << "  "
+                          << particles[i]->locations[j]->particleCoalFraction << "  "
+                          << particles[i]->locations[j]->particleCharFraction << "  "
+                          << particles[i]->locations[j]->CPTREF << "  "
+                          << particles[i]->locations[j]->particleTemperature << "  "
+                          << particles[i]->locations[j]->gasTemperature << "  "
+                          << particles[i]->locations[j]->particleSize << "  "
+                          << particles[i]->locations[j]->particleCloudDispersion << "  "
+                          << particles[i]->locations[j]->massOfChar << "  "
+                          << particles[i]->locations[j]->moistureFraction << std::endl;
 
 }
 
@@ -231,8 +233,8 @@ void reiParticles::writeParticlePolyData( void )
 
     yScale = zScale = xScale;
     std::cout << xRot   << " : " << yRot   << " : " << zRot   << " : "
-    << xTrans << " : " << yTrans << " : " << zTrans << " : "
-    << xScale << " : " << coordinateFilter << std::endl;
+              << xTrans << " : " << yTrans << " : " << zTrans << " : "
+              << xScale << " : " << coordinateFilter << std::endl;
 
     while( paramFile >> particleNumber )
     {
@@ -247,12 +249,14 @@ void reiParticles::writeParticlePolyData( void )
         {
             int test = 0;
             for( int y = 0; y < ( int )particles[i]->locations.size(); y += coordinateFilter )
+            {
                 test++;
+            }
 
             std::cout << " Time Steps = " << particles[i]->timeSteps << " "
-            << " Path Index = " << whichParticles[k] << " "
-            << " Actual Time Steps = " << test << " "
-            << " PPLOT3 LINE Index = " << particles[i]->pathIndex << std::endl;
+                      << " Path Index = " << whichParticles[k] << " "
+                      << " Actual Time Steps = " << test << " "
+                      << " PPLOT3 LINE Index = " << particles[i]->pathIndex << std::endl;
 
             lines->InsertNextCell( test );
             for( j = 0; j < ( int )particles[i]->locations.size(); j += coordinateFilter )
@@ -277,7 +281,9 @@ void reiParticles::writeParticlePolyData( void )
             }
             k++;
             if( k >= ( int )whichParticles.size() )
+            {
                 break;
+            }
         }
     }
 
@@ -305,7 +311,9 @@ void reiParticles::writeParticlePolyData( void )
 
     //delete parameterData
     for( i = 0; i < numParameters; i++ )
+    {
         parameterData[i]->Delete();
+    }
 
     delete [] parameterData;
     parameterData = NULL;

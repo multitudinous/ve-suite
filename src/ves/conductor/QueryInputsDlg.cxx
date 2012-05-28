@@ -42,8 +42,8 @@ BEGIN_EVENT_TABLE( QueryInputsDlg, wxDialog )
     EVT_BUTTON( QUERYINPUTSDLG_BUTTON4, QueryInputsDlg::WxButton4Click )
 END_EVENT_TABLE()
 
-QueryInputsDlg::QueryInputsDlg( wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style )
-        : wxDialog( parent, id, title, position, size, style )
+QueryInputsDlg::QueryInputsDlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& position, const wxSize& size, long style )
+    : wxDialog( parent, id, title, position, size, style )
 {
     CreateGUIControls();
 }
@@ -83,13 +83,17 @@ void QueryInputsDlg::CreateGUIControls()
 void QueryInputsDlg::WxButton1Click( wxCommandEvent& event )
 {
     if( WxListBox2->FindString( WxListBox1->GetStringSelection() ) == -1 )
+    {
         WxListBox2->Append( WxListBox1->GetStringSelection() );
+    }
 }
 
 void QueryInputsDlg::WxButton2Click( wxCommandEvent& event )
 {
     if( WxListBox2->GetSelection() != wxNOT_FOUND )
+    {
         WxListBox2->Delete( WxListBox2->GetSelection() );
+    }
 }
 
 void QueryInputsDlg::WxButton3Click( wxCommandEvent& event )
@@ -103,7 +107,7 @@ void QueryInputsDlg::WxButton4Click( wxCommandEvent& event )
     Destroy();
 }
 
-void QueryInputsDlg::AppendList( const char * input )
+void QueryInputsDlg::AppendList( const char* input )
 {
     WxListBox1->Append( wxString( input, wxConvUTF8 ) );
 }

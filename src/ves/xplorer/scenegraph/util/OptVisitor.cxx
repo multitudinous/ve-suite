@@ -40,14 +40,14 @@
 
 
 OptVisitor::OptVisitor()
-  : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
-    changeDLtoVBO_( false ),
-    changeDynamicToStatic_( false ),
-    changeDAtoDEUI_( false ),
-    triangles_( 0 ),
-    triFans_( 0 ),
-    triStrips_( 0 ),
-    newDEUIs_( 0 )
+    : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
+      changeDLtoVBO_( false ),
+      changeDynamicToStatic_( false ),
+      changeDAtoDEUI_( false ),
+      triangles_( 0 ),
+      triFans_( 0 ),
+      triStrips_( 0 ),
+      newDEUIs_( 0 )
 {
 }
 OptVisitor::~OptVisitor()
@@ -58,16 +58,18 @@ void
 OptVisitor::apply( osg::Node& node )
 {
     if( changeDynamicToStatic_ )
+    {
         node.setDataVariance( osg::Object::STATIC );
+    }
     traverse( node );
 }
 
 void
 OptVisitor::apply( osg::Geode& geode )
 {
-    for(unsigned int i=0;i<geode.getNumDrawables();++i)
+    for( unsigned int i = 0; i < geode.getNumDrawables(); ++i )
     {
-        osg::Drawable* draw = geode.getDrawable(i);
+        osg::Drawable* draw = geode.getDrawable( i );
         if( changeDLtoVBO_ )
         {
             draw->setUseDisplayList( false );
@@ -146,7 +148,7 @@ OptVisitor::processTriFan( const osg::DrawArrays& da, osg::VectorGLuint& indices
     GLint first = da.getFirst();
     GLsizei count = da.getCount();
 
-    unsigned int index( first+1 );
+    unsigned int index( first + 1 );
     GLsizei processed( 0 );
     while( processed + 3 <= count )
     {
@@ -170,8 +172,8 @@ OptVisitor::processTriStrip( const osg::DrawArrays& da, osg::VectorGLuint& indic
     while( processed + 3 <= count )
     {
         indices.push_back( index );
-        indices.push_back( index+1 );
-        indices.push_back( index+2 );
+        indices.push_back( index + 1 );
+        indices.push_back( index + 2 );
         index++;
         processed++;
     }

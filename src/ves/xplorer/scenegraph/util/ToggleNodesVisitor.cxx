@@ -44,8 +44,8 @@
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-ToggleNodesVisitor::ToggleNodesVisitor( osg::Node* osg_node, bool toggle, 
-    std::vector< std::string > nodeID )
+ToggleNodesVisitor::ToggleNodesVisitor( osg::Node* osg_node, bool toggle,
+                                        std::vector< std::string > nodeID )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
     mToggle( toggle ),
@@ -72,7 +72,7 @@ ToggleNodesVisitor::~ToggleNodesVisitor()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ToggleNodesVisitor::apply( osg::Node& node )
-{   
+{
     if( mToggle )
     {
         node.setNodeMask( 1 );
@@ -91,8 +91,8 @@ void ToggleNodesVisitor::apply( osg::Node& node )
     {
         name = m_nodeIDs.at( i );
         size_t found = nodeName.find( name );
-        if( found != std::string::npos )            
-        //if( name == nodeName )
+        if( found != std::string::npos )
+            //if( name == nodeName )
         {
             node.setNodeMask( 1 );
             m_nodePaths.insert( std::pair< std::string, osg::NodePath >( name, _nodePath ) );

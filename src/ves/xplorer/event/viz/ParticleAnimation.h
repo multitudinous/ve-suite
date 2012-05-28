@@ -40,7 +40,7 @@ namespace xplorer
 {
 namespace event
 {
-namespace viz        
+namespace viz
 {
 /*!\file ParticleAnimation.h
  *  ParticleAnimation API
@@ -83,7 +83,7 @@ public:
     float GetParticleScale();
 
     void UpdatePropertySet();
-    
+
 private:
     ///Sphere scaling.
     float GetSphereScaleFactor();

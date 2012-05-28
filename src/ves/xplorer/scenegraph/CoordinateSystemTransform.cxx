@@ -69,7 +69,7 @@ void CoordinateSystemTransform::apply( osg::Node& node )
 {
     if( &node == mStopNode.get() )
     {
-        ves::xplorer::scenegraph::DCS* localDCS = 
+        ves::xplorer::scenegraph::DCS* localDCS =
             dynamic_cast< ves::xplorer::scenegraph::DCS* >(
                 _nodePath.at( _nodePath.size() - 1 ) );
         if( localDCS )
@@ -81,7 +81,7 @@ void CoordinateSystemTransform::apply( osg::Node& node )
         {
             mStartToStopMatrixWithoutLocal *=
                 ves::xplorer::scenegraph::SceneManager::instance()->
-                    GetNavDCS()->GetMat();
+                GetNavDCS()->GetMat();
         }
 
         for( size_t i = 0; i < _nodePath.size() - 1; ++i )

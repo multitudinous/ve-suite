@@ -59,13 +59,13 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 AxesLabelsEventHandler::AxesLabelsEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 AxesLabelsEventHandler::AxesLabelsEventHandler( const AxesLabelsEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -101,7 +101,7 @@ void AxesLabelsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mode
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         std::cout << "Invalid object passed to BBoxEventHandler::SetGlobalBaseObject!" << std::endl;
@@ -111,19 +111,19 @@ void AxesLabelsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mode
 void AxesLabelsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
-    DataValuePairPtr activeModelDVP = 
+    DataValuePairPtr activeModelDVP =
         command->GetDataValuePair( "Axes Labels" );
     std::vector< std::string > labels;
     activeModelDVP->GetData( labels );
-    std::string datasetName = 
+    std::string datasetName =
         command->GetDataValuePair( "Active Dataset" )->GetDataString();
 
     if( _activeModel && !labels.empty() )
     {
-        DataSet* dataSet = _activeModel->GetCfdDataSet( 
-            _activeModel->GetIndexOfDataSet( datasetName ) );
+        DataSet* dataSet = _activeModel->GetCfdDataSet(
+                               _activeModel->GetIndexOfDataSet( datasetName ) );
         _activeModel->SetActiveDataSet( dataSet );
-        dataSet->GetDataSetAxes()->SetAxisLabels( 
+        dataSet->GetDataSetAxes()->SetAxisLabels(
             labels.at( 0 ), labels.at( 1 ), labels.at( 2 ) );
         dataSet->GetDataSetAxes()->CreateAxis();
     }

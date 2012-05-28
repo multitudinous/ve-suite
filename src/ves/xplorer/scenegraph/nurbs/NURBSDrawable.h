@@ -37,7 +37,7 @@
 
 #include <iostream>
 /*!\file NURBSDrawable.h
-  Drawable for NURBSObject 
+  Drawable for NURBSObject
   */
 /*!\file NURBSDrawable.cxx
   Drawable for NURBSObject Renderer code
@@ -69,8 +69,8 @@ public:
     META_Object( VE_NURBS, ves::xplorer::scenegraph::nurbs::NURBSDrawable )
 
     ///Update the mesh based on a moved ControlPoint
-    ///\param changedPoints The indecies of the changed points 
-    ///\param nurbs The updated NURBSObject 
+    ///\param changedPoints The indecies of the changed points
+    ///\param nurbs The updated NURBSObject
     void UpdateMesh( ves::xplorer::scenegraph::nurbs::NURBSObject* nurbs );
 
     ///Get the raw NURBS data
@@ -82,25 +82,25 @@ protected:
     {}
 
     ///Calculate the normal on the surface at point.
-    ///\param index Index of the surface point to calculate a normal 
+    ///\param index Index of the surface point to calculate a normal
     osg::Vec3 _calculateSurfaceNormalAtPoint( unsigned int index );
- 
+
     ///Update the vbos
     void _updateTessellatedSurface();
 
-     ///Update the surface vbo
-     void _updateSurfacePrimitive();
+    ///Update the surface vbo
+    void _updateSurfacePrimitive();
 
-     ///Update the curve vbo
-     void _updateCurvePrimitive();
-     
-     ///Initialize the StateSet for the drawable
-     void _initializeStateSet();
+    ///Update the curve vbo
+    void _updateCurvePrimitive();
 
-     ves::xplorer::scenegraph::nurbs::NURBSObject* m_nurbsObject;///The NURBS representation
-     osg::ref_ptr<osg::Vec3Array> m_tessellatedPoints;///<The points to tessellate
-     osg::ref_ptr<osg::Vec3Array> m_normals;///<The points to tessellate
-     osg::ref_ptr<osg::Vec2Array> m_texCoords;///<The points to tessellate
+    ///Initialize the StateSet for the drawable
+    void _initializeStateSet();
+
+    ves::xplorer::scenegraph::nurbs::NURBSObject* m_nurbsObject;///The NURBS representation
+    osg::ref_ptr<osg::Vec3Array> m_tessellatedPoints;///<The points to tessellate
+    osg::ref_ptr<osg::Vec3Array> m_normals;///<The points to tessellate
+    osg::ref_ptr<osg::Vec2Array> m_texCoords;///<The points to tessellate
 };
 }
 }

@@ -57,7 +57,7 @@ namespace rtt
 {
 class VE_SCENEGRAPH_EXPORTS UnitInOut : public Unit
 {
-public:    
+public:
     ///Constructor
     UnitInOut();
 
@@ -106,7 +106,7 @@ public:
     GLenum GetOutputInternalFormat() const;
 
     ///Set an output texture
-    ///\param outputTexture Texture used as output of this ppu 
+    ///\param outputTexture Texture used as output of this ppu
     ///\param mrt MRT (multiple rendering target) index of this output
     //void SetOutputTexture( osg::Texture* outputTexture, int mrt = 0 );
 

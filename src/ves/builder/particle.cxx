@@ -36,19 +36,19 @@ Data::Data( void )
 {}
 Data::~Data( void )
 {}
-Data::Data( Data *copy )
+Data::Data( Data* copy )
 {}
 
 Location::Location( void )
 {}
 Location::~Location( void )
 {}
-Location::Location( Location *copy )
+Location::Location( Location* copy )
 {}
 
 Particle::Particle( void )
 {}
 Particle::~Particle( void )
 {}
-Particle::Particle( Particle *copy )
+Particle::Particle( Particle* copy )
 {}

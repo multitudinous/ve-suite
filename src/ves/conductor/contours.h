@@ -85,20 +85,20 @@ public:
     /// Constructors
     Contours( );
     Contours( wxWindow* parent, wxWindowID id = -1,
-              const wxString& caption = _T("Contours"),
+              const wxString& caption = _T( "Contours" ),
               const wxPoint& pos = SYMBOL_CONTOURS_POSITION,
               const wxSize& size = SYMBOL_CONTOURS_SIZE,
-              long style = SYMBOL_CONTOURS_STYLE, 
+              long style = SYMBOL_CONTOURS_STYLE,
               std::string type = "SCALAR" );
 
     virtual ~Contours();
 
     /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = -1, 
-                const wxString& caption = _T("Contours"), 
-                const wxPoint& pos = SYMBOL_CONTOURS_POSITION, 
-                const wxSize& size = SYMBOL_CONTOURS_SIZE, 
-                long style = SYMBOL_CONTOURS_STYLE );
+    bool Create( wxWindow* parent, wxWindowID id = -1,
+                 const wxString& caption = _T( "Contours" ),
+                 const wxPoint& pos = SYMBOL_CONTOURS_POSITION,
+                 const wxSize& size = SYMBOL_CONTOURS_SIZE,
+                 long style = SYMBOL_CONTOURS_STYLE );
 
     /// Creates the controls and sizers
     void CreateControls();
@@ -117,7 +117,7 @@ public:
 
     /// Should we show tooltips?
     static bool ShowToolTips();
-    
+
     ///Set the available datasets so that they can be selected for surface mapping
     void SetAvailableDatasets( wxArrayString tempNames );
 
@@ -128,7 +128,7 @@ protected:
     ///SCALAR\n
     ///VECTOR
     void SetDataType( std::string type = "SCALAR" );
-    
+
     ///Update the contour with the current settings.
     void _updateContourInformation();
     ///Update the advanced settings
@@ -191,7 +191,7 @@ protected:
     wxComboBox*     m_datasetSelection;
 
     ves::conductor::util::wxSpinCtrlDbl* m_positionSpinner;
-    
+
     std::vector<ves::open::xml::DataValuePairPtr> _advancedSettings;///<The advanced settings.
     std::vector<ves::open::xml::DataValuePairPtr> _contourInformation;///<The countour setting data
 

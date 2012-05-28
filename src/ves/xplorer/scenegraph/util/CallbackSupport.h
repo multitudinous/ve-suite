@@ -41,7 +41,8 @@
 #include <vector>
 
 
-namespace osgwTools {
+namespace osgwTools
+{
 
 
 // In OSG 2.8.3 (at least), Cameras can only have one DrawCallback attached
@@ -53,9 +54,9 @@ struct VE_SCENEGRAPH_EXPORTS CompositeDrawCallback : public osg::Camera::DrawCal
 {
 public:
     CompositeDrawCallback();
-    CompositeDrawCallback( const CompositeDrawCallback& rhs,const osg::CopyOp& copyOp );
+    CompositeDrawCallback( const CompositeDrawCallback& rhs, const osg::CopyOp& copyOp );
 
-    META_Object(osgwTools,CompositeDrawCallback);
+    META_Object( osgwTools, CompositeDrawCallback );
 
     virtual void operator()( osg::RenderInfo& renderInfo ) const;
 

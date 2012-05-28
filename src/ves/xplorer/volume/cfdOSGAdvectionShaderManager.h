@@ -141,7 +141,7 @@ public:
     ///Equal operator
     ///\param sm The cfdOSGAdvectionShaderManager to set equal to
     virtual cfdOSGAdvectionShaderManager& operator=( const
-                                                     cfdOSGAdvectionShaderManager& sm );
+            cfdOSGAdvectionShaderManager& sm );
 protected:
     ///Initialize property texture
     void _initPropertyTexture();

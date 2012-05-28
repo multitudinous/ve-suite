@@ -111,50 +111,50 @@ Selection::Selection()
     m_manipulatorManager( m_sceneManager.GetManipulatorManager() ),
     m_cameraManager( m_sceneManager.GetCameraManager() ),
     m_lineSegmentIntersector( new osgUtil::LineSegmentIntersector(
-        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
+                                  osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
     m_currX( 0 ),
     m_currY( 0 ),
     m_pickedBody( 0 ),
     m_pickConstraint( 0 ),
     m_cadSelectionMode( false )
-{    
+{
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ),
-                      eventmanager::BooleanPropagationCombiner, &Selection::ProcessSelection,
-                      m_connections, any_SignalType, normal_Priority );
+                               eventmanager::BooleanPropagationCombiner, &Selection::ProcessSelection,
+                               m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
-                     eventmanager::BooleanPropagationCombiner, &Selection::RegisterButtonPress,
-                     m_connections, any_SignalType, normal_Priority );
+                               eventmanager::BooleanPropagationCombiner, &Selection::RegisterButtonPress,
+                               m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
-                     m_connections, any_SignalType, normal_Priority );
+                      m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_Z", 
-        bool( gadget::Keys, int, char ),
-        eventmanager::BooleanPropagationCombiner,
-        &Selection::ProcessUndoEvent, m_connections,
-        keyboard_SignalType, normal_Priority );
-    
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_Z",
+                               bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner,
+                               &Selection::ProcessUndoEvent, m_connections,
+                               keyboard_SignalType, normal_Priority );
+
     CONNECTSIGNALS_1( "%CADSelection",
-        void( bool const& flag ),
-        &Selection::SetCADSelection,
-        m_connections, any_SignalType, normal_Priority );
+                      void( bool const & flag ),
+                      &Selection::SetCADSelection,
+                      m_connections, any_SignalType, normal_Priority );
 
     ///Handle some wand signals
     CONNECTSIGNALS_4( "Wand.ButtonRelease0%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
-                     m_connections, any_SignalType, normal_Priority );
+                      m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
-                     m_connections, any_SignalType, normal_Priority );
+                      m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_1( "%HighlightAndSetManipulators", void( osg::NodePath& ),
                       &Selection::HighlightAndSetManipulators,
-                     m_connections, any_SignalType, high_Priority );
+                      m_connections, any_SignalType, high_Priority );
 
     CONNECTSIGNALS_1( "%HighlightNode", void( osg::NodePath& ),
-                     &Selection::HighlightNode,
-                     m_connections, any_SignalType, high_Priority );
-    
+                      &Selection::HighlightNode,
+                      m_connections, any_SignalType, high_Priority );
+
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
         "Selection.ObjectPickedSignal" );
@@ -186,8 +186,8 @@ bool Selection::ProcessUndoEvent( gadget::Keys keyPress, int modifierState, char
         return false;
     }
 
-    if( (modifierState&gadget::CTRL_MASK) || 
-       (modifierState&gadget::KEY_COMMAND) )
+    if( ( modifierState & gadget::CTRL_MASK ) ||
+            ( modifierState & gadget::KEY_COMMAND ) )
     {
         if( m_unselectedCADFiles.size() )
         {
@@ -202,12 +202,12 @@ bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
 {
     boost::ignore_unused_variable_warning( buttonKey );
 
-    if( (xPos > m_currX + 2) || (xPos < m_currX - 2) )
+    if( ( xPos > m_currX + 2 ) || ( xPos < m_currX - 2 ) )
     {
         return false;
     }
 
-    if( (yPos > m_currY + 2) || (yPos < m_currY - 2) )
+    if( ( yPos > m_currY + 2 ) || ( yPos < m_currY - 2 ) )
     {
         return false;
     }
@@ -230,22 +230,22 @@ bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
         //OnMouseRelease();
         scenegraph::DCS* infoDCS = DeviceHandler::instance()->GetSelectedDCS();
         DeviceHandler::instance()->UnselectObjects();
-        
-        std::map< std::string,
-        ves::xplorer::plugin::PluginBase* >* tempPlugins =
-        ves::xplorer::network::GraphicalPluginManager::instance()->
-        GetTheCurrentPlugins();
-        
-        std::map< std::string, 
-        ves::xplorer::plugin::PluginBase* >::iterator pluginIter;
-        
-        for( pluginIter = tempPlugins->begin(); 
-            pluginIter != tempPlugins->end(); ++pluginIter )
+
+        std::map < std::string,
+            ves::xplorer::plugin::PluginBase* > * tempPlugins =
+                ves::xplorer::network::GraphicalPluginManager::instance()->
+                GetTheCurrentPlugins();
+
+        std::map < std::string,
+            ves::xplorer::plugin::PluginBase* >::iterator pluginIter;
+
+        for( pluginIter = tempPlugins->begin();
+                pluginIter != tempPlugins->end(); ++pluginIter )
         {
             pluginIter->second->GetCFDModel()->
             RenderTextualDisplay( false );
         }
-        
+
         if( !infoDCS )
         {
             UpdateSelectionLine();
@@ -266,7 +266,7 @@ bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
                 return false;
             }
         }
-        
+
         pluginIter = tempPlugins->find( modelIdStr );
         if( pluginIter != tempPlugins->end() )
         {
@@ -291,66 +291,66 @@ void Selection::ProcessSelection()
 {
     //Unselect the previous selected DCS
     DeviceHandler::instance()->UnselectObjects();
-    
+
     //Remove custom glows
     {
-        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlightRemove( 
-                ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot(), 
-                "", false, true );
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        highlightRemove(
+            ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot(),
+            "", false, true );
     }
-    
+
     //Test for intersections
     osgUtil::LineSegmentIntersector::Intersections& intersections =
-    scenegraph::TestForIntersections(
-                                     *m_lineSegmentIntersector.get(), 
-                                     *m_sceneManager.GetModelRoot() );
+        scenegraph::TestForIntersections(
+            *m_lineSegmentIntersector.get(),
+            *m_sceneManager.GetModelRoot() );
     if( intersections.empty() )
     {
         vprDEBUG( vesDBG, 1 )
-        << "|\tSelection::ProcessSelection No object selected"
-        << std::endl << vprDEBUG_FLUSH;
+                << "|\tSelection::ProcessSelection No object selected"
+                << std::endl << vprDEBUG_FLUSH;
 
         // Tell everyone else we have a null selection. nullPath must be l-value
         // since signal passes it by reference
         osg::NodePath nullPath;
         m_objectPickedSignal( nullPath );
-        
+
         return;
     }
-    
+
     //Search for first item that is not the laser
     {
         osg::Node* objectHit( NULL );
-        for( osgUtil::LineSegmentIntersector::Intersections::iterator itr = 
-            intersections.begin(); itr != intersections.end(); ++itr )
+        for( osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+                    intersections.begin(); itr != intersections.end(); ++itr )
         {
             objectHit = *( itr->nodePath.rbegin() );
             if( objectHit->getName() != "Laser" &&
-               objectHit->getName() != "Root Node" )
+                    objectHit->getName() != "Root Node" )
             {
                 break;
             }
         }
-        
+
         if( !objectHit )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tSelection::ProcessSelection No object selected"
-                << std::endl << vprDEBUG_FLUSH;
-            
+                                  << std::endl << vprDEBUG_FLUSH;
+
             ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
                 ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
-            
+
             return;
         }
         ///Print the name of the first node hit
         osg::NodePath nodePath = intersections.begin()->nodePath;
         osg::Node* node = nodePath[ nodePath.size() - 1 ];
-        vprDEBUG( vesDBG, 1 ) 
-            << "|\tSelection::ProcessSelection The name of the first node hit is "
-            << node->getName() << std::endl << vprDEBUG_FLUSH;     
+        vprDEBUG( vesDBG, 1 )
+                << "|\tSelection::ProcessSelection The name of the first node hit is "
+                << node->getName() << std::endl << vprDEBUG_FLUSH;
     }
-    
+
     ///CAD selection code
     if( m_cadSelectionMode )
     {
@@ -360,7 +360,7 @@ void Selection::ProcessSelection()
         m_unselectedCADFiles.push_back( node );
         return;
     }
-    
+
     //Now find the new selected object
     osg::NodePath nodePath = intersections.begin()->nodePath;
     m_objectPickedSignal( nodePath );
@@ -381,8 +381,8 @@ void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
     if( !vesObject )
     {
         vprDEBUG( vesDBG, 1 )
-            << "|\tSelection::HighlightAndSetManipulators Invalid object selected"
-            << std::endl << vprDEBUG_FLUSH;
+                << "|\tSelection::HighlightAndSetManipulators Invalid object selected"
+                << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
             ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
@@ -398,7 +398,7 @@ void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
 
     //Remove custom glows
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-        highlight2( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot(), "", false, true );
+    highlight2( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot(), "", false, true );
 
     //
     osg::Vec3d center( 0.0, 0.0, 0.0 );
@@ -406,7 +406,7 @@ void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
     //We really need a selection callback for selectable objects -_-
     if( newSelectedDCS->getName() != "CameraDCS" )
     {
-        center= vesObject->getBound().center();
+        center = vesObject->getBound().center();
 
         //Remove local node from nodePath
         nodePath.pop_back();
@@ -446,18 +446,18 @@ void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
     }
 
     vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
-        << vesObject->getName()
-        << std::endl << vprDEBUG_FLUSH;
+                          << vesObject->getName()
+                          << std::endl << vprDEBUG_FLUSH;
     vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
-        << vesObject->getDescriptions().at( 1 )
-        << std::endl << vprDEBUG_FLUSH;
+                          << vesObject->getDescriptions().at( 1 )
+                          << std::endl << vprDEBUG_FLUSH;
     vprDEBUG( vesDBG, 1 ) << "|\tObject is part of model "
-        << newSelectedDCS->GetModelData()->GetID()
-        << std::endl << vprDEBUG_FLUSH;
+                          << newSelectedDCS->GetModelData()->GetID()
+                          << std::endl << vprDEBUG_FLUSH;
 
     // Change the active model to the one corresponding to this piece of geometry
     ves::xplorer::ModelHandler::instance()->
-        SetActiveModel( newSelectedDCS->GetModelData()->GetID() );
+    SetActiveModel( newSelectedDCS->GetModelData()->GetID() );
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -467,11 +467,11 @@ void Selection::ClearPointConstraint()
     if( m_pickConstraint )
     {
         m_physicsSimulator.GetDynamicsWorld()->
-            removeConstraint( m_pickConstraint );
+        removeConstraint( m_pickConstraint );
 
         delete m_pickConstraint;
         m_pickConstraint = NULL;
-        
+
         m_pickedBody->forceActivationState( ACTIVE_TAG );
         m_pickedBody->setDeactivationTime( 0.0 );
         m_pickedBody = NULL;
@@ -500,26 +500,26 @@ void Selection::HighlightNode( osg::NodePath& nodePath )
     {
         return;
     }
-    
+
     //Remove custom glows
-    ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-        highlight2( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot(), "", false, true );
-    
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+    highlight2( ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot(), "", false, true );
+
     osg::Node* node = nodePath.at( nodePath.size() - 1 );
-    vprDEBUG( vesDBG, 1 ) 
-        << "|\tSelection::HighlightNode The name of the first node hit is "
-        << node->getName() << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 )
+            << "|\tSelection::HighlightNode The name of the first node hit is "
+            << node->getName() << std::endl << vprDEBUG_FLUSH;
     osg::ref_ptr< osg::StateSet > geode_stateset = node->getOrCreateStateSet();
     //I think we need to check and see if the stateset has any parents
     if( geode_stateset->getNumParents() > 1 )
     {
         //std::cout << drawable_stateset->getNumParents() << std::endl;
         //std::cout << "StateSet is shared." << std::endl;
-        osg::ref_ptr< osg::StateSet > temp_stateset = 
-            new osg::StateSet( *(geode_stateset.get()), osg::CopyOp::DEEP_COPY_ALL );
+        osg::ref_ptr< osg::StateSet > temp_stateset =
+            new osg::StateSet( *( geode_stateset.get() ), osg::CopyOp::DEEP_COPY_ALL );
         node->setStateSet( temp_stateset.get() );
     }
-    
+
     //Add shader code to have code highlighted
     osg::Vec3 enableGlow( 1.0, 0.0, 0.0 );
     geode_stateset->addUniform( new osg::Uniform( "glowColor", enableGlow ) );

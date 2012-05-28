@@ -57,7 +57,7 @@ namespace conductor
 class VE_GUIPLUGINS_EXPORTS FinancialDialog : public wxDialog
 {
 public:
-    FinancialDialog( wxWindow *parent, wxWindowID id );
+    FinancialDialog( wxWindow* parent, wxWindowID id );
     virtual ~FinancialDialog();
 
 protected:
@@ -82,16 +82,16 @@ protected:
     wxTextCtrl* _om02;
     wxTextCtrl* _om03;
 
-    wxButton * ok_b;
+    wxButton* ok_b;
 
-    void double2entry( wxTextCtrl* entry, double * value );
-    void entry2double( wxTextCtrl* entry, double * value );
+    void double2entry( wxTextCtrl* entry, double* value );
+    void entry2double( wxTextCtrl* entry, double* value );
     virtual bool TransferDataToWindow();
     virtual bool TransferDataFromWindow();
 
 public:
 
-    void OnChange( wxCommandEvent &event );
+    void OnChange( wxCommandEvent& event );
 
     wxString _technology_s;
 

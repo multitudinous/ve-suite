@@ -43,7 +43,7 @@ using namespace ves::open::xml;
 ///Constructor                                                          //
 //////////////////////////////////////////////////////////////////////////
 Uniform::Uniform()
-        : XMLObject()
+    : XMLObject()
 {
     mType = std::string( "float" );
     mVariableSize = 0;
@@ -68,7 +68,7 @@ Uniform::~Uniform()
 //Copy constructor                 //
 /////////////////////////////////////
 Uniform:: Uniform( const Uniform& rhs )
-        : XMLObject( rhs )
+    : XMLObject( rhs )
 {
     mType = std::string( "float" );
     mVariableSize = 0;
@@ -172,10 +172,10 @@ void Uniform::_updateVEElement( const std::string& )
 void Uniform::_updateSize()
 {
     DOMElement* nodeSizeElement = mRootDocument->createElement(
-                                  Convert( "size" ).toXMLString() );
+                                      Convert( "size" ).toXMLString() );
 
     DOMText* nodeSize = mRootDocument->createTextNode(
-                        Convert( static_cast<int>( mVariableSize) ).toXMLString() );
+                            Convert( static_cast<int>( mVariableSize ) ).toXMLString() );
 
     nodeSizeElement->appendChild( nodeSize );
     mVeElement->appendChild( nodeSizeElement );
@@ -184,10 +184,10 @@ void Uniform::_updateSize()
 void Uniform::_updateUniformName()
 {
     DOMElement* nodeNameElement = mRootDocument->createElement(
-                                  Convert( "name" ).toXMLString() );
+                                      Convert( "name" ).toXMLString() );
 
     DOMText* nodeName = mRootDocument->createTextNode(
-                        Convert( mName ).toXMLString() );
+                            Convert( mName ).toXMLString() );
 
     nodeNameElement->appendChild( nodeName );
     mVeElement->appendChild( nodeNameElement );
@@ -196,10 +196,10 @@ void Uniform::_updateUniformName()
 void Uniform::_updateUniformType()
 {
     DOMElement* nodeTypeElement = mRootDocument->createElement(
-                                  Convert( "type" ).toXMLString() );
+                                      Convert( "type" ).toXMLString() );
 
     DOMText* nodeType = mRootDocument->createTextNode(
-                        Convert( mType ).toXMLString() );
+                            Convert( mType ).toXMLString() );
 
     nodeTypeElement->appendChild( nodeType );
     mVeElement->appendChild( nodeTypeElement );
@@ -211,11 +211,11 @@ void Uniform::_updateValues()
     {
         // name comes from verg.xsd
         DOMElement* valueTag  = mRootDocument->createElement(
-                                Convert( "value" ).toXMLString() );
+                                    Convert( "value" ).toXMLString() );
 
         mVeElement->appendChild( valueTag );
         DOMText* valueNum = mRootDocument->createTextNode(
-                            Convert( mValues.at( i ) ).toXMLString() );
+                                Convert( mValues.at( i ) ).toXMLString() );
 
         valueTag->appendChild( valueNum );
     }
@@ -224,10 +224,10 @@ void Uniform::_updateValues()
 void Uniform::_updateTextureUnit()
 {
     DOMElement* tUnitElement = mRootDocument->createElement(
-                               Convert( "textureUnit" ).toXMLString() );
+                                   Convert( "textureUnit" ).toXMLString() );
 
     DOMText* nodeTUnit = mRootDocument->createTextNode(
-                         Convert( static_cast<int>( mTextureUnit ) ).toXMLString() );
+                             Convert( static_cast<int>( mTextureUnit ) ).toXMLString() );
 
     tUnitElement->appendChild( nodeTUnit );
     mVeElement->appendChild( tUnitElement );
@@ -277,7 +277,7 @@ void Uniform::SetObjectFromXMLData( DOMNode* xmlNode )
     DOMElement* lengthNode = GetSubElement( currentElement, std::string( "size" ), 0 );
     if( lengthNode )
     {
-         GetDataFromElement( lengthNode, mVariableSize );
+        GetDataFromElement( lengthNode, mVariableSize );
     }
     //get the values for this uniform
     if( mType != std::string( "Sampler" ) )
@@ -290,7 +290,7 @@ void Uniform::SetObjectFromXMLData( DOMNode* xmlNode )
             if( uniformValue )
             {
                 double tmp_float;
-                GetDataFromElement( uniformValue, tmp_float);
+                GetDataFromElement( uniformValue, tmp_float );
                 mValues.push_back( static_cast<float>( tmp_float ) );
             }
         }

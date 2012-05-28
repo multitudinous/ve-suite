@@ -40,7 +40,7 @@ namespace ves
 {
 namespace conductor
 {
-class CADFileLoader 
+class CADFileLoader
 {
 public:
     CADFileLoader();

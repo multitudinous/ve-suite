@@ -88,7 +88,7 @@ public:
 
     ///Copy constructors for osg
     GroupedTextTextures( const GroupedTextTextures& ttexture,
-                 const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+                         const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     ///
     //META_Node( ves::xplorer::scenegraph, GroupedTextTextures );
@@ -107,7 +107,7 @@ public:
     void UpdateListPositions();
 
     void MakeTextureActive( const std::string& tempKey );
-    
+
     void MakeTextureActive( const TextTexture* tempKey );
 
     void MakeTextureActive( const ves::xplorer::scenegraph::DCS* tempKey );
@@ -125,7 +125,7 @@ protected:
     virtual ~GroupedTextTextures();
     ///Animate the texture position
     void AnimateTextureMovement();
-    
+
     ///The color of the text, default is black
     float _textColor[ 4 ];
 
@@ -134,17 +134,17 @@ protected:
 
     ///NULL string
     std::string m_nullString;
-    
+
     std::map< std::string, osg::ref_ptr< DCS > > m_groupedTextures;
-    
+
     osg::ref_ptr< DCS > m_activeDCS;
-    
+
     std::list< DCS* > m_transformList;
     ///Start location for lerp animation functions
     double m_yStartLocation;
     ///Selected DCS
     DCS* m_selectedTexture;
-    ///Current DCS 
+    ///Current DCS
     DCS* m_currentTexture;
     ///Tell if the animation is still running
     bool m_animationComplete;

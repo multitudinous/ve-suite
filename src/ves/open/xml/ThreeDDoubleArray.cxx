@@ -41,7 +41,7 @@ using namespace ves::open::xml;
 //Constructor                                     //
 ////////////////////////////////////////////////////
 ThreeDDoubleArray::ThreeDDoubleArray( unsigned int nElements )
-        : XMLObject()
+    : XMLObject()
 {
     mNElements  = nElements;
     // These should match the schema for min and max occurances
@@ -58,7 +58,7 @@ ThreeDDoubleArray::~ThreeDDoubleArray()
 }
 ///////////////////////////////////////////
 ThreeDDoubleArray::ThreeDDoubleArray( const ThreeDDoubleArray& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mNElements  = input.mNElements;
     for( size_t i = 0; i < input.mTwoDArray.size(); ++i )
@@ -119,11 +119,11 @@ double ThreeDDoubleArray::GetElement( unsigned int i, unsigned int j, unsigned i
     {
         return mTwoDArray.at( i )->GetElement( j, k );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << " ERROR!!! " << std::endl
-        << " Invalid index: " << i << "," << j << "," << k
-        << " in ThreeDDoubleArray::GetElement!!! " << std::endl;
+                  << " Invalid index: " << i << "," << j << "," << k
+                  << " in ThreeDDoubleArray::GetElement!!! " << std::endl;
         return 0;
     }
 }
@@ -181,7 +181,7 @@ void ThreeDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
         if( mMinIndex > numNodes )
         {
             std::cerr << " ERROR : ThreeDDoubleArray::SetObjectFromXMLData :" <<
-            " This node has too few or too many children." << std::endl;
+                      " This node has too few or too many children." << std::endl;
         }
 
         // This for loop may be wrong since the the text node and
@@ -200,7 +200,7 @@ void ThreeDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
     else
     {
         std::cerr << " ERROR : ThreeDDoubleArray::SetObjectFromXMLData :" <<
-        " This node has no children which means there is probably a problem." << std::endl;
+                  " This node has no children which means there is probably a problem." << std::endl;
     }
 }
 

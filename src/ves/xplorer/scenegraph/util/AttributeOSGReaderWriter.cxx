@@ -90,7 +90,10 @@ VETextureGLModeSet ve_TextureGLModeSet;
 void ve_initGLNames()
 {
     static bool first_time = true;
-    if( !first_time ) return;
+    if( !first_time )
+    {
+        return;
+    }
 
     VEADD_NAME( "GL_ALPHA_TEST", GL_ALPHA_TEST )
     VEADD_NAME( "GL_BLEND", GL_BLEND )
@@ -244,42 +247,41 @@ bool VEAttribute_readLocalData( Object& obj, Input& fr )
                 }
                 else
                 {
-                    stateset.setMode(( StateAttribute::GLMode )mode, value );
+                    stateset.setMode( ( StateAttribute::GLMode )mode, value );
                 }
                 fr += 2;
                 iteratorAdvanced = true;
                 readingMode = true;
             }
         }
-        else
-            if( fr[0].getStr() )
+        else if( fr[0].getStr() )
+        {
+            if( VEAttribute_matchModeStr( fr[1].getStr(), value ) )
             {
-                if( VEAttribute_matchModeStr( fr[1].getStr(), value ) )
+                VEGLNameToGLModeMap::iterator nitr = ve_GLNameToGLModeMap.find( fr[0].getStr() );
+                if( nitr != ve_GLNameToGLModeMap.end() )
                 {
-                    VEGLNameToGLModeMap::iterator nitr = ve_GLNameToGLModeMap.find( fr[0].getStr() );
-                    if( nitr != ve_GLNameToGLModeMap.end() )
+                    StateAttribute::GLMode mode = nitr->second;
+                    if( ve_TextureGLModeSet.find( mode ) != ve_TextureGLModeSet.end() )
                     {
-                        StateAttribute::GLMode mode = nitr->second;
-                        if( ve_TextureGLModeSet.find( mode ) != ve_TextureGLModeSet.end() )
-                        {
-                            // remap to a texture unit.
-                            stateset.setTextureMode( 0, mode, value );
-                        }
-                        else
-                        {
-                            stateset.setMode( mode, value );
-                        }
-                        fr += 2;
-                        iteratorAdvanced = true;
-                        readingMode = true;
+                        // remap to a texture unit.
+                        stateset.setTextureMode( 0, mode, value );
                     }
+                    else
+                    {
+                        stateset.setMode( mode, value );
+                    }
+                    fr += 2;
+                    iteratorAdvanced = true;
+                    readingMode = true;
                 }
             }
+        }
     }
 
     // new code using osg::Registry's list of prototypes to loaded attributes.
     osg::Uniform* uniform = NULL;
-    while (( uniform = fr.readUniform() ) != NULL )
+    while( ( uniform = fr.readUniform() ) != NULL )
     {
         stateset.addUniform( uniform );
         iteratorAdvanced = true;
@@ -288,7 +290,7 @@ bool VEAttribute_readLocalData( Object& obj, Input& fr )
 
     // new code using osg::Registry's list of prototypes to loaded attributes.
     StateAttribute* attribute = NULL;
-    while (( attribute = fr.readStateAttribute() ) != NULL )
+    while( ( attribute = fr.readStateAttribute() ) != NULL )
     {
         if( attribute->isTextureAttribute() )
         {
@@ -331,33 +333,34 @@ bool VEAttribute_readLocalData( Object& obj, Input& fr )
                         readingMode = true;
                     }
                 }
-                else
-                    if( fr[0].getStr() )
+                else if( fr[0].getStr() )
+                {
+                    if( VEAttribute_matchModeStr( fr[1].getStr(), value ) )
                     {
-                        if( VEAttribute_matchModeStr( fr[1].getStr(), value ) )
+                        VEGLNameToGLModeMap::iterator nitr = ve_GLNameToGLModeMap.find( fr[0].getStr() );
+                        if( nitr != ve_GLNameToGLModeMap.end() )
                         {
-                            VEGLNameToGLModeMap::iterator nitr = ve_GLNameToGLModeMap.find( fr[0].getStr() );
-                            if( nitr != ve_GLNameToGLModeMap.end() )
-                            {
-                                StateAttribute::GLMode mode = nitr->second;
-                                stateset.setTextureMode( unit, mode, value );
-                                fr += 2;
-                                localIteratorAdvanced = true;
-                                readingMode = true;
-                            }
+                            StateAttribute::GLMode mode = nitr->second;
+                            stateset.setTextureMode( unit, mode, value );
+                            fr += 2;
+                            localIteratorAdvanced = true;
+                            readingMode = true;
                         }
                     }
+                }
             }
 
             StateAttribute* attribute = NULL;
-            while (( attribute = fr.readStateAttribute() ) != NULL )
+            while( ( attribute = fr.readStateAttribute() ) != NULL )
             {
                 stateset.setTextureAttribute( unit, attribute );
                 localIteratorAdvanced = true;
             }
 
             if( !localIteratorAdvanced )
+            {
                 fr.advanceOverCurrentFieldOrBlock();
+            }
         }
 
         // skip over trailing '}'
@@ -377,7 +380,7 @@ bool VEAttribute_readLocalData( Object& obj, Input& fr )
 template<class T>
 T vemymax( const T& a, const T& b )
 {
-    return ((( a ) > ( b ) ) ? ( a ) : ( b ) );
+    return ( ( ( a ) > ( b ) ) ? ( a ) : ( b ) );
 }
 
 bool VEAttribute_writeLocalData( const Object& obj, Output& fw )
@@ -389,25 +392,25 @@ bool VEAttribute_writeLocalData( const Object& obj, Output& fw )
 
     // write the rendering hint value.
     fw.indent() << "rendering_hint ";
-    switch ( stateset.getRenderingHint() )
+    switch( stateset.getRenderingHint() )
     {
-        case( StateSet::DEFAULT_BIN ):
-                        fw << "DEFAULT_BIN" << std::endl;
-            break;
-        case( StateSet::OPAQUE_BIN ):
-                        fw << "OPAQUE_BIN" << std::endl;
-            break;
-        case( StateSet::TRANSPARENT_BIN ):
-                        fw << "TRANSPARENT_BIN" << std::endl;
-            break;
-        default:
-            fw << stateset.getRenderingHint() << std::endl;
-            break;
+    case( StateSet::DEFAULT_BIN ):
+        fw << "DEFAULT_BIN" << std::endl;
+        break;
+    case( StateSet::OPAQUE_BIN ):
+        fw << "OPAQUE_BIN" << std::endl;
+        break;
+    case( StateSet::TRANSPARENT_BIN ):
+        fw << "TRANSPARENT_BIN" << std::endl;
+        break;
+    default:
+        fw << stateset.getRenderingHint() << std::endl;
+        break;
     }
 
     fw.indent() << "renderBinMode " << VEAttribute_getRenderBinModeStr( stateset.getRenderBinMode() ) << std::endl;
     if( stateset.getRenderBinMode() != StateSet::INHERIT_RENDERBIN_DETAILS )
-{
+    {
         fw.indent() << "binNumber " << stateset.getBinNumber() << std::endl;
         fw.indent() << "binName " << stateset.getBinName() << std::endl;
     }
@@ -450,7 +453,7 @@ bool VEAttribute_writeLocalData( const Object& obj, Output& fw )
     const StateSet::TextureModeList& tml = stateset.getTextureModeList();
     const StateSet::TextureAttributeList& tal = stateset.getTextureAttributeList();
     unsigned int maxUnit = vemymax( tml.size(), tal.size() );
-    for( unsigned int unit = 0;unit < maxUnit;++unit )
+    for( unsigned int unit = 0; unit < maxUnit; ++unit )
     {
         fw.indent() << "textureUnit " << unit << " {" << std::endl;
         fw.moveIn();
@@ -496,56 +499,119 @@ bool VEAttribute_writeLocalData( const Object& obj, Output& fw )
 
 bool VEAttribute_matchModeStr( const char* str, StateAttribute::GLModeValue& mode )
 {
-    if( strcmp( str, "INHERIT" ) == 0 ) mode = StateAttribute::INHERIT;
-    else if( strcmp( str, "ON" ) == 0 ) mode = StateAttribute::ON;
-    else if( strcmp( str, "OFF" ) == 0 ) mode = StateAttribute::OFF;
-    else if( strcmp( str, "OVERRIDE_ON" ) == 0 ) mode = StateAttribute::OVERRIDE | StateAttribute::ON;
-    else if( strcmp( str, "OVERRIDE_OFF" ) == 0 ) mode = StateAttribute::OVERRIDE | StateAttribute::OFF;
-    else if( strcmp( str, "OVERRIDE|ON" ) == 0 ) mode = StateAttribute::OVERRIDE | StateAttribute::ON;
-    else if( strcmp( str, "OVERRIDE|OFF" ) == 0 ) mode = StateAttribute::OVERRIDE | StateAttribute::OFF;
-    else if( strcmp( str, "PROTECTED|ON" ) == 0 ) mode = StateAttribute::PROTECTED | StateAttribute::ON;
-    else if( strcmp( str, "PROTECTED|OFF" ) == 0 ) mode = StateAttribute::PROTECTED | StateAttribute::OFF;
-    else if( strcmp( str, "PROTECTED|OVERRIDE|ON" ) == 0 ) mode = StateAttribute::PROTECTED | StateAttribute::OVERRIDE | StateAttribute::ON;
-    else if( strcmp( str, "PROTECTED|OVERRIDE|OFF" ) == 0 ) mode = StateAttribute::PROTECTED | StateAttribute::OVERRIDE | StateAttribute::OFF;
-    else return false;
+    if( strcmp( str, "INHERIT" ) == 0 )
+    {
+        mode = StateAttribute::INHERIT;
+    }
+    else if( strcmp( str, "ON" ) == 0 )
+    {
+        mode = StateAttribute::ON;
+    }
+    else if( strcmp( str, "OFF" ) == 0 )
+    {
+        mode = StateAttribute::OFF;
+    }
+    else if( strcmp( str, "OVERRIDE_ON" ) == 0 )
+    {
+        mode = StateAttribute::OVERRIDE | StateAttribute::ON;
+    }
+    else if( strcmp( str, "OVERRIDE_OFF" ) == 0 )
+    {
+        mode = StateAttribute::OVERRIDE | StateAttribute::OFF;
+    }
+    else if( strcmp( str, "OVERRIDE|ON" ) == 0 )
+    {
+        mode = StateAttribute::OVERRIDE | StateAttribute::ON;
+    }
+    else if( strcmp( str, "OVERRIDE|OFF" ) == 0 )
+    {
+        mode = StateAttribute::OVERRIDE | StateAttribute::OFF;
+    }
+    else if( strcmp( str, "PROTECTED|ON" ) == 0 )
+    {
+        mode = StateAttribute::PROTECTED | StateAttribute::ON;
+    }
+    else if( strcmp( str, "PROTECTED|OFF" ) == 0 )
+    {
+        mode = StateAttribute::PROTECTED | StateAttribute::OFF;
+    }
+    else if( strcmp( str, "PROTECTED|OVERRIDE|ON" ) == 0 )
+    {
+        mode = StateAttribute::PROTECTED | StateAttribute::OVERRIDE | StateAttribute::ON;
+    }
+    else if( strcmp( str, "PROTECTED|OVERRIDE|OFF" ) == 0 )
+    {
+        mode = StateAttribute::PROTECTED | StateAttribute::OVERRIDE | StateAttribute::OFF;
+    }
+    else
+    {
+        return false;
+    }
     return true;
 }
 
 
 const char* VEAttribute_getModeStr( StateAttribute::GLModeValue value )
 {
-    switch ( value )
+    switch( value )
     {
-        case( StateAttribute::INHERIT ): return "INHERIT";
-        case( StateAttribute::ON ): return "ON";
-        case( StateAttribute::OFF ): return "OFF";
-        case( StateAttribute::OVERRIDE | StateAttribute::ON ): return "OVERRIDE|ON";
-        case( StateAttribute::OVERRIDE | StateAttribute::OFF ): return "OVERRIDE|OFF";
-        case( StateAttribute::PROTECTED | StateAttribute::ON ): return "PROTECTED|ON";
-        case( StateAttribute::PROTECTED | StateAttribute::OFF ): return "PROTECTED|OFF";
-        case( StateAttribute::PROTECTED | StateAttribute::OVERRIDE | StateAttribute::ON ): return "PROTECTED|OVERRIDE|ON";
-        case( StateAttribute::PROTECTED | StateAttribute::OVERRIDE | StateAttribute::OFF ): return "PROTECTED|OVERRIDE|OFF";
+    case( StateAttribute::INHERIT ):
+        return "INHERIT";
+    case( StateAttribute::ON ):
+        return "ON";
+    case( StateAttribute::OFF ):
+        return "OFF";
+    case( StateAttribute::OVERRIDE | StateAttribute::ON ):
+        return "OVERRIDE|ON";
+    case( StateAttribute::OVERRIDE | StateAttribute::OFF ):
+        return "OVERRIDE|OFF";
+    case( StateAttribute::PROTECTED | StateAttribute::ON ):
+        return "PROTECTED|ON";
+    case( StateAttribute::PROTECTED | StateAttribute::OFF ):
+        return "PROTECTED|OFF";
+    case( StateAttribute::PROTECTED | StateAttribute::OVERRIDE | StateAttribute::ON ):
+        return "PROTECTED|OVERRIDE|ON";
+    case( StateAttribute::PROTECTED | StateAttribute::OVERRIDE | StateAttribute::OFF ):
+        return "PROTECTED|OVERRIDE|OFF";
     }
     return "";
 }
 
 bool VEAttribute_matchRenderBinModeStr( const char* str, StateSet::RenderBinMode& mode )
 {
-    if( strcmp( str, "INHERIT" ) == 0 ) mode = StateSet::INHERIT_RENDERBIN_DETAILS;
-    else if( strcmp( str, "USE" ) == 0 ) mode = StateSet::USE_RENDERBIN_DETAILS;
-    else if( strcmp( str, "OVERRIDE" ) == 0 ) mode = StateSet::OVERRIDE_RENDERBIN_DETAILS;
-    else if( strcmp( str, "ENCLOSE" ) == 0 ) mode = StateSet::USE_RENDERBIN_DETAILS;
-    else return false;
+    if( strcmp( str, "INHERIT" ) == 0 )
+    {
+        mode = StateSet::INHERIT_RENDERBIN_DETAILS;
+    }
+    else if( strcmp( str, "USE" ) == 0 )
+    {
+        mode = StateSet::USE_RENDERBIN_DETAILS;
+    }
+    else if( strcmp( str, "OVERRIDE" ) == 0 )
+    {
+        mode = StateSet::OVERRIDE_RENDERBIN_DETAILS;
+    }
+    else if( strcmp( str, "ENCLOSE" ) == 0 )
+    {
+        mode = StateSet::USE_RENDERBIN_DETAILS;
+    }
+    else
+    {
+        return false;
+    }
     return true;
 }
 
 const char* VEAttribute_getRenderBinModeStr( StateSet::RenderBinMode mode )
 {
-    switch ( mode )
+    switch( mode )
     {
-        case( StateSet::INHERIT_RENDERBIN_DETAILS ):  return "INHERIT";
-        case( StateSet::USE_RENDERBIN_DETAILS ):      return "USE";
-        case( StateSet::OVERRIDE_RENDERBIN_DETAILS ): return "OVERRIDE";
+    case( StateSet::INHERIT_RENDERBIN_DETAILS ):
+        return "INHERIT";
+    case( StateSet::USE_RENDERBIN_DETAILS ):
+        return "USE";
+    case( StateSet::OVERRIDE_RENDERBIN_DETAILS ):
+        return "OVERRIDE";
     }
     return "";
 }

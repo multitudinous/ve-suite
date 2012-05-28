@@ -186,7 +186,7 @@ bool Point::IsSelected()
 //ControlPoint class      //
 ////////////////////////////
 ControlPoint::ControlPoint()
-        : ves::xplorer::scenegraph::nurbs::Point()
+    : ves::xplorer::scenegraph::nurbs::Point()
 {
     _xW = _v[ 0 ];
     _yW = _v[ 1 ];
@@ -198,13 +198,13 @@ ControlPoint::ControlPoint()
 }
 ///////////////////////////////////////////////////////////////
 ControlPoint::ControlPoint( double x, double y, double z, double w )
-        : ves::xplorer::scenegraph::nurbs::Point( x, y, z )
+    : ves::xplorer::scenegraph::nurbs::Point( x, y, z )
 {
     SetWeight( w );
 }
 ///////////////////////////////////////////////////
 ControlPoint::ControlPoint( const ControlPoint& rhs )
-        : ves::xplorer::scenegraph::nurbs::Point( rhs )
+    : ves::xplorer::scenegraph::nurbs::Point( rhs )
 {
     SetWeight( rhs._weight );
     _eyeSpaceTranslation[0] = rhs._eyeSpaceTranslation[0];
@@ -249,29 +249,29 @@ ControlPoint ControlPoint::GetWeightedPoint()
 ////////////////////////////////
 double ControlPoint::WeightedX()
 {
-    return _v[ 0 ]*_weight;
+    return _v[ 0 ] * _weight;
 }
 ////////////////////////////////
 //Weighted component Y        //
 ////////////////////////////////
 double ControlPoint::WeightedY()
 {
-    return _v[ 1 ]*_weight;
+    return _v[ 1 ] * _weight;
 }
 ////////////////////////////////
 //Weighted component Z        //
 ////////////////////////////////
 double ControlPoint::WeightedZ()
 {
-    return _v[ 2 ]*_weight;
+    return _v[ 2 ] * _weight;
 }
 ///////////////////////////////////////////////////////
 ControlPoint ControlPoint::operator*( const double& lhs )
 {
     //not sure how to handle the weights here!!!
-    ControlPoint newPoint( lhs*_v[ 0 ],
-                           lhs*_v[ 1 ],
-                           lhs*_v[ 2 ],
+    ControlPoint newPoint( lhs * _v[ 0 ],
+                           lhs * _v[ 1 ],
+                           lhs * _v[ 2 ],
                            _weight );
 
     return newPoint;

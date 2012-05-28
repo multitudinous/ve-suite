@@ -117,37 +117,37 @@ void AdvancedVectors::CreateControls()
 
 
     {
-    wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Vector Scale" ), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer3->Add( itemStaticText9, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
-    
-    _vectorScaleSlider = new wxSlider( itemDialog1, ADVANCEDVECTORS_SCALE_SLIDER, 200, 1, 400, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
-    itemStaticBoxSizer3->Add( _vectorScaleSlider, 0, wxGROW | wxALL, 5 );
-    
-    wxBoxSizer* itemBoxSizer11 = new wxBoxSizer( wxHORIZONTAL );
-    itemStaticBoxSizer3->Add( itemBoxSizer11, 1, wxGROW | wxALL, 5 );
-    
-    wxStaticText* itemStaticText12 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Decrease Size" ), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer11->Add( itemStaticText12, 0, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
-    
-    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Increase Size" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-    itemBoxSizer11->Add( itemStaticText13, 1, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
+        wxStaticText* itemStaticText9 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Vector Scale" ), wxDefaultPosition, wxDefaultSize, 0 );
+        itemStaticBoxSizer3->Add( itemStaticText9, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
+
+        _vectorScaleSlider = new wxSlider( itemDialog1, ADVANCEDVECTORS_SCALE_SLIDER, 200, 1, 400, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+        itemStaticBoxSizer3->Add( _vectorScaleSlider, 0, wxGROW | wxALL, 5 );
+
+        wxBoxSizer* itemBoxSizer11 = new wxBoxSizer( wxHORIZONTAL );
+        itemStaticBoxSizer3->Add( itemBoxSizer11, 1, wxGROW | wxALL, 5 );
+
+        wxStaticText* itemStaticText12 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Decrease Size" ), wxDefaultPosition, wxDefaultSize, 0 );
+        itemBoxSizer11->Add( itemStaticText12, 0, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
+
+        wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Increase Size" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+        itemBoxSizer11->Add( itemStaticText13, 1, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
     }
 
     {
-    wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Vector Ratio" ), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer3->Add( itemStaticText14, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
-    
-    _vectorRatioSlider = new wxSlider( itemDialog1, ADVANCEDVECTORS_RATIO_SLIDER, 1, 1, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
-    itemStaticBoxSizer3->Add( _vectorRatioSlider, 0, wxGROW | wxALL, 5 );
-    
-    wxBoxSizer* itemBoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
-    itemStaticBoxSizer3->Add( itemBoxSizer16, 1, wxGROW | wxALL, 5 );
-    
-    wxStaticText* itemStaticText17 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Dense" ), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer16->Add( itemStaticText17, 0, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
-    
-    wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Sparse" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-    itemBoxSizer16->Add( itemStaticText18, 1, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
+        wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Vector Ratio" ), wxDefaultPosition, wxDefaultSize, 0 );
+        itemStaticBoxSizer3->Add( itemStaticText14, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
+
+        _vectorRatioSlider = new wxSlider( itemDialog1, ADVANCEDVECTORS_RATIO_SLIDER, 1, 1, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+        itemStaticBoxSizer3->Add( _vectorRatioSlider, 0, wxGROW | wxALL, 5 );
+
+        wxBoxSizer* itemBoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
+        itemStaticBoxSizer3->Add( itemBoxSizer16, 1, wxGROW | wxALL, 5 );
+
+        wxStaticText* itemStaticText17 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Dense" ), wxDefaultPosition, wxDefaultSize, 0 );
+        itemBoxSizer16->Add( itemStaticText17, 0, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
+
+        wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Sparse" ), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+        itemBoxSizer16->Add( itemStaticText18, 1, wxALIGN_TOP | wxLEFT | wxRIGHT | wxBOTTOM | wxADJUST_MINSIZE, 5 );
     }
 
     _scaleByMagCheck = new wxCheckBox( itemDialog1, ADVANCEDVECTORS_SCALAR_BY_VECTOR_CHK, _T( "Scale by Vector Magnitude" ), wxDefaultPosition, wxDefaultSize, 0 );
@@ -238,14 +238,14 @@ void AdvancedVectors::OnVectorScale( wxCommandEvent& WXUNUSED( event ) )
 {
     ves::open::xml::DataValuePairPtr dvp( new ves::open::xml::DataValuePair() );
     ves::open::xml::CommandSharedPtr command( new ves::open::xml::Command() );
-    
+
     double value = static_cast< double >( _vectorScaleSlider->GetValue() );
-    
+
     dvp->SetData( std::string( "Vector Scale" ), value );
-    
+
     command->SetCommandName( std::string( "LIVE_VECTOR_UPDATE" ) );
     command->AddDataValuePair( dvp );
-    
+
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -253,14 +253,14 @@ void AdvancedVectors::OnVectorRatio( wxCommandEvent& WXUNUSED( event ) )
 {
     ves::open::xml::DataValuePairPtr dvp( new ves::open::xml::DataValuePair() );
     ves::open::xml::CommandSharedPtr command( new ves::open::xml::Command() );
-    
+
     double value = static_cast< double >( _vectorRatioSlider->GetValue() );
-    
+
     dvp->SetData( std::string( "Vector Ratio" ), value );
-    
+
     command->SetCommandName( std::string( "LIVE_VECTOR_UPDATE" ) );
     command->AddDataValuePair( dvp );
-    
+
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////

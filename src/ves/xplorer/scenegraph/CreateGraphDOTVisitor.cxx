@@ -48,9 +48,9 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 CreateGraphDOTVisitor::CreateGraphDOTVisitor( osg::Node* node,
-                                              std::string& inputStream )
-        :
-        NodeVisitor( TRAVERSE_ALL_CHILDREN )
+        std::string& inputStream )
+    :
+    NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
     m_dotFile.open( inputStream.c_str(), std::ios::out );
     m_dotFile << "digraph VE_Suite_Tree" << std::endl << "{" << std::endl;
@@ -91,32 +91,32 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
         {
             childName = std::string( "Class" ) + childNode->className();
         }
-        
+
         //Write the link
         m_dotFile << "\"" << tempGroup.get() << "\" -> \""
-            << childNode.get() << "\";" << std::endl;
-        if( !childNode->asGroup() || (!childNode->getNodeMask()) )
+                  << childNode.get() << "\";" << std::endl;
+        if( !childNode->asGroup() || ( !childNode->getNodeMask() ) )
         {
             //Write the child node label
             m_dotFile << "\"" << childNode.get() << "\" " << "[label=\""
-                << childName << "\\n";
+                      << childName << "\\n";
             if( !childNode->getNodeMask() )
             {
                 m_dotFile << "*This node is OFF*" << "\\n";
             }
             m_dotFile << GetStateSetDataString( childNode.get() ) << "\\n"
-                << GetMaterialDataString( childNode.get() ) << "\\n"
-                << GetTextureDataString( childNode.get() ) << "\\n"
-                << GetOSGStats( childNode.get() ) << "\"];" << std::endl;
+                      << GetMaterialDataString( childNode.get() ) << "\\n"
+                      << GetTextureDataString( childNode.get() ) << "\\n"
+                      << GetOSGStats( childNode.get() ) << "\"];" << std::endl;
         }
     }
-    
+
     //Write the label info for the parent
     m_dotFile << "\"" << tempGroup.get() << "\" " << "[label=\""
-        << nodeName << "\\n"
-        << GetStateSetDataString( tempGroup.get() ) << "\\n"
-        << GetMaterialDataString( tempGroup.get() ) << "\\n"
-        << GetTextureDataString( tempGroup.get() ) << "\"];" << std::endl;
+              << nodeName << "\\n"
+              << GetStateSetDataString( tempGroup.get() ) << "\\n"
+              << GetMaterialDataString( tempGroup.get() ) << "\\n"
+              << GetTextureDataString( tempGroup.get() ) << "\"];" << std::endl;
 
     osg::NodeVisitor::traverse( node );
 }
@@ -127,7 +127,7 @@ std::string CreateGraphDOTVisitor::GetMaterialDataString( osg::Node* node )
 
     osg::ref_ptr< osg::StateSet > stateset = node->getOrCreateStateSet();
     osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >
-                                             ( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
+            ( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
 
     if( material.valid() )
     {
@@ -137,19 +137,19 @@ std::string CreateGraphDOTVisitor::GetMaterialDataString( osg::Node* node )
         osg::Vec4 emission =  material->getEmission( osg::Material::FRONT );
         float shininess =  material->getShininess( osg::Material::FRONT );
         materialData << "Material Properties" << "\\n"
-            << "Ambient = " << ambient[ 0 ] << ", "
-            << ambient[ 1 ] << ", "
-            << ambient[ 2 ] << ", "
-            << ambient[ 3 ] << "\\n"
-            << "Diffuse = " << diffuse[ 0 ] << ", "
-            << diffuse[ 1 ] << ", "
-            << diffuse[ 2 ] << ", "
-            << diffuse[ 3 ] << "\\n"
-            << "Specular = " << specular[ 0 ] << ", "
-            << specular[ 1 ] << ", "
-            << specular[ 2 ] << ", "
-            << specular[ 3 ] << "\\n"
-            << "Shininess = " << shininess;
+                     << "Ambient = " << ambient[ 0 ] << ", "
+                     << ambient[ 1 ] << ", "
+                     << ambient[ 2 ] << ", "
+                     << ambient[ 3 ] << "\\n"
+                     << "Diffuse = " << diffuse[ 0 ] << ", "
+                     << diffuse[ 1 ] << ", "
+                     << diffuse[ 2 ] << ", "
+                     << diffuse[ 3 ] << "\\n"
+                     << "Specular = " << specular[ 0 ] << ", "
+                     << specular[ 1 ] << ", "
+                     << specular[ 2 ] << ", "
+                     << specular[ 3 ] << "\\n"
+                     << "Shininess = " << shininess;
     }
     else
     {
@@ -174,9 +174,9 @@ std::string CreateGraphDOTVisitor::GetTextureDataString( osg::Node* node )
         int h = texture->getTextureHeight();
         int d = texture->getTextureDepth();
         textureData << "Texture Properties" << "\\n"
-            << "Width = " << w << "\\n"
-            << "Height = " << h << "\\n"
-            << "Depth = " << d;
+                    << "Width = " << w << "\\n"
+                    << "Height = " << h << "\\n"
+                    << "Depth = " << d;
     }
     else
     {
@@ -188,13 +188,13 @@ std::string CreateGraphDOTVisitor::GetTextureDataString( osg::Node* node )
 std::string CreateGraphDOTVisitor::GetStateSetDataString( osg::Node* node )
 {
     std::ostringstream textureData;
-    
+
     //Grab stateset info
     std::string binName = "None";
     int binMode = -1;
     int binNum = -1;
     int renderingHint = -1;
-    
+
     osg::ref_ptr< osg::StateSet > tempState = node->getStateSet();
     if( tempState.valid() )
     {
@@ -203,7 +203,7 @@ std::string CreateGraphDOTVisitor::GetStateSetDataString( osg::Node* node )
         binMode = tempState->getRenderBinMode();
         renderingHint = tempState->getRenderingHint();
     }
-    
+
     std::string stringRenderHint = "None";
     if( renderingHint == 0 )
     {
@@ -232,10 +232,10 @@ std::string CreateGraphDOTVisitor::GetStateSetDataString( osg::Node* node )
         stringBinMode = "OVERRIDE_RENDERBIN_DETAILS";
     }
 
-    textureData << " StateSet " <<  "\\n" 
-                << "Bin Name = " << binName <<  "\\n" 
-                << "Bin Mode = " << stringBinMode <<  "\\n" 
-                << "Bin Number = " << binNum <<  "\\n" 
+    textureData << " StateSet " <<  "\\n"
+                << "Bin Name = " << binName <<  "\\n"
+                << "Bin Mode = " << stringBinMode <<  "\\n"
+                << "Bin Number = " << binNum <<  "\\n"
                 << "Rendering Hint = " << stringRenderHint;
 
     return textureData.str();
@@ -248,39 +248,39 @@ std::string CreateGraphDOTVisitor::GetOSGStats( osg::Node* node )
 
     unsigned int unique_primitives = 0;
     osgUtil::Statistics::PrimitiveCountMap::iterator pcmitr;
-    for(pcmitr = osgStats._uniqueStats.GetPrimitivesBegin();
-        pcmitr != osgStats._uniqueStats.GetPrimitivesEnd();
-        ++pcmitr)
+    for( pcmitr = osgStats._uniqueStats.GetPrimitivesBegin();
+            pcmitr != osgStats._uniqueStats.GetPrimitivesEnd();
+            ++pcmitr )
     {
         unique_primitives += pcmitr->second;
     }
 
     unsigned int instanced_primitives = 0;
-    for(pcmitr = osgStats._instancedStats.GetPrimitivesBegin();
-        pcmitr != osgStats._instancedStats.GetPrimitivesEnd();
-        ++pcmitr)
+    for( pcmitr = osgStats._instancedStats.GetPrimitivesBegin();
+            pcmitr != osgStats._instancedStats.GetPrimitivesEnd();
+            ++pcmitr )
     {
         instanced_primitives += pcmitr->second;
     }
 
     std::ostringstream statsData;
     statsData << "Object Type  Number Unique  Number Instanced" << "\\n"
-        /*<<"StateSet      \t"<<_statesetSet.size()<<"\t"<<_numInstancedStateSet<< "\\n"
-        <<"Group      \t"<<_groupSet.size()<<"\t"<<_numInstancedGroup<< "\\n"
-        <<"Transform  \t"<<_transformSet.size()<<"\t"<<_numInstancedTransform<< "\\n"
-        <<"LOD        \t"<<_lodSet.size()<<"\t"<<_numInstancedLOD<< "\\n"
-        <<"Switch     \t"<<_switchSet.size()<<"\t"<<_numInstancedSwitch<< "\\n"
-        << "Geode       " << osgStats._geodeSet.size()
-        << "  "<< osgStats._numInstancedGeode << "\\n"*/
-        << "StateSet    " << osgStats._statesetSet.size() 
-        << "  " << osgStats._numInstancedStateSet << "\\n"
-        << "Drawable    " << osgStats._drawableSet.size()
-        << "  " << osgStats._numInstancedDrawable << "\\n"
-        << "Geometry    " << osgStats._geometrySet.size()
-        << "  " << osgStats._numInstancedGeometry << "\\n"
-        << "Vertices    " << osgStats._uniqueStats._vertexCount
-        << "  " << osgStats._instancedStats._vertexCount << "\\n"
-        << "Primitives  " << unique_primitives << "  " << instanced_primitives;
+              /*<<"StateSet      \t"<<_statesetSet.size()<<"\t"<<_numInstancedStateSet<< "\\n"
+              <<"Group      \t"<<_groupSet.size()<<"\t"<<_numInstancedGroup<< "\\n"
+              <<"Transform  \t"<<_transformSet.size()<<"\t"<<_numInstancedTransform<< "\\n"
+              <<"LOD        \t"<<_lodSet.size()<<"\t"<<_numInstancedLOD<< "\\n"
+              <<"Switch     \t"<<_switchSet.size()<<"\t"<<_numInstancedSwitch<< "\\n"
+              << "Geode       " << osgStats._geodeSet.size()
+              << "  "<< osgStats._numInstancedGeode << "\\n"*/
+              << "StateSet    " << osgStats._statesetSet.size()
+              << "  " << osgStats._numInstancedStateSet << "\\n"
+              << "Drawable    " << osgStats._drawableSet.size()
+              << "  " << osgStats._numInstancedDrawable << "\\n"
+              << "Geometry    " << osgStats._geometrySet.size()
+              << "  " << osgStats._numInstancedGeometry << "\\n"
+              << "Vertices    " << osgStats._uniqueStats._vertexCount
+              << "  " << osgStats._instancedStats._vertexCount << "\\n"
+              << "Primitives  " << unique_primitives << "  " << instanced_primitives;
     return statsData.str();
 }
 ////////////////////////////////////////////////////////////////////////////////

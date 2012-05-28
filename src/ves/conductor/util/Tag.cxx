@@ -208,7 +208,9 @@ void Tag::DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale )
     dc.DrawRectangle( box.x - 3,  box.y - 3,  box.width + 6,  box.height + 6 );
 
     if( flag )
+    {
         dc.DrawText( text, box.x, box.y );
+    }
 
     dc.SetPen( old_pen );
     dc.SetBrush( old_brush );

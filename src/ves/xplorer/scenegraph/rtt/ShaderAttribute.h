@@ -86,68 +86,122 @@ public:
     * @param type Type of the uniform
     * @param elementCount Number of elements if you add an array, otherwise 1
     **/
-    void add( const std::string& name, osg::Uniform::Type type, unsigned int elementCount = 1, osg::StateAttribute::OverrideValue mode = osg::StateAttribute::ON);
+    void add( const std::string& name, osg::Uniform::Type type, unsigned int elementCount = 1, osg::StateAttribute::OverrideValue mode = osg::StateAttribute::ON );
 
     /**
     * Add new uniform. The uniform value will be copied.
     **/
-    void add(osg::Uniform* uniform, osg::StateAttribute::OverrideValue mode = osg::StateAttribute::ON);
-    void add(osg::StateSet::RefUniformPair uniform);
+    void add( osg::Uniform* uniform, osg::StateAttribute::OverrideValue mode = osg::StateAttribute::ON );
+    void add( osg::StateSet::RefUniformPair uniform );
 
     /**
     * Delete uniform. Uniforms which are deleted are removed from the parental StateSets too.
     * @param name Name of the uniform
     **/
-    void del( const std::string& name);
+    void del( const std::string& name );
 
     /**
     * Set uniform value.
     **/
-    bool set( const std::string& name, bool b0){return set(0,name,b0);}
-    bool set( const std::string& name, bool b0, bool b1){return set(0,name,b0,b1);}
-    bool set( const std::string& name, bool b0, bool b1, bool b2){return set(0,name,b0,b1,b2);}
-    bool set( const std::string& name, bool b0, bool b1, bool b2, bool b3){return set(0,name,b0,b1,b2,b3);}
+    bool set( const std::string& name, bool b0 )
+    {
+        return set( 0, name, b0 );
+    }
+    bool set( const std::string& name, bool b0, bool b1 )
+    {
+        return set( 0, name, b0, b1 );
+    }
+    bool set( const std::string& name, bool b0, bool b1, bool b2 )
+    {
+        return set( 0, name, b0, b1, b2 );
+    }
+    bool set( const std::string& name, bool b0, bool b1, bool b2, bool b3 )
+    {
+        return set( 0, name, b0, b1, b2, b3 );
+    }
 
-    bool set( const std::string& name, int i0){return set(0,name,i0);}
-    bool set( const std::string& name, int i0, int i1){return set(0,name,i0,i1);}
-    bool set( const std::string& name, int i0, int i1, int i2){return set(0,name,i0,i1,i2);}
-    bool set( const std::string& name, int i0, int i1, int i2, int i3){return set(0,name,i0,i1,i2,i3);}
+    bool set( const std::string& name, int i0 )
+    {
+        return set( 0, name, i0 );
+    }
+    bool set( const std::string& name, int i0, int i1 )
+    {
+        return set( 0, name, i0, i1 );
+    }
+    bool set( const std::string& name, int i0, int i1, int i2 )
+    {
+        return set( 0, name, i0, i1, i2 );
+    }
+    bool set( const std::string& name, int i0, int i1, int i2, int i3 )
+    {
+        return set( 0, name, i0, i1, i2, i3 );
+    }
 
-    bool set( const std::string& name, float b0){return set(0,name,b0);}
-    bool set( const std::string& name, float b0, float b1){return set(0,name,b0,b1);}
-    bool set( const std::string& name, float b0, float b1, float b2){return set(0,name,b0,b1,b2);}
-    bool set( const std::string& name, float b0, float b1, float b2, float b3){return set(0,name,b0,b1,b2,b3);}
+    bool set( const std::string& name, float b0 )
+    {
+        return set( 0, name, b0 );
+    }
+    bool set( const std::string& name, float b0, float b1 )
+    {
+        return set( 0, name, b0, b1 );
+    }
+    bool set( const std::string& name, float b0, float b1, float b2 )
+    {
+        return set( 0, name, b0, b1, b2 );
+    }
+    bool set( const std::string& name, float b0, float b1, float b2, float b3 )
+    {
+        return set( 0, name, b0, b1, b2, b3 );
+    }
 
-    bool set( const std::string& name, const osg::Vec2& v){return set(0,name,v);}
-    bool set( const std::string& name, const osg::Vec3& v){return set(0,name,v);}
-    bool set( const std::string& name, const osg::Vec4& v){return set(0,name,v);}
+    bool set( const std::string& name, const osg::Vec2& v )
+    {
+        return set( 0, name, v );
+    }
+    bool set( const std::string& name, const osg::Vec3& v )
+    {
+        return set( 0, name, v );
+    }
+    bool set( const std::string& name, const osg::Vec4& v )
+    {
+        return set( 0, name, v );
+    }
 
-    bool set( const std::string& name, const osg::Matrix2& m){return set(0,name,m);}
-    bool set( const std::string& name, const osg::Matrix3& m){return set(0,name,m);}
-    bool set( const std::string& name, const osg::Matrixf& m){return set(0,name,m);}
+    bool set( const std::string& name, const osg::Matrix2& m )
+    {
+        return set( 0, name, m );
+    }
+    bool set( const std::string& name, const osg::Matrix3& m )
+    {
+        return set( 0, name, m );
+    }
+    bool set( const std::string& name, const osg::Matrixf& m )
+    {
+        return set( 0, name, m );
+    }
 
-    bool set( unsigned int index, const std::string& name, bool b0);
-    bool set( unsigned int index, const std::string& name, bool b0, bool b1);
-    bool set( unsigned int index, const std::string& name, bool b0, bool b1, bool b2);
-    bool set( unsigned int index, const std::string& name, bool b0, bool b1, bool b2, bool b3);
+    bool set( unsigned int index, const std::string& name, bool b0 );
+    bool set( unsigned int index, const std::string& name, bool b0, bool b1 );
+    bool set( unsigned int index, const std::string& name, bool b0, bool b1, bool b2 );
+    bool set( unsigned int index, const std::string& name, bool b0, bool b1, bool b2, bool b3 );
 
-    bool set( unsigned int index, const std::string& name, int i0);
-    bool set( unsigned int index, const std::string& name, int i0, int i1);
-    bool set( unsigned int index, const std::string& name, int i0, int i1, int i2);
-    bool set( unsigned int index, const std::string& name, int i0, int i1, int i2, int i3);
+    bool set( unsigned int index, const std::string& name, int i0 );
+    bool set( unsigned int index, const std::string& name, int i0, int i1 );
+    bool set( unsigned int index, const std::string& name, int i0, int i1, int i2 );
+    bool set( unsigned int index, const std::string& name, int i0, int i1, int i2, int i3 );
 
-    bool set( unsigned int index, const std::string& name, float b0);
-    bool set( unsigned int index, const std::string& name, float b0, float b1);
-    bool set( unsigned int index, const std::string& name, float b0, float b1, float b2);
-    bool set( unsigned int index, const std::string& name, float b0, float b1, float b2, float b3);
+    bool set( unsigned int index, const std::string& name, float b0 );
+    bool set( unsigned int index, const std::string& name, float b0, float b1 );
+    bool set( unsigned int index, const std::string& name, float b0, float b1, float b2 );
+    bool set( unsigned int index, const std::string& name, float b0, float b1, float b2, float b3 );
 
-    bool set( unsigned int index, const std::string& name, const osg::Vec2& v);
-    bool set( unsigned int index, const std::string& name, const osg::Vec3& v);
-    bool set( unsigned int index, const std::string& name, const osg::Vec4& v);
+    bool set( unsigned int index, const std::string& name, const osg::Vec2& v );
+    bool set( unsigned int index, const std::string& name, const osg::Vec3& v );
+    bool set( unsigned int index, const std::string& name, const osg::Vec4& v );
 
-    bool set( unsigned int index, const std::string& name, const osg::Matrix2& m);
-    bool set( unsigned int index, const std::string& name, const osg::Matrix3& m);
-    bool set( unsigned int index, const std::string& name, const osg::Matrixf& m);
+    bool set( unsigned int index, const std::string& name, const osg::Matrix2& m );
+    bool set( unsigned int index, const std::string& name, const osg::Matrix3& m );
+    bool set( unsigned int index, const std::string& name, const osg::Matrixf& m );
 
 
     /**
@@ -157,10 +211,13 @@ public:
     * @param tex  Texture to bound
     * @param unit Texture unit to which to bound the texture. Specify -1 to automagically choose free texture unit
     **/
-    bool bindTexture(unsigned int index, const std::string& name, osg::Texture* tex, int unit = -1);
+    bool bindTexture( unsigned int index, const std::string& name, osg::Texture* tex, int unit = -1 );
 
     //! @copydoc bindTexture()
-    bool bindTexture( const std::string& name, osg::Texture* tex, int unit = -1) {return bindTexture(0, name, tex, unit);}
+    bool bindTexture( const std::string& name, osg::Texture* tex, int unit = -1 )
+    {
+        return bindTexture( 0, name, tex, unit );
+    }
 
     /**
     * Bind a vertex attribute to a uniform. You have to take care to deliver correct
@@ -169,30 +226,30 @@ public:
     * @param name Name of the uniform variable
     * @param index Attribute index which to bound
     **/
-    bool bindAttribute( const std::string& name, unsigned int index);
+    bool bindAttribute( const std::string& name, unsigned int index );
 
     /**
     * For shader model 4.0 hardwares you can specify the frag data to bound
     **/
-    bool bindFragData( const std::string& name, unsigned int index);
+    bool bindFragData( const std::string& name, unsigned int index );
 
     /**
     * Apply the shader attribute to the given state. This will bind the shader program
     * and set the uniforms. NOTE: The uniforms would be bound in this method,
     * hence the appropriate uniform value might be propagated to the shader in the next frame.
     **/
-    virtual void apply (osg::State &state) const;
+    virtual void apply( osg::State& state ) const;
 
     /** @copydoc osg::StateAttribute::compare() **/
-    virtual int compare( const osg::StateAttribute& sa) const
+    virtual int compare( const osg::StateAttribute& sa ) const
     {
         // Check for equal types, then create the rhs variable
         // used by the COMPARE_StateAttribute_Paramter macros below.
-        COMPARE_StateAttribute_Types(ShaderAttribute, sa)
+        COMPARE_StateAttribute_Types( ShaderAttribute, sa )
 
         // Compare each parameter in turn against the rhs.
-        COMPARE_StateAttribute_Parameter(mMaxTextureUnits)
-        COMPARE_StateAttribute_Parameter(mDirtyTextureBindings)
+        COMPARE_StateAttribute_Parameter( mMaxTextureUnits )
+        COMPARE_StateAttribute_Parameter( mDirtyTextureBindings )
 
         // TODO: currently no uniform comparison is made
 
@@ -203,34 +260,43 @@ public:
     * Get uniform by a its name. If uniform was previously added or created this method will return it.
     * @param name Name of the uniform
     **/
-    osg::Uniform* get( const std::string& name);
+    osg::Uniform* get( const std::string& name );
 
     /**
     * Set uniform list.
     **/
-    void setUniformList( const osg::StateSet::UniformList& list);
+    void setUniformList( const osg::StateSet::UniformList& list );
 
     /**
     * Get correpsonding uniform list.
     **/
-    const osg::StateSet::UniformList& getUniformList() const { return mUniforms; }
+    const osg::StateSet::UniformList& getUniformList() const
+    {
+        return mUniforms;
+    }
 
     /**
     * Set the number of maximal supported texture units. Per default this number is set to 8.
     * This number is needed to setup automagic texture to uniform binding.
     **/
-    void setMaximalSupportedTextureUnits(int i);
+    void setMaximalSupportedTextureUnits( int i );
 
     /**
     * Get maximum supported texture units. The results is the same as set by setMaximalSupportedTextureUnits() method
     **/
-    int getMaximalSupportedTextureUnits() const { return mMaxTextureUnits; }
+    int getMaximalSupportedTextureUnits() const
+    {
+        return mMaxTextureUnits;
+    }
 
     /**
     * Mark the ShaderAttribute as dirty. This will force to reset all the texture binding to
     * parental StateSets on the next apply method. @see bindTexture()
     **/
-    void dirty() { mDirtyTextureBindings = true; }
+    void dirty()
+    {
+        mDirtyTextureBindings = true;
+    }
 
     struct TexUnit
     {
@@ -244,7 +310,7 @@ protected:
     /** Release used memory and close all used shader programs **/
     virtual ~ShaderAttribute();
 
-    typedef std::map<std::string, std::map<int,TexUnit> > TexUnitDb;
+    typedef std::map<std::string, std::map<int, TexUnit> > TexUnitDb;
 
     //! Database to hold the texture to uniform bindings
     TexUnitDb mTexUnits;
@@ -261,7 +327,7 @@ protected:
     /**
     * Set parameters as uniform values.
     **/
-    void addParameter( const std::string& name, osg::Uniform* param, osg::StateAttribute::OverrideValue mode);
+    void addParameter( const std::string& name, osg::Uniform* param, osg::StateAttribute::OverrideValue mode );
 
     /**
     * Reset texture bindings. Call this if you have rebound textures and want to force
@@ -271,7 +337,7 @@ protected:
     void resetTextureUniforms();
 
     //! Convert string type name into type
-    osg::Uniform::Type convertToUniformType( const std::string& name);
+    osg::Uniform::Type convertToUniformType( const std::string& name );
 
 };
 } //end rtt

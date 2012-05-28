@@ -41,8 +41,8 @@
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-FindChildWithNameVisitor::FindChildWithNameVisitor( osg::Node* node, 
-    const std::string& nodeName, bool exactNameMatch, bool ignoreCase )
+FindChildWithNameVisitor::FindChildWithNameVisitor( osg::Node* node,
+        const std::string& nodeName, bool exactNameMatch, bool ignoreCase )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
     mParentName( nodeName ),
@@ -53,7 +53,7 @@ FindChildWithNameVisitor::FindChildWithNameVisitor( osg::Node* node,
     if( m_ignoreCase )
     {
         boost::algorithm::to_lower( mParentName );
-        //std::transform( mParentName.begin(), mParentName.end(), 
+        //std::transform( mParentName.begin(), mParentName.end(),
         //    mParentName.begin(), std::tolower);
     }
     node->accept( *this );
@@ -79,7 +79,7 @@ void FindChildWithNameVisitor::apply( osg::Node& node )
     if( m_ignoreCase )
     {
         boost::algorithm::to_lower( nodeName );
-        //std::transform( nodeName.begin(), nodeName.end(), 
+        //std::transform( nodeName.begin(), nodeName.end(),
         //    nodeName.begin(), std::tolower);
     }
 

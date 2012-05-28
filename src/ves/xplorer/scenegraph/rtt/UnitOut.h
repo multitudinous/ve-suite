@@ -51,7 +51,7 @@ namespace rtt
 {
 class VE_SCENEGRAPH_EXPORTS UnitOut : public Unit
 {
-public:    
+public:
     ///Constructor
     UnitOut();
 

@@ -78,16 +78,16 @@ public:
 private:
     ///Raw Network
     Network* _net;
-    
+
     ///??
     void sweep( Module* );
 
     int visit( int k, std::set<int> connid_ignore,
-                   std::vector<std::vector<int> > & sccs );
+               std::vector<std::vector<int> >& sccs );
     void visit( std::vector<std::vector<int> > adj,
                 std::size_t k,  std::vector<int>& order );
     int  breakdown( std::vector<int> S, std::set<int> connid_ignore,
-                        node_loop &node_loop );
+                    node_loop& node_loop );
 
     std::vector<int> visit_val;
     std::stack<int>  visit_stack;

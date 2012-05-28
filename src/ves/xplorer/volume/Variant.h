@@ -73,7 +73,8 @@ private:
     enum { tailResult = size_t( MaxSize<T>::result ) };
 public:
     enum { result = sizeof( H ) > tailResult ?
-                    sizeof( H ) : size_t( tailResult ) };
+                    sizeof( H ) : size_t( tailResult )
+         };
 };
 
 /**
@@ -127,8 +128,8 @@ typedef LOKI_TYPELIST_36(
     double*,
     long double*,
     void*,
-    Unknown( * )( Unknown ),
-    Unknown* Unknown::*,
+    Unknown(* )( Unknown ),
+    Unknown * Unknown::*,
     Unknown( Unknown::* )( Unknown ),
     Structify<char>,
     Structify<short int>,
@@ -145,7 +146,7 @@ typedef LOKI_TYPELIST_36(
     Structify<double*>,
     Structify<long double*>,
     Structify<void*>,
-    Structify < Unknown( * )( Unknown ) > ,
+    Structify < Unknown(* )( Unknown ) > ,
     Structify<Unknown* Unknown::*>,
     Structify < Unknown( Unknown::* )( Unknown ) >
 )
@@ -170,8 +171,8 @@ struct ComputeAlignBound< Loki::Typelist<H, T>, size >
     typedef typename ComputeAlignBound<T, size>::Result TailResult;
     typedef typename Loki::Select <
     sizeof( H ) <= size,
-    Loki::Typelist<H, TailResult>,
-    TailResult >::Result Result;
+            Loki::Typelist<H, TailResult>,
+            TailResult >::Result Result;
 };
 
 /**
@@ -285,7 +286,7 @@ private:
         // FIXME:  Converter not implemented.
         /*
         template <class T, TList>
-        void Init(bool (**pChangeType)(Variant&), 
+        void Init(bool (**pChangeType)(Variant&),
                   Loki::Type2Type<T> tt, TList)
         {
            typedef typename TList::Head Head;
@@ -335,7 +336,7 @@ private:
         static void Accept( Variant& var, StrictVisitor& visitor )
         {
             typedef typename StrictVisitor::ReturnType RType;
-            Loki::Visitor<T, RType> &v = visitor;
+            Loki::Visitor<T, RType>& v = visitor;
             v.Visit( *reinterpret_cast<T*>( &var.buffer_[0] ) );
         }
 
@@ -343,7 +344,7 @@ private:
                                  ConstStrictVisitor& visitor )
         {
             typedef typename ConstStrictVisitor::ReturnType RType;
-            Loki::Visitor<const T, RType> &v = visitor;
+            Loki::Visitor<const T, RType>& v = visitor;
             v.Visit( *reinterpret_cast<const T*>( &var.buffer_[0] ) );
         }
     };
@@ -360,14 +361,14 @@ public:
         typedef typename TList::Head T;
         new( &buffer_[0] ) T();
         static VTable vtbl_ =
-            {
-                &VTableImpl<T>::TypeId,
-                &VTableImpl<T>::Destroy,
-                &VTableImpl<T>::Clone,
-                &VTableImpl<T>::CloneTypeOnly,
-                &VTableImpl<T>::Accept,
-                &VTableImpl<T>::AcceptConst
-            };
+        {
+            &VTableImpl<T>::TypeId,
+            &VTableImpl<T>::Destroy,
+            &VTableImpl<T>::Clone,
+            &VTableImpl<T>::CloneTypeOnly,
+            &VTableImpl<T>::Accept,
+            &VTableImpl<T>::AcceptConst
+        };
         vptr_ = &vtbl_;
     }
 
@@ -382,14 +383,14 @@ public:
         typedef typename EnsureOccurence<TList, T>::Result Test;
         new( &buffer_[0] ) T( val );
         static VTable vtbl_ =
-            {
-                &VTableImpl<T>::TypeId,
-                &VTableImpl<T>::Destroy,
-                &VTableImpl<T>::Clone,
-                &VTableImpl<T>::CloneTypeOnly,
-                &VTableImpl<T>::Accept,
-                &VTableImpl<T>::AcceptConst
-            };
+        {
+            &VTableImpl<T>::TypeId,
+            &VTableImpl<T>::Destroy,
+            &VTableImpl<T>::Clone,
+            &VTableImpl<T>::CloneTypeOnly,
+            &VTableImpl<T>::Accept,
+            &VTableImpl<T>::AcceptConst
+        };
         vptr_ = &vtbl_;
     }
 

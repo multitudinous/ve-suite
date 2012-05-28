@@ -117,7 +117,7 @@ DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxStrin
 
 bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, ves::open::xml::model::ModelPtr veModel )
 {
-////@begin DataSetLoaderUI member initialisation
+    ////@begin DataSetLoaderUI member initialisation
     m_veModel = veModel;
     lastAddition = -1;
     dataSetList = NULL;
@@ -138,9 +138,9 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
     itemStaticBoxSizer15Static = 0;
     itemStaticBoxSizer19Static = 0;
     m_surfaceWrapChkBox = 0;
-////@end DataSetLoaderUI member initialisation
+    ////@end DataSetLoaderUI member initialisation
 
-////@begin DataSetLoaderUI creation
+    ////@begin DataSetLoaderUI creation
     //SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
     wxDialog::Create( parent, id, caption, pos, size, style );
 
@@ -158,7 +158,7 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
     temp.SetWidth( temp.GetWidth() + 1 );
     SetSize( temp );
     ///this->SetIcon( ve_icon32x32_xpm );
-////@end DataSetLoaderUI creation
+    ////@end DataSetLoaderUI creation
     return true;
 }
 
@@ -168,7 +168,7 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
 
 void DataSetLoaderUI::CreateControls()
 {
-////@begin DataSetLoaderUI content construction
+    ////@begin DataSetLoaderUI content construction
     DataSetLoaderUI* itemDialog1 = this;
 
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -191,7 +191,9 @@ void DataSetLoaderUI::CreateControls()
 
     dataSetList->SetHelpText( _( "Text Entry" ) );
     if( ShowToolTips() )
+    {
         dataSetList->SetToolTip( _( "Text Entry" ) );
+    }
     itemStaticBoxSizer4->Add( dataSetList, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     dataSetList->Raise();
     ///////////////////////////////////////////////////
@@ -206,7 +208,7 @@ void DataSetLoaderUI::CreateControls()
 
     ///////////////////////////////////////////////////////
     itemStaticBoxSizer6Static = new wxStaticBox( itemDialog1, wxID_ANY,
-                                                 _( "DataSet Filename" ) );
+            _( "DataSet Filename" ) );
     wxStaticBoxSizer* itemStaticBoxSizer6 = new wxStaticBoxSizer( itemStaticBoxSizer6Static, wxHORIZONTAL );
     itemStaticBoxSizer4->Add( itemStaticBoxSizer6, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
 
@@ -215,7 +217,9 @@ void DataSetLoaderUI::CreateControls()
                                        wxDefaultSize, wxTE_READONLY );
     dataSetTextEntry->SetHelpText( _( "Text Entry" ) );
     if( ShowToolTips() )
+    {
         dataSetTextEntry->SetToolTip( _( "Text Entry" ) );
+    }
     itemStaticBoxSizer6->Add( dataSetTextEntry, 1, wxALIGN_CENTER_VERTICAL | wxALL | wxEXPAND, 5 );
 
     dataSetOpenButton = new wxButton( itemDialog1, ID_BUTTON,
@@ -223,7 +227,9 @@ void DataSetLoaderUI::CreateControls()
                                       wxDefaultSize, 0 );
     dataSetOpenButton->SetHelpText( _( "Load Data" ) );
     if( ShowToolTips() )
+    {
         dataSetOpenButton->SetToolTip( _( "Load Data" ) );
+    }
     itemStaticBoxSizer6->Add( dataSetOpenButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     ///////////////////////////////////////////////////////
     itemStaticBoxSizer9Static = new wxStaticBox( itemDialog1, wxID_ANY, _( "Precomputed Data Directory" ) );
@@ -233,12 +239,16 @@ void DataSetLoaderUI::CreateControls()
     preComputDirTextEntry = new wxTextCtrl( itemDialog1, ID_TEXTCTRL2, _( "Enter Dir Here-->" ), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
     preComputDirTextEntry->SetHelpText( _( "Text Entry" ) );
     if( ShowToolTips() )
+    {
         preComputDirTextEntry->SetToolTip( _( "Text Entry" ) );
+    }
     itemStaticBoxSizer9->Add( preComputDirTextEntry, 1, wxALIGN_CENTER_VERTICAL | wxALL | wxEXPAND, 5 );
 
     preComputeOpenButton = new wxButton( itemDialog1, ID_BUTTON3, _( "Open" ), wxDefaultPosition, wxDefaultSize, 0 );
     if( ShowToolTips() )
+    {
         preComputeOpenButton->SetToolTip( _( "Precomputed Data Dir" ) );
+    }
     itemStaticBoxSizer9->Add( preComputeOpenButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     preComputDirTextEntry->Raise();
     ///////////////////////////////////////////////////////
@@ -273,7 +283,9 @@ void DataSetLoaderUI::CreateControls()
     transformButton = new wxButton( itemDialog1, ID_BUTTON6, _( "Transform" ), wxDefaultPosition, wxDefaultSize, 0 );
     transformButton->SetHelpText( _( "Transform GUI" ) );
     if( ShowToolTips() )
+    {
         transformButton->SetToolTip( _( "Transform GUI" ) );
+    }
     itemStaticBoxSizer15->Add( transformButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     itemStaticBoxSizer15->Add( 65, 5, 0, wxALIGN_CENTER_VERTICAL | wxALL | wxEXPAND, 5 );
@@ -281,15 +293,17 @@ void DataSetLoaderUI::CreateControls()
     scalarButton = new wxButton( itemDialog1, ID_BUTTON5, _( "Scalar" ), wxDefaultPosition, wxDefaultSize, 0 );
     scalarButton->SetHelpText( _( "Future Use" ) );
     if( ShowToolTips() )
+    {
         scalarButton->SetToolTip( _( "Future Use" ) );
+    }
     scalarButton->Enable( false );
     itemStaticBoxSizer15->Add( scalarButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
+
     m_surfaceWrapChkBox = new wxCheckBox( itemDialog1, ID_CREATE_SURFACE_WRAP, _T( "Create Surface Wrap" ), wxDefaultPosition, wxDefaultSize, 0 );
     m_surfaceWrapChkBox->SetValue( false );
     m_surfaceWrapChkBox->SetHelpText( _( "Create a surface from the 3D dataset" ) );
     itemStaticBoxSizer15->Add( m_surfaceWrapChkBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
+
     transformButton->Raise();
     ///////////////////////////////////////////////////////
     itemStaticBoxSizer19Static = new wxStaticBox( itemDialog1, wxID_ANY, _( "Volumetric Data Directories" ) );
@@ -325,7 +339,7 @@ void DataSetLoaderUI::CreateControls()
 
     itemStdDialogButtonSizer25->Realize();
 
-////@end DataSetLoaderUI content construction
+    ////@end DataSetLoaderUI content construction
 }
 ///////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::InitializeWidgets( void )
@@ -407,10 +421,10 @@ bool DataSetLoaderUI::ShowToolTips()
 wxBitmap DataSetLoaderUI::GetBitmapResource( const wxString& name )
 {
     // Bitmap retrieval
-////@begin DataSetLoaderUI bitmap retrieval
+    ////@begin DataSetLoaderUI bitmap retrieval
     wxUnusedVar( name );
     return wxNullBitmap;
-////@end DataSetLoaderUI bitmap retrieval
+    ////@end DataSetLoaderUI bitmap retrieval
 }
 
 /*!
@@ -420,10 +434,10 @@ wxBitmap DataSetLoaderUI::GetBitmapResource( const wxString& name )
 wxIcon DataSetLoaderUI::GetIconResource( const wxString& name )
 {
     // Icon retrieval
-////@begin DataSetLoaderUI icon retrieval
+    ////@begin DataSetLoaderUI icon retrieval
     wxUnusedVar( name );
     return wxNullIcon;
-////@end DataSetLoaderUI icon retrieval
+    ////@end DataSetLoaderUI icon retrieval
 }
 /*!
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
@@ -432,7 +446,7 @@ wxIcon DataSetLoaderUI::GetIconResource( const wxString& name )
 void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
 {
     //Load a vtk file
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in DataSetLoaderUI.
+    ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in DataSetLoaderUI.
     // Before editing this code, remove the block markers.
     wxPoint pos( 0, 0 );
     wxFileDialog dialog( this,
@@ -460,27 +474,27 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
                 tempDVP = mParamBlock->GetProperty( -1 );
             }
             tempStr = static_cast< const char* >(
-                wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) );
+                          wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) );
             tempDVP->SetData( "VTK_DATA_FILE", tempStr );
-            
+
             if( ves::xplorer::util::fileIO::getExtension( tempStr ) == "vtm" )
             {
                 std::string transDir =
-                ConvertUnicode( datasetFilename.GetPath().c_str() );
+                    ConvertUnicode( datasetFilename.GetPath().c_str() );
                 if( transDir.empty() )
                 {
                     transDir = ".";
                 }
-                std::vector<std::string> transientFile = 
-                    ves::xplorer::util::fileIO::GetFilesInDirectory( 
-                    transDir, ".vtm" );
+                std::vector<std::string> transientFile =
+                    ves::xplorer::util::fileIO::GetFilesInDirectory(
+                        transDir, ".vtm" );
                 if( transientFile.size() > 0 )
                 {
                     wxMessageDialog promptDlg( this,
-                        _( "Is this file part of a transient series?" ),
-                        _( "Transient Data Chooser" ),
-                        wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
-                        wxDefaultPosition );
+                                               _( "Is this file part of a transient series?" ),
+                                               _( "Transient Data Chooser" ),
+                                               wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                                               wxDefaultPosition );
                     int answer = promptDlg.ShowModal();
                     if( answer == wxID_YES )
                     {
@@ -492,7 +506,7 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
                         }
                         //unsigned int translfag = 1;
                         tempDVP->SetData( "VTK_TRANSIENT_SERIES", transDir );
-                    }            
+                    }
                 }
             }
         }
@@ -516,16 +530,16 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
                     arraysDVP = mParamBlock->GetProperty( -1 );
                 }
                 ves::open::xml::OneDStringArrayPtr
-                    stringArray( new ves::open::xml::OneDStringArray() );
+                stringArray( new ves::open::xml::OneDStringArray() );
                 stringArray->SetArray( dataArrayList );
                 arraysDVP->SetData( "VTK_ACTIVE_DATA_ARRAYS", stringArray );
             }
         }
         ves::open::xml::DataValuePairSharedPtr
-            dataValuePair( new ves::open::xml::DataValuePair() );
+        dataValuePair( new ves::open::xml::DataValuePair() );
         dataValuePair->SetData( "CREATE_NEW_DATASETS",
-            ves::open::xml::model::ModelPtr(
-            new ves::open::xml::model::Model( *m_veModel ) ) );
+                                ves::open::xml::model::ModelPtr(
+                                    new ves::open::xml::model::Model( *m_veModel ) ) );
         SendCommandToXplorer( dataValuePair );
     }
 }
@@ -586,12 +600,12 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
             preComputDirTextEntry->SetValue( relativePrecomputedDirPath );
 
             ves::open::xml::DataValuePairSharedPtr dataValuePair(
-               new ves::open::xml::DataValuePair() );
+                new ves::open::xml::DataValuePair() );
             dataValuePair->SetData( "ADD_PRECOMPUTED_DATA_DIR", tempDVP );
             SendCommandToXplorer( dataValuePair );
         }
     }
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON4 in DataSetLoaderUI.
+    ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON4 in DataSetLoaderUI.
 }
 
 /*!
@@ -601,7 +615,7 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
 void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED( event ) )
 {
     // Launch the transform UI
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON6 in DataSetLoaderUI.
+    ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON6 in DataSetLoaderUI.
     // Before editing this code, remove the block markers.
     wxDialog transformDialog( this,
                               ::wxNewId(),
@@ -611,27 +625,27 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED( event ) )
                               wxCAPTION | wxSYSTEM_MENU | wxCLOSE_BOX );
 
     transformDialog.CenterOnParent();
-    
+
     wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
     //wxBoxSizer* notebookSizer = new wxBoxSizer(wxVERTICAL);
     //wxBoxSizer* bottomRow = new wxBoxSizer(wxHORIZONTAL);
-    ves::conductor::util::TransformUI* transformPanel = 
-        new ves::conductor::util::TransformUI( 
+    ves::conductor::util::TransformUI* transformPanel =
+        new ves::conductor::util::TransformUI(
         &transformDialog, _( "Transform Input" ), mParamBlock->GetTransform() );
 
     if( mParamBlock )
     {
-        mainSizer->Add( transformPanel, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+        mainSizer->Add( transformPanel, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
     }
     else
     {
         mainSizer->Add( new TransformUI( &transformDialog, _( "Transform Input" ),
-                        ves::open::xml::TransformPtr() ),
+                                         ves::open::xml::TransformPtr() ),
                         0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
     }
 
-    mainSizer->Add( transformDialog.CreateStdDialogButtonSizer( wxOK|wxCANCEL ), 
-        0, wxALIGN_CENTER_HORIZONTAL|wxALL, 10 );
+    mainSizer->Add( transformDialog.CreateStdDialogButtonSizer( wxOK | wxCANCEL ),
+                    0, wxALIGN_CENTER_HORIZONTAL | wxALL, 10 );
     //set this flag and let wx handle alignment
     //transformDialog.SetAutoLayout( true );
 
@@ -643,13 +657,13 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED( event ) )
     //set parameterblock unique (GUID) id for transform GUI
     if( mParamBlock->GetProperty( "VTK_DATA_FILE" ) )
     {
-        transformPanel->SetParamBlockID( 
+        transformPanel->SetParamBlockID(
             mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
     }
     else
     {
         transformPanel->SetParamBlockID( "NULL" );
-            //mParamBlock->GetID() );
+        //mParamBlock->GetID() );
     }
     transformPanel->SetParamBlockTransform( mParamBlock->GetTransform() );
 
@@ -666,7 +680,7 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED( event ) )
 void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED( event ) )
 {
     //Load data for the texturebased vis
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON2 in DataSetLoaderUI.
+    ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON2 in DataSetLoaderUI.
     // Before editing this code, remove the block markers.
     wxString cwd( ::wxGetCwd() );
     int answer = 0;
@@ -681,7 +695,7 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED( event ) )
                              wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW,
                              wxDefaultPosition );
         dialog.CentreOnParent();
-        
+
         if( dialog.ShowModal() == wxID_OK )
         {
             wxFileName textureDir( dialog.GetPath() );
@@ -705,13 +719,13 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED( event ) )
     for( iter = textureDirs.begin(); iter != textureDirs.end(); ++iter )
     {
         ves::open::xml::DataValuePairPtr tempDVP = mParamBlock->GetProperty( -1 );
-        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB(( *iter ).c_str() ) ) );
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( ( *iter ).c_str() ) ) );
         tempDVP->SetData( "VTK_TEXTURE_DIR_PATH", tempStr );
-        wxString* dirString = new wxString(( *iter ) );
+        wxString* dirString = new wxString( ( *iter ) );
         itemListBox24->InsertItems( 1, dirString, 0 );
         //Send data to xplorer
         ves::open::xml::DataValuePairSharedPtr dataValuePair(
-         new ves::open::xml::DataValuePair() );
+            new ves::open::xml::DataValuePair() );
         dataValuePair->SetData( "ADD_TEXTURE_DATA_DIR", tempDVP );
         SendCommandToXplorer( dataValuePair );
     }
@@ -770,7 +784,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED( event ) 
     wxTextEntryDialog newDataSetName( this,
                                       wxString( _( "New Dataset" ) ),
                                       wxString( _( "Enter name for new Dataset:" ) ),
-                                      wxString( _( "Dataset" ) ), 
+                                      wxString( _( "Dataset" ) ),
                                       wxOK | wxCANCEL | wxCENTRE );
 
     newDataSetName.CentreOnParent();
@@ -779,7 +793,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED( event ) 
     {
         return;
     }
-    
+
 
     if( dataSetList->FindString( newDataSetName.GetValue() ) != wxNOT_FOUND )
     {
@@ -812,12 +826,12 @@ void DataSetLoaderUI::OnDeleteDataset( wxCommandEvent& WXUNUSED( event ) )
     wxString selection = dataSetList->GetStringSelection();
 
     std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( selection.c_str() ) ) );
-    
+
     ves::open::xml::DataValuePairSharedPtr dataFileDVP = mParamBlock->GetProperty( "VTK_DATA_FILE" );
 
     if( !dataFileDVP )
     {
-        wxLogMessage(  wxString( "This dataset has no VTK dataset.", wxConvUTF8 ) );
+        wxLogMessage( wxString( "This dataset has no VTK dataset.", wxConvUTF8 ) );
         return;
     }
     std::string tempDataSetName =
@@ -887,7 +901,7 @@ void DataSetLoaderUI::SendCommandToXplorer(
     {
         return;
     }
-    
+
     //Now send the data to xplorer
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -915,7 +929,7 @@ void DataSetLoaderUI::SendCommandToXplorer(
 ////////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::OnSurfaceWrapCheckBox( wxCommandEvent& WXUNUSED( event ) )
 {
-    ves::open::xml::DataValuePairPtr surfaceDVP = 
+    ves::open::xml::DataValuePairPtr surfaceDVP =
         mParamBlock->GetProperty( "Create Surface Wrap" );
     if( !surfaceDVP )
     {

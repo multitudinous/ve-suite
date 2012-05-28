@@ -55,14 +55,14 @@ public:
     void translateFluentPartToVTK( void );
     void writePolydata( void );
 
-    vtkPolyDataWriter          *writer;
-    vtkPolyData                *polydata;
-    vtkPoints                  *points;
-    vtkFloatArray              **parameterData;
-    vtkTransform               *transform;
-    vtkTransformPolyDataFilter *transFilter;
-    vtkSphereSource   *sphere;
-    vtkGlyph3D        *glyph;
+    vtkPolyDataWriter*          writer;
+    vtkPolyData*                polydata;
+    vtkPoints*                  points;
+    vtkFloatArray**              parameterData;
+    vtkTransform*               transform;
+    vtkTransformPolyDataFilter* transFilter;
+    vtkSphereSource*   sphere;
+    vtkGlyph3D*        glyph;
     vtkLookupTable* lut;
     int numParameters;
 };

@@ -63,8 +63,8 @@ public:
     /*cfdUpdateParameterCallback(const cfdUpdateParameterCallback &copy,
                               const osg::CopyOp &copyop = osg::CopyOp::SHALLOW_COPY);
     */
-    enum cfdParameterType{VECTOR, MATRIX, TIME};
-    enum cfdParameterSize{ONE = 0, TWO, THREE, FOUR};
+    enum cfdParameterType {VECTOR, MATRIX, TIME};
+    enum cfdParameterSize {ONE = 0, TWO, THREE, FOUR};
     virtual void operator()( osg::Uniform* uniVar, osg::NodeVisitor* nv );
 
     void setTypeAndSize( cfdParameterType type,

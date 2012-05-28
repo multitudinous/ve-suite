@@ -52,13 +52,13 @@ class VE_SCENEGRAPH_EXPORTS VTKTextureCreator : public VectorFieldData
 {
 public:
     VTKTextureCreator();
-    
+
     virtual osg::BoundingBox getBoundingBox();
-    
+
     void SetPolyData( vtkPolyData* rawVTKData );
-    
-    void SetActiveVectorAndScalar( const std::string& vectorName, 
-        const std::string& scalarName );
+
+    void SetActiveVectorAndScalar( const std::string& vectorName,
+                                   const std::string& scalarName );
 
     osg::Image* CreateColorTextures( double* dataRange );
 
@@ -69,11 +69,11 @@ protected:
     std::string m_scalarName;
 
     virtual ~VTKTextureCreator();
-    
+
     virtual void internalLoad();
-    
+
     void createDataArrays( float* pos, float* dir, float* scalar );
-    
+
 };
 }
 }

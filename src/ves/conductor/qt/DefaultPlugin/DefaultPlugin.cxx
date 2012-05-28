@@ -44,12 +44,12 @@ namespace conductor
 
 
 DefaultPlugin::DefaultPlugin():
-    m_UIWidget(0),
-    m_ResultWidget(0),
-    m_FinancialDataWidget(0),
-    m_InputVariablesWidget(0),
-    m_ResultsVariablesWidget(0),
-    m_name("Default Plugin")
+    m_UIWidget( 0 ),
+    m_ResultWidget( 0 ),
+    m_FinancialDataWidget( 0 ),
+    m_InputVariablesWidget( 0 ),
+    m_ResultsVariablesWidget( 0 ),
+    m_name( "Default Plugin" )
 {
     m_UIWidget = new DefaultPlugin_UIDialog( 0 );
 }
@@ -102,7 +102,7 @@ void DefaultPlugin::DeleteWidgets()
     delete m_InputVariablesWidget;
     delete m_ResultsVariablesWidget;
     m_UIWidget = m_ResultWidget = m_FinancialDataWidget =
-                 m_InputVariablesWidget = m_ResultsVariablesWidget = 0;
+                                      m_InputVariablesWidget = m_ResultsVariablesWidget = 0;
 }
 
 }

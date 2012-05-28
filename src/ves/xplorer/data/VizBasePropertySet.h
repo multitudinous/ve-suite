@@ -76,14 +76,17 @@ public:
     void UpdateDirectionSelection( PropertyPtr property );
     /// Override from PropertySet
     virtual void EnableLiveProperties( bool live );
-    
+
 protected:
     ///Registration of this property set for a child case
     ///\param tableName The table to be registered
     ///\post The PropertySet can now populate this table or read this table
     void RegisterPropertySet( std::string const& tableName );
     ///Create the skeleton for populating this PropertSet
-    virtual void CreateSkeleton(){;}
+    virtual void CreateSkeleton()
+    {
+        ;
+    }
     ///Delete this PropertySet from the DB. We override this from PropertySet.
     ///\param session The DB sesion holding this data
     ///\param TableName The TableName we are deleting
@@ -103,7 +106,7 @@ protected:
     ///The add viz signal
     ves::util::TwoStringSignal_type* m_addVizSignal;
 
-    
+
 private:
 };
 } // namespace data

@@ -103,14 +103,14 @@ bool MaterialPresent::CheckStateSet( osg::StateSet* stateSet )
         for( unsigned int i = 0; i < 16; ++i )
         {
             osg::StateAttribute* sa = stateSet->getTextureAttribute(
-                i, osg::StateAttribute::TEXTURE );
+                                          i, osg::StateAttribute::TEXTURE );
             //Only worry about 2D textures for now
             osg::Texture2D* tex2D = dynamic_cast< osg::Texture2D* >( sa );
             if( tex2D )
             {
                 //std::cout << tex2D->getImage()->getFileName() << std::endl;
                 /*stateSet->setTextureAttributeAndModes(
-                    i, tex2D, 
+                    i, tex2D,
                     osg::StateAttribute::ON|
                     osg::StateAttribute::PROTECTED|
                     osg::StateAttribute::OVERRIDE );*/
@@ -124,7 +124,7 @@ bool MaterialPresent::CheckStateSet( osg::StateSet* stateSet )
                     stateSet->addUniform(
                         new osg::Uniform( "textureZeroIsBound", true ) );
                 }
-                
+
                 if( i == 1 && mFileHasMaterial )
                 {
                     stateSet->addUniform( new osg::Uniform( ss.str().c_str(), int( i ) ) );
@@ -132,7 +132,7 @@ bool MaterialPresent::CheckStateSet( osg::StateSet* stateSet )
                     mHasSecondMaterial = true;
                     stateSet->addUniform(
                         new osg::Uniform( "textureOneIsBound", true ) );
-                }   
+                }
             }
         }
     }

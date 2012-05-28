@@ -78,7 +78,7 @@ public:
      * Sets a value of a scalar dataset at a particular index.
      *
      * @param   name     the name of the scalar to set a value for.
-     * @param   idx      the index of the value to set. 
+     * @param   idx      the index of the value to set.
      * @param   value    the value to set.
      *
      * @return     true if successful, false otherwise.
@@ -86,7 +86,7 @@ public:
     bool setScalar( const std::string& name, const size_t idx,
                     const float value )
     {
-        if (( mScalarMap.find( name ) == mScalarMap.end() && idx != 0 ) ||
+        if( ( mScalarMap.find( name ) == mScalarMap.end() && idx != 0 ) ||
                 idx >= mScalarMap[name].size() )
         {
             return false;

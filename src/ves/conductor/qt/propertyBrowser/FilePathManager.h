@@ -50,23 +50,32 @@ class FilePathManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    FilePathManager(QObject *parent = 0)
-        : QtAbstractPropertyManager(parent)
-            { }
+    FilePathManager( QObject* parent = 0 )
+        : QtAbstractPropertyManager( parent )
+    { }
 
-    QString value(const QtProperty *property) const;
-    QString filter(const QtProperty *property) const;
+    QString value( const QtProperty* property ) const;
+    QString filter( const QtProperty* property ) const;
 
 public Q_SLOTS:
-    void setValue(QtProperty *property, const QString &val);
-    void setFilter(QtProperty *property, const QString &fil);
+    void setValue( QtProperty* property, const QString& val );
+    void setFilter( QtProperty* property, const QString& fil );
 Q_SIGNALS:
-    void valueChanged(QtProperty *property, const QString &val);
-    void filterChanged(QtProperty *property, const QString &fil);
+    void valueChanged( QtProperty* property, const QString& val );
+    void filterChanged( QtProperty* property, const QString& fil );
 protected:
-    virtual QString valueText(const QtProperty *property) const { return value(property); }
-    virtual void initializeProperty(QtProperty *property) { theValues[property] = Data(); }
-    virtual void uninitializeProperty(QtProperty *property) { theValues.remove(property); }
+    virtual QString valueText( const QtProperty* property ) const
+    {
+        return value( property );
+    }
+    virtual void initializeProperty( QtProperty* property )
+    {
+        theValues[property] = Data();
+    }
+    virtual void uninitializeProperty( QtProperty* property )
+    {
+        theValues.remove( property );
+    }
 private:
 
     struct Data
@@ -75,7 +84,7 @@ private:
         QString filter;
     };
 
-    QMap<const QtProperty *, Data> theValues;
+    QMap<const QtProperty*, Data> theValues;
 };
 
 }

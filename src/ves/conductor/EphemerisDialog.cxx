@@ -76,15 +76,15 @@ BEGIN_EVENT_TABLE( EphemerisDialog, wxDialog )
     EVT_BUTTON( EPHEMERISDIALOG_LOAD_LOCATION_BUTTON, EphemerisDialog::OnLoadLocationInformation )
     EVT_BUTTON( EPHEMERISDIALOG_SAVE_LOCATION_BUTTON, EphemerisDialog::OnSaveLocationInformation )
     EVT_FILEPICKER_CHANGED( EPHEMERISDIALOG_LOAD_HEIGHT_MAP, EphemerisDialog::OnLoadHeightMap )
-    EVT_CHECKBOX( EPHEMERISDIALOG_TOGGLE_EPHEMERIS, EphemerisDialog::OnToggleDisplay)
+    EVT_CHECKBOX( EPHEMERISDIALOG_TOGGLE_EPHEMERIS, EphemerisDialog::OnToggleDisplay )
 END_EVENT_TABLE()
 ////Event Table End
 /////////////////////////////////////////////////////////////////
-EphemerisDialog::EphemerisDialog( wxWindow *parent, wxWindowID id,
-                                  const wxString &title,
-                                  const wxPoint &position,
+EphemerisDialog::EphemerisDialog( wxWindow* parent, wxWindowID id,
+                                  const wxString& title,
+                                  const wxPoint& position,
                                   const wxSize& size, long style )
-        : wxDialog( parent, id, title, position, size, style )
+    : wxDialog( parent, id, title, position, size, style )
 {
     CreateGUIControls();
 }
@@ -230,26 +230,26 @@ void EphemerisDialog::CreateGUIControls()
     m_lonMinutesSymbol->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_longitudeSizer->Add( m_lonMinutesSymbol, 0, wxALIGN_CENTER | wxALL, 5 );
 
-    wxStaticBox* locationOptions = new wxStaticBox(m_latitudeLongitude, wxID_ANY, wxT("Locations"));
-    wxStaticBoxSizer* locationButtonSizer = new wxStaticBoxSizer(locationOptions, wxHORIZONTAL);
-    m_latLongSizer->Add(locationButtonSizer, 1, wxALIGN_CENTER | wxALL, 5);
-    m_saveLocationButton = new wxButton(m_latitudeLongitude, 
-                                            EPHEMERISDIALOG_SAVE_LOCATION_BUTTON,
-                                            wxT("Save..."));
-    locationButtonSizer->Add(m_saveLocationButton, 1, wxALIGN_CENTER | wxALL, 5);
-    m_loadLocationButton = new wxButton(m_latitudeLongitude, 
-                                            EPHEMERISDIALOG_LOAD_LOCATION_BUTTON,
-                                            wxT("Load..."));
-    locationButtonSizer->Add(m_loadLocationButton, 1, wxALIGN_CENTER | wxALL, 5);
-    wxStaticBox* heightFieldFile = new wxStaticBox(m_latitudeLongitude, wxID_ANY, wxT("Terrain Map"));
-    wxStaticBoxSizer* heightFieldSizer = new wxStaticBoxSizer(heightFieldFile, wxHORIZONTAL);
-    m_latLongSizer->Add(heightFieldSizer, 1, wxALIGN_CENTER | wxALL, 5);
-    m_heightMapSelector = new wxFilePickerCtrl( m_latitudeLongitude, 
-                                                      EPHEMERISDIALOG_LOAD_HEIGHT_MAP,
-                                                      ::wxGetCwd(),
-                                                      wxT("Height Field"),
-                                                      wxT("Image Files (*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG;*.rgb;*.RGB)|*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG;*.rgb;*.RGB"));
-        heightFieldSizer->Add(m_heightMapSelector, 1, wxALIGN_CENTER | wxALL, 5);
+    wxStaticBox* locationOptions = new wxStaticBox( m_latitudeLongitude, wxID_ANY, wxT( "Locations" ) );
+    wxStaticBoxSizer* locationButtonSizer = new wxStaticBoxSizer( locationOptions, wxHORIZONTAL );
+    m_latLongSizer->Add( locationButtonSizer, 1, wxALIGN_CENTER | wxALL, 5 );
+    m_saveLocationButton = new wxButton( m_latitudeLongitude,
+                                         EPHEMERISDIALOG_SAVE_LOCATION_BUTTON,
+                                         wxT( "Save..." ) );
+    locationButtonSizer->Add( m_saveLocationButton, 1, wxALIGN_CENTER | wxALL, 5 );
+    m_loadLocationButton = new wxButton( m_latitudeLongitude,
+                                         EPHEMERISDIALOG_LOAD_LOCATION_BUTTON,
+                                         wxT( "Load..." ) );
+    locationButtonSizer->Add( m_loadLocationButton, 1, wxALIGN_CENTER | wxALL, 5 );
+    wxStaticBox* heightFieldFile = new wxStaticBox( m_latitudeLongitude, wxID_ANY, wxT( "Terrain Map" ) );
+    wxStaticBoxSizer* heightFieldSizer = new wxStaticBoxSizer( heightFieldFile, wxHORIZONTAL );
+    m_latLongSizer->Add( heightFieldSizer, 1, wxALIGN_CENTER | wxALL, 5 );
+    m_heightMapSelector = new wxFilePickerCtrl( m_latitudeLongitude,
+            EPHEMERISDIALOG_LOAD_HEIGHT_MAP,
+            ::wxGetCwd(),
+            wxT( "Height Field" ),
+            wxT( "Image Files (*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG;*.rgb;*.RGB)|*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG;*.rgb;*.RGB" ) );
+    heightFieldSizer->Add( m_heightMapSelector, 1, wxALIGN_CENTER | wxALL, 5 );
     wxArrayString arrayStringFor_m_lonHemisphere;
     arrayStringFor_m_lonHemisphere.Add( wxT( "East" ) );
     arrayStringFor_m_lonHemisphere.Add( wxT( "West" ) );
@@ -264,12 +264,12 @@ void EphemerisDialog::CreateGUIControls()
     m_mainSizer->Add( m_buttonsSizer, 0, wxALIGN_CENTER | wxALL, 5 );
 
     m_ephemerisToggleCheck = new wxCheckBox( this, EPHEMERISDIALOG_TOGGLE_EPHEMERIS,
-                                             wxT( "Display Ephemeris Data" ) );
+            wxT( "Display Ephemeris Data" ) );
 
-    m_ephemerisToggleCheck->SetFont( wxFont( 9, wxSWISS, wxNORMAL, 
-                                             wxNORMAL, false,
-                                             wxT( "Segoe UI" ) ) );
-    m_ephemerisToggleCheck->SetValue(true);
+    m_ephemerisToggleCheck->SetFont( wxFont( 9, wxSWISS, wxNORMAL,
+                                     wxNORMAL, false,
+                                     wxT( "Segoe UI" ) ) );
+    m_ephemerisToggleCheck->SetValue( true );
     m_buttonsSizer->Add( m_ephemerisToggleCheck, 0, wxALIGN_CENTER | wxALL, 5 );
 
     m_cancel = new wxButton( this, wxID_CANCEL, wxT( "Cancel" ),
@@ -320,19 +320,19 @@ void EphemerisDialog::CreateGUIControls()
     m_latitudeDecimalValue = DataValuePairPtr( new ves::open::xml::DataValuePair() );
     m_latitudeDecimalValue->SetData( "Latitude", 0.0 );
 
-    m_latitudeDirectionValue = DataValuePairPtr( new ves::open::xml::DataValuePair());
+    m_latitudeDirectionValue = DataValuePairPtr( new ves::open::xml::DataValuePair() );
     m_latitudeDirectionValue->SetData( "Latitude Direction", "North" );
 
-    m_longitudeDecimalValue = DataValuePairPtr( new ves::open::xml::DataValuePair());
+    m_longitudeDecimalValue = DataValuePairPtr( new ves::open::xml::DataValuePair() );
     m_longitudeDecimalValue->SetData( "Longitude", 0.0 );
 
-    m_longitudeDirectionValue = DataValuePairPtr( new ves::open::xml::DataValuePair());
+    m_longitudeDirectionValue = DataValuePairPtr( new ves::open::xml::DataValuePair() );
     m_longitudeDirectionValue->SetData( "Longitude Direction", "East" );
 
-    m_dateAndTimeInfo = DataValuePairPtr( new ves::open::xml::DataValuePair());
+    m_dateAndTimeInfo = DataValuePairPtr( new ves::open::xml::DataValuePair() );
     UpdateDateAndTimeInfo();
     ReadLocationInformation();
-    m_heightMapInfo = DataValuePairPtr( new ves::open::xml::DataValuePair());
+    m_heightMapInfo = DataValuePairPtr( new ves::open::xml::DataValuePair() );
     m_heightMapInfo->SetData( "Height Map", std::string( "Default" ) );
 }
 //////////////////////////////////////////////////////
@@ -360,11 +360,11 @@ void EphemerisDialog::OnToggleDisplay( wxCommandEvent& event )
     ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand(
         command->GetCommandName(), command );
     ves::conductor::util::CORBAServiceList::instance()->
-        SendCommandStringToXplorer( command );
+    SendCommandStringToXplorer( command );
 }
 //////////////////////////////////////////////////////////////////
 void EphemerisDialog::SetLatitudeAndLongitudeOnGUI( double latitude,
-                                                    double longitude )
+        double longitude )
 {
     m_lonHemisphere->SetSelection( 0 );
     m_latHemisphere->SetSelection( 0 );
@@ -396,14 +396,14 @@ void EphemerisDialog::SetLatitudeAndLongitudeOnGUI( double latitude,
 ///////////////////////////////////////////////////////////////
 double
 EphemerisDialog::ConvertSexagesimalComponentToDecimal( int minutesOrSeconds,
-                                                       bool isMinutes )
+        bool isMinutes )
 {
     return ( isMinutes ) ? double( minutesOrSeconds ) / 60.0 : double( minutesOrSeconds ) / 3600.0;
 }
 ///////////////////////////////////////////////////////////////////
 double EphemerisDialog::ConvertSexagesimalToDecimal( int degree,
-                                                     int minutes,
-                                                     int seconds )
+        int minutes,
+        int seconds )
 {
     double degreeConversion = degree;
     double minConversion = double( minutes ) / 60.0;
@@ -512,7 +512,7 @@ void EphemerisDialog::EnsureHour( int hourChange )
 /////////////////////////////////////////////
 void EphemerisDialog::UpdateDateAndTimeInfo()
 {
-    ves::open::xml::OneDIntArrayPtr dateAndTime( 
+    ves::open::xml::OneDIntArrayPtr dateAndTime(
         new ves::open::xml::OneDIntArray() );
     wxDateTime dt = m_calendar->GetDate();
 
@@ -570,7 +570,7 @@ void EphemerisDialog::UpdateAutoDateTime( bool useAutoDateTime )
     CommandPtr ephemerisAutoDateTime( new Command() );
     ephemerisAutoDateTime->SetCommandName( "Ephemeris Auto Date and Time" );
     DataValuePairPtr autoDateTime( new ves::open::xml::DataValuePair() );
-    autoDateTime->SetData( "Auto Date Time", static_cast<long int>(( useAutoDateTime ) ? 1 : 0 ) );
+    autoDateTime->SetData( "Auto Date Time", static_cast<long int>( ( useAutoDateTime ) ? 1 : 0 ) );
     ephemerisAutoDateTime->AddDataValuePair( autoDateTime );
 
     ves::conductor::UserPreferencesDataBuffer::instance()
@@ -598,10 +598,10 @@ void EphemerisDialog::OnLoadLocationInformation( wxCommandEvent& event )
     {
         return;
     }
-    
+
     wxArrayString locations;
-    for( std::map<std::string, ves::open::xml::CommandPtr>::iterator iter = 
-        m_storedLocations.begin(); iter != m_storedLocations.end(); ++iter )
+    for( std::map<std::string, ves::open::xml::CommandPtr>::iterator iter =
+                m_storedLocations.begin(); iter != m_storedLocations.end(); ++iter )
     {
         locations.Add( wxString( iter->first.c_str(), wxConvUTF8 ) );
     }
@@ -614,10 +614,10 @@ void EphemerisDialog::OnLoadLocationInformation( wxCommandEvent& event )
     {
         std::string location =
             ConvertUnicode( selectedLocation.GetStringSelection().GetData() );
-            
-        std::map<std::string, ves::open::xml::CommandPtr>::iterator 
-            foundLocation = m_storedLocations.find( location );
-            
+
+        std::map<std::string, ves::open::xml::CommandPtr>::iterator
+        foundLocation = m_storedLocations.find( location );
+
         if( foundLocation == m_storedLocations.end() )
         {
             return;
@@ -635,19 +635,19 @@ void EphemerisDialog::OnLoadLocationInformation( wxCommandEvent& event )
         {
             latitude = -1 * latitude;
         }
-        
+
         foundLocation->second->GetDataValuePair( "Longitude" )->GetData( longitude );
         foundLocation->second->GetDataValuePair( "Longitude Direction" )->GetData( eastWest );
         if( eastWest == "West" )
         {
             longitude = -1 * longitude;
         }
-        
+
         SetLatitudeAndLongitudeOnGUI( latitude, longitude );
         foundLocation->second->GetDataValuePair( "Height Map" )->GetData( heightMap );
         m_heightMapSelector->SetPath( wxString( heightMap.c_str(), wxConvUTF8 ) );
         wxFileDirPickerEvent emptyEvent;
-        OnLoadHeightMap(emptyEvent);
+        OnLoadHeightMap( emptyEvent );
     }
 }
 //////////////////////////////////////////////////////////////////////
@@ -668,7 +668,7 @@ void EphemerisDialog::OnSaveLocationInformation( wxCommandEvent& event )
     ephemerisData->AddDataValuePair( DataValuePairPtr( new ves::open::xml::DataValuePair( *m_latitudeDecimalValue ) ) );
     ephemerisData->AddDataValuePair( DataValuePairPtr( new ves::open::xml::DataValuePair( *m_latitudeDirectionValue ) ) );
     ephemerisData->AddDataValuePair( DataValuePairPtr( new ves::open::xml::DataValuePair( *m_longitudeDecimalValue ) ) );
-    ephemerisData->AddDataValuePair( DataValuePairPtr( new ves::open::xml::DataValuePair( *m_longitudeDirectionValue ))  );
+    ephemerisData->AddDataValuePair( DataValuePairPtr( new ves::open::xml::DataValuePair( *m_longitudeDirectionValue ) ) );
     ephemerisData->AddDataValuePair( DataValuePairPtr( new ves::open::xml::DataValuePair( *m_heightMapInfo ) ) );
     // ephemerisData->AddDataValuePair(new ves::open::xml::DataValuePair(*m_dateAndTimeInfo));
     m_storedLocations[ephemerisData->GetCommandName()] = ephemerisData;
@@ -723,7 +723,7 @@ void EphemerisDialog::ReadLocationInformation()
                                           ConvertUnicode( longitudeDirection.c_str() ) );
         locationData->AddDataValuePair( longitudeDirectionValue );
 
-        ves::open::xml::DataValuePairPtr heightMapData( 
+        ves::open::xml::DataValuePairPtr heightMapData(
             new ves::open::xml::DataValuePair() );
         heightMapData->SetData( "Height Map",
                                 ConvertUnicode( heightMap.c_str() ) );
@@ -741,13 +741,13 @@ void EphemerisDialog::WriteLocationInformation()
 {
     wxConfig* config  = dynamic_cast<wxConfig*>( wxConfig::Get() );
     int numLocations = 0;
-    for( std::map< std::string, ves::open::xml::CommandPtr >::iterator iter = 
-        m_storedLocations.begin(); iter != m_storedLocations.end(); ++iter )
+    for( std::map< std::string, ves::open::xml::CommandPtr >::iterator iter =
+                m_storedLocations.begin(); iter != m_storedLocations.end(); ++iter )
     {
         wxString key = _T( "EphemerisLocation_" ) +
-            wxString::Format( wxT( "%d" ), numLocations );
+                       wxString::Format( wxT( "%d" ), numLocations );
         config->Write( key + _T( "/" ) + _T( "Name" ),
-            wxString( iter->second->GetCommandName().c_str(), wxConvUTF8 ) );
+                       wxString( iter->second->GetCommandName().c_str(), wxConvUTF8 ) );
         _writeLocation( iter->second, key );
         numLocations++;
     }
@@ -760,9 +760,9 @@ void EphemerisDialog::_writeLocation( ves::open::xml::CommandPtr location,
     size_t nDvps = location->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < nDvps; ++i )
     {
-        ves::open::xml::DataValuePairPtr locationInfo = 
+        ves::open::xml::DataValuePairPtr locationInfo =
             location->GetDataValuePair( i );
-        if (( locationInfo->GetDataName() == std::string( "Latitude" ) ) ||
+        if( ( locationInfo->GetDataName() == std::string( "Latitude" ) ) ||
                 ( locationInfo->GetDataName() == std::string( "Longitude" ) ) )
         {
             config->Write( keySection +
@@ -785,18 +785,18 @@ void EphemerisDialog::_writeLocation( ves::open::xml::CommandPtr location,
 //////////////////////////////////////////////////////////////////
 void EphemerisDialog::OnLoadHeightMap( wxFileDirPickerEvent& event )
 {
-    m_heightMapInfo->SetData( "Height Map", 
-        ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
+    m_heightMapInfo->SetData( "Height Map",
+                              ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
     CommandPtr ephemerisHeightMapInfo( new Command() );
     ephemerisHeightMapInfo->SetCommandName( "Ephemeris Height Map" );
 
     DataValuePairPtr heightMapInfo( new ves::open::xml::DataValuePair() );
-    heightMapInfo->SetData( "Height Map", 
-        ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
+    heightMapInfo->SetData( "Height Map",
+                            ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
     ephemerisHeightMapInfo->AddDataValuePair( heightMapInfo );
 
-    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand( 
+    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand(
         ephemerisHeightMapInfo->GetCommandName(), ephemerisHeightMapInfo );
     ves::conductor::util::CORBAServiceList::instance()->
-        SendCommandStringToXplorer( ephemerisHeightMapInfo );
+    SendCommandStringToXplorer( ephemerisHeightMapInfo );
 }

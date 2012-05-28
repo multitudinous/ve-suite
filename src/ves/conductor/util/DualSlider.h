@@ -119,7 +119,7 @@ public:
     double GetMaxSliderValue();
 
     /*!\class DualSlider::SliderCallback
-     *Class that allows the user to do operations based on slider events 
+     *Class that allows the user to do operations based on slider events
      */
     class SliderCallback
     {
@@ -165,7 +165,7 @@ protected:
     ///Handle stop events on the sliders
     ///\param event wxScollEvent
     void _onStop( wxScrollEvent& event );
-    
+
     ///Handle events for spinners
     void UpdateSlider( wxCommandEvent& event );
 
@@ -179,7 +179,7 @@ protected:
     ///Ensure that sliders don't cross over.
     ///\param callbackID The slider on the dial that's moving
     void UpdateSpinnerValues( int callbackID );
-    
+
     int _range[2];///<Slider value bounds.
     unsigned int _buffer;///<Set the minimum space between sliders
     wxSlider* _minSlider;///<Minimum slider.\m Displayed on the top of the pair
@@ -189,7 +189,7 @@ protected:
     wxSpinCtrlDbl* m_minSpinner;
     ///Max double spinner
     wxSpinCtrlDbl* m_maxSpinner;
-    
+
     std::map<int, SliderCallback*> _callbacks;///<Map for the slider callbacks.
 
     DECLARE_EVENT_TABLE()

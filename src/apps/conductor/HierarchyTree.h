@@ -48,18 +48,18 @@ HierarchyTree API
 //Forward declaration of classes
 namespace ves
 {
-    namespace conductor
-    {
-        class Canvas;
-        class UIPluginBase;
-    }
+namespace conductor
+{
+class Canvas;
+class UIPluginBase;
+}
 }
 class PluginLoader;
 
 class HierarchyTree : public wxTreeCtrl
 {
 public:
-    
+
     ///Default constructor
     HierarchyTree()
     {
@@ -67,8 +67,8 @@ public:
     }
 
     ///Normal constructor
-    HierarchyTree( wxWindow *parent, const wxWindowID id, const wxPoint& pos,
-        const wxSize& size, long style );
+    HierarchyTree( wxWindow* parent, const wxWindowID id, const wxPoint& pos,
+                   const wxSize& size, long style );
 
     ///Destructor
     virtual ~HierarchyTree();
@@ -87,20 +87,20 @@ public:
 
     ///Set the canvas to work with
     ///\param can canvas to work with
-    void SetCanvas( ves::conductor::Canvas *can )
+    void SetCanvas( ves::conductor::Canvas* can )
     {
         m_canvas = can;
     }
-    
+
     ///add a module to the tree
-    void AddtoTree( ves::conductor::UIPluginBase *cur_module );
+    void AddtoTree( ves::conductor::UIPluginBase* cur_module );
 
     ///remove a module to the tree
     void RemoveFromTree( unsigned int itemId );
-    
-    ///used with making hierarchy blocks to add a defautl block to new level 
+
+    ///used with making hierarchy blocks to add a defautl block to new level
     void AppendToTree( unsigned int parentID, unsigned int itemId );
-    
+
     ///change the item
     void SetTreeItemName( unsigned int itemId, wxString name );
 
@@ -115,25 +115,25 @@ public:
     void Clear();
 
 protected:
-    
+
     ///The size of the images
     int m_imageSize;
-    
+
     ///single click selection
     void OnSelChanged( wxTreeEvent& event );
-    
+
     //when expanding
     void OnExpanded( wxTreeEvent& event );
-    
+
     //right clicking
     void OnRightClick( wxTreeEvent& event );
-    
+
     //double clicking
     void OnDoubleClick( wxTreeEvent& event );
-    
+
     ///used to select the plugin
     void SelectNetworkPlugin( wxTreeItemId treeId );
-    
+
     ///post right click menu events up to plugin.
     void ProcessRightClickMenuEvents( wxCommandEvent& event );
 
@@ -141,13 +141,13 @@ protected:
     wxTreeItemId m_rootId;
     wxTreeItemId m_selection;
     wxTreeItemId m_currentLevelId;
-    
+
     ///a pointer to the main canvas
     ves::conductor::Canvas* m_canvas;
-    
+
     ///the list of images
-    wxImageList *images;
-    
+    wxImageList* images;
+
     ///the default lookup
     std::map< std::string, wxImage > defaultIconMap;
 
@@ -155,7 +155,7 @@ protected:
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >
-            ( wxConvCurrent->cWX2MB( data ) ) );
+                             ( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
 
@@ -164,8 +164,8 @@ protected:
 
     ///used for recursively populating sub systems
     void PopulateLevel( wxTreeItemId parentLeaf,
-        std::vector< ves::open::xml::model::ModelPtr > models,
-        std::string id );
+                        std::vector< ves::open::xml::model::ModelPtr > models,
+                        std::string id );
 
     DECLARE_EVENT_TABLE();
 };

@@ -74,7 +74,7 @@ namespace cad
 static ves::xplorer::ModelCADHandler* GetModelCADHandler()
 {
     ves::xplorer::Model* activeModel =
-            ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        ves::xplorer::ModelHandler::instance()->GetActiveModel();
 
     if( activeModel )
     {
@@ -95,13 +95,13 @@ static ves::xplorer::ModelCADHandler* GetModelCADHandler()
   *                  x, y, z scale at the last three indices.
   **/
 static void TransformCADNode( const std::string& nodeID,
-                   const std::vector<double>& transform )
+                              const std::vector<double>& transform )
 {
-    STATIC_LOG_INFO("xplorer.CADSlots","TransformCADNode nodeID: " << nodeID << ", transform: ("
+    STATIC_LOG_INFO( "xplorer.CADSlots", "TransformCADNode nodeID: " << nodeID << ", transform: ("
                      << transform[0] << "," << transform[1] << "," << transform[2] << "), ("
                      << transform[3] << "," << transform[4] << "," << transform[5] << "), ("
                      << transform[6] << "," << transform[7] << "," << transform[8] << ")"
-                      );
+                   );
     ModelCADHandler* cadHandler = GetModelCADHandler();
 
     if( cadHandler )
@@ -123,7 +123,7 @@ static void TransformCADNode( const std::string& nodeID,
             // separate translation, rotation, and scale pieces.
             std::vector<double>::const_iterator start = transform.begin();
             std::vector<double>::const_iterator stop = transform.begin() + 3;
-            std::vector<double> translation( start, stop  );
+            std::vector<double> translation( start, stop );
             start += 3;
             stop += 3;
             std::vector<double> rotation( start, stop );
@@ -145,7 +145,7 @@ static void TransformCADNode( const std::string& nodeID,
   *                transparent and 1 is fully opaque
   */
 static void SetOpacityOnCADNode( const std::string& nodeID,
-                       double opacity )
+                                 double opacity )
 {
     ModelCADHandler* cadHandler = GetModelCADHandler();
 
@@ -161,7 +161,7 @@ static void SetOpacityOnCADNode( const std::string& nodeID,
   * @param visible Whether the CAD should be visible
   */
 static void ToggleCADNode( const std::string& nodeID,
-                    bool const& visible )
+                           bool const& visible )
 {
     ModelCADHandler* cadHandler = GetModelCADHandler();
 
@@ -175,12 +175,12 @@ static void ToggleCADNode( const std::string& nodeID,
 
             //Toggle all children on/off rather than the assembly
             ves::xplorer::scenegraph::util::ToggleNodeVisitor
-                tnv( tempDCS, visible, "" );
+            tnv( tempDCS, visible, "" );
         }
-        else if ( cadHandler->PartExists( nodeID ) )
+        else if( cadHandler->PartExists( nodeID ) )
         {
             cadHandler->GetPart( nodeID )->GetDCS()->
-                ToggleDisplay( visible );
+            ToggleDisplay( visible );
             //Now check to make sure parent is toggled on if this was a toggle on
 
             // ^^^ There was no code following the above comment in CADToggleEH.cxx
@@ -206,19 +206,19 @@ static void SetCADPhysicsMesh( const std::string& nodeID,
     }
 
     if( meshDetails.size() == 4 )
-    {        
-        const std::string motion = meshDetails.at(0);
-        const std::string lod = meshDetails.at(1);
-        const std::string mesh = meshDetails.at(2);
-        const std::string decimation = meshDetails.at(3);
+    {
+        const std::string motion = meshDetails.at( 0 );
+        const std::string lod = meshDetails.at( 1 );
+        const std::string mesh = meshDetails.at( 2 );
+        const std::string decimation = meshDetails.at( 3 );
 
         //if( cadHandler->PartExists( nodeID ) )
         {
             part->GetPhysicsRigidBody()->
-                CreateRigidBody( lod, motion, mesh, decimation );
+            CreateRigidBody( lod, motion, mesh, decimation );
             vprDEBUG( vesDBG, 1 ) << "|\tChanged Physics Mesh: "
-            << part->GetFilename()
-            << std::endl << vprDEBUG_FLUSH;
+                                  << part->GetFilename()
+                                  << std::endl << vprDEBUG_FLUSH;
         }
     }
 }
@@ -231,12 +231,12 @@ static void SetCADPhysicsMesh( const std::string& nodeID,
   * @param nodeType Type of node ("Part" or "Assembly")
   */
 static void DeleteCADNode( std::string const& parentID, std::string const& nodeID,
-                        std::string const& nodeType )
+                           std::string const& nodeType )
 {
     try
     {
         vprDEBUG( vesDBG, 1 ) << "|\t---Deleting node---" << std::endl
-            << vprDEBUG_FLUSH;
+                              << vprDEBUG_FLUSH;
 
         ModelCADHandler* m_cadHandler = GetModelCADHandler();
         ves::xplorer::scenegraph::DCS* parentAssembly = 0;
@@ -259,7 +259,7 @@ static void DeleteCADNode( std::string const& parentID, std::string const& nodeI
             if( error == 0 )
             {
                 error = parentAssembly->
-                    removeChild( tempPart->GetDCS()->getParent( 0 ) );
+                        removeChild( tempPart->GetDCS()->getParent( 0 ) );
             }
         }
         else if( nodeType == std::string( "Clone" ) )
@@ -269,7 +269,7 @@ static void DeleteCADNode( std::string const& parentID, std::string const& nodeI
         //Need to also remove the node from ModelCADHandler node maps
         m_cadHandler->RemoveNode( nodeID, nodeType );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
         std::cout << "---Invalid node specified to remove!---" << std::endl;
@@ -283,24 +283,24 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string oqLeve
     {
         return;
     }
-    
+
     if( !cadHandler->PartExists( nodeID ) )
     {
         return;
     }
 
-    osg::ref_ptr< osg::Node > activePart = 
+    osg::ref_ptr< osg::Node > activePart =
         //cadHandler->GetPart( nodeID )->GetNode()->GetNode();
         cadHandler->GetPart( nodeID )->GetDCS();
 
-    osg::ref_ptr< osg::Group > rootPartNode = 
+    osg::ref_ptr< osg::Group > rootPartNode =
         static_cast< osg::Group* >( activePart.get() );
 
     osgwQuery::RemoveQueries rqs;
     rootPartNode->accept( rqs );
 
     bool occlude = false;
-    
+
     if( oqLevel == "Off" )
     {
         occlude = false;
@@ -317,7 +317,7 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string oqLeve
     {
         occlude = true;
     }
-    
+
     //if( !root.valid() && occlude )
     if( occlude )
     {
@@ -325,7 +325,7 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string oqLeve
         //tempGroup->addChild( tempCADNode.get() );
         /*
          osgOQ::OcclusionQueryNonFlatVisitor oqv;
-         //Specify the vertex count threshold for performing 
+         //Specify the vertex count threshold for performing
          // occlusion query tests.
          //Settings others use are:
          //Fairly lax culling
@@ -349,23 +349,23 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string oqLeve
          //   test for visibility in future frames.
          osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( visibilityThreshold );
          tempGroup->accept( visibilityThresholdVisitor );
-         
+
          mCadNode = tempGroup.get();*/
-        
-        
+
+
         // Any models using occlusion query must render in front-to-back order.
         rootPartNode->getOrCreateStateSet()->setRenderBinDetails( 0, _QUERY_FRONT_TO_BACK_BIN_NAME );
-        
+
         // Realized the viewer, then root's parent should
         // be the top-level Camera. We want to add queries starting at that node.
         osgwQuery::AddQueries aqs;
         rootPartNode->accept( aqs );
     }
-    
+
     /*
     unsigned int numOQNs = 0;
     bool oqPresent = false;
-    
+
     {
         osgOQ::StatisticsVisitor statsVisitor;
         rootPartNode->accept( statsVisitor );
@@ -374,7 +374,7 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string oqLeve
         << "oq nodes." << std::endl
         << vprDEBUG_FLUSH;
     }
-    
+
     if( numOQNs > 0 )
     {
         oqPresent = true;
@@ -382,7 +382,7 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string oqLeve
     unsigned int occlusionThreshold = 1000;
     unsigned int visibilityThreshold = 100;
     bool occlude = false;
-    
+
     if( oqSettings == "Off" )
     {
         occlude = false;
@@ -405,14 +405,14 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string oqLeve
         occlusionThreshold = 2500;
         visibilityThreshold = 500;
     }
-    
+
     if( !oqPresent && occlude )
     {
         vprDEBUG( vesDBG, 2 ) << "|\t\tCreating new oq nodes " << std::endl
         << vprDEBUG_FLUSH;
-        
+
         osgOQ::OcclusionQueryNonFlatVisitor oqv;
-        //Specify the vertex count threshold for performing 
+        //Specify the vertex count threshold for performing
         // occlusion query tests.
         //Settings others use are:
         //Fairly lax culling
@@ -441,7 +441,7 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string oqLeve
     {
         vprDEBUG( vesDBG, 2 ) << "|\t\tRemoving oq nodes " << std::endl
         << vprDEBUG_FLUSH;
-        
+
         //remove oq nodes
         osgOQ::RemoveOcclusionQueryVisitor removeOQV;
         rootPartNode->accept( removeOQV );
@@ -453,23 +453,23 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string oqLeve
         //remove oq nodes
         osgOQ::RemoveOcclusionQueryVisitor removeOQV;
         rootPartNode->accept( removeOQV );
-        
+
         //Now create the oq nodes with new settings...
         osgOQ::OcclusionQueryNonFlatVisitor oqv;
         oqv.setOccluderThreshold( occlusionThreshold );
         rootPartNode->accept( oqv );
-        
+
         osgOQ::QueryFrameCountVisitor queryFrameVisitor( 2 );
         rootPartNode->accept( queryFrameVisitor );
-        
+
         osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( visibilityThreshold );
         rootPartNode->accept( visibilityThresholdVisitor );
     }
-    
+
     {
         osgOQ::StatisticsVisitor statsVisitor;
         rootPartNode->accept( statsVisitor );
-        numOQNs = statsVisitor.getNumOQNs();            
+        numOQNs = statsVisitor.getNumOQNs();
         vprDEBUG( vesDBG, 2 ) << "|\t\tThere are now " << numOQNs
         << "oq nodes." << std::endl
         << vprDEBUG_FLUSH;
@@ -483,7 +483,7 @@ static void ControlOcclusionQuery( std::string const& nodeID, std::string oqLeve
   * @param mass Mass
   */
 static void SetMassOnCADNode( std::string const& nodeID,
-                        double const& mass )
+                              double const& mass )
 {
     ModelCADHandler* m_cadHandler = GetModelCADHandler();
 
@@ -493,12 +493,12 @@ static void SetMassOnCADNode( std::string const& nodeID,
     }
 
     ves::xplorer::scenegraph::CADEntity* part = m_cadHandler->GetPart( nodeID );
-    
+
     if( part->HavePhysics() )
     {
         part->GetPhysicsRigidBody()->SetMass( mass );
-        std::cout << "Changed Physics Property (Mass): " << mass << " " 
-            << part->GetFilename() << std::endl;
+        std::cout << "Changed Physics Property (Mass): " << mass << " "
+                  << part->GetFilename() << std::endl;
     }
 }
 //////////////////////////////////////////////////////////////////////////
@@ -508,7 +508,7 @@ static void SetMassOnCADNode( std::string const& nodeID,
   * @param friction Friction
   */
 static void SetFrictionOnCADNode( std::string const& nodeID,
-                        double const& friction )
+                                  double const& friction )
 {
     ModelCADHandler* m_cadHandler = GetModelCADHandler();
 
@@ -518,12 +518,12 @@ static void SetFrictionOnCADNode( std::string const& nodeID,
     }
 
     ves::xplorer::scenegraph::CADEntity* part = m_cadHandler->GetPart( nodeID );
-    
+
     if( part->HavePhysics() )
     {
         part->GetPhysicsRigidBody()->SetFriction( friction );
-        std::cout << "Changed Physics Property (Friction): " << friction 
-            << " " << part->GetFilename() << std::endl;
+        std::cout << "Changed Physics Property (Friction): " << friction
+                  << " " << part->GetFilename() << std::endl;
     }
 }
 //////////////////////////////////////////////////////////////////////////
@@ -533,7 +533,7 @@ static void SetFrictionOnCADNode( std::string const& nodeID,
   * @param restitution Restitution
   */
 static void SetRestitutionOnCADNode( std::string const& nodeID,
-                        double const& restitution )
+                                     double const& restitution )
 {
     ModelCADHandler* m_cadHandler = GetModelCADHandler();
 
@@ -547,8 +547,8 @@ static void SetRestitutionOnCADNode( std::string const& nodeID,
     if( part->HavePhysics() )
     {
         part->GetPhysicsRigidBody()->SetRestitution( restitution );
-        std::cout << "Changed Physics Property (Restitution): " 
-            << restitution << " " << part->GetFilename() << std::endl;
+        std::cout << "Changed Physics Property (Restitution): "
+                  << restitution << " " << part->GetFilename() << std::endl;
     }
 }
 
@@ -559,7 +559,7 @@ static void SetRestitutionOnCADNode( std::string const& nodeID,
   * @param physics Whether physics is on or not
   */
 static void SetPhysicsOnCADNode( std::string const& nodeID,
-                        bool const& physics )
+                                 bool const& physics )
 {
     //std::cout << "SetPhysicsOnCADNode: " << physics << std::endl << std::flush;
     ModelCADHandler* m_cadHandler = GetModelCADHandler();
@@ -581,9 +581,9 @@ static void SetPhysicsOnCADNode( std::string const& nodeID,
         set.SetUUID( nodeID );
         set.LoadFromDatabase();
 
-        SetMassOnCADNode( nodeID, boost::any_cast<double>(set.GetPropertyValue("Physics_Mass")) );
-        SetFrictionOnCADNode( nodeID, boost::any_cast<double>(set.GetPropertyValue("Physics_Friction")) );
-        SetRestitutionOnCADNode( nodeID, boost::any_cast<double>(set.GetPropertyValue("Physics_Restitution")) );
+        SetMassOnCADNode( nodeID, boost::any_cast<double>( set.GetPropertyValue( "Physics_Mass" ) ) );
+        SetFrictionOnCADNode( nodeID, boost::any_cast<double>( set.GetPropertyValue( "Physics_Friction" ) ) );
+        SetRestitutionOnCADNode( nodeID, boost::any_cast<double>( set.GetPropertyValue( "Physics_Restitution" ) ) );
 
         std::vector<std::string> meshDetails;
         meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyAttribute( "Physics_MotionType", "enumCurrentString" ) ) );

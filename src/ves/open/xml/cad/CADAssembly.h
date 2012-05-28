@@ -115,7 +115,7 @@ public:
     ///\param uuid The identifier for the node of interest
     ///\return The node of interest
     ves::open::xml::cad::CADNodePtr SearchAllChildren( const std::string& uuid );
-    
+
     ///Copy constructor
     //\param rhs The CADPart to copy
     ///\param clone Create a clone of this node

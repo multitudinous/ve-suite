@@ -64,21 +64,21 @@ cfdREITranslator::~cfdREITranslator()
 {}
 /////////////////////////////////////////
 void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDataset,
-                                                   cfdTranslatorToVTK* toVTK,
-                                                   vtkAlgorithm*& )
+        cfdTranslatorToVTK* toVTK,
+        vtkAlgorithm*& )
 {
     cfdREITranslator* reiTranslator =
         dynamic_cast<cfdREITranslator*>( toVTK );
 
-//   reiTranslator->SetNumberOfFoundFiles(1);
+    //   reiTranslator->SetNumberOfFoundFiles(1);
     if( reiTranslator )
     {
         debug = 2;
-        vtkStructuredGrid * sGrid = NULL;
+        vtkStructuredGrid* sGrid = NULL;
 
-        FILE *s1;
+        FILE* s1;
         // open db file
-        if (( s1 = fopen( reiTranslator->GetFile( 0 ).c_str(), "rb" ) ) == NULL )
+        if( ( s1 = fopen( reiTranslator->GetFile( 0 ).c_str(), "rb" ) ) == NULL )
         {
             std::cerr << "ERROR: can't open file \"" << reiTranslator->GetFile( 0 ).c_str() << "\", so exiting" << std::endl;
             exit( 0 );
@@ -130,7 +130,9 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
                 exit( 0 );
             }
             if( debug )
+            {
                 std::cout << "ndim = " << ndim << std::endl;
+            }
 
             // read nx, ny, & nz
             fseek( s1, 8L, SEEK_CUR );
@@ -149,14 +151,14 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
                 std::cout << "nz = " << nz << std::endl;
             }
 
-            if (( nx < 0 || nx > 500 ) ||
+            if( ( nx < 0 || nx > 500 ) ||
                     ( ny < 0 || ny > 500 ) ||
                     ( nz < 0 || nz > 500 ) )
             {
                 if( debug )
                 {
                     std::cout << "NOTE flipping endian flag in attempt to read data "
-                    << "that makes sense" << std::endl;
+                              << "that makes sense" << std::endl;
                 }
                 endian_flip = 0;
                 continue;
@@ -180,18 +182,30 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
             std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
             exit( 0 );
         }
-        if( debug ) std::cout << "numScalars: \"" << numScalars << "\"" << std::endl;
-        if( debug ) std::cout << "numVectors: \"" << numVectors << "\"" << std::endl;
+        if( debug )
+        {
+            std::cout << "numScalars: \"" << numScalars << "\"" << std::endl;
+        }
+        if( debug )
+        {
+            std::cout << "numVectors: \"" << numVectors << "\"" << std::endl;
+        }
         int numParameters = numScalars + numVectors;
-        if( debug ) std::cout << "numParameters: \"" << numParameters << "\"" << std::endl;
+        if( debug )
+        {
+            std::cout << "numParameters: \"" << numParameters << "\"" << std::endl;
+        }
 
         // make space for scalar and vector names
-        char ** parameterNames = new char * [numParameters];
-        for( int i = 0; i < numParameters; i++ ) parameterNames[i] = new char [9];
+        char** parameterNames = new char * [numParameters];
+        for( int i = 0; i < numParameters; i++ )
+        {
+            parameterNames[i] = new char [9];
+        }
 
         // read and NULL terminate scalar names
         fseek( s1, 8L, SEEK_CUR );
-        for( int i = 0;i < numScalars;i++ )
+        for( int i = 0; i < numScalars; i++ )
         {
             if( parameterNames[i] == NULL )//.empty())//==NULL)
             {
@@ -205,26 +219,28 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
 
         // read and NULL terminate vector names
         fseek( s1, 8L, SEEK_CUR );
-        for( int i = 0;i < numVectors;i++ )
+        for( int i = 0; i < numVectors; i++ )
         {
-            if( parameterNames[numScalars+i] == NULL )//.empty())//==NULL)
+            if( parameterNames[numScalars + i] == NULL ) //.empty())//==NULL)
             {
                 std::cerr << "ERROR: can't get memory for parameterNames, so exiting" << std::endl;
                 exit( 0 );
             }
-            parameterNames[numScalars+i][8] = '\0';
-            fread( parameterNames[numScalars+i], sizeof( char ), 8, s1 );
-            fileIO::StripTrailingSpaces( parameterNames[numScalars+i] );
+            parameterNames[numScalars + i][8] = '\0';
+            fread( parameterNames[numScalars + i], sizeof( char ), 8, s1 );
+            fileIO::StripTrailingSpaces( parameterNames[numScalars + i] );
         }
 
         if( debug )
         {
-            for( int i = 0;i < numParameters;i++ )
+            for( int i = 0; i < numParameters; i++ )
+            {
                 std::cout << "parameterNames[" << i << "]: \t\"" << parameterNames[i] << "\"" << std::endl;
+            }
         }
 
         // make room for xCenters, yCenters, zCenters
-        float *xCenters = NULL, *yCenters = NULL, *zCenters = NULL;
+        float* xCenters = NULL, *yCenters = NULL, *zCenters = NULL;
         xCenters = new float [nx];
         yCenters = new float [ny];
         zCenters = new float [nz];
@@ -291,25 +307,31 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
             std::cout << "DEBUG :: Allocating X_Centers float arrays " << std::endl;
         }
 
-        vtkFloatArray *xCoords = vtkFloatArray::New();
+        vtkFloatArray* xCoords = vtkFloatArray::New();
         xCoords->SetArray( xCenters, nx, 0 );
 
         if( debug )
+        {
             std::cout << "DEBUG :: Allocating Y_Centers float arrays " << std::endl;
+        }
 
-        vtkFloatArray *yCoords = vtkFloatArray::New();
+        vtkFloatArray* yCoords = vtkFloatArray::New();
         yCoords->SetArray( yCenters, ny, 0 );
 
         if( debug )
+        {
             std::cout << "DEBUG :: Allocating Z_Centers float arrays " << std::endl;
+        }
 
-        vtkFloatArray *zCoords = vtkFloatArray::New();
+        vtkFloatArray* zCoords = vtkFloatArray::New();
         zCoords->SetArray( zCenters, nz, 0 );
 
         if( debug )
+        {
             std::cout << "DEBUG :: Allocating vtkRectilinearGrid " << std::endl;
+        }
 
-        vtkRectilinearGrid *rGrid = vtkRectilinearGrid::New();
+        vtkRectilinearGrid* rGrid = vtkRectilinearGrid::New();
         rGrid->SetDimensions( nx, ny, nz );
         rGrid->SetXCoordinates( xCoords );
         rGrid->SetYCoordinates( yCoords );
@@ -320,7 +342,9 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
         zCoords->Delete();
 
         if( debug )
+        {
             std::cout << "DEBUG :: Finished allocating float arrays " << std::endl;
+        }
 
         // convertToStructuredGrid will supply a new structured grid
         sGrid = convertToStructuredGrid( rGrid );
@@ -328,7 +352,7 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
 
 
         // set up arrays to store scalar and vector data over entire mesh...
-        vtkFloatArray ** parameterData = NULL;
+        vtkFloatArray** parameterData = NULL;
         parameterData = new vtkFloatArray * [numParameters];
         for( int i = 0; i < numParameters; i++ )
         {
@@ -343,7 +367,7 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
         }
 
         // make room for each scalar data, we will use pointers to quickly create parameterData objects
-        float ** scalarData = new float * [numScalars];
+        float** scalarData = new float * [numScalars];
         for( int i = 0; i < numScalars; i++ )
         {
             scalarData[i] = new float [num_verts];
@@ -375,28 +399,28 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
 
             if( debug )
                 std::cout << "Reading scalarData[" << i + 1 << " of "
-                << numScalars << "]:\t\""
-                << parameterNames[i] << "\"" << std::endl;
+                          << numScalars << "]:\t\""
+                          << parameterNames[i] << "\"" << std::endl;
 
             if( debug > 1 )
             {
                 for( int j = 0; j < 4; j++ )
                     std::cout << "scalarData[" << i << "][" << j << "] = "
-                    << scalarData[i][j] << std::endl;
+                              << scalarData[i][j] << std::endl;
 
                 std::cout << "                ..." << std::endl;
 
                 for( int j = num_verts - 4; j < num_verts; j++ )
                     std::cout << "scalarData[" << i << "][" << j << "] = "
-                    << scalarData[i][j] << std::endl;
+                              << scalarData[i][j] << std::endl;
 
                 std::cout << std::endl;
             }
         }
 
         // make room for vector data
-//      int xyz;
-        float ** vectorData = new float * [3];
+        //      int xyz;
+        float** vectorData = new float * [3];
         for( int xyz = 0; xyz < 3; xyz++ )
         {
             vectorData[xyz] = new float [num_verts];
@@ -414,14 +438,14 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
         {
             if( debug )
                 std::cout << "Reading vectorData[" << i + 1 << " of "
-                << numVectors << "]:\t\""
-                << parameterNames[numScalars+i] << "\"" << std::endl;
+                          << numVectors << "]:\t\""
+                          << parameterNames[numScalars + i] << "\"" << std::endl;
 
             for( int xyz = 0; xyz < 3; xyz++ )
             {
                 fseek( s1, 8L, SEEK_CUR );
                 if( fileIO::readNByteBlockFromFile( vectorData[xyz], sizeof( float ),
-                                                     num_verts, s1, endian_flip ) )
+                                                    num_verts, s1, endian_flip ) )
                 {
                     std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
                     sGrid->Delete();
@@ -429,22 +453,24 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
                     exit( 0 );
                 }
 
-                parameterData[numScalars+i]->SetName( parameterNames[numScalars+i] );
-                parameterData[numScalars+i]->SetNumberOfComponents( 3 );
-                parameterData[numScalars+i]->SetNumberOfTuples( num_verts );
+                parameterData[numScalars + i]->SetName( parameterNames[numScalars + i] );
+                parameterData[numScalars + i]->SetNumberOfComponents( 3 );
+                parameterData[numScalars + i]->SetNumberOfTuples( num_verts );
                 for( int tuple = 0; tuple < num_verts; tuple++ )
-                    parameterData[numScalars+i]->SetComponent( tuple, xyz, vectorData[xyz][tuple] );
+                {
+                    parameterData[numScalars + i]->SetComponent( tuple, xyz, vectorData[xyz][tuple] );
+                }
 
                 // print begining and ending of vector data to screen...
                 if( debug )
                 {
                     for( int j = 0; j < 20; j++ )
                         std::cout << "vectorData[" << i << "][" << xyz << "][" << j << "] = "
-                        << vectorData[xyz][j] << std::endl;
+                                  << vectorData[xyz][j] << std::endl;
                     std::cout << "                ..." << std::endl;
                     for( int j = num_verts - 20; j < num_verts; j++ )
                         std::cout << "vectorData[" << i << "][" << xyz << "][" << j << "] = "
-                        << vectorData[xyz][j] << std::endl;
+                                  << vectorData[xyz][j] << std::endl;
                     std::cout << std::endl;
                 }
             }
@@ -452,7 +478,10 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
 
         // doublecheck that you are finished: should see the message ...
         // "end of file found after reading 1 more floats"
-        if( debug ) fileIO::readToFileEnd( s1 );
+        if( debug )
+        {
+            fileIO::readToFileEnd( s1 );
+        }
         fclose( s1 );
         std::cout << std::endl;
 
@@ -485,12 +514,16 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
         for( int i = 0; i < num_verts; i++ )
         {
             if( parameterData[ 0 ]->GetComponent( i, 0 ) == 8 )
+            {
                 sGrid->BlankPoint( i );
+            }
         }
 
         //delete parameterData
         for( int i = 0; i < numParameters; i++ )
+        {
             parameterData[ i ]->Delete();
+        }
 
         delete [] parameterData;
         parameterData = NULL;
@@ -507,6 +540,6 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
 void cfdREITranslator::DisplayHelp( void )
 {
     std::cout << "|\tREI Translator Usage:" << std::endl
-    << "\t -singleFile <filename_to_load> -o <output_dir> "
-    << "-outFileName <output_filename> -loader BANFDB -w file" << std::endl;
+              << "\t -singleFile <filename_to_load> -o <output_dir> "
+              << "-outFileName <output_filename> -loader BANFDB -w file" << std::endl;
 }

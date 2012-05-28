@@ -53,59 +53,59 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
     using namespace ves::xplorer::event::volume;
 
     CONNECTSIGNALS_STATIC( "%TBETNumberOfSlicePlanes",
-                  void( std::string const&, std::vector< int > const& ),
-                  &UpdateNumberOfSlicePlanes,
-                  m_connections, any_SignalType, normal_Priority );
+                           void( std::string const&, std::vector< int > const& ),
+                           &UpdateNumberOfSlicePlanes,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%TBETEnablePreIntegration",
-                  void( bool const& ),
-                  &EnablePreIntegration,
-                  m_connections, any_SignalType, normal_Priority );
+                           void( bool const& ),
+                           &EnablePreIntegration,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%TBETPhongShading",
-                  void( std::string const&, std::vector< bool > const& ),
-                  &EnablePhoneShader,
-                  m_connections, any_SignalType, normal_Priority );
-    
+                           void( std::string const&, std::vector< bool > const& ),
+                           &EnablePhoneShader,
+                           m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_STATIC( "%TBETIsosurfaceValue",
-                  void( std::string const&, std::vector< double > const& ),
-                  &UpdateIsoSurfaceValue,
-                  m_connections, any_SignalType, normal_Priority );
+                           void( std::string const&, std::vector< double > const& ),
+                           &UpdateIsoSurfaceValue,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%TBETEnableIsosurface",
-                  void( std::string const&, std::vector< bool > const& ),
-                  &EnableIsoSurfaces,
-                  m_connections, any_SignalType, normal_Priority );
+                           void( std::string const&, std::vector< bool > const& ),
+                           &EnableIsoSurfaces,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%TBETUpdateScalarRange",
-                  void( double const&, double const& ),
-                  &UpdateScalarRange,
-                  m_connections, any_SignalType, normal_Priority );
+                           void( double const&, double const& ),
+                           &UpdateScalarRange,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%TBETUpdateScalar",
-                  void( std::string const&, std::string const&, double const&, double const& ),
-                  &UpdateTBSolution,
-                  m_connections, any_SignalType, normal_Priority );
-                          
+                           void( std::string const&, std::string const&, double const&, double const& ),
+                           &UpdateTBSolution,
+                           m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_STATIC( "%TBETROIBoundUpdate",
-                  void( std::string const&, std::vector< double > const& ),
-                  &UpdateROIBounds,
-                  m_connections, any_SignalType, normal_Priority );
+                           void( std::string const&, std::vector< double > const& ),
+                           &UpdateROIBounds,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%TBETAnimationDuration",
-                  void( std::string const&, std::vector< double > const& ),
-                  &SetTransientDuration,
-                  m_connections, any_SignalType, normal_Priority );
+                           void( std::string const&, std::vector< double > const& ),
+                           &SetTransientDuration,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%TBETAnimationControls",
-                  void( std::string const&, std::vector< std::string > const& ),
-                  &SetTransientMode,
-                  m_connections, any_SignalType, normal_Priority );
+                           void( std::string const&, std::vector< std::string > const& ),
+                           &SetTransientMode,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%TBETHideVizFeature",
-                     void( std::string const&, std::vector< bool > const& ),
-                     &HideVizFeature,
-                     m_connections, any_SignalType, normal_Priority );    
+                           void( std::string const&, std::vector< bool > const& ),
+                           &HideVizFeature,
+                           m_connections, any_SignalType, normal_Priority );
 }
 
 } // namespace cad

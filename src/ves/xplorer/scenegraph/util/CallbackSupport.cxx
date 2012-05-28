@@ -44,8 +44,8 @@ CompositeDrawCallback::CompositeDrawCallback()
 {
 }
 CompositeDrawCallback::CompositeDrawCallback( const CompositeDrawCallback& rhs, const osg::CopyOp& copyop )
-  : osg::Camera::DrawCallback( rhs, copyop ),
-    _dcl( rhs._dcl )
+    : osg::Camera::DrawCallback( rhs, copyop ),
+      _dcl( rhs._dcl )
 {
 }
 CompositeDrawCallback::~CompositeDrawCallback()
@@ -57,9 +57,9 @@ void
 CompositeDrawCallback::operator()( osg::RenderInfo& renderInfo ) const
 {
     DrawCallbackList::const_iterator it;
-    for( it=_dcl.begin(); it!= _dcl.end(); it++ )
+    for( it = _dcl.begin(); it != _dcl.end(); it++ )
     {
-        osg::Camera::DrawCallback& cb = *(*it);
+        osg::Camera::DrawCallback& cb = *( *it );
         cb( renderInfo );
     }
 }

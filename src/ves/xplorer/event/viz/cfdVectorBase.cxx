@@ -102,10 +102,10 @@ cfdVectorBase::cfdVectorBase( cfdVectorBase const& src )
     tfilter( vtkThresholdPoints::New() )
 {
     ptmask->RandomModeOn();
-    
+
     mapper->SetColorModeToMapScalars();
     mapper->ImmediateModeRenderingOn();
-    
+
     _vectorScale = 1.0;
     _vectorThreshHoldMinPercentage = 0;
     _vectorThreshHoldMaxPercentage = 100;
@@ -146,32 +146,32 @@ void cfdVectorBase::UpdateCommand()
 
     //Extract the specific commands from the overall command
     ves::open::xml::DataValuePairPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>( activeModelDVP->GetDataXMLObject() );
 
     //Extract the integration direction
     activeModelDVP = objectCommand->GetDataValuePair( "Select Data Mapping" );
     std::string dataMapping;
     activeModelDVP->GetData( dataMapping );
-    
-    vprDEBUG( vesDBG, 0 ) 
-        << "|\tSelect scalar or volume flux for contour display"
-        << std::endl << vprDEBUG_FLUSH;
-    
+
+    vprDEBUG( vesDBG, 0 )
+            << "|\tSelect scalar or volume flux for contour display"
+            << std::endl << vprDEBUG_FLUSH;
+
     if( !dataMapping.compare( "Map Scalar Data" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE SCALARS"
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << std::endl << vprDEBUG_FLUSH;
+
         m_selectDataMapping = 0;
     }
     else if( !dataMapping.compare( "Map Volume Flux Data" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE VOLUME FLUX"
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << std::endl << vprDEBUG_FLUSH;
+
         m_selectDataMapping = 1;
     }
-    
+
     //Extract the plane position
     activeModelDVP = objectCommand->GetDataValuePair( "Position" );
     double planePosition;
@@ -193,7 +193,7 @@ void cfdVectorBase::UpdateCommand()
     {
         SetPreCalcFlag( false );
     }
-    
+
     //Extract the advanced settings from the commands
     activeModelDVP = objectCommand->GetDataValuePair( "Advanced Vector Settings" );
     objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>( activeModelDVP->GetDataXMLObject() );
@@ -219,7 +219,7 @@ void cfdVectorBase::UpdateCommand()
     unsigned int scaleByMagnitude;
     activeModelDVP->GetData( scaleByMagnitude );
     SetScaleByVectorFlag( static_cast< int >( scaleByMagnitude ) );
-    
+
     activeModelDVP = objectCommand->GetDataValuePair( "GPU Tools" );
     if( activeModelDVP )
     {
@@ -230,14 +230,14 @@ void cfdVectorBase::UpdateCommand()
     else
     {
         m_gpuTools = false;
-    }    
+    }
 
-	//Extract the surface flag
+    //Extract the surface flag
     activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
     if( activeModelDVP )
-	{
-    	activeModelDVP->GetData( m_surfDataset );
-	}
+    {
+        activeModelDVP->GetData( m_surfDataset );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::SetVectorScale( float x )
@@ -253,9 +253,9 @@ float cfdVectorBase::GetVectorScale()
 void cfdVectorBase::SetGlyphWithThreshold()
 {
     vprDEBUG( vesDBG, 1 )
-        << "|\tcfdVectorBase::SetGlyphWithThreshold vectorThreshHoldValues : "
-        << _vectorThreshHoldValues[ 0 ] << " : "
-        << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
+            << "|\tcfdVectorBase::SetGlyphWithThreshold vectorThreshHoldValues : "
+            << _vectorThreshHoldValues[ 0 ] << " : "
+            << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
 
     double currentScalarRange[ 2 ];
     this->GetActiveDataSet()->GetRange( currentScalarRange );
@@ -264,14 +264,14 @@ void cfdVectorBase::SetGlyphWithThreshold()
             _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tcfdVectorBase: ThresholdBetween"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         tfilter->SetInputConnection( this->ptmask->GetOutputPort() );
         tfilter->ThresholdBetween( _vectorThreshHoldValues[ 0 ],
                                    _vectorThreshHoldValues[ 1 ] );
         tfilter->SetInputArrayToProcess( 0, 0, 0,
-              vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-              GetActiveDataSet()->GetActiveScalarName().c_str() );
-        
+                                         vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                         GetActiveDataSet()->GetActiveScalarName().c_str() );
+
         this->tris->SetInputConnection( this->tfilter->GetOutputPort() );
         this->strip->SetInputConnection( this->tris->GetOutputPort() );
         this->glyph->SetInputConnection( this->strip->GetOutputPort() );
@@ -279,12 +279,12 @@ void cfdVectorBase::SetGlyphWithThreshold()
     else if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tcfdVectorBase: ThresholdByUpper"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         tfilter->SetInputConnection( this->ptmask->GetOutputPort() );
         tfilter->ThresholdByUpper( _vectorThreshHoldValues[ 0 ] );
         tfilter->SetInputArrayToProcess( 0, 0, 0,
-            vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-            GetActiveDataSet()->GetActiveScalarName().c_str() );
+                                         vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                         GetActiveDataSet()->GetActiveScalarName().c_str() );
         this->tris->SetInputConnection( this->tfilter->GetOutputPort() );
         this->strip->SetInputConnection( this->tris->GetOutputPort() );
         this->glyph->SetInputConnection( this->strip->GetOutputPort() );
@@ -292,12 +292,12 @@ void cfdVectorBase::SetGlyphWithThreshold()
     else if( _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tcfdVectorBase: ThresholdByLower"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         tfilter->SetInputConnection( this->ptmask->GetOutputPort() );
         tfilter->ThresholdByLower( _vectorThreshHoldValues[ 1 ] );
         tfilter->SetInputArrayToProcess( 0, 0, 0,
-            vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-            GetActiveDataSet()->GetActiveScalarName().c_str() );
+                                         vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                         GetActiveDataSet()->GetActiveScalarName().c_str() );
         this->tris->SetInputConnection( this->tfilter->GetOutputPort() );
         this->strip->SetInputConnection( this->tris->GetOutputPort() );
         this->glyph->SetInputConnection( this->strip->GetOutputPort() );
@@ -305,7 +305,7 @@ void cfdVectorBase::SetGlyphWithThreshold()
     else
     {
         vprDEBUG( vesDBG, 1 ) << "|\tcfdVectorBase: NO Threshold"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         this->glyph->SetInputConnection( this->ptmask->GetOutputPort() );
     }
 }
@@ -336,7 +336,7 @@ float cfdVectorBase::GetVectorScaleFactor()
 
     /*
     float range = 2.5;
-    float scaleFactor = exp( this->GetVectorScale() / ( 100.0 / range ) ) * 
+    float scaleFactor = exp( this->GetVectorScale() / ( 100.0 / range ) ) *
     this->GetActiveDataSet()->GetMeanCellLength();
     */
     // This scale returns a range of ~ 0.0103 ->  ~ 220 units
@@ -344,9 +344,9 @@ float cfdVectorBase::GetVectorScaleFactor()
     float scaleFactor = ( exp( this->GetVectorScale() / ( 100.0 / range ) ) ) * 0.01f;
 
     vprDEBUG( vesDBG, 1 )
-    << "|\tcfdVectorBase::GetVectorScaleFactor scaleFactor = "
-    << scaleFactor
-    << std::endl << vprDEBUG_FLUSH;
+            << "|\tcfdVectorBase::GetVectorScaleFactor scaleFactor = "
+            << scaleFactor
+            << std::endl << vprDEBUG_FLUSH;
 
     return scaleFactor;
 }
@@ -415,8 +415,8 @@ void cfdVectorBase::UpdateThreshHoldValues()
         //temp->GetRange( currentScalarRange );
         double* currentScalarRange = temp->GetRange();
         vprDEBUG( vesDBG, 1 ) << "|\tcfdVectorBase::UpdateThreshHoldValues currentScalarRange = "
-        << currentScalarRange[ 0 ] << " : " <<  currentScalarRange[ 1 ]
-        << std::endl << vprDEBUG_FLUSH;
+                              << currentScalarRange[ 0 ] << " : " <<  currentScalarRange[ 1 ]
+                              << std::endl << vprDEBUG_FLUSH;
 
         _vectorThreshHoldValues[ 0 ] = currentScalarRange[0] +
                                        ( double )_vectorThreshHoldMinPercentage / 100.0
@@ -427,8 +427,8 @@ void cfdVectorBase::UpdateThreshHoldValues()
                                        * ( currentScalarRange[1] - currentScalarRange[0] );
 
         vprDEBUG( vesDBG, 1 ) << "|\tcfdVectorBase::UpdateThreshHoldValues Calculated Threshold Values = "
-        << _vectorThreshHoldValues[ 0 ] << " : "
-        << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
+                              << _vectorThreshHoldValues[ 0 ] << " : "
+                              << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -444,8 +444,8 @@ void cfdVectorBase::SetThreshHoldValues( double* input )
     _vectorThreshHoldValues[ 1 ] = input[ 1 ];
 
     vprDEBUG( vesDBG, 1 ) << "|\tThreshold Values = "
-    << _vectorThreshHoldValues[ 0 ] << " : "
-    << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
+                          << _vectorThreshHoldValues[ 0 ] << " : "
+                          << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 double* cfdVectorBase::GetThreshHoldValues( void )
@@ -474,36 +474,36 @@ int cfdVectorBase::GetScaleByVectorFlag( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVectorBase::CreateArbSurface()
-{   
+{
     //Need to set the active datasetname and get the position of the dataset
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
     // set the dataset as the appropriate dastaset type
     // (and the active dataset as well)
-    DataSet* surfDataset = activeModel->GetCfdDataSet( 
-      activeModel->GetIndexOfDataSet( m_surfDataset ) );
+    DataSet* surfDataset = activeModel->GetCfdDataSet(
+                               activeModel->GetIndexOfDataSet( m_surfDataset ) );
     vtkPolyData* pd = surfDataset->GetPolyData();
-    
+
     if( !pd )
     {
         std::cerr << "ERROR: Activate a polydata file to use this function"
-        << std::endl;
+                  << std::endl;
         return;
     }
-    
-    ves::xplorer::util::ExtractGeometryCallback* extractGeomCbk = 
+
+    ves::xplorer::util::ExtractGeometryCallback* extractGeomCbk =
         new ves::xplorer::util::ExtractGeometryCallback();
     ves::xplorer::util::DataObjectHandler handler;
     handler.SetDatasetOperatorCallback( extractGeomCbk );
     extractGeomCbk->SetPolyDataSurface( pd );
     handler.OperateOnAllDatasetsInObject( GetActiveDataSet()->GetDataSet() );
 
-	vtkCompositeDataProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
+    vtkCompositeDataProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
     surfProbe->SetInput( pd );
     //surfProbe->SetSourceConnection( extractGeomCbk->GetDataset() );
     surfProbe->SetSource( extractGeomCbk->GetDataset() );
-    
-   	vtkPolyData* surfProbeOutput = surfProbe->GetPolyDataOutput();
-    
+
+    vtkPolyData* surfProbeOutput = surfProbe->GetPolyDataOutput();
+
     if( !surfProbeOutput )
     {
         return;
@@ -511,20 +511,20 @@ void cfdVectorBase::CreateArbSurface()
 
     vtkPolyData* normalsOutputPD = 0;
     if( m_selectDataMapping == 1 )
-    { 
+    {
         // The code below computes volume flux on the specified contour plane
         vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
         normalGen->SetInputConnection( surfProbe->GetOutputPort() );
         normalGen->Update();
-        
-        normalsOutputPD = 
+
+        normalsOutputPD =
             ComputeVolumeFlux( normalGen->GetOutput() );
         ptmask->SetInput( normalsOutputPD );
         ptmask->SetOnRatio( this->GetVectorRatioFactor() );
         //ptmask->Update();
 
         normalGen->Delete();
-	}
+    }
     else
     {
         // get every nth point from the dataSet data
@@ -535,41 +535,41 @@ void cfdVectorBase::CreateArbSurface()
 
     SetGlyphWithThreshold();
     SetGlyphAttributes();
-    
+
     if( m_selectDataMapping != 1 )
     {
         mapper->SetInputConnection( glyph->GetOutputPort() );
         mapper->SetScalarModeToUsePointFieldData();
         mapper->UseLookupTableScalarRangeOn();
         mapper->SelectColorArray( GetActiveDataSet()->
-                                 GetActiveScalarName().c_str() );
+                                  GetActiveScalarName().c_str() );
         mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
         mapper->Update();
     }
     else
     {
-    	double range[ 2 ];
-    	normalsOutputPD->GetPointData()->
-            GetScalars( "VolumeFlux" )->GetRange( range );
-        
-    	vtkLookupTable* lut1 = vtkLookupTable::New();
-    	lut1->SetNumberOfColors( 2 );            //default is 256
-    	lut1->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
-    	lut1->SetTableRange( range );
-    	lut1->Build();
-        
-    	mapper->SetInputConnection( glyph->GetOutputPort() );
-    	mapper->SetColorModeToMapScalars();
-    	mapper->SetScalarRange( range );
-    	mapper->SetLookupTable( lut1 );
-    	mapper->SetScalarModeToUsePointFieldData();
-    	mapper->UseLookupTableScalarRangeOn();
-    	mapper->SelectColorArray( "VolumeFlux" );
-		mapper->Update();
-        
-    	lut1->Delete();
+        double range[ 2 ];
+        normalsOutputPD->GetPointData()->
+        GetScalars( "VolumeFlux" )->GetRange( range );
+
+        vtkLookupTable* lut1 = vtkLookupTable::New();
+        lut1->SetNumberOfColors( 2 );            //default is 256
+        lut1->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
+        lut1->SetTableRange( range );
+        lut1->Build();
+
+        mapper->SetInputConnection( glyph->GetOutputPort() );
+        mapper->SetColorModeToMapScalars();
+        mapper->SetScalarRange( range );
+        mapper->SetLookupTable( lut1 );
+        mapper->SetScalarModeToUsePointFieldData();
+        mapper->UseLookupTableScalarRangeOn();
+        mapper->SelectColorArray( "VolumeFlux" );
+        mapper->Update();
+
+        lut1->Delete();
     }
-    
+
     surfProbe->Delete();
     delete extractGeomCbk;
     extractGeomCbk = 0;
@@ -579,29 +579,29 @@ void cfdVectorBase::UpdatePropertySet()
 {
     //Extract the integration direction
     std::string dataMapping = boost::any_cast<std::string > ( m_propertySet->GetPropertyAttribute( "DataMapping", "enumCurrentString" ) );
-    
-    vprDEBUG( vesDBG, 0 ) 
-        << "|\tSelect scalar or volume flux for contour display: " << dataMapping
-        << std::endl << vprDEBUG_FLUSH;
-    
+
+    vprDEBUG( vesDBG, 0 )
+            << "|\tSelect scalar or volume flux for contour display: " << dataMapping
+            << std::endl << vprDEBUG_FLUSH;
+
     if( !dataMapping.compare( "Map Scalar Data" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE SCALARS"
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << std::endl << vprDEBUG_FLUSH;
+
         m_selectDataMapping = 0;
     }
     else if( !dataMapping.compare( "Map Volume Flux Data" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE VOLUME FLUX"
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << std::endl << vprDEBUG_FLUSH;
+
         m_selectDataMapping = 1;
     }
-    
+
     //Extract the plane position
     SetRequestedValue( boost::any_cast<double>( m_propertySet->GetPropertyValue( "PlaneLocation" ) ) );
-    
+
     std::string planeOption;
     if( boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Mode_UseNearestPrecomputedPlane" ) ) )
     {
@@ -620,38 +620,38 @@ void cfdVectorBase::UpdatePropertySet()
     {
         SetPreCalcFlag( false );
     }
-    
+
     //Extract the advanced settings from the commands
     std::vector< double > tempData;
     tempData.push_back( boost::any_cast<double>
-                       ( m_propertySet->GetPropertyValue( "Advanced_VectorThreshold_Min" ) ) );
+                        ( m_propertySet->GetPropertyValue( "Advanced_VectorThreshold_Min" ) ) );
     tempData.push_back( boost::any_cast<double>
-                       ( m_propertySet->GetPropertyValue( "Advanced_VectorThreshold_Max" ) ) );
+                        ( m_propertySet->GetPropertyValue( "Advanced_VectorThreshold_Max" ) ) );
     SetThreshHoldPercentages( static_cast< int >( tempData.at( 0 ) ),
-                             static_cast< int >( tempData.at( 1 ) ) );
+                              static_cast< int >( tempData.at( 1 ) ) );
     UpdateThreshHoldValues();
-    
+
     SetVectorScale( static_cast< float >( boost::any_cast<double>
-                                         ( m_propertySet->GetPropertyValue( "Advanced_VectorScale" ) ) ) );
-    
+                                          ( m_propertySet->GetPropertyValue( "Advanced_VectorScale" ) ) ) );
+
     SetVectorRatioFactor( static_cast< int >( boost::any_cast<double>
-                                             ( m_propertySet->GetPropertyValue( "Advanced_VectorRatio" ) ) ) );
-    
+                          ( m_propertySet->GetPropertyValue( "Advanced_VectorRatio" ) ) ) );
+
     SetScaleByVectorFlag( static_cast< int >( boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Advanced_ScaleByVectorMagnitude" ) ) ) );
-      
+
     m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
 
     bool vectorGreyscale = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Advanced_Greyscale" ) );
     GetActiveDataSet()->SetGreyscaleFlag( vectorGreyscale );
     vprDEBUG( vesDBG, 0 ) << "|\tVector Greyscale set to : "
-    << vectorGreyscale
-    << std::endl << vprDEBUG_FLUSH;
+                          << vectorGreyscale
+                          << std::endl << vprDEBUG_FLUSH;
 
-	//Extract the surface flag
+    //Extract the surface flag
     /*activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
     if( activeModelDVP )
-	{
+    {
     	activeModelDVP->GetData( m_surfDataset );
-	}*/
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////

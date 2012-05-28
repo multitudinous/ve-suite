@@ -138,8 +138,8 @@ private:
     ///The data value pair will contain the model and port
     ///number of the appropriate port to be linked
     ///The classes hold the fromPort in first and the toPort in second.
-    std::pair< ves::open::xml::DataValuePairPtr,
-               ves::open::xml::DataValuePairPtr > mModuleInfo;
+    std::pair < ves::open::xml::DataValuePairPtr,
+        ves::open::xml::DataValuePairPtr > mModuleInfo;
 
     ///The classes hold the fromPort in first and the toPort in second.
     std::pair< long int, long int > mPortInfo;
@@ -149,7 +149,7 @@ private:
 
     ///The link type
     int mType;
-    ///This variable is needed to enable the hiearchy data to be accessed 
+    ///This variable is needed to enable the hiearchy data to be accessed
     ///from any level in a sub system configuration
     ModelWeakPtr mParentModel;
 };

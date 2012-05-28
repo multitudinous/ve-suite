@@ -85,7 +85,7 @@ cfdIsosurface::cfdIsosurface( int numsteps )
 
 
 #ifdef USE_OMP
-    this->filter->SetInput(( vtkDataSet * )this->append->GetOutput() );
+    this->filter->SetInput( ( vtkDataSet* )this->append->GetOutput() );
 #endif
 
     this->mapper = vtkPolyDataMapper::New();
@@ -97,7 +97,7 @@ cfdIsosurface::cfdIsosurface( cfdIsosurface const& src )
     totalId( src.totalId ),
     value( src.value ),
     normals( vtkPolyDataNormals::New() ),
-    mapper( vtkPolyDataMapper::New() ) 
+    mapper( vtkPolyDataMapper::New() )
 {
     ;
 }
@@ -126,21 +126,21 @@ void cfdIsosurface::Update()
 {
     //SetActiveVtkPipeline();
     vprDEBUG( vesDBG, 1 ) << "|\tcfdIsosurface::Update: FileName: "
-    << this->GetActiveDataSet()->GetFileName() << std::endl << vprDEBUG_FLUSH;
+                          << this->GetActiveDataSet()->GetFileName() << std::endl << vprDEBUG_FLUSH;
 
     vprDEBUG( vesDBG, 1 ) << "|\trequestedValue: " << this->requestedValue
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     // convert the requested value percentage (0-100) to a scalar value
     this->value = convertPercentage( int( requestedValue ) );
 
     vprDEBUG( vesDBG, 1 ) << "|\tthis->value: " << this->value
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
 #ifdef USE_OMP
     int imax = this->nData;
     int i;
-# pragma omp parallel for private(i)
+    # pragma omp parallel for private(i)
     for( i = 0; i < imax; i++ )
     {
         this->contour[i]->SetInput( this->GetActiveDataSet()->GetData( i ) );
@@ -149,21 +149,21 @@ void cfdIsosurface::Update()
     }
     this->append->Update( );
 #else
-    vtkCellDataToPointData* c2p = vtkCellDataToPointData::New(); 
+    vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
     c2p->SetInput( GetActiveDataSet()->GetDataSet() );
     c2p->Update();
-    
+
     vtkContourFilter* contourFilter = vtkContourFilter::New();
     contourFilter->UseScalarTreeOn();
     contourFilter->SetInputConnection( 0, c2p->GetOutputPort( 0 ) );
     contourFilter->SetValue( 0, this->value );
     contourFilter->ComputeNormalsOff();
     contourFilter->SetInputArrayToProcess( 0, 0, 0,
-        vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-        GetActiveDataSet()->GetActiveScalarName().c_str() );
+                                           vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                           GetActiveDataSet()->GetActiveScalarName().c_str() );
     contourFilter->Update();
 
-    vtkAlgorithmOutput* polydata = 
+    vtkAlgorithmOutput* polydata =
         ApplyGeometryFilterNew( contourFilter->GetOutputPort( 0 ) );
 
     normals->SetInputConnection( polydata );
@@ -201,7 +201,7 @@ double cfdIsosurface::convertPercentage( const int percentage )
     this->GetActiveDataSet()->GetUserRange( minmax );
 
     vprDEBUG( vesDBG, 2 ) << "|\tMinmax = " << minmax[0] << "\t" << minmax[1]
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     double minmaxDiff = minmax[1] - minmax[0];
     double dx = ( minmaxDiff ) / ( double )this->totalId;
@@ -247,16 +247,16 @@ void cfdIsosurface::UpdateCommand()
 {
     UpdatePropertySet();
     return;
-    
+
     //Call base method - currently does nothing
     cfdObjects::UpdateCommand();
 
     //Extract the specific commands from the overall command
-    ves::open::xml::DataValuePairPtr activeModelDVP = 
+    ves::open::xml::DataValuePairPtr activeModelDVP =
         veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = 
+    ves::open::xml::CommandPtr objectCommand =
         boost::dynamic_pointer_cast<ves::open::xml::Command>(
-        activeModelDVP->GetDataXMLObject() );
+            activeModelDVP->GetDataXMLObject() );
 
     //Extract the isosurface value
     activeModelDVP = objectCommand->GetDataValuePair( "Iso-Surface Value" );
@@ -288,15 +288,15 @@ void cfdIsosurface::UpdateCommand()
 }
 ///////////////////////////////////////////////////////////////////////////
 void cfdIsosurface::UpdatePropertySet()
-{    
+{
     //Extract the isosurface value
     double planePosition = boost::any_cast<double>( m_propertySet->GetPropertyValue( "IsosurfaceValue" ) );
     SetRequestedValue( static_cast< int >( planePosition ) );
-    
+
     colorByScalar = boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "ColorByScalar", "enumCurrentString" ) );
-    
+
     minValue = boost::any_cast<double>( m_propertySet->GetPropertyValue( "ColorByScalar_ScalarRange_Min" ) );
-    
+
     maxValue = boost::any_cast<double>( m_propertySet->GetPropertyValue( "ColorByScalar_ScalarRange_Max" ) );
 
     DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
@@ -315,17 +315,17 @@ void cfdIsosurface::UpdatePropertySet()
     bool isoGreyscale = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Advanced_Greyscale" ) );
     ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetGreyscaleFlag( isoGreyscale );
     vprDEBUG( vesDBG, 0 ) << "|\tIsosurface Greyscale set to : "
-    << isoGreyscale
-    << std::endl << vprDEBUG_FLUSH;
+                          << isoGreyscale
+                          << std::endl << vprDEBUG_FLUSH;
 
     /*ves::open::xml::DataValuePairPtr nearestPrecomputed( new ves::open::xml::DataValuePair() );
     nearestPrecomputed->SetData( "Use Nearest Precomputed", static_cast<unsigned int>( 0 ) );
     m_contourInformation.push_back( nearestPrecomputed );
-    
+
     ves::open::xml::DataValuePairPtr gpuTools( new ves::open::xml::DataValuePair() );
     gpuTools->SetDataBool( "Use GPU Tools", boost::any_cast<bool>
                           ( set.GetPropertyValue( "UseGPUTools" ) ) );
     m_contourInformation.push_back( gpuTools );*/
-    
+
 }
 ///////////////////////////////////////////////////////////////////////////

@@ -73,7 +73,7 @@ std::string DefaultPluginFactory::GetHelpURL()
 
 QIcon DefaultPluginFactory::GetIcon( )
 {
-    QIcon result(":/xpm/ToolBar/PluginsButton.jpg");
+    QIcon result( ":/xpm/ToolBar/PluginsButton.jpg" );
     return result;
 }
 

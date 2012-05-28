@@ -127,109 +127,109 @@ ModelHandler::ModelHandler()
     m_CADSlotInitializer( new ves::xplorer::event::cad::CADSlotInitializer )
 {
     vprDEBUG( vesDBG, 2 ) << "ModelHandler constructor"
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
-    _eventHandlers[ std::string( "SET_ROOT_CAD_NODE" )] = 
+    _eventHandlers[ std::string( "SET_ROOT_CAD_NODE" )] =
         new ves::xplorer::event::CADSetRootNodeEventHandler();
-    _eventHandlers[ std::string( "CAD_TRANSFORM_UPDATE" )] = 
+    _eventHandlers[ std::string( "CAD_TRANSFORM_UPDATE" )] =
         new ves::xplorer::event::CADTransformEventHandler();
-    _eventHandlers[ std::string( "CAD_ADD_ANIMATION_TO_NODE" )] = 
+    _eventHandlers[ std::string( "CAD_ADD_ANIMATION_TO_NODE" )] =
         new ves::xplorer::event::CADAnimationEventHandler();
-    _eventHandlers[ std::string( "CAD_ADD_NODE" )] = 
+    _eventHandlers[ std::string( "CAD_ADD_NODE" )] =
         new ves::xplorer::event::CADAddNodeEventHandler();
-    _eventHandlers[ std::string( "CAD_DELETE_NODE" )] = 
+    _eventHandlers[ std::string( "CAD_DELETE_NODE" )] =
         new ves::xplorer::event::CADDeleteNodeEventHandler();
-    _eventHandlers[ std::string( "CAD_ADD_ATTRIBUTE_TO_NODE" )] = 
+    _eventHandlers[ std::string( "CAD_ADD_ATTRIBUTE_TO_NODE" )] =
         new ves::xplorer::event::CADAddAttributeEventHandler();
-    _eventHandlers[ std::string( "CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE" )] = 
+    _eventHandlers[ std::string( "CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE" )] =
         new ves::xplorer::event::CADSetActiveAttributeEventHandler();
-    _eventHandlers[ std::string( "CAD_SET_NODE_NAME" )] = 
+    _eventHandlers[ std::string( "CAD_SET_NODE_NAME" )] =
         new ves::xplorer::event::CADSetNameEventHandler();
-    _eventHandlers[ std::string( "CAD_TOGGLE_NODE" )] = 
+    _eventHandlers[ std::string( "CAD_TOGGLE_NODE" )] =
         new ves::xplorer::event::CADToggleEventHandler();
-    _eventHandlers[ std::string( "CHANGE_ACTIVE_MODEL" )] = 
+    _eventHandlers[ std::string( "CHANGE_ACTIVE_MODEL" )] =
         new ves::xplorer::event::ActiveModelEventHandler();
-    _eventHandlers[ std::string( "CHANGE_ACTIVE_DATASET" )] = 
+    _eventHandlers[ std::string( "CHANGE_ACTIVE_DATASET" )] =
         new ves::xplorer::event::data::ActiveDataSetEventHandler();
-    _eventHandlers[ std::string( "Optimize CAD" )] = 
+    _eventHandlers[ std::string( "Optimize CAD" )] =
         new ves::xplorer::event::ActiveModelEventHandler();
-    _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_UPDATE" )] = 
+    _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_UPDATE" )] =
         new ves::xplorer::event::MaterialUpdateEventHandler();
-    _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_MODE" )] = 
+    _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_MODE" )] =
         new ves::xplorer::event::MaterialModeUpdateEventHandler();
-    _eventHandlers[ std::string( "CAD_REMOVE_ATTRIBUTE" )] = 
+    _eventHandlers[ std::string( "CAD_REMOVE_ATTRIBUTE" )] =
         new ves::xplorer::event::CADRemoveAttributeEventHandler();
-    _eventHandlers[ std::string( "CAD_MOVE_NODE" )] = 
+    _eventHandlers[ std::string( "CAD_MOVE_NODE" )] =
         new ves::xplorer::event::CADMoveNodeEventHandler();
-    _eventHandlers[ std::string( "UPDATE_MODEL_DATASETS" )] = 
+    _eventHandlers[ std::string( "UPDATE_MODEL_DATASETS" )] =
         new ves::xplorer::event::AddVTKDataSetEventHandler();
-    _eventHandlers[ std::string( "Change Bounding Box State" )] = 
+    _eventHandlers[ std::string( "Change Bounding Box State" )] =
         new ves::xplorer::event::BBoxEventHandler();
-    _eventHandlers[ std::string( "Change Wire Frame State" )] = 
+    _eventHandlers[ std::string( "Change Wire Frame State" )] =
         new ves::xplorer::event::WireframeEventHandler();
-    _eventHandlers[ std::string( "Change Axes State" )] = 
+    _eventHandlers[ std::string( "Change Axes State" )] =
         new ves::xplorer::event::AxesEventHandler();
-    _eventHandlers[ std::string( "Change Axes Labels" )] = 
+    _eventHandlers[ std::string( "Change Axes Labels" )] =
         new ves::xplorer::event::AxesLabelsEventHandler();
-    _eventHandlers[ std::string( "Change Scalar Bar State" )] = 
+    _eventHandlers[ std::string( "Change Scalar Bar State" )] =
         new ves::xplorer::event::ScalarBarEventHandler();
-    _eventHandlers[ std::string( "DATA_TRANSFORM_UPDATE" )] = 
+    _eventHandlers[ std::string( "DATA_TRANSFORM_UPDATE" )] =
         new ves::xplorer::event::DataTransformEventHandler();
-    _eventHandlers[ std::string( "Enable/Disable Sound" )] = 
+    _eventHandlers[ std::string( "Enable/Disable Sound" )] =
         new ves::xplorer::event::SoundActivateEventHandler();
-    _eventHandlers[ std::string( "Add New Sound" )] = 
+    _eventHandlers[ std::string( "Add New Sound" )] =
         new ves::xplorer::event::SoundAddNewEventHandler();
-    _eventHandlers[ std::string( "INITIALIZE_PHYSICS" )] = 
+    _eventHandlers[ std::string( "INITIALIZE_PHYSICS" )] =
         new ves::xplorer::event::CADInitializePhysicsEventHandler();
-    _eventHandlers[ std::string( "PHYSICS_MESH" )] = 
+    _eventHandlers[ std::string( "PHYSICS_MESH" )] =
         new ves::xplorer::event::CADPhysicsMeshEventHandler();
-    _eventHandlers[ std::string( "PHYSICS_PROPERTIES" )] = 
+    _eventHandlers[ std::string( "PHYSICS_PROPERTIES" )] =
         new ves::xplorer::event::CADPhysicsPropertiesEventHandler();
-    _eventHandlers[ std::string( "CAD_OPACITY_UPDATE" )] = 
+    _eventHandlers[ std::string( "CAD_OPACITY_UPDATE" )] =
         new ves::xplorer::event::CADSetOpacityEventHandler();
-    _eventHandlers[ std::string( "Xplorer Toggle Plugin Events" )] = 
+    _eventHandlers[ std::string( "Xplorer Toggle Plugin Events" )] =
         new ves::xplorer::event::cad::TogglePluginsEventHandler();
-    _eventHandlers[ std::string( "Move to cad" )] = 
+    _eventHandlers[ std::string( "Move to cad" )] =
         new ves::xplorer::event::cad::NavigateToEventHandler();
-    _eventHandlers[ std::string( "Culling Settings" )] = 
+    _eventHandlers[ std::string( "Culling Settings" )] =
         new ves::xplorer::event::cad::OcclusionSettingsEventHandler();
-    
+
     // Register signal(s) with EventManager
     eventmanager::EventManager::instance()->RegisterSignal(
-    new eventmanager::SignalWrapper< ActiveModelChangedSignal_type >( &mActiveModelChangedSignal ),
-    "ModelHandler.ActiveModelChangedSignal" );
+        new eventmanager::SignalWrapper< ActiveModelChangedSignal_type >( &mActiveModelChangedSignal ),
+        "ModelHandler.ActiveModelChangedSignal" );
 
-    CONNECTSIGNALS_STATIC( "%SetContourPlaneGreyscale", void( std::string const&, std::vector< bool > const&),
-                 &ves::xplorer::event::data::SetContourPlaneGreyscale,
-                 m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_STATIC( "%SetContourPlaneGreyscale", void( std::string const&, std::vector< bool > const& ),
+                           &ves::xplorer::event::data::SetContourPlaneGreyscale,
+                           m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%TransformDataNode", void( std::string const&, std::vector< double > const&),
-                 &ves::xplorer::event::data::TransformDatasetNode,
-                 m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_STATIC( "%TransformDataNode", void( std::string const&, std::vector< double > const& ),
+                           &ves::xplorer::event::data::TransformDatasetNode,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%SetDatasetSurfaceWrap", void( std::string const&, bool const& ),
-                 &ves::xplorer::event::data::SetDatasetSurfaceWrap,
-                 m_connections, any_SignalType, normal_Priority );
-                 
+                           &ves::xplorer::event::data::SetDatasetSurfaceWrap,
+                           m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_STATIC( "%TBETAddScalarSignal",
-                          void( std::string const&, std::string const& ),
-                          &ves::xplorer::event::data::AddTextureDataset,
-                          m_connections, any_SignalType, normal_Priority );
+                           void( std::string const&, std::string const& ),
+                           &ves::xplorer::event::data::AddTextureDataset,
+                           m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%ToggleDataNode",
-                          void( std::string const&, bool const& ),
-                          &ves::xplorer::event::data::ToggleCADNode,
-                          m_connections, any_SignalType, normal_Priority );
-    
+                           void( std::string const&, bool const& ),
+                           &ves::xplorer::event::data::ToggleCADNode,
+                           m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNAL_1( "ChangeActiveModel",
-                    void( std::string const& ),
-                    &ModelHandler::SetActiveModel,
-                    m_connections, normal_Priority );
+                     void( std::string const& ),
+                     &ModelHandler::SetActiveModel,
+                     m_connections, normal_Priority );
 
     CONNECTSIGNALS_1( "%dbPresent",
-                    void( bool const& ),
-                    &ModelHandler::SetDBPresent,
-                    m_connections, any_SignalType, normal_Priority );
+                      void( bool const& ),
+                      &ModelHandler::SetDBPresent,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ModelHandler::~ModelHandler()
@@ -249,14 +249,14 @@ ModelHandler::~ModelHandler()
         arrow = 0;
     }
 
-    for( std::map< std::string , ves::xplorer::event::EventHandler* >::iterator 
-        itr = _eventHandlers.begin(); itr != _eventHandlers.end(); ++itr )
+    for( std::map< std::string , ves::xplorer::event::EventHandler* >::iterator
+            itr = _eventHandlers.begin(); itr != _eventHandlers.end(); ++itr )
     {
         delete itr->second;
         itr->second = 0;
     }
     _eventHandlers.clear();
-    
+
     osgDB::Registry::instance( true );
 }
 ///////////////////////
@@ -271,14 +271,14 @@ cfdTextureDataSet* ModelHandler::GetActiveTextureDataSet()
 void ModelHandler::SetActiveModel( std::string const& modelNumber )
 {
     _activeModel = 0;
-    
+
     for( size_t i = 0; i < _modelList.size(); i++ )
     {
         if( modelNumber == _modelList.at( i )->GetID() )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tModelHandler::SetActiveModel : "
-                << modelNumber
-                << " is set." << std::endl << vprDEBUG_FLUSH;
+                                  << modelNumber
+                                  << " is set." << std::endl << vprDEBUG_FLUSH;
             _activeModel = _modelList.at( i );
             mActiveModelChangedSignal( modelNumber );
             break;
@@ -303,15 +303,15 @@ void ModelHandler::AddModel( Model* const input )
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::RemoveModel( Model* const modelToBeRemoved )
 {
-    for( std::vector< Model* >::iterator iter = _modelList.begin(); 
-        iter != _modelList.end(); )
+    for( std::vector< Model* >::iterator iter = _modelList.begin();
+            iter != _modelList.end(); )
     {
         if( *iter == modelToBeRemoved )
         {
             _modelList.erase( iter++ );
             delete modelToBeRemoved;
             vprDEBUG( vesDBG, 1 ) << "|\tModelHandler::RemoveModel "
-                << " Model Removal Successful" << std::endl << vprDEBUG_FLUSH;
+                                  << " Model Removal Successful" << std::endl << vprDEBUG_FLUSH;
             return;
         }
         else
@@ -321,7 +321,7 @@ void ModelHandler::RemoveModel( Model* const modelToBeRemoved )
         // The above code is from : The C++ Standard Library by:Josuttis
     }
     vprDEBUG( vesDBG, 1 ) << "|\tModelHandler::RemoveModel "
-        << " Model Removal Failed" << std::endl << vprDEBUG_FLUSH;
+                          << " Model Removal Failed" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Model* ModelHandler::GetActiveModel()
@@ -348,7 +348,7 @@ vtkPolyData* ModelHandler::_GetArrowPolyData()
 
     float vertex[3];
     vtkIdType vertexList[4];     // make large enough for rectangles
-    vtkPolyData * arrow = vtkPolyData::New();
+    vtkPolyData* arrow = vtkPolyData::New();
 
     int memSize = numCells;
     arrow->Allocate( numCells, memSize );
@@ -356,7 +356,7 @@ vtkPolyData* ModelHandler::_GetArrowPolyData()
 
     // Work on the arrow head
     int i;
-    vtkPoints * points = vtkPoints::New();
+    vtkPoints* points = vtkPoints::New();
     for( i = 0; i < tipResolution; i++ )
     {
         float angle = tipAngleIncrement * float( i );
@@ -459,7 +459,7 @@ vtkPolyData* ModelHandler::_GetArrowPolyData()
     arrow->SetPoints( points );
 
     //the normals
-    vtkPolyDataNormals * arrowPolysWithNormals = vtkPolyDataNormals::New();
+    vtkPolyDataNormals* arrowPolysWithNormals = vtkPolyDataNormals::New();
     arrowPolysWithNormals->SetInput( arrow );
     //Specify the angle that defines a sharp edge. If the difference in angle across neighboring
     //polygons is greater than this value, the shared edge is considered "sharp".
@@ -491,17 +491,17 @@ void ModelHandler::InitScene()
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::PreFrameUpdate()
 {
-    activeCommand = 
+    activeCommand =
         ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
     if( activeCommand )
     {
-        std::map<std::string, ves::xplorer::event::EventHandler* >::const_iterator 
-            currentEventHandler = 
-                _eventHandlers.find( activeCommand->GetCommandName() );
+        std::map<std::string, ves::xplorer::event::EventHandler* >::const_iterator
+        currentEventHandler =
+            _eventHandlers.find( activeCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tModelHandler::PreFrameUpdate Executing: "
-                << activeCommand->GetCommandName() << std::endl << vprDEBUG_FLUSH;
+                                  << activeCommand->GetCommandName() << std::endl << vprDEBUG_FLUSH;
 
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( activeCommand );
@@ -518,7 +518,7 @@ void ModelHandler::RegisterAnimatedCADFile( ves::xplorer::scenegraph::CADEntity*
 {
     m_animationCADMap.insert(
         std::pair< std::string, ves::xplorer::scenegraph::CADEntity* const >(
-        tempEntity->GetFilename(), tempEntity ) );
+            tempEntity->GetFilename(), tempEntity ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::RegisterCADFile( ves::xplorer::scenegraph::CADEntity* const tempEntity )
@@ -532,7 +532,7 @@ void ModelHandler::RegisterCADFile( ves::xplorer::scenegraph::CADEntity* const t
 ves::xplorer::scenegraph::CADEntity* ModelHandler::IsCADFileLoaded( std::string const& filename )
 {
     std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::const_iterator
-        iter = m_filenameToCADMap.find( filename );
+    iter = m_filenameToCADMap.find( filename );
     if( iter != m_filenameToCADMap.end() )
     {
         return iter->second;
@@ -542,8 +542,8 @@ ves::xplorer::scenegraph::CADEntity* ModelHandler::IsCADFileLoaded( std::string 
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* const tempEntity )
 {
-    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator 
-        iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
+    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator
+            iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
     {
         if( iter->second == tempEntity )
         {
@@ -551,16 +551,16 @@ void ModelHandler::UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* const
             break;
         }
     }
-    
-    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator 
-        iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
+
+    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator
+            iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
     {
         if( iter->second == tempEntity )
         {
             m_animationCADMap.erase( iter );
             break;
         }
-    }    
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::ContextPreDrawUpdate()
@@ -569,11 +569,11 @@ void ModelHandler::ContextPreDrawUpdate()
     {
         vpr::Guard<vpr::Mutex> val_guard( mValueLock );
 
-        for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::const_iterator 
-            iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
+        for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::const_iterator
+                iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
         {
-            ves::xplorer::scenegraph::util::RescaleTextureVisitor 
-                textureVisitor( iter->second->GetDCS() );
+            ves::xplorer::scenegraph::util::RescaleTextureVisitor
+            textureVisitor( iter->second->GetDCS() );
         }
         m_rescaleCADEntityTextures = false;
     }
@@ -581,8 +581,8 @@ void ModelHandler::ContextPreDrawUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::PauseCADAnimations()
 {
-    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator 
-        iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
+    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator
+            iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
     {
         osg::AnimationPathCallback* tempPath = dynamic_cast< osg::AnimationPathCallback* >( iter->second->GetDCS()->getUpdateCallback() );
         if( tempPath )
@@ -594,8 +594,8 @@ void ModelHandler::PauseCADAnimations()
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::PlayCADAnimations()
 {
-    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator 
-        iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
+    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator
+            iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
     {
         osg::AnimationPathCallback* tempPath = dynamic_cast< osg::AnimationPathCallback* >( iter->second->GetDCS()->getUpdateCallback() );
         if( tempPath )
@@ -607,15 +607,15 @@ void ModelHandler::PlayCADAnimations()
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::ResetCADAnimations()
 {
-    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator 
-        iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
+    for( std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* const >::iterator
+            iter = m_animationCADMap.begin(); iter != m_animationCADMap.end(); ++iter )
     {
         osg::AnimationPathCallback* tempPath = dynamic_cast< osg::AnimationPathCallback* >( iter->second->GetDCS()->getUpdateCallback() );
         if( tempPath )
         {
             tempPath->reset();
             tempPath->setPause( true );
-            tempPath->update( *(static_cast< osg::Node* >( iter->second->GetDCS() )) );
+            tempPath->update( *( static_cast< osg::Node* >( iter->second->GetDCS() ) ) );
         }
     }
 }

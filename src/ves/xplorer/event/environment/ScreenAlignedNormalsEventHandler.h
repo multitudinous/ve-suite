@@ -73,7 +73,7 @@ public:
 
     ///Update screen aligned normals
     void UpdateScreenAlignedNormals( const bool enable );
-    
+
 protected:
     ves::xplorer::Model* m_activeModel;///<The active cfdModel
 };

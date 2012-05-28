@@ -37,8 +37,9 @@
 
 #include <ves/xplorer/Logging.h>
 
-namespace Ui {
-    class RecentFiles;
+namespace Ui
+{
+class RecentFiles;
 }
 
 namespace ves
@@ -51,14 +52,14 @@ class RecentFiles : public QDialog
     Q_OBJECT
 
 public:
-    explicit RecentFiles(QWidget *parent = 0);
+    explicit RecentFiles( QWidget* parent = 0 );
     ~RecentFiles();
     void RefreshFiles();
 
     //const QString& GetSelectedFile();
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent( QEvent* e );
 
 Q_SIGNALS:
     void newProject();
@@ -71,7 +72,7 @@ protected Q_SLOTS:
     void onFileListItemAccepted( QListWidgetItem* selected );
 
 private:
-    Ui::RecentFiles *ui;
+    Ui::RecentFiles* ui;
     QListWidgetItem* m_lastChanged;
     bool block;
 

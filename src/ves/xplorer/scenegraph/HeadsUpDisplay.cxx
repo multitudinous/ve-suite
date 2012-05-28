@@ -107,7 +107,7 @@ void HeadsUpDisplay::Initialize()
         0, 0, mWindowResolution.first, mWindowResolution.second );
     mCamera->setViewMatrix( osg::Matrix::identity() );
     mCamera->setProjectionMatrix( osg::Matrix::ortho(
-        0, mWindowResolution.first, 0, mWindowResolution.second, -50, 50 ) );
+                                      0, mWindowResolution.first, 0, mWindowResolution.second, -50, 50 ) );
     rootNode->addChild( mCamera.get() );
 
     osg::ref_ptr< osg::Light > light = new osg::Light();
@@ -153,7 +153,7 @@ void HeadsUpDisplay::Initialize()
         GetVESuite_WCS(), wcsDCS.get(), true, "Off" );
     mGeometryWCS->GetDCS()->setScale( osg::Vec3( 0.7, 0.7, 0.7 ) );
     mGeometryWCS->GetDCS()->setPosition( osg::Vec3(
-        mWindowResolution.first - 50, mWindowResolution.second - 50, 0 ) );
+            mWindowResolution.first - 50, mWindowResolution.second - 50, 0 ) );
     mGeometryWCS->GetDCS()->setNodeMask( false );
     mCamera->addChild( mGeometryWCS->GetDCS() );
 
@@ -199,13 +199,13 @@ void HeadsUpDisplay::Initialize()
     {
         osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
         std::string fragmentSource =
-        "uniform sampler2D baseMap; \n"
+            "uniform sampler2D baseMap; \n"
 
-        "void main() \n"
-        "{ \n"
+            "void main() \n"
+            "{ \n"
             "vec4 texture = texture2D( baseMap, gl_TexCoord[ 0 ].xy ); \n"
             "gl_FragColor = mix( texture, gl_Color, texture.a ); \n"
-        "} \n";
+            "} \n";
 
         fragmentShader->setType( osg::Shader::FRAGMENT );
         fragmentShader->setShaderSource( fragmentSource );
@@ -226,27 +226,27 @@ void HeadsUpDisplay::Initialize()
         mFramerateTextGeode->setStateSet( stateset.get() );
         wcsTextGeode->setStateSet( stateset.get() );
     }
-    
+
     //Create shader modules emulating ffp
     /*if( !scenegraph::SceneManager::instance()->IsRTTOn() )
     {
         backdropFX::ShaderModuleVisitor smv;
         //smv.setAddDefaults( false );
-        
+
         SetFrameRateFlag( true );
         SetCoordSysFlag( true );
-        
+
         mCamera->accept( smv );
-        
+
         SetFrameRateFlag( false );
         SetCoordSysFlag( false );
-    }*/    
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HeadsUpDisplay::LatePreFrame()
 {
-    if( (mFramerateTextGeode->getNodeMask() == 0) && 
-        (mGeometryWCS->GetDCS()->getNodeMask() == 0) )
+    if( ( mFramerateTextGeode->getNodeMask() == 0 ) &&
+            ( mGeometryWCS->GetDCS()->getNodeMask() == 0 ) )
     {
         return;
     }
@@ -277,7 +277,7 @@ void HeadsUpDisplay::LatePreFrame()
     if( mGeometryWCS->GetDCS()->getNodeMask() != 0 )
     {
         osg::Quat temp = ves::xplorer::scenegraph::SceneManager::instance()->
-            GetNavDCS()->getAttitude();
+                         GetNavDCS()->getAttitude();
         osg::Quat quat( temp.x(), temp.z(), -temp.y(), temp.w() );
 
         mGeometryWCS->GetDCS()->setAttitude( quat );
@@ -307,7 +307,7 @@ void HeadsUpDisplay::SetCoordSysFlag( bool val )
 void HeadsUpDisplay::SetTextColor( std::vector< double > color )
 {
     if( ( color[ 0 ] + color[ 1 ] + color[ 2 ] ) > 1.1 &&
-        ( color[ 0 ] + color[ 1 ] + color[ 2 ] ) < 2.0 )
+            ( color[ 0 ] + color[ 1 ] + color[ 2 ] ) < 2.0 )
     {
         mFramerateText->setColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
         mWCSxText->setColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );

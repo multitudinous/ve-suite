@@ -109,26 +109,26 @@ KeyboardMouse::KeyboardMouse()
     :
     Device( GAME_CONTROLLER ),
     m_exit( false ),
-    m_logger( Poco::Logger::get("xplorer.kbm.EventDebug") ),
+    m_logger( Poco::Logger::get( "xplorer.kbm.EventDebug" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     // Connect to Juggler's new event handling interface
-    m_mouseDoubleClickEventInterface.setClickTime(300);
-    m_mouseDoubleClickEventInterface.init("VJKeyboard");
+    m_mouseDoubleClickEventInterface.setClickTime( 300 );
+    m_mouseDoubleClickEventInterface.init( "VJKeyboard" );
 
-    m_keyboardMouseEventInterface.init("VJKeyboard");
-    m_keyboardMouseEventInterface.addCallback(boost::bind(&KeyboardMouse::onKeyboardMouseEvent, this, _1));
+    m_keyboardMouseEventInterface.init( "VJKeyboard" );
+    m_keyboardMouseEventInterface.addCallback( boost::bind( &KeyboardMouse::onKeyboardMouseEvent, this, _1 ) );
 
 #if 0
-    m_mouseDoubleClickEventInterface.addCallback(boost::bind(&KeyboardMouse::onMouseDoubleClick, this, _1));
+    m_mouseDoubleClickEventInterface.addCallback( boost::bind( &KeyboardMouse::onMouseDoubleClick, this, _1 ) );
 
 #else
     //m_mouseDoubleClickEventInterface.addCallback<gadget::event::single_click_tag>(
     //                                                         boost::bind(&KeyboardMouse::onKeyboardMouseEvent, this, _1)
     //                                                         );
     m_mouseDoubleClickEventInterface.addCallback<gadget::event::double_click_tag>(
-                                                             boost::bind(&KeyboardMouse::onMouseDoubleClick, this, _1)
-                                                             );
+        boost::bind( &KeyboardMouse::onMouseDoubleClick, this, _1 )
+    );
 #endif
     eventmanager::EventManager* evm = eventmanager::EventManager::instance();
     using eventmanager::SignalWrapper;
@@ -148,14 +148,14 @@ KeyboardMouse::KeyboardMouse()
     evm->RegisterSignal(
         new SignalWrapper< StartEndPointSignal_type >( &m_startEndPointSignal ),
         "KeyboardMouse.StartEndPoint", eventmanager::EventManager::unspecified_SignalType );
-    
+
     RegisterButtonSignals();
     RegisterKeySignals();
-    
+
     CONNECTSIGNALS_1( "%Exit", void( bool const& ),
-                     &KeyboardMouse::Exit,
-                     m_connections, any_SignalType, normal_Priority );  
-    
+                      &KeyboardMouse::Exit,
+                      m_connections, any_SignalType, normal_Priority );
+
     //Setup the ability to catch shutdowns
     //m_signalHandler = boost::bind(&KeyboardMouse::HandleSignal, this, _1);
     //vrj::Kernel::instance()->
@@ -182,19 +182,19 @@ void KeyboardMouse::ProcessEvents( ves::open::xml::CommandPtr )
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
+void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
 {
     if( m_exit )
     {
         return;
     }
-    
+
     const gadget::EventType eventType = event->type();
 
     //Get the current display from the input area
     gadget::InputArea& inputArea = event->getSource();
     vrj::DisplayPtr currentDisplay = GetCurrentDisplay( &inputArea );
-    
+
     switch( eventType )
     {
     case gadget::KeyPressEvent:
@@ -211,25 +211,25 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         if( keyEvt->getKey() == gadget::KEY_UNKNOWN )
         {
             vprDEBUG( vesDBG, 2 )
-                << "|\tGadgeteer does not recognize this key: " <<
-                keyEvt->getKeyChar() << std::endl << vprDEBUG_FLUSH;
+                    << "|\tGadgeteer does not recognize this key: " <<
+                    keyEvt->getKeyChar() << std::endl << vprDEBUG_FLUSH;
         }
 
         // Emit the keypress signal associated with this particular key
-        KeyPressSignalMapType::const_iterator itr = 
+        KeyPressSignalMapType::const_iterator itr =
             mKeyPressSignalMap.find( keyEvt->getKey() );
         if( itr != mKeyPressSignalMap.end() )
         {
-            (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask(),
-                              //For use when unicode works in VR Juggler
-                              //keyEvt->getKeyUnicode() );
-                              keyEvt->getKeyChar() );
+            ( *( itr->second ) )( keyEvt->getKey(), keyEvt->getModifierMask(),
+                                  //For use when unicode works in VR Juggler
+                                  //keyEvt->getKeyUnicode() );
+                                  keyEvt->getKeyChar() );
         }
         else
         {
             vprDEBUG( vesDBG, 2 )
-                << "|\tKeyboardMouse::onKeyboardMouseEvent::Unknown key in KeyPress event"
-                << std::endl << vprDEBUG_FLUSH;
+                    << "|\tKeyboardMouse::onKeyboardMouseEvent::Unknown key in KeyPress event"
+                    << std::endl << vprDEBUG_FLUSH;
         }
 
         break;
@@ -246,20 +246,20 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             boost::static_pointer_cast< gadget::KeyEvent >( event );
 
         // Emit the keypress signal associated with this particular key
-        KeyReleaseSignalMapType::const_iterator itr = 
+        KeyReleaseSignalMapType::const_iterator itr =
             mKeyReleaseSignalMap.find( keyEvt->getKey() );
         if( itr != mKeyReleaseSignalMap.end() )
         {
-            (*(itr->second))( keyEvt->getKey(), keyEvt->getModifierMask(),
-                             //For use when unicode works in VR Juggler
-                             //keyEvt->getKeyUnicode() );
-                             keyEvt->getKeyChar() );
+            ( *( itr->second ) )( keyEvt->getKey(), keyEvt->getModifierMask(),
+                                  //For use when unicode works in VR Juggler
+                                  //keyEvt->getKeyUnicode() );
+                                  keyEvt->getKeyChar() );
         }
         else
         {
             vprDEBUG( vesDBG, 2 )
-                << "|\tKeyboardMouse::onKeyboardMouseEvent::Unknown key in KeyRelease event"
-                << std::endl << vprDEBUG_FLUSH;
+                    << "|\tKeyboardMouse::onKeyboardMouseEvent::Unknown key in KeyRelease event"
+                    << std::endl << vprDEBUG_FLUSH;
         }
 
         break;
@@ -269,16 +269,16 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         //std::cout << "press event " << std::endl;
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
-        
+
         m_currX = mouseEvt->getX();
         m_currY = mouseEvt->getY();
-        
+
         //Set the current GLTransfromInfo from the event
         if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
         {
             return;
         }
-        
+
         //LOG_INFO( "KeyboardMouse:: Mouse button press" );
 
         //Send current Start and end points
@@ -291,12 +291,12 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             << ", " << mouseEvt->getY() << ", " << mouseEvt->getState()
             << std::endl << vprDEBUG_FLUSH;*/
 
-        ButtonPressSignalMapType::const_iterator itr = 
+        ButtonPressSignalMapType::const_iterator itr =
             mButtonPressSignalMap.find( mouseEvt->getButton() );
         if( itr != mButtonPressSignalMap.end() )
         {
-            (*(itr->second))( mouseEvt->getButton(), mouseEvt->getX(), 
-                             mouseEvt->getY(), mouseEvt->getState() );
+            ( *( itr->second ) )( mouseEvt->getButton(), mouseEvt->getX(),
+                                  mouseEvt->getY(), mouseEvt->getState() );
         }
 
         break;
@@ -314,18 +314,18 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
         if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
         {
             return;
-        }        
-        
+        }
+
         //Send current Start and end points
         SetStartEndPoint( m_startPoint, m_endPoint );
         m_startEndPointSignal( m_startPoint, m_endPoint );
-        
-        ButtonReleaseSignalMapType::const_iterator itr = 
+
+        ButtonReleaseSignalMapType::const_iterator itr =
             mButtonReleaseSignalMap.find( mouseEvt->getButton() );
         if( itr != mButtonReleaseSignalMap.end() )
         {
-            (*(itr->second))( mouseEvt->getButton(), mouseEvt->getX(), 
-                             mouseEvt->getY(), mouseEvt->getState() );
+            ( *( itr->second ) )( mouseEvt->getButton(), mouseEvt->getX(),
+                                  mouseEvt->getY(), mouseEvt->getState() );
         }
 
         break;
@@ -334,15 +334,15 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     {
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
-        
+
         m_currX = mouseEvt->getX();
         m_currY = mouseEvt->getY();
-        
+
         //Set the current GLTransfromInfo from the event
         if( !SetCurrentGLTransformInfo( currentDisplay, false ) )
         {
             return;
-        }        
+        }
 
         //int buttonMask = mouseEvt->getState();
         //if( buttonMask&gadget::BUTTON1_MASK )
@@ -351,7 +351,7 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
             SetStartEndPoint( m_startPoint, m_endPoint );
             m_startEndPointSignal( m_startPoint, m_endPoint );
         }
-        
+
         //vprDEBUG( vesDBG, 2 )
         //    << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseMoveEvent"
         //    << mouseEvt->getButton() << " " << mouseEvt->getX() << ", " << mouseEvt->getY()
@@ -373,8 +373,8 @@ void KeyboardMouse::onKeyboardMouseEvent(gadget::EventPtr event)
     }
     default:
     {
-        std::cout << "KeyboardMouse event not implemented." 
-            << std::endl << std::flush;
+        std::cout << "KeyboardMouse event not implemented."
+                  << std::endl << std::flush;
     }
     }
 }
@@ -392,7 +392,7 @@ void KeyboardMouse::onMouseDoubleClick( gadget::EventPtr event )
         << std::endl << vprDEBUG_FLUSH;*/
 
     m_mouseDoubleClick( mouseEvt->getButton(), mouseEvt->getX(),
-                       mouseEvt->getY(), 0, mouseEvt->getState() );
+                        mouseEvt->getY(), 0, mouseEvt->getState() );
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -407,36 +407,36 @@ void KeyboardMouse::RegisterButtonSignals()
     {
         std::stringstream ss;
         ss << index;
-        std::string pressName("KeyboardMouse.ButtonPress");
-        std::string releaseName("KeyboardMouse.ButtonRelease");
+        std::string pressName( "KeyboardMouse.ButtonPress" );
+        std::string releaseName( "KeyboardMouse.ButtonRelease" );
         pressName.append( ss.str() );
         releaseName.append( ss.str() );
 
         mButtonPressSignalHolder[ pressName ] = new ButtonPressSignal_type;
         mButtonReleaseSignalHolder[ releaseName ] = new ButtonReleaseSignal_type;
 
-        mButtonPressSignalMap[ buttonOneIndex + index ] = 
+        mButtonPressSignalMap[ buttonOneIndex + index ] =
             mButtonPressSignalHolder[ pressName ];
-        mButtonReleaseSignalMap[ buttonOneIndex + index ] = 
+        mButtonReleaseSignalMap[ buttonOneIndex + index ] =
             mButtonReleaseSignalHolder[ releaseName ];
 
         evm->RegisterSignal(
-            new SignalWrapper< ButtonPressSignal_type >( 
+            new SignalWrapper< ButtonPressSignal_type >(
                 mButtonPressSignalHolder[ pressName ] ),
-                pressName, eventmanager::EventManager::button_SignalType );
+            pressName, eventmanager::EventManager::button_SignalType );
 
         evm->RegisterSignal(
-            new SignalWrapper< ButtonReleaseSignal_type >( 
+            new SignalWrapper< ButtonReleaseSignal_type >(
                 mButtonReleaseSignalHolder[ releaseName ] ),
-                releaseName, eventmanager::EventManager::button_SignalType );
+            releaseName, eventmanager::EventManager::button_SignalType );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RegisterKeySignals()
 {
     // We will use this to get access to gadget::KeyboardMouse::getKeyName
-    mKeyboardMousePtr = gadget::KeyboardMousePtr( 
-                                gadget::KeyboardMouse::create() );
+    mKeyboardMousePtr = gadget::KeyboardMousePtr(
+                            gadget::KeyboardMouse::create() );
 
     eventmanager::EventManager* evm = eventmanager::EventManager::instance();
     using eventmanager::SignalWrapper;
@@ -459,10 +459,10 @@ void KeyboardMouse::RegisterKeySignals()
 
     while( key != gadget::MOUSE_POSX )
     {
-        std::string pressName("KeyboardMouse.KeyPress_");
-        std::string releaseName("KeyboardMouse.KeyRelease_");
+        std::string pressName( "KeyboardMouse.KeyPress_" );
+        std::string releaseName( "KeyboardMouse.KeyRelease_" );
         std::string keyName = mKeyboardMousePtr->getKeyName(
-                static_cast< gadget::Keys >( key ) );
+                                  static_cast< gadget::Keys >( key ) );
         pressName.append( keyName );
         releaseName.append( keyName );
 
@@ -470,20 +470,20 @@ void KeyboardMouse::RegisterKeySignals()
         mKeyReleaseSignalHolder[ releaseName ] = new KeyReleaseSignal_type;
 
         mKeyPressSignalMap[ static_cast< gadget::Keys >( key ) ] =
-                mKeyPressSignalHolder[ pressName ];
+            mKeyPressSignalHolder[ pressName ];
         mKeyReleaseSignalMap[ static_cast< gadget::Keys >( key ) ] =
-                mKeyReleaseSignalHolder[ releaseName ];
+            mKeyReleaseSignalHolder[ releaseName ];
 
         evm->RegisterSignal(
-                new SignalWrapper< KeyPressSignal_type >(
-                    mKeyPressSignalHolder[ pressName ] ),
-                    pressName, 
-                    eventmanager::EventManager::keyboard_SignalType );
+            new SignalWrapper< KeyPressSignal_type >(
+                mKeyPressSignalHolder[ pressName ] ),
+            pressName,
+            eventmanager::EventManager::keyboard_SignalType );
         evm->RegisterSignal(
-                new SignalWrapper< KeyReleaseSignal_type >(
-                    mKeyReleaseSignalHolder[ releaseName ] ),
-                    releaseName, 
-                    eventmanager::EventManager::keyboard_SignalType );
+            new SignalWrapper< KeyReleaseSignal_type >(
+                mKeyReleaseSignalHolder[ releaseName ] ),
+            releaseName,
+            eventmanager::EventManager::keyboard_SignalType );
 
         ++key;
     }
@@ -491,10 +491,10 @@ void KeyboardMouse::RegisterKeySignals()
     key = gadget::KEY_TAB;
     while( key != gadget::KEY_UNKNOWN )
     {
-        std::string pressName("KeyboardMouse.KeyPress_");
-        std::string releaseName("KeyboardMouse.KeyRelease_");
+        std::string pressName( "KeyboardMouse.KeyPress_" );
+        std::string releaseName( "KeyboardMouse.KeyRelease_" );
         std::string keyName = mKeyboardMousePtr->getKeyName(
-                static_cast< gadget::Keys >( key ) );
+                                  static_cast< gadget::Keys >( key ) );
         pressName.append( keyName );
         releaseName.append( keyName );
 
@@ -502,20 +502,20 @@ void KeyboardMouse::RegisterKeySignals()
         mKeyReleaseSignalHolder[ releaseName ] = new KeyReleaseSignal_type;
 
         mKeyPressSignalMap[ static_cast< gadget::Keys >( key ) ] =
-                mKeyPressSignalHolder[ pressName ];
+            mKeyPressSignalHolder[ pressName ];
         mKeyReleaseSignalMap[ static_cast< gadget::Keys >( key ) ] =
-                mKeyReleaseSignalHolder[ releaseName ];
+            mKeyReleaseSignalHolder[ releaseName ];
 
         evm->RegisterSignal(
-                new SignalWrapper< KeyPressSignal_type >(
-                    mKeyPressSignalHolder[ pressName ] ),
-                    pressName, 
-                    eventmanager::EventManager::keyboard_SignalType );
+            new SignalWrapper< KeyPressSignal_type >(
+                mKeyPressSignalHolder[ pressName ] ),
+            pressName,
+            eventmanager::EventManager::keyboard_SignalType );
         evm->RegisterSignal(
-                new SignalWrapper< KeyReleaseSignal_type >(
-                    mKeyReleaseSignalHolder[ releaseName ] ),
-                    releaseName, 
-                    eventmanager::EventManager::keyboard_SignalType );
+            new SignalWrapper< KeyReleaseSignal_type >(
+                mKeyReleaseSignalHolder[ releaseName ] ),
+            releaseName,
+            eventmanager::EventManager::keyboard_SignalType );
 
         ++key;
     }
@@ -572,27 +572,27 @@ vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
     //upcast
     window = dynamic_cast< const vrj::opengl::Window* >( windowXWin );
 #endif
-    
+
     if( window )
     {
         //With the new VR Juggler function callbacks for event management
-        //the VR Juggler kernel can still process events when the app is 
-        //shutting down and windows are closing. Due to this change we 
+        //the VR Juggler kernel can still process events when the app is
+        //shutting down and windows are closing. Due to this change we
         //need to make sure the window is open and not in the process
         //of being closed.
         if( !window->isOpen() )
         {
             return vrj::DisplayPtr();
         }
-        
+
         return window->getDisplay();
     }
     else
     {
         //Error output, this should never happen
-        vprDEBUG( vesDBG, 2 ) 
-        << "VPR OS is not defined properly in KeyboardMouse::GetCurrentDisplay." 
-        << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 2 )
+                << "VPR OS is not defined properly in KeyboardMouse::GetCurrentDisplay."
+                << std::endl << vprDEBUG_FLUSH;
         return vrj::DisplayPtr();
     }
 }
@@ -606,7 +606,7 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
         m_sceneManager.SetCurrentGLTransformInfo( GLTransformInfoPtr() );
         return false;
     }
-    
+
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
         m_manipulatorManager.GetSceneManipulator();
     vrj::ViewportPtr viewport;
@@ -620,39 +620,39 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
             m_sceneManager.SetCurrentGLTransformInfo( GLTransformInfoPtr() );
             return false;
         }
-        
+
         // ---------- This needs to be optimized ------------ //
         // --- Does not need to be set for every viewport --- //
         //const int& windowWidth = m_currentGLTransformInfo->GetWindowWidth();
         //const int& windowHeight = m_currentGLTransformInfo->GetWindowHeight();
         //SetWindowValues( windowWidth, windowHeight );
         // -------------------------------------------------- //
-        
+
         if( isKeyEvent )
         {
             m_sceneManager.SetCurrentGLTransformInfo( m_currentGLTransformInfo );
             return true;
         }
-        
+
         //Get dimensions of viewport in pixels
         const int& viewportOriginX = m_currentGLTransformInfo->GetViewportOriginX();
         const int& viewportOriginY = m_currentGLTransformInfo->GetViewportOriginY();
         const int& viewportWidth = m_currentGLTransformInfo->GetViewportWidth();
         const int& viewportHeight = m_currentGLTransformInfo->GetViewportHeight();
-        
+
         //Check if mouse is inside viewport
         if( ( m_currX >= viewportOriginX ) &&
-           ( m_currY >= viewportOriginY ) &&
-           ( m_currX <= viewportOriginX + viewportWidth ) &&
-           ( m_currY <= viewportOriginY + viewportHeight ) )
+                ( m_currY >= viewportOriginY ) &&
+                ( m_currX <= viewportOriginX + viewportWidth ) &&
+                ( m_currY <= viewportOriginY + viewportHeight ) )
         {
             sceneManipulator->SetCurrentGLTransformInfo(
-                                                        m_currentGLTransformInfo );
-            m_sceneManager.SetCurrentGLTransformInfo( m_currentGLTransformInfo );            
+                m_currentGLTransformInfo );
+            m_sceneManager.SetCurrentGLTransformInfo( m_currentGLTransformInfo );
             return true;
         }
     }
-    
+
     m_sceneManager.SetCurrentGLTransformInfo( GLTransformInfoPtr() );
     m_sceneManager.SetCurrentGLTransformInfo( scenegraph::GLTransformInfoPtr() );
     return false;

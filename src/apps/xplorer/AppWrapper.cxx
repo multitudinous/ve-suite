@@ -72,19 +72,19 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::pro
     m_vm( vm )
 {
     SetupOSGFILEPATH();
-    
+
     int desktopWidth = 0;
     int desktopHeight = 0;
     bool enableRTT = false;
     bool desktopMode = false;
-    
+
     bool RTTtemp = vm["VESRTT"].as<bool>();
     if( RTTtemp )
     {
         enableRTT = true;
-        std::cout << "|\tEnabling RTT"<< std::endl;
+        std::cout << "|\tEnabling RTT" << std::endl;
     }
-    
+
     bool desktopModeOp = vm["VESDesktopMode"].as<bool>();
     if( desktopModeOp )
     {
@@ -93,15 +93,15 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::pro
             std::cout << "|\tEnabling Desktop Mode" << std::endl;
             desktopMode = true;
             //int dwWidth = GetSystemMetrics(SM_CXBORDER);
-            desktopWidth = GetSystemMetrics(SM_CXSCREEN);
+            desktopWidth = GetSystemMetrics( SM_CXSCREEN );
             //int dwHeight = GetSystemMetrics(SM_CYBORDER);
-            desktopHeight = GetSystemMetrics(SM_CYSCREEN);
+            desktopHeight = GetSystemMetrics( SM_CYSCREEN );
         }
 #else
         std::cout << "Automatic desktop mode not yet supported on this platform" << std::endl;
 #endif
     }
-    else if( vm.count("VESDesktop") )
+    else if( vm.count( "VESDesktop" ) )
     {
         std::cout << "|\tEnabling Desktop Mode" << std::endl;
         std::vector< int > desktopSize =
@@ -117,7 +117,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::pro
     m_cfdApp = new App( m_argc, m_argv, enableRTT, vm, splitter );
     m_cfdApp->SetDesktopInfo( desktopMode, desktopWidth, desktopHeight );
     m_cfdApp->SetWrapper( m_vjObsWrapper );
-    
+
     vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
 #if defined _DARWIN
     CocoaInit( m_cfdApp );
@@ -127,23 +127,23 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::pro
     //We could ask to resize our window here based on command line args.
     //After we call start the application has handed the config files
     //off to jccl::ConfigManager.
-    if( (desktopWidth > 0) && (desktopHeight > 0) && desktopMode )
+    if( ( desktopWidth > 0 ) && ( desktopHeight > 0 ) && desktopMode )
     {
         cfdDisplaySettings* displaySettings = new cfdDisplaySettings();
 
-        std::cout << 
-            "| Initializing....................................  Desktop Display |" 
-            << std::endl;
+        std::cout <<
+                  "| Initializing....................................  Desktop Display |"
+                  << std::endl;
         // Create the command and data value pairs
         // to adjust the desktop settings.
         ves::open::xml::DataValuePairPtr dvpDesktopWidth( new ves::open::xml::DataValuePair( std::string( "FLOAT" ) ) );
         dvpDesktopWidth->SetDataName( "desktop_width" );
         dvpDesktopWidth->SetDataValue( static_cast< double >( desktopWidth ) );
-        
+
         ves::open::xml::DataValuePairPtr dvpDesktopHeight( new ves::open::xml::DataValuePair( std::string( "FLOAT" ) ) );
         dvpDesktopHeight->SetDataName( "desktop_height" );
         dvpDesktopHeight->SetDataValue( static_cast< double >( desktopHeight ) );
-        
+
         ves::open::xml::CommandPtr displayCommand( new ves::open::xml::Command() );
         displayCommand->SetCommandName( std::string( "Juggler_Desktop_Data" ) );
         displayCommand->AddDataValuePair( dvpDesktopWidth );
@@ -151,11 +151,11 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::pro
         displaySettings->SetVECommand( displayCommand );
         displaySettings->ProcessCommand();
         delete displaySettings;
-    }    
+    }
 
     kernel->setApplication( m_cfdApp );    // Give application to kernel
 
-    //vpr::Thread* thread = 
+    //vpr::Thread* thread =
     //    new vpr::Thread( boost::bind(&AppWrapper::init, this) );
     //m_jugglerIsRunning = true;
 }
@@ -168,7 +168,7 @@ AppWrapper::~AppWrapper()
     delete m_vjObsWrapper;
     m_vjObsWrapper = NULL;
     m_jugglerIsRunning = false;
-    
+
     ves::xplorer::eventmanager::EventManager::instance()->Shutdown();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -180,14 +180,14 @@ bool AppWrapper::JugglerIsRunning()
 void AppWrapper::init()
 {
     vrj::Kernel::instance()->waitForKernelStop();// Block until kernel stops
-    
-/*
-    delete m_cfdApp;
-    m_cfdApp = NULL;
 
-    delete m_vjObsWrapper;
-    m_vjObsWrapper = NULL;
-    m_jugglerIsRunning = false;*/
+    /*
+        delete m_cfdApp;
+        m_cfdApp = NULL;
+
+        delete m_vjObsWrapper;
+        m_vjObsWrapper = NULL;
+        m_jugglerIsRunning = false;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppWrapper::SetupOSGFILEPATH()
@@ -202,9 +202,9 @@ void AppWrapper::SetupOSGFILEPATH()
     vpr::System::getenv( "XPLORER_BASE_DIR", xplorerBaseDir );
     std::string vesDir = xplorerBaseDir + "/share/vesuite";
     std::string glslDir = vesDir + "/glsl";
-	std::string bdfxDir = vesDir + "/bdfx-data";
+    std::string bdfxDir = vesDir + "/bdfx-data";
     fileList.push_back( vesDir );
     fileList.push_back( glslDir );
-	fileList.push_back( bdfxDir );
+    fileList.push_back( bdfxDir );
 }
 ////////////////////////////////////////////////////////////////////////////////

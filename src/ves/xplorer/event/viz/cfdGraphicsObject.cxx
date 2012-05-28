@@ -117,7 +117,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
         if( !worldNode->SearchChild( parentNode ) )
         {
             vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active switch node to worldDCS"
-            << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
             worldNode->AddChild( parentNode );
         }
 
@@ -130,39 +130,39 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             if( !parentNode->SearchChild( temp ) )
             {
                 vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active dcs node to worldDCS for classic ss "
-                << std::endl << vprDEBUG_FLUSH;
+                                      << std::endl << vprDEBUG_FLUSH;
                 parentNode->AddChild( temp );
             }
 
             vprDEBUG( vesDBG, 1 ) << "|\t\tAdding geode to active dataset dcs "
-            << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
 
             // we can do this because classic group is always
             // child 0 see line 58 of cfdModel.cxx
             ves::xplorer::scenegraph::Group* test = dynamic_cast< ves::xplorer::scenegraph::Group* >( temp->GetChild( 0 ) );
             test->AddChild( geodes.back().get() );
             vprDEBUG( vesDBG, 1 ) << "|\tFinished classic ss add to graph"
-            << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
         }
         // classic ss animated images, planes, tracked particles
         // even if model contains transient data
         else if( geodes.size() > 1 )
-                //&& 
-                //( !(model->GetAnimation() ) || 
-                // !(model->GetActiveDataSet()->IsPartOfTransientSeries() ) ) )
+            //&&
+            //( !(model->GetAnimation() ) ||
+            // !(model->GetActiveDataSet()->IsPartOfTransientSeries() ) ) )
         {
             ves::xplorer::scenegraph::Switch* temp = model->GetActiveDataSet()->GetSwitchNode();
 
             if( !parentNode->SearchChild( temp ) )
             {
-                vprDEBUG(vesDBG,1) << "|\t\tAdding active dcs node to worldDCS for classic ss animation"
-                    << std::endl << vprDEBUG_FLUSH;
+                vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active dcs node to worldDCS for classic ss animation"
+                                      << std::endl << vprDEBUG_FLUSH;
                 parentNode->AddChild( temp );
             }
             m_animation = new osg::Sequence();
             //m_animation->setDefaultTime( 1.0f );
             m_animation->
-                setInterval( osg::Sequence::LOOP, 0, -1 );
+            setInterval( osg::Sequence::LOOP, 0, -1 );
             for( size_t i = 0; i < geodes.size(); ++i )
             {
                 m_animation->addChild( geodes.at( i ).get(), 0.3f );
@@ -173,7 +173,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             ves::xplorer::scenegraph::Group* test = dynamic_cast< ves::xplorer::scenegraph::Group* >( temp->GetChild( 0 ) );
             test->addChild( m_animation.get() );
         }
-        /*else if( ( geodes.size() > 1 ) && 
+        /*else if( ( geodes.size() > 1 ) &&
                  model->GetActiveDataSet()->IsPartOfTransientSeries() )
         {
             if( worldNode->SearchChild( temp ) < 0 )
@@ -216,7 +216,7 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* const input )
     {
         isStreamLine = true;
     }
-    
+
     bool isPD = false;
     if( dynamic_cast< ves::xplorer::cfdPolyData* >( input ) )
     {
@@ -237,10 +237,10 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* const input )
 
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodeList =
         input->GetGeodes();
-        
+
     for( size_t i = 0; i < geodeList.size(); ++i )
     {
-        if(  geodeList.at( i ).valid() )
+        if( geodeList.at( i ).valid() )
         {
             geodes.push_back( geodeList.at( i ) );
         }
@@ -490,7 +490,7 @@ void cfdGraphicsObject::RemoveGeodeFromDCS()
 
         if( m_animation.valid() )
         {
-            osg::Group* parent = m_animation->getParent(0);
+            osg::Group* parent = m_animation->getParent( 0 );
             parent->removeChild( m_animation.get() );
         }
     }

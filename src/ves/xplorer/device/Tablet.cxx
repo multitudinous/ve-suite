@@ -93,8 +93,8 @@ void Tablet::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
 {
-    vprDEBUG( vesDBG, 3 ) << "|\tTablet Navigate ProcessEvents" 
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tTablet Navigate ProcessEvents"
+                          << std::endl << vprDEBUG_FLUSH;
 
     if( !command )
     {
@@ -133,11 +133,11 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
     }
     else if( !newCommand.compare( "Z_GREATER_THAN_ZERO" ) )
     {
-		Device::SetSubZeroFlag( cfdIso_value );
+        Device::SetSubZeroFlag( cfdIso_value );
     }
-	else if( !newCommand.compare( "Z_EQUALS_ZERO" ) )
+    else if( !newCommand.compare( "Z_EQUALS_ZERO" ) )
     {
-		Device::SetZEqualsZeroFlag( cfdIso_value );
+        Device::SetZEqualsZeroFlag( cfdIso_value );
     }
     else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )
     {
@@ -159,7 +159,7 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
     {
         //This equation returns a range of ~ 0.00029' -> 1.586' NOTE: These are in degrees
         //This equation is 1 / 750 * ( x / 2 ) ^ 2.2 where 1 < x < 50
-        rotationStepSize = ( 0.001333f ) * powf(( cfdIso_value * 0.5f ), 2.2f );
+        rotationStepSize = ( 0.001333f ) * powf( ( cfdIso_value * 0.5f ), 2.2f );
     }
     else if( !newCommand.compare( "GUI_NAV" ) )
     {
@@ -532,9 +532,9 @@ void Tablet::ProcessEvents( ves::open::xml::CommandPtr command )
         else
         {
             m_characterController.Rotate( 0., osg::DegreesToRadians( rotationStepSize ) );
-        }        
+        }
     }
-	
+
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Tablet Navigate" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////

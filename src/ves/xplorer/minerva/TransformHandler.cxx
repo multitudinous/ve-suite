@@ -81,36 +81,36 @@ TransformHandler::~TransformHandler()
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  
+//
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void TransformHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void TransformHandler::Execute( CommandPtr command, MinervaManager& manager )
 {
-  ves::open::xml::DataValuePairPtr nodeIDData ( command->GetDataValuePair( "Node ID" ) );
-  ves::open::xml::DataValuePairPtr nodeType ( command->GetDataValuePair( "Node Type" ) );
-  ves::open::xml::DataValuePairPtr transformData ( command->GetDataValuePair( "Transform" ) );
+    ves::open::xml::DataValuePairPtr nodeIDData( command->GetDataValuePair( "Node ID" ) );
+    ves::open::xml::DataValuePairPtr nodeType( command->GetDataValuePair( "Node Type" ) );
+    ves::open::xml::DataValuePairPtr transformData( command->GetDataValuePair( "Transform" ) );
 
-  /// Assembly not handled yet.
-  if ( "Assembly" == nodeType->GetDataString() )
-  {
-    return;
-  }
+    /// Assembly not handled yet.
+    if( "Assembly" == nodeType->GetDataString() )
+    {
+        return;
+    }
 
-  std::string nodeId;
-  nodeIDData->GetData ( nodeId );
+    std::string nodeId;
+    nodeIDData->GetData( nodeId );
 
-  ves::open::xml::TransformPtr transform ( boost::dynamic_pointer_cast<ves::open::xml::Transform> ( transformData->GetDataXMLObject() ) );
+    ves::open::xml::TransformPtr transform( boost::dynamic_pointer_cast<ves::open::xml::Transform> ( transformData->GetDataXMLObject() ) );
 
-  ModelWrapper::RefPtr modelWrapper ( this->GetOrCreateModel ( nodeId, manager ) );
+    ModelWrapper::RefPtr modelWrapper( this->GetOrCreateModel( nodeId, manager ) );
 
-  ves::open::xml::FloatArrayPtr scaleArray ( transform->GetScaleArray() );
-  ves::open::xml::FloatArrayPtr rotationArray ( transform->GetRotationArray() );
-  ves::open::xml::FloatArrayPtr translationArray ( transform->GetTranslationArray() );
+    ves::open::xml::FloatArrayPtr scaleArray( transform->GetScaleArray() );
+    ves::open::xml::FloatArrayPtr rotationArray( transform->GetRotationArray() );
+    ves::open::xml::FloatArrayPtr translationArray( transform->GetTranslationArray() );
 
-  modelWrapper->scale ( osg::Vec3d ( scaleArray->GetElement ( 0 ), scaleArray->GetElement ( 1 ), scaleArray->GetElement ( 2 ) ) );
-  modelWrapper->orientation ( rotationArray->GetElement ( 0 ), rotationArray->GetElement ( 1 ), rotationArray->GetElement ( 2 ) );
-  modelWrapper->setTranslationOffset ( translationArray->GetElement ( 0 ), translationArray->GetElement ( 1 ), translationArray->GetElement ( 2 ) );
+    modelWrapper->scale( osg::Vec3d( scaleArray->GetElement( 0 ), scaleArray->GetElement( 1 ), scaleArray->GetElement( 2 ) ) );
+    modelWrapper->orientation( rotationArray->GetElement( 0 ), rotationArray->GetElement( 1 ), rotationArray->GetElement( 2 ) );
+    modelWrapper->setTranslationOffset( translationArray->GetElement( 0 ), translationArray->GetElement( 1 ), translationArray->GetElement( 2 ) );
 
-  manager.UpdateModel ( modelWrapper.get() );
+    manager.UpdateModel( modelWrapper.get() );
 }

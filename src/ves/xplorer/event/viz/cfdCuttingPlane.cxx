@@ -46,7 +46,7 @@ cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
     this->SetBounds( bounds );
 
     vprDEBUG( vesDBG, 1 ) << "|\tcfdCuttingPlane type = " << this->type
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     // specify the normal to sweep, the step-size, and the origin...
     if( this->type == 0 )
@@ -89,8 +89,8 @@ cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
     }
 
     vprDEBUG( vesDBG, 1 ) << "|\t\tcfdCuttingPlane origin = " << this->origin[0] << " : "
-    << this->origin[1] << " : " << this->origin[2]
-    << std::endl << vprDEBUG_FLUSH;
+                          << this->origin[1] << " : " << this->origin[2]
+                          << std::endl << vprDEBUG_FLUSH;
     this->plane = vtkPlane::New( );
     this->plane->SetOrigin( this->origin );
     this->plane->SetNormal( this->normal );
@@ -103,7 +103,7 @@ cfdCuttingPlane::~cfdCuttingPlane( )
 {
     //vprDEBUG(vesDBG,2) << "in cfdCuttingPlane destructor"
     //                      << std::endl << vprDEBUG_FLUSH;
-// Fix this mccdo
+    // Fix this mccdo
     this->plane->Delete();
 }
 
@@ -115,7 +115,7 @@ void cfdCuttingPlane::SetBounds( const double* bounds )
     }
 }
 
-vtkPlane * cfdCuttingPlane::GetPlane( )
+vtkPlane* cfdCuttingPlane::GetPlane( )
 {
     return this->plane;
 }
@@ -142,11 +142,17 @@ void cfdCuttingPlane::Advance( double requestedValue )
     }
     // if over the limit, reset close to bottom of range
     // if at the limit, reset close to end of range
-    if( this->isPastEnd() ) this->ResetOriginToLow();
-    else if( this->isAtEnd() ) this->ResetOriginToHigh();
+    if( this->isPastEnd() )
+    {
+        this->ResetOriginToLow();
+    }
+    else if( this->isAtEnd() )
+    {
+        this->ResetOriginToHigh();
+    }
 
     vprDEBUG( vesDBG, 0 ) << "|\t\tthis->origin[" << this->type << "] = "
-    << this->origin[this->type] << std::endl << vprDEBUG_FLUSH;
+                          << this->origin[this->type] << std::endl << vprDEBUG_FLUSH;
 
     this->plane->SetOrigin( this->origin );
     this->plane->Modified();
@@ -162,20 +168,26 @@ void cfdCuttingPlane::GetOrigin( double Origin[ 3 ] )
 
 void cfdCuttingPlane::ComputeOrigin( double requestedValue )
 {
-    if( requestedValue < 0 )   requestedValue = 0;
-    if( requestedValue > 100 ) requestedValue = 100;
+    if( requestedValue < 0 )
+    {
+        requestedValue = 0;
+    }
+    if( requestedValue > 100 )
+    {
+        requestedValue = 100;
+    }
 
     // bd is an array of 6 values xmin, xmax, ymin, ymax, zmin, zmax
     // bd is calculated from the raw DataSet NOT from the precalc values
     // type is either 0,1,2 representing x,y,z
-    this->origin[this->type] = this->bd[2*this->type] +
+    this->origin[this->type] = this->bd[2 * this->type] +
                                ( requestedValue * 0.010f ) *
-                               ( this->bd[2*this->type+1] - this->bd[2*this->type] );
+                               ( this->bd[2 * this->type + 1] - this->bd[2 * this->type] );
 }
 
 int cfdCuttingPlane::isPastEnd()
 {
-    if( this->origin[this->type] > ( this->bd[2*this->type+1] + 0.5*this->dx ) )
+    if( this->origin[this->type] > ( this->bd[2 * this->type + 1] + 0.5 * this->dx ) )
     {
         return 1;
     }
@@ -187,7 +199,7 @@ int cfdCuttingPlane::isPastEnd()
 
 int cfdCuttingPlane::isAtEnd()
 {
-    if( this->origin[this->type] > ( this->bd[2*this->type+1] - ( this->bd[2*this->type+1] - this->bd[2*this->type] ) / 100.0 ) )
+    if( this->origin[this->type] > ( this->bd[2 * this->type + 1] - ( this->bd[2 * this->type + 1] - this->bd[2 * this->type] ) / 100.0 ) )
     {
         return 1;
     }
@@ -199,7 +211,7 @@ int cfdCuttingPlane::isAtEnd()
 
 int cfdCuttingPlane::isAtStart()
 {
-    if( this->origin[this->type] < ( this->bd[2*this->type] + ( this->bd[2*this->type+1] - this->bd[2*this->type] ) / 100.0 ) )
+    if( this->origin[this->type] < ( this->bd[2 * this->type] + ( this->bd[2 * this->type + 1] - this->bd[2 * this->type] ) / 100.0 ) )
     {
         return 1;
     }
@@ -211,14 +223,14 @@ int cfdCuttingPlane::isAtStart()
 
 void cfdCuttingPlane::ResetOriginToLow()
 {
-    this->origin[this->type] = this->bd[2*this->type] +
-                               ( this->bd[2*this->type+1] - this->bd[2*this->type] ) / 100.0;
+    this->origin[this->type] = this->bd[2 * this->type] +
+                               ( this->bd[2 * this->type + 1] - this->bd[2 * this->type] ) / 100.0;
 }
 
 void cfdCuttingPlane::ResetOriginToHigh()
 {
-    this->origin[this->type] = this->bd[2*this->type+1] -
-                               ( this->bd[2*this->type+1] - this->bd[2*this->type] ) / 100.0;
+    this->origin[this->type] = this->bd[2 * this->type + 1] -
+                               ( this->bd[2 * this->type + 1] - this->bd[2 * this->type] ) / 100.0;
 }
 
 void cfdCuttingPlane::IncrementOrigin()

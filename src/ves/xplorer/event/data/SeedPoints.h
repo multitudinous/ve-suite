@@ -130,7 +130,7 @@ public:
                        std::string minMax = "Min" );
 
 protected:
-class PointsDrawable: public osg::Geometry
+    class PointsDrawable: public osg::Geometry
     {
     public:
         ///Constructor

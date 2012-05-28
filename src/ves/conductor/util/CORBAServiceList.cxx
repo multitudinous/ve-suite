@@ -71,7 +71,7 @@ CORBAServiceList::CORBAServiceList( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 CORBAServiceList::~CORBAServiceList()
-{    
+{
     /*try
     {
         m_orb->shutdown( false );
@@ -80,7 +80,7 @@ CORBAServiceList::~CORBAServiceList()
     {
         ;
     }
-    
+
     try
     {
         m_orbThread->join();
@@ -115,7 +115,7 @@ void CORBAServiceList::CleanUp()
         delete p_ui_i;
         p_ui_i = 0;
     }
-    
+
 #ifndef WIN32
     if( !CORBA::is_nil( m_orb.in() ) )
     {
@@ -141,7 +141,7 @@ bool CORBAServiceList::IsConnectedToXplorer( void )
     {
         vjobs->_non_existent();
     }
-    catch ( ... )
+    catch( ... )
     {
         return ConnectToXplorer();
     }
@@ -160,7 +160,7 @@ bool CORBAServiceList::IsConnectedToCE( void )
     {
         veCE->_non_existent();
     }
-    catch ( ... )
+    catch( ... )
     {
         return ConnectToCE();
     }
@@ -188,7 +188,7 @@ bool CORBAServiceList::ConnectToCE( void )
         return false;
     }
 
-    if (( p_ui_i != 0 ) && !CORBA::is_nil( veCE.in() ) )
+    if( ( p_ui_i != 0 ) && !CORBA::is_nil( veCE.in() ) )
     {
         return true;
     }
@@ -196,12 +196,12 @@ bool CORBAServiceList::ConnectToCE( void )
     try
     {
         CreateCORBAModule();
-        if (( p_ui_i == 0 ) || CORBA::is_nil( veCE.in() ) )
+        if( ( p_ui_i == 0 ) || CORBA::is_nil( veCE.in() ) )
         {
             return false;
         }
     }
-    catch ( CORBA::Exception& ex )
+    catch( CORBA::Exception& ex )
     {
         std::string tempMessage =
             "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
@@ -242,10 +242,10 @@ bool CORBAServiceList::ConnectToXplorer( void )
         MessageLog( "Connected to VE-Xplorer." );
 
     }
-    catch ( CORBA::Exception& ex )
+    catch( CORBA::Exception& ex )
     {
-        std::string tempMessage = 
-            "Cannot find VE-Xplorer: CORBA Exception " + 
+        std::string tempMessage =
+            "Cannot find VE-Xplorer: CORBA Exception " +
             std::string( ex._info().c_str() );
         MessageLog( tempMessage.c_str() );
 
@@ -253,10 +253,10 @@ bool CORBAServiceList::ConnectToXplorer( void )
     }
 
     ///Cannot assume that p_ui_i and m_ui have been initialized yet
-    if (( p_ui_i == 0 ) || CORBA::is_nil( m_ui.in() ) )
+    if( ( p_ui_i == 0 ) || CORBA::is_nil( m_ui.in() ) )
     {
         CreateCORBAModule();
-        if (( p_ui_i == 0 ) || CORBA::is_nil( m_ui.in() ) )
+        if( ( p_ui_i == 0 ) || CORBA::is_nil( m_ui.in() ) )
         {
             return false;
         }
@@ -279,7 +279,7 @@ bool CORBAServiceList::ConnectToXplorer( void )
         m_xplorer->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in() );
         MessageLog( "Connected to two-way VE-Xplorer." );
     }
-    catch ( CORBA::Exception& ex )
+    catch( CORBA::Exception& ex )
     {
         std::string tempMessage =
             "Cannot find two-way VE-Xplorer: CORBA Exception " +
@@ -317,7 +317,7 @@ bool CORBAServiceList::ConnectToNamingService( void )
         //std::string Advanced_Resource_Factory( "static Advanced_Resource_Factory \"-ORBReactorType select_st -ORBInputCDRAllocator null -ORBConnectionCacheLock null -ORBFlushingStrategy blocking\"" );
         //std::string Client_Strategy_Factory( "static Client_Strategy_Factory \"-ORBProfileLock null -ORBClientConnectionHandler RW\"" );
         //std::string  Server_Strategy_Factory( "static Server_Strategy_Factory \"-ORBConcurrency thread-per-connection -ORBPOALock thread -ORBThreadPerConnectionTimeout 1\"" );
-        
+
         //resource factory args, server strategy factory args, client args
         //TAO::ORB::default_svc_conf_entries( 0, Server_Strategy_Factory.c_str(), 0 );
         // First initialize the ORB,
@@ -336,12 +336,12 @@ bool CORBAServiceList::ConnectToNamingService( void )
             m_orb->resolve_initial_references( "NameService" );
         naming_context = CosNaming::NamingContext::_narrow( naming_context_object.in() );
         MessageLog( "Initialized ORB and connection to the Naming Service." );
-        //m_orbThread = 
+        //m_orbThread =
         //    new vpr::Thread( boost::bind( &CORBAServiceList::OrbRun, this ) );
 
         return true;
     }
-    catch ( CORBA::Exception& ex )
+    catch( CORBA::Exception& ex )
     {
         m_orb->destroy();
         std::string tempMessage =
@@ -359,10 +359,10 @@ bool CORBAServiceList::DisconnectFromCE( void )
         if( p_ui_i )
         {
             veCE->UnRegisterUI( p_ui_i->UIName_.c_str() );
-            MessageLog( "Disconnect successful." );            
+            MessageLog( "Disconnect successful." );
         }
     }
-    catch ( CORBA::SystemException& ex )
+    catch( CORBA::SystemException& ex )
     {
         MessageLog( "Disconnect failed." );
         MessageLog( ex._info().c_str() );
@@ -448,7 +448,7 @@ void CORBAServiceList::CreateCORBAModule( void )
                 poa = poa_root->create_POA( "childPOA", poa_manager.in(),
                                             policies );
             }
-            catch ( const PortableServer::POA::AdapterAlreadyExists & )
+            catch( const PortableServer::POA::AdapterAlreadyExists& )
             {
                 std::cout << " Child POA Already Connected : Do nothing " << std::endl;
             }
@@ -484,11 +484,11 @@ void CORBAServiceList::CreateCORBAModule( void )
         {
             try
             {
-                PortableServer::ObjectId_var idObject = 
+                PortableServer::ObjectId_var idObject =
                     PortableServer::string_to_ObjectId( UINAME.c_str() );
 
                 //Activate it to obtain the object reference
-                CORBA::Object_var objectRef = 
+                CORBA::Object_var objectRef =
                     poa->id_to_reference( idObject.in() );
                 m_ui = Body::UI::_narrow( objectRef.in() );
 
@@ -503,7 +503,7 @@ void CORBAServiceList::CreateCORBAModule( void )
             }
         }
     }
-    catch ( CORBA::Exception& ex )
+    catch( CORBA::Exception& ex )
     {
         std::string tempMessage =
             "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
@@ -532,7 +532,7 @@ bool CORBAServiceList::SendCommandStringToXplorer( const ves::open::xml::Command
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 
     ves::conductor::util::DataLoggerEngine::instance()->SendCommandStringToXplorer( veCommand.lock() );
-    
+
     if( CORBA::is_nil( vjobs.in() ) || xmlDocument.empty() )
     {
         return false;
@@ -558,7 +558,7 @@ VjObs_ptr CORBAServiceList::GetXplorerPointer( void )
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::MessageLog( const char* msg )
 {
-    wxLogMessage(  wxString( msg, wxConvUTF8 ) );
+    wxLogMessage( wxString( msg, wxConvUTF8 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
@@ -638,7 +638,7 @@ void CORBAServiceList::StartCalc( void )
     {
         veCE->StartCalc();
     }
-    catch ( ... )
+    catch( ... )
     {
         return;
     }
@@ -656,7 +656,7 @@ void CORBAServiceList::PauseCalc( void )
     {
         veCE->PauseCalc();
     }
-    catch ( ... )
+    catch( ... )
     {
         return;
     }
@@ -707,9 +707,9 @@ void CORBAServiceList::SetNetwork( const std::string& command )
     {
         return;
     }
-    
+
     ves::conductor::util::DataLoggerEngine::instance()->SendNetworkStringToCE( command );
-    
+
     try
     {
         veCE->SetNetwork( command.c_str() );

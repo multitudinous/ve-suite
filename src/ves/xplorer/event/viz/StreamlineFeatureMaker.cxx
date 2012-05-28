@@ -78,32 +78,32 @@ void StreamlineFeatureMaker::Update( const::std::string& recordUUID )
 void StreamlineFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )
 {
     m_vectorInformation.clear();
-    
+
     ves::open::xml::DataValuePairPtr streamlineDirection( new ves::open::xml::DataValuePair() );
-    streamlineDirection->SetData( std::string( "Cursor Direction" ), 
-        boost::any_cast<std::string >( set.GetPropertyAttribute( "CursorDirection", "enumCurrentString" ) ) );
-    
+    streamlineDirection->SetData( std::string( "Cursor Direction" ),
+                                  boost::any_cast<std::string >( set.GetPropertyAttribute( "CursorDirection", "enumCurrentString" ) ) );
+
     m_vectorInformation.push_back( streamlineDirection );
-    
+
     std::string tempString = boost::any_cast<std::string>( set.GetPropertyAttribute( "CursortType", "enumCurrentString" ) );
-    ves::open::xml::DataValuePairPtr cursorSelection = ves::open::xml::MakeDVP(  "Cursor Type", tempString );
-    
+    ves::open::xml::DataValuePairPtr cursorSelection = ves::open::xml::MakeDVP( "Cursor Type", tempString );
+
     m_vectorInformation.push_back( cursorSelection );
-    
+
     ves::open::xml::DataValuePairPtr integrationDirection( new ves::open::xml::DataValuePair() );
-    integrationDirection->SetData( std::string( "Integration Direction" ), 
-        boost::any_cast<std::string >( set.GetPropertyAttribute( "IntegrationDirection", "enumCurrentString" ) ) );
-    
+    integrationDirection->SetData( std::string( "Integration Direction" ),
+                                   boost::any_cast<std::string >( set.GetPropertyAttribute( "IntegrationDirection", "enumCurrentString" ) ) );
+
     m_vectorInformation.push_back( integrationDirection );
-    
+
     ves::open::xml::DataValuePairPtr streamSize( new ves::open::xml::DataValuePair() );
     streamSize->SetData( "Size", boost::any_cast<double>( set.GetPropertyValue( "StreamlineSize" ) ) );
-    
+
     m_vectorInformation.push_back( streamSize );
-    
+
     ves::open::xml::DataValuePairPtr nPointsPerPlane( new ves::open::xml::DataValuePair() );
     nPointsPerPlane->SetData( "Number Of Points Per Plane", boost::any_cast<double>( set.GetPropertyValue( "NumberOfPointsPerPlane" ) ) );
-    
+
     m_vectorInformation.push_back( nPointsPerPlane );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +123,7 @@ void StreamlineFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     activeDataset->SetData( "Active Dataset", datasetname );
     displaySeedPoint->AddDataValuePair( activeDataset );
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( displaySeedPoint );
-        
+
     ves::open::xml::CommandPtr boundsCommand( new ves::open::xml::Command() );
     boundsCommand->SetCommandName( "Seed Points Bounds" );
     ///6 numbers to define all the mins and maxs, goes like x, y, z
@@ -143,7 +143,7 @@ void StreamlineFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     boundsCommand->AddDataValuePair( seedPointBoundsDVP );
 
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( boundsCommand );
-    
+
     ves::open::xml::CommandPtr dimensionsCommand( new ves::open::xml::Command() );
     dimensionsCommand->SetCommandName( "Seed Points Dimensions" );
     ///Thre numbers for the number of seed points in each direction
@@ -159,7 +159,7 @@ void StreamlineFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     dimensionsCommand->AddDataValuePair( dimensions );
 
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( dimensionsCommand );
-    
+
 
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
     newCommand->SetCommandName( "UPDATE_STREAMLINE_SETTINGS" );
@@ -187,7 +187,7 @@ void StreamlineFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     {
         SendUpdatedSettingsToXplorer( newCommand, set );
     }
-    catch ( ... )
+    catch( ... )
     {
         //QMessageBox msg;
         //msg.setText( "Invalid Parent" );
@@ -199,7 +199,7 @@ void StreamlineFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
 void StreamlineFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
 {
     m_advancedSettings.clear();
-    
+
     // With a bit of re-thinking here and some normalization of names, we may be
     // able to convert much of the following code to something like:
     //
@@ -219,31 +219,31 @@ void StreamlineFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet&
     ves::open::xml::DataValuePairPtr propagationTime( new ves::open::xml::DataValuePair() );
     propagationTime->SetData( "Propagation Time", boost::any_cast<double>( set.GetPropertyValue( "Advanced_PropogationTime" ) ) );
     m_advancedSettings.push_back( propagationTime );
-    
+
     ves::open::xml::DataValuePairPtr integrationStep( new ves::open::xml::DataValuePair() );
     integrationStep->SetData( "Integration Step Size", boost::any_cast<double>( set.GetPropertyValue( "Advanced_IntegrationStepSize" ) ) );
     m_advancedSettings.push_back( integrationStep );
-    
+
     ves::open::xml::DataValuePairPtr lineDiameter( new ves::open::xml::DataValuePair() );
     lineDiameter->SetData( "Diameter", boost::any_cast<double>( set.GetPropertyValue( "Advanced_Diameter" ) ) );
     m_advancedSettings.push_back( lineDiameter );
-    
+
     ves::open::xml::DataValuePairPtr sphereArrowParticles( new ves::open::xml::DataValuePair() );
     sphereArrowParticles->SetData( "Sphere/Arrow/Particle Size", boost::any_cast<double>( set.GetPropertyValue( "Advanced_SphereArrowParticleSize" ) ) );
     m_advancedSettings.push_back( sphereArrowParticles );
-    
+
     ves::open::xml::DataValuePairPtr seedPtFlag( new ves::open::xml::DataValuePair() );
     seedPtFlag->SetDataBool( "Use Last Seed Pt", boost::any_cast<bool>( set.GetPropertyValue( "UseLastSeedPoints" ) ) );
     m_advancedSettings.push_back( seedPtFlag );
-    
+
     ves::open::xml::DataValuePairPtr streamArrow( new ves::open::xml::DataValuePair() );
     streamArrow->SetDataBool( "Use Stream Arrows", boost::any_cast<bool>( set.GetPropertyValue( "UseStreamArrows" ) ) );
     m_advancedSettings.push_back( streamArrow );
-    
+
     ves::open::xml::DataValuePairPtr streamRibbon( new ves::open::xml::DataValuePair() );
     streamRibbon->SetDataBool( "Use Stream Ribbons", boost::any_cast<bool>( set.GetPropertyValue( "UseStreamRibbons" ) ) );
     m_advancedSettings.push_back( streamRibbon );
-    
+
     ves::open::xml::DataValuePairPtr gpuToolsDVP( new ves::open::xml::DataValuePair() );
     gpuToolsDVP->SetDataBool( "GPU Tools", boost::any_cast<bool>( set.GetPropertyValue( "UseGPUTools" ) ) );
     m_advancedSettings.push_back( gpuToolsDVP );

@@ -72,22 +72,22 @@ void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string&
     namespace bfs = boost::filesystem;
     using namespace ves::open::xml;
     using namespace ves::open::xml::cad;
-    
+
     // The filename
     bfs::path vegFileName( fileName );
-    
+
     // Re-write the path as being relative to CWD
     //vegFileName = bfs::system_complete( vegFileName );
-    
+
     // Get the entire file path
     std::string vegFileNamePath = vegFileName.string();
-    
+
     // Replace backslashes with single forward slash
     while( vegFileNamePath.find( "\\" ) != std::string::npos )
     {
         vegFileNamePath.replace( vegFileNamePath.find( "\\" ), 2, "/" );
     }
-    
+
     // ?
     bfs::path cadFileName( vegFileNamePath );
 
@@ -97,19 +97,19 @@ void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string&
     std::string partName = "New_";
     partName.append( bfs::basename( cadFileName ) );
 
-    CADPartPtr newCADPart( new CADPart( partName  ) );
+    CADPartPtr newCADPart( new CADPart( partName ) );
     newCADPart->SetCADFileName( vegFileNamePath );
     newCADPart->SetVisibility( true );
 
     // Make this node the child of the top assembly, and tell it who its parent is.
     ves::xplorer::Model* model =
-            ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        ves::xplorer::ModelHandler::instance()->GetActiveModel();
 
     if( model == NULL )
     {
         std::cerr << "Error loading CAD file " << fileName << ": No model present "
-                "to which to add CAD. Please select New File from the file menu before "
-                "attempting to load CAD." << std::endl << std::flush;
+                  "to which to add CAD. Please select New File from the file menu before "
+                  "attempting to load CAD." << std::endl << std::flush;
         return;
     }
 
@@ -119,7 +119,7 @@ void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string&
         boost::dynamic_pointer_cast<CADAssembly>( cad->GetCADPart() );
     assembly->AddChild( newCADPart );
     //newCADPart->SetParent( assembly->GetID() );
-    
+
     // Send node off to xplorer
     ves::open::xml::DataValuePairPtr cadNode( new ves::open::xml::DataValuePair() );
     cadNode->SetDataType( std::string( "XMLOBJECT" ) );
@@ -131,13 +131,13 @@ void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string&
     WritePartToDB( vegFileNamePath, newCADPart );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADFileLoader::WritePartToDB( std::string const& vegFileNamePath, 
-    ves::open::xml::cad::CADPartPtr& newPart )
+void CADFileLoader::WritePartToDB( std::string const& vegFileNamePath,
+                                   ves::open::xml::cad::CADPartPtr& newPart )
 {
     ves::xplorer::data::CADPropertySet newSet;
     newSet.SetUUID( newPart->GetID() );
     boost::filesystem::path cadFileName( vegFileNamePath );
-    newSet.SetPropertyValue( "NameTag", boost::filesystem::basename( cadFileName )  );
+    newSet.SetPropertyValue( "NameTag", boost::filesystem::basename( cadFileName ) );
     newSet.SetPropertyValue( "Opacity", 1.0 );
     newSet.SetPropertyValue( "TransparencyFlag", true );
     newSet.SetPropertyValue( "Transform_Translation_X", 0. );
@@ -160,7 +160,7 @@ void CADFileLoader::WritePartToDB( std::string const& vegFileNamePath,
     //newSet.SetPropertyValue( "Culling", "" );
     std::string pathString;
     newSet.SetPropertyValue( "NodePath", pathString );
-    newSet.SetPropertyValue( "Filename", vegFileNamePath );    
+    newSet.SetPropertyValue( "Filename", vegFileNamePath );
     newSet.SetPropertyValue( "Visibile", true );
     // What needs to be tested to turn GPS on/off?
     //    if( ??minerva_gps_condition?? )
@@ -171,10 +171,10 @@ void CADFileLoader::WritePartToDB( std::string const& vegFileNamePath,
     //    {
     //        newSet.SetPropertyValue( "GPS", false );
     //    }
-    
+
     //newSet.SetPropertyValue( "GPS_Longitude",  );
     //newSet.SetPropertyValue( "GPS_Latitude", );
-        
+
     newSet.WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////

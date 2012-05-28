@@ -40,8 +40,8 @@
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 Port::Port( int id, Module* m )
-        : _module( m ),
-        _id( id )
+    : _module( m ),
+      _id( id )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 Port::Port( const Port& p )
@@ -66,7 +66,10 @@ Port::~Port()
 ////////////////////////////////////////////////////////////////////////////////
 void Port::copy( const Port& p )
 {
-    if( this == &p ) return;
+    if( this == &p )
+    {
+        return;
+    }
 
     _connections = p._connections;
     _module      = p._module;
@@ -84,7 +87,7 @@ Connection* Port::connection( int idx )
     {
         return _connections.at( idx );
     }
-    catch ( ... )
+    catch( ... )
     {
         return NULL;
     }

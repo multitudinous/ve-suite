@@ -75,21 +75,21 @@ void SelectTechnique::DefinePasses()
                                osg::Stencil::REPLACE );//stencil pass/depth pass
 
         m_stateSet->setMode( GL_STENCIL_TEST,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         m_stateSet->setAttributeAndModes( stencil.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                          osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         AddPass( m_stateSet.get() );
     }
 
     //Create the shader used to render the lines and points
     std::string fragmentSource =
-    "uniform vec4 color; \n"
+        "uniform vec4 color; \n"
 
-    "void main() \n"
-    "{ \n"
+        "void main() \n"
+        "{ \n"
         "gl_FragColor = color; \n"
-    "} \n";
+        "} \n";
 
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     fragmentShader->setType( osg::Shader::FRAGMENT );
@@ -112,26 +112,26 @@ void SelectTechnique::DefinePasses()
     {
         osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
         stateset->setAttributeAndModes( program.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         stateset->addUniform( m_color.get() );
 
         stateset->setMode( GL_STENCIL_TEST,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                           osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         stateset->setAttributeAndModes( stencil.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         osg::ref_ptr< osg::PolygonMode > polygonMode = new osg::PolygonMode();
         polygonMode->setMode(
             osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
 
         stateset->setAttributeAndModes( polygonMode.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
         linewidth->setWidth( m_lineAndPointSize );
         stateset->setAttributeAndModes( linewidth.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         AddPass( stateset.get() );
     }
@@ -141,24 +141,24 @@ void SelectTechnique::DefinePasses()
     {
         osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
         stateset->setAttributeAndModes( program.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         stateset->addUniform( m_color.get() );
 
         stateset->setMode( GL_STENCIL_TEST,
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                           osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         stateset->setAttributeAndModes( stencil.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         osg::ref_ptr< osg::PolygonMode > polygonMode = new osg::PolygonMode();
         polygonMode->setMode(
             osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::POINT );
 
         stateset->setAttributeAndModes( polygonMode.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         stateset->setAttribute( new osg::Point( m_lineAndPointSize ),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         AddPass( stateset.get() );
     }

@@ -104,7 +104,7 @@ public:
     //std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
     ///Get the map of all systems
     const std::map< std::string, ves::open::xml::model::SystemPtr >
-        GetXMLSystemDataMap();
+    GetXMLSystemDataMap();
     ///Get a system
     std::string GetTopSystemId( );
     ///Get a system
@@ -119,11 +119,11 @@ public:
     ///Remove the model from the system
     ///\param model Model to be removed
     bool RemoveModelFromSystem( ves::open::xml::model::ModelPtr model );
-    ///Recursive function to clean up systems and subsystems 
+    ///Recursive function to clean up systems and subsystems
     ///\param system The system to be removed
     bool RemovemSystem( ves::open::xml::model::SystemPtr system );
 
-    
+
 private:
     ///Map to store the command name and command for easy lookup by the user
     //std::map< std::string, ves::open::xml::CommandPtr > m_commandMap;

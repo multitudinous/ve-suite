@@ -132,11 +132,11 @@ void TranslateAxis::ComboForm()
     osg::Vec3d explodeVector = GetUnitAxis() * m_explodeDistance;
 
     //Move the line in from the origin and unit axis
-    (*m_lineVertices)[ 0 ] += explodeVector;
+    ( *m_lineVertices )[ 0 ] += explodeVector;
     m_positiveLineGeometry->dirtyDisplayList();
     m_positiveLineGeometry->dirtyBound();
 
-    (*m_lineVertices)[ 2 ] -= explodeVector;
+    ( *m_lineVertices )[ 2 ] -= explodeVector;
     m_negativeLineGeometry->dirtyDisplayList();
     m_negativeLineGeometry->dirtyBound();
 
@@ -171,11 +171,11 @@ void TranslateAxis::DefaultForm()
     osg::Vec3d explodeVector = GetUnitAxis() * m_explodeDistance;
 
     //Move the line back to the origin and unit axis
-    (*m_lineVertices)[ 0 ] -= explodeVector;
+    ( *m_lineVertices )[ 0 ] -= explodeVector;
     m_positiveLineGeometry->dirtyDisplayList();
     m_positiveLineGeometry->dirtyBound();
 
-    (*m_lineVertices)[ 2 ] += explodeVector;
+    ( *m_lineVertices )[ 2 ] += explodeVector;
     m_negativeLineGeometry->dirtyDisplayList();
     m_negativeLineGeometry->dirtyBound();
 
@@ -280,10 +280,10 @@ void TranslateAxis::SetupDefaultGeometry()
     const osg::Vec3d unitAxis = GetUnitAxis();
     m_lineVertices = new osg::Vec3Array();
     m_lineVertices->resize( 4 );
-    (*m_lineVertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
-    (*m_lineVertices)[ 1 ] =  unitAxis;
-    (*m_lineVertices)[ 2 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
-    (*m_lineVertices)[ 3 ] = -unitAxis;
+    ( *m_lineVertices )[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
+    ( *m_lineVertices )[ 1 ] =  unitAxis;
+    ( *m_lineVertices )[ 2 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
+    ( *m_lineVertices )[ 3 ] = -unitAxis;
 
     //Create a positive line
     {
@@ -309,10 +309,10 @@ void TranslateAxis::SetupDefaultGeometry()
     //Create a positive cone
     {
         osg::Vec3d CONE_CENTER = unitAxis * CONE_HEIGHT;
-        (*m_lineVertices)[ 1 ] -= CONE_CENTER;
+        ( *m_lineVertices )[ 1 ] -= CONE_CENTER;
         CONE_CENTER *= 0.25;
         m_positiveCone = new osg::Cone(
-            (*m_lineVertices)[ 1 ] + CONE_CENTER, CONE_RADIUS, CONE_HEIGHT );
+            ( *m_lineVertices )[ 1 ] + CONE_CENTER, CONE_RADIUS, CONE_HEIGHT );
 
         m_positiveConeDrawable = new osg::ShapeDrawable( m_positiveCone.get() );
         coneGeode->addDrawable( m_positiveConeDrawable.get() );
@@ -325,9 +325,9 @@ void TranslateAxis::SetupDefaultGeometry()
     //Create an invisible cylinder for picking the positive line
     {
         m_positiveCylinder = new osg::Cylinder(
-            (*m_lineVertices)[ 1 ] * 0.5,
+            ( *m_lineVertices )[ 1 ] * 0.5,
             PICK_RADIUS,
-            (*m_lineVertices)[ 1 ].length() );
+            ( *m_lineVertices )[ 1 ].length() );
         m_positiveCylinderDrawable =
             new osg::ShapeDrawable( m_positiveCylinder.get() );
 
@@ -359,10 +359,10 @@ void TranslateAxis::SetupDefaultGeometry()
     //Create a negative cone
     {
         osg::Vec3d CONE_CENTER = -unitAxis * CONE_HEIGHT;
-        (*m_lineVertices)[ 3 ] -= CONE_CENTER;
+        ( *m_lineVertices )[ 3 ] -= CONE_CENTER;
         CONE_CENTER *= 0.25;
         m_negativeCone = new osg::Cone(
-            (*m_lineVertices)[ 3 ] + CONE_CENTER, CONE_RADIUS, -CONE_HEIGHT );
+            ( *m_lineVertices )[ 3 ] + CONE_CENTER, CONE_RADIUS, -CONE_HEIGHT );
 
         m_negativeConeDrawable = new osg::ShapeDrawable( m_negativeCone.get() );
         //coneGeode->addDrawable( m_negativeConeDrawable.get() );
@@ -375,9 +375,9 @@ void TranslateAxis::SetupDefaultGeometry()
     //Create an invisible cylinder for picking the negative line
     {
         m_negativeCylinder = new osg::Cylinder(
-            (*m_lineVertices)[ 3 ] * 0.5,
+            ( *m_lineVertices )[ 3 ] * 0.5,
             PICK_RADIUS,
-            -(*m_lineVertices)[ 3 ].length() );
+            -( *m_lineVertices )[ 3 ].length() );
         m_negativeCylinderDrawable =
             new osg::ShapeDrawable( m_negativeCylinder.get() );
 

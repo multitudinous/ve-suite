@@ -43,7 +43,7 @@ using namespace ves::open::xml;
 //Constructor       //
 //////////////////////
 Command::Command()
-        : XMLObject()
+    : XMLObject()
 {
     mCmdName.empty();
     mDataValuePairs.clear();
@@ -57,12 +57,12 @@ Command::~Command()
 }
 ///////////////////////////////////////////
 Command::Command( const Command& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mCmdName =  input.mCmdName;
     for( size_t i = 0; i < input.mDataValuePairs.size(); ++i )
     {
-        mDataValuePairs.push_back( DataValuePairPtr( new DataValuePair(( *( input.mDataValuePairs.at( i ) ) ) ) ) );
+        mDataValuePairs.push_back( DataValuePairPtr( new DataValuePair( ( *( input.mDataValuePairs.at( i ) ) ) ) ) );
         mNameToDataValuePairMap[ mDataValuePairs.back()->GetDataName()] = mDataValuePairs.back();
     }
 }
@@ -80,7 +80,7 @@ Command& Command::operator=( const Command& input )
 
         for( size_t i = 0; i < input.mDataValuePairs.size(); ++i )
         {
-            mDataValuePairs.push_back( DataValuePairPtr( new DataValuePair(( *( input.mDataValuePairs.at( i ) ) ) ) ) );
+            mDataValuePairs.push_back( DataValuePairPtr( new DataValuePair( ( *( input.mDataValuePairs.at( i ) ) ) ) ) );
             mNameToDataValuePairMap[ mDataValuePairs.back()->GetDataName()] = mDataValuePairs.back();
         }
     }
@@ -108,27 +108,27 @@ void Command::AddDataValuePair( DataValuePairPtr commandValuePair )
     bool hasDVP = false;
     for( std::vector< DataValuePairPtr >::iterator iter = mDataValuePairs.begin(); iter != mDataValuePairs.end(); ++iter )
     {
-        if( (*iter)->GetDataName() == commandValuePair->GetDataName() )
+        if( ( *iter )->GetDataName() == commandValuePair->GetDataName() )
         {
             hasDVP = true;
             break;
         }
     }
-    
+
     if( hasDVP )
     {
         mDataValuePairs.push_back( commandValuePair );
     }
- }
+}
 ////////////////////////////////////////////////////////////////////////////////
 void Command::RemoveDataValuePair( const std::string& dataValueName )
 {
-  std::map< std::string, DataValuePairPtr >::iterator iter ( mNameToDataValuePairMap.find ( dataValueName ) );
-  if ( iter != mNameToDataValuePairMap.end() )
-  {
-    mDataValuePairs.erase ( std::find_if ( mDataValuePairs.begin(), mDataValuePairs.end(), boost::lambda::_1 == iter->second ) );
-    mNameToDataValuePairMap.erase ( iter );
-  }
+    std::map< std::string, DataValuePairPtr >::iterator iter( mNameToDataValuePairMap.find( dataValueName ) );
+    if( iter != mNameToDataValuePairMap.end() )
+    {
+        mDataValuePairs.erase( std::find_if( mDataValuePairs.begin(), mDataValuePairs.end(), boost::lambda::_1 == iter->second ) );
+        mNameToDataValuePairMap.erase( iter );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Command::_updateVEElement( const std::string& input )
@@ -147,10 +147,10 @@ void Command::_updateVEElement( const std::string& input )
 void Command::_updateCommandName()
 {
     DOMElement* cmdNameElement = mRootDocument->createElement(
-                                 Convert( "command" ).toXMLString() );
+                                     Convert( "command" ).toXMLString() );
 
     DOMText* cmdName = mRootDocument->createTextNode(
-                       Convert( mCmdName ).toXMLString() );
+                           Convert( mCmdName ).toXMLString() );
 
     cmdNameElement->appendChild( cmdName );
     mVeElement->appendChild( cmdNameElement );
@@ -184,7 +184,7 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
         //get variables by tags
         DOMNodeList* subElements = 0;
         subElements = currentElement->getElementsByTagName(
-                      Convert( "command" ).toXMLString() );
+                          Convert( "command" ).toXMLString() );
 
         if( subElements->getLength() > 0 )
         {
@@ -201,7 +201,7 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
     {
         //get variables by tags
         DOMNodeList* subElements = currentElement->getElementsByTagName(
-                                   Convert( "parameter" ).toXMLString() );
+                                       Convert( "parameter" ).toXMLString() );
 
         //clear out old dvpairs
         mDataValuePairs.clear();
@@ -252,11 +252,11 @@ DataValuePairPtr Command::GetDataValuePair( size_t index )
     {
         return mDataValuePairs.at( index );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cerr << " Command::GetDataValuePair The element request "
-        << "is out of sequence. Please ask for a lower number point."
-        << std::endl;
+                  << "is out of sequence. Please ask for a lower number point."
+                  << std::endl;
 
         return DataValuePairPtr();
     }

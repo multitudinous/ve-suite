@@ -159,9 +159,9 @@ protected:
     virtual void UpdateUniforms();
 
     ///Set the input textures based on the parents
-    ///This does NOT scan parents for any uniforms. If a uniform is needed for 
+    ///This does NOT scan parents for any uniforms. If a uniform is needed for
     ///this unit it must explicitly be configured through the SetInputToUniform
-    ///interface. 
+    ///interface.
     ///This function should really be a pure virtual because every unit is going
     ///to have a different implementation. This default implementation
     ///in specifically for UnitInOut's.

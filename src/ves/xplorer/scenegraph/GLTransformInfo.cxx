@@ -414,10 +414,10 @@ void GLTransformInfo::UpdateProjectionMatrix()
         ( m_topFrustum - m_bottomFrustum );
     m_projectionMatrix.mData[ 10 ] =
         -1.0 * ( m_farFrustum + m_nearFrustum ) /
-               ( m_farFrustum - m_nearFrustum );
+        ( m_farFrustum - m_nearFrustum );
     m_projectionMatrix.mData[ 14 ] =
         ( -2.0 * m_farFrustum * m_nearFrustum ) /
-               ( m_farFrustum - m_nearFrustum );
+        ( m_farFrustum - m_nearFrustum );
 
     m_projectionMatrixOSG.set( m_projectionMatrix.getData() );
 }

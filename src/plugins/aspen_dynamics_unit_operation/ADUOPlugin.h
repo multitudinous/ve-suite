@@ -94,7 +94,7 @@ private:
     void OnTimer( wxTimerEvent& event );
 
     ///???
-    void StopTimer( wxCommandEvent& event  );
+    void StopTimer( wxCommandEvent& event );
 
     ///???
     void DrawValue( wxDC* dc );

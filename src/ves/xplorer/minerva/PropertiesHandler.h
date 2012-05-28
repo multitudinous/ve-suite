@@ -42,21 +42,24 @@
 
 #include "ves/xplorer/minerva/EventHandler.h"
 
-namespace ves {
-namespace xplorer {
-namespace minerva {
+namespace ves
+{
+namespace xplorer
+{
+namespace minerva
+{
 
 
 class PropertiesHandler : public EventHandler
 {
-  typedef EventHandler BaseClass;
+    typedef EventHandler BaseClass;
 
 public:
 
-  PropertiesHandler();
-  virtual ~PropertiesHandler();
+    PropertiesHandler();
+    virtual ~PropertiesHandler();
 
-  virtual void Execute ( CommandPtr command, MinervaManager& manager );
+    virtual void Execute( CommandPtr command, MinervaManager& manager );
 };
 
 

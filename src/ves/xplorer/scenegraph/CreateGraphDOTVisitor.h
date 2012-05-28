@@ -84,7 +84,7 @@ private:
     ///\param node Node to look at
     ///\return Node data in a string
     std::string GetStateSetDataString( osg::Node* node );
-    
+
     ///Get the OSG Stats string to write out
     ///\param node Node to look at
     ///\return Node data in a string

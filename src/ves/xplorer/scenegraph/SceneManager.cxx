@@ -138,30 +138,30 @@ SceneManager::SceneManager()
 
     // Set some MxCore defaults:
 
-    m_viewMatrix->setInitialValues( 
-        osg::Vec3d( 0., 0., 1. ), 
-        osg::Vec3d( 0., 1., 0. ), 
+    m_viewMatrix->setInitialValues(
+        osg::Vec3d( 0., 0., 1. ),
+        osg::Vec3d( 0., 1., 0. ),
         osg::Vec3d( 0., 0., 0. ) );
     m_viewMatrix->setRotateScale( 0.75 );
     m_viewMatrix->setOrbitCenterPoint( osg::Vec3d( 0., 10., 0. ) );
     m_viewMatrix->reset();
-    
+
     ///Setup some default uniforms so that they are not replicated all over the
     ///code base
     ///For models with textures
     const std::string shaderName = osgDB::findDataFile( "null_glow_texture.fs" );
-    osg::ref_ptr< osg::Shader > fragShader = 
+    osg::ref_ptr< osg::Shader > fragShader =
         osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
-    
+
     m_nullGlowTextureProgram = new osg::Program();
     m_nullGlowTextureProgram->addShader( fragShader.get() );
-    
+
     m_nullGlowTextureUniform = new osg::Uniform( "tex", 0 );
     ///For models without textures
 
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_updateData ),
-        "SceneManager.UpdateData");
+        "SceneManager.UpdateData" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize()
@@ -172,15 +172,15 @@ void SceneManager::Initialize()
 SceneManager::~SceneManager()
 {
 #ifdef VE_SOUND
-/*    try
-    {
-        osgAudio::SoundManager::instance()->shutdown();
-    }
-    catch( ... )
-    {
-        std::cerr << "|\tosgAL::SoundManager is unable to shutdown." 
-            << std::endl;
-    }*/
+    /*    try
+        {
+            osgAudio::SoundManager::instance()->shutdown();
+        }
+        catch( ... )
+        {
+            std::cerr << "|\tosgAL::SoundManager is unable to shutdown."
+                << std::endl;
+        }*/
 #endif
 
 #ifdef VE_SOUND
@@ -201,20 +201,20 @@ void SceneManager::ConfigureFMODSystem( FMOD::System* system )
     //FMOD_SPEAKERMODE_5POINT1 - Channel count is set to 6.
     //FMOD_SPEAKERMODE_7POINT1 - Channel count is set to 8.
     //FMOD_SPEAKERMODE_PROLOGIC - Channel count is set to 2
-	FMOD_RESULT result;
-    result = system->setOutput(FMOD_OUTPUTTYPE_ALSA);
-    result = system->setSpeakerMode(FMOD_SPEAKERMODE_5POINT1);
+    FMOD_RESULT result;
+    result = system->setOutput( FMOD_OUTPUTTYPE_ALSA );
+    result = system->setSpeakerMode( FMOD_SPEAKERMODE_5POINT1 );
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::InitScene()
 {
-    std::cout << 
-        "|  Initializing....................................... SceneManager |" 
-        << std::endl;
+    std::cout <<
+              "|  Initializing....................................... SceneManager |"
+              << std::endl;
 
     m_vrjHead.init( "VJHead" );
-    m_vrjHeadMatrix = 
+    m_vrjHeadMatrix =
         gmtl::convertTo< double >( m_vrjHead->getData() );
     m_vrjHeadMatrix = m_zUpTransform * m_vrjHeadMatrix * m_defaultView;
     m_previousVRJHeadMatrix = m_vrjHeadMatrix;
@@ -227,7 +227,7 @@ void SceneManager::InitScene()
     pos[ 1 ] = m_vrjHeadMatrix.mData[ 13 ];
     pos[ 2 ] = m_vrjHeadMatrix.mData[ 14 ];
     m_viewMatrix->setInitialValues( up, dir, pos, fovy );
-                
+
     //mRootNode = new ves::xplorer::scenegraph::Group();
     if( !mRootNode.valid() )
     {
@@ -261,141 +261,141 @@ void SceneManager::InitScene()
     {
 #if defined( ENABLE_SUBSYSTEM_FMOD ) && defined( VPR_OS_Linux )
         osgAudio::AudioEnvironment::instance()->
-            setPreSystemInitFunc( &SceneManager::ConfigureFMODSystem );
+        setPreSystemInitFunc( &SceneManager::ConfigureFMODSystem );
 #endif
         osgAudio::SoundManager::instance()->init( 16, true );
         osgAudio::SoundManager::instance()->getEnvironment()->
-            setDistanceModel( osgAudio::InverseDistance );
+        setDistanceModel( osgAudio::InverseDistance );
         osgAudio::SoundManager::instance()->getEnvironment()->
-            setDopplerFactor( 1 );
-/*        
-#ifdef ENABLE_SUBSYSTEM_FMOD
-        std::vector< std::string > driverNames;
-        std::vector< std::string > driverPriorities;
-        driverPriorities.push_back( "surround71" );
-        driverPriorities.push_back( "surround51" );
-        driverPriorities.push_back( "surround50" );
-        driverPriorities.push_back( "surround41" );
-        driverPriorities.push_back( "surround40" );
-        driverPriorities.push_back( "default" );
-        ///driverPriorities.push_back( "iec958" );
-        for( size_t i = 0; i < driverPriorities.size(); ++i )
-        {
-            std::vector::const_iterator iter = 
-                std::find( driverNames.begin(), 
-                            driverNames.end(), 
-                            driverPriorities.at( i ) );
-            if( iter != driverNames.end() )
-            {
-                size_t driverNumber = iter - driverNames.begin();
-                result = fmodSystem->setDriver( driverNumber );
-                if( result == FMOD_OK )
+        setDopplerFactor( 1 );
+        /*
+        #ifdef ENABLE_SUBSYSTEM_FMOD
+                std::vector< std::string > driverNames;
+                std::vector< std::string > driverPriorities;
+                driverPriorities.push_back( "surround71" );
+                driverPriorities.push_back( "surround51" );
+                driverPriorities.push_back( "surround50" );
+                driverPriorities.push_back( "surround41" );
+                driverPriorities.push_back( "surround40" );
+                driverPriorities.push_back( "default" );
+                ///driverPriorities.push_back( "iec958" );
+                for( size_t i = 0; i < driverPriorities.size(); ++i )
                 {
-                    break;
-                }
-            }
-        }
-        //Setup the driver to use on linux with fmod
-        FMOD::System* fmodSystem = 
-            osgAudio::SoundManager::instance()->getEnvironment()->getSystem();
-        int numDrivers;
-        FMOD_RESULT result;
-        result = fmodSystem->getNumDrivers( &numDrivers );
-        if( numDrivers > 0 )
-        {
-            std::cout << "Initializing FMOD. Detected " 
-                << numDrivers << " drivers." << std::endl;
-            numDrivers -= 1;
-            for( int idx = numDrivers; idx >= 0; --idx )
-            {
-                const int nameLen( 128 );
-                char name[ nameLen - 1 ];
-                FMOD_GUID guid;
-                result = fmodSystem->getDriverInfo( idx, name, nameLen, &guid );
-                std::string driverName( name );
-                std::cout << idx << ": " << name << std::endl;
-                if( driverName == "surround71" )
-                {
-                    result = fmodSystem->setDriver( idx );
-                    if( result == FMOD_OK )
+                    std::vector::const_iterator iter =
+                        std::find( driverNames.begin(),
+                                    driverNames.end(),
+                                    driverPriorities.at( i ) );
+                    if( iter != driverNames.end() )
                     {
-                        break;
+                        size_t driverNumber = iter - driverNames.begin();
+                        result = fmodSystem->setDriver( driverNumber );
+                        if( result == FMOD_OK )
+                        {
+                            break;
+                        }
                     }
                 }
-                else if( driverName == "surround51" )
+                //Setup the driver to use on linux with fmod
+                FMOD::System* fmodSystem =
+                    osgAudio::SoundManager::instance()->getEnvironment()->getSystem();
+                int numDrivers;
+                FMOD_RESULT result;
+                result = fmodSystem->getNumDrivers( &numDrivers );
+                if( numDrivers > 0 )
                 {
-                    result = fmodSystem->setDriver( idx );
-                    if( result == FMOD_OK )
+                    std::cout << "Initializing FMOD. Detected "
+                        << numDrivers << " drivers." << std::endl;
+                    numDrivers -= 1;
+                    for( int idx = numDrivers; idx >= 0; --idx )
                     {
-                        break;
+                        const int nameLen( 128 );
+                        char name[ nameLen - 1 ];
+                        FMOD_GUID guid;
+                        result = fmodSystem->getDriverInfo( idx, name, nameLen, &guid );
+                        std::string driverName( name );
+                        std::cout << idx << ": " << name << std::endl;
+                        if( driverName == "surround71" )
+                        {
+                            result = fmodSystem->setDriver( idx );
+                            if( result == FMOD_OK )
+                            {
+                                break;
+                            }
+                        }
+                        else if( driverName == "surround51" )
+                        {
+                            result = fmodSystem->setDriver( idx );
+                            if( result == FMOD_OK )
+                            {
+                                break;
+                            }
+                        }
+                        else if( driverName == "surround50" )
+                        {
+                            result = fmodSystem->setDriver( idx );
+                            if( result == FMOD_OK )
+                            {
+                                break;
+                            }
+                        }
+                        else if( driverName == "surround40" )
+                        {
+                            result = fmodSystem->setDriver( idx );
+                            if( result == FMOD_OK )
+                            {
+                                break;
+                            }
+                        }
+                        else if( driverName == "surround41" )
+                        {
+                            result = fmodSystem->setDriver( idx );
+                            if( result == FMOD_OK )
+                            {
+                                break;
+                            }
+                        }
+                        else if( driverName == "default" )
+                        {
+                            result = fmodSystem->setDriver( idx );
+                            if( result == FMOD_OK )
+                            {
+                                break;
+                            }
+                        }
+                        //else if( driverName == "iec958" )
+                        //{
+                        //    result = fmodSystem->setDriver( idx );
+                        //    if( result == FMOD_OK )
+                        //    {
+                        //        break;
+                        //    }
+                        //}
+                        else
+                        {
+                            result = fmodSystem->setDriver( 0 );
+                            if( result == FMOD_OK )
+                            {
+                                break;
+                            }
+                        }
                     }
                 }
-                else if( driverName == "surround50" )
-                {
-                    result = fmodSystem->setDriver( idx );
-                    if( result == FMOD_OK )
-                    {
-                        break;
-                    }
-                }
-                else if( driverName == "surround40" )
-                {
-                    result = fmodSystem->setDriver( idx );
-                    if( result == FMOD_OK )
-                    {
-                        break;
-                    }
-                }
-                else if( driverName == "surround41" )
-                {
-                    result = fmodSystem->setDriver( idx );
-                    if( result == FMOD_OK )
-                    {
-                        break;
-                    }
-                }
-                else if( driverName == "default" )
-                {
-                    result = fmodSystem->setDriver( idx );
-                    if( result == FMOD_OK )
-                    {
-                        break;
-                    }
-                }
-                //else if( driverName == "iec958" )
-                //{
-                //    result = fmodSystem->setDriver( idx );
-                //    if( result == FMOD_OK )
-                //    {
-                //        break;
-                //    }
-                //}
-                else
-                {
-                    result = fmodSystem->setDriver( 0 );
-                    if( result == FMOD_OK )
-                    {
-                        break;
-                    }
-                }
-            }
-        }        
-#endif
-*/
-        osg::ref_ptr< osgAudio::SoundRoot > soundRoot = 
+        #endif
+        */
+        osg::ref_ptr< osgAudio::SoundRoot > soundRoot =
             new osgAudio::SoundRoot();
         soundRoot->setName( "Sound Root" );
         mRootNode->addChild( soundRoot.get() );
     }
     catch( std::exception& ex )
     {
-        std::cerr << "|\tosgAudio::SoundManager is unable to initialize: " 
-            << ex.what() << std::endl;
+        std::cerr << "|\tosgAudio::SoundManager is unable to initialize: "
+                  << ex.what() << std::endl;
     }
 #endif
     mNavSwitch = new ves::xplorer::scenegraph::Switch();
     mNavSwitch->setName( "Nav Switch" );
-    
+
     m_navDCS = new ves::xplorer::scenegraph::DCS();
     m_navDCS->SetName( "World DCS" );
     //Setup world nav switch
@@ -434,9 +434,9 @@ void SceneManager::InitScene()
     if( !loadedLib )
     {
         vprDEBUG( vesDBG, 2 ) << "Can't load plugin \""
-            << pluginName << "\"." << std::endl << vprDEBUG_FLUSH;
+                              << pluginName << "\"." << std::endl << vprDEBUG_FLUSH;
     }
-    
+
     SetActiveSwitchNode( 1 );
 
     //Create the character controller
@@ -593,7 +593,7 @@ void SceneManager::_createLogo()
 
     mLogoNode->setAttitude(
         osg::Quat( osg::DegreesToRadians( -45.0 ),
-        osg::Vec3d( 0.0, 0.0, 1.0 ) ) );
+                   osg::Vec3d( 0.0, 0.0, 1.0 ) ) );
 
     mLogoNode->setScale( osg::Vec3d( 0.01, 0.01, 0.01 ) );
 
@@ -613,7 +613,7 @@ void SceneManager::_createLogo()
         //smv.setRemoveFFPState(false);
         smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
         smv.setInitialStateSet( tempState, tempMap );
-        
+
         backdropFX::convertFFPToShaderModules( vesuiteNode.get(), &smv );
     }*/
     mLogoNode->addChild( vesuiteNode.get() );
@@ -653,11 +653,11 @@ void SceneManager::PrePhysicsLatePreFrameUpdate()
 {
     m_vrjHeadMatrix = gmtl::convertTo< double >( m_vrjHead->getData() );
     ///Convert the head matrix to Z up land and then back out purely the
-    ///rotation component to get a pure matrix with head rotation and 
+    ///rotation component to get a pure matrix with head rotation and
     ///position in Z up land.
     m_vrjHeadMatrix = m_zUpTransform * m_vrjHeadMatrix * m_defaultView;
-    
-    //If we do not constantly send this signal when we are using a tracked 
+
+    //If we do not constantly send this signal when we are using a tracked
     //head position the character controller will become out of sync with
     //the view position and the head constants. The update signal forces
     //the character controller to update the character position based
@@ -675,7 +675,7 @@ void SceneManager::PrePhysicsLatePreFrameUpdate()
         osg::Vec3d up, dir, pos;
         double fovy;
         m_viewMatrix->getInitialValues( up, dir, pos, fovy );
-        ///We grab the head location here so that we have a base location for 
+        ///We grab the head location here so that we have a base location for
         ///where the head is in the scene
         m_lastHeadLocation = gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
         pos[ 0 ] = m_vrjHeadMatrix.mData[ 12 ];
@@ -684,19 +684,19 @@ void SceneManager::PrePhysicsLatePreFrameUpdate()
         m_viewMatrix->setInitialValues( up, dir, pos, fovy );
         m_viewMatrix->reset();
     }
-    
+
     ///Get the tracked head location for and create a delta that can be added
-    ///to the current matrix stack in MxCore. This delta is in Z up land and 
+    ///to the current matrix stack in MxCore. This delta is in Z up land and
     ///needs to be a delta so that it is an adder to whatever is being done
     ///by the user through input devices.
-    gmtl::Point3d headLocation = 
+    gmtl::Point3d headLocation =
         gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
     m_deltaHeadLocation = headLocation - m_lastHeadLocation;
 
-    osg::Vec3d deltaHeadPosition( m_deltaHeadLocation.mData[ 0 ], 
-                                 m_deltaHeadLocation.mData[ 1 ], 
-                                 m_deltaHeadLocation.mData[ 2 ] );
-    
+    osg::Vec3d deltaHeadPosition( m_deltaHeadLocation.mData[ 0 ],
+                                  m_deltaHeadLocation.mData[ 1 ],
+                                  m_deltaHeadLocation.mData[ 2 ] );
+
     m_viewMatrix->setPosition( m_viewMatrix->getPosition() + deltaHeadPosition );
 
     ///This is the distance from the VR Juggler defined ground plane to the
@@ -715,7 +715,7 @@ void SceneManager::LatePreFrameUpdate()
     }
 
     gmtl::identity( m_invertedNavMatrix );
-    
+
     //Create the OpenGL oriented matrices used in the frustum calculations so
     //that the character, physics and the tracked head position will render
     //properly.
@@ -726,7 +726,7 @@ void SceneManager::LatePreFrameUpdate()
     m_pureNav.mData[ 12 ] = m_pureNav.mData[ 12 ] - m_lastValidVRJHeadLocation.mData[ 0 ];
     m_pureNav.mData[ 13 ] = m_pureNav.mData[ 13 ] - m_lastValidVRJHeadLocation.mData[ 1 ];
     m_pureNav.mData[ 14 ] = m_pureNav.mData[ 14 ] - m_lastValidVRJHeadLocation.mData[ 2 ];
-    
+
     gmtl::Matrix44d navMatrix;
     navMatrix.set( m_viewMatrix->getInverseMatrix().ptr() );
     navMatrix = m_zUpTransform * navMatrix;
@@ -741,7 +741,7 @@ void SceneManager::LatePreFrameUpdate()
     gmtl::invert( m_invertedNavMatrix, navMatrix );
 
     m_invertedNavMatrixOSG.set( m_invertedNavMatrix.getData() );
-    
+
     ///We need to remove the position from the head matrix because it is
     ///already being accounted for in the navMatrix for MxCore. The
     ///m_globalViewMatrix is the matrix that we need to use throughout ves
@@ -751,11 +751,11 @@ void SceneManager::LatePreFrameUpdate()
     //headRotMat.mData[ 12 ] = 0.0;
     //headRotMat.mData[ 13 ] = 0.0;
     //headRotMat.mData[ 14 ] = 0.0;
-    
+
     gmtl::identity( m_globalViewMatrix );
     m_globalViewMatrix = m_invertedNavMatrix * headRotMat;
     m_globalViewMatrixOSG.set( m_globalViewMatrix.getData() );
-    
+
     gmtl::identity( m_invertedGlobalViewMatrix );
     gmtl::invert( m_invertedGlobalViewMatrix, m_globalViewMatrix );
     m_invertedGlobalViewMatrixOSG.set( m_globalViewMatrix.getData() );
@@ -770,9 +770,9 @@ bool SceneManager::CheckCharacterCollisionState() const
 {
     if( !m_isDesktopMode )
     {
-        //gmtl::Vec3d deltaVec = m_deltaHeadLocation;    
+        //gmtl::Vec3d deltaVec = m_deltaHeadLocation;
         //double changeInHeadPosition = gmtl::length( deltaVec );
-        
+
         if( mCharacterController->IsEnabled() )
         {
             if( mCharacterController->isColliding() )
@@ -788,10 +788,10 @@ bool SceneManager::CheckCharacterCollisionState() const
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::UpdateHeadPositionConstants()
 {
-    m_lastHeadLocation = 
+    m_lastHeadLocation =
         gmtl::makeTrans< gmtl::Point3d >( m_vrjHeadMatrix );
     m_lastValidHeadLocation = m_lastHeadLocation;
-    m_lastValidVRJHeadLocation = 
+    m_lastValidVRJHeadLocation =
         gmtl::makeTrans< gmtl::Point3d >( gmtl::convertTo< double >( m_vrjHead->getData() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -824,13 +824,13 @@ osg::Group* SceneManager::GetActiveSwitchNode() const
 DCS* SceneManager::GetActiveNavSwitchNode() const
 {
     osg::Switch::ValueList boolList = mNavSwitch->getValueList();
-    
+
     for( size_t i = 0; i < boolList.size(); ++i )
     {
         if( boolList.at( i ) )
         {
-            return static_cast< ves::xplorer::scenegraph::DCS* >( 
-                mNavSwitch->getChild( i ) );
+            return static_cast< ves::xplorer::scenegraph::DCS* >(
+                       mNavSwitch->getChild( i ) );
         }
     }
     return 0;

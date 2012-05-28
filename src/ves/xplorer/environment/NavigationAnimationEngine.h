@@ -101,25 +101,25 @@ public:
 
     ///If a quat is active this will move the cam to the next location
     void PreFrameUpdate();
-    
+
     ///Set the quaternions and position for the animation
     void SetAnimationEndPoints( gmtl::Vec3d navToPoint, gmtl::Quatd rotationPoint,
-        bool setCenterPoint = false,
-        ves::xplorer::scenegraph::DCS* centerPointDCS = NULL );
-    
+                                bool setCenterPoint = false,
+                                ves::xplorer::scenegraph::DCS* centerPointDCS = NULL );
+
     ///Set the quaternions and position for the animation
-    void SetAnimationPoints( std::vector< std::pair< gmtl::Vec3d, 
-        gmtl::Quatd > > animationPoints );
+    void SetAnimationPoints( std::vector < std::pair < gmtl::Vec3d,
+                             gmtl::Quatd > > animationPoints );
 
     ///Do we have an active animation
     bool IsActive();
 
     ///Set the speed of travel for movement. We default to 10 ft/s.
     void SetAnimationSpeed( double travelSpeed );
-    
+
     ///Increment the animation speed
     void IncrementAnimationSpeed( double increment );
-    
+
 private:
     ///Update the gui with the new data
     void UpdateViewGUIPointData();
@@ -148,7 +148,7 @@ private:
     bool mSetCenterPoint;
     ///
     ves::xplorer::scenegraph::DCS* mCenterPointDCS;
-    ///The last angle 
+    ///The last angle
     double m_lastAngle;
 };
 } //end xplorer

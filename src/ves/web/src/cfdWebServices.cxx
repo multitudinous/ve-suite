@@ -70,11 +70,11 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
     {
         XMLPlatformUtils::Initialize();
     }
-    catch ( const XMLException &toCatch )
+    catch( const XMLException& toCatch )
     {
         std::cerr << "Error during Xerces-c Initialization.\n"
-        << "  Exception message:"
-        << XMLString::transcode( toCatch.getMessage() ) << std::endl;
+                  << "  Exception message:"
+                  << XMLString::transcode( toCatch.getMessage() ) << std::endl;
         return;
     }
 
@@ -142,7 +142,7 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
         //this->thread = new cfdThread();
         //thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdWebServices > ( this, &cfdWebServices::GetEverything ) );
     }
-    catch ( CORBA::Exception & )
+    catch( CORBA::Exception& )
     {
         std::cerr << "|\tExecutive not present or VEClient registration error" << std::endl;
     }
@@ -186,14 +186,14 @@ void cfdWebServices::GetEverything( void )
             for( iter = IDMap.begin(); iter != IDMap.end(); iter++ )
             {
                 foundPlugin = _plugins.find( iter->first );
-                if (( foundPlugin == _plugins.end() ) || _plugins.empty() )
+                if( ( foundPlugin == _plugins.end() ) || _plugins.empty() )
                 {
                     // if a new module is on the id map but not on the plugins map
                     // create it...
-                    cfdVEBaseClass* temp = ( cfdVEBaseClass* )( av_modules->GetLoader()->CreateObject(( char* )iter->second.c_str() ) );
+                    cfdVEBaseClass* temp = ( cfdVEBaseClass* )( av_modules->GetLoader()->CreateObject( ( char* )iter->second.c_str() ) );
                     if( temp != NULL )
                     {
-                        _plugins[ iter->first ] = ( cfdVEBaseClass* )( av_modules->GetLoader()->CreateObject(( char* )iter->second.c_str() ) );
+                        _plugins[ iter->first ] = ( cfdVEBaseClass* )( av_modules->GetLoader()->CreateObject( ( char* )iter->second.c_str() ) );
                         // When we create the _plugin map here we will do the following
                         _plugins[ iter->first ]->InitializeNode( cfdPfSceneManagement::instance()->GetWorldDCS() );
                         _plugins[ iter->first ]->AddSelfToSG();
@@ -209,8 +209,8 @@ void cfdWebServices::GetEverything( void )
                 {
                     // plugin already present...
                     vprDEBUG( vprDBG_ALL, 1 ) << "|\t\tPlugin [ " << iter->first
-                    << " ]-> " << iter->second
-                    << " is already on the plugin map." << std::endl << vprDEBUG_FLUSH;
+                                              << " ]-> " << iter->second
+                                              << " is already on the plugin map." << std::endl << vprDEBUG_FLUSH;
                 }
             }
 
@@ -233,8 +233,8 @@ void cfdWebServices::GetEverything( void )
                 {
                     // plugin already present...
                     vprDEBUG( vprDBG_ALL, 1 ) << "|\t\tPlugin [ " << iter->first
-                    << " ]-> " << iter->second
-                    << " is already on the plugin and id map." << std::endl << vprDEBUG_FLUSH;
+                                              << " ]-> " << iter->second
+                                              << " is already on the plugin and id map." << std::endl << vprDEBUG_FLUSH;
                     ++foundPlugin;
                 }
                 // The above code is from : The C++ Standard Library by:Josuttis pg. 205
@@ -263,7 +263,7 @@ char* cfdWebServices::GetNetwork( void )
     std::string temp( uii->GetNetworkString() );
     const char* networkString = temp.c_str();        //***temporary testing purposes.  comment this back in!
     vprDEBUG( vprDBG_ALL, 2 )  << "|\tNetwork String : " << networkString
-    << std::endl << vprDEBUG_FLUSH;
+                               << std::endl << vprDEBUG_FLUSH;
 #else
 
     std::string testFile = "/home/users/kennyk/public_html/PowerPlant/data/larry_ruth.nt";
@@ -291,10 +291,10 @@ char* cfdWebServices::GetNetwork( void )
     //first we insert a clear command and timestamp into the database so we can tell if things have been updated
     fprintf( outputFile, "delete from VEConfigurations where ID = '0';\n\n" );
     /////////////////////////////
-// This code taken from Executive_i.cpp
+    // This code taken from Executive_i.cpp
     Package p;
     p.SetSysId( "temp.xml" );
-//   printf("string:  %s\n is %i long\n", networkString, strlen(networkString));
+    //   printf("string:  %s\n is %i long\n", networkString, strlen(networkString));
     vprDEBUG( vprDBG_ALL, 2 )  << "loading package..." << std::endl << vprDEBUG_FLUSH;
 
     p.Load( networkString, strlen( networkString ) );
@@ -369,7 +369,7 @@ char* cfdWebServices::GetNetwork( void )
 
 }
 
-void cfdWebServices::insertItemIntoSQL( Interface &interface )
+void cfdWebServices::insertItemIntoSQL( Interface& interface )
 {
     StringHolder object;
     object.ID = interface._id;
@@ -387,7 +387,7 @@ void cfdWebServices::insertItemIntoSQL( Interface &interface )
         char numStr[16];
         int thisInteger = interface.getInt( *stringIter );
         sprintf( numStr, "%i", interface.getInt( *stringIter ) );
-//      printf("number:  %s\n", numStr);
+        //      printf("number:  %s\n", numStr);
         std::string s( numStr );
         SQLString += *stringIter + "|" + numStr + "||";  //tack the name and number into our string, seperated by pipes
 
@@ -487,17 +487,17 @@ void cfdWebServices::insertItemIntoSQL( Interface &interface )
     sprintf( IDChars, "%i", object.ID );
     std::string IDString( IDChars );
     //SQLString = "insert into ppModules(ID,
-//      intString, doubleString, stringString,
-//      intArrayString, doubleArrayString, stringArrayString)
-//      values ('"
-//      + IDString + "','"
-//      + object.intString + "', ' "
-//      + object.doubleString + "', '"
-//      + object.stringString + "','"
-//      + object.intArrayString + "', '"
-//      + object.doubleArrayString + "', '"
-//      + object.stringArrayString + "')";
-//   //printf("%s;\n", SQLString.c_str());
+    //      intString, doubleString, stringString,
+    //      intArrayString, doubleArrayString, stringArrayString)
+    //      values ('"
+    //      + IDString + "','"
+    //      + object.intString + "', ' "
+    //      + object.doubleString + "', '"
+    //      + object.stringString + "','"
+    //      + object.intArrayString + "', '"
+    //      + object.doubleArrayString + "', '"
+    //      + object.stringArrayString + "')";
+    //   //printf("%s;\n", SQLString.c_str());
     std::string moduleString = "%%%%"
                                + IDString + "&&&"
                                + object.intString + "&&&"
@@ -521,8 +521,8 @@ cfdWebServices::~cfdWebServices()
 
 void cfdWebServices::mysqlQuery( std::string qel )
 {
-    std::cout << "I'm gonna stick \n\n" << qel << 
-                  "\n\ninto the database" << std::endl;
+    std::cout << "I'm gonna stick \n\n" << qel <<
+              "\n\ninto the database" << std::endl;
     mysqlpp::Connection con( mysqlpp::use_exceptions );
     try
     {
@@ -533,19 +533,19 @@ void cfdWebServices::mysqlQuery( std::string qel )
         query.exec( qel.c_str() );
 
     }
-    catch ( mysqlpp::BadQuery& er )
+    catch( mysqlpp::BadQuery& er )
     {
         // handle any connection or query errors that may come up
         std::cerr << "Error: " << er.what() << " " << con.errnum() << std::endl;
     }
-    catch ( mysqlpp::BadConversion& er )
+    catch( mysqlpp::BadConversion& er )
     {
         // handle bad conversions
         std::cerr << "Error: " << er.what() << "\"." << std::endl
-        << "retrieved data size: " << er.retrieved
-        << " actual data size: " << er.actual_size << std::endl;
+                  << "retrieved data size: " << er.retrieved
+                  << " actual data size: " << er.actual_size << std::endl;
     }
-    catch ( std::exception& er )
+    catch( std::exception& er )
     {
         std::cerr << "Error: " << er.what() << std::endl;
     }

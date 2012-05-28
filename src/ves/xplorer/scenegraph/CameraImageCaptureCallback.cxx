@@ -57,16 +57,16 @@ void CameraImageCaptureCallback::operator()( osg::RenderInfo& ri ) const
 {
     osg::ref_ptr< osg::Image > image = new osg::Image();
 
-    osg::notify( osg::ALWAYS ) << "Reading image for file " 
-        << m_filename << " ... " << std::endl;
+    osg::notify( osg::ALWAYS ) << "Reading image for file "
+                               << m_filename << " ... " << std::endl;
 
-    const osg::Viewport* vp = ri.getState()->getCurrentViewport();    
-    image->readPixels( int( vp->x() ), int( vp->y() ), 
-                   int( vp->width() ), int( vp->height() ), 
-        GL_RGBA, GL_UNSIGNED_BYTE );
+    const osg::Viewport* vp = ri.getState()->getCurrentViewport();
+    image->readPixels( int( vp->x() ), int( vp->y() ),
+                       int( vp->width() ), int( vp->height() ),
+                       GL_RGBA, GL_UNSIGNED_BYTE );
 
-    osg::notify( osg::ALWAYS ) << "Writing file " 
-        << m_filename << " ... " << std::endl;
+    osg::notify( osg::ALWAYS ) << "Writing file "
+                               << m_filename << " ... " << std::endl;
 
     osgDB::writeImageFile( *image.get(), m_filename );
     osg::notify( osg::ALWAYS ) << "Capture complete." << std::endl;

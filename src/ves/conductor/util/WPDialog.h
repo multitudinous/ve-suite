@@ -99,8 +99,8 @@ protected:
     ///\param event The wxCommand event.
     void _updateDimensions( wxSpinEvent& event );
 
-class WPMinSliderCallback: public
-                ves::conductor::util::DualSlider::SliderCallback
+    class WPMinSliderCallback: public
+        ves::conductor::util::DualSlider::SliderCallback
     {
     public:
 
@@ -124,8 +124,8 @@ class WPMinSliderCallback: public
     };
 
 
-class WPBothMoveCallback: public
-                ves::conductor::util::DualSlider::SliderCallback
+    class WPBothMoveCallback: public
+        ves::conductor::util::DualSlider::SliderCallback
     {
     public:
 
@@ -150,8 +150,8 @@ class WPBothMoveCallback: public
 
 
 
-class WPMaxSliderCallback: public
-                ves::conductor::util::DualSlider::SliderCallback
+    class WPMaxSliderCallback: public
+        ves::conductor::util::DualSlider::SliderCallback
     {
     public:
 

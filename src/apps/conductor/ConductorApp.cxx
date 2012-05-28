@@ -63,11 +63,11 @@ bool ConductorApp::OnInit()
     {
         XMLPlatformUtils::Initialize();
     }
-    catch ( const XMLException &toCatch )
+    catch( const XMLException& toCatch )
     {
         std::cerr << "Error during Xerces-c Initialization.\n"
-        << "  Exception message:"
-        << XMLString::transcode( toCatch.getMessage() ) << std::endl;
+                  << "  Exception message:"
+                  << XMLString::transcode( toCatch.getMessage() ) << std::endl;
         return false;
     }
 

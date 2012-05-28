@@ -45,21 +45,21 @@ using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 MaterialInitializer::MaterialInitializer( osg::Node* osg_node )
-        :
-        NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-        mFileHasMaterial( false )
+    :
+    NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+    mFileHasMaterial( false )
 {
     osg_node->accept( *this );
 
     if( !mFileHasMaterial )
     {
         osg::ref_ptr< osg::StateSet > stateset = osg_node->getOrCreateStateSet();
-            osg::ref_ptr< osg::Material > material;
+        osg::ref_ptr< osg::Material > material;
         material = new osg::Material();
-        material->setAmbient( osg::Material::FRONT_AND_BACK, 
-                             osg::Vec4( 0.56862f, 0.56842f, 0.56842f, 1.0f ) );
+        material->setAmbient( osg::Material::FRONT_AND_BACK,
+                              osg::Vec4( 0.56862f, 0.56842f, 0.56842f, 1.0f ) );
         material->setColorMode( osg::Material::AMBIENT_AND_DIFFUSE );
-        stateset->setAttribute( material.get(), osg::StateAttribute::ON );        
+        stateset->setAttribute( material.get(), osg::StateAttribute::ON );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,14 +75,14 @@ void MaterialInitializer::apply( osg::Geode& node )
     {
         return;
     }
-    
+
     //Stateset for the geode
     mFileHasMaterial = CheckStateSet( node.getStateSet() );
     if( mFileHasMaterial )
     {
         return;
     }
-    
+
     for( size_t i = 0; i < node.getNumDrawables(); i++ )
     {
         //Stateset for the drawable of the geode
@@ -93,17 +93,17 @@ void MaterialInitializer::apply( osg::Geode& node )
         }
 
         //StateSet for the Drawables Geometry
-        osg::ref_ptr< osg::Geometry > geom = 
+        osg::ref_ptr< osg::Geometry > geom =
             node.getDrawable( i )->asGeometry();
         if( geom.valid() )
         {
-            mFileHasMaterial = CheckStateSet(  geom->getStateSet() );
+            mFileHasMaterial = CheckStateSet( geom->getStateSet() );
             if( mFileHasMaterial )
             {
                 return;
             }
 
-            osg::ref_ptr< osg::Vec4Array > color_array = 
+            osg::ref_ptr< osg::Vec4Array > color_array =
                 dynamic_cast< osg::Vec4Array* >( geom->getColorArray() );
             if( color_array.valid() )
             {
@@ -141,23 +141,23 @@ bool MaterialInitializer::CheckStateSet( osg::StateSet* stateSet )
     osg::ref_ptr< osg::StateSet > tempStateSet = stateSet;
     if( tempStateSet.valid() )
     {
-        osg::ref_ptr< osg::Material > material = 
+        osg::ref_ptr< osg::Material > material =
             static_cast< osg::Material* >( tempStateSet->
-            getAttribute( osg::StateAttribute::MATERIAL ) );
-        
+                                           getAttribute( osg::StateAttribute::MATERIAL ) );
+
         if( material.valid() )
         {
             return true;
         }
-    
-        osg::StateSet::TextureAttributeList stateSetTal = 
+
+        osg::StateSet::TextureAttributeList stateSetTal =
             tempStateSet->getTextureAttributeList();
         if( stateSetTal.size() > 0 )
         {
             return true;
         }
     }
-    
+
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////

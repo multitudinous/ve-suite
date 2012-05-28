@@ -49,17 +49,17 @@ namespace scenegraph
 {
 namespace rtt
 {
-    ///Utility function to derive source texture format from the internal format
-    VE_SCENEGRAPH_EXPORTS GLenum CreateSourceTextureFormat(
-        GLenum internalFormat );
+///Utility function to derive source texture format from the internal format
+VE_SCENEGRAPH_EXPORTS GLenum CreateSourceTextureFormat(
+    GLenum internalFormat );
 
-    ///Utility function to derive uniform type based on the given texture
-    VE_SCENEGRAPH_EXPORTS osg::Uniform::Type ConvertTextureToUniformType(
-        osg::Texture* texture );
+///Utility function to derive uniform type based on the given texture
+VE_SCENEGRAPH_EXPORTS osg::Uniform::Type ConvertTextureToUniformType(
+    osg::Texture* texture );
 
-    ///Compute memory size in bytes, which is allocated by the texture
-    //VE_SCENEGRAPH_EXPORTS unsigned int ComputeTextureSizeInBytes(
-        //osg::Texture* texture );
+///Compute memory size in bytes, which is allocated by the texture
+//VE_SCENEGRAPH_EXPORTS unsigned int ComputeTextureSizeInBytes(
+//osg::Texture* texture );
 
 }; //end rtt
 }  //end scenegraph

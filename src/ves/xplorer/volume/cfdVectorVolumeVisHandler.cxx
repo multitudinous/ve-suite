@@ -56,7 +56,7 @@ using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler()
-        : cfdVolumeVisNodeHandler()
+    : cfdVolumeVisNodeHandler()
 {
     _aSM = 0;
     //_velocityCbk = 0;
@@ -70,7 +70,7 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler( const cfdVectorVolumeVisHandler& vvnh )
-        : cfdVolumeVisNodeHandler( vvnh )
+    : cfdVolumeVisNodeHandler( vvnh )
 {
 
     _aSM = new cfdOSGAdvectionShaderManager( *vvnh._aSM );
@@ -147,7 +147,7 @@ void cfdVectorVolumeVisHandler::_initPropertyTexture()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::SetCurrentTransientTexture( unsigned int whichTimeStep,
-                                                            bool makeSlave )
+        bool makeSlave )
 {
     if( _velocityCbk.valid() )
     {
@@ -249,8 +249,8 @@ void cfdVectorVolumeVisHandler::_setUpDecorator()
     if( !_cullCallback.valid() && _pbuffer )
     {
         _cullCallback = new cfd3DTextureCullCallback( _advectionSlice.get(),
-                                                      _tm->fieldResolution()[0],
-                                                      _tm->fieldResolution()[1] );
+                _tm->fieldResolution()[0],
+                _tm->fieldResolution()[1] );
         _cullCallback->SetPBuffer( _pbuffer );
         _propertyTextureGroup->setCullCallback( _cullCallback.get() );
     }

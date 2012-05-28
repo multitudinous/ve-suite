@@ -51,7 +51,7 @@ TextureBasedTransientModeUpdateEventHandler::TextureBasedTransientModeUpdateEven
 ///////////////////////////////////////////////////////////////////
 TextureBasedTransientModeUpdateEventHandler
 ::TextureBasedTransientModeUpdateEventHandler( const TextureBasedTransientModeUpdateEventHandler& ceh )
-: ves::xplorer::event::TextureBasedEventHandler( ceh )
+    : ves::xplorer::event::TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedTransientModeUpdateEventHandler::~TextureBasedTransientModeUpdateEventHandler()
@@ -92,7 +92,7 @@ void TextureBasedTransientModeUpdateEventHandler::_operateOnNode( XMLObjectPtr v
             ves::xplorer::TextureBasedVizHandler::instance()->StopTransientVisualization();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid TextureDataSet!!" << std::endl;
         std::cout << "TextureBasedTransientModeUpdateEventHandler::_operateOnNode()" << std::endl;

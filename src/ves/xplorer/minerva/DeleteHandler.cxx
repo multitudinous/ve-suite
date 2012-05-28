@@ -33,7 +33,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  
+//
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -82,16 +82,16 @@ DeleteHandler::~DeleteHandler()
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//  
+//
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void DeleteHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void DeleteHandler::Execute( CommandPtr command, MinervaManager& manager )
 {
-  ves::open::xml::DataValuePairPtr nodeIDData ( command->GetDataValuePair( "Node ID" ) );
+    ves::open::xml::DataValuePairPtr nodeIDData( command->GetDataValuePair( "Node ID" ) );
 
-  std::string nodeId;
-  nodeIDData->GetData ( nodeId );
+    std::string nodeId;
+    nodeIDData->GetData( nodeId );
 
-  manager.RemoveModel ( nodeId );
+    manager.RemoveModel( nodeId );
 }

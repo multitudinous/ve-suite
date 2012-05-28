@@ -52,7 +52,7 @@ void PerlinNoiseTexture::_initNoiseImage( int s, int t, int r )
     m_noiseImage = new osg::Image();
     m_noiseImage->setImage( s, t, r,
                             4, GL_RGBA, GL_UNSIGNED_BYTE,
-                            new unsigned char[4*s*t*r],
+                            new unsigned char[4 * s * t * r],
                             osg::Image::USE_NEW_DELETE );
 
     const int startFrequency = 4;
@@ -62,7 +62,7 @@ void PerlinNoiseTexture::_initNoiseImage( int s, int t, int r )
     double ni[3];
     double inci, incj, inck;
     int frequency = startFrequency;
-    GLubyte *ptr;
+    GLubyte* ptr;
     double amp = 0.5;
 
     for( f = 0, inc = 0; f < numOctaves; ++f, frequency *= 2, ++inc, amp *= 0.5 )
@@ -80,7 +80,7 @@ void PerlinNoiseTexture::_initNoiseImage( int s, int t, int r )
                 inck = 1.0 / ( s / frequency );
                 for( k = 0; k < s; ++k, ni[2] += inck, ptr += 4 )
                 {
-                    *( ptr + inc ) = ( GLubyte )((( ves::xplorer::scenegraph::util::noise3( ni ) + 1.0 ) * amp ) * 128.0 );
+                    *( ptr + inc ) = ( GLubyte )( ( ( ves::xplorer::scenegraph::util::noise3( ni ) + 1.0 ) * amp ) * 128.0 );
                 }
             }
         }

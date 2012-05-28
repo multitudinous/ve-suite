@@ -80,7 +80,7 @@ public:
     /**
      * Sets the value of the specified vector at the given index.  If
      * the vector name does not exist and the index is not zero,
-     * or the index is greater than 1 + the current maximum index, 
+     * or the index is greater than 1 + the current maximum index,
      * this will return false.
      *
      * @param   name     the name of the vector to set a value of.
@@ -92,7 +92,7 @@ public:
     bool setVector( const std::string& name, const size_t idx,
                     const gmtl::Vec3f& value )
     {
-        if (( mVectorMap.find( name ) == mVectorMap.end() && idx != 0 ) ||
+        if( ( mVectorMap.find( name ) == mVectorMap.end() && idx != 0 ) ||
                 idx > mVectorMap[name].size() )
         {
             return false;
@@ -171,7 +171,7 @@ public:
     VectorMap getVector( const size_t idx ) const;
 
     /**
-     * Checks to see if this VectorDataSet contains a vector with the 
+     * Checks to see if this VectorDataSet contains a vector with the
      * given name.
      *
      * @param   name     the name of the vector to lookup.
@@ -210,7 +210,7 @@ public:
 
     /**
      * Returns the number of values for the first vector in the map.
-     * 
+     *
      * @note    This should be changed to something else whenever a support
      *          for time steps without vector values is added.
      *

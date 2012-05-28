@@ -44,9 +44,9 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 UpdateIDOnChildrenVisitor::UpdateIDOnChildrenVisitor( ves::xplorer::scenegraph::DCS* node, std::string id )
-        :
-        NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-        modelGUID( id )
+    :
+    NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+    modelGUID( id )
 {
     node->accept( *this );
 }

@@ -112,7 +112,7 @@ public:
     ///\return
     gadget::KeyboardMousePtr GetKeyboardMouseVRJDevice();
 
-     ///Get the current display based on the VR Juggler InputArea
+    ///Get the current display based on the VR Juggler InputArea
     ///\return The display where this event occurred
     vrj::DisplayPtr const GetCurrentDisplay( const gadget::InputArea* inputArea );
 
@@ -121,29 +121,29 @@ public:
     bool SetCurrentGLTransformInfo( const vrj::DisplayPtr display, bool isKeyEvent );
 
 private:
-    ///Setup the start and end point for a mouse pick 
+    ///Setup the start and end point for a mouse pick
     void SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
 
-    ///Handle VR Juggler kernal signals 
+    ///Handle VR Juggler kernal signals
     void HandleSignal( const int signum );
-    
+
     ///The current X mouse position
     int m_currX;
-    
+
     ///The current Y mouse position
     int m_currY;
 
     ///The current matrix stack for the context
-    scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;    
+    scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;
 
     ///Determine if the mouse is inside the UI
     bool m_exit;
-    
+
     ///Selection ray start point
     osg::Vec3d m_startPoint;
     ///Selection ray end point
     osg::Vec3d m_endPoint;
-    
+
     //The signal handler to hand off to VR Juggler
     //vrj::Kernel::signal_callback_t m_signalHandler;
 
@@ -152,11 +152,11 @@ private:
     /// Params are: start point and end point
     typedef boost::signals2::signal< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
     StartEndPointSignal_type m_startEndPointSignal;
-    
+
     /// Temporarily needed until legacy functions in this class can be
     /// completely removed
     gadget::KeyboardMousePtr mKeyboardMousePtr;
-    
+
     /// The keyboardmouse device needed for juggler
     ///For now we will use the synchronized_tag rather than the immediate tag
     ///so the the function callbacks are executed from VR Juggler in sync with
@@ -165,11 +165,11 @@ private:
     ///is called in VR Juggler. This has the potential to cause big thread
     ///sync issues. Again, for now we will use the draw loop to help us sync
     ///data access.
-    gadget::KeyboardMouseEventInterface<gadget::event::all_events_tag,
-        gadget::event::synchronized_tag> m_keyboardMouseEventInterface;
-    
+    gadget::KeyboardMouseEventInterface < gadget::event::all_events_tag,
+           gadget::event::synchronized_tag > m_keyboardMouseEventInterface;
+
     /// All keyboardmouse events get delivered here
-    void onKeyboardMouseEvent(gadget::EventPtr event);
+    void onKeyboardMouseEvent( gadget::EventPtr event );
 
     /// Interface to receive double-click events from gadgeteer
     ///For now we will use the synchronized_tag rather than the immediate tag
@@ -180,27 +180,27 @@ private:
     ///sync issues. Again, for now we will use the draw loop to help us sync
     ///data access.
 #if 0
-    gadget::MouseMultiClickEventInterface< 2,
-        gadget::event::all_events_tag,
-        gadget::event::synchronized_tag > m_mouseDoubleClickEventInterface;
+    gadget::MouseMultiClickEventInterface < 2,
+           gadget::event::all_events_tag,
+           gadget::event::synchronized_tag > m_mouseDoubleClickEventInterface;
 #else
-    gadget::MouseClickEventInterface< 2,
-        gadget::event::all_events_tag,
-        gadget::event::synchronized_tag > m_mouseDoubleClickEventInterface;
+    gadget::MouseClickEventInterface < 2,
+           gadget::event::all_events_tag,
+           gadget::event::synchronized_tag > m_mouseDoubleClickEventInterface;
 #endif
 
     void onMouseDoubleClick( gadget::EventPtr event );
 
     /// MouseMove signal
     /// Params are: x, y, z, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< bool ( int, int, int, int ),
+    typedef boost::signals2::signal < bool ( int, int, int, int ),
             eventmanager::BooleanPropagationCombiner > MouseMoveSignal_type;
     MouseMoveSignal_type m_mouseMove;
 
     /// MouseDoubleClick signal
     /// Params are: button, x, y, z, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, int, int, int ),
-        eventmanager::BooleanPropagationCombiner > MouseDoubleClickSignal_type;
+    typedef boost::signals2::signal < bool ( gadget::Keys, int, int, int, int ),
+            eventmanager::BooleanPropagationCombiner > MouseDoubleClickSignal_type;
     MouseDoubleClickSignal_type m_mouseDoubleClick;
 
     /// Sets up the mouse/wand button signal map
@@ -214,18 +214,18 @@ private:
 
     /// Scroll signal type
     /// Params are: deltaX, deltaY, x, y, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< bool ( int, int, int, int, int ),
-        eventmanager::BooleanPropagationCombiner > ScrollSignal_type;
+    typedef boost::signals2::signal < bool ( int, int, int, int, int ),
+            eventmanager::BooleanPropagationCombiner > ScrollSignal_type;
     ScrollSignal_type m_scroll;
 
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, int, int ),
-        eventmanager::BooleanPropagationCombiner > ButtonPressSignal_type;
+    typedef boost::signals2::signal < bool ( gadget::Keys, int, int, int ),
+            eventmanager::BooleanPropagationCombiner > ButtonPressSignal_type;
 
     /// ButtonRelease signal type
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, int, int ),
-        eventmanager::BooleanPropagationCombiner > ButtonReleaseSignal_type;
+    typedef boost::signals2::signal < bool ( gadget::Keys, int, int, int ),
+            eventmanager::BooleanPropagationCombiner > ButtonReleaseSignal_type;
 
     /// Map to hold ButtonPress signals
     /// First arg is actually a gadget::Keys
@@ -256,10 +256,10 @@ private:
     /// First arg is the key that was pressed
     /// Second arg is the gadget::ModiferMask (modifier mask)
     /// Third arg is the unicode representation of the key
-    ///NOTE: As soon as VR Juggler supports wide body chars we can change the 
+    ///NOTE: As soon as VR Juggler supports wide body chars we can change the
     ///char argument back to a wchar_t
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, char ),
-        eventmanager::BooleanPropagationCombiner > KeyPressSignal_type;
+    typedef boost::signals2::signal < bool ( gadget::Keys, int, char ),
+            eventmanager::BooleanPropagationCombiner > KeyPressSignal_type;
 
     typedef boost::signals2::signal< bool ( gadget::Keys, int, char ) > KeyPressSignal_rtype;
 
@@ -267,10 +267,10 @@ private:
     /// First arg is the key that was pressed
     /// Second arg is the gadget::ModiferMask (modifier mask)
     /// Third arg is the unicode representation of the key
-    ///NOTE: As soon as VR Juggler supports wide body chars we can change the 
+    ///NOTE: As soon as VR Juggler supports wide body chars we can change the
     ///char argument back to a wchar_t
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, char ),
-        eventmanager::BooleanPropagationCombiner > KeyReleaseSignal_type;
+    typedef boost::signals2::signal < bool ( gadget::Keys, int, char ),
+            eventmanager::BooleanPropagationCombiner > KeyReleaseSignal_type;
 
     typedef boost::signals2::signal< bool ( gadget::Keys, int, char ) > KeyReleaseSignal_rtype;
 

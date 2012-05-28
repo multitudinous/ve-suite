@@ -39,7 +39,7 @@
 
 using namespace ves::xplorer::util;
 
-void ves::xplorer::util::activateScalar( vtkDataSet * dataSet )
+void ves::xplorer::util::activateScalar( vtkDataSet* dataSet )
 {
     // if there are data arrays, count the number of arrays
     int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();
@@ -51,11 +51,15 @@ void ves::xplorer::util::activateScalar( vtkDataSet * dataSet )
         for( int i = 0; i < numPDArrays; i++ )
         {
             if( dataSet->GetPointData()->GetArray( i )->GetNumberOfComponents() == 1 )
+            {
                 numScalars++;
+            }
         }
 
         if( numScalars == 0 )
+        {
             return;
+        }
         else if( numScalars == 1 )
         {
             for( int i = 0; i < numPDArrays; i++ )
@@ -73,7 +77,9 @@ void ves::xplorer::util::activateScalar( vtkDataSet * dataSet )
             for( int i = 0; i < numPDArrays; i++ )
             {
                 if( dataSet->GetPointData()->GetArray( i )->GetNumberOfComponents() == 1 )
+                {
                     std::cout << "\t" << i << "\t" << dataSet->GetPointData()->GetArray( i )->GetName() << std::endl;
+                }
             }
             std::cout << std::endl;
 
@@ -86,9 +92,13 @@ void ves::xplorer::util::activateScalar( vtkDataSet * dataSet )
                 // verify that the choice corresponds to a valid scalar...
                 if( dataSet->GetPointData()->GetArray( choice )
                         ->GetNumberOfComponents() == 1 )
+                {
                     break;
+                }
                 else
+                {
                     std::cout << "ERROR!: " << std::flush;
+                }
             }
             while( 1 );
 
@@ -99,7 +109,7 @@ void ves::xplorer::util::activateScalar( vtkDataSet * dataSet )
     return;
 }
 
-void ves::xplorer::util::activateVector( vtkDataSet * dataSet )
+void ves::xplorer::util::activateVector( vtkDataSet* dataSet )
 {
     // if there are data arrays, count the number of arrays
     int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();
@@ -111,11 +121,15 @@ void ves::xplorer::util::activateVector( vtkDataSet * dataSet )
         for( int i = 0; i < numPDArrays; i++ )
         {
             if( dataSet->GetPointData()->GetArray( i )->GetNumberOfComponents() == 3 )
+            {
                 numVectors++;
+            }
         }
 
         if( numVectors == 0 )
+        {
             return;
+        }
         else if( numVectors == 1 )
         {
             for( int i = 0; i < numPDArrays; i++ )
@@ -133,7 +147,9 @@ void ves::xplorer::util::activateVector( vtkDataSet * dataSet )
             for( int i = 0; i < numPDArrays; i++ )
             {
                 if( dataSet->GetPointData()->GetArray( i )->GetNumberOfComponents() == 3 )
+                {
                     std::cout << "\t" << i << "\t" << dataSet->GetPointData()->GetArray( i )->GetName() << std::endl;
+                }
             }
 
             int choice;
@@ -145,9 +161,13 @@ void ves::xplorer::util::activateVector( vtkDataSet * dataSet )
                 // verify that the choice corresponds to a valid vector...
                 if( dataSet->GetPointData()->GetArray( choice )
                         ->GetNumberOfComponents() == 3 )
+                {
                     break;
+                }
                 else
+                {
                     std::cout << "ERROR!: " << std::flush;
+                }
             }
             while( 1 );
 

@@ -114,7 +114,7 @@ public:
     void OnResetNavPosition( wxCommandEvent& event );
     void OnHeadCheck( wxCommandEvent& event );
     void OnSubZeroCheck( wxCommandEvent& event );
-	void OnZEqualsZeroCheck( wxCommandEvent& event );
+    void OnZEqualsZeroCheck( wxCommandEvent& event );
     void SendCommandsToXplorer( void );
 
     // Build the navigation pane
@@ -134,7 +134,7 @@ public:
 protected:
     int _activeButton;
     wxScrolledWindow* scrollWindow;
-    
+
     ves::open::xml::CommandPtr startPoint;
     ves::open::xml::DataValuePairPtr quatStartPoint;
     ves::open::xml::DataValuePairPtr positionStartPoint;
@@ -159,7 +159,7 @@ protected:
     wxSlider*   rotationStepSize;
     wxCheckBox* headRotationChk;
     wxCheckBox* subZeroChk;
-	wxCheckBox* zEqualsZeroChk;
+    wxCheckBox* zEqualsZeroChk;
     wxButton*   resetNavPosition;
     wxTimer mTimer;
 

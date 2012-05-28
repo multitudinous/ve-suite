@@ -37,7 +37,7 @@
 
 // Implementation skeleton constructor
 veWebService_i::veWebService_i( Body::Executive_ptr exec, std::string name )
-        : executive_( Body::Executive::_duplicate( exec ) )
+    : executive_( Body::Executive::_duplicate( exec ) )
 {
     UIName_ = name;
 }
@@ -60,7 +60,7 @@ std::string veWebService_i::GetNetworkString( void )
         std::vector< std::string >::iterator iter;
         std::cout << "check 2" << std::endl;
         iter = networkStringBuffer.begin();
-        std::string temp(( *iter ) );
+        std::string temp( ( *iter ) );
         std::cout << "check 3" << std::endl;
         networkStringBuffer.erase( iter );
         return temp;
@@ -94,65 +94,73 @@ bool veWebService_i::GetCalcFlag( void )
 }
 
 void veWebService_i::UpdateNetwork(
-    const char * network
+    const char* network
     ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
+ACE_THROW_SPEC( (
+                    CORBA::SystemException
+                    , Error::EUnknown
+                ) )
 {
     // Add your implementation here
     if( network != NULL )
+    {
         std::cout << network << std::endl;
+    }
     std::cout << UIName_ << " :UpdateNetwork called" << std::endl;
 }
 
 void veWebService_i::UpdateModuleUI(
     CORBA::Long module_id,
-    const char * msg
+    const char* msg
     ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
+ACE_THROW_SPEC( (
+                    CORBA::SystemException
+                    , Error::EUnknown
+                ) )
 {
     // Add your implementation here
     if( msg != NULL )
+    {
         std::cout << module_id << " : " << msg << std::endl;
+    }
     std::cout << UIName_ << " :UpdateModuleUI called" << std::endl;
 }
 
 void veWebService_i::UpdateModuleResult(
     CORBA::Long module_id,
-    const char * msg
+    const char* msg
     ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
+ACE_THROW_SPEC( (
+                    CORBA::SystemException
+                    , Error::EUnknown
+                ) )
 {
     // Add your implementation here
     if( msg != NULL )
+    {
         std::cout << module_id << " : " << msg << std::endl;
+    }
     std::cout << UIName_ << " :UpdateModuleResult called" << std::endl;
 }
 
 void veWebService_i::UpdateLinkContent(
     CORBA::Long id,
-    const char * msg
+    const char* msg
     ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
+ACE_THROW_SPEC( (
+                    CORBA::SystemException
+                    , Error::EUnknown
+                ) )
 {
     // Add your implementation here
     if( msg != NULL )
+    {
         std::cout << id << " : " << msg << std::endl;
+    }
     std::cout << UIName_ << " :UpdateLinkContent called" << std::endl;
 }
 
@@ -164,19 +172,19 @@ void veWebService_i::setWebServices( cfdWebServices* webServe )
 
 
 void veWebService_i::Raise(
-    const char * notification
+    const char* notification
     ACE_ENV_ARG_DECL
 )
-ACE_THROW_SPEC((
-                   CORBA::SystemException
-                   , Error::EUnknown
-               ) )
+ACE_THROW_SPEC( (
+                    CORBA::SystemException
+                    , Error::EUnknown
+                ) )
 {
     // Add your implementation here
     if( notification != NULL )
     {
         std::cout << "|\tNotification Message : " << notification << " : Raise called " << std::endl
-        << "|\tModule Being Called : " << UIName_ << " : Raise called" << std::endl;
+                  << "|\tModule Being Called : " << UIName_ << " : Raise called" << std::endl;
         std::string temp( notification );
         if( !temp.compare( 0, 26, "Network execution complete" ) ||
                 !temp.compare( 0, 30, "Successfully Scheduled Network" ) ||
@@ -191,7 +199,7 @@ ACE_THROW_SPEC((
                 this->SetNetworkString( network );
                 webServices->GetNetwork();
             }
-            catch ( CORBA::Exception & )
+            catch( CORBA::Exception& )
             {
                 std::cerr << "CFD DEBUG: cfdWebServices : no exec found! " << std::endl;
             }

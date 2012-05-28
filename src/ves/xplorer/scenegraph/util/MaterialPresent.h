@@ -66,7 +66,7 @@ public:
 
     bool FileHasMaterial();
     bool FileHasSecondMaterial();
-    
+
 private:
     bool mFileHasMaterial;
     bool mHasSecondMaterial;

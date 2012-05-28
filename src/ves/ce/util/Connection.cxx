@@ -39,9 +39,9 @@
 using namespace VE_CE::Utilities;
 
 Connection::Connection( int id )
-        : _iport( NULL ),
-        _oport( NULL ),
-        _id( id )
+    : _iport( NULL ),
+      _oport( NULL ),
+      _id( id )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 Connection::Connection( const Connection& c )
@@ -54,7 +54,10 @@ Connection::~Connection()
 ////////////////////////////////////////////////////////////////////////////////
 void Connection::copy( const Connection& c )
 {
-    if( this == &c ) return;
+    if( this == &c )
+    {
+        return;
+    }
 
     _iport = c._iport;
     _oport = c._oport;

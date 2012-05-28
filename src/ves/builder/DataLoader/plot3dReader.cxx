@@ -69,13 +69,13 @@ plot3dReader::plot3dReader( void )
 plot3dReader::~plot3dReader( void )
 {}
 ////////////////////////////////////////////////////////////////////////////////
-plot3dReader::plot3dReader( plot3dReader * )
+plot3dReader::plot3dReader( plot3dReader* )
 {
     ;
 }
 //////////////////////////////////////////////////////////////////////////
 void plot3dReader::Plot3DPreTranslateCbk::Preprocess( int argc, char** argv,
-                                                      cfdTranslatorToVTK* toVTK )
+        cfdTranslatorToVTK* toVTK )
 {
     plot3dReader* plot3DToVTK =
         dynamic_cast< plot3dReader* >( toVTK );
@@ -145,8 +145,8 @@ std::string plot3dReader::Plot3DPreTranslateCbk::GetQFilename( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                 cfdTranslatorToVTK* toVTK,
-                                                 vtkAlgorithm*& dataReader )
+        cfdTranslatorToVTK* toVTK,
+        vtkAlgorithm*& dataReader )
 {
     plot3dReader* plot3DToVTK =
         dynamic_cast< plot3dReader* >( toVTK );
@@ -263,13 +263,13 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataObject*& outputDataset,
 
         //reader->Print( std::cout );
         std::cout << "|   Number of grids in " <<
-        numGrids << std::endl;
+                  numGrids << std::endl;
         //writer->DebugOn();
         writer->BreakOnError();
         for( size_t i = 0; i < static_cast<size_t>( numGrids ); i++ )
         {
             grids[ i ] = vtkStructuredGrid::New();
-            grids[ i ]->ShallowCopy(( vtkStructuredGrid * ) reader->GetOutput( static_cast<int>( i ) ) );
+            grids[ i ]->ShallowCopy( ( vtkStructuredGrid* ) reader->GetOutput( static_cast<int>( i ) ) );
             //std::ostringstream number;
             //number << i;
             //std::string testname = "test_" + number.str() + '.' + "vts";
@@ -292,7 +292,7 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataObject*& outputDataset,
             //filter->Print( cout );
         }
 
-        unsgrid->ShallowCopy(( vtkUnstructuredGrid * ) filter->GetOutput() );
+        unsgrid->ShallowCopy( ( vtkUnstructuredGrid* ) filter->GetOutput() );
         this->unsgrid->GetPointData()->SetActiveVectors( "Velocity" );
         //this->unsgrid->Print( cout );
         //vtkFilename = prefix + '.' + suffix;
@@ -307,7 +307,7 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataObject*& outputDataset,
         //unswriter->Write();
 
         /*int numPoints = ((vtkPointSet *)filter->GetOutput())->GetNumberOfPoints();
-        std::cout << "|   Number of vertices in unstructured grid : " << 
+        std::cout << "|   Number of vertices in unstructured grid : " <<
            numPoints << std::endl;
         vtkExtractUnstructuredGrid *extunsgrid = vtkExtractUnstructuredGrid::New();
         //extunsgrid->DebugOn();
@@ -328,7 +328,7 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataObject*& outputDataset,
         //unswriter->Print( cout );
         //if (!debug)
         unswriter->SetFileTypeToBinary();
-        unswriter->Write(); 
+        unswriter->Write();
         */
         if( !outputDataset )
         {
@@ -340,19 +340,29 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataObject*& outputDataset,
         //outputDataset->Print( std::cout );
 
         if( writer != NULL )
+        {
             writer->Delete();
+        }
 
         if( reader != NULL )
+        {
             reader->Delete();
+        }
 
         if( unsgrid != NULL )
+        {
             unsgrid->Delete();
+        }
 
         if( unswriter != NULL )
+        {
             unswriter->Delete();
+        }
 
         if( filter != NULL )
+        {
             filter->Delete();
+        }
 
         for( size_t i = 0; i < static_cast<size_t>( numGrids ); i++ )
         {
@@ -366,10 +376,10 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataObject*& outputDataset,
 void plot3dReader::DisplayHelp( void )
 {
     std::cout << "|\tPlot3D Translator Usage:" << std::endl
-    << "\t -geometryFileXYZ <filename_to_load> -dataFileQ <filename_to_load> " << std::endl
-    << "-o <output_dir> -multiGridFlag <0|1> -iblankFlag <0|1> -twoDimensions <0|1> " << std::endl
-    << "-forceRead <0|1> -bigEndian <0|1> -bytePad <0|1> -binaryFile <0|1> " << std::endl
-    << "-outFileName <output_filename> -loader xyz -w file" << std::endl;
+              << "\t -geometryFileXYZ <filename_to_load> -dataFileQ <filename_to_load> " << std::endl
+              << "-o <output_dir> -multiGridFlag <0|1> -iblankFlag <0|1> -twoDimensions <0|1> " << std::endl
+              << "-forceRead <0|1> -bigEndian <0|1> -bytePad <0|1> -binaryFile <0|1> " << std::endl
+              << "-outFileName <output_filename> -loader xyz -w file" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void plot3dReader::GetFileNames( void )

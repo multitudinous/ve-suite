@@ -36,13 +36,13 @@
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 OPort::OPort( int id, Module* m )
-        : Port( id, m ), _profile( 0 )
+    : Port( id, m ), _profile( 0 )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 OPort::OPort( const OPort& p )
-        : Port( p )
+    : Port( p )
 {
     copy( p );
 }
@@ -57,9 +57,9 @@ void OPort::copy( const OPort& p )
     if( this == &p )
     {
         return;
-    } 
+    }
 
-    if( _profile ) 
+    if( _profile )
     {
         delete _profile;
     }

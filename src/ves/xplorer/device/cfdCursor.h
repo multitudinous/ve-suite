@@ -105,8 +105,8 @@ public:
     */
     /*
     Update the position and direction of the virtual cursor
-    based on the output from cfdNavigate::GetCursorLocation(location) 
-    and cfdNavigate::GetDirection(direction).  
+    based on the output from cfdNavigate::GetCursorLocation(location)
+    and cfdNavigate::GetDirection(direction).
     */
     void Update( double x[3], double v[3], double wx[3] );
 
@@ -117,12 +117,12 @@ public:
 
     ///Set/Get plane size.
     void SetPlaneSize( float size );
-    void GetPlaneSize( float &size );
+    void GetPlaneSize( float& size );
     float GetPlaneSize();
 
     ///Set/Get plane resolution: the number of x-y subdivisions in the plane
     void SetPlaneReso( int size );
-    void GetPlaneReso( int &size );
+    void GetPlaneReso( int& size );
     int GetPlaneReso();
 
     ///Set the sphere scale
@@ -134,7 +134,7 @@ public:
     virtual void ProcessCommand();
     // for box cursor...
     void getExtent( double boxExtent[6] );
-    vtkCubeSource *getBox();
+    vtkCubeSource* getBox();
     float boxExtent;
 
     void SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS );
@@ -156,51 +156,51 @@ private:
     // Update the current position of sphere cursor.
     void UpdateSphere();
 
-    vtkSphereSource *sphereSrc;
-    vtkPolyDataNormals *sphereNorm;
-    vtkPolyDataMapper *sphereMapper;
-    vtkActor *sphereActor;
+    vtkSphereSource* sphereSrc;
+    vtkPolyDataNormals* sphereNorm;
+    vtkPolyDataMapper* sphereMapper;
+    vtkActor* sphereActor;
 
     //Arrow Source Stuff
     // Build arrow cursor and use as source for glyph.
     void BuildArrowSource( void );
     void UpdateArrowSource( void );
 
-    vtkPolyData * arrow;
+    vtkPolyData* arrow;
 
-    vtkPlaneSource * arrowPlaneS;
-    vtkPolyDataMapper * arrowMapperS;
-    vtkActor * arrowActorS;
-    vtkGlyph3D * arrowGlyphS;
+    vtkPlaneSource* arrowPlaneS;
+    vtkPolyDataMapper* arrowMapperS;
+    vtkActor* arrowActorS;
+    vtkGlyph3D* arrowGlyphS;
     //DataSet * dataSet;
 
     // Line Source Stuff
     void UpdateLineSource( int );
     void BuildLineSource( void );
 
-    vtkLineSource * lineSrc;
-    vtkActor * lineActor;
-    vtkPolyDataMapper *lineMapper;
-    vtkGlyph3D * lineGlyph;
-    vtkSphereSource * lineSphere;
+    vtkLineSource* lineSrc;
+    vtkActor* lineActor;
+    vtkPolyDataMapper* lineMapper;
+    vtkGlyph3D* lineGlyph;
+    vtkSphereSource* lineSphere;
 
     //add for box cursor
     void UpdateCube();
     void BuildCube();
 
-    vtkCubeSource *cubeSrc;
-    vtkPolyDataMapper *cubeMapper;
-    vtkActor *cubeActor;
+    vtkCubeSource* cubeSrc;
+    vtkPolyDataMapper* cubeMapper;
+    vtkActor* cubeActor;
 
     // Plane Source Stuff
     // Build the x,y,z plane orientations cursors.
     void UpdatePlaneSource( int );
 
-    vtkPlaneSource * planeSrc;
-    vtkActor * planeActorS;
-    vtkPolyDataMapper *planeMapperS;
-    vtkGlyph3D * sphereGlyph;
-    vtkSphereSource * planeSphereS;
+    vtkPlaneSource* planeSrc;
+    vtkActor* planeActorS;
+    vtkPolyDataMapper* planeMapperS;
+    vtkGlyph3D* sphereGlyph;
+    vtkSphereSource* planeSphereS;
 
     // I use 'pos' to indicate the current coordinate of the cursor
     double pos[3];

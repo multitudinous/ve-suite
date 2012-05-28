@@ -54,11 +54,11 @@ int main( int argc, char* argv[] )
     {
         XMLPlatformUtils::Initialize();
     }
-    catch ( const XMLException &toCatch )
+    catch( const XMLException& toCatch )
     {
         XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
-        << "  Exception message:"
-        << XMLString::transcode( toCatch.getMessage() ) << XERCES_STD_QUALIFIER endl;
+                                  << "  Exception message:"
+                                  << XMLString::transcode( toCatch.getMessage() ) << XERCES_STD_QUALIFIER endl;
         return 1;
     }
 
@@ -68,7 +68,7 @@ int main( int argc, char* argv[] )
         //std::string Advanced_Resource_Factory( "static Advanced_Resource_Factory \"-ORBReactorType select_st -ORBInputCDRAllocator null -ORBConnectionCacheLock null -ORBFlushingStrategy blocking\"" );
         //std::string Client_Strategy_Factory( "static Client_Strategy_Factory \"-ORBProfileLock null -ORBClientConnectionHandler RW\"" );
         //std::string  Server_Strategy_Factory( "static Server_Strategy_Factory \"-ORBConcurrency thread-per-connection -ORBPOALock thread -ORBThreadPerConnectionTimeout 1\"" );
-        
+
         //resource factory args, server strategy factory args, client args
         //TAO::ORB::default_svc_conf_entries( 0, Server_Strategy_Factory.c_str(), Client_Strategy_Factory.c_str() );
         // First initialize the ORB,
@@ -132,7 +132,7 @@ int main( int argc, char* argv[] )
         {
             naming_context->bind( name, exec.in() );
         }
-        catch ( CosNaming::NamingContext::AlreadyBound& ex )
+        catch( CosNaming::NamingContext::AlreadyBound& ex )
         {
             naming_context->rebind( name, exec.in() );
             std::cout << ex._info().c_str() << std::endl << std::flush;
@@ -147,10 +147,10 @@ int main( int argc, char* argv[] )
     }
     catch( CORBA::Exception& ex )
     {
-        std::cerr 
-            << "CORBA exception raised : Unable to connect to Naming Service!" 
-            << std::endl
-            << ex._info().c_str() << std::endl << std::flush;
+        std::cerr
+                << "CORBA exception raised : Unable to connect to Naming Service!"
+                << std::endl
+                << ex._info().c_str() << std::endl << std::flush;
     }
     return 0;
 }

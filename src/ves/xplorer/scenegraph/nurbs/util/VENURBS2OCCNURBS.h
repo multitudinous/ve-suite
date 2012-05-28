@@ -134,9 +134,9 @@ public:
         int VDegree = veNURBSSurface->GetDegree( "V" );
         //Now create occ nurb surface
         Geom_BSplineSurface* surface = new Geom_BSplineSurface( Poles,  Weights,
-                                                                UKnots, VKnots,
-                                                                UMults, VMults,
-                                                                UDegree, VDegree );
+                UKnots, VKnots,
+                UMults, VMults,
+                UDegree, VDegree );
         return surface;
     }
 };

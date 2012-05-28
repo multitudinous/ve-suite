@@ -63,10 +63,10 @@ public:
     enum modifierType
     {
         NONE_MASK    = 0,
-        SHIFT_MASK   = (1 << 0),
-        ALT_MASK     = (1 << 1),
-        CTRL_MASK    = (1 << 2),
-        COMMAND_MASK = (1 << 3)
+        SHIFT_MASK   = ( 1 << 0 ),
+        ALT_MASK     = ( 1 << 1 ),
+        CTRL_MASK    = ( 1 << 2 ),
+        COMMAND_MASK = ( 1 << 3 )
     };
 
     InteractionEvent( eventType eType,

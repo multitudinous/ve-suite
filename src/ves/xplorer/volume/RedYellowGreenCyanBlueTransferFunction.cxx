@@ -42,15 +42,15 @@ using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 RYGCBLinearTF::RYGCBLinearTF( unsigned int s )
-        : TransferFunction1D( s )
+    : TransferFunction1D( s )
 {
     _types[0] = TransferFunction::RAMP;
     _types[1] = TransferFunction::RAMP;
     _types[2] = TransferFunction::RAMP;
 }
 ////////////////////////////////////////////////////////////////////////////////
-RYGCBLinearTF::RYGCBLinearTF( const RYGCBLinearTF &rhs )
-        : TransferFunction( rhs )
+RYGCBLinearTF::RYGCBLinearTF( const RYGCBLinearTF& rhs )
+    : TransferFunction( rhs )
 {
     ;
 }
@@ -70,8 +70,8 @@ void RYGCBLinearTF::InitializeData()
         //texture in GL
         return;
     }
-    _classification = new float[_resolution[0]*4];
-    _textureData = new unsigned char[_resolution[0]*4];
+    _classification = new float[_resolution[0] * 4];
+    _textureData = new unsigned char[_resolution[0] * 4];
 
     float inverseRange = 1.f / ( float )_resolution[0];
     float alpha = 0;
@@ -80,43 +80,43 @@ void RYGCBLinearTF::InitializeData()
         alpha = i * inverseRange;
         if( alpha <= .25 )
         {
-            _classification[i*4    ] = 0;
-            _classification[i*4 + 1] = ( 4.f * alpha ) * 255.f,
-                                       _classification[i*4 + 2] = ( 1.0 ) * 255.f;
-            _classification[i*4 + 3] = alpha * 255.f;
+            _classification[i * 4    ] = 0;
+            _classification[i * 4 + 1] = ( 4.f * alpha ) * 255.f,
+                                         _classification[i * 4 + 2] = ( 1.0 ) * 255.f;
+            _classification[i * 4 + 3] = alpha * 255.f;
         }
         else if( alpha <= .5 )
         {
-            _classification[i*4    ] = 0;
-            _classification[i*4 + 1] = ( 1.f ) * 255.f,
-                                       _classification[i*4 + 2] = ( 2.f - 4.f * alpha ) * 255.f;
-            _classification[i*4 + 3] = alpha * 255.f;
+            _classification[i * 4    ] = 0;
+            _classification[i * 4 + 1] = ( 1.f ) * 255.f,
+                                         _classification[i * 4 + 2] = ( 2.f - 4.f * alpha ) * 255.f;
+            _classification[i * 4 + 3] = alpha * 255.f;
         }
         else if( alpha <= .75 )
         {
-            _classification[i*4    ] = ( 4.f * alpha - 2.f ) * 255.f;
-            _classification[i*4 + 1] = ( 1.f ) * 255.f;
-            _classification[i*4 + 2] = 0.;
-            _classification[i*4 + 3] = alpha * 255.f;
+            _classification[i * 4    ] = ( 4.f * alpha - 2.f ) * 255.f;
+            _classification[i * 4 + 1] = ( 1.f ) * 255.f;
+            _classification[i * 4 + 2] = 0.;
+            _classification[i * 4 + 3] = alpha * 255.f;
         }
         else if( alpha <= 1.0 )
         {
-            _classification[i*4    ]  = ( 1.f ) * 255.f;
-            _classification[i*4 + 1] = ( 4.f - 4.f * alpha ) * 255.f;
-            _classification[i*4 + 2] = 0.;
-            _classification[i*4 + 3] = alpha * 255.f;
+            _classification[i * 4    ]  = ( 1.f ) * 255.f;
+            _classification[i * 4 + 1] = ( 4.f - 4.f * alpha ) * 255.f;
+            _classification[i * 4 + 2] = 0.;
+            _classification[i * 4 + 3] = alpha * 255.f;
         }
-        _textureData[i*4    ] = static_cast<unsigned char>( _classification[i*4] );
-        _textureData[i*4 + 1] = static_cast<unsigned char>( _classification[i*4+1] );
-        _textureData[i*4 + 2] = static_cast<unsigned char>( _classification[i*4+2] );
-        _textureData[i*4 + 3] = static_cast<unsigned char>( _classification[i*4+3] );
+        _textureData[i * 4    ] = static_cast<unsigned char>( _classification[i * 4] );
+        _textureData[i * 4 + 1] = static_cast<unsigned char>( _classification[i * 4 + 1] );
+        _textureData[i * 4 + 2] = static_cast<unsigned char>( _classification[i * 4 + 2] );
+        _textureData[i * 4 + 3] = static_cast<unsigned char>( _classification[i * 4 + 3] );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RYGCBLinearTF::_update()
 {
     float newRange[2] = {0., 1.};
-    if (( _originalScalarRange[1] - _originalScalarRange[0] ) == 0.0 )
+    if( ( _originalScalarRange[1] - _originalScalarRange[0] ) == 0.0 )
     {
         newRange[0] = 0.0;
         newRange[1] = 255.0;
@@ -141,17 +141,17 @@ void RYGCBLinearTF::_update()
         {
             if( i < newRange[0] )
             {
-                _classification[ i*4 ] = 0;
-                _classification[i*4 + 1] = 0;
-                _classification[i*4 + 2] = 0;
-                _classification[i*4 + 3] = 0;
+                _classification[ i * 4 ] = 0;
+                _classification[i * 4 + 1] = 0;
+                _classification[i * 4 + 2] = 0;
+                _classification[i * 4 + 3] = 0;
             }
             else if( i > newRange[1] )
             {
-                _classification[i*4 ] = 0;//255;
-                _classification[i*4 + 1] = 0;
-                _classification[i*4 + 2] = 0;
-                _classification[i*4 + 3] = 0;
+                _classification[i * 4 ] = 0; //255;
+                _classification[i * 4 + 1] = 0;
+                _classification[i * 4 + 2] = 0;
+                _classification[i * 4 + 3] = 0;
             }
             else
             {
@@ -166,39 +166,39 @@ void RYGCBLinearTF::_update()
                         alpha = ( i - newRange[0] ) * invSRange;
                         if( alpha <= .25 )
                         {
-                            _classification[i*4 ] = 0;
-                            _classification[i*4 +1] = ( 4.f * alpha ) * 255,
-                                                      _classification[i*4 +2] = ( 1.f ) * 255;
-                            _classification[i*4 +3] = alpha * 255.f;//*.5f;
+                            _classification[i * 4 ] = 0;
+                            _classification[i * 4 + 1] = ( 4.f * alpha ) * 255,
+                                                         _classification[i * 4 + 2] = ( 1.f ) * 255;
+                            _classification[i * 4 + 3] = alpha * 255.f; //*.5f;
                         }
                         else if( alpha <= .5 )
                         {
-                            _classification[i*4 ] = 0;
-                            _classification[i*4 +1] = ( 1.f ) * 255,
-                                                      _classification[i*4 +2] = ( 2.f - 4.f * alpha ) * 255;
-                            _classification[i*4 +3] = alpha * 255.f;//*.5f;
+                            _classification[i * 4 ] = 0;
+                            _classification[i * 4 + 1] = ( 1.f ) * 255,
+                                                         _classification[i * 4 + 2] = ( 2.f - 4.f * alpha ) * 255;
+                            _classification[i * 4 + 3] = alpha * 255.f; //*.5f;
                         }
                         else if( alpha <= .75 )
                         {
-                            _classification[i*4 ] = ( 4.f * alpha - 2.f ) * 255;
-                            _classification[i*4 +1] = ( 1.f ) * 255;
-                            _classification[i*4 +2] = 0.;
-                            _classification[i*4 +3] = alpha * 255.f;//*.5f;
+                            _classification[i * 4 ] = ( 4.f * alpha - 2.f ) * 255;
+                            _classification[i * 4 + 1] = ( 1.f ) * 255;
+                            _classification[i * 4 + 2] = 0.;
+                            _classification[i * 4 + 3] = alpha * 255.f; //*.5f;
                         }
                         else if( alpha <= 1.0 )
                         {
-                            _classification[i*4 ] = ( 1.f ) * 255;
-                            _classification[i*4 +1] = ( 4.f - 4.f * alpha ) * 255;
-                            _classification[i*4 +2] = 0.;
-                            _classification[i*4 +3] = alpha * 255.f;//*.5f;
+                            _classification[i * 4 ] = ( 1.f ) * 255;
+                            _classification[i * 4 + 1] = ( 4.f - 4.f * alpha ) * 255;
+                            _classification[i * 4 + 2] = 0.;
+                            _classification[i * 4 + 3] = alpha * 255.f; //*.5f;
                         }
                     }
                     else
                     {
-                        _classification[i*4 ] =
-                            _classification[i*4 + 1] =
-                                _classification[i*4 + 2] =
-                                    _classification[i*4 + 3] = 0;
+                        _classification[i * 4 ] =
+                            _classification[i * 4 + 1] =
+                                _classification[i * 4 + 2] =
+                                    _classification[i * 4 + 3] = 0;
                     }
                 }
                 else
@@ -206,38 +206,38 @@ void RYGCBLinearTF::_update()
                     alpha = ( i - newRange[0] ) * invSRange;
                     if( alpha <= .25 )
                     {
-                        _classification[i*4     ] = 0;
-                        _classification[i*4 + 1] = ( 4.f * alpha ) * 255,
-                                                   _classification[i*4 + 2] = ( 1.f ) * 255;
-                        _classification[i*4 + 3] = alpha * 255.f;//*.5f;
+                        _classification[i * 4     ] = 0;
+                        _classification[i * 4 + 1] = ( 4.f * alpha ) * 255,
+                                                     _classification[i * 4 + 2] = ( 1.f ) * 255;
+                        _classification[i * 4 + 3] = alpha * 255.f; //*.5f;
                     }
                     else if( alpha <= .5 )
                     {
-                        _classification[i*4     ] = 0;
-                        _classification[i*4 + 1] = ( 1.f ) * 255,
-                                                   _classification[i*4 + 2] = ( 2.f - 4.f * alpha ) * 255;
-                        _classification[i*4 + 3] = alpha * 255.f;//*.5f;
+                        _classification[i * 4     ] = 0;
+                        _classification[i * 4 + 1] = ( 1.f ) * 255,
+                                                     _classification[i * 4 + 2] = ( 2.f - 4.f * alpha ) * 255;
+                        _classification[i * 4 + 3] = alpha * 255.f; //*.5f;
                     }
                     else if( alpha <= .75 )
                     {
-                        _classification[i*4     ] = ( 4.f * alpha - 2.f ) * 255;
-                        _classification[i*4 + 1] = ( 1.f ) * 255;
-                        _classification[i*4 + 2] = 0.;
-                        _classification[i*4 + 3] = alpha * 255.f;//*.5f;
+                        _classification[i * 4     ] = ( 4.f * alpha - 2.f ) * 255;
+                        _classification[i * 4 + 1] = ( 1.f ) * 255;
+                        _classification[i * 4 + 2] = 0.;
+                        _classification[i * 4 + 3] = alpha * 255.f; //*.5f;
                     }
                     else if( alpha <= 1.0 )
                     {
-                        _classification[i*4     ] = ( 1.f ) * 255;
-                        _classification[i*4 + 1] = ( 4.f - 4.f * alpha ) * 255;
-                        _classification[i*4 + 2] = 0.;
-                        _classification[i*4 + 3] = alpha * 255.f;//*.5f;
+                        _classification[i * 4     ] = ( 1.f ) * 255;
+                        _classification[i * 4 + 1] = ( 4.f - 4.f * alpha ) * 255;
+                        _classification[i * 4 + 2] = 0.;
+                        _classification[i * 4 + 3] = alpha * 255.f; //*.5f;
                     }
                 }
             }
-            _textureData[i*4 ]  = ( unsigned char )_classification[i*4 ];
-            _textureData[i*4 + 1] = ( unsigned char )_classification[i*4 + 1];
-            _textureData[i*4 + 2] = ( unsigned char )_classification[i*4 + 2];
-            _textureData[i*4 + 3] = ( unsigned char )_classification[i*4 + 3];
+            _textureData[i * 4 ]  = ( unsigned char )_classification[i * 4 ];
+            _textureData[i * 4 + 1] = ( unsigned char )_classification[i * 4 + 1];
+            _textureData[i * 4 + 2] = ( unsigned char )_classification[i * 4 + 2];
+            _textureData[i * 4 + 3] = ( unsigned char )_classification[i * 4 + 3];
         }
     }
 }

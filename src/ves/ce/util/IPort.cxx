@@ -34,11 +34,11 @@
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 IPort::IPort( int id, Module* m )
-        : Port( id, m )
+    : Port( id, m )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 IPort::IPort( const IPort& p )
-        : Port( p )
+    : Port( p )
 {
     copy( p );
 }
@@ -49,5 +49,7 @@ IPort::~IPort()
 void IPort::copy( const IPort& p )
 {
     if( this == &p )
+    {
         return;
+    }
 }

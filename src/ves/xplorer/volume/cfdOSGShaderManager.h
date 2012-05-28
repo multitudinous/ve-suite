@@ -116,14 +116,14 @@ protected:
     ///\param filename The file containing the shader code
     ///\param isFrag Fragment or Vertex shader
     virtual osg::Shader* _createGLSLShaderFromFile( const std::string filename,
-                                                    bool isFrag );
+            bool isFrag );
 
 
     ///Create a shader from a string
     ///\param inlineSource The string containing the shader code
     ///\param isFrag Fragment or Vertex shader
     virtual osg::Shader*  _createGLSLShaderFromInline( const std::string inlineSource,
-                                                       bool isFrag );
+            bool isFrag );
 
     ///Set up the shader and the osg::StateSet
     virtual void _setupStateSetForGLSL() = 0;

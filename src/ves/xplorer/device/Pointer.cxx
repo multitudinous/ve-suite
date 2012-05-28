@@ -89,7 +89,7 @@ Pointer::Pointer()
     m_pointerPosition.init( "VESPointer" );
 
     beamLineSegment = new osg::LineSegment();
-    
+
     mRootNode = ves::xplorer::DeviceHandler::instance()->GetDeviceGroup();
 
     Initialize();
@@ -125,13 +125,13 @@ void Pointer::Initialize()
         //loc[ i ] + dir[ i ] * cursorLen;
         objLoc[ i ] = cursorLoc[ i ];
     }
-    
+
     osg::Vec3 pos;
     osg::Quat quat;
-    
+
     /////////
     osg::ref_ptr< osg::Node > handFile = osgDB::readNodeFile( "osg-data/arrowmono.ive" );
-    
+
     if( !handFile.valid() )
     {
         osg::notify( osg::FATAL ) << "Can't load pointer.ive. Check osgDB data file search path." << std::endl;
@@ -140,7 +140,7 @@ void Pointer::Initialize()
     {
         m_pointer = handFile;
         m_pointer->setName( "Pointer" );
-        
+
         if( !m_pointer.valid() )
         {
             std::cerr << "|\tProblems loading right hand model for glove tools." << std::endl;
@@ -154,7 +154,7 @@ void Pointer::Initialize()
             m_pointerDCS->setAttitude( quat );
             osg::Vec3 scale( 0.00328, 0.00328, 0.00328 );
             m_pointerDCS->setScale( scale );
-            
+
             ves::xplorer::scenegraph::util::NormalizeVisitor normVis( m_pointerDCS, true );
         }
     }
@@ -212,11 +212,11 @@ void Pointer::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 {
     osgUtil::Hit objectHit;
     selectedGeometry = 0;
-    
+
     if( listOfHits.empty() )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tPointer::ProcessHit No object selected"
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
             ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
@@ -229,7 +229,7 @@ void Pointer::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     {
         objectHit = listOfHits[ i ];
         //std::cout << i << " " <<  objectHit._geode->getName() << std::endl;
-        if (( objectHit._geode->getName() != laserName ) &&
+        if( ( objectHit._geode->getName() != laserName ) &&
                 ( objectHit._geode->getName() != "Root Node" ) )
         {
             break;
@@ -249,11 +249,11 @@ void Pointer::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     if( parentNode.valid() )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
-        << parentNode->getName() << std::endl << vprDEBUG_FLUSH;
+                              << parentNode->getName() << std::endl << vprDEBUG_FLUSH;
 
         vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
-        << parentNode->getDescriptions().at( 1 )
-        << std::endl << vprDEBUG_FLUSH;
+                              << parentNode->getDescriptions().at( 1 )
+                              << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
             dynamic_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() ) );
@@ -263,8 +263,8 @@ void Pointer::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         selectedGeometry = objectHit._geode;
 
         vprDEBUG( vesDBG, 1 ) << "|\tObject does not have name parent name "
-        << objectHit._geode->getParents().front()->getName()
-        << std::endl << vprDEBUG_FLUSH;
+                              << objectHit._geode->getParents().front()->getName()
+                              << std::endl << vprDEBUG_FLUSH;
 
         ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
             ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
@@ -374,7 +374,7 @@ void Pointer::DrawLine( osg::Vec3d start, osg::Vec3d end )
 void Pointer::UpdateObjectHandler()
 {
     vprDEBUG( vesDBG, 3 ) << "|\tStart Pointer::UpdateObjectHandler"
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     //Update the juggler location of the wand
     UpdateWandLocalDirection();
@@ -405,10 +405,10 @@ void Pointer::UpdateObjectHandler()
     */
 
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Pointer::UpdateObjectHandler"
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Pointer::SetupStartEndPoint( osg::Vec3d * startPoint, osg::Vec3d * endPoint )
+void Pointer::SetupStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
 {
     double* wandPosition = GetObjLocation();
     double* wandDirection = GetDirection();
@@ -557,15 +557,15 @@ void Pointer::FreeRotateAboutWand( const bool freeRotate )
         //Rotate about z-up axis
         tempVec.set( 0, 0, wandQuat[ 1 ] );
     }
-    
+
     //Create rotation increment
     m_rotIncrement =
         osg::Quat( osg::DegreesToRadians( -rotationStepSize ), tempVec );
     //Now make it a 4 x 4
     gmtl::Matrix44d rotMatTemp = gmtl::make< gmtl::Matrix44d >
                                  ( gmtl::Quat< double >( m_rotIncrement[ 0 ],
-                                                         m_rotIncrement[ 1 ], m_rotIncrement[ 2 ],
-                                                         m_rotIncrement[ 3 ] ) );
+                                         m_rotIncrement[ 1 ], m_rotIncrement[ 2 ],
+                                         m_rotIncrement[ 3 ] ) );
 
     gmtl::Vec4d newGlobalHeadPointVec;
     newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
@@ -617,10 +617,10 @@ void Pointer::UpdateHandModel()
      (mod&osgGA::GUIEventAdapter::MODKEY_RIGHT_CTRL) );
      const bool alt = ( (mod&osgGA::GUIEventAdapter::MODKEY_LEFT_SHIFT) ||
      (mod&osgGA::GUIEventAdapter::MODKEY_RIGHT_SHIFT) );
-     
+
      const unsigned int buttonMask( ea.getButtonMask() );
      const bool ourLeft( (ctrl || alt) && (buttonMask == osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON) );
-     
+
      switch( ea.getEventType() )
      {
      case osgGA::GUIEventAdapter::KEYUP:
@@ -680,7 +680,7 @@ void Pointer::UpdateHandModel()
      _mode = osgbBullet::HandNode::MAX_ARTICULATIONS;
      return true;
      }
-     
+
      else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_Left)
      {
      if( _mode == osgbBullet::HandNode::MAX_ARTICULATIONS )
@@ -717,7 +717,7 @@ void Pointer::UpdateHandModel()
      }
      return false;
      }
-     
+
      case osgGA::GUIEventAdapter::SCROLL:
      {
      const unsigned int mod = ea.getModKeyMask();
@@ -725,12 +725,12 @@ void Pointer::UpdateHandModel()
      (mod&osgGA::GUIEventAdapter::MODKEY_RIGHT_CTRL) );
      const bool k0 = ( !k1 || ( (mod&osgGA::GUIEventAdapter::MODKEY_LEFT_SHIFT) ||
      (mod&osgGA::GUIEventAdapter::MODKEY_RIGHT_SHIFT) ) );
-     
+
      float delta( 0.05 );
      osgGA::GUIEventAdapter::ScrollingMotion sm = ea.getScrollingMotion();
      if (sm == osgGA::GUIEventAdapter::SCROLL_UP)
      delta = -delta;
-     
+
      if( _mode == osgbBullet::HandNode::MAX_ARTICULATIONS )
      {
      osgbBullet::HandNode::Articulation art;
@@ -752,7 +752,7 @@ void Pointer::UpdateHandModel()
      {
      if( !ourLeft )
      return false;
-     
+
      _lastX = ea.getXnormalized();
      _lastY = ea.getYnormalized();
      return true;
@@ -761,7 +761,7 @@ void Pointer::UpdateHandModel()
      {
      if( !ourLeft )
      return false;
-     
+
      osg::Vec3 move;
      if( ctrl )
      {
@@ -772,7 +772,7 @@ void Pointer::UpdateHandModel()
      move[ 2 ] = ea.getYnormalized() - _lastY;
      _lastX = ea.getXnormalized();
      _lastY = ea.getYnormalized();
-     
+
      osg::Quat q = _hand->getAttitude();
      osg::Vec3 tmove = q * move * 5.f;
      _hand->setPosition( tmove + _hand->getPosition() );
@@ -782,7 +782,7 @@ void Pointer::UpdateHandModel()
      break;
      }
      return false;
-     }     
+     }
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -792,7 +792,7 @@ void Pointer::UpdatePointer()
     {
         return;
     }
-    
+
     if( !mRootNode->containsNode( m_pointerDCS.get() ) )
     {
         return;
@@ -812,7 +812,7 @@ void Pointer::UpdatePointer()
     //gmtl::Vec3d x_axis( 1.0f, 0.0f, 0.0f );
     //gmtl::Matrix44d rhRot = gmtl::makeRot< gmtl::Matrix44d >(
     //    gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0f ), x_axis ) );
-    gmtl::Matrix44d tempCamera = 
+    gmtl::Matrix44d tempCamera =
         ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix();
     hand_pos_rot = tempCamera * hand_pos_rot;
     m_pointerDCS->setPosition( osg::Vec3( hand_pos_rot[0][3], hand_pos_rot[1][3], hand_pos_rot[2][3] ) );
@@ -821,23 +821,23 @@ void Pointer::UpdatePointer()
     //osg::Vec3d pitch( 1, 0, 0 );
     //osg::Vec3d roll( 0, 1, 0 );
     //osg::Vec3d yaw( 0, 0, 1 );
-    
+
     //osg::Matrixd rotateMat;
     //rotateMat.makeRotate( osg::DegreesToRadians( 180.0 ), yaw,
     //                     osg::DegreesToRadians( -90.0 ), pitch,
     //                     osg::DegreesToRadians( 0.0 ), roll );
-    
+
     double rotArray[ 3 ] = { 0.0, -90.0, 0.0 };
     osg::Matrixd rotateMat = CreateQuat( rotArray );
-    
+
     gmtl::Matrix44d naVRot;
     naVRot.set( rotateMat.ptr() );
     hand_pos_rot = hand_pos_rot * naVRot;
     gmtl::Quatd rhandQuat = gmtl::make< gmtl::Quatd >( hand_pos_rot );
 
-    m_pointerDCS->setAttitude( osg::Quat(rhandQuat[0], rhandQuat[1], rhandQuat[2], rhandQuat[3]  ) );
-    
-    
+    m_pointerDCS->setAttitude( osg::Quat( rhandQuat[0], rhandQuat[1], rhandQuat[2], rhandQuat[3] ) );
+
+
     /*
      DCS& dcs = cameraObject->GetDCS();
      const gmtl::AxisAngled myAxisAngle(
@@ -874,14 +874,14 @@ osg::Matrix Pointer::CreateQuat( double* rotArray )
     z = qRoll * z;
     // Use x, y, and z axes to create an orientation matrix.
     osg::Matrix m( x[0], x[1], x[2], 0.,
-                  y[0], y[1], y[2], 0.,
-                  z[0], z[1], z[2], 0.,
-                  0., 0., 0., 1. );
-    
+                   y[0], y[1], y[2], 0.,
+                   z[0], z[1], z[2], 0.,
+                   0., 0., 0., 1. );
+
     //osg::Quat quat;
     //quat.set( m );
     //setAttitude( quat );
     //setPivotPoint( osg::Vec3d( 0, 0, 0 ) );
-    
+
     return m;
 }

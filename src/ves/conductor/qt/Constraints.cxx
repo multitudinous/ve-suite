@@ -54,16 +54,16 @@ Constraints::Constraints( QWidget* parent )
     :
     QDialog( parent ),
     m_ui( new Ui::Constraints ),
-    m_logger( Poco::Logger::get("conductor.Constraints") ),
+    m_logger( Poco::Logger::get( "conductor.Constraints" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     m_ui->setupUi( this );
 
     mFeatureBrowser = new PropertyBrowser( this );
 
-//    CONNECTSIGNALS_0( "%ResyncFromDatabase", void(),
-//                      &Constraints::ResyncFromDatabaseSlot,
-//                      m_connections, any_SignalType, lowest_Priority );
+    //    CONNECTSIGNALS_0( "%ResyncFromDatabase", void(),
+    //                      &Constraints::ResyncFromDatabaseSlot,
+    //                      m_connections, any_SignalType, lowest_Priority );
 
     LOG_TRACE( "ctor" );
 }
@@ -94,7 +94,7 @@ void Constraints::on_WritePropertiesButton_clicked()
     {
         LOG_DEBUG( "on_WritePropertiesButton_clicked" );
         mTempSet->WriteToDatabase();
-        //const std::string featureName = 
+        //const std::string featureName =
         //    m_ui->FeaturesList->currentItem()->text().toStdString();
         //ConstraintManager::instance()->
         //    UpdateFeature( featureName, mTempSet->GetUUIDAsString() );
@@ -128,7 +128,7 @@ void Constraints::on_NewFeatureButton_clicked()
 
     QString featureName = m_ui->FeaturesList->currentItem()->text();
     mTempSet = ConstraintManager::instance()->
-            CreateNewConstraint( featureName.toStdString() );
+               CreateNewConstraint( featureName.toStdString() );
 
     // Re-read available feature IDs from database, and select the last one added,
     // which corresponds to the "new" one
@@ -171,8 +171,8 @@ void Constraints::UpdateFeatureIDSelectorChoices()
     // Get all available IDs for current feature type
     QString featureName = m_ui->FeaturesList->currentItem()->text();
     std::vector< std::pair< std::string, std::string > > nameIDPairs =
-            ConstraintManager::instance()->GetNameIDPairsForConstraint(
-                    featureName.toStdString() );
+        ConstraintManager::instance()->GetNameIDPairsForConstraint(
+            featureName.toStdString() );
 
     // Get Name Tag for each feature and add these as choices
     QStringList nameList;
@@ -188,7 +188,7 @@ void Constraints::UpdateFeatureIDSelectorChoices()
         // Check whether this entry refers to the set currently being edited
         if( mTempSet.get() )
         {
-            if( mTempSet->GetUUIDAsString() == tempID  )
+            if( mTempSet->GetUUIDAsString() == tempID )
             {
                 tempInList = true;
             }
@@ -221,7 +221,7 @@ void Constraints::on_FeatureIDSelector_currentIndexChanged( int index )
     // cleared. Index > size should only occur if code is faulty elsewhere
     // in this class. In either case we want to ensure nothing is visible in the
     // browser.
-    if( (index == -1) || (index > int(m_ids.size()) ) )
+    if( ( index == -1 ) || ( index > int( m_ids.size() ) ) )
     {
         LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Removing any visible PropertySet" );
         mFeatureBrowser->ParsePropertySet( ves::xplorer::data::PropertySetPtr() );
@@ -231,7 +231,7 @@ void Constraints::on_FeatureIDSelector_currentIndexChanged( int index )
     LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Loading PropertySet" );
     QString featureName = m_ui->FeaturesList->currentItem()->text();
     mTempSet = ConstraintManager::instance()->
-            CreateNewConstraint( featureName.toStdString() );
+               CreateNewConstraint( featureName.toStdString() );
 
     if( mTempSet )
     {

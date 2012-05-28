@@ -86,7 +86,7 @@ BEGIN_EVENT_TABLE( NavigationPane, wxDialog )
     EVT_BUTTON( NAVIGATIONPANE_RESET_NAV_POSITION, NavigationPane::OnResetNavPosition )
     EVT_CHECKBOX( NAVIGATIONPANE_HEAD_ROTATE_CHK,      NavigationPane::OnHeadCheck )
     EVT_CHECKBOX( NAVIGATIONPANE_SUB_ZERO_CHK,         NavigationPane::OnSubZeroCheck )
-	EVT_CHECKBOX( NAVIGATIONPANE_Z_EQUALS_ZERO_CHK,		NavigationPane::OnZEqualsZeroCheck )
+    EVT_CHECKBOX( NAVIGATIONPANE_Z_EQUALS_ZERO_CHK,		NavigationPane::OnZEqualsZeroCheck )
     //EVT_LEFT_UP(NavigationPane::onMouse)
     //EVT_IDLE( NavigationPane::OnIdle )
     EVT_TIMER( NAVIGATIONPANE_UPDATE_TIMER_ID, NavigationPane::OnTimer )
@@ -100,11 +100,11 @@ END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 NavigationPane::NavigationPane( wxWindow* parent )
-        : 
-        wxDialog( parent, -1, _( "Navigation Pane" ),
-                    wxDefaultPosition, wxDefaultSize,
-                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP ),
-        mTimer( this, NAVIGATIONPANE_UPDATE_TIMER_ID )
+    :
+    wxDialog( parent, -1, _( "Navigation Pane" ),
+              wxDefaultPosition, wxDefaultSize,
+              ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP ),
+    mTimer( this, NAVIGATIONPANE_UPDATE_TIMER_ID )
 {
     _activeButton = NONE;
 
@@ -112,7 +112,7 @@ NavigationPane::NavigationPane( wxWindow* parent )
 
     wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
     /*wxRect dialogPosition( 2*displaySize.GetWidth()/3, bbox.GetBottomRight().y,
-                         displaySize.GetWidth()/3, 
+                         displaySize.GetWidth()/3,
                          .5*(displaySize.GetHeight()-displaySize.GetHeight()*0.0732421875) );*/
 
     wxConfig* cfg = static_cast< wxConfig* >( wxConfig::Get() );
@@ -157,7 +157,7 @@ NavigationPane::NavigationPane( wxWindow* parent )
     dataValueName = "Z_GREATER_THAN_ZERO";
     cIso_value = subZeroChk->GetValue();
     SendCommandsToXplorer();
-	dataValueName = "Z_EQUALS_ZERO";
+    dataValueName = "Z_EQUALS_ZERO";
     cIso_value = zEqualsZeroChk->GetValue();
     SendCommandsToXplorer();
 
@@ -433,9 +433,9 @@ void NavigationPane::BuildPane( void )
 
     wxStaticBitmap* coordpic =
         new wxStaticBitmap(
-            scrollWindow, -1, wxBitmap( *_imagecoord ),
-            wxDefaultPosition, wxSize( 110, 112 ),
-            wxMINIMIZE_BOX );
+        scrollWindow, -1, wxBitmap( *_imagecoord ),
+        wxDefaultPosition, wxSize( 110, 112 ),
+        wxMINIMIZE_BOX );
 
 #if wxCHECK_VERSION( 2, 9, 1 )
     wxGridSizer* picSizer = new wxGridSizer( 1 );
@@ -487,11 +487,11 @@ void NavigationPane::BuildPane( void )
     cfg->Read( key + _T( "/" ) + _T( "Navigation z=0 Lock" ), &zLock, false );
     subZeroChk->SetValue( zLock );
     miscGroup2->Add( subZeroChk, 0, wxALL | wxALIGN_LEFT, 5 );
-    
-	zEqualsZeroChk = new wxCheckBox( scrollWindow, NAVIGATIONPANE_Z_EQUALS_ZERO_CHK, wxT( "Fixed Height View ( Z = 0 )" ) );
-	miscGroup2->Add( zEqualsZeroChk, 0, wxALL | wxALIGN_LEFT, 5 );
-	
-	///Store start position
+
+    zEqualsZeroChk = new wxCheckBox( scrollWindow, NAVIGATIONPANE_Z_EQUALS_ZERO_CHK, wxT( "Fixed Height View ( Z = 0 )" ) );
+    miscGroup2->Add( zEqualsZeroChk, 0, wxALL | wxALIGN_LEFT, 5 );
+
+    ///Store start position
     wxButton* startButton = new wxButton( scrollWindow, NAVIGATIONPANE_STORE_START_POSITION,
                                           wxT( "Store Start Position" ) );
     miscGroup2->Add( startButton, 1, wxALL | wxALIGN_LEFT, 5 );
@@ -509,7 +509,7 @@ void NavigationPane::BuildPane( void )
 ////////////////////////////////////////////
 UI_NavButton::UI_NavButton( wxWindow* parent,
                             wxWindowID id, const wxBitmap& bitmap )
-        : wxBitmapButton( parent, id, bitmap, wxDefaultPosition, wxSize( 35, 40 ), wxBU_EXACTFIT )
+    : wxBitmapButton( parent, id, bitmap, wxDefaultPosition, wxSize( 35, 40 ), wxBU_EXACTFIT )
 {
     _buttonPushed = 0;
 }
@@ -521,10 +521,10 @@ void UI_NavButton::onMouseUp( wxMouseEvent& WXUNUSED( event ) )
     //specific button we need to
     //tell cfdApp to stop moving
     //reset the active button
-    (( NavigationPane* )( GetParent()->GetParent() ) )->setActiveButton( NONE );
+    ( ( NavigationPane* )( GetParent()->GetParent() ) )->setActiveButton( NONE );
 
     //relay info to cfdApp
-    (( NavigationPane* )( GetParent()->GetParent() ) )->updateParent( 0, -1 );
+    ( ( NavigationPane* )( GetParent()->GetParent() ) )->updateParent( 0, -1 );
 }
 ///////////////////////////////////////////////
 //only activate motion when left mouse is    //
@@ -532,7 +532,7 @@ void UI_NavButton::onMouseUp( wxMouseEvent& WXUNUSED( event ) )
 ///////////////////////////////////////////////
 void UI_NavButton::onMouse( wxMouseEvent& mouse )
 {
-    int activeId = (( NavigationPane* )( GetParent()->GetParent() ) )->getActiveButton();
+    int activeId = ( ( NavigationPane* )( GetParent()->GetParent() ) )->getActiveButton();
 
     //no button pushed yet
     if( activeId == NONE )
@@ -544,10 +544,10 @@ void UI_NavButton::onMouse( wxMouseEvent& mouse )
             _buttonPushed = 1;
 
             //update the active button
-            (( NavigationPane* )( GetParent()->GetParent() ) )->setActiveButton( GetId() );
+            ( ( NavigationPane* )( GetParent()->GetParent() ) )->setActiveButton( GetId() );
 
             //pass the nav info to cfdApp
-            (( NavigationPane* )( GetParent()->GetParent() ) )->updateParent( _buttonPushed, GetId() );
+            ( ( NavigationPane* )( GetParent()->GetParent() ) )->updateParent( _buttonPushed, GetId() );
         }
     }
 }
@@ -671,7 +671,7 @@ void NavigationPane::UpdateNavigationData( void )
 void NavigationPane::UpdateXplorerData( void )
 {
     const CommandPtr viewPointData = CORBAServiceList::instance()->
-                            GetGUIUpdateCommands( "START_POSITION" );
+                                     GetGUIUpdateCommands( "START_POSITION" );
     //Hasn't updated yet
     if( viewPointData->GetCommandName() == "NULL" )
     {
@@ -718,13 +718,13 @@ void NavigationPane::SetPreferenceNavigationData( void )
     dataValuePair->SetDataValue( static_cast<double>( cIso_value ) );
     navPreferenceData->AddDataValuePair( dataValuePair );
     //////////////////////////////////////////////////////////////////
-	dataValuePair = DataValuePairPtr( new DataValuePair( "FLOAT" ) );
+    dataValuePair = DataValuePairPtr( new DataValuePair( "FLOAT" ) );
     dataValueName = "Z_EQUALS_ZERO";
     cIso_value = zEqualsZeroChk->GetValue();
     dataValuePair->SetDataName( dataValueName );
     dataValuePair->SetDataValue( static_cast<double>( cIso_value ) );
     navPreferenceData->AddDataValuePair( dataValuePair );
-	//////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////
     if( quatStartPoint )
     {
         navPreferenceData->AddDataValuePair( quatStartPoint );

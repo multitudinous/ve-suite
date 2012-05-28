@@ -37,8 +37,8 @@
 #include <iostream>
 
 QueryThread::QueryThread( Body::Unit_var m ) :
-        _mod( m ),
-        isComplete( true )
+    _mod( m ),
+    isComplete( true )
 {
     shutdown = false;
 }
@@ -64,7 +64,7 @@ int QueryThread::svc( void )
             _mod->SetCurID( moduleId );
             queryData.assign( _mod->Query( CORBA::string_dup( queryCommand.c_str() ) ) );
         }
-        catch ( CORBA::Exception &ex )
+        catch( CORBA::Exception& ex )
         {
             std::cout << "Module Query Messed up." << std::endl;
             std::cerr << "CORBA exception raised! : " << ex._name() << std::endl;

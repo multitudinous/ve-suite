@@ -118,41 +118,41 @@ using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( AppToolBar, wxToolBar )
 
-//EVT_ERASE_BACKGROUND( AppToolBar::OnEraseBackGround )
-//EVT_PAINT( AppToolBar::OnPaint )
+    //EVT_ERASE_BACKGROUND( AppToolBar::OnEraseBackGround )
+    //EVT_PAINT( AppToolBar::OnPaint )
 
-EVT_MENU( APP_TOOL_BAR_NEW, AppToolBar::OnNew )
-EVT_MENU( APP_TOOL_BAR_OPEN, AppToolBar::OnOpen )
-EVT_MENU( APP_TOOL_BAR_SAVE, AppToolBar::OnSave )
+    EVT_MENU( APP_TOOL_BAR_NEW, AppToolBar::OnNew )
+    EVT_MENU( APP_TOOL_BAR_OPEN, AppToolBar::OnOpen )
+    EVT_MENU( APP_TOOL_BAR_SAVE, AppToolBar::OnSave )
 
-EVT_MENU( APP_TOOL_BAR_WORLD_NAVIGATION, AppToolBar::OnChangeDeviceMode )
-EVT_MENU( APP_TOOL_BAR_OBJECT_NAVIGATION, AppToolBar::OnChangeDeviceMode )
+    EVT_MENU( APP_TOOL_BAR_WORLD_NAVIGATION, AppToolBar::OnChangeDeviceMode )
+    EVT_MENU( APP_TOOL_BAR_OBJECT_NAVIGATION, AppToolBar::OnChangeDeviceMode )
 
-EVT_MENU( APP_TOOL_BAR_UNSELECT, AppToolBar::OnUnselectObjects )
+    EVT_MENU( APP_TOOL_BAR_UNSELECT, AppToolBar::OnUnselectObjects )
 
-EVT_MENU( APP_TOOL_BAR_MANIPULATOR, AppToolBar::OnManipulatorState )
-EVT_MENU( APP_TOOL_BAR_MANIPULATOR_TRANSLATE, AppToolBar::OnChangeManipulatorMode )
-EVT_MENU( APP_TOOL_BAR_MANIPULATOR_ROTATE, AppToolBar::OnChangeManipulatorMode )
-EVT_MENU( APP_TOOL_BAR_MANIPULATOR_SCALE, AppToolBar::OnChangeManipulatorMode )
-EVT_MENU( APP_TOOL_BAR_MANIPULATOR_COMBO, AppToolBar::OnChangeManipulatorMode )
+    EVT_MENU( APP_TOOL_BAR_MANIPULATOR, AppToolBar::OnManipulatorState )
+    EVT_MENU( APP_TOOL_BAR_MANIPULATOR_TRANSLATE, AppToolBar::OnChangeManipulatorMode )
+    EVT_MENU( APP_TOOL_BAR_MANIPULATOR_ROTATE, AppToolBar::OnChangeManipulatorMode )
+    EVT_MENU( APP_TOOL_BAR_MANIPULATOR_SCALE, AppToolBar::OnChangeManipulatorMode )
+    EVT_MENU( APP_TOOL_BAR_MANIPULATOR_COMBO, AppToolBar::OnChangeManipulatorMode )
 
-EVT_MENU( APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP, AppToolBar::OnCenterPointUpdate )
-EVT_MENU( APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP, AppToolBar::OnCenterPointUpdate )
-EVT_MENU( APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP, AppToolBar::OnCenterPointUpdate )
-EVT_MENU( APP_TOOL_BAR_BB_CENTER_POINT_JUMP, AppToolBar::OnCenterPointUpdate )
+    EVT_MENU( APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP, AppToolBar::OnCenterPointUpdate )
+    EVT_MENU( APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP, AppToolBar::OnCenterPointUpdate )
+    EVT_MENU( APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP, AppToolBar::OnCenterPointUpdate )
+    EVT_MENU( APP_TOOL_BAR_BB_CENTER_POINT_JUMP, AppToolBar::OnCenterPointUpdate )
 
-EVT_MENU( APP_TOOL_BAR_RESET_CENTER_POINT, AppToolBar::OnResetCenterPoint )
+    EVT_MENU( APP_TOOL_BAR_RESET_CENTER_POINT, AppToolBar::OnResetCenterPoint )
 
-EVT_MENU( APP_TOOL_BAR_CHARACTER, AppToolBar::OnCharacterState )
-EVT_MENU( APP_TOOL_BAR_CHARACTER_FLY, AppToolBar::OnCharacterFly )
+    EVT_MENU( APP_TOOL_BAR_CHARACTER, AppToolBar::OnCharacterState )
+    EVT_MENU( APP_TOOL_BAR_CHARACTER_FLY, AppToolBar::OnCharacterFly )
 
-EVT_MENU( APP_TOOL_BAR_PHYSICS, AppToolBar::OnPhysicsState )
-EVT_MENU( APP_TOOL_BAR_PHYSICS_RESET, AppToolBar::OnPhysics )
-EVT_MENU( APP_TOOL_BAR_PHYSICS_PAUSE, AppToolBar::OnPhysics )
-EVT_MENU( APP_TOOL_BAR_PHYSICS_PLAY, AppToolBar::OnPhysics )
-EVT_MENU( APP_TOOL_BAR_PHYSICS_STEP, AppToolBar::OnPhysics )
+    EVT_MENU( APP_TOOL_BAR_PHYSICS, AppToolBar::OnPhysicsState )
+    EVT_MENU( APP_TOOL_BAR_PHYSICS_RESET, AppToolBar::OnPhysics )
+    EVT_MENU( APP_TOOL_BAR_PHYSICS_PAUSE, AppToolBar::OnPhysics )
+    EVT_MENU( APP_TOOL_BAR_PHYSICS_PLAY, AppToolBar::OnPhysics )
+    EVT_MENU( APP_TOOL_BAR_PHYSICS_STEP, AppToolBar::OnPhysics )
 
-EVT_MENU( APP_TOOL_BAR_SUMMIT_JOB, AppToolBar::OnSummitJob )
+    EVT_MENU( APP_TOOL_BAR_SUMMIT_JOB, AppToolBar::OnSummitJob )
 
 END_EVENT_TABLE()
 
@@ -359,7 +359,7 @@ void AppToolBar::CreateAppToolBar()
         wxITEM_RADIO, wxT( "Combo Manipulator Mode" ) );
 
     wxString manipulatorChoices[] =
-        { wxT( "Global" ), wxT( "Local" ), wxT( "View" ) };
+    { wxT( "Global" ), wxT( "Local" ), wxT( "View" ) };
     int numManipulatorChoices = sizeof( manipulatorChoices ) / sizeof( wxString );
     wxChoice* manipulatorChoice = new wxChoice(
         this, wxID_ANY,
@@ -367,7 +367,7 @@ void AppToolBar::CreateAppToolBar()
         numManipulatorChoices, manipulatorChoices );
     manipulatorChoice->SetSelection( 0 );
     manipulatorChoice->SetBackgroundColour( wxColour( 255, 255, 255 ) );
-    
+
     AddControl( manipulatorChoice );
 
     AddSeparator();
@@ -511,46 +511,46 @@ void AppToolBar::OnChangeManipulatorMode( wxCommandEvent& event )
     std::string data;
     switch( currentSelection )
     {
-        case APP_TOOL_BAR_MANIPULATOR_TRANSLATE:
-        {
-            data = "TRANSLATE";
+    case APP_TOOL_BAR_MANIPULATOR_TRANSLATE:
+    {
+        data = "TRANSLATE";
 
-            SetToolNormalBitmap(
-                currentSelection,
-                m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ] );
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_TRANSLATE_SELECT ] );
 
-            break;
-        }
-        case APP_TOOL_BAR_MANIPULATOR_ROTATE:
-        {
-            data = "ROTATE";
+        break;
+    }
+    case APP_TOOL_BAR_MANIPULATOR_ROTATE:
+    {
+        data = "ROTATE";
 
-            SetToolNormalBitmap(
-                currentSelection,
-                m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE_SELECT ] );
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_ROTATE_SELECT ] );
 
-            break;
-        }
-        case APP_TOOL_BAR_MANIPULATOR_SCALE:
-        {
-            data = "SCALE";
+        break;
+    }
+    case APP_TOOL_BAR_MANIPULATOR_SCALE:
+    {
+        data = "SCALE";
 
-            SetToolNormalBitmap(
-                currentSelection,
-                m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE_SELECT ] );
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_SCALE_SELECT ] );
 
-            break;
-        }
-        case APP_TOOL_BAR_MANIPULATOR_COMBO:
-        {
-            data = "COMBO";
+        break;
+    }
+    case APP_TOOL_BAR_MANIPULATOR_COMBO:
+    {
+        data = "COMBO";
 
-            SetToolNormalBitmap(
-                currentSelection,
-                m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO_SELECT ] );
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_MANIPULATOR_COMBO_SELECT ] );
 
-            break;
-        }
+        break;
+    }
     }
 
     SetToolNormalBitmap(
@@ -696,26 +696,26 @@ void AppToolBar::OnChangeDeviceMode( wxCommandEvent& event )
     std::string mode;
     switch( currentSelection )
     {
-        case APP_TOOL_BAR_WORLD_NAVIGATION:
-        {
-            mode = "World Navigation";
+    case APP_TOOL_BAR_WORLD_NAVIGATION:
+    {
+        mode = "World Navigation";
 
-            SetToolNormalBitmap(
-                currentSelection,
-                m_toolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ] );
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_WORLD_NAVIGATION_SELECT ] );
 
-            break;
-        }
-        case APP_TOOL_BAR_OBJECT_NAVIGATION:
-        {
-            mode = "Object Navigation";
+        break;
+    }
+    case APP_TOOL_BAR_OBJECT_NAVIGATION:
+    {
+        mode = "Object Navigation";
 
-            SetToolNormalBitmap(
-                currentSelection,
-                m_toolbarBitmaps[ APP_TOOL_BAR_OBJECT_NAVIGATION_SELECT ] );
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_OBJECT_NAVIGATION_SELECT ] );
 
-            break;
-        }
+        break;
+    }
     }
 
     SetToolNormalBitmap(
@@ -745,46 +745,46 @@ void AppToolBar::OnCenterPointUpdate( wxCommandEvent& event )
     std::string mode;
     switch( currentSelection )
     {
-        case APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP:
-        {
-            mode = "Small";
+    case APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP:
+    {
+        mode = "Small";
 
-            SetToolNormalBitmap(
-                currentSelection,
-                m_toolbarBitmaps[ APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP_SELECT ] );
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_SMALL_CENTER_POINT_JUMP_SELECT ] );
 
-            break;
-        }
-        case APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP:
-        {
-            mode = "Medium";
+        break;
+    }
+    case APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP:
+    {
+        mode = "Medium";
 
-            SetToolNormalBitmap(
-                currentSelection,
-                m_toolbarBitmaps[ APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP_SELECT ] );
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_MEDIUM_CENTER_POINT_JUMP_SELECT ] );
 
-            break;
-        }
-        case APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP:
-        {
-            mode = "Large";
+        break;
+    }
+    case APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP:
+    {
+        mode = "Large";
 
-            SetToolNormalBitmap(
-                currentSelection,
-                m_toolbarBitmaps[ APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP_SELECT ] );
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_LARGE_CENTER_POINT_JUMP_SELECT ] );
 
-            break;
-        }
-        case APP_TOOL_BAR_BB_CENTER_POINT_JUMP:
-        {
-            mode = "Bounding Box";
+        break;
+    }
+    case APP_TOOL_BAR_BB_CENTER_POINT_JUMP:
+    {
+        mode = "Bounding Box";
 
-            SetToolNormalBitmap(
-                currentSelection,
-                m_toolbarBitmaps[ APP_TOOL_BAR_BB_CENTER_POINT_JUMP_SELECT ] );
+        SetToolNormalBitmap(
+            currentSelection,
+            m_toolbarBitmaps[ APP_TOOL_BAR_BB_CENTER_POINT_JUMP_SELECT ] );
 
-            break;
-        }
+        break;
+    }
     }
 
     SetToolNormalBitmap(
@@ -860,8 +860,8 @@ void AppToolBar::OnPhysics( wxCommandEvent& event )
 {
     unsigned int currentSelection = event.GetId();
     if( m_prevPhysicsSimulation == currentSelection &&
-      ( currentSelection == APP_TOOL_BAR_PHYSICS_PLAY ||
-        currentSelection == APP_TOOL_BAR_PHYSICS_PAUSE ) )
+            ( currentSelection == APP_TOOL_BAR_PHYSICS_PLAY ||
+              currentSelection == APP_TOOL_BAR_PHYSICS_PAUSE ) )
     {
         return;
     }
@@ -869,70 +869,70 @@ void AppToolBar::OnPhysics( wxCommandEvent& event )
     std::string value;
     switch( currentSelection )
     {
-        case APP_TOOL_BAR_PHYSICS_PAUSE:
-        {
-            value = "PausePhysicsSimulation";
+    case APP_TOOL_BAR_PHYSICS_PAUSE:
+    {
+        value = "PausePhysicsSimulation";
 
-            ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, true );
-            ToggleTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
+        ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, true );
+        ToggleTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
 
-            SetToolNormalBitmap(
-                APP_TOOL_BAR_PHYSICS_PAUSE,
-                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
-            SetToolNormalBitmap(
-                APP_TOOL_BAR_PHYSICS_PLAY,
-                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
+        SetToolNormalBitmap(
+            APP_TOOL_BAR_PHYSICS_PAUSE,
+            m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
+        SetToolNormalBitmap(
+            APP_TOOL_BAR_PHYSICS_PLAY,
+            m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
 
-            break;
-        }
-        case APP_TOOL_BAR_PHYSICS_RESET:
-        {
-            value = "ResetPhysicsSimulation";
+        break;
+    }
+    case APP_TOOL_BAR_PHYSICS_RESET:
+    {
+        value = "ResetPhysicsSimulation";
 
-            ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, true );
-            ToggleTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
+        ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, true );
+        ToggleTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
 
-            SetToolNormalBitmap(
-                APP_TOOL_BAR_PHYSICS_PAUSE,
-                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
-            SetToolNormalBitmap(
-                APP_TOOL_BAR_PHYSICS_PLAY,
-                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
+        SetToolNormalBitmap(
+            APP_TOOL_BAR_PHYSICS_PAUSE,
+            m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
+        SetToolNormalBitmap(
+            APP_TOOL_BAR_PHYSICS_PLAY,
+            m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
 
-            break;
-        }
-        case APP_TOOL_BAR_PHYSICS_STEP:
-        {
-            value = "StepPhysicsSimulation";
+        break;
+    }
+    case APP_TOOL_BAR_PHYSICS_STEP:
+    {
+        value = "StepPhysicsSimulation";
 
-            ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, true );
-            ToggleTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
+        ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, true );
+        ToggleTool( APP_TOOL_BAR_PHYSICS_PLAY, false );
 
-            SetToolNormalBitmap(
-                APP_TOOL_BAR_PHYSICS_PAUSE,
-                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
-            SetToolNormalBitmap(
-                APP_TOOL_BAR_PHYSICS_PLAY,
-                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
+        SetToolNormalBitmap(
+            APP_TOOL_BAR_PHYSICS_PAUSE,
+            m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE_SELECT ] );
+        SetToolNormalBitmap(
+            APP_TOOL_BAR_PHYSICS_PLAY,
+            m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY ] );
 
-            break;
-        }
-        case APP_TOOL_BAR_PHYSICS_PLAY:
-        {
-            value = "StartPhysicsSimulation";
+        break;
+    }
+    case APP_TOOL_BAR_PHYSICS_PLAY:
+    {
+        value = "StartPhysicsSimulation";
 
-            ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, false );
-            ToggleTool( APP_TOOL_BAR_PHYSICS_PLAY, true );
-            
-            SetToolNormalBitmap(
-                APP_TOOL_BAR_PHYSICS_PLAY,
-                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY_SELECT ] );
-            SetToolNormalBitmap(
-                APP_TOOL_BAR_PHYSICS_PAUSE,
-                m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ] );
+        ToggleTool( APP_TOOL_BAR_PHYSICS_PAUSE, false );
+        ToggleTool( APP_TOOL_BAR_PHYSICS_PLAY, true );
 
-            break;
-        }
+        SetToolNormalBitmap(
+            APP_TOOL_BAR_PHYSICS_PLAY,
+            m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PLAY_SELECT ] );
+        SetToolNormalBitmap(
+            APP_TOOL_BAR_PHYSICS_PAUSE,
+            m_toolbarBitmaps[ APP_TOOL_BAR_PHYSICS_PAUSE ] );
+
+        break;
+    }
     }
 
     m_prevPhysicsSimulation = currentSelection;

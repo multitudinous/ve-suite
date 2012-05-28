@@ -79,7 +79,7 @@ namespace event
 {
 namespace cad
 {
-class VE_XPLORER_EXPORTS TogglePluginsEventHandler : 
+class VE_XPLORER_EXPORTS TogglePluginsEventHandler :
     public ves::xplorer::event::EventHandler
 {
 public:

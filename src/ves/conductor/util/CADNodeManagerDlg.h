@@ -202,7 +202,7 @@ protected:
     void _moveNodeToNewParent( ves::open::xml::cad::CADNodePtr childToRemove,
                                wxTreeItemId oldParentTreeID,
                                wxTreeItemId newParentTreeID );
-         
+
     ///Navigate to the selected file
     void NavigateToFile( wxCommandEvent& event );
 

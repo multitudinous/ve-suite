@@ -42,21 +42,24 @@
 
 #include "ves/xplorer/minerva/EventHandler.h"
 
-namespace ves {
-namespace xplorer {
-namespace minerva {
+namespace ves
+{
+namespace xplorer
+{
+namespace minerva
+{
 
 
 class AddElevationLayerHandler : public EventHandler
 {
-  typedef EventHandler BaseClass;
+    typedef EventHandler BaseClass;
 
 public:
 
-  AddElevationLayerHandler();
-  virtual ~AddElevationLayerHandler();
+    AddElevationLayerHandler();
+    virtual ~AddElevationLayerHandler();
 
-  virtual void Execute ( CommandPtr command, MinervaManager& manager );
+    virtual void Execute( CommandPtr command, MinervaManager& manager );
 };
 
 

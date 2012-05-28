@@ -67,23 +67,23 @@ DataLoggerEngine::DataLoggerEngine( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 DataLoggerEngine::~DataLoggerEngine()
-{    
+{
     delete m_commandTimer;
     m_commandTimer = 0;
     m_looping = false;
-    
+
     if( m_playThread )
     {
         try
         {
             m_playThread->kill();
         }
-        catch ( ... )
+        catch( ... )
         {
             ;//do nothing
         }
-        delete m_playThread;   
-    } 
+        delete m_playThread;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataLoggerEngine::CleanUp()
@@ -101,7 +101,7 @@ bool DataLoggerEngine::SendCommandStringToXplorer( const ves::open::xml::Command
         //Now send the data to xplorer
         ves::open::xml::XMLReaderWriter netowrkWriter;
         netowrkWriter.UseStandaloneDOMDocumentManager();
-        
+
         // New need to destroy document and send it
         std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
         nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( veCommand.lock(), "vecommand" ) );
@@ -118,7 +118,7 @@ bool DataLoggerEngine::SendCommandStringToXplorer( const ves::open::xml::Command
         actionCommand->SetCommandName( std::string( "Action Pair" ) );
         actionCommand->AddDataValuePair( dataValuePair );
         actionCommand->AddDataValuePair( actionDataValuePair );
-        
+
         m_dataLoggerCommandVectorQueue.push_back( actionCommand );
 
         m_commandTimer->reset();
@@ -133,16 +133,16 @@ bool DataLoggerEngine::SendNetworkStringToCE( const std::string& command )
     if( m_dataLogging )
     {
         m_commandTimer->stopTiming();
-        
+
         XMLReaderWriter networkWriter;
         networkWriter.UseStandaloneDOMDocumentManager();
         networkWriter.ReadFromString();
-        
+
         // do this for models
         networkWriter.ReadXMLData( command, "System", "veSystem" );
         std::vector< XMLObjectPtr > objectVector =
             networkWriter.GetLoadedXMLObjects();
-        
+
         DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( std::string( "Time" ), m_commandTimer->getLastTiming() );
         DataValuePairPtr actionDataValuePair( new DataValuePair() );
@@ -151,9 +151,9 @@ bool DataLoggerEngine::SendNetworkStringToCE( const std::string& command )
         actionCommand->SetCommandName( std::string( "Action Pair" ) );
         actionCommand->AddDataValuePair( dataValuePair );
         actionCommand->AddDataValuePair( actionDataValuePair );
-        
+
         m_dataLoggerCommandVectorQueue.push_back( actionCommand );
-        
+
         m_commandTimer->reset();
         m_commandTimer->startTiming();
     }
@@ -161,11 +161,11 @@ bool DataLoggerEngine::SendNetworkStringToCE( const std::string& command )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataLoggerEngine::LoadVEMFile( const std::string& file )
-{    
+{
     m_dataLogging = false;
 
     m_loadedCommands.clear();
-    
+
     //Now send the data to xplorer
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
@@ -182,16 +182,16 @@ void DataLoggerEngine::PlayVEMFile()
         {
             m_playThread->kill();
         }
-        catch ( ... )
+        catch( ... )
         {
             ;//do nothing
         }
-        delete m_playThread;   
+        delete m_playThread;
     }
-    
-    m_playThread = 
+
+    m_playThread =
         new vpr::Thread( boost::bind( &DataLoggerEngine::PlayThread, this ) );
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataLoggerEngine::ToggleOn( bool turnOn )
@@ -219,15 +219,15 @@ void DataLoggerEngine::WriteFile()
         nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( m_dataLoggerCommandVectorQueue.at( i ), "vecommand" ) );
     }
     m_dataLoggerCommandVectorQueue.clear();
-    
+
     //std::string xmlDocument( "returnString" );
     //Now send the data to xplorer
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
     netowrkWriter.WriteXMLDocument( nodes, m_movieFilename, "Command" );
-    
+
     {
-        //std::cout << "Writing VE movie file " 
+        //std::cout << "Writing VE movie file "
         //    << m_movieFilename << "." << std::endl;
         //std::ofstream commandScriptfile( m_movieFilename.c_str() );
         //commandScriptfile << xmlDocument << std::endl;
@@ -253,29 +253,29 @@ void DataLoggerEngine::PlayThread()
             if( actionDvp->GetDataName() == "Xplorer Action" )
             {
                 ves::conductor::util::CORBAServiceList::instance()->
-                SendCommandStringToXplorer( 
-                                           boost::dynamic_pointer_cast<ves::open::xml::Command >( 
-                                                                                                 actionDvp->GetDataXMLObject() ) );
+                SendCommandStringToXplorer(
+                    boost::dynamic_pointer_cast<ves::open::xml::Command >(
+                        actionDvp->GetDataXMLObject() ) );
             }
             else if( actionDvp->GetDataName() == "SetNetwork" )
             {
-                ves::open::xml::model::SystemPtr tempSys = boost::dynamic_pointer_cast<ves::open::xml::model::System >( 
-                                                                                                                       actionDvp->GetDataXMLObject() );
+                ves::open::xml::model::SystemPtr tempSys = boost::dynamic_pointer_cast<ves::open::xml::model::System >(
+                            actionDvp->GetDataXMLObject() );
                 std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
                 nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( tempSys, "veSystem" ) );
-                
+
                 std::string xmlDocument( "returnString" );
                 //Now send the data to xplorer
                 ves::open::xml::XMLReaderWriter netowrkWriter;
                 netowrkWriter.UseStandaloneDOMDocumentManager();
                 netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Network" );
-                
+
                 ves::conductor::util::CORBAServiceList::instance()->
                 SetNetwork( xmlDocument );
             }
         }
     }
-    while( m_looping );    
+    while( m_looping );
     m_isPlaying = false;
 }
 ////////////////////////////////////////////////////////////////////////////////

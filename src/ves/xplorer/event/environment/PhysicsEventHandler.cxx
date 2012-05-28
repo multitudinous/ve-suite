@@ -100,7 +100,7 @@ void PhysicsEventHandler::Execute(
     {
         unsigned int toggle = 0;
         command->GetDataValuePair( "Physics Debugger Toggle Value" )->
-            GetData( toggle );
+        GetData( toggle );
         scenegraph::PhysicsSimulator::instance()->SetDebuggingOn( toggle );
     }
 

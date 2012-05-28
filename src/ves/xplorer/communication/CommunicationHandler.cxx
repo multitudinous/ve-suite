@@ -42,9 +42,9 @@ using namespace ves::xplorer::communication;
 
 ////////////////////////////////////////////////////////////////////////////////
 CommunicationHandler::CommunicationHandler():
-        m_xplorer( 0 )
+    m_xplorer( 0 )
 {
-   m_input = ves::open::xml::CommandPtr();
+    m_input = ves::open::xml::CommandPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CommunicationHandler::Initialize()
@@ -86,7 +86,7 @@ bool CommunicationHandler::SetXMLCommand( const ves::open::xml::CommandPtr& inpu
             //std::cout << xmlDocument << std::endl;
             m_xplorer->SetXplorerData( xmlDocument );
         }
-        catch ( ... )
+        catch( ... )
         {
             return false;
         }

@@ -55,9 +55,9 @@
 #include <map>
 
 namespace ves
-{ 
-namespace conductor 
-{ 
+{
+namespace conductor
+{
 class PreferencesTab;
 class TreeTab;
 class IconStack;
@@ -65,17 +65,17 @@ class PluginSelectionTab;
 class Constraints;
 class RecentFiles;
 
-namespace qt 
-{ 
-namespace minerva 
-{ 
-class StackedWidget; 
-} 
-} 
-} 
+namespace qt
+{
+namespace minerva
+{
+class StackedWidget;
+}
+}
+}
 }
 
-namespace Ui 
+namespace Ui
 {
 class MainWindow;
 } // Ui
@@ -92,38 +92,38 @@ namespace ves
 {
 namespace conductor
 {
-class VE_CONDUCTOR_QTUI_EXPORTS MainWindow : public QMainWindow 
+class VE_CONDUCTOR_QTUI_EXPORTS MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
     MainWindow( QWidget* parent = 0, const std::string& features = "VESDefault" );
     virtual ~MainWindow();
-    
+
     /// Adds @c widget to tabs and gives tab the label @c tabLabel.
     int AddTab( QWidget* widget, const std::string& tabLabel, bool deleteOnClose = false );
-    
+
     /// Remove tab containing @c widget. Does not delete the widget.
     void RemoveTab( QWidget* widget );
-    
+
     /// Remove tab with label @c tabLabel. Does not delete the associated widget.
     void RemoveTab( const std::string& tabLabel );
-    
+
     /// Remove all existing tabs. Does not delete the underlying widgets.
     void RemoveAllTabs();
-    
+
     /// Activate tab containing @c widget
     void ActivateTab( QWidget* widget );
-    
+
     /// Activate tab with label @c tabLabel
     void ActivateTab( const std::string& tabLabel );
-    
+
     /// Activate tab at index @c index
     void ActivateTab( int index );
 
     void SetLogSplitter( Poco::SplitterChannel* splitter );
 
 protected:
-    void changeEvent(QEvent* e);
+    void changeEvent( QEvent* e );
     /*
     ///Test code
     virtual void mouseMoveEvent( QMouseEvent* event );
@@ -146,96 +146,96 @@ protected:
 protected Q_SLOTS:
 
     void on_actionRecent_triggered();
-    
+
     /// Called when the physics icon is pressed on the toolbar
     /// Autoconnected slot
-    void on_actionPhysicsStack_triggered(); 
-    
+    void on_actionPhysicsStack_triggered();
+
     /// Enables physics engine
     /// Autoconnected slot
-    void on_actionStepPhysics_triggered(); 
-    
+    void on_actionStepPhysics_triggered();
+
     ///Start the physics engine
     /// Autoconnected slot
-    void on_actionPlayPhysics_triggered(); 
-    
+    void on_actionPlayPhysics_triggered();
+
     ///Pause he physics engine
     /// Autoconnected slot
-    void on_actionPausePhysics_triggered(); 
-    
+    void on_actionPausePhysics_triggered();
+
     ///Reset the physics engine
     /// Autoconnected slot
-    void on_actionResetPhysics_triggered(); 
-    
+    void on_actionResetPhysics_triggered();
+
     ///Debug physics
     /// Autoconnected slot
     //void on_actionDebugPhysics_triggered();
 
     /// Called when the manipulators icon is pressed on the toolbar
     /// Autoconnected slot
-    void on_actionManipulatorStack_triggered(); 
-    
+    void on_actionManipulatorStack_triggered();
+
     /// Called when the manipulators icon is pressed on the toolbar
     /// Autoconnected slot
     //void on_actionManipulatorStack_hovered();
 
     /// Enables physics engine
     /// Autoconnected slot
-    void on_actionScaleManipulator_triggered(); 
-    
+    void on_actionScaleManipulator_triggered();
+
     ///Start the physics engine
     /// Autoconnected slot
-    void on_actionTranslateManipulator_triggered(); 
-    
+    void on_actionTranslateManipulator_triggered();
+
     ///Pause he physics engine
     /// Autoconnected slot
-    void on_actionRotateManipulator_triggered(); 
-    
-    ///Reset the physics engine
-    /// Autoconnected slot
-    void on_actionComboManipulator_triggered(); 
+    void on_actionRotateManipulator_triggered();
 
     ///Reset the physics engine
     /// Autoconnected slot
-    void on_actionEnableManipulator_triggered( bool triggered ); 
-    
+    void on_actionComboManipulator_triggered();
+
+    ///Reset the physics engine
+    /// Autoconnected slot
+    void on_actionEnableManipulator_triggered( bool triggered );
+
     /// Called when the file operations icon on the main toolbar is clicked.
     /// Autoconnected slot
-    void on_actionFile_triggered(); 
+    void on_actionFile_triggered();
 
     void on_actionNew_triggered( const QString& workingDir = "" );
-    
+
     /// Called when the open file icon of the file operations stack is clicked.
     /// Autoconnected slot
-    void on_actionOpen_triggered(); 
+    void on_actionOpen_triggered();
 
     /// Called when the file save icon of the file operations stack is clicked.
     /// Autoconnected slot.
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
-    
+
     /// Called when a user selects quit.
     void on_actionQuit_triggered();
 
     /// Called when user selects a filter in the open file tab. This gives
     /// us the opportunity to allow or disallow multiple selection based on
     /// file type.
-    void OnOpenFileFilterSelected ( const QString& filter );
+    void OnOpenFileFilterSelected( const QString& filter );
 
     /// Called when user clicks a filename in file open tab. This lets us
     /// allow or disallow multiple selection based on the extension of the
     /// selected file.
-    void OnCurrentChanged ( const QString& path );
-    
+    void OnCurrentChanged( const QString& path );
+
     /// Called when a valid file selection is made via the file open dialog.
     void onFileOpenSelected( const QStringList& fileNames );
-    
+
     /// Called when the file selection dialog has been cancelled
     void onFileCancelled();
 
     /// Called when a filename has been chosen for saving.
     void onFileSaveSelected( const QString& fileName );
-    
+
     /// Called when current tab is changed.
     /// Autoconnected slot
     void on_tabWidget_currentChanged( int index );
@@ -243,39 +243,39 @@ protected Q_SLOTS:
 
     /// Called when the manipulators icon is pressed on the toolbar
     /// Autoconnected slot
-    void on_actionNavigationStack_triggered(); 
-    
+    void on_actionNavigationStack_triggered();
+
     /// Called when the manipulators icon is pressed on the toolbar
     /// Autoconnected slot
     void on_actionSmallJump_hovered();
-    
+
     /// Enables physics engine
     /// Autoconnected slot
-    void on_actionMediumJump_triggered(); 
-    
+    void on_actionMediumJump_triggered();
+
     ///Start the physics engine
     /// Autoconnected slot
-    void on_actionLargeJump_triggered(); 
-    
+    void on_actionLargeJump_triggered();
+
     ///Pause he physics engine
     /// Autoconnected slot
-    void on_actionBoundingBoxJump_triggered(); 
-    
-    ///Reset the physics engine
-    /// Autoconnected slot
-    void on_actionWorldNavigation_triggered(); 
+    void on_actionBoundingBoxJump_triggered();
 
     ///Reset the physics engine
     /// Autoconnected slot
-    void on_actionObjectNavigation_triggered(); 
-    
+    void on_actionWorldNavigation_triggered();
+
+    ///Reset the physics engine
+    /// Autoconnected slot
+    void on_actionObjectNavigation_triggered();
+
     ///Control character navigation
     /// Autoconnected slot
-    void on_actionCharacterNavigation_triggered( bool triggered ); 
+    void on_actionCharacterNavigation_triggered( bool triggered );
 
     ///Control character fly mode
     /// Autoconnected slot
-    void on_actionCharacterFlyMode_triggered( bool triggered ); 
+    void on_actionCharacterFlyMode_triggered( bool triggered );
 
     void on_actionViewStack_triggered( );
 
@@ -284,9 +284,9 @@ protected Q_SLOTS:
     void on_actionShowPreferencesTab_triggered();
 
     // Something in the qt slots mechanism breaks down if these are surrounded by a #ifndef/#endif block.
-    void on_actionAdd_Planet_triggered ( bool );
-    void on_actionRemove_Planet_triggered ( bool );
-    void on_actionConfigure_Layers_triggered ( bool );
+    void on_actionAdd_Planet_triggered( bool );
+    void on_actionRemove_Planet_triggered( bool );
+    void on_actionConfigure_Layers_triggered( bool );
 
     void on_actionConstraints_triggered();
 
@@ -295,7 +295,7 @@ protected Q_SLOTS:
 
     void UseAsSurfaceDataQueued( const std::string uuid, bool flag );
 
-    void on_tabWidget_tabCloseRequested ( int index );
+    void on_tabWidget_tabCloseRequested( int index );
 
 Q_SIGNALS:
     /// Queued signal emitted when OnActiveModelChanged slot is called. This is
@@ -311,7 +311,7 @@ protected Q_SLOTS:
     void onRecentFileSelected( QString file );
     void onRecentFileRejected();
 
-private: 
+private:
     ///Qt window widget
     Ui::MainWindow* ui;
     ///Q file dialog
@@ -333,16 +333,16 @@ private:
     std::map< std::string, std::pair< QWidget*, bool > > mTabbedWidgets;
     ///Active tab key
     std::string mActiveTab;
-    
+
     /// Maintains the list of signals this object is connected to
     ves::xplorer::eventmanager::ScopedConnectionList mConnections;
-    
+
     // Main tabs that this class owns and manages
     QWidget* mVisualizationTab;
 
     ///The layers tree pointer
     ves::conductor::qt::minerva::StackedWidget* mMinervaStackedWidget;
-    
+
     ///The PreferencesTab pointer
     ves::conductor::PreferencesTab* m_preferencesTab;
 
@@ -353,18 +353,18 @@ private:
     ves::conductor::Constraints* m_constraintsTab;
 
     ves::conductor::RecentFiles* m_recentTab;
-    
+
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
     typedef boost::signals2::signal< void ( const std::string ) > NavJumpSignal_type;
-    NavJumpSignal_type m_jumpSignal;  
-    
+    NavJumpSignal_type m_jumpSignal;
+
     ///Control the syncing of the ves db
     //ves::util::VoidSignal_type m_resyncFromDB;
 
     ///Let everyone know when the character is turned off/on
     ves::util::BoolSignal_type m_characterEnable;
-    
+
     void SaveSytemToFile( ves::open::xml::model::SystemPtr system, std::string fileName );
 
     QMessageBox* m_messageBox;
@@ -388,6 +388,6 @@ private:
     ///Actual stream for this class
     ves::xplorer::LogStreamPtr m_logStream;
 };
-    
+
 }
 }

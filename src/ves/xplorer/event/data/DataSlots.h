@@ -70,7 +70,7 @@ void AddTextureDataset( std::string const& uuid, std::string const& dirName );
 ///\param nodeID The UUID of the node to alter
 ///\param visible Whether the CAD should be visible
 void ToggleCADNode( const std::string& nodeID, bool const& visible );
-   
+
 } //end data
 } //end event
 } //end xplorer

@@ -36,8 +36,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 DataSetDataArrayChoiceDialog::DataSetDataArrayChoiceDialog( wxWindow* parent )
-:
-DataArrayChoiceDialog( parent )
+    :
+    DataArrayChoiceDialog( parent )
 {
     CentreOnParent();
 }
@@ -56,15 +56,15 @@ void DataSetDataArrayChoiceDialog::SetDataArrays( std::vector< std::string > act
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< std::string > DataSetDataArrayChoiceDialog::GetUserActiveArrays()
-{   
+{
     unsigned int numSelections = m_checkList1->GetCount();
     for( size_t i = 0; i < numSelections; ++i )
     {
         if( m_checkList1->IsChecked( i ) )
         {
-            m_usersDataArrays.push_back( 
-                static_cast< const char* >( 
-                wxConvCurrent->cWX2MB( m_checkList1->GetString( i ).c_str() ) ) );
+            m_usersDataArrays.push_back(
+                static_cast< const char* >(
+                    wxConvCurrent->cWX2MB( m_checkList1->GetString( i ).c_str() ) ) );
             //std::cout << m_usersDataArrays.back() << std::endl;
         }
     }

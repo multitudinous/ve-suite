@@ -96,9 +96,9 @@ protected:
     ///The VTK debug level
     int _vtkDebugLevel;
 
-// -------------------------------------------------- //
-// --- This stuff is used for multipass rendering --- //
-// -------------------------------------------------- //
+    // -------------------------------------------------- //
+    // --- This stuff is used for multipass rendering --- //
+    // -------------------------------------------------- //
 public:
     ///
     virtual void traverse( osg::NodeVisitor& nv );

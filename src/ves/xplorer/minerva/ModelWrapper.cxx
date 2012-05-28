@@ -54,14 +54,14 @@ typedef Minerva::Common::IElevationDatabase IElevationDatabase;
 ///////////////////////////////////////////////////////////////////////////////
 
 ModelWrapper::ModelWrapper() : BaseClass(),
-  _cadEntity ( 0x0 ),
-  _offset ( 0.0, 0.0, 0.0 ),
-  _parent ( 0x0 )
+    _cadEntity( 0x0 ),
+    _offset( 0.0, 0.0, 0.0 ),
+    _parent( 0x0 )
 {
-  // ves units are in feet.  Add the conversion to meters.
-  this->toMeters ( 0.3048 );
+    // ves units are in feet.  Add the conversion to meters.
+    this->toMeters( 0.3048 );
 
-  this->altitudeMode ( Minerva::Core::Data::ALTITUDE_MODE_RELATIVE_TO_GROUND );
+    this->altitudeMode( Minerva::Core::Data::ALTITUDE_MODE_RELATIVE_TO_GROUND );
 }
 
 
@@ -73,8 +73,8 @@ ModelWrapper::ModelWrapper() : BaseClass(),
 
 ModelWrapper::~ModelWrapper()
 {
-  _cadEntity = 0x0;
-  _parent = 0x0;
+    _cadEntity = 0x0;
+    _parent = 0x0;
 }
 
 
@@ -84,34 +84,34 @@ ModelWrapper::~ModelWrapper()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-bool ModelWrapper::elevationChangedNotify ( 
-  const Extents& extents, 
-  unsigned int level, 
-  ElevationDataPtr elevationData, 
-  Usul::Interfaces::IUnknown * caller )
+bool ModelWrapper::elevationChangedNotify(
+    const Extents& extents,
+    unsigned int level,
+    ElevationDataPtr elevationData,
+    Usul::Interfaces::IUnknown* caller )
 {
-  BaseClass::Extents e ( this->extents() );
+    BaseClass::Extents e( this->extents() );
 
-  if ( e.intersects ( extents ) )
-  {
-    Guard guard ( this->mutex() );
+    if( e.intersects( extents ) )
+    {
+        Guard guard( this->mutex() );
 
-    osg::Vec3d location ( this->location() );
-    osg::Vec3d tempLocation ( location );
-    tempLocation[2] += _offset[2];
+        osg::Vec3d location( this->location() );
+        osg::Vec3d tempLocation( location );
+        tempLocation[2] += _offset[2];
 
-    this->location ( tempLocation );
+        this->location( tempLocation );
 
-    IPlanetCoordinates::QueryPtr planet ( caller );
-    IElevationDatabase::QueryPtr elevation ( caller );
-    this->UpdateMatrix ( planet.get(), elevation.get() );
+        IPlanetCoordinates::QueryPtr planet( caller );
+        IElevationDatabase::QueryPtr elevation( caller );
+        this->UpdateMatrix( planet.get(), elevation.get() );
 
-    this->location ( location );
+        this->location( location );
 
-    return true;
-  }
+        return true;
+    }
 
-  return false;
+    return false;
 }
 
 
@@ -121,10 +121,10 @@ bool ModelWrapper::elevationChangedNotify (
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void ModelWrapper::SetCADEntity ( CADEntity *entity )
+void ModelWrapper::SetCADEntity( CADEntity* entity )
 {
-  Guard guard ( this );
-  _cadEntity = entity;
+    Guard guard( this );
+    _cadEntity = entity;
 }
 
 
@@ -136,8 +136,8 @@ void ModelWrapper::SetCADEntity ( CADEntity *entity )
 
 ModelWrapper::CADEntity* ModelWrapper::GetCADEntity() const
 {
-  Guard guard ( this );
-  return _cadEntity;
+    Guard guard( this );
+    return _cadEntity;
 }
 
 
@@ -147,21 +147,21 @@ ModelWrapper::CADEntity* ModelWrapper::GetCADEntity() const
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void ModelWrapper::UpdateMatrix ( IPlanetCoordinates* planet, IElevationDatabase* elevation )
+void ModelWrapper::UpdateMatrix( IPlanetCoordinates* planet, IElevationDatabase* elevation )
 {
-  Matrix matrix ( this->matrix ( planet, elevation ) );
+    Matrix matrix( this->matrix( planet, elevation ) );
 
-  CADEntity *entity ( this->GetCADEntity() );
-  if ( 0x0 != entity )
-  {
-    ves::xplorer::scenegraph::DCS* dcs ( entity->GetDCS() );
-    if ( 0x0 != dcs )
+    CADEntity* entity( this->GetCADEntity() );
+    if( 0x0 != entity )
     {
-      gmtl::Matrix44d theMatrix;
-      theMatrix.set ( matrix.ptr() );
-      dcs->SetMat ( theMatrix );
+        ves::xplorer::scenegraph::DCS* dcs( entity->GetDCS() );
+        if( 0x0 != dcs )
+        {
+            gmtl::Matrix44d theMatrix;
+            theMatrix.set( matrix.ptr() );
+            dcs->SetMat( theMatrix );
+        }
     }
-  }
 }
 
 
@@ -171,19 +171,19 @@ void ModelWrapper::UpdateMatrix ( IPlanetCoordinates* planet, IElevationDatabase
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void ModelWrapper::setTranslationOffset ( double x, double y, double z )
+void ModelWrapper::setTranslationOffset( double x, double y, double z )
 {
-  Guard guard ( this->mutex() );
-  _offset.set ( x, y, z );
+    Guard guard( this->mutex() );
+    _offset.set( x, y, z );
 }
 
 // Set/get the parent.
-void ModelWrapper::SetParent ( Minerva::Core::Data::DataObject* parent )
+void ModelWrapper::SetParent( Minerva::Core::Data::DataObject* parent )
 {
-  _parent = parent;
+    _parent = parent;
 }
 
 Minerva::Core::Data::DataObject* ModelWrapper::GetParent() const
 {
-  return _parent;
+    return _parent;
 }

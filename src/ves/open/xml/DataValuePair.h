@@ -146,12 +146,12 @@ public:
             mIntDataValue = data;
         }
     }*/
-    
+
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data A bool that will be cast to an unsigned int.
     void SetDataBool( const std::string& dataName, bool data );
-    
+
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data XMLObject being passed in. Can be a broad range of data types
@@ -230,10 +230,10 @@ public:
     void GetData( std::vector< double >& data );
     ///Helper functions to get data easily
     ///\param data Name of the data being passed in
-    void GetData( std::vector< std::vector< double > > & data );
+    void GetData( std::vector< std::vector< double > >& data );
     ///Helper functions to get data easily
     ///\param data Name of the data being passed in
-    void GetData( std::vector< std::vector< std::vector< double > > > & data );
+    void GetData( std::vector< std::vector< std::vector< double > > >& data );
 
     ///Int arrays
     ///Helper functions to get data easily
@@ -252,11 +252,11 @@ public:
     ///Helper functions to get data easily
     ///\param data Name of the data being passed in
     void GetData( unsigned int& data );
-    
+
     ///Helper functions to get data easily
     ///\param data Name of the data being passed in
     void GetData( bool& data );
-    
+
     ///XMLObject
     ///Helper functions to get data easily
     ///\param data Name of the data being passed in
@@ -266,27 +266,27 @@ public:
     friend std::ostream& operator<<( std::ostream& os, const DataValuePairPtr dvp )
     {
         os << "***********(ves::open::xml::DataValuePair)***********" << std::endl
-            << "DVP Name = " << dvp->mDataName << std::endl
-            << "GUID = " << dvp->mUuid << std::endl
-            << "Object Type = " << dvp->mObjectType << std::endl
-            << "Object Namespace = " << dvp->mObjectNamespace << std::endl
-            << "Data Type = " << dvp->mDataType << std::endl;
-        
+           << "DVP Name = " << dvp->mDataName << std::endl
+           << "GUID = " << dvp->mUuid << std::endl
+           << "Object Type = " << dvp->mObjectType << std::endl
+           << "Object Namespace = " << dvp->mObjectNamespace << std::endl
+           << "Data Type = " << dvp->mDataType << std::endl;
+
         /*if( dvp->mVeXMLObject )
         {
             if( boost::dynamic_pointer_cast< Command >( dvp->mVeXMLObject ) )
             {
-                const ves::open::xml::CommandPtr tempCommand = 
+                const ves::open::xml::CommandPtr tempCommand =
                     boost::dynamic_pointer_cast< ves::open::xml::Command >( dvp->mVeXMLObject );
                 os << tempCommand;
                 os << tempCommand->GetCommandName() << std::endl
                     << tempCommand->GetDataValuePair( 0 )->GetDataName() << std::endl;
             }
         }*/
-        
+
         return os;
     }
-    
+
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
@@ -296,7 +296,7 @@ protected:
     ///In derived classes, this should be overridden
     ///\param baseElement The element to extract the XMLObject from.
     ///\param objectType The XMLObject::_objectType to extract
-    virtual void _extractXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, const std::string& objectType  );
+    virtual void _extractXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, const std::string& objectType );
 
     std::string mDataType;///<The data type.
     std::string mDataName;///<The data name.
@@ -316,8 +316,8 @@ protected:
 template<class T>
 inline DataValuePairPtr MakeDVP( const std::string& name, T& value )
 {
-    ves::open::xml::DataValuePairPtr 
-        dvp( new ves::open::xml::DataValuePair() );
+    ves::open::xml::DataValuePairPtr
+    dvp( new ves::open::xml::DataValuePair() );
     dvp->SetData( name, value );
     return dvp;
 }

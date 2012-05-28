@@ -50,7 +50,7 @@ EphemerisDataEventHandler::EphemerisDataEventHandler()
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 EphemerisDataEventHandler::EphemerisDataEventHandler( const EphemerisDataEventHandler& ceh )
-    : 
+    :
     ves::xplorer::event::EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
@@ -97,8 +97,8 @@ void EphemerisDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             //std::cout<<"Longitude: "<<longitudeData<<std::endl;
             osgEphemeris::EphemerisModel* ephemerisModel =
                 ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel( true );
-            ephemerisModel->setLatitudeLongitude(( northSouth == "South" ) ? -1*latitudeData : latitudeData,
-                                                 ( eastWest == "West" ) ? -1*longitudeData : longitudeData );
+            ephemerisModel->setLatitudeLongitude( ( northSouth == "South" ) ? -1 * latitudeData : latitudeData,
+                                                  ( eastWest == "West" ) ? -1 * longitudeData : longitudeData );
             std::vector<long> dateTimeInfo;
             ves::open::xml::DataValuePairPtr dateTimeData =
                 ephemerisInfo->GetDataValuePair( "Date and Time Info" );
@@ -108,13 +108,13 @@ void EphemerisDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             //std::cout<<"Time: "<<dateTimeInfo[3]<<":"<<dateTimeInfo[4]<<std::endl;
 
             ephemerisModel->setDateTime( osgEphemeris::DateTime( dateTimeInfo[0],
-                                                                 dateTimeInfo[1],
-                                                                 dateTimeInfo[2],
-                                                                 dateTimeInfo[3],
-                                                                 dateTimeInfo[4] ) );
+                                         dateTimeInfo[1],
+                                         dateTimeInfo[2],
+                                         dateTimeInfo[3],
+                                         dateTimeInfo[4] ) );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
         std::cout << "Invalid command passed to EphemerisDataEventHandler!!" << std::endl;
@@ -123,7 +123,7 @@ void EphemerisDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
 }
 //////////////////////////////////////////////////////////////////////////////
 void EphemerisDataEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
-                                                     baseObject )
+        baseObject )
 {
     try
     {
@@ -137,7 +137,7 @@ void EphemerisDataEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
                 ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
     }

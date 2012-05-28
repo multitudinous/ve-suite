@@ -45,24 +45,25 @@ namespace xplorer
 namespace eventmanager
 {
 
-struct BooleanPropagationCombiner {
-typedef bool result_type; // This typedef is req'd by boost::signals2 combiner
-                          // interface.
-
-template<typename InputIterator>
-result_type operator()(InputIterator first, InputIterator last) const
+struct BooleanPropagationCombiner
 {
-    while (first != last)
-    {
-        if (result_type sinkEvent = *first)
-        {
-            return sinkEvent;
-        }
+    typedef bool result_type; // This typedef is req'd by boost::signals2 combiner
+    // interface.
 
-        ++first;
+    template<typename InputIterator>
+    result_type operator()( InputIterator first, InputIterator last ) const
+    {
+        while( first != last )
+        {
+            if( result_type sinkEvent = *first )
+            {
+                return sinkEvent;
+            }
+
+            ++first;
+        }
+        return false;
     }
-    return false;
-}
 };
 
 } // namespace eventmanager

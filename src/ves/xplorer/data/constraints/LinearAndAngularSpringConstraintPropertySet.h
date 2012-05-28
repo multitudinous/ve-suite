@@ -43,7 +43,7 @@ namespace constraints
 {
 
 class VE_DATA_EXPORTS LinearAndAngularSpringConstraintPropertySet :
-        public SpringConstraintBasePropertySet
+    public SpringConstraintBasePropertySet
 {
 public:
     LinearAndAngularSpringConstraintPropertySet();

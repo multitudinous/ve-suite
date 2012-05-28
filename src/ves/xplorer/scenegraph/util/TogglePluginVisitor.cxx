@@ -42,8 +42,8 @@
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-TogglePluginVisitor::TogglePluginVisitor( osg::Node* osg_node, bool toggle, 
-    const std::string& nodeID )
+TogglePluginVisitor::TogglePluginVisitor( osg::Node* osg_node, bool toggle,
+        const std::string& nodeID )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
     mToggle( toggle ),
@@ -71,7 +71,7 @@ TogglePluginVisitor::~TogglePluginVisitor()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TogglePluginVisitor::apply( osg::Group& node )
-{    
+{
     //Lets see if the node is a plugin base
     osg::Node::DescriptionList descriptorsList;
     descriptorsList = node.getDescriptions();
@@ -84,7 +84,7 @@ void TogglePluginVisitor::apply( osg::Group& node )
         {
             isBasePlugin = true;
             //If the id is the plugin we are after
-            if( mNodeID ==  descriptorsList.at( i+1 ) )
+            if( mNodeID ==  descriptorsList.at( i + 1 ) )
             {
                 isActiveNode = true;
             }
@@ -127,7 +127,7 @@ void TogglePluginVisitor::apply( osg::Group& node )
         node.setNodeMask( 1 );
     }
 
-    //Once we reach to the active node on the way back up 
+    //Once we reach to the active node on the way back up
     //turn the toggle flag false
     if( isActiveNode )
     {

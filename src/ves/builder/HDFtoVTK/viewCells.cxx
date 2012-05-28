@@ -59,7 +59,7 @@
 #include <vtkLookupTable.h>
 
 #include <iostream>
-void viewCells( vtkDataSet *dataset, const float shrinkFactor )
+void viewCells( vtkDataSet* dataset, const float shrinkFactor )
 {
     std::cout << "\nviewCells: Preparing to view mesh..." << std::endl;
     int numCells = dataset->GetNumberOfCells();
@@ -67,7 +67,10 @@ void viewCells( vtkDataSet *dataset, const float shrinkFactor )
     int numPts = dataset->GetNumberOfPoints();
     std::cout << "     The number of points is " << numPts << std::endl;
 
-    if( numCells == 0 ) return;
+    if( numCells == 0 )
+    {
+        return;
+    }
 
     //Create one-time graphics stuff
     vtkRenderer* ren1 = vtkRenderer::New();
@@ -77,23 +80,23 @@ void viewCells( vtkDataSet *dataset, const float shrinkFactor )
     iren->SetRenderWindow( renWin );
 
     //Create actor from dataset and add to the renderer
-    vtkActor *actor = AddToRenderer( dataset, ren1, shrinkFactor );
+    vtkActor* actor = AddToRenderer( dataset, ren1, shrinkFactor );
 
-    vtkActor * axesActor = NULL;
-    vtkFollower * xActor = NULL;
-    vtkFollower * yActor = NULL;
-    vtkFollower * zActor = NULL;
-    vtkActor * C6Actor = NULL;
+    vtkActor* axesActor = NULL;
+    vtkFollower* xActor = NULL;
+    vtkFollower* yActor = NULL;
+    vtkFollower* zActor = NULL;
+    vtkActor* C6Actor = NULL;
 
     int hasCaveCorners = 1;
     if( hasCaveCorners )
     {
         // Create the cube corners and the associated mapper and actor.
-        vtkCubeSource * C6 = vtkCubeSource::New();
+        vtkCubeSource* C6 = vtkCubeSource::New();
         C6->SetBounds( -5, 5, -5, 5, 0, 10 );
-        vtkOutlineCornerFilter * C6CornerFilter = vtkOutlineCornerFilter::New();
+        vtkOutlineCornerFilter* C6CornerFilter = vtkOutlineCornerFilter::New();
         C6CornerFilter->SetInput( C6->GetOutput() );
-        vtkPolyDataMapper * C6Mapper = vtkPolyDataMapper::New();
+        vtkPolyDataMapper* C6Mapper = vtkPolyDataMapper::New();
         C6Mapper->SetInput( C6CornerFilter->GetOutput() );
 
         C6Actor = vtkActor::New();
@@ -161,13 +164,13 @@ void viewCells( vtkDataSet *dataset, const float shrinkFactor )
     renWin->Delete();
     iren->Delete();
 }
-void GetAxesSymbol( vtkActor * axesActor )
+void GetAxesSymbol( vtkActor* axesActor )
 {
     // Create the axes and the associated mapper and actor.
-    vtkPoints *newPts = vtkPoints::New();
+    vtkPoints* newPts = vtkPoints::New();
     newPts->Allocate( 6 );
 
-    vtkCellArray *newLines = vtkCellArray::New();
+    vtkCellArray* newLines = vtkCellArray::New();
     newLines->Allocate( 3 );
 
     float x[3];
@@ -212,14 +215,14 @@ void GetAxesSymbol( vtkActor * axesActor )
     newPts->InsertPoint( pts[1], x );
     newLines->InsertNextCell( 2, pts );
 
-    vtkPolyData *output = vtkPolyData::New();
+    vtkPolyData* output = vtkPolyData::New();
     output->SetPoints( newPts );
     newPts->Delete();
 
     output->SetLines( newLines );
     newLines->Delete();
 
-    vtkPolyDataMapper * axesMapper = vtkPolyDataMapper::New();
+    vtkPolyDataMapper* axesMapper = vtkPolyDataMapper::New();
     axesMapper->SetInput( output );
 
     axesActor->SetMapper( axesMapper );
@@ -229,31 +232,31 @@ void GetAxesSymbol( vtkActor * axesActor )
 }
 
 
-void GetAxesLabels( vtkFollower * xActor, vtkFollower * yActor, vtkFollower * zActor )
+void GetAxesLabels( vtkFollower* xActor, vtkFollower* yActor, vtkFollower* zActor )
 {
     // Create the 3D text and the associated mapper and follower
-    vtkVectorText * xText = vtkVectorText::New();
+    vtkVectorText* xText = vtkVectorText::New();
     xText->SetText( "X" );
-    vtkVectorText * yText = vtkVectorText::New();
+    vtkVectorText* yText = vtkVectorText::New();
     yText->SetText( "Y" );
-    vtkVectorText * zText = vtkVectorText::New();
+    vtkVectorText* zText = vtkVectorText::New();
     zText->SetText( "Z" );
 
-    vtkPolyDataMapper * xMapper = vtkPolyDataMapper::New();
+    vtkPolyDataMapper* xMapper = vtkPolyDataMapper::New();
     xMapper->SetInput( xText->GetOutput() );
 
     xActor->SetMapper( xMapper );
     xActor->SetScale( 0.2, 0.2, 0.2 );
     xActor->AddPosition( 1, -0.1, 0 );
 
-    vtkPolyDataMapper * yMapper = vtkPolyDataMapper::New();
+    vtkPolyDataMapper* yMapper = vtkPolyDataMapper::New();
     yMapper->SetInput( yText->GetOutput() );
 
     yActor->SetMapper( yMapper );
     yActor->SetScale( 0.2, 0.2, 0.2 );
     yActor->AddPosition( 0, 1 - 0.1, 0 );
 
-    vtkPolyDataMapper * zMapper = vtkPolyDataMapper::New();
+    vtkPolyDataMapper* zMapper = vtkPolyDataMapper::New();
     zMapper->SetInput( zText->GetOutput() );
 
     zActor->SetMapper( zMapper );
@@ -268,9 +271,9 @@ void GetAxesLabels( vtkFollower * xActor, vtkFollower * yActor, vtkFollower * zA
     yMapper->Delete();
     zMapper->Delete();
 }
-vtkActor * AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float shrinkFactor )
+vtkActor* AddToRenderer( vtkDataSet* dataset, vtkRenderer* ren1, const float shrinkFactor )
 {
-    vtkActor * actor = NULL;
+    vtkActor* actor = NULL;
 
     int numCells = dataset->GetNumberOfCells();
 
@@ -280,15 +283,15 @@ vtkActor * AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float sh
         return actor;
     }
 
-    vtkDataSetMapper *map = vtkDataSetMapper::New();
-//    By default, VTK uses OpenGL display lists which results in another copy of the data being stored
-//    in memory. For most large datasets you will be better off saving memory by not using display lists.
-//    You can turn off display lists by turning on ImmediateModeRendering.
+    vtkDataSetMapper* map = vtkDataSetMapper::New();
+    //    By default, VTK uses OpenGL display lists which results in another copy of the data being stored
+    //    in memory. For most large datasets you will be better off saving memory by not using display lists.
+    //    You can turn off display lists by turning on ImmediateModeRendering.
     map->ImmediateModeRenderingOn();
 
     std::cout << "Using shrinkFactor = " << shrinkFactor << std::endl;
 
-    vtkShrinkFilter *shrink = NULL;
+    vtkShrinkFilter* shrink = NULL;
     if( shrinkFactor > 0.0 && shrinkFactor < 1.0 )
     {
         //cout << "Using shrinkFactor = " << shrinkFactor << std::endl;
@@ -299,7 +302,10 @@ vtkActor * AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float sh
 
         map->SetInput( shrink->GetOutput() );    //don't use this with stock version of vtk3.2: has code error!
     }
-    else map->SetInput( dataset );
+    else
+    {
+        map->SetInput( dataset );
+    }
 
 
     actor = vtkActor::New();
@@ -309,7 +315,10 @@ vtkActor * AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float sh
     //Add the actors to the renderer, set the viewport and background
     ren1->AddActor( actor );
 
-    if( shrink ) shrink->Delete();
+    if( shrink )
+    {
+        shrink->Delete();
+    }
     map->Delete();
 
     return actor;

@@ -78,13 +78,13 @@ END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
 Link::Link( wxScrolledWindow* designCanvas, wxEvtHandler* handler )
-        :
-        Fr_mod( 1000000 ),
-        To_mod( 1000000 ),
-        Fr_port( 1000000 ),
-        To_port( 1000000 ),
-        networkFrame( designCanvas ),
-        userScale( 0 )
+    :
+    Fr_mod( 1000000 ),
+    To_mod( 1000000 ),
+    Fr_port( 1000000 ),
+    To_port( 1000000 ),
+    networkFrame( designCanvas ),
+    userScale( 0 )
 {
     double a = atan( 3.0 / 10.0 );
     double b = -a;
@@ -170,7 +170,7 @@ wxPoint* Link::GetPoint( size_t i )
     {
         return &( cons.at( i ) );
     }
-    catch ( ... )
+    catch( ... )
     {
         cons.push_back( wxPoint() );
         return &( cons.at( i ) );
@@ -347,56 +347,56 @@ void Link::DrawLinkLine( wxDC* dc )
         //std::cout << j << " " << points[ j ].x << " " <<  points[ j ].y << std::endl;
     }
 
-    if(linkType == 0)
+    if( linkType == 0 )
     {
-    dc->SetPen( *wxBLACK_PEN );
-    dc->SetBrush( *wxWHITE_BRUSH );
+        dc->SetPen( *wxBLACK_PEN );
+        dc->SetBrush( *wxWHITE_BRUSH );
     }
-    else if(linkType == 1)
+    else if( linkType == 1 )
     {
-    dc->SetPen( *wxRED_PEN );
-    dc->SetBrush( *wxWHITE_BRUSH );
+        dc->SetPen( *wxRED_PEN );
+        dc->SetBrush( *wxWHITE_BRUSH );
     }
-    else if(linkType == 2)
+    else if( linkType == 2 )
     {
-    dc->SetPen( *wxGREEN_PEN );
-    dc->SetBrush( *wxWHITE_BRUSH );
+        dc->SetPen( *wxGREEN_PEN );
+        dc->SetBrush( *wxWHITE_BRUSH );
     }
     else
     {
-    dc->SetPen( *wxBLACK_PEN );
-    dc->SetBrush( *wxWHITE_BRUSH );
+        dc->SetPen( *wxBLACK_PEN );
+        dc->SetBrush( *wxWHITE_BRUSH );
     }
 
     dc->DrawLines( cons.size(), points );
 
     //Now draw the arrow head
-    if(linkType == 0)
+    if( linkType == 0 )
     {
-    dc->SetPen( *wxBLACK_PEN );
-    dc->SetBrush( *wxBLACK_BRUSH );
+        dc->SetPen( *wxBLACK_PEN );
+        dc->SetBrush( *wxBLACK_BRUSH );
     }
-    else if(linkType == 1)
+    else if( linkType == 1 )
     {
-    dc->SetPen( *wxCYAN_PEN );
-    dc->SetBrush( *wxCYAN_BRUSH );
+        dc->SetPen( *wxCYAN_PEN );
+        dc->SetBrush( *wxCYAN_BRUSH );
     }
-    else if(linkType == 2)
+    else if( linkType == 2 )
     {
-    dc->SetPen( *wxGREEN_PEN );
-    dc->SetBrush( *wxGREEN_BRUSH );
+        dc->SetPen( *wxGREEN_PEN );
+        dc->SetBrush( *wxGREEN_BRUSH );
     }
     else
     {
-    dc->SetPen( *wxBLACK_PEN );
-    dc->SetBrush( *wxBLACK_BRUSH );
+        dc->SetPen( *wxBLACK_PEN );
+        dc->SetBrush( *wxBLACK_BRUSH );
     }
 
     wxPoint arrow[ 3 ];
     arrow[0] = points[0];
-    double dist = sqrt( double(( points[1].y - points[0].y ) *
-                               ( points[1].y - points[0].y ) + ( points[1].x - points[0].x ) *
-                               ( points[1].x - points[0].x ) ) );
+    double dist = sqrt( double( ( points[1].y - points[0].y ) *
+                                ( points[1].y - points[0].y ) + ( points[1].x - points[0].x ) *
+                                ( points[1].x - points[0].x ) ) );
     //Make sure we do not divide by zero
     if( dist <= 0.0001f )
     {
@@ -421,16 +421,16 @@ void Link::DrawLinkLine( wxDC* dc )
 /////////////////////////////////////////////////////////////////////////////
 void Link::DrawName( wxDC* dc )
 {
-    if(cons.size() != 2)
+    if( cons.size() != 2 )
     {
-        wxPoint middle = cons[ cons.size()/2 ];
+        wxPoint middle = cons[ cons.size() / 2 ];
         //dc->GetTextExtent( linkName, &w, &h );
         dc->DrawText( linkName, middle.x, middle.y );
     }
     else
     {
         wxPoint middle = cons[0] + cons[1];
-        dc->DrawText( linkName, middle.x/2, middle.y/2 );
+        dc->DrawText( linkName, middle.x / 2, middle.y / 2 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -452,7 +452,7 @@ void Link::OnShowLinkContent( wxCommandEvent& event )
     {
         //linkresult = exec->GetExportData(mod, port);
     }
-    catch ( CORBA::Exception& )
+    catch( CORBA::Exception& )
     {
         //ves::conductor::util::CORBAServiceList::instance()->GetMessageLog()->SetMessage( "Maybe Engine is down\n" );
         return;
@@ -476,9 +476,9 @@ void Link::OnSetLinkName( wxCommandEvent& event )
 {
     UILINK_CHECKID( event )
 
-    wxTextEntryDialog linkNameDlg( networkFrame, 
-        _("Set Link Name"), _("Link Name"), GetName(),
-        wxOK|wxCANCEL|wxCENTRE, wxDefaultPosition );
+    wxTextEntryDialog linkNameDlg( networkFrame,
+                                   _( "Set Link Name" ), _( "Link Name" ), GetName(),
+                                   wxOK | wxCANCEL | wxCENTRE, wxDefaultPosition );
 
     int showLinkDlg = linkNameDlg.ShowModal();
     if( showLinkDlg != wxID_OK )
@@ -625,7 +625,9 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
     params->SetServiceList( serviceList );
     params->SetDialogType( "output" );
     for( size_t i = 0; i < temp_vector.size(); i++ )
+    {
         params->AppendList( temp_vector[i].c_str() );
+    }
     params->ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -638,14 +640,14 @@ void Link::OnShowAspenDynName( wxCommandEvent& event )
     wxMessageDialog( networkFrame, desc, title ).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::OnQueryStreamAllVars( wxCommandEvent &event )
+void Link::OnQueryStreamAllVars( wxCommandEvent& event )
 {
     UILINK_CHECKID( event )
-        
+
     CORBAServiceList* serviceList = ves::conductor::util::CORBAServiceList::instance();
     std::string compName = ConvertUnicode( GetName().c_str() );
     //compName = "Data.Streams." + compName;
-   
+
     //generate hierarchical name if necessary
     ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
     while( parentTraverser != NULL )
@@ -690,7 +692,7 @@ void Link::OnQueryStreamAllVars( wxCommandEvent &event )
         std::vector< std::string > temp_vector;
         pair->GetData( temp_vector );
         params->SetData( wxString( temp_vector[0].c_str(), wxConvUTF8 ), wxString( temp_vector[1].c_str(), wxConvUTF8 ),
-            wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
+                         wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
         //params->SetData( wxString( temp_vector[0].c_str(), wxConvUTF8 ) );
     }
     params->UpdateSizes();
@@ -740,7 +742,9 @@ void Link::OnDelLink( wxCommandEvent& event )
 
     int answer = wxMessageBox( _( "Do you really want to delete this link?" ), _( "Confirmation" ), wxYES_NO );
     if( answer != wxYES )
+    {
         return;
+    }
 
     networkFrame->RemoveEventHandler( this );
     networkFrame->Refresh( true );
@@ -762,11 +766,11 @@ void Link::OnAddLinkCon( wxCommandEvent& event )
     size_t i;
     for( i = 0; i < linkline.GetNumberOfPoints() - 1; i++ )
     {
-        if (( linkline.GetPoint( i )->x <= Near.GetPoint( 0 )->x &&
+        if( ( linkline.GetPoint( i )->x <= Near.GetPoint( 0 )->x &&
                 linkline.GetPoint( i + 1 )->x >= Near.GetPoint( 0 )->x ) ||
                 ( linkline.GetPoint( i )->x >= Near.GetPoint( 0 )->x &&
                   linkline.GetPoint( i + 1 )->x <= Near.GetPoint( 0 )->x )
-           )
+          )
         {
             break;
         }
@@ -793,7 +797,7 @@ void Link::OnAddLinkCon( wxCommandEvent& event )
     GetLink();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::OnMRightDown( wxMouseEvent &event )
+void Link::OnMRightDown( wxMouseEvent& event )
 {
     // This function opens a plugins dialog when double clicked on the design canvas
     wxClientDC dc( networkFrame );
@@ -832,7 +836,7 @@ void Link::OnMRightDown( wxMouseEvent &event )
     the_pop_menu.Enable( LINK_SHOW_CONT, false );
 
     //Aspen Menu
-    wxMenu * aspen_plus_menu = new wxMenu();
+    wxMenu* aspen_plus_menu = new wxMenu();
     aspen_plus_menu->Append( LINK_ASPEN_PLUS_SHOW_NAME, _( "Aspen Name" ) );
     aspen_plus_menu->Enable( LINK_ASPEN_PLUS_SHOW_NAME, true );
     aspen_plus_menu->Append( LINK_ASPEN_PLUS_INPUTS, _( "Inputs" ) );
@@ -843,7 +847,7 @@ void Link::OnMRightDown( wxMouseEvent &event )
     the_pop_menu.Enable( LINK_MENU, false );
 
     //Aspen Menu
-    wxMenu * aspen_dyn_menu = new wxMenu();
+    wxMenu* aspen_dyn_menu = new wxMenu();
     aspen_dyn_menu->Append( LINK_ASPEN_DYN_SHOW_NAME, _( "Aspen Name" ) );
     aspen_dyn_menu->Enable( LINK_ASPEN_DYN_SHOW_NAME, true );
     aspen_dyn_menu->Append( LINK_ASPEN_DYN_ALL_VARS, _( "All Variables" ) );
@@ -864,9 +868,13 @@ void Link::OnMRightDown( wxMouseEvent &event )
     the_pop_menu.Enable( LINK_DEL, true );
     //the_pop_menu.Enable(SHOW_LINK_CONT, true);
     if( m_selLinkCon >= 0 )
+    {
         the_pop_menu.Enable( LINK_DEL_CON, true );
+    }
     else
+    {
         the_pop_menu.Enable( LINK_ADD_CON, true );
+    }
 
     the_pop_menu.Enable( LINK_MENU, true );
     //the_pop_menu.SetClientData( &id );
@@ -887,7 +895,7 @@ bool Link::SelectLink( int x, int y )
 ////////////////////////////////////////////////////////////////////////////////
 double Link::computenorm( wxPoint pt1, wxPoint pt2 )
 {
-    return sqrt( double(( pt1.x - pt2.x )*( pt1.x - pt2.x ) + ( pt1.y - pt2.y )*( pt1.y - pt2.y ) ) );
+    return sqrt( double( ( pt1.x - pt2.x ) * ( pt1.x - pt2.x ) + ( pt1.y - pt2.y ) * ( pt1.y - pt2.y ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetDCScale( std::pair< double, double >* scale )
@@ -964,7 +972,7 @@ void Link::SetLink( ves::open::xml::model::LinkPtr inputLink )
         point.y = rawPoint.second;
         SetPoint( &point );
         /*if( point.x > maxX )
-        { 
+        {
             maxX = point.x + 100;
         }
 

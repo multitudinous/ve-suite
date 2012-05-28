@@ -40,18 +40,18 @@ namespace eventmanager
 {
 struct null_deleter
 {
-    void operator()(void*) {}
+    void operator()( void* ) {}
 };
 
 ScopedConnectionList::ScopedConnectionList()
     :
-    this_(this, null_deleter())
+    this_( this, null_deleter() )
 {
 }
 
 ScopedConnectionList::ScopedConnectionList( const ScopedConnectionList& )
     :
-    this_(this, null_deleter())
+    this_( this, null_deleter() )
 {
 }
 
@@ -87,7 +87,7 @@ boost::shared_ptr< boost::signals2::scoped_connection > ScopedConnectionList::Ge
     if( iter != mConnections.begin( ) )
     {
         iter--; // Decrement because mConnections.end() returns one position *past* the last element
-        return (*iter );
+        return ( *iter );
     }
     else
     {

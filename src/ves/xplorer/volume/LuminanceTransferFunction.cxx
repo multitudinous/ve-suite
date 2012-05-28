@@ -43,13 +43,13 @@ using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 LuminanceTF::LuminanceTF( unsigned int s )
-        : TransferFunction1D( s )
+    : TransferFunction1D( s )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-LuminanceTF::LuminanceTF( const LuminanceTF &rhs )
-        : TransferFunction( rhs )
+LuminanceTF::LuminanceTF( const LuminanceTF& rhs )
+    : TransferFunction( rhs )
 {
     ;
 }
@@ -69,8 +69,8 @@ void LuminanceTF::InitializeData()
         //texture in GL
         return;
     }
-    _classification = new float[_resolution[0]*4];
-    _textureData = new unsigned char[_resolution[0]*4];
+    _classification = new float[_resolution[0] * 4];
+    _textureData = new unsigned char[_resolution[0] * 4];
 
     unsigned char* gTable = new unsigned char[_resolution[0]];
     double gamma = 2.4;
@@ -78,7 +78,7 @@ void LuminanceTF::InitializeData()
     {
         double y = ( double )( i ) / ( _resolution[0] - 1.0 );
         y = pow( y, 1.0 / gamma );
-        gTable[i] = ( int ) floor(( _resolution[0] - 1.0 ) * y + 0.5 );
+        gTable[i] = ( int ) floor( ( _resolution[0] - 1.0 ) * y + 0.5 );
     }
 
     float inverseRange = 1.f / ( float )_resolution[0];
@@ -87,15 +87,15 @@ void LuminanceTF::InitializeData()
     {
         alpha = gTable[i] * inverseRange;
         {
-            _classification[i*4    ] =
-                _classification[i*4 + 1] =
-                    _classification[i*4 + 2] =
-                        _classification[i*4 + 3] = alpha * 255.f;
+            _classification[i * 4    ] =
+                _classification[i * 4 + 1] =
+                    _classification[i * 4 + 2] =
+                        _classification[i * 4 + 3] = alpha * 255.f;
         }
-        _textureData[i*4    ] = static_cast<unsigned char>( _classification[i*4] );
-        _textureData[i*4 + 1] = static_cast<unsigned char>( _classification[i*4+1] );
-        _textureData[i*4 + 2] = static_cast<unsigned char>( _classification[i*4+2] );
-        _textureData[i*4 + 3] = static_cast<unsigned char>( _classification[i*4+3] );
+        _textureData[i * 4    ] = static_cast<unsigned char>( _classification[i * 4] );
+        _textureData[i * 4 + 1] = static_cast<unsigned char>( _classification[i * 4 + 1] );
+        _textureData[i * 4 + 2] = static_cast<unsigned char>( _classification[i * 4 + 2] );
+        _textureData[i * 4 + 3] = static_cast<unsigned char>( _classification[i * 4 + 3] );
     }
     delete [] gTable;
     gTable = 0;
@@ -112,7 +112,7 @@ void LuminanceTF::InitializeData()
 void LuminanceTF::_update()
 {
     float newRange[2] = {0., 1.};
-    if (( _originalScalarRange[1] - _originalScalarRange[0] ) == 0.0 )
+    if( ( _originalScalarRange[1] - _originalScalarRange[0] ) == 0.0 )
     {
         newRange[0] = 0.0;
         newRange[1] = 255.0;
@@ -137,17 +137,17 @@ void LuminanceTF::_update()
         {
             if( i < newRange[0] )
             {
-                _classification[ i*4 ] = 0;
-                _classification[i*4 + 1] = 0;
-                _classification[i*4 + 2] = 0;
-                _classification[i*4 + 3] = 0;
+                _classification[ i * 4 ] = 0;
+                _classification[i * 4 + 1] = 0;
+                _classification[i * 4 + 2] = 0;
+                _classification[i * 4 + 3] = 0;
             }
             else if( i > newRange[1] )
             {
-                _classification[i*4 ] = 0;//255;
-                _classification[i*4 + 1] = 0;
-                _classification[i*4 + 2] = 0;
-                _classification[i*4 + 3] = 0;
+                _classification[i * 4 ] = 0; //255;
+                _classification[i * 4 + 1] = 0;
+                _classification[i * 4 + 2] = 0;
+                _classification[i * 4 + 3] = 0;
             }
             else
             {
@@ -160,32 +160,32 @@ void LuminanceTF::_update()
                     if( i >= isoRange[0] && i <= isoRange[1] )
                     {
                         alpha = ( i - newRange[0] ) * invSRange;
-                        _classification[i*4 ] =
-                            _classification[i*4 + 1] =
-                                _classification[i*4 + 2] =
-                                    _classification[i*4 + 3] = alpha * ( _resolution[0] - 1 );
+                        _classification[i * 4 ] =
+                            _classification[i * 4 + 1] =
+                                _classification[i * 4 + 2] =
+                                    _classification[i * 4 + 3] = alpha * ( _resolution[0] - 1 );
                     }
                     else
                     {
-                        _classification[i*4 ] =
-                            _classification[i*4 + 1] =
-                                _classification[i*4 + 2] =
-                                    _classification[i*4 + 3] = 0;
+                        _classification[i * 4 ] =
+                            _classification[i * 4 + 1] =
+                                _classification[i * 4 + 2] =
+                                    _classification[i * 4 + 3] = 0;
                     }
                 }
                 else
                 {
                     alpha = ( i - newRange[0] ) * invSRange;
-                    _classification[i*4 ] =
-                        _classification[i*4 + 1] =
-                            _classification[i*4 + 2] =
-                                _classification[i*4 + 3] = alpha * alpha * ( _resolution[0] - 1 );
+                    _classification[i * 4 ] =
+                        _classification[i * 4 + 1] =
+                            _classification[i * 4 + 2] =
+                                _classification[i * 4 + 3] = alpha * alpha * ( _resolution[0] - 1 );
                 }
             }
-            _textureData[i*4 ]  = ( unsigned char )_classification[i*4 ];
-            _textureData[i*4 + 1] = ( unsigned char )_classification[i*4 + 1];
-            _textureData[i*4 + 2] = ( unsigned char )_classification[i*4 + 2];
-            _textureData[i*4 + 3] = ( unsigned char )_classification[i*4 + 3];
+            _textureData[i * 4 ]  = ( unsigned char )_classification[i * 4 ];
+            _textureData[i * 4 + 1] = ( unsigned char )_classification[i * 4 + 1];
+            _textureData[i * 4 + 2] = ( unsigned char )_classification[i * 4 + 2];
+            _textureData[i * 4 + 3] = ( unsigned char )_classification[i * 4 + 3];
         }
     }
 }

@@ -43,7 +43,7 @@ using namespace VE_CE;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 GetResultsEventHandler::GetResultsEventHandler()
-        : VE_CE::EventHandler()
+    : VE_CE::EventHandler()
 {
     baseModel = ves::open::xml::model::ModelPtr();
 }
@@ -64,7 +64,7 @@ void GetResultsEventHandler::SetBaseObject( ves::open::xml::XMLObjectPtr model )
             baseModel = boost::dynamic_pointer_cast<ves::open::xml::model::Model>( model );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         baseModel = ves::open::xml::model::ModelPtr();
         std::cout << "Invalid object passed to SetInputsEventHandler::SetGlobalBaseObject!" << std::endl;
@@ -75,8 +75,8 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
 {
     if( !baseModel )
     {
-        std::cerr << "Must call GetResultsEventHandler::SetBaseObject first" 
-            << std::endl;
+        std::cerr << "Must call GetResultsEventHandler::SetBaseObject first"
+                  << std::endl;
         return std::string( "NULL" );
     }
 
@@ -88,8 +88,8 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
 
     if( numResults == 0 )
     {
-        std::cout << "No results for this unit : " 
-            << baseModel->GetVendorName() << std::endl;
+        std::cout << "No results for this unit : "
+                  << baseModel->GetVendorName() << std::endl;
         return std::string( "NULL" );
     }
 

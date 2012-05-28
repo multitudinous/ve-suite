@@ -36,7 +36,7 @@
 #include <osg/Geode>
 namespace osg
 {
-    class LineSegment;
+class LineSegment;
 }
 #include <ves/VEConfig.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBSObject.h>
@@ -70,7 +70,7 @@ public:
     NURBS( ves::xplorer::scenegraph::nurbs::NURBSObject* object = 0 );
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     NURBS( const NURBS&,
-               const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+           const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     //META_Node( ves::xplorer::scenegraph::nurbs, NURBS );
 
@@ -96,7 +96,7 @@ public:
 
     ///Select a ControlPoint on the node
     ///\param index The index of the selected ControlPoint
-    void SetSelectedControlPoint( unsigned int index);
+    void SetSelectedControlPoint( unsigned int index );
 
     ///Get the original surface
     ves::xplorer::scenegraph::nurbs::NURBSObject* GetNURBS();

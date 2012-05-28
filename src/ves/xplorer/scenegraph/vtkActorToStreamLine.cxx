@@ -55,7 +55,7 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-osg::Geode* ves::xplorer::scenegraph::vtkActorToStreamLine( vtkActor *actor, osg::Geode* geode, int verbose )
+osg::Geode* ves::xplorer::scenegraph::vtkActorToStreamLine( vtkActor* actor, osg::Geode* geode, int verbose )
 {
     //Make actor current
     actor->GetMapper()->Update();
@@ -109,7 +109,7 @@ osg::Geode* ves::xplorer::scenegraph::vtkActorToStreamLine( vtkActor *actor, osg
     return geode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Geometry* ves::xplorer::scenegraph::ProcessPrimitive( vtkActor *actor, vtkCellArray *primArray, int primType, int verbose )
+osg::Geometry* ves::xplorer::scenegraph::ProcessPrimitive( vtkActor* actor, vtkCellArray* primArray, int primType, int verbose )
 {
     if( verbose )
     {
@@ -120,7 +120,7 @@ osg::Geometry* ves::xplorer::scenegraph::ProcessPrimitive( vtkActor *actor, vtkC
     }
 
     //Get polyData from vtkActor
-    vtkPolyData *polyData = ( vtkPolyData* )actor->GetMapper()->GetInput();
+    vtkPolyData* polyData = ( vtkPolyData* )actor->GetMapper()->GetInput();
 
     int numPrimitives = primArray->GetNumberOfCells();
     if( numPrimitives == 0 )
@@ -140,7 +140,7 @@ osg::Geometry* ves::xplorer::scenegraph::ProcessPrimitive( vtkActor *actor, vtkC
     osg::ref_ptr< osg::Vec3Array > texcoord0 = new osg::Vec3Array();
 
     double opacity = actor->GetProperty()->GetOpacity();
-    vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars( opacity );
+    vtkUnsignedCharArray* colorArray = actor->GetMapper()->MapScalars( opacity );
 
     //Copy data from vtk prim array to osg Geometry
     int prim = 0, totpts = 0;
@@ -178,7 +178,7 @@ osg::Geometry* ves::xplorer::scenegraph::ProcessPrimitive( vtkActor *actor, vtkC
                 vertices->push_back( osg::Vec3d( -1.73205, -1.0, 0 ) + pointA );
                 vertices->push_back( osg::Vec3d( 1.73205, -1.0, 0 ) + pointA );
 
-                unsigned char *aColor = colorArray->GetPointer( 4 * pts[ i ] );
+                unsigned char* aColor = colorArray->GetPointer( 4 * pts[ i ] );
                 colors->push_back( osg::Vec4d( aColor[ 0 ] / 255.0f,
                                                aColor[ 1 ] / 255.0f,
                                                aColor[ 2 ] / 255.0f,
@@ -214,7 +214,7 @@ osg::Geometry* ves::xplorer::scenegraph::ProcessPrimitive( vtkActor *actor, vtkC
                     vertices->push_back( osg::Vec3d( -1.73205, -1.0, j ) + temp );
                     vertices->push_back( osg::Vec3d( 1.73205, -1.0, j ) + temp );
 
-                    unsigned char *aColor = colorArray->GetPointer( 4 * pts[ i ] );
+                    unsigned char* aColor = colorArray->GetPointer( 4 * pts[ i ] );
                     colors->push_back( osg::Vec4d( aColor[ 0 ] / 255.0f,
                                                    aColor[ 1 ] / 255.0f,
                                                    aColor[ 2 ] / 255.0f,
@@ -284,25 +284,25 @@ osg::Program* ves::xplorer::scenegraph::GetShader()
 
         "void main() \n"
         "{ \n"
-            //Subtract the translated position from the triangle vertex
-            "vec2 temp = gl_Vertex.xy - gl_MultiTexCoord0.xy; \n"
+        //Subtract the translated position from the triangle vertex
+        "vec2 temp = gl_Vertex.xy - gl_MultiTexCoord0.xy; \n"
 
-            //Billboard the triangles using the original position
-            "vec3 pos = particleSize * \n"
-                "( temp.x * vec3( gl_ModelViewMatrix[ 0 ][ 0 ], \n"
-                                 "gl_ModelViewMatrix[ 1 ][ 0 ], \n"
-                                 "gl_ModelViewMatrix[ 2 ][ 0 ] ) +  \n"
-                  "temp.y * vec3( gl_ModelViewMatrix[ 0 ][ 1 ],  \n"
-                                 "gl_ModelViewMatrix[ 1 ][ 1 ],  \n"
-                                 "gl_ModelViewMatrix[ 2 ][ 1 ] ) ); \n"
+        //Billboard the triangles using the original position
+        "vec3 pos = particleSize * \n"
+        "( temp.x * vec3( gl_ModelViewMatrix[ 0 ][ 0 ], \n"
+        "gl_ModelViewMatrix[ 1 ][ 0 ], \n"
+        "gl_ModelViewMatrix[ 2 ][ 0 ] ) +  \n"
+        "temp.y * vec3( gl_ModelViewMatrix[ 0 ][ 1 ],  \n"
+        "gl_ModelViewMatrix[ 1 ][ 1 ],  \n"
+        "gl_ModelViewMatrix[ 2 ][ 1 ] ) ); \n"
 
-            //Move the triangle vertex back to its translated position
-            "pos += gl_MultiTexCoord0.xyz; \n"
+        //Move the triangle vertex back to its translated position
+        "pos += gl_MultiTexCoord0.xyz; \n"
 
-            //Set the variables
-            "gl_Position = gl_ModelViewProjectionMatrix * vec4( pos, 1.0 ); \n"
-            "gl_TexCoord[ 0 ].xy = temp; \n"
-            "gl_FrontColor = gl_Color; \n"
+        //Set the variables
+        "gl_Position = gl_ModelViewProjectionMatrix * vec4( pos, 1.0 ); \n"
+        "gl_TexCoord[ 0 ].xy = temp; \n"
+        "gl_FrontColor = gl_Color; \n"
         "} \n";
 
     char fragmentPass[] =
@@ -310,9 +310,9 @@ osg::Program* ves::xplorer::scenegraph::GetShader()
 
         "void main() \n"
         "{ \n"
-            "vec4 totalColor = ( 1.0 - pow( dot( gl_TexCoord[ 0 ].xy, gl_TexCoord[ 0 ].xy ), particleExp ) ) * gl_Color; \n"
+        "vec4 totalColor = ( 1.0 - pow( dot( gl_TexCoord[ 0 ].xy, gl_TexCoord[ 0 ].xy ), particleExp ) ) * gl_Color; \n"
 
-            "gl_FragColor = totalColor; \n"
+        "gl_FragColor = totalColor; \n"
         "} \n";
 
     osg::Program* program = new osg::Program();

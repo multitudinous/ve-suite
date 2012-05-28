@@ -39,7 +39,7 @@ void StripCharacters( std::string& data, std::string character );
 
 int main( int argc, char* argv[] )
 {
-    if (( argc < 2 ) || ( std::string( argv[ 1 ] ) == "--help" ) )
+    if( ( argc < 2 ) || ( std::string( argv[ 1 ] ) == "--help" ) )
     {
         std::cout << "Usage : " << argv[ 0 ] << " <filename_without_extension> " << std::endl;
         std::cout << "* Note * The file must be an osg file type." << std::endl;
@@ -62,13 +62,13 @@ int main( int argc, char* argv[] )
     std::ofstream hFile( outputFilename.c_str() );
 
     hFile << "#ifndef GETVESUITE_" << argv[ 1 ] << "_H" << std::endl
-    << "#define GETVESUITE_" << argv[ 1 ] << "_H" << std::endl
-    << std::endl
-    << "#include <string>" << std::endl
-    << std::endl
-    << "std::string GetVESuite_" << argv[ 1 ] << "( void )" << std::endl
-    << "{" << std::endl
-    << "  std::string osgData;" << std::endl;
+          << "#define GETVESUITE_" << argv[ 1 ] << "_H" << std::endl
+          << std::endl
+          << "#include <string>" << std::endl
+          << std::endl
+          << "std::string GetVESuite_" << argv[ 1 ] << "( void )" << std::endl
+          << "{" << std::endl
+          << "  std::string osgData;" << std::endl;
 
 
     std::string tempData;
@@ -101,9 +101,9 @@ int main( int argc, char* argv[] )
 
 
     hFile << "  return osgData;" << std::endl
-    << "}" << std::endl
-    << "#endif" << std::endl
-    << std::endl;
+          << "}" << std::endl
+          << "#endif" << std::endl
+          << std::endl;
     hFile.close();
 
     return 0;

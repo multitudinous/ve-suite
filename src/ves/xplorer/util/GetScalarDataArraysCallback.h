@@ -57,21 +57,23 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS GetScalarDataArraysCallback:
-            public DataObjectHandler::DatasetOperatorCallback
+    public DataObjectHandler::DatasetOperatorCallback
 {
 public:
     ///Constructor
     GetScalarDataArraysCallback();
     ///Destructor
     virtual ~GetScalarDataArraysCallback()
-    {;}
+    {
+        ;
+    }
     ///The operation to do on each vtkDataSet in the vtkDataObject
     ///\param dataset The vtkDataSet to operate on
     virtual void OperateOnDataset( vtkDataSet* dataset );
 
     void SetScalarNames( std::vector< std::string > scalarNames );
     ///Get the vertex cells from this dataset
-    ///\return The vector with the points for this dataset, the first id is 
+    ///\return The vector with the points for this dataset, the first id is
     ///the cell id and the second id is the point id
     //std::vector< std::pair< vtkIdType, vtkIdType > > GetVertexCells();
     std::vector< std::pair< std::string, std::vector< double > > > GetCellData();

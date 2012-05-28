@@ -51,22 +51,22 @@ class NodeSelectFactory : public QtAbstractEditorFactory<NodeSelectManager>
 {
     Q_OBJECT
 public:
-    NodeSelectFactory(QObject *parent = 0)
-        : QtAbstractEditorFactory<NodeSelectManager>(parent)
-            { }
+    NodeSelectFactory( QObject* parent = 0 )
+        : QtAbstractEditorFactory<NodeSelectManager>( parent )
+    { }
     virtual ~NodeSelectFactory();
 protected:
-    virtual void connectPropertyManager(NodeSelectManager *manager);
-    virtual QWidget *createEditor(NodeSelectManager *manager, QtProperty *property,
-                QWidget *parent);
-    virtual void disconnectPropertyManager(NodeSelectManager *manager);
+    virtual void connectPropertyManager( NodeSelectManager* manager );
+    virtual QWidget* createEditor( NodeSelectManager* manager, QtProperty* property,
+                                   QWidget* parent );
+    virtual void disconnectPropertyManager( NodeSelectManager* manager );
 private Q_SLOTS:
-    void slotPropertyChanged(QtProperty *property, const QString &value);
-    void slotSetValue(const QString &value);
-    void slotEditorDestroyed(QObject *object);
+    void slotPropertyChanged( QtProperty* property, const QString& value );
+    void slotSetValue( const QString& value );
+    void slotEditorDestroyed( QObject* object );
 private:
-    QMap<QtProperty *, QList<NodeSelect *> > theCreatedEditors;
-    QMap<NodeSelect *, QtProperty *> theEditorToProperty;
+    QMap<QtProperty*, QList<NodeSelect*> > theCreatedEditors;
+    QMap<NodeSelect*, QtProperty*> theEditorToProperty;
 };
 
 }

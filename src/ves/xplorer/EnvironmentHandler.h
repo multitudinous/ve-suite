@@ -134,7 +134,7 @@ public:
     ///Accessor to get desktop size information
     ///\param width The desktop width
     ///\param height The desktop height
-    void GetDesktopSize( int &width, int &height );
+    void GetDesktopSize( int& width, int& height );
 
     ///Set the window dimension
     ///\param width The window width
@@ -165,7 +165,7 @@ public:
     void DeactivateGeometryPicking();
 
     ///Set the globalLOD scale
-    ///\param lodScale The scale to set 
+    ///\param lodScale The scale to set
     void SetGlobalLODScale( double lodScale );
 
     ///Get the globalLOD scale
@@ -199,7 +199,7 @@ private:
     // cur_box will eventually be used to define bounding box
     // for data interagation
     double cur_box[6];///<???
-    vtkPolyData * arrow;///<???
+    vtkPolyData* arrow; ///<???
     float worldScale[ 3 ];///<World scale.
     float worldTrans[ 3 ];///<World translation
     float worldRot[ 3 ];///<World rotation.

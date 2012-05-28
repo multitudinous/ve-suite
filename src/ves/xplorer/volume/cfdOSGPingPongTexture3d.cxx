@@ -51,7 +51,7 @@ cfdOSGPingPongTexture3D::cfdOSGPingPongTexture3D()
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdOSGPingPongTexture3D::cfdOSGPingPongTexture3D( const
-                                                  cfdOSGPingPongTexture3D& pp )
+        cfdOSGPingPongTexture3D& pp )
 {
     _previous = pp._previous;
     _current = pp._current;
@@ -63,14 +63,14 @@ cfdOSGPingPongTexture3D::~cfdOSGPingPongTexture3D()
 {}
 ////////////////////////////////////////////////////////////////////////////////
 void cfdOSGPingPongTexture3D::SetPingTexture( unsigned int unit,
-                                              osg::Node* ping )
+        osg::Node* ping )
 {
     _pingUnit = unit;
     _previous = ping;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdOSGPingPongTexture3D::SetPongTexture( unsigned int unit,
-                                              osg::Node* pong )
+        osg::Node* pong )
 {
     _pongUnit = unit;
     _current = pong;

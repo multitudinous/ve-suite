@@ -56,14 +56,14 @@ namespace camera
 ///
 namespace Event
 {
-    enum Enum
-    {
-        NONE = 0x0,
-        FOCUS = 0x1,
-        //PUSH = 0x2,
-        //DRAG = 0x4,
-        RELEASE = 0x8
-    };
+enum Enum
+{
+    NONE = 0x0,
+    FOCUS = 0x1,
+    //PUSH = 0x2,
+    //DRAG = 0x4,
+    RELEASE = 0x8
+};
 }
 
 } //end camera

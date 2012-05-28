@@ -80,7 +80,7 @@ cfdPresetMomentum::~cfdPresetMomentum()
 cfdPresetMomentum::cfdPresetMomentum( cfdPresetMomentum const& src )
     :
     cfdContourBase( src ),
-    warper( vtkWarpVector::New() ) 
+    warper( vtkWarpVector::New() )
 {
     ;
 }
@@ -93,7 +93,7 @@ cfdObjects* cfdPresetMomentum::CreateCopy()
 void cfdPresetMomentum::Update( void )
 {
     vprDEBUG( vesDBG, 1 ) << "cfdPresetMomentum::Update, usePreCalcData = "
-    << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
+                          << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
 
     if( this->usePreCalcData )
     {
@@ -104,7 +104,7 @@ void cfdPresetMomentum::Update( void )
         if( preCalcData == NULL )
         {
             vprDEBUG( vesDBG, 0 ) << "cfdPresetMomentum: no precalculated data"
-            << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
             this->updateFlag = false;
             return;
         }
@@ -121,8 +121,8 @@ void cfdPresetMomentum::Update( void )
                                       ->GetLookupTable() );
         //this->mapper->Update();
         vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetMomentum::Update Yes Precalc : "
-        << this->cursorType << " : " << usePreCalcData
-        << std::endl << vprDEBUG_FLUSH;
+                              << this->cursorType << " : " << usePreCalcData
+                              << std::endl << vprDEBUG_FLUSH;
     }
     else
     {
@@ -140,24 +140,24 @@ void cfdPresetMomentum::Update( void )
         this->cuttingPlane->SetBounds(
             this->GetActiveDataSet()->GetBounds() );
         this->cuttingPlane->Advance( requestedValue );
-        vtkCutter* tempCutter = vtkCutter::New();        
+        vtkCutter* tempCutter = vtkCutter::New();
         tempCutter->SetCutFunction( this->cuttingPlane->GetPlane() );
         tempCutter->SetInput( GetActiveDataSet()->GetDataSet() );
         tempCutter->Update();
-        
+
         delete this->cuttingPlane;
         this->cuttingPlane = NULL;
         vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
         c2p->SetInputConnection( tempCutter->GetOutputPort() );
-        
+
         warper->SetInputConnection( c2p->GetOutputPort() );
         warper->SetScaleFactor( warpedContourScale );
         warper->SetInputArrayToProcess( 0, 0, 0,
-            vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-            GetActiveDataSet()->GetActiveVectorName().c_str() );
+                                        vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                        GetActiveDataSet()->GetActiveVectorName().c_str() );
 
         SetMapperInput( warper->GetOutputPort() );
-        
+
         tempCutter->Delete();
         c2p->Delete();
     }
@@ -172,13 +172,13 @@ void cfdPresetMomentum::Update( void )
         geodes.push_back( tempGeode.get() );
         this->updateFlag = true;
     }
-    catch ( std::bad_alloc )
+    catch( std::bad_alloc )
     {
         mapper->Delete();
         mapper = vtkPolyDataMapper::New();
 
         vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetMomentum "
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
     }
     //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
     temp->Delete();

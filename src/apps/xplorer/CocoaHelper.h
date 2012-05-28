@@ -38,4 +38,4 @@ class App;
 }
 }
 
-void CocoaInit(ves::xplorer::App* app);
+void CocoaInit( ves::xplorer::App* app );

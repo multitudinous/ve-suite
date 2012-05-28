@@ -108,7 +108,7 @@ cfdContour::cfdContour( cfdContour const& src )
     this->plane = vtkPlane::New();
     this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
     this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
-    
+
     // set the cut function
     this->cutter = vtkCutter::New();
     this->cutter->SetCutFunction( this->plane );
@@ -163,13 +163,13 @@ void cfdContour::Update( void )
     else if( this->cursorType == ARROW )
     {
         vprDEBUG( vesDBG, 0 ) << "contour cutting plane origin: "
-        << origin[0] << " : " << origin[1] << " : " << origin[2]
-        << std::endl << vprDEBUG_FLUSH;
+                              << origin[0] << " : " << origin[1] << " : " << origin[2]
+                              << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP
         int num_data = this->nData;
         int i;
 
-# pragma omp parallel for private(i)
+        # pragma omp parallel for private(i)
         for( i = 0; i < num_data; i++ )
         {
             this->plane[i]->SetOrigin( this->origin );
@@ -207,13 +207,13 @@ void cfdContour::Update( void )
         geodes.push_back( tempGeode.get() );
         this->updateFlag = true;
     }
-    catch ( std::bad_alloc )
+    catch( std::bad_alloc )
     {
         mapper->Delete();
         mapper = vtkPolyDataMapper::New();
 
         vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdContour"
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
     }
     //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
     temp->Delete();

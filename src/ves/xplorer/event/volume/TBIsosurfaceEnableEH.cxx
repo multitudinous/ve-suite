@@ -76,9 +76,9 @@ void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode( XMLObjectPtr veXM
         DataValuePairPtr enable = command->GetDataValuePair( "Iso-Surface State" );
         std::string onOff;
         enable->GetData( onOff );
-        ves::xplorer::TextureBasedVizHandler::instance()->EnsureIsosurface(( onOff == "On" ) ? true : false );
+        ves::xplorer::TextureBasedVizHandler::instance()->EnsureIsosurface( ( onOff == "On" ) ? true : false );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid TextureDataSet!!" << std::endl;
         std::cout << "TextureBasedIsosurfaceEnableEventHandler::_operateOnNode()" << std::endl;

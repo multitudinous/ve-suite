@@ -51,7 +51,7 @@ EphemerisDisplayToggleEventHandler::EphemerisDisplayToggleEventHandler()
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 EphemerisDisplayToggleEventHandler::EphemerisDisplayToggleEventHandler( const EphemerisDisplayToggleEventHandler& ceh )
-    : 
+    :
     ves::xplorer::event::EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
@@ -88,14 +88,14 @@ void EphemerisDisplayToggleEventHandler::Execute( const ves::open::xml::XMLObjec
                 toggleValue = true;
             }
             osgEphemeris::EphemerisModel* ephemerisModel =
-                    ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel( toggleValue );
+                ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel( toggleValue );
             if( ephemerisModel )
             {
                 ephemerisModel->setNodeMask( onOff );
             }
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
         std::cout << "Invalid command passed to EphemerisAutoDateTimeEventHandler!!" << std::endl;
@@ -119,7 +119,7 @@ void EphemerisDisplayToggleEventHandler::SetGlobalBaseObject( ves::xplorer::Glob
                 ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
     }

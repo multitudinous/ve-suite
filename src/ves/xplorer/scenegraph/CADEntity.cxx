@@ -96,13 +96,13 @@ CADEntity::CADEntity(
         ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( parentDCS, backdropFX::Manager::instance()->getManagedRoot() );
         osg::NodePath nodePath = parentVisitor.GetParentNodePath();
         osg::StateSet* tempState = backdropFX::accumulateStateSetsAndShaderModules( tempMap, nodePath );
-        
+
         backdropFX::ShaderModuleVisitor smv;
         //smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
         smv.setInitialStateSet( tempState, tempMap );
-        
+
         backdropFX::convertFFPToShaderModules( mDCS.get(), &smv );
-    }    
+    }
     parentDCS->AddChild( mDCS.get() );
     if( !scenegraph::SceneManager::instance()->IsRTTOn() )
     {
@@ -166,11 +166,11 @@ CADEntity::CADEntity(
     {
         mFileName = mCADEntityHelper->GetNode()->getName();
     }
-    
+
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
     parentDCS->AddChild( mDCS.get() );
-    
+
     if( !scenegraph::SceneManager::instance()->IsRTTOn() )
     {
         backdropFX::RebuildShaderModules rsm;
@@ -203,10 +203,10 @@ void CADEntity::InitPhysics()
     if( !mPhysicsRigidBody )
     {
         mPhysicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody(
-                                 mDCS.get(), mPhysicsSimulator );
+            mDCS.get(), mPhysicsSimulator );
         //mDCS->SetPhysicsRigidBody( mPhysicsRigidBody );
     }
-    
+
     return;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -230,7 +230,7 @@ PhysicsRigidBody* CADEntity::GetPhysicsRigidBody()
 {
     //can't say that this function is const because mPhysicsRigidBody can change
     InitPhysics();
-    
+
     return mPhysicsRigidBody;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -271,14 +271,14 @@ void CADEntity::Save()
         ostr << "id" << id++;
         osg::ref_ptr< osgwTools::RefID > rid = new osgwTools::RefID( ostr.str() );
         ps.addPhysicsData( rid.get(), pd.get() );
-        
+
         osgbBulletPlus::savePhysics( mFileName, mDCS->getParent( 0 ).get(), ps );*/
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CADEntity::HavePhysics()
 {
-    if ( mPhysicsRigidBody && mPhysicsFlag )
+    if( mPhysicsRigidBody && mPhysicsFlag )
     {
         return true;
     }

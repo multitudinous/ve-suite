@@ -133,9 +133,9 @@ public:
     ///\param parentID The xml parent id of the part
     ///\param occlusionSettings The occlusion settings for the part
     void CreatePart( const std::string& fileName,
-                    const std::string& partID,
-                    const std::string& parentID, 
-                    const std::string& occlusionSettings );
+                     const std::string& partID,
+                     const std::string& parentID,
+                     const std::string& occlusionSettings );
 
     ///Clear out the associated information for a node
     ///\param nodeID The node id
@@ -150,7 +150,7 @@ public:
     ///\param face The face to apply the update to.
     ///\param values The new values.
     void UpdateMaterialComponent( const std::string& nodeID,
-                                  const std::string& attributeName, 
+                                  const std::string& attributeName,
                                   const std::string& component,
                                   const std::string& face,
                                   std::vector<double> values );
@@ -168,7 +168,7 @@ public:
     ///Update the opacity for a specified CADNode
     ///\param nodeID The CADNode
     ///\param opacity The value of the opacity.
-    ///\param storeState Tell the opacity visitor wether or not to 
+    ///\param storeState Tell the opacity visitor wether or not to
     ///store the original color and material state
     void UpdateOpacity( const std::string& nodeID, float opacity );
 
@@ -196,10 +196,10 @@ public:
 
     ///The current graph
     const std::string& GetRootCADNodeID();
-    
+
     ///Return the list of CAD file names associated with this model
     std::vector< std::string > GetCADFilenames();
-    
+
     ///Set the clip plane equation
     ///\param a X coefficient
     ///\param b Y coefficient

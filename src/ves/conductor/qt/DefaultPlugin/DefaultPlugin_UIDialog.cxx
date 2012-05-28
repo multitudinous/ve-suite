@@ -36,11 +36,11 @@
 #include "DefaultPlugin_UIDialog.h"
 //#include "ui_DefaultPlugin_UIDialog.h"
 
-DefaultPlugin_UIDialog::DefaultPlugin_UIDialog(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::DefaultPlugin_UIDialog)
+DefaultPlugin_UIDialog::DefaultPlugin_UIDialog( QWidget* parent ) :
+    QWidget( parent ),
+    ui( new Ui::DefaultPlugin_UIDialog )
 {
-    ui->setupUi(this);
+    ui->setupUi( this );
 }
 
 DefaultPlugin_UIDialog::~DefaultPlugin_UIDialog()
@@ -48,12 +48,13 @@ DefaultPlugin_UIDialog::~DefaultPlugin_UIDialog()
     delete ui;
 }
 
-void DefaultPlugin_UIDialog::changeEvent(QEvent *e)
+void DefaultPlugin_UIDialog::changeEvent( QEvent* e )
 {
-    QWidget::changeEvent(e);
-    switch (e->type()) {
+    QWidget::changeEvent( e );
+    switch( e->type() )
+    {
     case QEvent::LanguageChange:
-        ui->retranslateUi(this);
+        ui->retranslateUi( this );
         break;
     default:
         break;

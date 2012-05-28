@@ -126,36 +126,36 @@ SQLiteDriver::execute( const std::string& query )
             for( int i = 0; i < column_cnt; ++i )
             {
                 int column_type = sqlite3_column_type( stmt, i );
-                switch ( column_type )
+                switch( column_type )
                 {
-                    case SQLITE_INTEGER:
-                        row.push_back( DBValue( sqlite3_column_int64( stmt, i ) ) );
-                        break;
-                    case SQLITE_FLOAT:
-                        row.push_back( DBValue( sqlite3_column_double( stmt, i ) ) );
-                        break;
-                    case SQLITE_TEXT:
-                    {
-                        std::string s =
-                            reinterpret_cast<const char*>(
-                                sqlite3_column_text( stmt, i ) );
-                        row.push_back( DBValue( s ) );
-                        break;
-                    }
-                    case SQLITE_BLOB:
-                    {
-                        BinaryData bd( sqlite3_column_bytes( stmt, i ),
-                                       const_cast<unsigned char*>(
-                                           reinterpret_cast<const unsigned char*>
-                                           ( sqlite3_column_blob( stmt, i ) ) ) );
-                        row.push_back( DBValue( bd ) );
-                        break;
-                    }
-                    case SQLITE_NULL:
-                        row.push_back( DBValue( DBNullValue() ) );
-                        break;
-                    default:
-                        return false;
+                case SQLITE_INTEGER:
+                    row.push_back( DBValue( sqlite3_column_int64( stmt, i ) ) );
+                    break;
+                case SQLITE_FLOAT:
+                    row.push_back( DBValue( sqlite3_column_double( stmt, i ) ) );
+                    break;
+                case SQLITE_TEXT:
+                {
+                    std::string s =
+                        reinterpret_cast<const char*>(
+                            sqlite3_column_text( stmt, i ) );
+                    row.push_back( DBValue( s ) );
+                    break;
+                }
+                case SQLITE_BLOB:
+                {
+                    BinaryData bd( sqlite3_column_bytes( stmt, i ),
+                                   const_cast<unsigned char*>(
+                                       reinterpret_cast<const unsigned char*>
+                                       ( sqlite3_column_blob( stmt, i ) ) ) );
+                    row.push_back( DBValue( bd ) );
+                    break;
+                }
+                case SQLITE_NULL:
+                    row.push_back( DBValue( DBNullValue() ) );
+                    break;
+                default:
+                    return false;
                 }
             }
             mResults.push_back( row );

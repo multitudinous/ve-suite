@@ -78,7 +78,7 @@ protected:
     void SetActiveScalarAndRange( xplorer::data::PropertySetPtr set );
 
     bool SetActiveDataSet( xplorer::data::PropertySetPtr set );
-    
+
     ///The name of the command to send back
     std::string m_commandName;
     ///The advanced settings.
@@ -88,8 +88,8 @@ protected:
     ///Logger reference
     Poco::Logger& m_logger;
     ///Actual stream for this class
-    ves::xplorer::LogStreamPtr m_logStream;    
-    
+    ves::xplorer::LogStreamPtr m_logStream;
+
 private:
 
 };

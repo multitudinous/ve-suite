@@ -74,7 +74,7 @@ protected:
 };
 }
 }
-}    
+}
 }
 
 #endif //CAD_OCCLUSION_SETTINGS_EVENT_HANDLER_H

@@ -41,98 +41,116 @@ namespace conductor
 
 FileEditFactory::~FileEditFactory()
 {
-    QList<FileEdit *> editors = theEditorToProperty.keys();
-    QListIterator<FileEdit *> it(editors);
-    while (it.hasNext())
+    QList<FileEdit*> editors = theEditorToProperty.keys();
+    QListIterator<FileEdit*> it( editors );
+    while( it.hasNext() )
+    {
         delete it.next();
+    }
 }
 
-void FileEditFactory::connectPropertyManager(FilePathManager *manager)
+void FileEditFactory::connectPropertyManager( FilePathManager* manager )
 {
-    connect(manager, SIGNAL(valueChanged(QtProperty *, const QString &)),
-                this, SLOT(slotPropertyChanged(QtProperty *, const QString &)));
-    connect(manager, SIGNAL(filterChanged(QtProperty *, const QString &)),
-                this, SLOT(slotFilterChanged(QtProperty *, const QString &)));
+    connect( manager, SIGNAL( valueChanged( QtProperty*, const QString& ) ),
+             this, SLOT( slotPropertyChanged( QtProperty*, const QString& ) ) );
+    connect( manager, SIGNAL( filterChanged( QtProperty*, const QString& ) ),
+             this, SLOT( slotFilterChanged( QtProperty*, const QString& ) ) );
 }
 
-QWidget *FileEditFactory::createEditor(FilePathManager *manager,
-        QtProperty *property, QWidget *parent)
+QWidget* FileEditFactory::createEditor( FilePathManager* manager,
+                                        QtProperty* property, QWidget* parent )
 {
-    FileEdit *editor = new FileEdit(parent);
-    editor->setFilePath(manager->value(property));
-    editor->setFilter(manager->filter(property));
-    theCreatedEditors[property].append(editor);
+    FileEdit* editor = new FileEdit( parent );
+    editor->setFilePath( manager->value( property ) );
+    editor->setFilter( manager->filter( property ) );
+    theCreatedEditors[property].append( editor );
     theEditorToProperty[editor] = property;
 
-    connect(editor, SIGNAL(filePathChanged(const QString &)),
-                this, SLOT(slotSetValue(const QString &)));
-    connect(editor, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotEditorDestroyed(QObject *)));
+    connect( editor, SIGNAL( filePathChanged( const QString& ) ),
+             this, SLOT( slotSetValue( const QString& ) ) );
+    connect( editor, SIGNAL( destroyed( QObject* ) ),
+             this, SLOT( slotEditorDestroyed( QObject* ) ) );
     return editor;
 }
 
-void FileEditFactory::disconnectPropertyManager(FilePathManager *manager)
+void FileEditFactory::disconnectPropertyManager( FilePathManager* manager )
 {
-    disconnect(manager, SIGNAL(valueChanged(QtProperty *, const QString &)),
-                this, SLOT(slotPropertyChanged(QtProperty *, const QString &)));
-    disconnect(manager, SIGNAL(filterChanged(QtProperty *, const QString &)),
-                this, SLOT(slotFilterChanged(QtProperty *, const QString &)));
+    disconnect( manager, SIGNAL( valueChanged( QtProperty*, const QString& ) ),
+                this, SLOT( slotPropertyChanged( QtProperty*, const QString& ) ) );
+    disconnect( manager, SIGNAL( filterChanged( QtProperty*, const QString& ) ),
+                this, SLOT( slotFilterChanged( QtProperty*, const QString& ) ) );
 }
 
-void FileEditFactory::slotPropertyChanged(QtProperty *property,
-                const QString &value)
+void FileEditFactory::slotPropertyChanged( QtProperty* property,
+        const QString& value )
 {
-    if (!theCreatedEditors.contains(property))
+    if( !theCreatedEditors.contains( property ) )
+    {
         return;
+    }
 
-    QList<FileEdit *> editors = theCreatedEditors[property];
-    QListIterator<FileEdit *> itEditor(editors);
-    while (itEditor.hasNext())
-        itEditor.next()->setFilePath(value);
+    QList<FileEdit*> editors = theCreatedEditors[property];
+    QListIterator<FileEdit*> itEditor( editors );
+    while( itEditor.hasNext() )
+    {
+        itEditor.next()->setFilePath( value );
+    }
 }
 
-void FileEditFactory::slotFilterChanged(QtProperty *property,
-            const QString &filter)
+void FileEditFactory::slotFilterChanged( QtProperty* property,
+        const QString& filter )
 {
-    if (!theCreatedEditors.contains(property))
+    if( !theCreatedEditors.contains( property ) )
+    {
         return;
+    }
 
-    QList<FileEdit *> editors = theCreatedEditors[property];
-    QListIterator<FileEdit *> itEditor(editors);
-    while (itEditor.hasNext())
-        itEditor.next()->setFilter(filter);
+    QList<FileEdit*> editors = theCreatedEditors[property];
+    QListIterator<FileEdit*> itEditor( editors );
+    while( itEditor.hasNext() )
+    {
+        itEditor.next()->setFilter( filter );
+    }
 }
 
-void FileEditFactory::slotSetValue(const QString &value)
+void FileEditFactory::slotSetValue( const QString& value )
 {
-    QObject *object = sender();
-    QMap<FileEdit *, QtProperty *>::ConstIterator itEditor =
-                theEditorToProperty.constBegin();
-    while (itEditor != theEditorToProperty.constEnd()) {
-        if (itEditor.key() == object) {
-            QtProperty *property = itEditor.value();
-            FilePathManager *manager = propertyManager(property);
-            if (!manager)
+    QObject* object = sender();
+    QMap<FileEdit*, QtProperty*>::ConstIterator itEditor =
+        theEditorToProperty.constBegin();
+    while( itEditor != theEditorToProperty.constEnd() )
+    {
+        if( itEditor.key() == object )
+        {
+            QtProperty* property = itEditor.value();
+            FilePathManager* manager = propertyManager( property );
+            if( !manager )
+            {
                 return;
-            manager->setValue(property, value);
+            }
+            manager->setValue( property, value );
             return;
         }
         itEditor++;
     }
 }
 
-void FileEditFactory::slotEditorDestroyed(QObject *object)
+void FileEditFactory::slotEditorDestroyed( QObject* object )
 {
-    QMap<FileEdit *, QtProperty *>::ConstIterator itEditor =
-                theEditorToProperty.constBegin();
-    while (itEditor != theEditorToProperty.constEnd()) {
-        if (itEditor.key() == object) {
-            FileEdit *editor = itEditor.key();
-            QtProperty *property = itEditor.value();
-            theEditorToProperty.remove(editor);
-            theCreatedEditors[property].removeAll(editor);
-            if (theCreatedEditors[property].isEmpty())
-                theCreatedEditors.remove(property);
+    QMap<FileEdit*, QtProperty*>::ConstIterator itEditor =
+        theEditorToProperty.constBegin();
+    while( itEditor != theEditorToProperty.constEnd() )
+    {
+        if( itEditor.key() == object )
+        {
+            FileEdit* editor = itEditor.key();
+            QtProperty* property = itEditor.value();
+            theEditorToProperty.remove( editor );
+            theCreatedEditors[property].removeAll( editor );
+            if( theCreatedEditors[property].isEmpty() )
+            {
+                theCreatedEditors.remove( property );
+            }
             return;
         }
         itEditor++;

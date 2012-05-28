@@ -126,8 +126,8 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string const& netId )
     }
 
     ves::xplorer::scenegraph::SceneManager::instance()->GetNetworkDCS()->
-        removeChildren( 0, ves::xplorer::scenegraph::SceneManager::instance()->
-        GetNetworkDCS()->getNumChildren() );
+    removeChildren( 0, ves::xplorer::scenegraph::SceneManager::instance()->
+                    GetNetworkDCS()->getNumChildren() );
 
     osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
     // now lets create a list of them
@@ -151,14 +151,14 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string const& netId )
             fs::path file_name( model->GetIconFilename() );
             file_name.replace_extension( "ive" );
             std::string iconFilename = file_name.string();
-            
-            osg::ref_ptr<osg::Node> loadedModel = 
+
+            osg::ref_ptr<osg::Node> loadedModel =
                 osgDB::readNodeFile( dataPrefix + "/3DIcons/" + iconFilename );
 
             //add red block id if block .ive file is not found
             if( !loadedModel.valid() )
             {
-                std::istringstream textNodeStream( 
+                std::istringstream textNodeStream(
                     GetVESuite_UnsupportedComponent() );
                 loadedModel = osgDB::Registry::instance()->
                               getReaderWriterForExtension( "osg" )->
@@ -173,14 +173,14 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string const& netId )
             //set the blocks name
             loadedModel->setName( model->GetPluginName() );
             //normalize the normals so that lighting works better
-            loadedModel->getOrCreateStateSet()->setMode( GL_NORMALIZE, 
-                osg::StateAttribute::ON );
+            loadedModel->getOrCreateStateSet()->setMode( GL_NORMALIZE,
+                    osg::StateAttribute::ON );
             //setup two sided lighting to account for poor modeling
             osg::ref_ptr< osg::LightModel > lightModel;
             lightModel = new osg::LightModel;
             lightModel->setTwoSided( true );
             loadedModel->getOrCreateStateSet()->setAttributeAndModes(
-                lightModel.get(), osg::StateAttribute::ON );     
+                lightModel.get(), osg::StateAttribute::ON );
 
             //scale comp correctly
             osg::ref_ptr<osg::AutoTransform> scaledComp = new osg::AutoTransform();
@@ -191,73 +191,73 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string const& netId )
             //corrects issue with initial model location
             osg::ref_ptr<osg::AutoTransform> rotatedComp = new osg::AutoTransform();
             rotatedComp->addChild( scaledComp.get() );
-            
+
             //move pivot point to center
             osg::ComputeBoundsVisitor visitor2;
             rotatedComp->accept( visitor2 );
             osg::BoundingBox bounds2 = visitor2.getBoundingBox();
-            rotatedComp->setPivotPoint(bounds2.center());
-            
+            rotatedComp->setPivotPoint( bounds2.center() );
+
             //rotate
-            rotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), 
-                osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
+            rotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ),
+                                                 osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
 
             //rotate according to iconMirror value
             osg::ref_ptr<osg::AutoTransform> mirrorComp = new osg::AutoTransform();
-            vprDEBUG( vesDBG, 2 ) << "PP: x="<<mirrorComp->getPivotPoint().x()
-                << " y="<<mirrorComp->getPivotPoint().y()
-                << " z="<<mirrorComp->getPivotPoint().z()
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 2 ) << "PP: x=" << mirrorComp->getPivotPoint().x()
+                                  << " y=" << mirrorComp->getPivotPoint().y()
+                                  << " z=" << mirrorComp->getPivotPoint().z()
+                                  << std::endl << vprDEBUG_FLUSH;
             mirrorComp->addChild( rotatedComp.get() );
-            
+
             //move pivot point to center
             osg::ComputeBoundsVisitor visitor3;
             mirrorComp->accept( visitor3 );
             osg::BoundingBox bounds3 = visitor3.getBoundingBox();
-            mirrorComp->setPivotPoint(bounds3.center());
-            
+            mirrorComp->setPivotPoint( bounds3.center() );
+
             if( mirror > 0 && mirror < 3 )
             {
                 //horizontally
                 if( mirror == 1 )
-                    mirrorComp->setRotation( osg::Quat( 
-                        osg::DegreesToRadians( 180.0 ), 
-                        osg::Vec3d( 0.0, 0.0, 1.0 ) ) );
+                    mirrorComp->setRotation( osg::Quat(
+                                                 osg::DegreesToRadians( 180.0 ),
+                                                 osg::Vec3d( 0.0, 0.0, 1.0 ) ) );
                 //vertically
                 else
-                    mirrorComp->setRotation( osg::Quat( 
-                        osg::DegreesToRadians( 180.0 ), 
-                        osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
+                    mirrorComp->setRotation( osg::Quat(
+                                                 osg::DegreesToRadians( 180.0 ),
+                                                 osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
             }
 
             //rotate according to iconRotation value
             osg::ref_ptr<osg::AutoTransform> reRotatedComp = new osg::AutoTransform();
             reRotatedComp->addChild( mirrorComp.get() );
-            
+
             //move pivot point to center
             osg::ComputeBoundsVisitor visitor4;
             reRotatedComp->accept( visitor4 );
             osg::BoundingBox bounds4 = visitor4.getBoundingBox();
-            reRotatedComp->setPivotPoint(bounds4.center());
-            
+            reRotatedComp->setPivotPoint( bounds4.center() );
+
             //rotate
-            reRotatedComp->setRotation( osg::Quat( 
-                    osg::DegreesToRadians( rotation ), 
-                    osg::Vec3d( 0.0, 1.0, 0.0 ) ) );
+            reRotatedComp->setRotation( osg::Quat(
+                                            osg::DegreesToRadians( rotation ),
+                                            osg::Vec3d( 0.0, 1.0, 0.0 ) ) );
 
             //translate to comp with name to correct location
             PointPtr iconLocation = model->GetIconLocation();
             std::pair<unsigned int, unsigned int> xyPair = iconLocation->GetPoint();
             osg::ref_ptr<osg::AutoTransform> mModelTrans = new osg::AutoTransform();
             mModelTrans->addChild( reRotatedComp.get() );
-            
+
             //find offset from center to upper left corner
             osg::ComputeBoundsVisitor visitor5;
             mModelTrans->accept( visitor5 );
             osg::BoundingBox bounds5 = visitor5.getBoundingBox();
-            osg::Vec3 centerTrans = osg::Vec3( xyPair.first + 
-                ((bounds5.xMax()-bounds5.xMin())/2), 0, xyPair.second + 
-                ((bounds5.zMax()-bounds5.zMin())/2));
+            osg::Vec3 centerTrans = osg::Vec3( xyPair.first +
+                                               ( ( bounds5.xMax() - bounds5.xMin() ) / 2 ), 0, xyPair.second +
+                                               ( ( bounds5.zMax() - bounds5.zMin() ) / 2 ) );
             mModelTrans->setPosition( centerTrans );
             mModelTrans->setName( model->GetPluginName() );
             loadedModels->addChild( mModelTrans.get() );
@@ -280,18 +280,18 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string const& netId )
     for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
     {
         size_t numberOfPoints = veNetwork->GetLink( i )->
-            GetNumberOfLinkPoints();
+                                GetNumberOfLinkPoints();
         osg::Vec3Array* vertices = new osg::Vec3Array( numberOfPoints );
         osg::Geometry* linesGeom = new osg::Geometry();
         for( size_t j = 0; j < numberOfPoints; ++j )
         {
-            std::pair< unsigned int, unsigned int > rawPoint = 
+            std::pair< unsigned int, unsigned int > rawPoint =
                 veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
             ( *vertices )[j].set( rawPoint.first, 0.0, rawPoint.second );
         }
         linesGeom->setVertexArray( vertices );
         linesGeom->addPrimitiveSet( new osg::DrawArrays(
-            osg::PrimitiveSet::LINE_STRIP, 0, numberOfPoints ) );
+                                        osg::PrimitiveSet::LINE_STRIP, 0, numberOfPoints ) );
         linesGeom->setColorBinding( osg::Geometry::BIND_OVERALL );
         linesGeom->setNormalArray( shared_normals.get() );
         linesGeom->setNormalBinding( osg::Geometry::BIND_OVERALL );
@@ -320,7 +320,7 @@ osg::Group* NetworkSystemView::DrawNetwork( std::string const& netId )
     osg::ref_ptr<osg::AutoTransform> worldRotate = new osg::AutoTransform();
     worldRotate->addChild( loadedModels.get() );
     worldRotate->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ),
-        osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
+                                         osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
 
     //center the world
     worldTranslate = new osg::AutoTransform();
@@ -360,12 +360,12 @@ void NetworkSystemView::LoadVESData( std::string const& xmlNetwork )
         //If the file is a new xml file with a system element
         if( objectVector.at( 0 )->GetObjectType() == "System" )
         {
-            tempSystem = 
+            tempSystem =
                 boost::dynamic_pointer_cast<ves::open::xml::model::System>(
-                objectVector.at( 0 ) );
+                    objectVector.at( 0 ) );
             systems[tempSystem->GetID()] = tempSystem;
             //get the main systems id
-            
+
             topId = tempSystem->GetID();
             m_networkMap[ "Network" ] = tempSystem->GetNetwork();
             objectIter = objectVector.begin();
@@ -375,7 +375,7 @@ void NetworkSystemView::LoadVESData( std::string const& xmlNetwork )
     else
     {
         std::cerr << "Improperly formated ves file."
-            << "VES File Read Error" << std::endl;
+                  << "VES File Read Error" << std::endl;
     }
 
     std::vector< std::string > networkModelVector;
@@ -392,14 +392,14 @@ void NetworkSystemView::LoadVESData( std::string const& xmlNetwork )
         toID << moduleID;
 
         stringIter = std::find( networkModelVector.begin(),
-            networkModelVector.end(), fromID.str() );
+                                networkModelVector.end(), fromID.str() );
         if( stringIter == networkModelVector.end() )
         {
             networkModelVector.push_back( fromID.str() );
         }
 
         stringIter = std::find( networkModelVector.begin(),
-            networkModelVector.end(), toID.str() );
+                                networkModelVector.end(), toID.str() );
         if( stringIter == networkModelVector.end() )
         {
             networkModelVector.push_back( toID.str() );
@@ -413,9 +413,9 @@ void NetworkSystemView::LoadVESData( std::string const& xmlNetwork )
         // now lets create a list of them
         std::ostringstream modelID;
         for( objectIter = objectVector.begin();
-            objectIter != objectVector.end(); )
+                objectIter != objectVector.end(); )
         {
-            if( (*objectIter)->GetObjectType() != "Model" )
+            if( ( *objectIter )->GetObjectType() != "Model" )
             {
                 //if this object is not a model continue
                 ++objectIter;
@@ -454,7 +454,7 @@ void NetworkSystemView::LoadVESData( std::string const& xmlNetwork )
             modelID.str( "" );
         }
     }
-   //For the case where there are no links between models
+    //For the case where there are no links between models
     //Just grab all the models in the ves file
     //this is somewhat of a hack but the schema does not support anything else
     if( tempNetwork->GetNumberOfLinks() == 0 )
@@ -473,7 +473,7 @@ void NetworkSystemView::LoadVESData( std::string const& xmlNetwork )
 
     if( !objectVector.empty() )
     {
-        m_userMap[ "Network" ] = 
+        m_userMap[ "Network" ] =
             boost::dynamic_pointer_cast<ves::open::xml::User>
             ( objectVector.at( 0 ) );
         //Set user preferences
@@ -526,9 +526,9 @@ void NetworkSystemView::ParseSystem( ves::open::xml::model::SystemPtr system )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, ves::open::xml::model::SystemPtr > 
-    NetworkSystemView::GetSystemsMap( void )
+std::map< std::string, ves::open::xml::model::SystemPtr >
+NetworkSystemView::GetSystemsMap( void )
 {
-   return systems;
+    return systems;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -83,11 +83,11 @@ public:
 
     ///Get XML command from command queue
     const ves::open::xml::CommandPtr& GetXMLCommand();
-    
+
     ///Get all of the XML commands that have this command name
     ///\param commandName The command you are after
-    std::vector< ves::open::xml::CommandPtr > 
-        GetXMLCommands( std::string const& commandName );
+    std::vector< ves::open::xml::CommandPtr >
+    GetXMLCommands( std::string const& commandName );
 
     ///Initialize scene.
     void InitScene();
@@ -109,5 +109,5 @@ private:
     ves::open::xml::CommandPtr m_activeCommand;
 };
 }
-}    
+}
 }

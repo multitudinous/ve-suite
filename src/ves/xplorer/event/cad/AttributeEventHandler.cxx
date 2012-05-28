@@ -48,13 +48,13 @@ using namespace ves::xplorer::scenegraph;
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 AttributeEventHandler::AttributeEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////
 AttributeEventHandler::AttributeEventHandler( const AttributeEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     _activeModel = rhs._activeModel;
 }
@@ -77,7 +77,7 @@ void AttributeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         std::cout << "Invalid object passed to CADEventHandler!" << std::endl;

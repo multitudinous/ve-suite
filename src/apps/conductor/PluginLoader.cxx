@@ -102,7 +102,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
     {
         // Dispaly error
         wxString msg( _( "Directory " ) + pluginsDir.GetName() +
-                     _( " is present but cannot be opened." ) );
+                      _( " is present but cannot be opened." ) );
         //wxMessageBox( msg, _( "Plugin Loader Failure" ),
         //             wxOK | wxICON_INFORMATION );
         wxLogMessage( _( "Loading error [%s]" ), msg.c_str() );
@@ -120,11 +120,11 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
         {
             //std::cout << "try Loaded " << ConvertUnicode( ext.c_str() ) << " "
             //    << ConvertUnicode( filename.c_str() ) << std::endl;
-        
+
             wxFileName  libname( pluginsDirStr, filename );
             wxString libn = pluginsDirStr + _( "/" ) + libname.GetName();
-        
-            wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
+
+            wxPluginLibrary* lib = wxPluginManager::LoadLibrary( libn );
             if( lib )
             {
                 wxLogMessage( _( "Loaded [ %s ]" ), libn.c_str() );
@@ -158,7 +158,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
         {
             // Dispaly error
             wxString msg( _( "Directory " ) + dir.GetName() +
-                      _( " is present but cannot be opened." ) );
+                          _( " is present but cannot be opened." ) );
             //wxMessageBox( msg, _( "Plugin Loader Failure" ),
             //          wxOK | wxICON_INFORMATION );
             wxLogMessage( msg );
@@ -167,7 +167,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
             //return FALSE;
         }
 
-        //Load custom app plugins 
+        //Load custom app plugins
         bool cont = dir.GetFirst( &filename, ext, wxDIR_FILES );
         while( cont )
         {
@@ -177,7 +177,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
             wxFileName  libname( lib_dir, filename );
             wxString libn = lib_dir + _( "/" ) + libname.GetName();
 
-            wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
+            wxPluginLibrary* lib = wxPluginManager::LoadLibrary( libn );
             if( lib )
             {
                 wxLogMessage( _( "Loaded [ %s ]" ), filename.c_str() );
@@ -188,7 +188,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
             cont = dir.GetNext( &filename );
         }
     }
-    
+
     RegisterPlugins();
 
     //Load default plugin into vectors
@@ -211,7 +211,7 @@ void PluginLoader::RegisterPlugins()
     //due to the changes for wxClassInfo in wxWidgets-2.9.0
     //Also, RegisterPlugin() function needs to be uncommented
     for( const wxClassInfo* classInfo = wxClassInfo::GetFirst(); classInfo;
-         classInfo = classInfo->GetNext() )
+            classInfo = classInfo->GetNext() )
     {
         if( wxString( classInfo->GetBaseClassName1() ) ==
                 wxString( "UIPluginBase", wxConvUTF8 ) )
@@ -243,7 +243,7 @@ void PluginLoader::RegisterPlugins()
         {
             RegisterPlugin( classInfo );
             wxLogMessage( _( "|\tRegister plugins : %s" ),
-                        classInfo->GetClassName() );
+                          classInfo->GetClassName() );
         }
         node = wxClassInfo::sm_classTable->Next();
     }
@@ -256,7 +256,7 @@ void PluginLoader::RegisterPlugin( wxClassInfo* info )
     {
         UIPluginBase* object =
 #if wxCHECK_VERSION( 2, 9, 0 )
-            static_cast< UIPluginBase* >( (info->GetConstructor())() );
+            static_cast< UIPluginBase* >( ( info->GetConstructor() )() );
 #else
             static_cast< UIPluginBase* >( info->m_objectConstructor() );
 #endif
@@ -270,10 +270,10 @@ size_t PluginLoader::GetNumberOfPlugins( void )
     return plugin_cls.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::pair< UIPluginBase*, wxClassInfo* > 
-    PluginLoader::GetPluginDataPair( size_t i )
+std::pair< UIPluginBase*, wxClassInfo* >
+PluginLoader::GetPluginDataPair( size_t i )
 {
     std::pair< UIPluginBase*, wxClassInfo* >
-        dataPair( plugins.at( i ), plugin_cls.at( i ) );
+    dataPair( plugins.at( i ), plugin_cls.at( i ) );
     return dataPair;
 }

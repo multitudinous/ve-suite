@@ -49,12 +49,12 @@ class DataSetDataArrayChoiceDialog : public DataArrayChoiceDialog
 public:
     /** Constructor */
     DataSetDataArrayChoiceDialog( wxWindow* parent );
-    
+
     ///
     void SetDataArrays( std::vector< std::string > activeArrays );
     ///
     std::vector< std::string > GetUserActiveArrays();
-    
+
 protected:
     std::vector< std::string > m_activeArrays;
     std::vector< std::string > m_usersDataArrays;

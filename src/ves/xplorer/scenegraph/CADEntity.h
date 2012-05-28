@@ -106,30 +106,30 @@ public:
     void InitPhysics();
 
     ///Returns the DCS of CADEntity
-    ///\return 
+    ///\return
     ves::xplorer::scenegraph::DCS* GetDCS() const;
 
     ///Returns the node of CADEntity
-    ///\return 
+    ///\return
     ves::xplorer::scenegraph::CADEntityHelper* GetNode() const;
 
     ///Returns the physics rigid body of CADEntity
-    ///\return 
+    ///\return
     ves::xplorer::scenegraph::PhysicsRigidBody* GetPhysicsRigidBody();
 
     ///Returns the filename of CADEntity
-    ///\return 
+    ///\return
     std::string const& GetFilename() const;
 
     ///Get the opacity value for this file
-    ///\return 
+    ///\return
     float GetOpacityValue() const;
 
     ///Returns the transparency state of the node
-    ///\return 
+    ///\return
     bool GetTransparentFlag() const;
 
-    ///Set the transparency state of the node to go 
+    ///Set the transparency state of the node to go
     ///transparent when data is selected
     ///\param flag The transparency state
     void SetTransparencyFlag( bool flag );
@@ -137,7 +137,7 @@ public:
     ///Set the opacity value for this file
     ///\param opacity
     void SetOpacityValue( float opacity );
-    
+
     ///Save the current physics state and scenegraph information
     void Save();
 
@@ -156,7 +156,7 @@ protected:
 
     ///Set the opacity value
     float mOpacity;
-    
+
     ///The name of the geometry file loaded
     std::string mFileName;
 

@@ -62,9 +62,9 @@ DeviceEventHandler::DeviceEventHandler()
     ves::xplorer::event::EventHandler()
 {
     CONNECTSIGNALS_1( "%CADSelection",
-                     void( bool const& enable ),
-                     &DeviceEventHandler::UpdateCADSelectionMode,
-                     m_connections, any_SignalType, normal_Priority );    
+                      void( bool const & enable ),
+                      &DeviceEventHandler::UpdateCADSelectionMode,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::DeviceEventHandler( const DeviceEventHandler& rhs )
@@ -97,12 +97,12 @@ void DeviceEventHandler::Execute(
     {
         std::vector< long > data;
         deviceDVP->GetData( data );
-        device::Device::Type type = 
+        device::Device::Type type =
             static_cast< device::Device::Type >( data.front() );
         DeviceHandler::instance()->EnableDevice( type, data.back() );
         return;
     }
-    
+
     deviceDVP = command->GetDataValuePair( "CAD Selection Mode" );
     if( deviceDVP )
     {
@@ -126,8 +126,8 @@ DeviceEventHandler& DeviceEventHandler::operator=(
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceEventHandler::UpdateCADSelectionMode( bool const& enable )
 {
-    static_cast< ves::xplorer::device::Wand* >( 
+    static_cast< ves::xplorer::device::Wand* >(
         DeviceHandler::instance()->GetDevice( device::Device::WAND ) )->
-        SetCADSelectionMode( enable );
+    SetCADSelectionMode( enable );
 }
 ////////////////////////////////////////////////////////////////////////////////

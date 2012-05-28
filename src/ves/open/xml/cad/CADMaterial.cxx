@@ -43,7 +43,7 @@ using namespace ves::open::xml::cad;
 //Constructor                                                     //
 ////////////////////////////////////////////////////////////////////
 CADMaterial::CADMaterial( const std::string& name )
-        : ves::open::xml::XMLObject()
+    : ves::open::xml::XMLObject()
 {
     std::vector< double > temp;
     temp.assign( 4, 1.0f );
@@ -201,24 +201,24 @@ std::string CADMaterial::GetMaterialName()
 void CADMaterial::_updateMaterialName()
 {
     DOMElement* nameElement  = mRootDocument->createElement(
-                               Convert( "materialName" ).toXMLString() );
+                                   Convert( "materialName" ).toXMLString() );
 
     mVeElement->appendChild( nameElement );
 
     DOMText* materialName = mRootDocument->createTextNode(
-                            Convert( _materialName ).toXMLString() );
+                                Convert( _materialName ).toXMLString() );
     nameElement->appendChild( materialName );
 }
 ////////////////////////////////////
 void CADMaterial::_updateShininess()
 {
     DOMElement* shineElement  = mRootDocument->createElement(
-                                Convert( "shininess" ).toXMLString() );
+                                    Convert( "shininess" ).toXMLString() );
 
     mVeElement->appendChild( shineElement );
 
     DOMText* shininess = mRootDocument->createTextNode(
-                         Convert( _shininess ).toXMLString() );
+                             Convert( _shininess ).toXMLString() );
 
     shineElement->appendChild( shininess );
 }
@@ -238,12 +238,12 @@ void CADMaterial::_updateColorProperties()
     mVeElement->appendChild( _specular->GetXMLData( "specular" ) );
 
     DOMElement* opacityElement  = mRootDocument->createElement(
-                                  Convert( "opacity" ).toXMLString() );
+                                      Convert( "opacity" ).toXMLString() );
 
     mVeElement->appendChild( opacityElement );
 
     DOMText* opacity = mRootDocument->createTextNode(
-                       Convert( _opacity ).toXMLString() );
+                           Convert( _opacity ).toXMLString() );
 
     opacityElement->appendChild( opacity );
 }
@@ -260,10 +260,10 @@ void CADMaterial::_updateVEElement( const std::string& )
 void CADMaterial::_updateMaterialFace()
 {
     DOMElement* faceElement = mRootDocument->createElement(
-                              Convert( "face" ).toXMLString() );
+                                  Convert( "face" ).toXMLString() );
 
     DOMText* faceName = mRootDocument->createTextNode(
-                        Convert( _face ).toXMLString() );
+                            Convert( _face ).toXMLString() );
 
     faceElement->appendChild( faceName );
 
@@ -273,10 +273,10 @@ void CADMaterial::_updateMaterialFace()
 void CADMaterial::_updateColorMode()
 {
     DOMElement* cModeElement = mRootDocument->createElement(
-                               Convert( "colorMode" ).toXMLString() );
+                                   Convert( "colorMode" ).toXMLString() );
 
     DOMText* cMode = mRootDocument->createTextNode(
-                     Convert( _colorMode ).toXMLString() );
+                         Convert( _colorMode ).toXMLString() );
 
     cModeElement->appendChild( cMode );
 
@@ -296,7 +296,7 @@ void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode )
     {
         return;
     }
-    
+
     if( !currentElement->hasChildNodes() )
     {
         return;
@@ -312,28 +312,28 @@ void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode )
     _specular->SetObjectFromXMLData( GetSubElement( currentElement, std::string( "specular" ), 0 ) );
 
     GetDataFromElement(
-       GetSubElement( currentElement, std::string( "shininess" ), 0 ),
-                       _shininess );
+        GetSubElement( currentElement, std::string( "shininess" ), 0 ),
+        _shininess );
     //this is only needed to check with files that were created before we added opacity but won't be needed by the public
     //for 1.0 release.
     if( GetSubElement( currentElement, std::string( "opacity" ), 0 ) )
     {
-       GetDataFromElement(
-          GetSubElement( currentElement, std::string( "opacity" ), 0 ),
-                          _opacity);
+        GetDataFromElement(
+            GetSubElement( currentElement, std::string( "opacity" ), 0 ),
+            _opacity );
     }
 
     GetDataFromElement(
-       GetSubElement( currentElement, std::string( "materialName" ), 0 ),
-                       _materialName);
+        GetSubElement( currentElement, std::string( "materialName" ), 0 ),
+        _materialName );
 
     GetDataFromElement(
-       GetSubElement( currentElement, std::string( "face" ), 0 ),
-                       _face);
+        GetSubElement( currentElement, std::string( "face" ), 0 ),
+        _face );
 
     GetDataFromElement(
-       GetSubElement( currentElement, std::string( "colorMode" ), 0 ),
-                       _colorMode);
+        GetSubElement( currentElement, std::string( "colorMode" ), 0 ),
+        _colorMode );
 }
 ////////////////////////////////////////////
 void CADMaterial::SetOpacity( double opacity )
@@ -347,12 +347,12 @@ double CADMaterial::GetOpacity()
 }
 ////////////////////////////////////////////////
 CADMaterial::CADMaterial( const CADMaterial& rhs )
-        : XMLObject( rhs )
+    : XMLObject( rhs )
 {
-    _kDiffuse = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray(  *rhs._kDiffuse ) );
-    _kEmissive = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray(  *rhs._kEmissive ) );
-    _ambient = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray(  *rhs._ambient ) );
-    _specular = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray(  *rhs._specular ) );
+    _kDiffuse = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray( *rhs._kDiffuse ) );
+    _kEmissive = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray( *rhs._kEmissive ) );
+    _ambient = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray( *rhs._ambient ) );
+    _specular = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray( *rhs._specular ) );
     _shininess = rhs._shininess;
     _materialName = rhs._materialName;
     _face = rhs._face;
@@ -366,10 +366,10 @@ CADMaterial& CADMaterial::operator=( const CADMaterial& rhs )
     {
         XMLObject::operator =( rhs );
 
-        _kDiffuse = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray(  *rhs._kDiffuse ) );
-        _kEmissive = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray(  *rhs._kEmissive ) );
-        _ambient = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray(  *rhs._ambient ) );
-        _specular = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray(  *rhs._specular ) );
+        _kDiffuse = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray( *rhs._kDiffuse ) );
+        _kEmissive = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray( *rhs._kEmissive ) );
+        _ambient = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray( *rhs._ambient ) );
+        _specular = ves::open::xml::FloatArrayPtr( new ves::open::xml::FloatArray( *rhs._specular ) );
         _shininess = rhs._shininess;
         _materialName = rhs._materialName;
         _colorMode = rhs._colorMode;

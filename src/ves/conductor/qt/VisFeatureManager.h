@@ -69,7 +69,7 @@ namespace conductor
  * \namespace ves::conductor
  *
  */
-    
+
 class VE_CONDUCTOR_QTUI_EXPORTS VisFeatureManager : boost::noncopyable
 {
 public:
@@ -91,7 +91,7 @@ public:
 
 
     std::vector< std::pair< std::string, std::string > >
-        GetNameIDPairsForFeature( const std::string& featureType );
+    GetNameIDPairsForFeature( const std::string& featureType );
 
 private:
 
@@ -108,7 +108,7 @@ private:
     ///Reloads all viz features from the database. This slot is connected to
     ///"DatabaseManager.ResyncFromDatabase"
     void ResyncFromDatabase();
-    
+
     ///Map to hold a mapping between feature names and table names
     std::map< std::string, std::string > m_featureNameToTableName;
 
@@ -121,7 +121,7 @@ private:
 
     ///Manages slot connections
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
-    
+
 };
 } // namespace conductor
 } // namespace ves

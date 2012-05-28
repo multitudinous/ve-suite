@@ -50,15 +50,15 @@ public:
 
     void SetDebugLevel( int );
 
-    float * GetRotations( void );
-    float * GetTranslations( void );
+    float* GetRotations( void );
+    float* GetTranslations( void );
     int     GetScaleIndex( void );
     float   GetScaleFactor( void );
     int     GetWriteOption( void );
     std::string GetVTKFileName( void );
 
     void  ReadParameterFile( void );
-    vtkUnstructuredGrid * GetUnsGrid();
+    vtkUnstructuredGrid* GetUnsGrid();
 
 private:
     std::string paramFileName;

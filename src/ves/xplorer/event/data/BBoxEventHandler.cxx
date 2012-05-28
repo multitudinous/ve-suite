@@ -61,17 +61,17 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 BBoxEventHandler::BBoxEventHandler()
-        : ves::xplorer::event::EventHandler(),
-        _activeModel( 0 )
+    : ves::xplorer::event::EventHandler(),
+      _activeModel( 0 )
 {
     CONNECTSIGNALS_2( "%ShowDatasetBBox",
-                     void ( const std::string&, const bool& ),
-                     &BBoxEventHandler::ShowBBox,
-                     m_connections, any_SignalType, normal_Priority );
+                      void ( const std::string&, const bool& ),
+                      &BBoxEventHandler::ShowBBox,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 BBoxEventHandler::BBoxEventHandler( const BBoxEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -107,7 +107,7 @@ void BBoxEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         std::cout << "Invalid object passed to BBoxEventHandler::SetGlobalBaseObject!" << std::endl;
@@ -117,17 +117,17 @@ void BBoxEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 void BBoxEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
-    DataValuePairPtr activeModelDVP = 
+    DataValuePairPtr activeModelDVP =
         command->GetDataValuePair( "Bounding Box State" );
-    std::string datasetName = 
+    std::string datasetName =
         command->GetDataValuePair( "Active Dataset" )->GetDataString();
-    
+
     unsigned int state = 0;
     activeModelDVP->GetData( state );
     if( _activeModel )
     {
-        DataSet* dataSet = _activeModel->GetCfdDataSet( 
-            _activeModel->GetIndexOfDataSet( datasetName ) );
+        DataSet* dataSet = _activeModel->GetCfdDataSet(
+                               _activeModel->GetIndexOfDataSet( datasetName ) );
         _activeModel->SetActiveDataSet( dataSet );
         dataSet->SetBoundingBoxState( state );
     }
@@ -140,10 +140,10 @@ void BBoxEventHandler::ShowBBox( const std::string& uuid, const bool& show )
     ves::xplorer::data::DatasetPropertySet set;
     set.SetUUID( uuid );
     set.LoadFromDatabase();
-    std::string datasetName = boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
+    std::string datasetName = boost::any_cast<std::string>( set.GetPropertyValue( "Filename" ) );
 
     DataSet* dataSet = _activeModel->GetCfdDataSet(
-     _activeModel->GetIndexOfDataSet( datasetName ) );
+                           _activeModel->GetIndexOfDataSet( datasetName ) );
     if( dataSet )
     {
         dataSet->SetBoundingBoxState( show );

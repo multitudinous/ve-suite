@@ -80,7 +80,7 @@ namespace event
 {
 namespace cad
 {
-class VE_XPLORER_EXPORTS NavigateToEventHandler : 
+class VE_XPLORER_EXPORTS NavigateToEventHandler :
     public ves::xplorer::event::EventHandler
 {
 public:

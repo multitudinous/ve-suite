@@ -138,7 +138,7 @@ void Isosurfaces::CreateControls()
     _isoSpinner = new wxSpinCtrlDbl( *itemDialog1, ISOSURFACES_SPINCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0, 0.1, -1, wxEmptyString );
 
     _isoSurfaceSlider = new wxSlider( itemDialog1, ISOSURFACES_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
-//    itemStaticBoxSizer3->Add(_isoSurfaceSlider, 0, wxGROW|wxALL, 5);
+    //    itemStaticBoxSizer3->Add(_isoSurfaceSlider, 0, wxGROW|wxALL, 5);
 
     isoSizer->Add( _isoSpinner, 0, wxALIGN_LEFT | wxTOP | wxLEFT | wxRIGHT, 5 );
     isoSizer->Add( _isoSurfaceSlider, 1, wxGROW | wxALIGN_LEFT | wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 5 );
@@ -232,7 +232,7 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED( event ) )
     newCommand->SetCommandName( "UPDATE_ISOSURFACE_SETTINGS" );
 
     ves::open::xml::DataValuePairPtr isosurfaceValue( new ves::open::xml::DataValuePair() );
-    isosurfaceValue->SetData( "Iso-Surface Value", static_cast<double>(( _isoSurfaceSlider->GetValue() ) ) );
+    isosurfaceValue->SetData( "Iso-Surface Value", static_cast<double>( ( _isoSurfaceSlider->GetValue() ) ) );
     newCommand->AddDataValuePair( isosurfaceValue );
 
     ves::open::xml::DataValuePairPtr colorByScalar( new ves::open::xml::DataValuePair() );
@@ -264,11 +264,11 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED( event ) )
     {
         dynamic_cast<Vistab*>( GetParent() )->SendUpdatedSettingsToXplorer( newCommand );
     }
-    catch ( ... )
+    catch( ... )
     {
-            wxMessageBox( _( "Invalid Parent" ),
-                          _( "Communication Failure" ),
-                          wxOK | wxICON_INFORMATION );
+        wxMessageBox( _( "Invalid Parent" ),
+                      _( "Communication Failure" ),
+                      wxOK | wxICON_INFORMATION );
     }
 }
 //////////////////////////////////////////////////////
@@ -312,7 +312,7 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
 void Isosurfaces::_onSpinner( wxScrollEvent& WXUNUSED( event ) )
 {
     double spinnerValue = 0;
-    spinnerValue = (( _isoSpinner->GetValue() - _scalarRange.at( 0 ) ) / ( _scalarRange.at( 1 ) - _scalarRange.at( 0 ) ) * 100 );
+    spinnerValue = ( ( _isoSpinner->GetValue() - _scalarRange.at( 0 ) ) / ( _scalarRange.at( 1 ) - _scalarRange.at( 0 ) ) * 100 );
     _isoSurfaceSlider->SetValue( spinnerValue );
 }
 //////////////////////////////////////////////////////
@@ -320,7 +320,7 @@ void Isosurfaces::UpdateSlider( wxCommandEvent& WXUNUSED( event ) )
 {
     double spinnerValue = 0;
 
-    spinnerValue = (( _isoSpinner->GetValue() - _scalarRange.at( 0 ) ) / ( _scalarRange.at( 1 ) - _scalarRange.at( 0 ) ) * 100 );
+    spinnerValue = ( ( _isoSpinner->GetValue() - _scalarRange.at( 0 ) ) / ( _scalarRange.at( 1 ) - _scalarRange.at( 0 ) ) * 100 );
 
     _isoSurfaceSlider->SetValue( spinnerValue );
 }

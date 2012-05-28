@@ -52,7 +52,7 @@ namespace rtt
 {
 class VE_SCENEGRAPH_EXPORTS UnitCameraAttachmentBypass : public Unit
 {
-public:    
+public:
     ///Constructor
     UnitCameraAttachmentBypass();
 

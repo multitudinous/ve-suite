@@ -51,8 +51,8 @@ using namespace ves::conductor::util;
 //Here is the constructor with passed in pointers //
 ////////////////////////////////////////////////////
 BaseDialog::BaseDialog( wxWindow* parent, int id, std::string title )
-        : wxDialog(( wxWindow* ) parent, id, wxString( title.c_str(), wxConvUTF8 ), wxDefaultPosition, wxDefaultSize,
-                   ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxCLOSE_BOX ) )
+    : wxDialog( ( wxWindow* ) parent, id, wxString( title.c_str(), wxConvUTF8 ), wxDefaultPosition, wxDefaultSize,
+                ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxCLOSE_BOX ) )
 {
     SetIcon( ve_icon32x32_xpm );
 }
@@ -116,7 +116,7 @@ void BaseDialog::_sendCommandsToXplorer()
             //_vjObsPtr->SetCommandString( tempDoc );
             CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
         }
-        catch ( ... )
+        catch( ... )
         {
             wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
                           _( "Communication Failure" ), wxOK | wxICON_INFORMATION );

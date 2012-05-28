@@ -39,19 +39,19 @@
 
 using namespace ves::conductor::qt::minerva;
 
-StackedWidget::StackedWidget ( QWidget *parent ) : BaseClass ( parent ),
-  m_layersTree ( 0x0 ),
-  m_addLayerWidget ( 0x0 )
+StackedWidget::StackedWidget( QWidget* parent ) : BaseClass( parent ),
+    m_layersTree( 0x0 ),
+    m_addLayerWidget( 0x0 )
 {
-    m_layersTree = new LayersTree ( this );
-    this->addWidget ( m_layersTree );
-    QObject::connect ( m_layersTree, SIGNAL ( addLayerRequested() ), this, SLOT ( showAddLayerWidget() ) );
+    m_layersTree = new LayersTree( this );
+    this->addWidget( m_layersTree );
+    QObject::connect( m_layersTree, SIGNAL( addLayerRequested() ), this, SLOT( showAddLayerWidget() ) );
 
     m_addLayerWidget = new AddLayerWidget;
-    this->addWidget ( m_addLayerWidget );
+    this->addWidget( m_addLayerWidget );
 
-    QObject::connect ( m_addLayerWidget, SIGNAL ( accepted() ), this, SLOT ( addLayerWidgetAccepted() ) );
-    QObject::connect ( m_addLayerWidget, SIGNAL ( rejected() ), this, SLOT ( addLayerWidgetRejected() ) );
+    QObject::connect( m_addLayerWidget, SIGNAL( accepted() ), this, SLOT( addLayerWidgetAccepted() ) );
+    QObject::connect( m_addLayerWidget, SIGNAL( rejected() ), this, SLOT( addLayerWidgetRejected() ) );
 }
 
 StackedWidget::~StackedWidget()
@@ -59,35 +59,35 @@ StackedWidget::~StackedWidget()
     delete m_layersTree;
 }
 
-void StackedWidget::setFeature ( Minerva::Core::Data::Feature * feature )
+void StackedWidget::setFeature( Minerva::Core::Data::Feature* feature )
 {
-    m_layersTree->BuildTree ( feature );
+    m_layersTree->BuildTree( feature );
 }
 
 void StackedWidget::showAddLayerWidget()
 {
-    this->setCurrentIndex ( 1 );
+    this->setCurrentIndex( 1 );
 }
 
 void StackedWidget::addLayerWidgetAccepted()
 {
-    this->setCurrentIndex ( 0 );
+    this->setCurrentIndex( 0 );
 
     // Get the added layers and add them to the planet.
-    Minerva::Core::Data::Feature::RefPtr feature ( m_layersTree->GetCurrentFeature() );
-    if ( feature.valid() )
+    Minerva::Core::Data::Feature::RefPtr feature( m_layersTree->GetCurrentFeature() );
+    if( feature.valid() )
     {
-        Minerva::Core::Data::Container::RefPtr container ( feature->asContainer() );
-        if ( container )
+        Minerva::Core::Data::Container::RefPtr container( feature->asContainer() );
+        if( container )
         {
-            m_addLayerWidget->AddLayersToFeature ( container.get() );
+            m_addLayerWidget->AddLayersToFeature( container.get() );
         }
     }
 }
 
 void StackedWidget::addLayerWidgetRejected()
 {
-    this->setCurrentIndex ( 0 );
+    this->setCurrentIndex( 0 );
 }
 
 #endif

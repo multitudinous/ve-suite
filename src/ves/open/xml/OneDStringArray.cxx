@@ -40,7 +40,7 @@ using namespace ves::open::xml;
 //Constructor                                     //
 ////////////////////////////////////////////////////
 OneDStringArray::OneDStringArray( unsigned int nElements )
-        : XMLObject()
+    : XMLObject()
 {
     mNElements  = nElements;
     // These should match the schema for min and max occurances
@@ -57,7 +57,7 @@ OneDStringArray::~OneDStringArray()
 }
 ////////////////////////////////////////////////////////////////////////////////
 OneDStringArray::OneDStringArray( const OneDStringArray& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mNElements = input.mNElements;
     mArray = input.mArray;
@@ -96,7 +96,7 @@ std::string OneDStringArray::GetElement( unsigned int index )
     {
         return mArray.at( index );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "ERROR!!!" << std::endl;
         std::cout << "Invalid index: " << index << " in OneDStringArray::GetElement!!!" << std::endl;
@@ -121,11 +121,11 @@ void OneDStringArray::_updateVEElement( const std::string& )
     {
         // name comes from verg.xsd
         DOMElement* valueTag  = mRootDocument->createElement(
-                                Convert( "data" ).toXMLString() );
+                                    Convert( "data" ).toXMLString() );
 
         mVeElement->appendChild( valueTag );
         DOMText* valueNum = mRootDocument->createTextNode(
-                            Convert( mArray.at( i ) ).toXMLString() );
+                                Convert( mArray.at( i ) ).toXMLString() );
 
         valueTag->appendChild( valueNum );
     }
@@ -151,14 +151,14 @@ void OneDStringArray::SetObjectFromXMLData( DOMNode* xmlInput )
         // do we need to delete the old one or does xerces handle this???
         //mNElements = xmlInput->getChildNodes()->getLength();
         DOMNodeList* nodeList = currentElement->getElementsByTagName(
-                                Convert( "data" ).toXMLString() );
+                                    Convert( "data" ).toXMLString() );
 
         XMLSize_t numNodes = nodeList->getLength();
         mNElements = numNodes;
-        if (( mMinIndex > numNodes ) )
+        if( ( mMinIndex > numNodes ) )
         {
             std::cerr << " ERROR : OneDStringArray::SetObjectFromXMLData :" <<
-            " This node has too few or too many children." << std::endl;
+                      " This node has too few or too many children." << std::endl;
         }
 
         // This for loop may be wrong since the the text node and
@@ -178,7 +178,7 @@ void OneDStringArray::SetObjectFromXMLData( DOMNode* xmlInput )
     else
     {
         std::cerr << " ERROR : OneDStringArray::SetObjectFromXMLData :" <<
-        " This node has no children which means there is probably a problem." << std::endl;
+                  " This node has no children which means there is probably a problem." << std::endl;
     }
 }
 

@@ -46,49 +46,49 @@
 
 using namespace ves::conductor::qt::minerva;
 
-AddLayerWidget::AddLayerWidget ( QWidget *parent ) : BaseClass ( parent ),
-    m_addFileSystemStackedWidget ( 0x0 ),
-    m_addWmsLayerWidget ( 0x0 )
+AddLayerWidget::AddLayerWidget( QWidget* parent ) : BaseClass( parent ),
+    m_addFileSystemStackedWidget( 0x0 ),
+    m_addWmsLayerWidget( 0x0 )
 {
-    QTabWidget *tabs ( new QTabWidget ( this ) );
-    QPushButton *ok ( new QPushButton ( "Ok" ) );
-    QPushButton *cancel ( new QPushButton ( "Cancel" ) );
+    QTabWidget* tabs( new QTabWidget( this ) );
+    QPushButton* ok( new QPushButton( "Ok" ) );
+    QPushButton* cancel( new QPushButton( "Cancel" ) );
 
-    QObject::connect ( ok, SIGNAL ( clicked() ), this, SIGNAL ( accepted() ) );
-    QObject::connect ( cancel, SIGNAL ( clicked() ), this, SIGNAL ( rejected() ) );
+    QObject::connect( ok, SIGNAL( clicked() ), this, SIGNAL( accepted() ) );
+    QObject::connect( cancel, SIGNAL( clicked() ), this, SIGNAL( rejected() ) );
 
-    QVBoxLayout *topLayout ( new QVBoxLayout );
-    this->setLayout ( topLayout );
-  
-    QVBoxLayout *vLayout ( new QVBoxLayout );
-    QHBoxLayout *hLayout ( new QHBoxLayout );
-  
-    topLayout->addLayout ( vLayout );
-    topLayout->addLayout ( hLayout );
-  
-    vLayout->addWidget ( tabs );
+    QVBoxLayout* topLayout( new QVBoxLayout );
+    this->setLayout( topLayout );
+
+    QVBoxLayout* vLayout( new QVBoxLayout );
+    QHBoxLayout* hLayout( new QHBoxLayout );
+
+    topLayout->addLayout( vLayout );
+    topLayout->addLayout( hLayout );
+
+    vLayout->addWidget( tabs );
     hLayout->addStretch();
-    hLayout->addWidget ( ok );
-    hLayout->addWidget ( cancel );
+    hLayout->addWidget( ok );
+    hLayout->addWidget( cancel );
 
-    m_addFileSystemStackedWidget = new AddFileSystemStackedWidget ( tabs );
-    tabs->addTab ( m_addFileSystemStackedWidget, "File System" );
+    m_addFileSystemStackedWidget = new AddFileSystemStackedWidget( tabs );
+    tabs->addTab( m_addFileSystemStackedWidget, "File System" );
 
-    m_addWmsLayerWidget = new AddWmsLayerWidget ( tabs );
-    tabs->addTab ( m_addWmsLayerWidget, "WMS" );
+    m_addWmsLayerWidget = new AddWmsLayerWidget( tabs );
+    tabs->addTab( m_addWmsLayerWidget, "WMS" );
 
     // For now hide the button that opens a dialog.  This is usually not needed.
-    m_addWmsLayerWidget->setViewOptionsVisibility ( false );
+    m_addWmsLayerWidget->setViewOptionsVisibility( false );
 }
 
 AddLayerWidget::~AddLayerWidget()
 {
 }
 
-void AddLayerWidget::AddLayersToFeature ( Minerva::Core::Data::Container* container )
+void AddLayerWidget::AddLayersToFeature( Minerva::Core::Data::Container* container )
 {
-    m_addFileSystemStackedWidget->AddLayersToFeature ( container );
-    m_addWmsLayerWidget->apply ( container );
+    m_addFileSystemStackedWidget->AddLayersToFeature( container );
+    m_addWmsLayerWidget->apply( container );
 }
 
 #endif

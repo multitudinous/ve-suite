@@ -103,7 +103,7 @@ NURBSObject::NURBSObject( const NURBSObject& rhs )
     _order = rhs._order;
     for( size_t i = 0; i <   m_changedVertexIndecies.size(); ++i )
     {
-        m_changedVertexIndecies.push_back( rhs.m_changedVertexIndecies.at(i) );
+        m_changedVertexIndecies.push_back( rhs.m_changedVertexIndecies.at( i ) );
     }
 
     m_modifiedUBounds[0] = rhs.m_modifiedUBounds[0];
@@ -162,7 +162,7 @@ NURBSObject& NURBSObject::operator=( const NURBSObject& rhs )
         m_changedVertexIndecies.clear();
         for( size_t i = 0; i <   m_changedVertexIndecies.size(); ++i )
         {
-            m_changedVertexIndecies.push_back( rhs.m_changedVertexIndecies.at(i) );
+            m_changedVertexIndecies.push_back( rhs.m_changedVertexIndecies.at( i ) );
         }
         m_modifiedUBounds[0] = rhs.m_modifiedUBounds[0];
         m_modifiedUBounds[1] = rhs.m_modifiedUBounds[1];
@@ -213,7 +213,7 @@ void NURBSObject::SetControlPoints( std::vector<ves::xplorer::scenegraph::nurbs:
 }
 //////////////////////////////////////////////////////////
 void NURBSObject::SetInterpolationGridSize( unsigned int stepSize,
-                                            std::string direction )
+        std::string direction )
 {
     //if(stepSize < .5)
     //_interpolationStepSize[direction] = stepSize;
@@ -284,8 +284,8 @@ void NURBSObject::SetMovingControlPoint( unsigned int index )
     {
         for( unsigned int u = m_modifiedUBounds[0]; u <= m_modifiedUBounds[1]; u++ )
         {
-            m_changedVertexIndecies.push_back( v*_meshDimensions["U"] + u );
-     //       std::cout<<m_changedVertexIndecies.back()<<std::endl;
+            m_changedVertexIndecies.push_back( v * _meshDimensions["U"] + u );
+            //       std::cout<<m_changedVertexIndecies.back()<<std::endl;
         }
     }
 }
@@ -297,10 +297,10 @@ void NURBSObject::UpdateMesh( )
 }
 /////////////////////////////////////////////////////////////////
 void NURBSObject::UpdateControlPointPosition( unsigned int index,
-                                              Point newPosition )
+        Point newPosition )
 {
     _controlPoints[0][index].set( newPosition.x(), newPosition.y(), newPosition.z() );
-}          
+}
 //////////////////////////////////////////////////////////////////////
 unsigned int NURBSObject::NumInterpolatedPoints( std::string direction )
 {
@@ -350,7 +350,9 @@ ves::xplorer::scenegraph::nurbs::ControlPoint* NURBSObject::GetControlPoint( siz
 void NURBSObject::Interpolate()
 {
     if( !_needsRetessellation )
+    {
         return;
+    }
     if( !_controlPoints.size() )
     {
         std::cout << "No control points specified!!" << std::endl;
@@ -367,7 +369,7 @@ void NURBSObject::_interpolateWithinBounds( double* uBounds, double* vBounds )
 }
 ////////////////////////////////////////////////////////////
 void NURBSObject::_calculateBasisFunctions( double parameter,
-                                            std::string direction )
+        std::string direction )
 {
     std::cout << "Not implemented!!" << std::endl;
     std::cout << "Use NURBSObject::_calculateBasisFunctionsAndDerivatives" << std::endl;
@@ -394,29 +396,35 @@ unsigned int NURBSObject::GetMinimumDegree()
         return _degree["U"];
     }
     if( _degree["U"] < _degree["V"] )
+    {
         return _degree["U"];
+    }
     else
+    {
         return _degree["V"];
+    }
 }
 ///////////////////////////////////////////////////////////////////////
 unsigned int NURBSObject::_calculateBinomialCoefficients( unsigned int row,
-                                                          unsigned int column )
+        unsigned int column )
 {
-    if (( row == 0 || column == 0 || row == column + 1 ) )
+    if( ( row == 0 || column == 0 || row == column + 1 ) )
+    {
         return 1;
-    return _calculateBinomialCoefficients( row -1, column - 1 )
+    }
+    return _calculateBinomialCoefficients( row - 1, column - 1 )
            + _calculateBinomialCoefficients( row - 1, column );
 }
 /////////////////////////////////////////////////////////////////////////
 void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
-                                                          unsigned int spanIndex,
-                                                          std::string direction,
-                                                          bool addToSpan )
+        unsigned int spanIndex,
+        std::string direction,
+        bool addToSpan )
 {
     if( addToSpan )
     {
-        _currentSpan[direction].push_back(  _knotVectors[direction].FindKnotSpan( parameter,
-                              _degree[direction] ) );
+        _currentSpan[direction].push_back( _knotVectors[direction].FindKnotSpan( parameter,
+                                           _degree[direction] ) );
     }
     //std::cout<<"Span["<<direction<<"]: "<<_currentSpan[direction].at(spanIndex)<<std::endl;
 
@@ -436,8 +444,8 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
     for( size_t j = 1; j <= _degree[direction]; j++ )
     {
 
-        left.push_back( parameter - _knotVectors[direction].Knot( _currentSpan[direction].at(spanIndex) + 1 - j ) );
-        right.push_back( _knotVectors[direction].Knot( _currentSpan[direction].at(spanIndex) + j ) - parameter );
+        left.push_back( parameter - _knotVectors[direction].Knot( _currentSpan[direction].at( spanIndex ) + 1 - j ) );
+        right.push_back( _knotVectors[direction].Knot( _currentSpan[direction].at( spanIndex ) + j ) - parameter );
 
         saved = 0.0;
         temp = 0.0;
@@ -445,13 +453,13 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
         for( size_t r = 0; r < j; r++ )
         {
             //Lower triangle for basis function table
-            _knotDifferences[direction][j][parameter].push_back( right[r+1] + left[j-r] );
-            temp = _knotDifferences[direction][r][parameter][j-1] / _knotDifferences[direction][j][parameter][r];
+            _knotDifferences[direction][j][parameter].push_back( right[r + 1] + left[j - r] );
+            temp = _knotDifferences[direction][r][parameter][j - 1] / _knotDifferences[direction][j][parameter][r];
 
 
             //Upper triangle for basis function table
-            _knotDifferences[direction][r][parameter].push_back( saved + ( right[r+1]*temp ) );
-            saved = left[j-r] * temp;
+            _knotDifferences[direction][r][parameter].push_back( saved + ( right[r + 1]*temp ) );
+            saved = left[j - r] * temp;
         }
         _knotDifferences[direction][j][parameter].push_back( saved );
     }
@@ -474,7 +482,7 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
 
     unsigned int jthree = 0;
     double d = 0.0;
-    double* a = new double [2*( _degree[direction] + 1 )];
+    double* a = new double [2 * ( _degree[direction] + 1 )];
     //Compute the derivatives
     for( int r = 0; r <= static_cast<int>( _degree[direction] ); r++ )
     {
@@ -492,9 +500,9 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
             if( r >= k )
             {
                 //a[s2][0] = a[s1][0]/ndu[pk+1][rk]
-                a[row2*( _degree[direction] + 1 )] = a[row1*( _degree[direction] + 1 )] / _knotDifferences[direction][pk+1][parameter][rk];
+                a[row2 * ( _degree[direction] + 1 )] = a[row1 * ( _degree[direction] + 1 )] / _knotDifferences[direction][pk + 1][parameter][rk];
 
-                d = a[row2*( _degree[direction] + 1 )] * _knotDifferences[direction][rk][parameter][pk];
+                d = a[row2 * ( _degree[direction] + 1 )] * _knotDifferences[direction][rk][parameter][pk];
             }
 
             if( rk >= -1 )
@@ -517,17 +525,17 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
 
             for( int j = jone; j <= jtwo; j++ )
             {
-                a[row2*( _degree[direction] + 1 ) + j] = ( a[row1*( _degree[direction] + 1 ) + ( j )]
-                                                           - a[row1*( _degree[direction] + 1 ) + ( j - 1 )] )
-                                                         / _knotDifferences[direction][pk+1][parameter][rk+j];
+                a[row2 * ( _degree[direction] + 1 ) + j] = ( a[row1 * ( _degree[direction] + 1 ) + ( j )]
+                        - a[row1 * ( _degree[direction] + 1 ) + ( j - 1 )] )
+                        / _knotDifferences[direction][pk + 1][parameter][rk + j];
 
-                d += a[row2*( _degree[direction] + 1 ) + j] * _knotDifferences[direction][rk+j][parameter][pk];
+                d += a[row2 * ( _degree[direction] + 1 ) + j] * _knotDifferences[direction][rk + j][parameter][pk];
             }
 
             if( r <= pk )
             {
-                a[row2*( _degree[direction] + 1 ) + k] = -a[row1*( _degree[direction] + 1 ) + ( k - 1 )] / _knotDifferences[direction][pk+1][parameter][r];
-                d += a[row2*( _degree[direction] + 1 ) + k] * _knotDifferences[direction][r][parameter][pk];
+                a[row2 * ( _degree[direction] + 1 ) + k] = -a[row1 * ( _degree[direction] + 1 ) + ( k - 1 )] / _knotDifferences[direction][pk + 1][parameter][r];
+                d += a[row2 * ( _degree[direction] + 1 ) + k] * _knotDifferences[direction][r][parameter][pk];
             }
             _derivativeBasisFunctions[direction][k][parameter].push_back( d );
 
@@ -545,13 +553,13 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
         {
             _derivativeBasisFunctions[direction][k][parameter][j] *= r;
         }
-        r *= (( _degree[direction] ) - k );
+        r *= ( ( _degree[direction] ) - k );
     }
     delete [] a;
 }
 //////////////////////////////////////////////////////////////////////////
 unsigned int NURBSObject::_findNearestParameterIndex( std::string direction,
-                                                      double parameter )
+        double parameter )
 {
     std::map<double, unsigned int >::iterator lowerNearestValue;
     //endpoints
@@ -573,24 +581,24 @@ unsigned int NURBSObject::_findNearestParameterIndex( std::string direction,
     //std::cout<<"Parameter: "<<parameter<<std::endl;
 
     unsigned int counter = 0;
-    if(lowerNearestValue == _parameterValues[direction].end())
+    if( lowerNearestValue == _parameterValues[direction].end() )
     {
-    //    std::cout<<"Invalid search" <<std::endl;
+        //    std::cout<<"Invalid search" <<std::endl;
         if( parameter == 0.f )
         {
-    //        std::cout<<"Parameter == 0: "<<parameter<<std::endl;
-     //       std::cout<<"returning: "<<_parameterValues[direction].begin()->second<<std::endl;
+            //        std::cout<<"Parameter == 0: "<<parameter<<std::endl;
+            //       std::cout<<"returning: "<<_parameterValues[direction].begin()->second<<std::endl;
             return _parameterValues[direction].begin()->second;
         }
         if( parameter == 1.f )
         {
-      //      std::cout<<"Parameter == 1: "<<parameter<<std::endl;
-       //     std::cout<<"returning: "<<_parameterValues[direction].rbegin()->second<<std::endl;
+            //      std::cout<<"Parameter == 1: "<<parameter<<std::endl;
+            //     std::cout<<"returning: "<<_parameterValues[direction].rbegin()->second<<std::endl;
             return _parameterValues[direction].rbegin()->second;
         }
     }
     counter = 0;
-    while (( float )parameter < ( float )lowerNearestValue->first /*&& counter < 20*/)
+    while( ( float )parameter < ( float )lowerNearestValue->first /*&& counter < 20*/ )
     {
         lowerNearestValue--;
         //std::cout<<"=== "<<lowerNearestValue->second<<std::endl;
@@ -611,7 +619,7 @@ std::vector< std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > NURBSO
         std::vector< ves::xplorer::scenegraph::nurbs::ControlPoint > points;
         for( size_t j = 0; j < numUPoints; ++j )
         {
-            points.push_back( tempPoints.at(( i * numUPoints ) + j ) );
+            points.push_back( tempPoints.at( ( i * numUPoints ) + j ) );
         }
         controlPoints.push_back( points );
     }

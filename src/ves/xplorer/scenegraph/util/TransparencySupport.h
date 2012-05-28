@@ -59,16 +59,16 @@ class ProtectTransparencyVisitor : public osg::NodeVisitor
 {
 public:
     ProtectTransparencyVisitor();
-    
+
     virtual void apply( osg::Node& node );
     virtual void apply( osg::Geode& geode );
-    
+
 protected:
     /** \bried Mark the transparent componenets of \c stateSet as PROTECTED.
      Does nothing if the \c stateSet is NULL.
      */
     virtual void protectTransparent( osg::StateSet* stateSet ) const;
-    
+
     /** \brief A general test for transparency.
      Code was lifted from osgconv.cpp FixTransparentVisitor and modified.
      */
@@ -85,7 +85,7 @@ class VE_SCENEGRAPH_EXPORTS RestoreOpacityVisitor : public osg::NodeVisitor
 {
 public:
     RestoreOpacityVisitor();
-    
+
     virtual void apply( osg::Node& node );
     virtual void apply( osg::Geode& geode );
 };
@@ -102,11 +102,13 @@ template< class T >
 bool transparentEnable( T* nodeOrDrawable, float alpha )
 {
     if( nodeOrDrawable == NULL )
+    {
         return( false );
+    }
 
     osg::StateSet* stateSet( nodeOrDrawable->getStateSet() );
     if( ( stateSet != NULL ) &&
-        ( nodeOrDrawable->getUserData() == NULL ) )
+            ( nodeOrDrawable->getUserData() == NULL ) )
     {
         // We have a StateSet, and UserData is NULL, so make a copy of the StateSet.
         // We'll store the original StateSet as UserData (for later restore) and modify
@@ -124,14 +126,14 @@ bool transparentEnable( T* nodeOrDrawable, float alpha )
         nodeOrDrawable->setStateSet( stateSet );
     }
 
-    const osg::StateAttribute::GLModeValue modeValue = 
+    const osg::StateAttribute::GLModeValue modeValue =
         osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE;
 
     osg::BlendColor* bc = new osg::BlendColor( osg::Vec4( 0., 0., 0., alpha ) );
     stateSet->setAttributeAndModes( bc, modeValue );
-    osg::BlendFunc* bf = 
+    osg::BlendFunc* bf =
         new osg::BlendFunc( osg::BlendFunc::CONSTANT_ALPHA,
-        osg::BlendFunc::ONE_MINUS_CONSTANT_ALPHA );
+                            osg::BlendFunc::ONE_MINUS_CONSTANT_ALPHA );
     stateSet->setAttributeAndModes( bf, modeValue );
     stateSet->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
     stateSet->setNestRenderBins( false );
@@ -147,10 +149,12 @@ to its StateSet.
 \return false if \c node is NULL or \c node doesn't have a StateSet. Otherwise, returns true.
 */
 template< class T >
-bool transparentDisable( T* nodeOrDrawable, bool recursive=false )
+bool transparentDisable( T* nodeOrDrawable, bool recursive = false )
 {
     if( nodeOrDrawable == NULL )
+    {
         return( false );
+    }
 
     osg::Node* node( dynamic_cast< osg::Node* >( nodeOrDrawable ) );
     if( recursive && ( node != NULL ) )
@@ -161,7 +165,9 @@ bool transparentDisable( T* nodeOrDrawable, bool recursive=false )
     }
 
     if( !isTransparent( nodeOrDrawable->getStateSet() ) )
+    {
         return( false );
+    }
 
     osg::Referenced* userData = nodeOrDrawable->getUserData();
     osg::StateSet* origStateSet = dynamic_cast< osg::StateSet* >( userData );

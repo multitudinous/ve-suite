@@ -113,7 +113,7 @@ void CADNodeTraverser::_traverseNode( CADNodePtr cNode, CADAssemblyPtr currentPa
     if( cNode->GetNodeType() == std::string( "Assembly" ) )
     {
         ves::open::xml::cad::CADAssemblyPtr assembly =
-               boost::static_pointer_cast<CADAssembly>( cNode );
+            boost::static_pointer_cast<CADAssembly>( cNode );
         unsigned int nChildren = assembly->GetNumberOfChildren();
         //recurse the children of this node
         for( unsigned int i = 0; i < nChildren; i++ )

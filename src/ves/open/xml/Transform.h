@@ -112,7 +112,7 @@ protected:
     ///Internally update the XML data.
     ///\param tagName The tag name for this element.
     virtual void _updateVEElement( const std::string& tagName );
-    
+
     FloatArrayPtr mTranslationArray;///<The FloatArray holding translation information.
     FloatArrayPtr mScaleArray;///<The FloatArray holding scale information.
     FloatArrayPtr mRotationArray;///<The FloatArray holding rotation information.

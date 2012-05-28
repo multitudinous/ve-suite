@@ -96,7 +96,10 @@ void cfdCopyTo3DTextureStage::reset()
                                osgUtil::RenderLeaf*& previous)*/
 void cfdCopyTo3DTextureStage::draw( osg::RenderInfo&, osgUtil::RenderLeaf*& )
 {
-    if( _stageDrawnThisFrame ) return;
+    if( _stageDrawnThisFrame )
+    {
+        return;
+    }
 
 #ifdef _PBUFFER
     if( _pbuffer->isCreated() )

@@ -76,8 +76,8 @@ public:
     ~OSGParticleStage();
 
     ///create a Group of Stream Lines
-    ves::xplorer::scenegraph::Geode* createInstanced(const std::vector< ves::xplorer::DataSet* >& transData, 
-        const std::string& activeScalar, const std::string& activeVector );
+    ves::xplorer::scenegraph::Geode* createInstanced( const std::vector< ves::xplorer::DataSet* >& transData,
+            const std::string& activeScalar, const std::string& activeVector );
 
     void SetParticleDiameter( int pDiameter );
 
@@ -95,11 +95,11 @@ private:
 
     ///create strealines
     void createStreamLines( ves::xplorer::scenegraph::Geode* geode );
-    
+
     ///create the coloring scalar array
     //float* createScalarArray( vtkIdType numPoints , int mult, vtkPointData* pointdata, std::deque< Point > pointList, int &tm, int &tn, const std::string& scalarName);
 
-    ///The map of points to create a streamline line segment    
+    ///The map of points to create a streamline line segment
     std::vector< std::deque< ves::xplorer::scenegraph::VTKParticleTextureCreator::Point > > m_streamlineList;
     ///The raw collection of points
     std::vector< std::vector< std::pair< vtkIdType, double* > > >  m_pointCollection;

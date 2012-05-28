@@ -58,15 +58,15 @@ using namespace ves::open::xml::cad;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 OcclusionSettingsEventHandler::OcclusionSettingsEventHandler()
-        :
-        ves::xplorer::event::CADEventHandler()
+    :
+    ves::xplorer::event::CADEventHandler()
 {
     ;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 OcclusionSettingsEventHandler::OcclusionSettingsEventHandler( const OcclusionSettingsEventHandler& rhs )
-        :
-        ves::xplorer::event::CADEventHandler( rhs )
+    :
+    ves::xplorer::event::CADEventHandler( rhs )
 {
     ;
 }
@@ -98,15 +98,15 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         {
             return;
         }
-        
-        osg::ref_ptr< osg::Node > activePart = 
-          m_cadHandler->GetPart( nodeID->GetDataString() )->
-          GetNode()->GetNode();
+
+        osg::ref_ptr< osg::Node > activePart =
+            m_cadHandler->GetPart( nodeID->GetDataString() )->
+            GetNode()->GetNode();
         std::string oqSettings = nodeType->GetDataString();
-        
-        osg::ref_ptr< osg::Group > rootPartNode = 
+
+        osg::ref_ptr< osg::Group > rootPartNode =
             static_cast< osg::Group* >( activePart.get() );
-        
+
         unsigned int numOQNs = 0;
         bool oqPresent = false;
 
@@ -115,10 +115,10 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             rootPartNode->accept( statsVisitor );
             numOQNs = statsVisitor.getNumOQNs();
             vprDEBUG( vesDBG, 2 ) << "|\t\tThere are currently " << numOQNs
-                << "oq nodes." << std::endl
-                << vprDEBUG_FLUSH;
+                                  << "oq nodes." << std::endl
+                                  << vprDEBUG_FLUSH;
         }
-        
+
         if( numOQNs > 0 )
         {
             oqPresent = true;
@@ -126,7 +126,7 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         unsigned int occlusionThreshold = 1000;
         unsigned int visibilityThreshold = 100;
         bool occlude = false;
-        
+
         if( oqSettings == "Off" )
         {
             occlude = false;
@@ -153,10 +153,10 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         if( !oqPresent && occlude )
         {
             vprDEBUG( vesDBG, 2 ) << "|\t\tCreating new oq nodes " << std::endl
-                << vprDEBUG_FLUSH;
-            
+                                  << vprDEBUG_FLUSH;
+
             osgOQ::OcclusionQueryNonFlatVisitor oqv;
-            //Specify the vertex count threshold for performing 
+            //Specify the vertex count threshold for performing
             // occlusion query tests.
             //Settings others use are:
             //Fairly lax culling
@@ -184,7 +184,7 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         else if( oqPresent && !occlude )
         {
             vprDEBUG( vesDBG, 2 ) << "|\t\tRemoving oq nodes " << std::endl
-                << vprDEBUG_FLUSH;
+                                  << vprDEBUG_FLUSH;
 
             //remove oq nodes
             osgOQ::RemoveOcclusionQueryVisitor removeOQV;
@@ -193,11 +193,11 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         else if( oqPresent )
         {
             vprDEBUG( vesDBG, 2 ) << "|\t\tUpdating oq nodes " << std::endl
-                << vprDEBUG_FLUSH;
+                                  << vprDEBUG_FLUSH;
             //remove oq nodes
             osgOQ::RemoveOcclusionQueryVisitor removeOQV;
             rootPartNode->accept( removeOQV );
-            
+
             //Now create the oq nodes with new settings...
             osgOQ::OcclusionQueryNonFlatVisitor oqv;
             oqv.setOccluderThreshold( occlusionThreshold );
@@ -205,19 +205,19 @@ void OcclusionSettingsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 
             osgOQ::QueryFrameCountVisitor queryFrameVisitor( 2 );
             rootPartNode->accept( queryFrameVisitor );
-            
+
             osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( visibilityThreshold );
             rootPartNode->accept( visibilityThresholdVisitor );
         }
-        
+
         {
             osgOQ::StatisticsVisitor statsVisitor;
             rootPartNode->accept( statsVisitor );
-            numOQNs = statsVisitor.getNumOQNs();            
+            numOQNs = statsVisitor.getNumOQNs();
             vprDEBUG( vesDBG, 2 ) << "|\t\tThere are now " << numOQNs
-                << "oq nodes." << std::endl
-                << vprDEBUG_FLUSH;
-        }        
+                                  << "oq nodes." << std::endl
+                                  << vprDEBUG_FLUSH;
+        }
     }
     catch( ... )
     {

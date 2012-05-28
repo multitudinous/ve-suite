@@ -78,7 +78,7 @@ void TextureBasedIsosurfaceUpdateEventHandler::_operateOnNode( XMLObjectPtr veXM
         isovalue->GetData( value );
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateIsosurface( value );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid TextureDataSet!!" << std::endl;
         std::cout << "TextureBasedIsosurfaceUpdateEventHandler::_operateOnNode()" << std::endl;

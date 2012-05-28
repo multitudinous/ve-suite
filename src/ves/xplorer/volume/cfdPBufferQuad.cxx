@@ -87,7 +87,7 @@ cfdPBufferQuad::cfdPBufferQuad(
 {
     _nSlices = pbQuad._nSlices;
     _curSlice = pbQuad._curSlice;
-    _nearFarSlices = new float[_nSlices+1];
+    _nearFarSlices = new float[_nSlices + 1];
     _slices = new float[_nSlices];
     for( unsigned int i = 0; i < _nSlices; i++ )
     {
@@ -209,7 +209,7 @@ void cfdPBufferQuad::CalculateSlices()
     {
         if( !_nearFarSlices )
         {
-            _nearFarSlices = new float[_nSlices+1];
+            _nearFarSlices = new float[_nSlices + 1];
         }
         //transform our polys to view space
         osg::Matrix viewMatrix;
@@ -255,7 +255,7 @@ void cfdPBufferQuad::_drawAutoTexCoords() const
     glPushMatrix();
     glLoadIdentity();
     glFrustum( _bounds[0], _bounds[1], _bounds[2], _bounds[3],
-               _nearFarSlices[curSlice+1], _nearFarSlices[curSlice] );
+               _nearFarSlices[curSlice + 1], _nearFarSlices[curSlice] );
     //set the camera
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix();
@@ -442,7 +442,9 @@ osg::BoundingBox cfdPBufferQuad::BBoxCallback::computeBound(
     osg::BoundingBox bbox;
     bbox.init();
     if( !_pbq->_bbSet )
+    {
         return bbox;
+    }
 
     float minBBox[3];
     float maxBBox[3];

@@ -137,7 +137,7 @@ public:
     const std::string Query( const std::string& command );
     ///Thread to run the ORB
     void OrbRun();
-    
+
 private:
     void CreateCORBAModule( void );
 
@@ -161,12 +161,12 @@ private:
     int peArgc;
     char** peArgv;
     ves::open::xml::CommandPtr nullTextPtr;
-    
+
     ACE_Time_Value mTimeOutValue;
     ACE_Time_Value mTimeZero;
-    
+
     ///A mutex to protect thread
-    vpr::Mutex mLock;  
+    vpr::Mutex mLock;
     ///Thread for running the orb
     vpr::Thread* m_orbThread;
 };

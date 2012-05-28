@@ -59,14 +59,14 @@ using namespace ves::open::xml;
 ///Constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
 ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler( const ChangeBackgroundColorEventHandler& rhs )
-        : 
-        ves::xplorer::event::EventHandler( rhs )
+    :
+    ves::xplorer::event::EventHandler( rhs )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                     //
@@ -104,6 +104,6 @@ void ChangeBackgroundColorEventHandler::UpdateBackgroundColor( bool const, std::
 {
     ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor( color );
     ves::xplorer::EnvironmentHandler::instance()->
-        GetHeadsUpDisplay()->SetTextColor( color );
+    GetHeadsUpDisplay()->SetTextColor( color );
 }
 ////////////////////////////////////////////////////////////////////////////////

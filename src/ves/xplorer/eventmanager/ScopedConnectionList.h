@@ -91,7 +91,7 @@ public:
     /// to other elements during erasure. These two advantages should make up for
     /// the slight increase in storage overhead.
     typedef std::list< boost::shared_ptr< boost::signals2::scoped_connection > > ConnectionList_type;
-    
+
     ScopedConnectionList( );
     ScopedConnectionList( const ScopedConnectionList& orig );
     virtual ~ScopedConnectionList( );
@@ -125,7 +125,10 @@ public:
     boost::shared_ptr< boost::signals2::scoped_connection > GetLastConnection();
 
     /// Returns a weak pointer to this object without the need to create a shared ptr first.
-    boost::weak_ptr< ScopedConnectionList > GetWeakPtr() const { return this_; }
+    boost::weak_ptr< ScopedConnectionList > GetWeakPtr() const
+    {
+        return this_;
+    }
 
 private:
     boost::shared_ptr< ScopedConnectionList > this_;

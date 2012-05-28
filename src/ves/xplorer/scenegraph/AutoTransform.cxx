@@ -137,19 +137,19 @@ bool AutoTransform::computeLocalToWorldMatrix(
     case osg::NodeVisitor::NODE_VISITOR:
     {
         //osgUtil::IntersectionVisitor* iv =
-            //dynamic_cast< osgUtil::IntersectionVisitor* >( nv );
+        //dynamic_cast< osgUtil::IntersectionVisitor* >( nv );
         if( m_currentGLTransformInfo != GLTransformInfoPtr() )
         {
             //if( m_autoScaleToScreen )
             {
-                view = &(m_currentGLTransformInfo->GetViewMatrixOSG());
+                view = &( m_currentGLTransformInfo->GetViewMatrixOSG() );
             }
             /*else
             {
-                view = &(m_currentGLTransformInfo->GetCenterViewMatrixOSG());                
+                view = &(m_currentGLTransformInfo->GetCenterViewMatrixOSG());
             }*/
 
-            projection = &(m_currentGLTransformInfo->GetProjectionMatrixOSG());
+            projection = &( m_currentGLTransformInfo->GetProjectionMatrixOSG() );
             window = m_currentGLTransformInfo->GetWindowMatrixOSG();
         }
 
@@ -161,8 +161,8 @@ bool AutoTransform::computeLocalToWorldMatrix(
         osg::Camera* camera = cv->getCurrentCamera();
         if( camera )
         {
-            view = &(camera->getViewMatrix());
-            projection = &(camera->getProjectionMatrix());
+            view = &( camera->getViewMatrix() );
+            projection = &( camera->getProjectionMatrix() );
             window = camera->getViewport()->computeWindowMatrix();
         }
 
@@ -186,7 +186,7 @@ bool AutoTransform::computeLocalToWorldMatrix(
         //Make it z up
         gmtl::Point3d jugglerHeadPoint =
             gmtl::makeTrans< gmtl::Point3d >( ves::xplorer::scenegraph::SceneManager::instance()->GetHeadMatrix() );
-        
+
         ///Transform from juggler space to world space
         gmtl::Point3d worldWandMat =
             ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix() * jugglerHeadPoint;
@@ -205,8 +205,8 @@ bool AutoTransform::computeLocalToWorldMatrix(
             double fLeft, fRight, fBottom, fTop, fNear, fFar;
             projection->getFrustum( fLeft, fRight, fBottom, fTop, fNear, fFar );
             osg::Matrixd ortho =
-                osg::Matrixd::ortho2D(  fLeft, fRight, fBottom, fTop );
-            osg::Matrixd mvpwMatrix = (*view) * ortho * window;
+                osg::Matrixd::ortho2D( fLeft, fRight, fBottom, fTop );
+            osg::Matrixd mvpwMatrix = ( *view ) * ortho * window;
 
             osg::Vec3d screenPosition = m_position * mvpwMatrix;
             screenPosition.z() = 0.0;
@@ -223,8 +223,8 @@ bool AutoTransform::computeLocalToWorldMatrix(
         eyeVector = osg::Vec3d( 0.0, 1.0, 0.0 ) * eyeVector.length();
         osg::Vec3d center( 0.0, 0.0, 0.0 );
         osg::Matrixd scaleView = osg::Matrixd::lookAt(
-            eyeVector, center, osg::Vec3d( 0.0, 0.0, 1.0 ) );
-        osg::Matrixd mvpwMatrix = scaleView * (*projection) * window;
+                                     eyeVector, center, osg::Vec3d( 0.0, 0.0, 1.0 ) );
+        osg::Matrixd mvpwMatrix = scaleView * ( *projection ) * window;
         osg::Vec3d ps = center * mvpwMatrix;
         osg::Vec3d pe = osg::Vec3d( 1.0, 0.0, 0.0 ) * mvpwMatrix;
         double size = 1.0 / ( pe - ps ).length();
@@ -291,7 +291,7 @@ bool AutoTransform::computeWorldToLocalMatrix(
     {
         matrix.postMultTranslate( -m_position );
         matrix.postMultRotate( m_rotation.inverse() );
-        matrix.postMultScale( osg::Vec3d( 1.0 /_scale.x(), 1.0 / _scale.y(), 1.0 / _scale.z() ) );
+        matrix.postMultScale( osg::Vec3d( 1.0 / _scale.x(), 1.0 / _scale.y(), 1.0 / _scale.z() ) );
         matrix.postMultTranslate( m_pivotPoint );
     }
     else //absolute

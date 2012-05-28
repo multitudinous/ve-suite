@@ -106,7 +106,7 @@ public:
                      const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION,
                      const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE,
                      long style = SYMBOL_DATASETLOADERUI_STYLE,
-                     ves::open::xml::model::ModelPtr veModel = 
+                     ves::open::xml::model::ModelPtr veModel =
                          ves::open::xml::model::ModelPtr() );
 
     enum
@@ -140,7 +140,7 @@ public:
                  const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION,
                  const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE,
                  long style = SYMBOL_DATASETLOADERUI_STYLE,
-                 ves::open::xml::model::ModelPtr veModel = 
+                 ves::open::xml::model::ModelPtr veModel =
                      ves::open::xml::model::ModelPtr() );
 
     /// Creates the controls and sizers
@@ -148,7 +148,7 @@ public:
     ///Send commands to xplorer as events are processed
     void SendCommandToXplorer( ves::open::xml::DataValuePairSharedPtr tempObject );
 
-////@begin DataSetLoaderUI event handler declarations
+    ////@begin DataSetLoaderUI event handler declarations
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
     void OnLoadFile( wxCommandEvent& event );
@@ -181,7 +181,7 @@ public:
     void OnInformationPacketChangeName( wxCommandEvent& event );
 
     void OnSurfaceWrapCheckBox( wxCommandEvent& event );
-    
+
     std::string GetActiveDataSetName();
     ves::open::xml::ParameterBlockPtr GetParamBlock();
 
@@ -193,16 +193,16 @@ public:
     ///Set the text controls when the text is modified
     void SetTextCtrls( void );
 
-////@end DataSetLoaderUI event handler declarations
+    ////@end DataSetLoaderUI event handler declarations
 
-////@begin DataSetLoaderUI member function declarations
+    ////@begin DataSetLoaderUI member function declarations
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
     /// Retrieves icon resources
     wxIcon GetIconResource( const wxString& name );
-////@end DataSetLoaderUI member function declarations
+    ////@end DataSetLoaderUI member function declarations
 
     /// Should we show tooltips?
     static bool ShowToolTips();
@@ -226,7 +226,7 @@ private:
     wxStaticBox* itemStaticBoxSizer12Static;
     wxStaticBox* itemStaticBoxSizer15Static;
     wxStaticBox* itemStaticBoxSizer19Static;
-    
+
     wxCheckBox* m_surfaceWrapChkBox;
     std::set< wxString > textureDirs;
 
@@ -234,13 +234,13 @@ private:
     ves::open::xml::ParameterBlockPtr mParamBlock;
 
     int lastAddition;
-    
+
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
-    
+
     DECLARE_EVENT_TABLE()
 };
 }

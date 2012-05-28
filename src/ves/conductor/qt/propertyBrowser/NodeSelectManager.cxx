@@ -38,29 +38,35 @@ namespace ves
 namespace conductor
 {
 
-QString NodeSelectManager::value(const QtProperty *property) const
+QString NodeSelectManager::value( const QtProperty* property ) const
 {
-    if (!theValues.contains(property))
+    if( !theValues.contains( property ) )
+    {
         return QString();
+    }
     return theValues[property].value;
 }
 
-void NodeSelectManager::setValue(QtProperty *property, const QString &val)
+void NodeSelectManager::setValue( QtProperty* property, const QString& val )
 {
-    if (!theValues.contains(property))
+    if( !theValues.contains( property ) )
+    {
         return;
+    }
 
     Data data = theValues[property];
 
-    if (data.value == val)
+    if( data.value == val )
+    {
         return;
+    }
 
     data.value = val;
 
     theValues[property] = data;
 
-    emit propertyChanged(property);
-    emit valueChanged(property, data.value);
+    emit propertyChanged( property );
+    emit valueChanged( property, data.value );
 }
 
 }

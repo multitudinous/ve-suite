@@ -58,20 +58,20 @@ class VE_GUIPLUGINS_EXPORTS MinervaDialog : public wxDialog
 public:
     typedef wxDialog BaseClass;
 
-    MinervaDialog ( wxWindow *parent, wxWindowID id );
+    MinervaDialog( wxWindow* parent, wxWindowID id );
     virtual ~MinervaDialog();
 
     void AddDefaultLayers();
 
-    void AddElevationLayerWMS ( wxCommandEvent& event );
-    void AddElevationLayerFileSystem ( wxCommandEvent& event );
-    void RemoveElevationLayer ( wxCommandEvent& event );
+    void AddElevationLayerWMS( wxCommandEvent& event );
+    void AddElevationLayerFileSystem( wxCommandEvent& event );
+    void RemoveElevationLayer( wxCommandEvent& event );
 
-    void AddRasterLayerWMS ( wxCommandEvent& event );
-    void AddRasterLayerFileSystem ( wxCommandEvent& event );
-    void RemoveRasterLayer ( wxCommandEvent& event );
+    void AddRasterLayerWMS( wxCommandEvent& event );
+    void AddRasterLayerFileSystem( wxCommandEvent& event );
+    void RemoveRasterLayer( wxCommandEvent& event );
 
-    void InitalizeFromCommands ( ves::open::xml::CommandPtr elevationGroupCommand, ves::open::xml::CommandPtr rasterGroupCommand );
+    void InitalizeFromCommands( ves::open::xml::CommandPtr elevationGroupCommand, ves::open::xml::CommandPtr rasterGroupCommand );
 
     void NavigateToElevationLayer( wxCommandEvent& event );
     void NavigateToRasterLayer( wxCommandEvent& event );
@@ -80,30 +80,30 @@ private:
 
     typedef std::vector<std::string> LayerIds;
 
-    static void _addLayerFileSystem ( 
-      const std::string& commandName, 
-      const std::string& filename,
-      wxListBox *layersList, 
-      LayerIds &guids,
-      ves::open::xml::CommandPtr groupCommand );
-    static void _addLayer ( 
-      const std::string& commandName, 
-      const std::string& server, 
-      const std::string& layers, 
-      const std::string& styles, 
-      const std::string& format,
-      wxListBox *layersList, 
-      LayerIds &guids,
-      ves::open::xml::CommandPtr groupCommand );
-    static void _removeLayer ( 
-      const std::string& commandName, 
-      wxListBox *layersList, 
-      LayerIds &guids,
-      ves::open::xml::CommandPtr groupCommand );
-    static void _initializeFromCommand (
-      ves::open::xml::CommandPtr groupCommand,
-      wxListBox *layersList, 
-      LayerIds &guids );
+    static void _addLayerFileSystem(
+        const std::string& commandName,
+        const std::string& filename,
+        wxListBox* layersList,
+        LayerIds& guids,
+        ves::open::xml::CommandPtr groupCommand );
+    static void _addLayer(
+        const std::string& commandName,
+        const std::string& server,
+        const std::string& layers,
+        const std::string& styles,
+        const std::string& format,
+        wxListBox* layersList,
+        LayerIds& guids,
+        ves::open::xml::CommandPtr groupCommand );
+    static void _removeLayer(
+        const std::string& commandName,
+        wxListBox* layersList,
+        LayerIds& guids,
+        ves::open::xml::CommandPtr groupCommand );
+    static void _initializeFromCommand(
+        ves::open::xml::CommandPtr groupCommand,
+        wxListBox* layersList,
+        LayerIds& guids );
 
     wxListBox* _elevationLayersList;
     wxButton* _addElevationLayerButton;
@@ -120,13 +120,13 @@ private:
 
     ves::open::xml::CommandPtr _rasterGroupCommand;
     ves::open::xml::CommandPtr _elevationGroupCommand;
-    
+
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
-    
+
     DECLARE_EVENT_TABLE();
 };
 

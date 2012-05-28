@@ -55,15 +55,15 @@ class wxButton;
 class VE_GUIPLUGINS_EXPORTS MinervaWmsDialog : public wxDialog
 {
 public:
-  typedef wxDialog BaseClass;
+    typedef wxDialog BaseClass;
 
-  MinervaWmsDialog ( wxWindow *parent, wxWindowID id );
-  virtual ~MinervaWmsDialog();
+    MinervaWmsDialog( wxWindow* parent, wxWindowID id );
+    virtual ~MinervaWmsDialog();
 
-  std::string server() ;
-  std::string layers() ;
-  std::string styles() ;
-  std::string format() const;
+    std::string server() ;
+    std::string layers() ;
+    std::string styles() ;
+    std::string format() const;
 
 private:
 

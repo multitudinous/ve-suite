@@ -53,7 +53,7 @@ namespace volume
  * Dummy class to represent NULL Database Values
  */
 struct DBNullValue
-    {};
+{};
 
 /**
  * Raw BinaryData
@@ -66,7 +66,7 @@ public:
      * Does not allocate the array.
      */
     BinaryData()
-            : mSize( 0 ), mData( NULL )
+        : mSize( 0 ), mData( NULL )
     {}
 
     /**
@@ -74,7 +74,7 @@ public:
      * Sets the size and allocates the array.
      */
     BinaryData( const size_t size )
-            : mSize( size ), mData( new unsigned char[size] )
+        : mSize( size ), mData( new unsigned char[size] )
     {}
 
     /**
@@ -90,7 +90,7 @@ public:
      *       this class assumes ownership of the given data pointer!
      */
     BinaryData( const size_t size, unsigned char* data )
-            : mSize( size ), mData( data )
+        : mSize( size ), mData( data )
     {}
 
     /**
@@ -98,7 +98,7 @@ public:
      * Duplicates another BinaryData buffer.
      */
     BinaryData( const BinaryData& src )
-            : mSize( src.mSize ), mData( new unsigned char[src.mSize] )
+        : mSize( src.mSize ), mData( new unsigned char[src.mSize] )
     {
         memcpy( mData, src.mData, mSize );
     }
@@ -164,9 +164,9 @@ public:
      */
     bool operator==( const BinaryData& rhs )
     {
-        return (( &rhs == this ) ||
-                (( mSize == rhs.mSize ) &&
-                 ( memcmp( mData, rhs.mData, mSize ) == 0 ) ) );
+        return ( ( &rhs == this ) ||
+                 ( ( mSize == rhs.mSize ) &&
+                   ( memcmp( mData, rhs.mData, mSize ) == 0 ) ) );
     }
 
 private:
@@ -175,7 +175,7 @@ private:
     size_t                                          mSize;
 
     /// The raw data.
-    unsigned char *                                 mData;
+    unsigned char*                                  mData;
 
 };
 /// Typedef for the type of results that can be retrieved.

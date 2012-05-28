@@ -148,11 +148,11 @@ public:
     ///
     ///\return
     virtual Pointer* AsPointer();
-    
+
     ///
     ///\return
     virtual GameController* AsGameController();
-    
+
     ///
     ///\return
     const Device::Type& GetType() const;
@@ -165,7 +165,10 @@ public:
     virtual void UpdateCommand();
 
     ///Initialize the device if needed
-    virtual void Initialize(){;}
+    virtual void Initialize()
+    {
+        ;
+    }
 
     ///Check if the head collides with the rest of the objects in the scene
     ///\param headPositionInWorld The head position in world coordinates
@@ -192,20 +195,20 @@ public:
     ///Set the reset position for the world
     void SetResetWorldPosition( osg::Quat* quat, std::vector< double >* pos );
 
-	///Does not let the user go below the ground plane at 0,0,0
+    ///Does not let the user go below the ground plane at 0,0,0
     ///\param input Flag to insure translation does not go below zero plane
     void SetSubZeroFlag( int input );
 
-	///Does not let user go to anything but the ground plane at 0,0,0
-	///\param input Flag to insure translation doesn't leave zero plane
-	void SetZEqualsZeroFlag( int input);
+    ///Does not let user go to anything but the ground plane at 0,0,0
+    ///\param input Flag to insure translation doesn't leave zero plane
+    void SetZEqualsZeroFlag( int input );
 
     ///Used as the slot for nav control signals
     void UpdateZEqualZero( bool const& enable );
-    
+
     ///Used as the slot for nav control signals
     void UpdateZGreaterZero( bool const& enable );
-    
+
 protected:
     ///Process the selection of a piece of geometry
     virtual void ProcessSelection();
@@ -223,12 +226,12 @@ protected:
 
     ///Ensure that the camera stays above ground.
     void EnsureCameraStaysAboveGround( const gmtl::Matrix44d& headMatrix, double* translation, const osg::Quat& world_quat, int m_subzeroFlag, int m_zEqualsZeroFlag = 0 );
- 
-	///<Camera above the zero plane flag
-	int m_subzeroFlag; 
-	
-	///<Camera at the zero plane flag
-	int m_zEqualsZeroFlag; 
+
+    ///<Camera above the zero plane flag
+    int m_subzeroFlag;
+
+    ///<Camera at the zero plane flag
+    int m_zEqualsZeroFlag;
 
     ///Device is enabled
     bool m_enabled;

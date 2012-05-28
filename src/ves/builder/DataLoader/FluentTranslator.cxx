@@ -60,14 +60,14 @@ FluentTranslator::~FluentTranslator()
 {}
 
 void FluentTranslator::FluentPreTranslateCbk::Preprocess( int argc, char** argv,
-                                                          cfdTranslatorToVTK* toVTK )
+        cfdTranslatorToVTK* toVTK )
 {
     PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 
 void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                      cfdTranslatorToVTK* toVTK,
-                                                      vtkAlgorithm*& dataReader )
+        cfdTranslatorToVTK* toVTK,
+        vtkAlgorithm*& dataReader )
 {
     FluentTranslator* FluentToVTK =
         dynamic_cast< FluentTranslator* >( toVTK );
@@ -75,7 +75,7 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
     {
         return;
     }
-    
+
     //check and see if data file is present with cas file
     std::string casFile = FluentToVTK->GetFile( 0 );
     size_t period = casFile.rfind( "." );
@@ -84,8 +84,8 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
     casFileMinusExtension.append( ".dat" );
     if( !ves::xplorer::util::fileIO::isFileReadable( casFileMinusExtension ) )
     {
-        std::cerr << "FLUENT dat file is not present with cas file." 
-            << std::endl;
+        std::cerr << "FLUENT dat file is not present with cas file."
+                  << std::endl;
         return;
     }
     //now convert cas and dat file
@@ -108,10 +108,10 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
     ///For traversal of nested multigroupdatasets
     mgdIterator->VisitOnlyLeavesOn();
     mgdIterator->GoToFirstItem();
-           
+
     while( !mgdIterator->IsDoneWithTraversal() )
     {
-        vtkDataSet* currentDataset = 
+        vtkDataSet* currentDataset =
             dynamic_cast<vtkDataSet*>( mgdIterator->GetCurrentDataObject() );
         CreateVectorFromScalar( currentDataset );
         mgdIterator->GoToNextItem();
@@ -131,8 +131,8 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
 void FluentTranslator::DisplayHelp( void )
 {
     std::cout << "|\tFluent Translator Usage:" << std::endl
-        << "\t -singleFile <filename_to_load> -o <output_dir> "
-        << "-outFileName <output_filename> -loader cas -w file" << std::endl;
+              << "\t -singleFile <filename_to_load> -o <output_dir> "
+              << "-outFileName <output_filename> -loader cas -w file" << std::endl;
 }
 
 void FluentTranslator::FluentTranslateCbk::CreateVectorFromScalar( vtkDataSet* dataSet )
@@ -142,7 +142,7 @@ void FluentTranslator::FluentTranslateCbk::CreateVectorFromScalar( vtkDataSet* d
     {
         return;
     }
-    
+
     vtkDataArray* xComp = cData->GetArray( "X_VELOCITY" );
     vtkDataArray* yComp = cData->GetArray( "Y_VELOCITY" );
     vtkDataArray* zComp = cData->GetArray( "Z_VELOCITY" );
@@ -171,17 +171,17 @@ void FluentTranslator::FluentTranslateCbk::CreateVectorFromScalar( vtkDataSet* d
     {
         if( xComp )
         {
-            vec[ 0 ] = xComp->GetTuple1( i );            
+            vec[ 0 ] = xComp->GetTuple1( i );
         }
-        
+
         if( yComp )
         {
-            vec[ 1 ] = yComp->GetTuple1( i );            
+            vec[ 1 ] = yComp->GetTuple1( i );
         }
-        
+
         if( zComp )
         {
-            vec[ 2 ] = zComp->GetTuple1( i );            
+            vec[ 2 ] = zComp->GetTuple1( i );
         }
 
         velocityVec->InsertNextTupleValue( vec );

@@ -74,8 +74,8 @@ TransferFunction::TransferFunction( const TransferFunction& rhs )
     _types[2] = rhs._types[2];
     _types[3] = rhs._types[3];
     _updateCallback = rhs._updateCallback;
-    _classification = new float[_resolution[0]*_resolution[1]*_resolution[2]*4];
-    _textureData = new unsigned char[_resolution[0]*_resolution[1]*_resolution[2]*4];
+    _classification = new float[_resolution[0]*_resolution[1]*_resolution[2] * 4];
+    _textureData = new unsigned char[_resolution[0]*_resolution[1]*_resolution[2] * 4];
 
     unsigned int resolution = _resolution[0] * _resolution[1] * _resolution[2];
     for( unsigned int i = 0; i < resolution; i++ )
@@ -108,7 +108,7 @@ TransferFunction::~TransferFunction()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TransferFunction::SetComponentType( ComponentType type,
-                                         unsigned int component )
+        unsigned int component )
 {
     _types[component] = type;
 }
@@ -238,8 +238,8 @@ TransferFunction& TransferFunction::operator=( const TransferFunction& rhs )
             delete [] _textureData;
             _textureData = 0;
         }
-        _classification = new float[_resolution[0]*_resolution[1]*_resolution[2]*4];
-        _textureData = new unsigned char[_resolution[0]*_resolution[1]*_resolution[2]*4];
+        _classification = new float[_resolution[0]*_resolution[1]*_resolution[2] * 4];
+        _textureData = new unsigned char[_resolution[0]*_resolution[1]*_resolution[2] * 4];
 
         unsigned int resolution = _resolution[0] * _resolution[1] * _resolution[2];
         for( unsigned int i = 0; i < resolution; i++ )

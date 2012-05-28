@@ -61,25 +61,25 @@ class ADUOVarDialog : public wxDialog
 {
 public:
     ///Constructor
-    ADUOVarDialog(wxWindow *parent, wxEvtHandler *tempParent,
-        wxWindowID id = 1, const wxString &title = wxT("ADUOVarDialog"),
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxDefaultSize,
-        long style = wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU |
-        wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX);
+    ADUOVarDialog( wxWindow* parent, wxEvtHandler* tempParent,
+                   wxWindowID id = 1, const wxString& title = wxT( "ADUOVarDialog" ),
+                   const wxPoint& pos = wxDefaultPosition,
+                   const wxSize& size = wxDefaultSize,
+                   long style = wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU |
+                                wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX );
 
     ///Destructor
     virtual ~ADUOVarDialog();
 
     ///???
-    void CancelButtonClick(wxCommandEvent& event);
+    void CancelButtonClick( wxCommandEvent& event );
 
     ///???
-    void SetButtonClick(wxCommandEvent& event);
+    void SetButtonClick( wxCommandEvent& event );
 
     ///???
-    void SetData( wxString name = wxT(""), wxString description = wxT(""),
-        wxString value = wxT(""), wxString units = wxT("") );
+    void SetData( wxString name = wxT( "" ), wxString description = wxT( "" ),
+                  wxString value = wxT( "" ), wxString units = wxT( "" ) );
 
     ///???
     void UpdateSizes();
@@ -89,36 +89,36 @@ public:
 
     ///???
     void SetServiceList(
-        ves::conductor::util::CORBAServiceList * serviceList );
+        ves::conductor::util::CORBAServiceList* serviceList );
 
     ///???
     wxString m_compName;
 
     ///???
-    ves::conductor::util::CORBAServiceList * m_serviceList;
+    ves::conductor::util::CORBAServiceList* m_serviceList;
 
 private:
-    wxButton *CancelButton;
-    wxButton *SetButton;
-    wxButton *MonitorButton;
-    wxBoxSizer *WxBoxSizer1;
-    wxGrid *WxGrid;
-    wxFlexGridSizer *WxFlexGridSizer;
+    wxButton* CancelButton;
+    wxButton* SetButton;
+    wxButton* MonitorButton;
+    wxBoxSizer* WxBoxSizer1;
+    wxGrid* WxGrid;
+    wxFlexGridSizer* WxFlexGridSizer;
     std::vector< int > rowsChanged;
     int m_monitorRow;
-    wxEvtHandler * m_parent;
+    wxEvtHandler* m_parent;
     wxString prefix;
-    
+
     ///???
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >
-            ( wxConvCurrent->cWX2MB( data ) ) );
+                             ( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
 
     ///???
-    void OnClose(wxCloseEvent& event);
+    void OnClose( wxCloseEvent& event );
 
     ///???
     void CreateGUIControls();

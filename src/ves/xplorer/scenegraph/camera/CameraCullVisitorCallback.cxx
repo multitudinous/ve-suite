@@ -57,11 +57,11 @@ void CameraCullVisitorCallback::operator()( osg::Node* node, osg::NodeVisitor* n
 {
     osg::Camera* tempCamera = static_cast< osg::Camera* >( node );
     std::cout << tempCamera << std::endl;
-    if( nv->getVisitorType() == osg::NodeVisitor::CULL_VISITOR  )
+    if( nv->getVisitorType() == osg::NodeVisitor::CULL_VISITOR )
     {
         osgUtil::CullVisitor* tempVisitor = static_cast< osgUtil::CullVisitor* >( nv );
         tempVisitor->getRenderStage()->setCameraRequiresSetUp( true );
     }
-    traverse(node,nv);
+    traverse( node, nv );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -59,15 +59,15 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 ViewEventHandler::ViewEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ViewEventHandler::ViewEventHandler( const ViewEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler( rhs )
+    :
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }

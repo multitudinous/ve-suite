@@ -106,10 +106,10 @@ CameraManager::CameraManager()
     //Initialize m_texGenNode
     m_texGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
     m_texGenNode->setTextureUnit( 6 );
-    
-    //I am not sure if this is correct or not but for now I am disabling the 
-    //manager to help debug our new signals and slots. When we wire up the 
-    //CPT we will need to review this change and potentially remove the 
+
+    //I am not sure if this is correct or not but for now I am disabling the
+    //manager to help debug our new signals and slots. When we wire up the
+    //CPT we will need to review this change and potentially remove the
     //Enable code below.
     Enable( false );
 }
@@ -146,7 +146,7 @@ bool CameraManager::addChild( std::string const& name )
     ///is in VR Juggler space (y up) so that when the view matrix is multiplied
     ///in the 90 is taken back out.
     myMat = ves::xplorer::scenegraph::SceneManager::instance()->
-        GetGlobalViewMatrix() * myMat;
+            GetGlobalViewMatrix() * myMat;
     dcs.SetMat( myMat );
 
     return osg::Group::addChild( cameraObject.get() );
@@ -315,7 +315,7 @@ void CameraManager::SetActiveCameraObject(
 
     if( cameraObject )
     {
-        cameraObject->SetRenderQuadTexture( *(m_rttQuad.get()) );
+        cameraObject->SetRenderQuadTexture( *( m_rttQuad.get() ) );
         m_rttQuadTransform->setNodeMask( 1 );
         cameraObject->EnableCamera();
         cameraObject->Update();
@@ -330,12 +330,12 @@ void CameraManager::SetActiveCameraObject(
 
     if( m_projectEffect )
     {
-        bool enableGlobalProjectionEffects(cameraObject);
+        bool enableGlobalProjectionEffects( cameraObject );
         //If we are setting the active camera to null AND we have selected that
-        //the projection effect should be used for all cameras then we need to 
-        //disable all projection effects across all cameras. We use the 
-        //cameraObject pointer in conjuction with the m_projectEffect as the 
-        //mechanism to determine if this is the case. 
+        //the projection effect should be used for all cameras then we need to
+        //disable all projection effects across all cameras. We use the
+        //cameraObject pointer in conjuction with the m_projectEffect as the
+        //mechanism to determine if this is the case.
         DisplayProjectionEffect( enableGlobalProjectionEffects, false );
     }
 
@@ -372,47 +372,47 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     cameraViewQuadVertices->resize( 4 );
     if( SceneManager::instance()->IsDesktopMode() )
     {
-        (*cameraViewQuadVertices)[ 0 ].set( 0.0, 0.0, 0.0 );
-        (*cameraViewQuadVertices)[ 1 ].set( 1.0, 0.0, 0.0 );
-        (*cameraViewQuadVertices)[ 2 ].set( 1.0, 1.0, 0.0 );
-        (*cameraViewQuadVertices)[ 3 ].set( 0.0, 1.0, 0.0 );
+        ( *cameraViewQuadVertices )[ 0 ].set( 0.0, 0.0, 0.0 );
+        ( *cameraViewQuadVertices )[ 1 ].set( 1.0, 0.0, 0.0 );
+        ( *cameraViewQuadVertices )[ 2 ].set( 1.0, 1.0, 0.0 );
+        ( *cameraViewQuadVertices )[ 3 ].set( 0.0, 1.0, 0.0 );
 
         //Set initial scale to match quad size in UI
         m_rttQuadTransform->setScale( osg::Vec3( 300.0, 300.0, 1.0 ) );
     }
     else
     {
-        (*cameraViewQuadVertices)[ 0 ].set( -1.5,  0.01, -1.5 );
-        (*cameraViewQuadVertices)[ 1 ].set(  1.5,  0.01, -1.5 );
-        (*cameraViewQuadVertices)[ 2 ].set(  1.5,  0.01,  1.5 );
-        (*cameraViewQuadVertices)[ 3 ].set( -1.5,  0.01,  1.5 );
+        ( *cameraViewQuadVertices )[ 0 ].set( -1.5,  0.01, -1.5 );
+        ( *cameraViewQuadVertices )[ 1 ].set( 1.5,  0.01, -1.5 );
+        ( *cameraViewQuadVertices )[ 2 ].set( 1.5,  0.01,  1.5 );
+        ( *cameraViewQuadVertices )[ 3 ].set( -1.5,  0.01,  1.5 );
     }
 
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
     quadTexCoords->resize( 4 );
-    (*quadTexCoords)[ 0 ].set( 0.0, 0.0 );
-    (*quadTexCoords)[ 1 ].set( 1.0, 0.0 );
-    (*quadTexCoords)[ 2 ].set( 1.0, 1.0 );
-    (*quadTexCoords)[ 3 ].set( 0.0, 1.0 );
+    ( *quadTexCoords )[ 0 ].set( 0.0, 0.0 );
+    ( *quadTexCoords )[ 1 ].set( 1.0, 0.0 );
+    ( *quadTexCoords )[ 2 ].set( 1.0, 1.0 );
+    ( *quadTexCoords )[ 3 ].set( 0.0, 1.0 );
 
     //Create the quad geometry
     osg::ref_ptr< osg::Geometry > quadGeometry = new osg::Geometry();
     quadGeometry->setVertexArray( cameraViewQuadVertices.get() );
-    quadGeometry->addPrimitiveSet( new osg::DrawArrays( 
-        osg::PrimitiveSet::QUADS, 0, cameraViewQuadVertices->size() ) );
+    quadGeometry->addPrimitiveSet( new osg::DrawArrays(
+                                       osg::PrimitiveSet::QUADS, 0, cameraViewQuadVertices->size() ) );
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
 
     //
     {
         osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
         std::string fragmentSource =
-        "uniform sampler2D baseMap; \n"
+            "uniform sampler2D baseMap; \n"
 
-        "void main() \n"
-        "{ \n"
+            "void main() \n"
+            "{ \n"
             "gl_FragData[ 0 ] = texture2D( baseMap, gl_TexCoord[ 0 ].xy ); \n"
-        "} \n";
+            "} \n";
 
         fragmentShader->setType( osg::Shader::FRAGMENT );
         fragmentShader->setShaderSource( fragmentSource );
@@ -436,7 +436,7 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
     GLushort idxLoops[ 4 ] = { 0, 1, 2, 3 };
     osg::ref_ptr< osg::Geometry > lineGeometry = new osg::Geometry();
     lineGeometry->addPrimitiveSet( new osg::DrawElementsUShort(
-        osg::PrimitiveSet::LINE_LOOP, 4, idxLoops ) );
+                                       osg::PrimitiveSet::LINE_LOOP, 4, idxLoops ) );
 
     osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
     colorArray->push_back( osg::Vec4( 0.33, 0.87, 0.56, 1.0 ) );
@@ -553,7 +553,7 @@ void CameraManager::SetPictureMode( bool isPictureMode )
     if( m_isPictureMode )
     {
         addChild( "HeadShot" );
-        m_headShotCamera = 
+        m_headShotCamera =
             ConvertNodeToCameraObject( getChild( getNumChildren() - 1 ) );
         SetActiveCameraObject( m_headShotCamera.get() );
         m_headShotCamera->MakeHeadTrackedCamera();

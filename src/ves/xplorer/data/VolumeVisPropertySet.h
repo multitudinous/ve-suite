@@ -69,16 +69,16 @@ public:
 
     ///Setup the live properties
     virtual void EnableLiveProperties( bool live );
-    
+
 protected:
     ///Slot connected to the value change of  display seed points
     ///\param property The bool value for the seed point display flag
     //void UpdateSeedPointDisplay( PropertyPtr property );
     ///Create the skeleton
     virtual void CreateSkeleton();
-    
+
     void ActivateVoilumeVis();
-    
+
     void UpdateScalarRange( PropertyPtr property );
 
     void UpdateScalar( PropertyPtr property );
@@ -88,17 +88,17 @@ protected:
     ///????
     typedef boost::signals2::signal< void ( std::string const&, std::string const&, double const&, double const& ) > UpdateScalar_type;
     UpdateScalar_type m_updateTBETScalar;
-/*
-    ///Update signal to control turning off and on seed points
-    typedef boost::signals2::signal< void ( const std::string&, const bool ) > ActivateSeedPointsSignal_type;
-    ActivateSeedPointsSignal_type m_activateSeedPoints;
-    ///Update signal to control the bounding box for seed points
-    typedef boost::signals2::signal< void ( const std::vector< double >& ) > UpdateSeedPointBoundsSignal_type;
-    UpdateSeedPointBoundsSignal_type m_updateSeedPointBounds;
-    ///Update signal to control changing the active dataset
-    typedef boost::signals2::signal< void ( const std::string& ) > UpdateActiveDataSetSignal_type;
-    UpdateActiveDataSetSignal_type m_activeDataSet;
-*/
+    /*
+        ///Update signal to control turning off and on seed points
+        typedef boost::signals2::signal< void ( const std::string&, const bool ) > ActivateSeedPointsSignal_type;
+        ActivateSeedPointsSignal_type m_activateSeedPoints;
+        ///Update signal to control the bounding box for seed points
+        typedef boost::signals2::signal< void ( const std::vector< double >& ) > UpdateSeedPointBoundsSignal_type;
+        UpdateSeedPointBoundsSignal_type m_updateSeedPointBounds;
+        ///Update signal to control changing the active dataset
+        typedef boost::signals2::signal< void ( const std::string& ) > UpdateActiveDataSetSignal_type;
+        UpdateActiveDataSetSignal_type m_activeDataSet;
+    */
 };
 
 } // namespace data

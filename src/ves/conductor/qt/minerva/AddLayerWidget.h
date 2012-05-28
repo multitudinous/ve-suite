@@ -36,16 +36,44 @@
 
 #include <QtGui/QWidget>
 
-namespace Minerva { namespace QtWidgets { template <class Layer> class AddNetworkLayerWidget; } }
-namespace Minerva { namespace Core { namespace Layers { class RasterLayerWms; } } }
-namespace Minerva { namespace Core { namespace Data { class Container; } } }
+namespace Minerva
+{
+namespace QtWidgets
+{
+template <class Layer> class AddNetworkLayerWidget;
+}
+}
+namespace Minerva
+{
+namespace Core
+{
+namespace Layers
+{
+class RasterLayerWms;
+}
+}
+}
+namespace Minerva
+{
+namespace Core
+{
+namespace Data
+{
+class Container;
+}
+}
+}
 
-namespace ves {
-namespace conductor {
-namespace qt {
-namespace minerva {
+namespace ves
+{
+namespace conductor
+{
+namespace qt
+{
+namespace minerva
+{
 
-    class AddFileSystemStackedWidget;
+class AddFileSystemStackedWidget;
 
 class AddLayerWidget : public QWidget
 {
@@ -55,11 +83,11 @@ public:
     typedef QWidget BaseClass;
     typedef Minerva::QtWidgets::AddNetworkLayerWidget<Minerva::Core::Layers::RasterLayerWms> AddWmsLayerWidget;
 
-    AddLayerWidget ( QWidget *parent = 0x0 );
+    AddLayerWidget( QWidget* parent = 0x0 );
     virtual ~AddLayerWidget();
 
     /// Get a list of features that the user wants to add
-    void AddLayersToFeature ( Minerva::Core::Data::Container* );
+    void AddLayersToFeature( Minerva::Core::Data::Container* );
 
 Q_SIGNALS:
 

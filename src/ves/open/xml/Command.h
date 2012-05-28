@@ -83,7 +83,7 @@ public:
 
     ///Remove a data value pair from the command.
     ///\param dataValueName The name of the data value pair to remove.
-    void RemoveDataValuePair ( const std::string& dataValueName );
+    void RemoveDataValuePair( const std::string& dataValueName );
 
     ///Populate the Command data from an XML element.
     ///\param xmlInput The element to populate the command data from.
@@ -111,22 +111,22 @@ public:
     friend std::ostream& operator<<( std::ostream& os, const CommandPtr command )
     {
         os << "***********(ves::open::xml::Command)***********" << std::endl
-            << "Command Name = " << command->mCmdName << std::endl
-            << "GUID = " << command->mUuid << std::endl
-            << "Object Type = " << command->mObjectType << std::endl
-            << "Object Namespace = " << command->mObjectNamespace << std::endl
-            << "Number of DVPs = " << command->mDataValuePairs.size() << std::endl;
+           << "Command Name = " << command->mCmdName << std::endl
+           << "GUID = " << command->mUuid << std::endl
+           << "Object Type = " << command->mObjectType << std::endl
+           << "Object Namespace = " << command->mObjectNamespace << std::endl
+           << "Number of DVPs = " << command->mDataValuePairs.size() << std::endl;
 
-            for( std::vector< DataValuePairPtr >::iterator 
-                iter = command->mDataValuePairs.begin(); 
+        for( std::vector< DataValuePairPtr >::iterator
+                iter = command->mDataValuePairs.begin();
                 iter != command->mDataValuePairs.end(); ++iter )
-            {
-                os << *iter;
-            }
+        {
+            os << *iter;
+        }
 
         return os;
     }
-    
+
 protected:
     ///Internally update the command element.
     ///\param tagName The tagName of this element

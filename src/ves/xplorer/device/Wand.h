@@ -141,21 +141,21 @@ public:
     //void UpdateDeltaWandPosition();
     ///Get the plane equation constants normal to the wand in world space
     double* GetPlaneEquationConstantsNormalToWand();
-    
+
     ///Set wether when selecting parts if the parts will be turned off
     void SetCADSelectionMode( bool cadSelectionMode );
 
     ///Return the transform that holds the geode for the wand line
     osg::MatrixTransform& GetWandTransform();
-    
+
     ///Identifies selection chosen by wand
     void UpdateSelectionLine( bool drawLine = true );
-        
+
     ///Draws a beam from the wand to object
     ///\param startPoint The start position
     ///\param endPoint The end position
     virtual void DrawLine( const osg::Vec3d& startPoint, const osg::Vec3d& endPoint );
-    
+
 protected:
     ///Set the start and end point
     ///\param startPoint The start point
@@ -176,7 +176,7 @@ protected:
 
     ///Postprocess data for nav
     void PostProcessNav();
-    
+
     ///Update the main components of the wand positional information
     void UpdateForwardAndUp();
 
@@ -187,8 +187,8 @@ private:
     /// The keyboardmouse device needed for juggler >= 3.1
     //gadget::event::last_event_tag
     //gadget::event::all_events_tag
-    typedef gadget::DigitalEventInterface<gadget::event::all_events_tag,
-        gadget::event::synchronized_tag> WandClickInterface;
+    typedef gadget::DigitalEventInterface < gadget::event::all_events_tag,
+            gadget::event::synchronized_tag > WandClickInterface;
     WandClickInterface m_wandButton0EventInterface;
     WandClickInterface m_wandButton1EventInterface;
     WandClickInterface m_wandButton2EventInterface;
@@ -207,9 +207,9 @@ private:
     void OnWandButton6Event( gadget::DigitalState::State event );
 
     /// Interface to receive double-click events from gadgeteer
-    typedef gadget::DigitalClickEventInterface< 2,
-        gadget::event::all_events_tag,
-        gadget::event::synchronized_tag > WandDoubleClickInterface;
+    typedef gadget::DigitalClickEventInterface < 2,
+            gadget::event::all_events_tag,
+            gadget::event::synchronized_tag > WandDoubleClickInterface;
     WandDoubleClickInterface m_wandButton0DoubleClickEventInterface;
     WandDoubleClickInterface m_wandButton1DoubleClickEventInterface;
     WandDoubleClickInterface m_wandButton2DoubleClickEventInterface;
@@ -231,7 +231,7 @@ private:
     void LatePreFrameUpdate();
     ///Trigger a wand move event
     void OnWandMoveTimer( Poco::Util::TimerTask& task );
-    
+
     gadget::DigitalInterface digital[ 6 ]; ///Array handling button controls on wand
     int buttonData[ 6 ]; ///<do not know what this does
     gadget::DigitalInterface buttonEight;
@@ -265,7 +265,7 @@ private:
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_beamLineSegment;
     ///Transform to manipulate the selection line
     osg::ref_ptr< osg::MatrixTransform > m_wandPAT;
-    
+
     ///See if a button has been pushed
     bool m_buttonPushed;
     ///Quat used every frame to store and rotational increments
@@ -280,11 +280,11 @@ private:
     osg::Quat m_worldQuat;
     ///Selected DCS
     ves::xplorer::scenegraph::DCS* m_activeDCS;
-    
+
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
     typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > WandButtonPressSignal_type;
-    
+
     /// ButtonRelease signal type
     typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > WandButtonReleaseSignal_type;
 
@@ -294,32 +294,32 @@ private:
     /// MouseDoubleClick signal
     /// Params are: button, x, y, z, state (modifier mask OR'd with button mask)
     typedef boost::signals2::signal< void ( gadget::Keys, int, int, int, int ) > WandDoubleClickSignal_type;
-    
+
     /// Map to hold ButtonPress signals
     typedef std::map< std::string, WandButtonPressSignal_type* > WandButtonPressSignalMapType;
     WandButtonPressSignalMapType m_wandButtonPressSignalMap;
-    
+
     /// Map to hold ButtonRelease signals
     typedef std::map< std::string, WandButtonReleaseSignal_type* > WandButtonReleaseSignalMapType;
     WandButtonReleaseSignalMapType m_wandButtonReleaseSignalMap;
-    
+
     typedef std::map< std::string, WandButtonOnSignal_type* > WandButtonOnSignalMapType;
     WandButtonOnSignalMapType m_wandButtonOnSignalMap;
-    
+
     typedef std::map< std::string, WandDoubleClickSignal_type* > WandDoubleClickSignalMapType;
     WandDoubleClickSignalMapType m_wandDoubleClickSignalMap;
-    
+
     /// signal for generating the start and end point for selection and other
     ///interaction tools.
     /// Params are: start point and end point
     typedef boost::signals2::signal< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
     StartEndPointSignal_type m_startEndPointSignal;
-    
+
     /// MouseMove signal
     /// Params are: x, y, z, state (modifier mask OR'd with button mask)
     typedef boost::signals2::signal< void ( int, int, int, int ) > WandMoveSignal_type;
     WandMoveSignal_type m_wandMove;
-    
+
     ///The signature to tell others the game pad is active
     ves::util::BoolSignal_type m_updateData;
 

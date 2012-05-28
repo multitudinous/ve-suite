@@ -39,7 +39,7 @@
 #include <Poco/LogStream.h>
 
 #include <ves/util/PointerTypes.h>
-///We must add this here 
+///We must add this here
 //#include <windows.h>
 
 // Smart pointer-ized version of LogStream to automate memory management
@@ -91,19 +91,19 @@ typedef ves::util::ClassPtrDef<Poco::LogStream>::type  LogStreamPtr;
 // individually defined in a single class before the include statement for
 // this file.
 #if defined(VES_DEBUG)
-    #define LOG_DEBUG( msg ) _LOG_CALL( debug, msg )
-    #define LOG_TRACE( msg ) _LOG_CALL( trace, msg )
-    #define STATIC_LOG_DEBUG( name, msg ) _STATIC_LOG_CALL( debug, name, msg )
-    #define STATIC_LOG_TRACE( name, msg ) _STATIC_LOG_CALL( trace, name, msg )
+#define LOG_DEBUG( msg ) _LOG_CALL( debug, msg )
+#define LOG_TRACE( msg ) _LOG_CALL( trace, msg )
+#define STATIC_LOG_DEBUG( name, msg ) _STATIC_LOG_CALL( debug, name, msg )
+#define STATIC_LOG_TRACE( name, msg ) _STATIC_LOG_CALL( trace, name, msg )
 #else
-    //#if defined(_MSC_VER)
-        #define LOG_DEBUG( msg )
-        #define LOG_TRACE( msg )
-    //#else
-    //    #define LOG_DEBUG( msg ) msg __attribute__ ((unused))
-    //    #define LOG_TRACE( msg ) msg __attribute__ ((unused))
-    //#endif
-    #define STATIC_LOG_DEBUG( name, msg )
-    #define STATIC_LOG_TRACE( name, msg )
+//#if defined(_MSC_VER)
+#define LOG_DEBUG( msg )
+#define LOG_TRACE( msg )
+//#else
+//    #define LOG_DEBUG( msg ) msg __attribute__ ((unused))
+//    #define LOG_TRACE( msg ) msg __attribute__ ((unused))
+//#endif
+#define STATIC_LOG_DEBUG( name, msg )
+#define STATIC_LOG_TRACE( name, msg )
 #endif
 

@@ -120,7 +120,7 @@ CharacterController::CharacterController()
     mTurnSpeed( 7.0 ),
     mWeightModifier( 0.0 ),
     mTotalWeight( 0.0 ),
-    mLookAtOffsetZ( 0.0, 0.0, (m_characterHeight * 0.5) /*current character offset*/ ),//m_characterHeight * 0.5 ),
+    mLookAtOffsetZ( 0.0, 0.0, ( m_characterHeight * 0.5 ) /*current character offset*/ ), //m_characterHeight * 0.5 ),
     mCameraRotation( 0.0, 0.0, 0.0, 1.0 ),
     mCameraRotationX( 1.0, 0.0, 0.0, 1.0 ),
     mCameraRotationZ( 0.0, 0.0, 1.0, 1.0 ),
@@ -133,8 +133,8 @@ CharacterController::CharacterController()
     wand.init( "VJWand" );
 
     CONNECTSIGNALS_1( "%UpdateData", void( bool const& ),
-                     &CharacterController::SetGameControllerAxisUpdate,
-                     m_connections, any_SignalType, normal_Priority );  
+                      &CharacterController::SetGameControllerAxisUpdate,
+                      m_connections, any_SignalType, normal_Priority );
 
     Initialize();
 
@@ -156,20 +156,20 @@ void CharacterController::Initialize()
 
     mMatrixTransform = new osg::MatrixTransform();
     mMatrixTransform->setName( "Character Transform" );
-    
-    osg::ref_ptr< osg::StateSet > stateset = 
+
+    osg::ref_ptr< osg::StateSet > stateset =
         mMatrixTransform->getOrCreateStateSet();
 
-    osg::ref_ptr< osg::Program > program = 
+    osg::ref_ptr< osg::Program > program =
         ves::xplorer::scenegraph::SceneManager::instance()->
         GetNullGlowTextureProgram();
-    
-    stateset->addUniform( 
+
+    stateset->addUniform(
         ves::xplorer::scenegraph::SceneManager::instance()->
         GetNullGlowTextureUniform() );
-    
+
     stateset->setAttributeAndModes( program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
 #ifdef VES_USE_ANIMATED_CHARACTER
     //create animated character
@@ -200,7 +200,7 @@ void CharacterController::Initialize()
     mCharacterAnimations->setName( "Character Switch Control" );
 
     //for scaling if necessary
-    osg::ref_ptr< osg::PositionAttitudeTransform > scaleDown = new osg::PositionAttitudeTransform(); 
+    osg::ref_ptr< osg::PositionAttitudeTransform > scaleDown = new osg::PositionAttitudeTransform();
     scaleDown->setName( "Character Scale Transform" );
     scaleDown->addChild( mCharacterAnimations.get() );
     scaleDown->setScale( osg::Vec3d( 0.055, 0.055, 0.055 ) );
@@ -215,8 +215,8 @@ void CharacterController::Initialize()
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
     osg::ref_ptr< osg::Capsule > capsule =
         new osg::Capsule(
-            osg::Vec3( 0.0, 0.0, 0.0 ),
-            m_characterWidth, m_characterHeight );
+        osg::Vec3( 0.0, 0.0, 0.0 ),
+        m_characterWidth, m_characterHeight );
     osg::ref_ptr< osg::TessellationHints > hints = new osg::TessellationHints();
     hints->setDetailRatio( 1.0 );
     osg::ref_ptr< osg::ShapeDrawable > shapeDrawable =
@@ -233,8 +233,8 @@ void CharacterController::Initialize()
     //Used for center to eye occluder test per frame
     mLineSegmentIntersector =
         new osgUtil::LineSegmentIntersector(
-            osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
-                
+        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
+
     //Create shader modules emulating ffp
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsRTTOn() )
     {
@@ -242,26 +242,26 @@ void CharacterController::Initialize()
         ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( SceneManager::instance()->GetModelRoot(), backdropFX::Manager::instance()->getManagedRoot() );
         osg::NodePath nodePath = parentVisitor.GetParentNodePath();
         osg::StateSet* tempState = backdropFX::accumulateStateSetsAndShaderModules( tempMap, nodePath );
-        
+
         backdropFX::ShaderModuleVisitor smv;
         //smv.setSupportSunLighting( false ); // Use shaders that support Sun lighting.
         smv.setInitialStateSet( tempState, tempMap );
-        
+
         backdropFX::convertFFPToShaderModules( mMatrixTransform.get(), &smv );
-        
+
         //now that the graph has the character added lets let bdfx know about it
         SceneManager::instance()->GetModelRoot()->
-            addChild( mMatrixTransform.get() );
-        
+        addChild( mMatrixTransform.get() );
+
         backdropFX::RebuildShaderModules rsm;
         backdropFX::Manager::instance()->getManagedRoot()->accept( rsm );
     }
     else
     {
         SceneManager::instance()->GetModelRoot()->
-            addChild( mMatrixTransform.get() );
+        addChild( mMatrixTransform.get() );
     }
-    
+
     ///In non desktop mode make the camera the character
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
@@ -271,32 +271,32 @@ void CharacterController::Initialize()
         //Setup the shaders
         osg::ref_ptr< osg::Program > program = new osg::Program();
         program->setName( "VS UI Quad Program" );
-        
+
         osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
         std::string fragmentSource =
         "uniform sampler2D baseMap;\n"
         "uniform vec3 glowColor;\n"
         "uniform float opacityVal;\n"
-        
+
         "void main()\n"
         "{\n"
         "vec3 baseColor = texture2D( baseMap, gl_TexCoord[ 0 ].st ).rgb;\n"
-        
+
         "gl_FragData[ 0 ] = vec4( baseColor, opacityVal );\n"
         "gl_FragData[ 1 ] = vec4( glowColor, opacityVal );\n"
         "}\n";
-        
+
         fragmentShader->setType( osg::Shader::FRAGMENT );
         fragmentShader->setShaderSource( fragmentSource );
         fragmentShader->setName( "VS UI Quad Fragment Shader" );
         program->addShader( fragmentShader.get() );
-                
-        osg::ref_ptr< osg::StateSet > stateset = 
+
+        osg::ref_ptr< osg::StateSet > stateset =
             mCharacterAnimations->getOrCreateStateSet();
         {
             stateset->setRenderBinDetails( 99, "RenderBin" );
         }
-        
+
         //Create stateset for adding texture
         osg::StateAttribute::GLModeValue glModeValue =
             osg::StateAttribute::ON |
@@ -304,15 +304,15 @@ void CharacterController::Initialize()
             osg::StateAttribute::OVERRIDE;
         stateset->setAttributeAndModes( program.get(), glModeValue );
         stateset->addUniform( new osg::Uniform( "baseMap", 0 ) );
-        
+
         {
             osg::Uniform* m_opacityUniform = new osg::Uniform( "opacityVal", float( 0.5 ) );
             stateset->addUniform( m_opacityUniform );
         }
-        
+
         {
             osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
-            bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
+            bf->setFunction( osg::BlendFunc::SRC_ALPHA,
                             osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
             stateset->setMode( GL_BLEND, glModeValue );
             stateset->setAttributeAndModes( bf.get(), glModeValue );
@@ -346,15 +346,15 @@ void CharacterController::Enable( const bool& enable )
         m_dynamicsWorld.addAction( this );
 
         Reset();
-        
+
         osg::Matrix orient = osg::Matrix::rotate( -osg::PI_2, 1., 0., 0. );
-        osg::Matrix worldMatrix = 
+        osg::Matrix worldMatrix =
             orient * SceneManager::instance()->GetMxCoreViewMatrix().getMatrix();
         osg::Vec3 deltaStep = worldMatrix.getTrans();
 
-        deltaStep[ 2 ] = deltaStep[ 2 ] - (m_characterHeight * 0.5);
+        deltaStep[ 2 ] = deltaStep[ 2 ] - ( m_characterHeight * 0.5 );
         warp( osgbCollision::asBtVector3( deltaStep ) );
-        
+
         btVector3 tempVec = m_ghostObject->getWorldTransform().getOrigin() + mLookAtOffsetZ;
         m_lastPosition = osgbCollision::asOsgVec3( tempVec );
     }
@@ -494,15 +494,15 @@ void CharacterController::SetPhysicsWorldTransform()
         return;
     }
 
-    ///Reset this flag so that the game controller input is basically just 
+    ///Reset this flag so that the game controller input is basically just
     ///sending true to the controller class
     m_axisInputUpdate = false;
-    
+
     m_translateType = TranslateType::NONE;
 
     // Account for MxCore orientation.
     osg::Matrix orient = osg::Matrix::rotate( -osg::PI_2, 1., 0., 0. );
-    osg::Matrix worldMatrix = 
+    osg::Matrix worldMatrix =
         orient * SceneManager::instance()->GetMxCoreViewMatrix().getMatrix();
 
     osg::Vec3 deltaStep = worldMatrix.getTrans() - m_lastPosition;
@@ -510,7 +510,7 @@ void CharacterController::SetPhysicsWorldTransform()
 
     double yaw, pitch, roll;
     SceneManager::instance()->
-        GetMxCoreViewMatrix().getYawPitchRoll( yaw, pitch, roll, true );
+    GetMxCoreViewMatrix().getYawPitchRoll( yaw, pitch, roll, true );
     yaw = -osg::DegreesToRadians( yaw );
     pitch = -osg::DegreesToRadians( pitch );
     roll = -osg::DegreesToRadians( roll );
@@ -525,41 +525,41 @@ void CharacterController::SetPhysicsWorldTransform()
     {
         mTurnAngleX = gmtl::Math::PI_OVER_2;
     }
-    
+
     mTurnAngleZ = yaw;
     //Restrict angles about the z-axis from 0 to 2PI
     if( mTurnAngleZ >= gmtl::Math::TWO_PI )
     {
         mTurnAngleZ -= gmtl::Math::TWO_PI;
-        
+
     }
     else if( mTurnAngleZ < 0.0 )
     {
         mTurnAngleZ += gmtl::Math::TWO_PI;
     }
-    
+
     //Set the camera rotation about the x-axis
     mCameraRotationX.setX( sin( 0.5 * mTurnAngleX ) );
     mCameraRotationX.setW( cos( 0.5 * mTurnAngleX ) );
-    
+
     //Set the camera rotation about the z-axis
     mCameraRotationZ.setZ( sin( 0.5 * mTurnAngleZ ) );
     mCameraRotationZ.setW( cos( 0.5 * mTurnAngleZ ) );
-    
+
     //Set the total camera rotation
     mCameraRotation = mCameraRotationX * mCameraRotationZ;
-    
-    
+
+
     //if( mCameraDistance <= (mMinCameraDistance + 0.5) )
     {
         SetRotationFromCamera();
     }
-    
+
     /*else if( mCameraDistance > (mMinCameraDistance + 0.5) )
     {
         mCharacterAnimations->setNodeMask( 1 );
     }*/
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::SetCameraRotationSLERP( bool onOff )
@@ -620,18 +620,18 @@ void CharacterController::Move( btScalar dt )
 #endif
         iter_type cur_frame_iter = headSampleBuffer.rbegin();
         iter_type prev_frame_iter = cur_frame_iter + 1;
-        const unsigned int dev_num(head->getUnit());
+        const unsigned int dev_num( head->getUnit() );
         m_vjHeadMat2 = m_vjHeadMat1;
 #if __GADGET_version > 2001000
         m_vjHeadMat1 =
-            gmtl::convertTo<double>((*cur_frame_iter)[dev_num].getValue());
+            gmtl::convertTo<double>( ( *cur_frame_iter )[dev_num].getValue() );
 #else
         m_vjHeadMat1 =
-            gmtl::convertTo<double>((*cur_frame_iter)[dev_num].getPosition());
+            gmtl::convertTo<double>( ( *cur_frame_iter )[dev_num].getPosition() );
 #endif
-        
+
         //Every time swap buffers is called the main VR Juggler buffer
-        //is cleared and thus all of the history data is lost. We will have to 
+        //is cleared and thus all of the history data is lost. We will have to
         //keep all of the history ourselves with the buffer_type datatype.
         //std::cout << m_vjHeadMat1 << " " << m_vjHeadMat2 << std::endl;
         //std::cout << headSampleBuffer.size() << std::endl;
@@ -663,13 +663,13 @@ void CharacterController::Move( btScalar dt )
     {
         //Update the character physics btCapsuleShapeZ
         UpdateCapsuleShape();
-        
+
         //Update the character rotation
         UpdateRotation();
 
         //Update the character translation
         UpdateTranslation( dt );
-        
+
         ///Update the character based on game controller input
         SetPhysicsWorldTransform();
     }
@@ -719,7 +719,7 @@ void CharacterController::UpdateCamera()
 
     //Move the camera to look at the center of the character
     LookAt( eye, center, up );
-    
+
     m_lastPosition = osgbCollision::asOsgVec3( eye );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -773,12 +773,12 @@ void CharacterController::CameraDistanceLERP()
 
         mCameraDistanceLERP = false;
     }
-    
-    if( mCameraDistance <= (mMinCameraDistance + 0.5) )
+
+    if( mCameraDistance <= ( mMinCameraDistance + 0.5 ) )
     {
         mCharacterAnimations->setNodeMask( 0 );
     }
-    else if( mCameraDistance > (mMinCameraDistance + 0.5) )
+    else if( mCameraDistance > ( mMinCameraDistance + 0.5 ) )
     {
         mCharacterAnimations->setNodeMask( 1 );
     }
@@ -882,11 +882,11 @@ void CharacterController::LookAt(
 {
     btVector3 vVector = center - eye;
     vVector.normalize();
-    
+
     osgwMx::MxCore& core = SceneManager::instance()->GetMxCoreViewMatrix();
-    core.setDir(      osg::Vec3d( vVector[ 0 ], vVector[ 1 ], vVector[ 2 ] ) );
-    core.setPosition( osg::Vec3d(     eye[ 0 ],     eye[ 1 ],     eye[ 2 ] ) );
-    core.setUp(       osg::Vec3d(      up[ 0 ],      up[ 1 ],      up[ 2 ] ) );
+    core.setDir( osg::Vec3d( vVector[ 0 ], vVector[ 1 ], vVector[ 2 ] ) );
+    core.setPosition( osg::Vec3d( eye[ 0 ],     eye[ 1 ],     eye[ 2 ] ) );
+    core.setUp( osg::Vec3d( up[ 0 ],      up[ 1 ],      up[ 2 ] ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::OccludeDistanceLERP()
@@ -921,7 +921,7 @@ void CharacterController::SetBufferSizeAndWeights(
     mHistoryBuffer.assign( mBufferSize, std::make_pair( 0.0, 0.0 ) );
     mWeights.clear();
     mWeights.assign( mBufferSize, 0.0 );
-    
+
     //First weight is worth 100%
     mWeights.at( 0 ) = 1.0;
     mTotalWeight += mWeights.at( 0 );
@@ -1097,7 +1097,7 @@ void CharacterController::UpdateRotationTrackedHead()
 
     //Update the device input history buffer
     std::pair< double, double > deltaDeviceInput = UpdateHistoryBuffer();
-    
+
     //Calculate character rotation
     if( deltaDeviceInput.first != 0.0 || deltaDeviceInput.second != 0.0 )
     {
@@ -1143,7 +1143,7 @@ void CharacterController::UpdateRotationTrackedHead()
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateTranslationTrackedHead()
 {
-    //We will populate the translate vector based on information from the 
+    //We will populate the translate vector based on information from the
     //tracker VJHead position
     btVector3 displacement( 0.0, 0.0, 0.0 );
 
@@ -1193,9 +1193,9 @@ void CharacterController::UpdateTranslationTrackedHead()
     gmtl::Point3d jugglerHeadPoint2 =
         gmtl::makeTrans< gmtl::Point3d >( m_vjHeadMat2 );
 
-    displacement[ 0 ] += ( jugglerHeadPoint1[ 0 ] - jugglerHeadPoint2[ 0 ]);
-    displacement[ 1 ] += (-jugglerHeadPoint1[ 2 ] + jugglerHeadPoint2[ 2 ]);
-    displacement[ 2 ] += ( jugglerHeadPoint1[ 1 ] - jugglerHeadPoint2[ 1 ]);
+    displacement[ 0 ] += ( jugglerHeadPoint1[ 0 ] - jugglerHeadPoint2[ 0 ] );
+    displacement[ 1 ] += ( -jugglerHeadPoint1[ 2 ] + jugglerHeadPoint2[ 2 ] );
+    displacement[ 2 ] += ( jugglerHeadPoint1[ 1 ] - jugglerHeadPoint2[ 1 ] );
 
     //slerp mCameraRotation if necessary
     if( mCameraRotationSLERP )
@@ -1268,7 +1268,7 @@ void CharacterController::InitializeCharacters()
     mCharacterAnimations->setSingleChildOn( 0 );
     mCharacterAnimations->setName( "Character Switch Control" );
 
-    //stand still 
+    //stand still
     CharacterAnimation* stillCharacter = new CharacterAnimation();
     m_fbxCharacters.push_back( stillCharacter );
     osg::Group* tempGroup = stillCharacter->Register( fileNames2 );
@@ -1332,18 +1332,18 @@ void CharacterController::InitializeCharacters()
     mCharacterAnimations->setName( "Character Switch Control" );
 
     //for scaling if necessary
-    m_scaleDown = new osg::PositionAttitudeTransform(); 
+    m_scaleDown = new osg::PositionAttitudeTransform();
     m_scaleDown->setName( "Character Scale Transform" );
     m_scaleDown->addChild( mCharacterAnimations.get() );
 
     //orients the character in the proper direction
     m_scaleDown->setAttitude( osg::Quat(
-        //roll
-        osg::DegreesToRadians( 180.0 ), osg::Vec3f( 0.0, 1.0, 0.0 ),
-        //pitch
-        osg::DegreesToRadians( 90.0 ), osg::Vec3f( 1.0, 0.0, 0.0 ),
-        //heading
-        osg::DegreesToRadians( 0.0 ), osg::Vec3f( 0.0, 0.0, 1.0 )) );
+                                  //roll
+                                  osg::DegreesToRadians( 180.0 ), osg::Vec3f( 0.0, 1.0, 0.0 ),
+                                  //pitch
+                                  osg::DegreesToRadians( 90.0 ), osg::Vec3f( 1.0, 0.0, 0.0 ),
+                                  //heading
+                                  osg::DegreesToRadians( 0.0 ), osg::Vec3f( 0.0, 0.0, 1.0 ) ) );
 
     m_scaleDown->setScale( osg::Vec3d( 1.058, 1.058, 1.058 ) );
 
@@ -1360,14 +1360,14 @@ void CharacterController::SetGameControllerAxisUpdate( bool const& data )
 ////////////////////////////////////////////////////////////////////////////////
 void CharacterController::UpdateCapsuleShape()
 {
-    double const& height = 
+    double const& height =
         ves::xplorer::scenegraph::SceneManager::instance()->GetUserHeight();
 
     if( height < 1.5f )
     {
         return;
     }
-    
+
     m_characterHeight = height;
 
     //2.8 is how far the character is off the ground in the osg model
@@ -1376,14 +1376,14 @@ void CharacterController::UpdateCapsuleShape()
     //8.3 = 3.2 + 5.1
     //7.3 = 3.8 + 3.5
     //Offset
-    float offset = (6. - m_characterHeight) * 0.5 + 2.8;
+    float offset = ( 6. - m_characterHeight ) * 0.5 + 2.8;
     m_scaleDown->setPosition( osg::Vec3d( 0.0, 0.0, -offset ) );
-    
+
     btCapsuleShapeZ* shape = new btCapsuleShapeZ( m_characterWidth,
-                            m_characterHeight - ( m_characterWidth * 2. ) );
+            m_characterHeight - ( m_characterWidth * 2. ) );
 
     SetConvexShape( shape );
-    
+
     mLookAtOffsetZ.setZ( m_characterHeight * 0.5 );
 }
 ////////////////////////////////////////////////////////////////////////////////

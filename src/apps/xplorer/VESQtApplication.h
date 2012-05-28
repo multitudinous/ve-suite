@@ -52,13 +52,13 @@ class VESQtApplication : public QApplication
 {
 public:
     ///Our special constructor
-    VESQtApplication(int & argc, char ** argv, ves::xplorer::App* app );
+    VESQtApplication( int& argc, char** argv, ves::xplorer::App* app );
 
 protected:
     ///Override the default notify function so that we can sync things
-    virtual bool notify(QObject* recv, QEvent* evt);
+    virtual bool notify( QObject* recv, QEvent* evt );
     ///Convenience function to process the actual event with QApplication::notify
-    bool ProcessEvent( QObject *obj, QEvent *event);
+    bool ProcessEvent( QObject* obj, QEvent* event );
 
 private:
     ///Provides access to the mutexs to lock event processing to the draw thread

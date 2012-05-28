@@ -90,7 +90,7 @@ wxString OpcUOPlugin::GetConductorName()
 void  OpcUOPlugin::OnShowValue( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-        
+
     /*std::string compName = GetVEModel()->GetPluginName();
     //compName = "Data.Blocks." + compName;
 
@@ -120,7 +120,7 @@ void  OpcUOPlugin::OnShowValue( wxCommandEvent& event )
     ves::open::xml::CommandPtr cmd =
         boost::dynamic_pointer_cast<ves::open::xml::Command>
         ( objectVector.at( 0 ) );
-    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );    
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
 
     //wxString title;
     //title << wxT( "OPC Value" );
@@ -161,7 +161,7 @@ wxMenu* OpcUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     {
         return baseMenu;
     }
-    
+
     //set the vendor name of the current plugin to the parents
     if( GetVEModel()->GetParentModel() )
     {
@@ -182,7 +182,7 @@ wxMenu* OpcUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mOpcMenu->Append( OPCUOPLUGIN_ALL_VAR, _( "ALL VAR" ) );
     mOpcMenu->Enable( OPCUOPLUGIN_ALL_VAR, true );
     baseMenu->Insert( 0, OPCUOPLUGIN_START_TIMER,   _( "OPC" ), mOpcMenu,
-                    _( "Used in conjunction with OPC" ) );
+                      _( "Used in conjunction with OPC" ) );
     baseMenu->Enable( OPCUOPLUGIN_SIM_MENU, true );
     return baseMenu;
 }
@@ -205,7 +205,7 @@ void OpcUOPlugin::DrawValue( wxDC* dc )
     x = x / n_pts;
     y = y / n_pts;
 
-    dc->GetTextExtent( wxString( m_monValue.c_str(), wxConvUTF8), &w, &h );
+    dc->GetTextExtent( wxString( m_monValue.c_str(), wxConvUTF8 ), &w, &h );
     dc->DrawText( wxString( m_monValue.c_str(), wxConvUTF8 ), int( x - w / 2 + xoff ), pos.y + int( y * 4.0 ) );
 }
 
@@ -242,17 +242,17 @@ void OpcUOPlugin::DrawValue( wxDC* dc )
     ves::open::xml::CommandPtr cmd =
         boost::dynamic_pointer_cast<ves::open::xml::Command>
         ( objectVector.at( 0 ) );
-    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );    
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
 
     dynValue = pair->GetDataString();
 }*/
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::ReadValue( )
-{    
+{
     //This functions reads data through DynamicsDataBuffer
     //is it the active network ie is it being drawn
     if( m_canvas->GetActiveNetworkID() == m_network->GetNetworkID() )
-    {        
+    {
         const CommandPtr opcData =
             DynamicsDataBuffer::instance()->GetCommand( "OPCData" );
         if( opcData->GetCommandName() == "NULL" )
@@ -287,12 +287,12 @@ void OpcUOPlugin::OnTimer( wxTimerEvent& event )
 void OpcUOPlugin::DrawPlugin( wxDC* dc )
 {
     //if hidden
-    if(nameFlag)
+    if( nameFlag )
     {
         DrawIcon( dc );
         DrawID( dc );
         DrawName( dc );
-        if(m_monValueExists)
+        if( m_monValueExists )
         {
             DrawValue( dc );
         }
@@ -301,7 +301,7 @@ void OpcUOPlugin::DrawPlugin( wxDC* dc )
     //if highlighted
     if( highlightFlag )
     {
-        if(nameFlag)
+        if( nameFlag )
         {
             HighlightSelectedIcon( dc );
         }
@@ -319,7 +319,7 @@ void OpcUOPlugin::StartTimer( float msec )
     //    m_timer = NULL;
     //}
     m_timer = new wxTimer( this, OPCUOPLUGIN_TIMER_ID );
-    m_timer->Start(msec);
+    m_timer->Start( msec );
     //dynValue = "NA";
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -350,10 +350,10 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
 
     std::string nw_str = serviceList->Query( status );
 
-    if( nw_str.compare("Error") == 0 || nw_str.compare("NULL") == 0 )
+    if( nw_str.compare( "Error" ) == 0 || nw_str.compare( "NULL" ) == 0 )
     {
-        wxString title( _("Error") );
-        wxString desc( _("Connection Issue.") );
+        wxString title( _( "Error" ) );
+        wxString desc( _( "Connection Issue." ) );
         wxMessageDialog( m_canvas, desc, title ).ShowModal();
         return;
     }
@@ -383,7 +383,7 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
         pair->GetData( value );
         params->SetData( wxString( name.c_str(), wxConvUTF8 ), wxString( value.c_str(), wxConvUTF8 ) );
     }
-    
+
     //populate dialog
     params->ShowModal();
     params->Destroy();

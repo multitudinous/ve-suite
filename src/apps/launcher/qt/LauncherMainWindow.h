@@ -36,8 +36,9 @@
 #include <QtGui/QTextEdit>
 #include <QtCore/QProcess>
 
-namespace Ui {
-    class LauncherMainWindow;
+namespace Ui
+{
+class LauncherMainWindow;
 }
 
 class LauncherMainWindow : public QMainWindow
@@ -45,14 +46,14 @@ class LauncherMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit LauncherMainWindow(QWidget *parent = 0);
+    explicit LauncherMainWindow( QWidget* parent = 0 );
     ~LauncherMainWindow();
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent( QEvent* e );
 
 private:
-    Ui::LauncherMainWindow *ui;
+    Ui::LauncherMainWindow* ui;
     QTextEdit* m_stdout;
     QProcess* m_process;
 

@@ -85,7 +85,7 @@ public:
 
     ///Create a copy of this object
     virtual cfdObjects* CreateCopy() = 0;
-    
+
     ///Update the actors in the object
     void UpdateActors();
 
@@ -115,7 +115,7 @@ public:
     void SetOrigin( float o[3] );
 
     ///returns the origin.
-    double * GetOrigin();
+    double* GetOrigin();
 
     ///Gets the origin values.
     ///\param o
@@ -170,7 +170,7 @@ public:
 
     ///Sets the source points.
     ///\param pointSource
-    void SetSourcePoints( vtkPolyData * pointSource );
+    void SetSourcePoints( vtkPolyData* pointSource );
 
 
     ///Adds another geode to the sequence.
@@ -210,7 +210,7 @@ public:
 
     ///Set the surface dataset name
     void SetDataMapSurfaceName( std::string const& surfName );
-    
+
 protected:
     vtkPolyData* ComputeVolumeFlux( vtkPolyData* inputPD );
     ///active dataset.
@@ -225,7 +225,7 @@ protected:
     vtkCompositeDataGeometryFilter* m_multiGroupGeomFilter;
     ///vtkGeometryFilter
     vtkGeometryFilter* m_geometryFilter;
-    
+
     vtkDataSetSurfaceFilter* m_surfaceFilter;
 
     bool updateFlag;///<flag for updating.

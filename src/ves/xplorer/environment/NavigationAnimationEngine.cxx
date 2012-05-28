@@ -150,9 +150,9 @@ void NavigationAnimationEngine::PreFrameUpdate()
     //convert osg quat to gmtl quat
     osg::Quat tempWorldQuat = _worldDCS->GetQuat();
     gmtl::Quatd tempQuat( tempWorldQuat[0], tempWorldQuat[1],
-        tempWorldQuat[2], tempWorldQuat[3] );
+                          tempWorldQuat[2], tempWorldQuat[3] );
 
-    //See if we only have a small distance left to travel. If so then lets 
+    //See if we only have a small distance left to travel. If so then lets
     //exit the animation
     gmtl::Vec3d deltaLeft = mEndVec - curVec;
     float length = gmtl::length( deltaLeft );
@@ -180,7 +180,7 @@ void NavigationAnimationEngine::PreFrameUpdate()
     //interpolate the rotation and translation
     gmtl::lerp( tempVec, t, curVec, mEndVec );
     gmtl::slerp( tempResQuat, t, tempQuat, mEndQuat );
-    
+
     //convert gmtl vec to double *
     double tempConvVec[3] ;
     tempConvVec[0] = tempVec[0];
@@ -192,7 +192,7 @@ void NavigationAnimationEngine::PreFrameUpdate()
     //convert gmtl quat to osg quat
     osg::Quat tempOSGQuat(
         tempResQuat[0], tempResQuat[1], tempResQuat[2], tempResQuat[3] );
-    
+
     //rotate and translate
     _worldDCS->SetQuat( tempOSGQuat );
     if( mSetCenterPoint == true && !mBeginAnim )
@@ -201,7 +201,7 @@ void NavigationAnimationEngine::PreFrameUpdate()
         osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
             new ves::xplorer::scenegraph::CoordinateSystemTransform(
             ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
-                mCenterPointDCS, true );
+            mCenterPointDCS, true );
         gmtl::Matrix44d localToWorldMatrix =
             cst->GetTransformationMatrix( false );
 
@@ -212,9 +212,9 @@ void NavigationAnimationEngine::PreFrameUpdate()
             mCenterPointDCS->getBound().center() * tempMatrix;
         gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
         ves::xplorer::DeviceHandler::instance()->
-            SetCenterPoint( &tempCenter );
+        SetCenterPoint( &tempCenter );
     }
-    
+
     m_frameTimer->reset();
     m_frameTimer->startTiming();
 }
@@ -227,7 +227,7 @@ void NavigationAnimationEngine::UpdateCommand()
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationAnimationEngine::SetAnimationEndPoints(
     gmtl::Vec3d navToPoint, gmtl::Quatd rotationPoint,
-    bool setCenterPoint, ves::xplorer::scenegraph::DCS* centerPointDCS)
+    bool setCenterPoint, ves::xplorer::scenegraph::DCS* centerPointDCS )
 {
     mBeginAnim = true;
     mEndVec = navToPoint;
@@ -236,7 +236,7 @@ void NavigationAnimationEngine::SetAnimationEndPoints(
     m_lastAngle = 0.0;
     mSetCenterPoint = setCenterPoint;
     mCenterPointDCS = centerPointDCS;
-    
+
     //Set up the interval constant
     gmtl::Vec3d curVec;
     //osg vec to gmtl vec
@@ -250,11 +250,11 @@ void NavigationAnimationEngine::SetAnimationEndPoints(
     //movementIntervalCalc =
     //    1.0 / ( length / ( m_movementSpeed * m_deltaTime ) );
 
-    double timeConstant = length/m_movementSpeed;
-    double numSegments = timeConstant/m_deltaTime;
-    movementIntervalCalc = 1.0/numSegments;
+    double timeConstant = length / m_movementSpeed;
+    double numSegments = timeConstant / m_deltaTime;
+    movementIntervalCalc = 1.0 / numSegments;
     //std::cout << numSegments << " " <<  movementIntervalCalc << std::endl;
-    if( (length == 0) || (movementIntervalCalc > 1.0) || (numSegments < 2.0) )
+    if( ( length == 0 ) || ( movementIntervalCalc > 1.0 ) || ( numSegments < 2.0 ) )
     {
         movementIntervalCalc = 0.01;
     }

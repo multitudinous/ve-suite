@@ -156,13 +156,13 @@ public:
 
     ///Send camera manager data to conductor to enable the gui
     ///to be in sync with Xplorer
-    void UpdateConductorData( ves::open::xml::DataValuePairPtr inDvp = 
-        ves::open::xml::DataValuePairPtr() );
+    void UpdateConductorData( ves::open::xml::DataValuePairPtr inDvp =
+                                  ves::open::xml::DataValuePairPtr() );
 
     ///Set the picture mode to create and take a picture when the user presses
     ///a button on the keyboard or wand
     void SetPictureMode( bool isPictureMode );
-    
+
     ///Get the picture mode setting
     bool IsPictureMode();
 
@@ -207,15 +207,15 @@ private:
 
     ///Used to generate texture coordinates for camera projection
     osg::ref_ptr< osg::TexGenNode > m_texGenNode;
-    
+
     ///Set the picture mode
     bool m_isPictureMode;
-    
+
     ///Get head shot camera
     osg::ref_ptr< CameraObject > m_headShotCamera;
     ///Tell wether we are taking screen caps
     bool m_isTakingScreenCap;
-    
+
     ///The directory for storing images
     std::string m_imageDir;
 };

@@ -65,8 +65,8 @@ private:
     DECLARE_EVENT_TABLE();
 
 public:
-    IconChooser( wxWindow *parent, /*std::string path,*/ wxWindowID id = 1,
-                 const wxString &title = wxT( "IconChooser" ),
+    IconChooser( wxWindow* parent, /*std::string path,*/ wxWindowID id = 1,
+                 const wxString& title = wxT( "IconChooser" ),
                  const wxPoint& pos = wxDefaultPosition,
                  const wxSize& size = wxDefaultSize, long style = IconChooser_STYLE );
     virtual ~IconChooser();
@@ -75,7 +75,7 @@ public:
     void cancelButtonClick( wxCommandEvent& event );
     void IconDirectoryClick( wxCommandEvent& event );
     //void AppendList(const char * input);
-    void SetPlugin( UIPluginBase * plugin );
+    void SetPlugin( UIPluginBase* plugin );
     void AddIconsDir( wxString directory );
 
 private:

@@ -73,33 +73,33 @@ void ExportMenu::OnScreenShot( wxCommandEvent& event )
     if( event.GetId() == EXPORTMENU_SCREEN_SHOT )
     {
         wxFileDialog dialog( NULL, _T( "Save Screen Shot..." ),
-                            ::wxGetCwd(),
-                            _T( "xploreScreenCap" ),
-                            _T( "JPG Image (*.jpg;*.png)|*.jpg;*.png" ),
-                            wxFD_SAVE | wxFD_OVERWRITE_PROMPT
-                            );
-        
+                             ::wxGetCwd(),
+                             _T( "xploreScreenCap" ),
+                             _T( "JPG Image (*.jpg;*.png)|*.jpg;*.png" ),
+                             wxFD_SAVE | wxFD_OVERWRITE_PROMPT
+                           );
+
         if( dialog.ShowModal() != wxID_OK )
         {
             return;
         }
-        
+
         vesFileName = dialog.GetPath();
     }
     else if( event.GetId() == EXPORTMENU_MOVIE_CAPTURE )
     {
         wxFileDialog dialog( NULL, _T( "Save Movie Capture..." ),
-                            ::wxGetCwd(),
-                            _T( "xplorer_movie_capture" ),
-                            _T( "JPG Image (*.jpg;*.png)|*.jpg;*.png" ),
-                            wxFD_SAVE | wxFD_OVERWRITE_PROMPT
-                            );
-        
+                             ::wxGetCwd(),
+                             _T( "xplorer_movie_capture" ),
+                             _T( "JPG Image (*.jpg;*.png)|*.jpg;*.png" ),
+                             wxFD_SAVE | wxFD_OVERWRITE_PROMPT
+                           );
+
         if( dialog.ShowModal() != wxID_OK )
         {
             return;
         }
-        
+
         vesFileName = dialog.GetPath();
     }
 
@@ -111,7 +111,7 @@ void ExportMenu::OnScreenShot( wxCommandEvent& event )
         if( !success )
         {
             wxMessageBox( _( "Can't save the screen capture on another drive." ),
-                         _( "JPG Write Error" ), wxOK | wxICON_INFORMATION );
+                          _( "JPG Write Error" ), wxOK | wxICON_INFORMATION );
             return;
         }
     }

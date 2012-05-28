@@ -50,11 +50,11 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADDeleteNodeEventHandler::CADDeleteNodeEventHandler()
-        : ves::xplorer::event::CADEventHandler()
+    : ves::xplorer::event::CADEventHandler()
 {}
 ///////////////////////////////////////////////////////////////////////////////////////
 CADDeleteNodeEventHandler::CADDeleteNodeEventHandler( const CADDeleteNodeEventHandler& rhs )
-        : ves::xplorer::event::CADEventHandler( rhs )
+    : ves::xplorer::event::CADEventHandler( rhs )
 {}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
@@ -82,7 +82,7 @@ void CADDeleteNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
 
         vprDEBUG( vesDBG, 1 ) << "|\t---Deleting node---" << std::endl
-            << vprDEBUG_FLUSH;
+                              << vprDEBUG_FLUSH;
 
         ves::xplorer::scenegraph::DCS* parentAssembly = 0;
         parentAssembly = m_cadHandler->GetAssembly( parentID->GetDataString() );
@@ -90,21 +90,21 @@ void CADDeleteNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         //This assumes the part/assembly isn't there already
         if( nodeType->GetDataString() == std::string( "Assembly" ) )
         {
-            parentAssembly->RemoveChild( 
+            parentAssembly->RemoveChild(
                 m_cadHandler->GetAssembly( nodeID->GetDataString() ) );
         }
         else if( nodeType->GetDataString() == std::string( "Part" ) )
         {
-            ves::xplorer::scenegraph::CADEntity* tempPart = 
+            ves::xplorer::scenegraph::CADEntity* tempPart =
                 m_cadHandler->GetPart( nodeID->GetDataString() );
             int error = parentAssembly->RemoveChild( tempPart->GetDCS() );
             ///If this node has physics enabled there is an AMT node
-            ///between the cadentitity and parent which means this 
+            ///between the cadentitity and parent which means this
             ///has to be removed manually.
             if( error == 0 )
             {
                 error = parentAssembly->
-                    removeChild( tempPart->GetDCS()->getParent( 0 ) );
+                        removeChild( tempPart->GetDCS()->getParent( 0 ) );
             }
         }
         else if( nodeType->GetDataString() == std::string( "Clone" ) )
@@ -114,7 +114,7 @@ void CADDeleteNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         //Need to also remove the node from ModelCADHandler node maps
         m_cadHandler->RemoveNode( nodeID->GetDataString(), nodeType->GetDataString() );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
         std::cout << "---Invalid node specified to remove!---" << std::endl;

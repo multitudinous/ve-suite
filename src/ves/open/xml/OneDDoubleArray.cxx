@@ -40,7 +40,7 @@ using namespace ves::open::xml;
 //Constructor                                     //
 ////////////////////////////////////////////////////
 OneDDoubleArray::OneDDoubleArray( unsigned int )
-        : XMLObject()
+    : XMLObject()
 {
     // These should match the schema for min and max occurances
     // of the float array
@@ -56,7 +56,7 @@ OneDDoubleArray::~OneDDoubleArray()
 }
 ///////////////////////////////////////////
 OneDDoubleArray::OneDDoubleArray( const OneDDoubleArray& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mArray = input.mArray;
     mMinIndex = input.mMinIndex;
@@ -91,7 +91,7 @@ double OneDDoubleArray::GetElement( unsigned int index )
     {
         return mArray.at( index );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "ERROR!!!" << std::endl;
         std::cout << "Invalid index: " << index << " in OneDDoubleArray::GetElement!!!" << std::endl;
@@ -116,11 +116,11 @@ void OneDDoubleArray::_updateVEElement( const std::string& )
     {
         // name comes from verg.xsd
         DOMElement* valueTag  = mRootDocument->createElement(
-                                Convert( "data" ).toXMLString() );
+                                    Convert( "data" ).toXMLString() );
 
         mVeElement->appendChild( valueTag );
         DOMText* valueNum = mRootDocument->createTextNode(
-                            Convert( mArray.at( i ) ).toXMLString() );
+                                Convert( mArray.at( i ) ).toXMLString() );
 
         valueTag->appendChild( valueNum );
     }
@@ -144,13 +144,13 @@ void OneDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
         // do we need to delete the old one or does xerces handle this???
         DOMNodeList* nodeList = currentElement->getElementsByTagName(
-                                Convert( "data" ).toXMLString() );
+                                    Convert( "data" ).toXMLString() );
 
         XMLSize_t numNodes = nodeList->getLength();
-        if (( mMinIndex > numNodes ) )
+        if( ( mMinIndex > numNodes ) )
         {
             std::cerr << " ERROR : OneDDoubleArray::SetObjectFromXMLData :" <<
-            " This node has too few or too many children." << std::endl;
+                      " This node has too few or too many children." << std::endl;
         }
 
         // This for loop may be wrong since the the text node and
@@ -170,7 +170,7 @@ void OneDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
     else
     {
         std::cerr << " ERROR : OneDDoubleArray::SetObjectFromXMLData :" <<
-        " This node has no children which means there is probably a problem." << std::endl;
+                  " This node has no children which means there is probably a problem." << std::endl;
     }
 }
 

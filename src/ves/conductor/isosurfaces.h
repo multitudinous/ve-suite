@@ -71,7 +71,7 @@ class Network;
 class AdvancedIsosurface;
 class VE_GUIPLUGINS_EXPORTS Isosurfaces: public wxDialog
 {
-//    DECLARE_DYNAMIC_CLASS( Isosurfaces )
+    //    DECLARE_DYNAMIC_CLASS( Isosurfaces )
     DECLARE_EVENT_TABLE()
 
 public:

@@ -49,20 +49,29 @@ class NodeSelectManager : public QtAbstractPropertyManager
 {
     Q_OBJECT
 public:
-    NodeSelectManager(QObject *parent = 0)
-        : QtAbstractPropertyManager(parent)
-            { }
+    NodeSelectManager( QObject* parent = 0 )
+        : QtAbstractPropertyManager( parent )
+    { }
 
-    QString value(const QtProperty *property) const;
+    QString value( const QtProperty* property ) const;
 
 public Q_SLOTS:
-    void setValue(QtProperty *property, const QString &val);
+    void setValue( QtProperty* property, const QString& val );
 Q_SIGNALS:
-    void valueChanged(QtProperty *property, const QString &val);
+    void valueChanged( QtProperty* property, const QString& val );
 protected:
-    virtual QString valueText(const QtProperty *property) const { return value(property); }
-    virtual void initializeProperty(QtProperty *property) { theValues[property] = Data(); }
-    virtual void uninitializeProperty(QtProperty *property) { theValues.remove(property); }
+    virtual QString valueText( const QtProperty* property ) const
+    {
+        return value( property );
+    }
+    virtual void initializeProperty( QtProperty* property )
+    {
+        theValues[property] = Data();
+    }
+    virtual void uninitializeProperty( QtProperty* property )
+    {
+        theValues.remove( property );
+    }
 private:
 
     struct Data
@@ -70,7 +79,7 @@ private:
         QString value;
     };
 
-    QMap<const QtProperty *, Data> theValues;
+    QMap<const QtProperty*, Data> theValues;
 };
 
 }

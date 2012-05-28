@@ -73,30 +73,30 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, osg::Group* worldDCS )
     directory( specifiedDir )
 {
     vprDEBUG( vesDBG, 1 ) << "|\tStored Scenes directory : \"" << this->directory
-        << "\"" << std::endl << vprDEBUG_FLUSH;
+                          << "\"" << std::endl << vprDEBUG_FLUSH;
 
     // initialize in case the directory is not there...
-    // We use a node specifically for teacher to keep book keeping on loaded 
+    // We use a node specifically for teacher to keep book keeping on loaded
     // scenes a little bit easier
     dcs->SetName( "Teacher Node" );
     mModelRoot->addChild( dcs.get() );
     //Get ive, osg, and pfb filenames
-    pfbFileNames = 
+    pfbFileNames =
         ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
-    tempFilenames = 
+    tempFilenames =
         ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
     tempFilenames.clear();
-    tempFilenames = 
+    tempFilenames =
         ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
 
     // how many performer binaries found ?
     vprDEBUG( vesDBG, 1 ) << "|\t\tNumber of stored scenes found: "
-        << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
+                          << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::~cfdTeacher()
@@ -158,31 +158,31 @@ void cfdTeacher::RecordScene()
     {
         if( !boost::filesystem::is_directory( dir_path ) )
         {
-            std::cout << "|\tCreated " << directory 
-                << " directory." << std::endl;
+            std::cout << "|\tCreated " << directory
+                      << " directory." << std::endl;
             boost::filesystem::create_directory( dir_path );
         }
     }
-    catch ( const std::exception& ex )
+    catch( const std::exception& ex )
     {
         std::cout << ex.what() << std::endl;
-        std::cout << "|\tCreated " << directory 
-            << " directory." << std::endl;
+        std::cout << "|\tCreated " << directory
+                  << " directory." << std::endl;
         //Needed for backwards compatibility
         boost::filesystem::create_directory( dir_path );
     }
-    
+
     // Generate a .pfb filename...
     std::string pfb_filename;
     std::ostringstream dirStringStream;
     dirStringStream << this->directory << "/stored_scene_"
-        << pfbFileNames.size() << ".ive";
+                    << pfbFileNames.size() << ".ive";
 
     std::string dirString = dirStringStream.str();
     pfb_filename = dirString.c_str();
 
     vprDEBUG( vesDBG, 0 ) << "|\tScene stored as " << pfb_filename
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     // store the world DCS matrix..
     if( mModelRoot.valid() )
@@ -195,7 +195,7 @@ void cfdTeacher::RecordScene()
     }
 
     vprDEBUG( vesDBG, 1 ) << "|\tStored Scene Output " << pfbFileNames.size()
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::LoadScene( unsigned int whichChild )
@@ -206,7 +206,7 @@ void cfdTeacher::LoadScene( unsigned int whichChild )
     }
 
     vprDEBUG( vesDBG, 2 ) << "LOAD_PFB_FILE: addChild" << std::endl
-        << vprDEBUG_FLUSH;
+                          << vprDEBUG_FLUSH;
 
     GetDCS()->addChild( GetCurrentLoadedScene( whichChild )->GetNode() );
 }
@@ -214,8 +214,8 @@ void cfdTeacher::LoadScene( unsigned int whichChild )
 void cfdTeacher::ClearStoredScenes()
 {
     vprDEBUG( vesDBG, 2 )
-        << "|\tcfdTeacher::ClearStoredScenes : CLEAR_ALL or CLEAR_PFB_FILE "
-        << std::endl  << vprDEBUG_FLUSH;
+            << "|\tcfdTeacher::ClearStoredScenes : CLEAR_ALL or CLEAR_PFB_FILE "
+            << std::endl  << vprDEBUG_FLUSH;
 
     if( dcs->getNumChildren() > 0 )
     {
@@ -256,8 +256,8 @@ void cfdTeacher::writePFBFile( osg::Node* graph, std::string fileName )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::Reset()
 {
-    vprDEBUG( vesDBG, 1 ) << "|\tStored Scenes directory : \"" 
-        << directory << "\"" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tStored Scenes directory : \""
+                          << directory << "\"" << std::endl << vprDEBUG_FLUSH;
     //Remove the other application's stored scenes
     ClearStoredScenes();
     //Delete the old active scene if we have one
@@ -269,21 +269,21 @@ void cfdTeacher::Reset()
     }
     //Get ive, osg, and pfb filenames for the new application
     pfbFileNames.clear();
-    pfbFileNames = 
+    pfbFileNames =
         ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
-    tempFilenames = 
+    tempFilenames =
         ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
     tempFilenames.clear();
-    tempFilenames = 
+    tempFilenames =
         ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
 
     // how many performer binaries found ?
     vprDEBUG( vesDBG, 1 ) << "|\t\tNumber of stored scenes found: "
-        << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
+                          << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////

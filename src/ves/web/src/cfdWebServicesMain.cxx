@@ -76,8 +76,8 @@ int main( int argc, char* argv[] )
     // the request
     std::cout << "creating POA..." << std::endl;
     PortableServer::POA_var child_poa = poa->create_POA( "childPOA",
-                                                         poa_manager.in(),
-                                                         policies );
+                                        poa_manager.in(),
+                                        policies );
 
     // Creation of childPOA is over. Destroy the Policy objects.
     std::cout << "destroying policies..." << std::endl;

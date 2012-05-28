@@ -97,8 +97,8 @@ public:
     wxSpinCtrlDbl();
 
     // Native constructor - note &parent, this is to avoid ambiguity
-    wxSpinCtrlDbl( wxWindow &parent, wxWindowID id,
-                   const wxString &value = wxEmptyString,
+    wxSpinCtrlDbl( wxWindow& parent, wxWindowID id,
+                   const wxString& value = wxEmptyString,
                    const wxPoint& pos = wxDefaultPosition,
                    const wxSize& size = wxSize( 95, -1 ),
                    long style = 0,
@@ -108,8 +108,8 @@ public:
                    const wxString& name = _T( "wxSpinCtrlDbl" ) );
 
     // wxSpinCtrl compatibility, call SetIncrement(increment,digits) after
-    wxSpinCtrlDbl( wxWindow *parent, wxWindowID id = wxID_ANY,
-                   const wxString &value = wxEmptyString,
+    wxSpinCtrlDbl( wxWindow* parent, wxWindowID id = wxID_ANY,
+                   const wxString& value = wxEmptyString,
                    const wxPoint& pos = wxDefaultPosition,
                    const wxSize& size = wxSize( 95, -1 ),
                    long style = 0,
@@ -117,9 +117,9 @@ public:
                    int initial = 0,
                    const wxString& name = _T( "wxSpinCtrlDbl" ) );
 
-    bool Create( wxWindow *parent,
+    bool Create( wxWindow* parent,
                  wxWindowID id = wxID_ANY,
-                 const wxString &value = wxEmptyString,
+                 const wxString& value = wxEmptyString,
                  const wxPoint& pos = wxDefaultPosition,
                  const wxSize& size = wxSize( 100, -1 ),
                  long style = 0,
@@ -194,7 +194,7 @@ public:
     }
     virtual bool InRange( double value ) const
     {
-        return !HasRange() || (( value >= m_min ) && ( value <= m_max ) );
+        return !HasRange() || ( ( value >= m_min ) && ( value <= m_max ) );
     }
     double   GetIncrement() const
     {
@@ -222,22 +222,22 @@ public:
         return ( m_value == m_default_value );
     }
 
-    bool   SetFont( const wxFont &font );
+    bool   SetFont( const wxFont& font );
     wxFont GetFont() const;
 
     // for setting... stuff
-    wxTextCtrl *GetTextCtrl()
+    wxTextCtrl* GetTextCtrl()
     {
         return ( wxTextCtrl* )m_textCtrl;
     }
 
 protected:
-    void OnSpin( wxSpinEvent &event );
-    void OnSpinUp( wxSpinEvent &event );
-    void OnSpinDown( wxSpinEvent &event );
-    void OnTextEnter( wxCommandEvent &event );
+    void OnSpin( wxSpinEvent& event );
+    void OnSpinUp( wxSpinEvent& event );
+    void OnSpinDown( wxSpinEvent& event );
+    void OnTextEnter( wxCommandEvent& event );
     // the textctrl is subclassed to get at pgup/dn and then sent here
-    void OnChar( wxKeyEvent &event );
+    void OnChar( wxKeyEvent& event );
 
     virtual void SyncSpinToText( bool send_event = TRUE );
 
@@ -249,10 +249,10 @@ protected:
     virtual wxSize DoGetBestSize() const;
 
     void OnFocus( wxFocusEvent& event );  // pass focus to textctrl, for wxTAB_TRAVERSAL
-    void OnKillFocus( wxFocusEvent &event );
+    void OnKillFocus( wxFocusEvent& event );
 
-    wxSpinButton           *m_spinButton;
-    wxSpinCtrlDblTextCtrl *m_textCtrl;
+    wxSpinButton*           m_spinButton;
+    wxSpinCtrlDblTextCtrl* m_textCtrl;
 
     double   m_min;           // min allowed value
     double   m_max;           // max allowed value

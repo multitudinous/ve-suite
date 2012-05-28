@@ -36,15 +36,28 @@
 
 #include <QtGui/QStackedWidget>
 
-namespace Minerva { namespace Core { namespace Data { class Feature; } } }
+namespace Minerva
+{
+namespace Core
+{
+namespace Data
+{
+class Feature;
+}
+}
+}
 
-namespace ves {
-namespace conductor {
-namespace qt {
-namespace minerva {
+namespace ves
+{
+namespace conductor
+{
+namespace qt
+{
+namespace minerva
+{
 
-    class LayersTree;
-    class AddLayerWidget;
+class LayersTree;
+class AddLayerWidget;
 
 class StackedWidget : public QStackedWidget
 {
@@ -53,10 +66,10 @@ class StackedWidget : public QStackedWidget
     typedef QStackedWidget BaseClass;
 public:
 
-    StackedWidget ( QWidget *parent = 0x0 );
+    StackedWidget( QWidget* parent = 0x0 );
     virtual ~StackedWidget();
 
-    void setFeature ( Minerva::Core::Data::Feature * feature );
+    void setFeature( Minerva::Core::Data::Feature* feature );
 
 protected Q_SLOTS:
 

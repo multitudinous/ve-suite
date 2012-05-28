@@ -41,7 +41,7 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 LocalToWorldNodePath::LocalToWorldNodePath( osg::Node* stopNode,
-                                              osg::Node* startNode )
+        osg::Node* startNode )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
     mStopNode( stopNode )

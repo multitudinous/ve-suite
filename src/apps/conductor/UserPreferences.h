@@ -157,7 +157,7 @@ private:
     wxTextCtrl* m_nearFarEntry;
     ///Text control for dragger scaling
     wxTextCtrl* m_draggerScalingEntry;
-    
+
     std::vector<double> xplorerColor;
     ///Near far ratio
     double m_nearFar;

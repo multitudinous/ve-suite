@@ -47,7 +47,7 @@
 
 /**
  * This file contains the main() function for the Julius Speech Navigation
- * plugin for Xplorer.  It is necessary to run this application to make 
+ * plugin for Xplorer.  It is necessary to run this application to make
  * the CORBA connections to Xplorer and establish the socket communication with
  * the Julius Speech Engine.
  */
@@ -70,7 +70,7 @@ void usage()
  */
 void cleanup()
 {
-    if (gSpeechNavigator)
+    if( gSpeechNavigator )
     {
         delete gSpeechNavigator;
     }
@@ -79,7 +79,7 @@ void cleanup()
 /**
  * Handles a SIGINT; it stops the parser thread and the data loop.
  */
-int on_sigint(int, siginfo_t*, ucontext_t*)
+int on_sigint( int, siginfo_t*, ucontext_t* )
 {
     std::cout << "[DBG] Entering SIGINT handler." << std::endl;
     gSpeechNavigator->stopParserThread();
@@ -92,10 +92,10 @@ int on_sigint(int, siginfo_t*, ucontext_t*)
  * This allows an external application to send a SIGUSR1 to stop this
  * app from sending speech recognition results.
  */
-int on_sigusr1(int, siginfo_t*, ucontext_t*)
+int on_sigusr1( int, siginfo_t*, ucontext_t* )
 {
     std::cout << "[DBG] Entering SIGUSR1 handler." << std::endl;
-    if (gSpeechNavigator && gSpeechNavigator->isParserThreadRunning())
+    if( gSpeechNavigator && gSpeechNavigator->isParserThreadRunning() )
     {
         gSpeechNavigator->stopParserThread();
     }
@@ -107,57 +107,57 @@ int on_sigusr1(int, siginfo_t*, ucontext_t*)
  * This allows an external application that previously sent a SIGUSR1 to stop
  * the speech recognition to resume speech recogntion.
  */
-int on_sigusr2(int, siginfo_t*, ucontext_t*)
+int on_sigusr2( int, siginfo_t*, ucontext_t* )
 {
     std::cout << "[DBG] Entering SIGUSR2 handler." << std::endl;
-    if (gSpeechNavigator && !gSpeechNavigator->isParserThreadRunning())
+    if( gSpeechNavigator && !gSpeechNavigator->isParserThreadRunning() )
     {
         gSpeechNavigator->startParserThread();
     }
     return 0;
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    if (argc < 4)
+    if( argc < 4 )
     {
         usage();
         return 1;
     }
-    atexit(cleanup);
+    atexit( cleanup );
     std::string julius_host = argv[1];
-    unsigned short port = atoi(argv[2]);
+    unsigned short port = atoi( argv[2] );
     SpeechNavigator* gSpeechNavigator = new SpeechNavigator();
     // TODO:  Create signal handlers.
     ACE_Sig_Handler signal_handler;
     // Create the SIGINT handlers.
     AceFunctorHandler sigint_handler;
-    AceFunctorHandler::SignalHandler sih(on_sigint);
-    sigint_handler.setSignalHandler(sih);
+    AceFunctorHandler::SignalHandler sih( on_sigint );
+    sigint_handler.setSignalHandler( sih );
     // Create the SIGUSR1 handlers.
     AceFunctorHandler sigusr1_handler;
-    AceFunctorHandler::SignalHandler su1(on_sigusr1);
-    sigusr1_handler.setSignalHandler(su1);
+    AceFunctorHandler::SignalHandler su1( on_sigusr1 );
+    sigusr1_handler.setSignalHandler( su1 );
     // Create the SIGUSR2 handlers.
     AceFunctorHandler sigusr2_handler;
-    AceFunctorHandler::SignalHandler su2(on_sigusr2);
-    sigusr2_handler.setSignalHandler(su2);
+    AceFunctorHandler::SignalHandler su2( on_sigusr2 );
+    sigusr2_handler.setSignalHandler( su2 );
     // Register all handlers with ACE.
-    signal_handler.register_handler(SIGINT, &sigint_handler); 
-    signal_handler.register_handler(SIGUSR1, &sigusr1_handler);
-    signal_handler.register_handler(SIGUSR2, &sigusr2_handler);
-     
-    gSpeechNavigator->setArgcArgv(argc, argv);
+    signal_handler.register_handler( SIGINT, &sigint_handler );
+    signal_handler.register_handler( SIGUSR1, &sigusr1_handler );
+    signal_handler.register_handler( SIGUSR2, &sigusr2_handler );
+
+    gSpeechNavigator->setArgcArgv( argc, argv );
     std::cout << "Connecting to Julius on " << julius_host << ":"
               << port << "..." << std::endl;
-    if (!gSpeechNavigator->connectToJulius(std::string("localhost")))
+    if( !gSpeechNavigator->connectToJulius( std::string( "localhost" ) ) )
     {
         std::cerr << "[ERR] Unable to connect to julius." << std::endl;
         return 2;
     }
     std::cout << "Connected." << std::endl;
     std::cout << "Connecting to Xplorer..." << std::endl;
-    if (!gSpeechNavigator->connectToXplorer())
+    if( !gSpeechNavigator->connectToXplorer() )
     {
         std::cerr << "[ERR] Unable to connect to Xplorer." << std::endl;
         return 3;
@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
     std::cout << "Connected." << std::endl;
     std::cout << "Starting the data loop..." << std::endl;
     // Start the data loop.
-    if (!gSpeechNavigator->startDataLoop())
+    if( !gSpeechNavigator->startDataLoop() )
     {
         std::cerr << "[ERR] Unable to start the data loop." << std::endl;
         return 4;

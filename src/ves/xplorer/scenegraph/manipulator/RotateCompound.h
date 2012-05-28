@@ -103,10 +103,10 @@ protected:
 private:
     ///
     osg::ref_ptr< RotateAxis > m_xRotateAxis;
-    
+
     ///
     osg::ref_ptr< RotateAxis > m_yRotateAxis;
-    
+
     ///
     osg::ref_ptr< RotateAxis > m_zRotateAxis;
 

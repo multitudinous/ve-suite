@@ -35,8 +35,9 @@
 
 #include <QtGui/QWidget>
 
-namespace Ui {
-    class DefaultPlugin_UIDialog;
+namespace Ui
+{
+class DefaultPlugin_UIDialog;
 }
 
 class DefaultPlugin_UIDialog : public QWidget
@@ -44,14 +45,14 @@ class DefaultPlugin_UIDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit DefaultPlugin_UIDialog(QWidget *parent = 0);
+    explicit DefaultPlugin_UIDialog( QWidget* parent = 0 );
     ~DefaultPlugin_UIDialog();
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent( QEvent* e );
 
 private:
-    Ui::DefaultPlugin_UIDialog *ui;
+    Ui::DefaultPlugin_UIDialog* ui;
 };
 
 #endif // DEFAULTPLUGIN_UIDIALOG_H

@@ -107,19 +107,19 @@ public:
     );
 
     virtual
-    char * GetStatusMessage(
+    char* GetStatusMessage(
 
     );
 
     virtual
-    char * GetUserData(
+    char* GetUserData(
 
     );
 
     virtual
     void SetParams(
         ::CORBA::Long module_id,
-        const char * param
+        const char* param
     );
 
     virtual
@@ -133,7 +133,7 @@ public:
     );
 
     virtual
-    ::Types::ArrayLong * GetID(
+    ::Types::ArrayLong* GetID(
 
     );
 
@@ -144,18 +144,18 @@ public:
 
     virtual
     void SetName(
-        const char * name
+        const char* name
     );
 
     virtual
-    char * GetName(
+    char* GetName(
 
     );
 
     virtual
-    char * Query( const char * command
+    char* Query( const char* command
 
-                );
+               );
 
     virtual
     void DeleteModuleInstance(

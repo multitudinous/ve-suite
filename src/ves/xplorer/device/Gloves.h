@@ -170,7 +170,7 @@ protected:
 
     ///Update the hand model with data from VR Juggler
     void UpdateHandModel();
-    
+
     void UpdateRightHandGlove();
     void UpdateLeftHandGlove();
 
@@ -218,7 +218,7 @@ private:
     double m_worldTrans[ 3 ];
     ///A flag to control bullet debug info
     bool mDebugInfo;
-    
+
     osg::ref_ptr< osgbInteraction::HandNode > mLeftHand;
     osg::ref_ptr< osgbInteraction::HandNode > mRightHand;
 

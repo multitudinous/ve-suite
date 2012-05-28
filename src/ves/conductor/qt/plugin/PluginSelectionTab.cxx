@@ -72,41 +72,41 @@
 #include <QtGui/QLabel>
 #include <QtGui/QKeyEvent>
 
-Q_DECLARE_METATYPE(std::string)
-Q_DECLARE_METATYPE(ves::xplorer::plugin::PluginBase)
+Q_DECLARE_METATYPE( std::string )
+Q_DECLARE_METATYPE( ves::xplorer::plugin::PluginBase )
 
 namespace ves
 {
 namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
-PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget *parent ) :
-    QWidget(parent),
-    ui(new Ui::PluginSelectionTab),
+PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget* parent ) :
+    QWidget( parent ),
+    ui( new Ui::PluginSelectionTab ),
     m_mainWindow( mainWindow )
 {
-    ui->setupUi(this);
+    ui->setupUi( this );
     ui->m_instantiatedPlugins->installEventFilter( this );
 
-    ReDiscoverPlugins("");
-    
+    ReDiscoverPlugins( "" );
+
     qRegisterMetaType<std::string>();
     qRegisterMetaType<ves::xplorer::plugin::PluginBase>();
 
     connect( this, SIGNAL( CreateUIPluginQSignal( const std::string& ,
-                                         ves::xplorer::plugin::PluginBase* ) ),
-                              this, SLOT( qCreateUIPlugin( const std::string& ,
-                                         ves::xplorer::plugin::PluginBase*  ) ),
-                              Qt::QueuedConnection );
+                           ves::xplorer::plugin::PluginBase* ) ),
+             this, SLOT( qCreateUIPlugin( const std::string& ,
+                                          ves::xplorer::plugin::PluginBase* ) ),
+             Qt::QueuedConnection );
 
-    connect( this, SIGNAL( FileLoadedQSignal( const std::string&  ) ),
-                              this, SLOT( qFileLoadedSlot( const std::string& ) ),
-                              Qt::QueuedConnection );
+    connect( this, SIGNAL( FileLoadedQSignal( const std::string& ) ),
+             this, SLOT( qFileLoadedSlot( const std::string& ) ),
+             Qt::QueuedConnection );
 
     CONNECTSIGNALS_2( "%CreatePlugin",
                       void ( const std::string&, ves::xplorer::plugin::PluginBase* ),
                       &PluginSelectionTab::CreateUIPlugin, m_connections,
-                      any_SignalType, normal_Priority);
+                      any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_1( "%VesFileLoading%",
                       void( const std::string& ),
@@ -132,22 +132,22 @@ void PluginSelectionTab::ReDiscoverPlugins( std::string const& dir )
 
 
     QString qPluginDir =
-        QProcessEnvironment::systemEnvironment().value ( "CONDUCTOR_PLUGINS_DIR" );
+        QProcessEnvironment::systemEnvironment().value( "CONDUCTOR_PLUGINS_DIR" );
     std::string pluginsDir;
     if( qPluginDir.toStdString().empty() )
     {
         std::cout << "|\tCONDUCTOR_PLUGINS_DIR is not defined."
-            << std::endl << std::flush;
+                  << std::endl << std::flush;
         qPluginDir =
-            QProcessEnvironment::systemEnvironment().value ( "XPLORER_PLUGINS_DIR" );
+            QProcessEnvironment::systemEnvironment().value( "XPLORER_PLUGINS_DIR" );
         pluginsDir = qPluginDir.toStdString() + "/../../conductor/plugins";
         std::cout << "|\tUsing " << pluginsDir << " instead."
-            << std::endl << std::flush;
+                  << std::endl << std::flush;
     }
     else
     {
         std::cout << "|\tCONDUCTOR_PLUGINS_DIR = "
-            << qPluginDir.toStdString() << std::endl << std::flush;
+                  << qPluginDir.toStdString() << std::endl << std::flush;
         pluginsDir = qPluginDir.toStdString();
     }
     DiscoverPlugins( pluginsDir );
@@ -162,30 +162,30 @@ void PluginSelectionTab::ReDiscoverPlugins( std::string const& dir )
 void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
 {
     std::string const pluginDir = dir;
-    
+
     QString tempDir( pluginDir.c_str() );
     QDir pluginsPath( tempDir );
     if( !pluginsPath.exists() )
     {
         std::cout << std::endl << "|\tConductor does not have any plugins to "
-            << "search for in " << pluginDir 
-            << "." << std::endl << std::flush; 
+                  << "search for in " << pluginDir
+                  << "." << std::endl << std::flush;
         return;
     }
 
     // Recursively search all subdirectories of the passed directory
-    QStringList subdirs = pluginsPath.entryList( QDir::Dirs|QDir::NoDotAndDotDot );
+    QStringList subdirs = pluginsPath.entryList( QDir::Dirs | QDir::NoDotAndDotDot );
     QStringList::iterator dir_iter = subdirs.begin();
     while( dir_iter != subdirs.end() )
     {
-        std::string compoundpath = dir + "/" + ((*dir_iter).toStdString());
+        std::string compoundpath = dir + "/" + ( ( *dir_iter ).toStdString() );
         std::cout << "Traversing to " << compoundpath << std::endl << std::flush;
         DiscoverPlugins( compoundpath );
         dir_iter++;
     }
 
     std::cout << std::endl << "|\tConductor is searching for plugins in "
-        << pluginsPath.canonicalPath().toStdString() << std::endl << std::flush;
+              << pluginsPath.canonicalPath().toStdString() << std::endl << std::flush;
 
     // Walk through all files in Plugins/UI directory
     QStringList extensionFilters;
@@ -195,32 +195,32 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
     if( iter == files.end() )
     {
         std::cout << "|\tConductor found no plugins."
-            << std::endl << std::flush;
+                  << std::endl << std::flush;
     }
 
 
     while( iter != files.end() )
     {
-        QString fileName = (*iter);
+        QString fileName = ( *iter );
         QPluginLoader loader;
-        loader.setFileName( pluginsPath.absoluteFilePath(fileName) );
+        loader.setFileName( pluginsPath.absoluteFilePath( fileName ) );
         std::cout << "|\tChecking whether " << fileName.toStdString()
-                << " is a plugin...";
+                  << " is a plugin...";
         if( loader.load() )
         {
             std::cout << "yes." << std::endl << std::flush;
 
             // Get root object, which should be a UIPluginFactory
-            QObject *plugin = loader.instance();
-            if (plugin)
+            QObject* plugin = loader.instance();
+            if( plugin )
             {
-                UIPluginFactory* factory = qobject_cast< UIPluginFactory* >(plugin);
+                UIPluginFactory* factory = qobject_cast< UIPluginFactory* >( plugin );
                 if( factory )
                 {
-                    std::cout << "|\tConductor successfully loaded plugin " 
-                            << fileName.toStdString()
-                            << " containing plugin: " << factory->GetFactoryClassName() << " -- "
-                            << factory->GetDescription() << std::endl;
+                    std::cout << "|\tConductor successfully loaded plugin "
+                              << fileName.toStdString()
+                              << " containing plugin: " << factory->GetFactoryClassName() << " -- "
+                              << factory->GetDescription() << std::endl;
                     QString displayName = QString::fromStdString( factory->GetFactoryDisplayName() );
                     QList< QListWidgetItem* > existing = ui->m_availablePlugins->findItems(
                             displayName, Qt::MatchFixedString | Qt::MatchCaseSensitive );
@@ -233,16 +233,16 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
                         QListWidgetItem* item = new QListWidgetItem( factory->GetIcon(), displayName, ui->m_availablePlugins );
                         // Set the plugin's full path as extra data in the item so that later
                         // we can create new instances of this plugin.
-                        item->setData( Qt::UserRole, QString::fromStdString(factory->GetFactoryClassName()) );
+                        item->setData( Qt::UserRole, QString::fromStdString( factory->GetFactoryClassName() ) );
                         item->setData( Qt::UserRole + 1, loader.fileName() );
                         std::cout << "|\tAdding plugin with filename " << loader.fileName().toStdString() << std::endl;
                         ui->m_availablePlugins->addItem( item );
-                     }
+                    }
                 }
                 else
                 {
                     std::cout << "|\tFailed to cast plugin " << fileName.toStdString() <<
-                            " as a UIPluginFactory." << std::endl << std::flush;
+                              " as a UIPluginFactory." << std::endl << std::flush;
                 }
             }
             else
@@ -265,12 +265,13 @@ PluginSelectionTab::~PluginSelectionTab()
     delete ui;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginSelectionTab::changeEvent(QEvent *e)
+void PluginSelectionTab::changeEvent( QEvent* e )
 {
-    QWidget::changeEvent(e);
-    switch (e->type()) {
+    QWidget::changeEvent( e );
+    switch( e->type() )
+    {
     case QEvent::LanguageChange:
-        ui->retranslateUi(this);
+        ui->retranslateUi( this );
         break;
     default:
         break;
@@ -293,13 +294,13 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
     std::cout << "Creating instance of " << fileName.toStdString() << std::endl << std::flush;
 
     QPluginLoader loader( fileName );
-    QObject *plugin = loader.instance();
+    QObject* plugin = loader.instance();
     if( !plugin )
     {
         return;
     }
     UIPluginFactory* factory =
-            qobject_cast< UIPluginFactory* >(plugin);
+        qobject_cast< UIPluginFactory* >( plugin );
     if( factory )
     {
         // We have a valid plugin. Add this to the current system, and
@@ -312,7 +313,7 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
         ///Initialize top level network
         ves::open::xml::model::NetworkPtr tempNetwork( new ves::open::xml::model::Network() );
         if( !mDataBufferEngine->GetXMLSystemDataObject(
-                        mDataBufferEngine->GetTopSystemId() )->GetNetwork() )
+                    mDataBufferEngine->GetTopSystemId() )->GetNetwork() )
         {
 
             mDataBufferEngine->GetXMLSystemDataObject(
@@ -321,13 +322,13 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
         else
         {
             tempNetwork = mDataBufferEngine->GetXMLSystemDataObject(
-                    mDataBufferEngine->GetTopSystemId() )->GetNetwork();
+                              mDataBufferEngine->GetTopSystemId() )->GetNetwork();
         }
 
         using namespace ves::open::xml::model;
 
         SystemPtr system( mDataBufferEngine->GetXMLSystemDataObject(
-                mDataBufferEngine->GetTopSystemId() ) );
+                              mDataBufferEngine->GetTopSystemId() ) );
 
         ModelPtr mod( new Model );
         mod->SetPluginType( factory->GetFactoryClassName() );
@@ -338,7 +339,7 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
         system->AddModel( mod );
 
         const std::string network = XMLDataBufferEngine::instance()->
-                        SaveVESData( std::string( "returnString" ) );
+                                    SaveVESData( std::string( "returnString" ) );
 
         ves::xplorer::network::GraphicalPluginManager::instance()->SetCurrentNetwork( network );
 
@@ -356,23 +357,23 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidget
     // Check whether we've already composed a widget and tab for this item to
     // prevent showing multiple tabs
     std::map< QListWidgetItem*, QWidget* >::iterator witer =
-            m_itemWidgetMap.find( item );
+        m_itemWidgetMap.find( item );
     if( witer != m_itemWidgetMap.end() )
     {
         std::map< QListWidgetItem*, UIPluginInterface* >::const_iterator iter =
-                m_itemInterfaceMap.find( item );
+            m_itemInterfaceMap.find( item );
         if( iter != m_itemInterfaceMap.end() )
         {
             // Just activate the tab.
             m_mainWindow->ActivateTab( m_mainWindow->AddTab( witer->second,
-                                               iter->second->GetName() ) );
+                                       iter->second->GetName() ) );
             return;
         }
 
     }
 
     std::map< QListWidgetItem*, UIPluginInterface* >::const_iterator iter =
-            m_itemInterfaceMap.find( item );
+        m_itemInterfaceMap.find( item );
     if( iter != m_itemInterfaceMap.end() )
     {
         UIPluginInterface* interface = iter->second;
@@ -380,13 +381,13 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidget
         // Compose a widget containing the PluginPorts ui in the top part and
         // the UIWidget associated with this plugin in the bottom part
         Ui::Form* qtop = new Ui::Form;
-        QWidget* top = new QWidget(0);
+        QWidget* top = new QWidget( 0 );
         qtop->setupUi( top );
         QWidget* bottom = interface->GetUIWidget();
         QVBoxLayout* layout = new QVBoxLayout;
-        layout->addWidget(top);
-        layout->addWidget(bottom);
-        QWidget* tempWidget = new QWidget(0);
+        layout->addWidget( top );
+        layout->addWidget( bottom );
+        QWidget* tempWidget = new QWidget( 0 );
         tempWidget->setLayout( layout );
 
         //UIPluginBase* pb = dynamic_cast<UIPluginBase*>(interface);
@@ -398,7 +399,7 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidget
 
         // Add the composed widget as a tab
         m_mainWindow->ActivateTab(
-                m_mainWindow->AddTab( tempWidget, interface->GetName() ) );
+            m_mainWindow->AddTab( tempWidget, interface->GetName() ) );
 
         // Keep track of the composed widget so it can be deleted at the right
         // time
@@ -411,10 +412,10 @@ void PluginSelectionTab::on_m_availablePlugins_itemActivated( QListWidgetItem* i
     InstantiatePlugin( item );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginSelectionTab::on_m_instantiatedPlugins_itemChanged ( QListWidgetItem * item )
-{   
+void PluginSelectionTab::on_m_instantiatedPlugins_itemChanged( QListWidgetItem* item )
+{
     std::map< QListWidgetItem*, UIPluginInterface* >::const_iterator iter =
-            m_itemInterfaceMap.find( item );
+        m_itemInterfaceMap.find( item );
     if( iter != m_itemInterfaceMap.end() )
     {
         UIPluginInterface* interface = iter->second;
@@ -422,7 +423,7 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemChanged ( QListWidgetItem 
 
         // Re-add the tab, which will cause the tab name to be updated.
         m_mainWindow->ActivateTab(
-                m_mainWindow->AddTab( m_itemWidgetMap[ item ], interface->GetName() ) );
+            m_mainWindow->AddTab( m_itemWidgetMap[ item ], interface->GetName() ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -436,7 +437,7 @@ void PluginSelectionTab::on_m_removePluginButton_clicked()
     }
 
     std::map< QListWidgetItem*, UIPluginInterface* >::iterator iter =
-            m_itemInterfaceMap.find( item );
+        m_itemInterfaceMap.find( item );
     if( iter != m_itemInterfaceMap.end() )
     {
         RemovePlugin( iter->second );
@@ -444,7 +445,7 @@ void PluginSelectionTab::on_m_removePluginButton_clicked()
     }
 
     std::map< QListWidgetItem*, QWidget* >::iterator witer =
-            m_itemWidgetMap.find( item );
+        m_itemWidgetMap.find( item );
     if( witer != m_itemWidgetMap.end() )
     {
         ui->m_instantiatedPlugins->removeItemWidget( witer->first );
@@ -457,24 +458,24 @@ void PluginSelectionTab::on_m_removePluginButton_clicked()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::CreateUIPlugin( const std::string& pluginFactoryClassName,
-                                         ves::xplorer::plugin::PluginBase* xplorerPlugin)
+        ves::xplorer::plugin::PluginBase* xplorerPlugin )
 {
     CreateUIPluginQSignal( pluginFactoryClassName, xplorerPlugin );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::on_m_instantiatedPlugins_currentItemChanged
-     ( QListWidgetItem* current, QListWidgetItem* previous )
+( QListWidgetItem* current, QListWidgetItem* previous )
 {
     boost::ignore_unused_variable_warning( previous );
     if( current )
     {
         std::map< QListWidgetItem*, UIPluginInterface* >::const_iterator iter =
-                m_itemInterfaceMap.find( current );
+            m_itemInterfaceMap.find( current );
         if( iter != m_itemInterfaceMap.end() )
         {
             UIPluginBase* plugin = dynamic_cast< UIPluginBase* >( iter->second );
             ves::xplorer::ModelHandler::instance()->SetActiveModel(
-                    plugin->GetVEModel()->GetID() );
+                plugin->GetVEModel()->GetID() );
         }
     }
 }
@@ -483,7 +484,7 @@ void PluginSelectionTab::ClearActivePlugins()
 {
     std::cout << "|\tClearing active plugins" << std::endl << std::flush;
     std::map< QListWidgetItem*, UIPluginInterface* >::iterator iter =
-            m_itemInterfaceMap.begin();
+        m_itemInterfaceMap.begin();
     while( iter != m_itemInterfaceMap.end() )
     {
         RemovePlugin( iter->second );
@@ -499,18 +500,18 @@ void PluginSelectionTab::FileLoadedSlot( const std::string& fileName )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassName,
-                      ves::xplorer::plugin::PluginBase* xplorerPlugin )
+        ves::xplorer::plugin::PluginBase* xplorerPlugin )
 {
     QString pluginName = QString::fromStdString( pluginFactoryClassName );
 
     // See if this plugin exists in the available UI plugins list
     int index = 0;
     bool found = false;
-    while( !found && (index < ui->m_availablePlugins->count()) )
+    while( !found && ( index < ui->m_availablePlugins->count() ) )
     {
-        std::cout << "|\tMatches " 
-            << ui->m_availablePlugins->item( index )->data( Qt::UserRole ).toString().toStdString() 
-            << " ?" << std::endl << std::flush;
+        std::cout << "|\tMatches "
+                  << ui->m_availablePlugins->item( index )->data( Qt::UserRole ).toString().toStdString()
+                  << " ?" << std::endl << std::flush;
         if( ui->m_availablePlugins->item( index )->data( Qt::UserRole ).toString() == pluginName )
         {
             found = true;
@@ -522,13 +523,13 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
     if( !found )
     {
         std::cerr << "ERROR -- PluginSelectionTab::qCreateUIPlugin: No available UI plugin named "
-                << pluginFactoryClassName << std::endl << std::flush;
+                  << pluginFactoryClassName << std::endl << std::flush;
         return;
     }
     else
     {
-        std::cout << "|\tFound UI plugin lib matching name " 
-            << pluginFactoryClassName << std::endl << std::flush;
+        std::cout << "|\tFound UI plugin lib matching name "
+                  << pluginFactoryClassName << std::endl << std::flush;
     }
 
     // Create an instance of the plugin from its factory
@@ -538,14 +539,14 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
     QString fileName = item->data( Qt::UserRole + 1 ).toString();
 
     QPluginLoader loader( fileName );
-    QObject *plugin = loader.instance();
+    QObject* plugin = loader.instance();
     if( !plugin )
     {
         return;
     }
 
     UIPluginFactory* factory =
-            qobject_cast< UIPluginFactory* >(plugin);
+        qobject_cast< UIPluginFactory* >( plugin );
     if( factory )
     {
         // Create new instance of the UIPluginInterface object
@@ -553,9 +554,9 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
         UIPluginInterface* interface = factory->CreateInstance();
 
         // Set its name as interfaceName_index
-        QList<QListWidgetItem *> results =
-                ui->m_instantiatedPlugins->findItems( QString::fromStdString( interface->GetName() ),
-                                                      Qt::MatchStartsWith );
+        QList<QListWidgetItem*> results =
+            ui->m_instantiatedPlugins->findItems( QString::fromStdString( interface->GetName() ),
+                    Qt::MatchStartsWith );
         int index = results.count();
         std::stringstream nameSS;
         nameSS << interface->GetName();
@@ -563,7 +564,7 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
         nameSS << index;
         interface->SetName( nameSS.str() );
 
-        std::string newName("Plugin_");
+        std::string newName( "Plugin_" );
         newName += nameSS.str();
         xplorerPlugin->GetPluginDCS()->SetName( newName );
 
@@ -577,19 +578,19 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
         // rather than the name of the factory.
         QString name;
         QListWidgetItem* newItem =
-            new QListWidgetItem( 
-                factory->GetIcon(), name.fromStdString( interface->GetName() ),
-                ui->m_instantiatedPlugins );
+            new QListWidgetItem(
+            factory->GetIcon(), name.fromStdString( interface->GetName() ),
+            ui->m_instantiatedPlugins );
 
         if( newItem )
         {
-            std::cout << "|\tCreated item named " 
-                << interface->GetName() << std::endl << std::flush;
+            std::cout << "|\tCreated item named "
+                      << interface->GetName() << std::endl << std::flush;
         }
         else
         {
-            std::cout << "|\tFailed to create list item!" 
-                << std::endl << std::flush;
+            std::cout << "|\tFailed to create list item!"
+                      << std::endl << std::flush;
         }
 
         newItem->setFlags( newItem->flags() | Qt::ItemIsEditable );
@@ -611,11 +612,11 @@ void PluginSelectionTab::qFileLoadedSlot( const std::string& fileName )
     ClearActivePlugins();
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PluginSelectionTab::eventFilter(QObject *obj, QEvent *event)
+bool PluginSelectionTab::eventFilter( QObject* obj, QEvent* event )
 {
-    if ( event->type() == QEvent::KeyPress )
+    if( event->type() == QEvent::KeyPress )
     {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        QKeyEvent* keyEvent = static_cast<QKeyEvent*>( event );
 
         // If delete key was pressed inside instantiatedPlugins list, we
         // remove that plugin.
@@ -645,23 +646,23 @@ void PluginSelectionTab::RemovePlugin( UIPluginInterface* plugin )
         XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
         bool success = mDataBufferEngine->RemoveModelFromSystem( modelPtr );
         boost::ignore_unused_variable_warning( success );
-        
+
         ///Remove the graphics side of things
         ves::xplorer::network::GraphicalPluginManager::instance()->
-            RemovePlugin( modelPtr->GetID() );
+        RemovePlugin( modelPtr->GetID() );
     }
     else
     {
-        std::cout 
-            << "|\tUnable to remove the XML data from the System model." 
-            << std::endl;
+        std::cout
+                << "|\tUnable to remove the XML data from the System model."
+                << std::endl;
     }
-    
+
     //Set active model to null so that if the previous active model is deleted
     //that we don't get errors in our code other places.
     std::string const nullString;
-    ves::xplorer::ModelHandler::instance()->SetActiveModel( nullString );    
-    
+    ves::xplorer::ModelHandler::instance()->SetActiveModel( nullString );
+
     // Deleting the widgets will automatically remove the tabs
     plugin->DeleteWidgets();
     delete plugin;

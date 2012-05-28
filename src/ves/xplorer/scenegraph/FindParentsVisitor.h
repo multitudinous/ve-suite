@@ -70,7 +70,7 @@ public:
 
     ///Return the GUID for the found node
     std::string GetNodeGUID();
-    
+
     ///Get the node path for the found parent
     osg::NodePath GetParentNodePath();
 

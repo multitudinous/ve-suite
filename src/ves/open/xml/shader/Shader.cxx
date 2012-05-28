@@ -46,7 +46,7 @@ XERCES_CPP_NAMESPACE_USE
 //Constructor                                                         //
 ////////////////////////////////////////////////////////////////////////
 Shader::Shader()
-        : ves::open::xml::XMLObject()
+    : ves::open::xml::XMLObject()
 {
     mShaderType = std::string( "Vertex" );
     mShaderSource = std::string( "" );
@@ -66,7 +66,7 @@ Shader::~Shader()
 ///Copy constructor            //
 /////////////////////////////////
 Shader::Shader( const Shader& rhs )
-        : XMLObject( rhs )
+    : XMLObject( rhs )
 {
     mShaderSource = std::string( "" );
     for( size_t i = 0; i < rhs.mUniformList.size(); i++ )
@@ -176,14 +176,16 @@ const TextureImagePtr Shader::GetTextureImage( unsigned int textureUnit )
     try
     {
         if( !mTextureImages.size() )
+        {
             throw( "No textures present in shader!!" );
+        }
         return mTextureImages[textureUnit];
     }
-    catch ( const char* msg )
+    catch( const char* msg )
     {
         std::cout << "ERROR: " << msg << std::endl;
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Texture Unit: " << textureUnit << " doesn't exist!" << std::endl;
         std::cout << "Shader::GetTextureImage() " << std::endl;
@@ -245,10 +247,10 @@ void Shader::_updateUniforms()
 void Shader::_updateShaderType()
 {
     DOMElement* typeElement = mRootDocument->createElement(
-                              Convert( "type" ).toXMLString() );
+                                  Convert( "type" ).toXMLString() );
 
     DOMText* type = mRootDocument->createTextNode(
-                    Convert( mShaderType ).toXMLString() );
+                        Convert( mShaderType ).toXMLString() );
 
     typeElement->appendChild( type );
     mVeElement->appendChild( typeElement );
@@ -257,10 +259,10 @@ void Shader::_updateShaderType()
 void Shader::_updateShaderSource()
 {
     DOMElement* sourceElement = mRootDocument->createElement(
-                                Convert( "shaderCode" ).toXMLString() );
+                                    Convert( "shaderCode" ).toXMLString() );
 
     DOMText* source = mRootDocument->createTextNode(
-                      Convert( mShaderSource ).toXMLString() );
+                          Convert( mShaderSource ).toXMLString() );
 
     sourceElement->appendChild( source );
     mVeElement->appendChild( sourceElement );

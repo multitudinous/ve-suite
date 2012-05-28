@@ -41,9 +41,9 @@ int main( int argc, char** argv )
     {
         std::cout << "Usage:" << std::endl;
         std::cout << "HDFtoVTK ./infile.hdf ./outDir outname" << std::endl
-        << "./infile.hdf ==> path and filename to read in" << std::endl
-        << "./outDir     ==> path to write output" << std::endl
-        << "outname      ==> prefix(before .vtk extension) for output files" << std::endl;
+                  << "./infile.hdf ==> path and filename to read in" << std::endl
+                  << "./outDir     ==> path to write output" << std::endl
+                  << "outname      ==> prefix(before .vtk extension) for output files" << std::endl;
         exit( 0 );
     }
     else

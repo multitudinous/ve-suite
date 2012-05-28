@@ -60,7 +60,7 @@ bool VEGeode_readLocalData( Object& obj, Input& fr )
     ves::xplorer::scenegraph::Geode& geode = static_cast< ves::xplorer::scenegraph::Geode&>( obj );
 
     int num_drawables;
-    if (( fr[0].matchWord( "num_drawables" ) || fr[0].matchWord( "num_geosets" ) ) &&
+    if( ( fr[0].matchWord( "num_drawables" ) || fr[0].matchWord( "num_geosets" ) ) &&
             fr[1].getInt( num_drawables ) )
     {
         // could allocate space for children here...
@@ -69,7 +69,7 @@ bool VEGeode_readLocalData( Object& obj, Input& fr )
     }
 
     Drawable* drawable = NULL;
-    while (( drawable = fr.readDrawable() ) != NULL )
+    while( ( drawable = fr.readDrawable() ) != NULL )
     {
         geode.addDrawable( drawable );
         iteratorAdvanced = true;
@@ -85,7 +85,7 @@ bool VEGeode_writeLocalData( const osg::Object& obj, Output& fw )
     //fw.writeObject( geode );
     fw.indent() << "num_drawables " << geode.getNumDrawables() << std::endl;
 
-    for( unsigned int i = 0;i < geode.getNumDrawables();++i )
+    for( unsigned int i = 0; i < geode.getNumDrawables(); ++i )
     {
         fw.writeObject( *geode.getDrawable( i ) );
     }

@@ -53,7 +53,7 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS CountNumberOfParametersCallback:
-            public DataObjectHandler::DatasetOperatorCallback
+    public DataObjectHandler::DatasetOperatorCallback
 {
 public:
     ///Constructor

@@ -37,7 +37,7 @@ using namespace ves::conductor::util;
 ///Constructor                         //
 /////////////////////////////////////////
 CADMaterialEditMenu::CADMaterialEditMenu()
-        : wxMenu()
+    : wxMenu()
 {
     Append( DIFFUSE_ID,
             _T( "Diffuse..." ),

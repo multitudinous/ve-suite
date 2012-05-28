@@ -88,8 +88,8 @@ DatabaseManager::DatabaseManager()
     mPool( 0 )
 {
     eventmanager::EventManager::instance()->RegisterSignal(
-            new eventmanager::SignalWrapper< boost::signals2::signal< void() > >( &m_resyncFromDatabase ),
-       "DatabaseManager.ResyncFromDatabase" );
+        new eventmanager::SignalWrapper< boost::signals2::signal< void() > >( &m_resyncFromDatabase ),
+        "DatabaseManager.ResyncFromDatabase" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DatabaseManager::~DatabaseManager()
@@ -101,7 +101,7 @@ void DatabaseManager::Shutdown()
 {
     if( mPool )
     {
-        //std::cout << "Number of idle Poco::Sessions " << mPool->idle() 
+        //std::cout << "Number of idle Poco::Sessions " << mPool->idle()
         //    << " Number of dead Poco::Sessions " << mPool->dead() << std::endl;
         //This must be deleted from the thread that it was created from
         delete mPool;
@@ -175,7 +175,7 @@ std::vector< std::string > DatabaseManager::GetStringVector( const std::string& 
             }
         }
     }
-    catch( Poco::Data::DataException &e )
+    catch( Poco::Data::DataException& e )
     {
         std::cout << "DatabaseManager::GetStringVector: " << e.displayText() << std::endl;
     }
@@ -193,7 +193,7 @@ bool DatabaseManager::TableExists( const std::string& tableName )
                 Poco::Data::into( exists ),
                 Poco::Data::now;
     }
-    catch( Poco::Data::DataException &e )
+    catch( Poco::Data::DataException& e )
     {
         std::cout << e.displayText() << std::endl;
         exists = false;
@@ -220,7 +220,7 @@ void DatabaseManager::ResetAll()
             for( size_t rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
             {
                 std::string tableName = recordset.value( 0, rowIndex ).convert< std::string > ();
-                if( (tableName != "sqlite_sequence") && (tableName != "XplorerDBDetails") )
+                if( ( tableName != "sqlite_sequence" ) && ( tableName != "XplorerDBDetails" ) )
                 {
                     session << "DROP TABLE " << tableName, Poco::Data::now;
                 }
@@ -228,7 +228,7 @@ void DatabaseManager::ResetAll()
             session.commit();
         }
     }
-    catch( Poco::Data::DataException &e )
+    catch( Poco::Data::DataException& e )
     {
         std::cout << e.displayText() << std::endl;
     }
@@ -300,7 +300,7 @@ bool DatabaseManager::LoadFrom( const std::string& path )
         details.LoadFromDatabase();
         if( details.PropertyExists( "DatabaseVersion" ) )
         {
-            dbVersion = boost::any_cast<double>( details.GetPropertyValue("DatabaseVersion") );
+            dbVersion = boost::any_cast<double>( details.GetPropertyValue( "DatabaseVersion" ) );
         }
     }
     if( dbVersion < CURRENT_DB_VERSION )
@@ -360,7 +360,7 @@ void DatabaseManager::ConvertFromOld()
             properties.push_back( propSet );
         }
         Poco::Data::Session session( mPool->get() );
-        if(TableExists( propSet->GetTableName() ))
+        if( TableExists( propSet->GetTableName() ) )
         {
             session << "DROP TABLE " << propSet->GetTableName(), Poco::Data::now;
         }

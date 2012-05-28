@@ -45,7 +45,7 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 VTKTextureCreator::VTKTextureCreator()
-    : 
+    :
     VectorFieldData(),
     m_rawVTKData( 0 )
 {
@@ -55,10 +55,10 @@ VTKTextureCreator::VTKTextureCreator()
 osg::BoundingBox VTKTextureCreator::getBoundingBox()
 {
     double bounds[6];
-    m_rawVTKData->GetPoints()->GetBounds(bounds);
+    m_rawVTKData->GetPoints()->GetBounds( bounds );
     //VTK does bounds xmin, xmax,....
     //OSG does bounds xmin, ymin, zmin, xmax, ymax,...
-    osg::BoundingBox bb(bounds[0],bounds[2],bounds[4],bounds[1],bounds[3],bounds[5]);
+    osg::BoundingBox bb( bounds[0], bounds[2], bounds[4], bounds[1], bounds[3], bounds[5] );
     return( bb );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,14 +77,14 @@ void VTKTextureCreator::internalLoad()
     // Actual data size would come from file.
     // NOTE: Crash in NVIDIA friver if total _dataSize
     // is > 32768.
-    vtkPoints* points = m_rawVTKData->GetPoints();    
+    vtkPoints* points = m_rawVTKData->GetPoints();
     _dataSize = points->GetNumberOfPoints();
 
     // Determine optimal 3D texture dimensions.
     int s, t, p;
     compute3DTextureSize( getDataCount(), s, t, p );
     _texSizes = osg::Vec3s( s, t, p );
-    
+
     // Allocate memory for data.
     //unsigned int size( getDataCount() );
     //_pos = new float[ size * 3 ];
@@ -93,14 +93,14 @@ void VTKTextureCreator::internalLoad()
     _pos = new float[ s * t * p * 3 ];
     _dir = new float[ s * t * p * 3 ];
     _scalar = new float[ s * t * p ];
-    
+
     // TBD You would replace this line with code to load the data from file.
     // In this example, we just generate test data.
     createDataArrays( _pos, _dir, _scalar );
-    
-    _texPos = makeFloatTexture( (unsigned char*)_pos, 3, osg::Texture2D::NEAREST );
-    _texDir = makeFloatTexture( (unsigned char*)_dir, 3, osg::Texture2D::NEAREST );
-    _texScalar = makeFloatTexture( (unsigned char*)_scalar, 1, osg::Texture2D::NEAREST );
+
+    _texPos = makeFloatTexture( ( unsigned char* )_pos, 3, osg::Texture2D::NEAREST );
+    _texDir = makeFloatTexture( ( unsigned char* )_dir, 3, osg::Texture2D::NEAREST );
+    _texScalar = makeFloatTexture( ( unsigned char* )_scalar, 1, osg::Texture2D::NEAREST );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar )
@@ -108,22 +108,22 @@ void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar 
     float* posI = pos;
     float* dirI = dir;
     float* scalarI = scalar;
-    
+
     vtkPoints* points = m_rawVTKData->GetPoints();
     vtkPointData* pointData = m_rawVTKData->GetPointData();
-    vtkDataArray* vectorArray = pointData->GetVectors(m_vectorName.c_str());
-    vtkDataArray* scalarArray = pointData->GetScalars(m_scalarName.c_str());
+    vtkDataArray* vectorArray = pointData->GetVectors( m_vectorName.c_str() );
+    vtkDataArray* scalarArray = pointData->GetScalars( m_scalarName.c_str() );
 
-    //double dataRange[2]; 
+    //double dataRange[2];
     //scalarArray->GetRange(dataRange);
-    
+
     //Here we build a color look up table
-    //vtkLookupTable* lut = vtkLookupTable::New(); 
+    //vtkLookupTable* lut = vtkLookupTable::New();
     //lut->SetHueRange (0.667, 0.0);
     //lut->SetRange(dataRange);
     //lut->SetRampToLinear();
     //lut->Build();
-    
+
     double x[3];
     double val;
     //double rgb[3];
@@ -135,9 +135,9 @@ void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar 
         {
             //Get Position data
             points->GetPoint( i, x );
-            *posI++ = (float)x[0];
-            *posI++ = (float)x[1];
-            *posI++ = (float)x[2]; 
+            *posI++ = ( float )x[0];
+            *posI++ = ( float )x[1];
+            *posI++ = ( float )x[2];
 
             if( scalarArray )
             {
@@ -164,7 +164,7 @@ void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar 
         {
             *posI++ = 0.0;
             *posI++ = 0.0;
-            *posI++ = 0.0; 
+            *posI++ = 0.0;
 
             *scalarI++ = 0.0;
             //*scalarI++ = 0.0;
@@ -178,8 +178,8 @@ void VTKTextureCreator::createDataArrays( float* pos, float* dir, float* scalar 
     //lut->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VTKTextureCreator::SetActiveVectorAndScalar( const std::string& vectorName, 
-    const std::string& scalarName )
+void VTKTextureCreator::SetActiveVectorAndScalar( const std::string& vectorName,
+        const std::string& scalarName )
 {
     m_vectorName = vectorName;
     m_scalarName = scalarName;
@@ -188,9 +188,9 @@ void VTKTextureCreator::SetActiveVectorAndScalar( const std::string& vectorName,
 osg::Image* VTKTextureCreator::CreateColorTextures( double* dataRange )
 {
     //Here we build a color look up table
-    vtkLookupTable* lut = vtkLookupTable::New(); 
-    lut->SetHueRange(0.667, 0);
-    lut->SetRange(dataRange);
+    vtkLookupTable* lut = vtkLookupTable::New();
+    lut->SetHueRange( 0.667, 0 );
+    lut->SetRange( dataRange );
     lut->SetRampToLinear();
     //lut->SetRampToSCurve();
     //lut->SetRampToSQRT();
@@ -199,34 +199,34 @@ osg::Image* VTKTextureCreator::CreateColorTextures( double* dataRange )
     vtkIdType numTuples = lut->GetTable()->GetNumberOfTuples();
     vtkIdType numComponents = lut->GetTable()->GetNumberOfComponents();
     unsigned char* charLut = 0;
-    //std::cout << " rgb " << lut->GetTable()->GetNumberOfTuples() << " " 
+    //std::cout << " rgb " << lut->GetTable()->GetNumberOfTuples() << " "
     //<< lut->GetTable()->GetNumberOfComponents() << " " << charLut << std::endl;
     //unsigned char* charLut2= lut->GetPointer( 0 );
     //std::cout << sizeof( charLut2 ) << std::endl;
     float* newScalarLutArray = new float[ numTuples * 3 ];
     for( int i = 0; i < numTuples; ++i )
     {
-        int numLuts = (i*numComponents);
-        int numColorIndex = (i*3);
+        int numLuts = ( i * numComponents );
+        int numColorIndex = ( i * 3 );
         charLut = lut->GetTable()->WritePointer( numLuts, 0 );
-        //std::cout << sizeof( charLut ) << " " << charLut<<  " " 
+        //std::cout << sizeof( charLut ) << " " << charLut<<  " "
         //<< (double*)charLut << std::endl;
-        newScalarLutArray[  numColorIndex + 0 ] = float( charLut[ 0 ] )/255.0f;
-        newScalarLutArray[  numColorIndex + 1 ] = float( charLut[ 1 ] )/255.0f;
-        newScalarLutArray[  numColorIndex + 2 ] = float( charLut[ 2 ] )/255.0f;
+        newScalarLutArray[  numColorIndex + 0 ] = float( charLut[ 0 ] ) / 255.0f;
+        newScalarLutArray[  numColorIndex + 1 ] = float( charLut[ 1 ] ) / 255.0f;
+        newScalarLutArray[  numColorIndex + 2 ] = float( charLut[ 2 ] ) / 255.0f;
         //newScalarLutArray[  numLuts + 3 ] = float( charLut[ 3 ] )/255.0f;
-        //std::cout << newScalarLutArray[  numLuts + 0 ] << " " 
+        //std::cout << newScalarLutArray[  numLuts + 0 ] << " "
         //    << newScalarLutArray[  numLuts + 1 ] << " "
-        //    << newScalarLutArray[  numLuts + 2 ] << " " 
+        //    << newScalarLutArray[  numLuts + 2 ] << " "
         //    << newScalarLutArray[  numLuts + 3 ] << std::endl;
     }
     //std::string tempString( charLut );
     lut->Delete();
-    
+
     // Set up the color spectrum.
     osg::Image* iColorScale = new osg::Image();
     iColorScale->setImage( int( numTuples ), 1, 1, GL_RGB32F_ARB, GL_RGB, GL_FLOAT,
-                          (unsigned char*)newScalarLutArray, osg::Image::NO_DELETE );
+                           ( unsigned char* )newScalarLutArray, osg::Image::NO_DELETE );
     return iColorScale;
 }
 ////////////////////////////////////////////////////////////////////////////////

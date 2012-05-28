@@ -186,68 +186,68 @@ protected:
     /*!\class ScalarRangeMinSliderCallback
      *Class that allows the user to do operations based on the min slider events
      */
-/*class ScalarRangeMinSliderCallback:
-                public ves::conductor::util::DualSlider::SliderCallback
-    {
-    public:
-        ///Constructors
-        ScalarRangeMinSliderCallback( Vistab* parent )
+    /*class ScalarRangeMinSliderCallback:
+                    public ves::conductor::util::DualSlider::SliderCallback
         {
-            _parent = parent;
-        }
-        ///Destructor
-        virtual ~ScalarRangeMinSliderCallback()
-        {}
+        public:
+            ///Constructors
+            ScalarRangeMinSliderCallback( Vistab* parent )
+            {
+                _parent = parent;
+            }
+            ///Destructor
+            virtual ~ScalarRangeMinSliderCallback()
+            {}
 
-        ///The operation to do for the slider
-        virtual void SliderOperation();
-    protected:
-        Vistab* _parent;
-    };*/
+            ///The operation to do for the slider
+            virtual void SliderOperation();
+        protected:
+            Vistab* _parent;
+        };*/
     /*!\class ScalarRangeBothMoveCallback
      *Class that allows the user to do operations based on both sliders moving, i.e.
      *This is caused by the slider buffer being reached.
      */
-/*class ScalarRangeBothMoveCallback:
-                public ves::conductor::util::DualSlider::SliderCallback
-    {
-    public:
-        ///Constructors
-        ScalarRangeBothMoveCallback( Vistab* parent )
+    /*class ScalarRangeBothMoveCallback:
+                    public ves::conductor::util::DualSlider::SliderCallback
         {
-            _parent = parent;
-        }
+        public:
+            ///Constructors
+            ScalarRangeBothMoveCallback( Vistab* parent )
+            {
+                _parent = parent;
+            }
 
-        ///Destructor
-        virtual ~ScalarRangeBothMoveCallback()
-        {}
+            ///Destructor
+            virtual ~ScalarRangeBothMoveCallback()
+            {}
 
-        ///The operation to do for the slider
-        virtual void SliderOperation();
-    protected:
-        Vistab* _parent;
-    };*/
+            ///The operation to do for the slider
+            virtual void SliderOperation();
+        protected:
+            Vistab* _parent;
+        };*/
     /*!\class ScalarRangeMaxSliderCallback
      *Class that allows the user to do operations based on the max slider events
      */
-/*class ScalarRangeMaxSliderCallback:
-                public ves::conductor::util::DualSlider::SliderCallback
-    {
-    public:
-        ///Constructors
-        ScalarRangeMaxSliderCallback( Vistab* parent )
+    /*class ScalarRangeMaxSliderCallback:
+                    public ves::conductor::util::DualSlider::SliderCallback
         {
-            _parent = parent;
-        }
-        ///Destructor
-        virtual ~ScalarRangeMaxSliderCallback()
-        {}
+        public:
+            ///Constructors
+            ScalarRangeMaxSliderCallback( Vistab* parent )
+            {
+                _parent = parent;
+            }
+            ///Destructor
+            virtual ~ScalarRangeMaxSliderCallback()
+            {}
 
-        ///The operation to do for the slider
-        virtual void SliderOperation();
-    protected:
-        Vistab* _parent;
-    };*/
+            ///The operation to do for the slider
+            virtual void SliderOperation();
+        protected:
+            Vistab* _parent;
+        };*/
     void _onContour( wxCommandEvent& );
     void _onVector( wxCommandEvent& );
     void _onStreamline( wxCommandEvent& );

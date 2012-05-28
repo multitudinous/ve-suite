@@ -67,11 +67,11 @@ struct vesMotionState : public btMotionState
 
     vesMotionState( const btTransform& startTrans = btTransform::getIdentity(),
                     const btTransform& centerOfMassOffset = btTransform::getIdentity() )
-            :
-            m_graphicsWorldTrans( startTrans ),
-            m_centerOfMassOffset( centerOfMassOffset ),
-            m_startWorldTrans( startTrans ),
-            m_userPointer( 0 )
+        :
+        m_graphicsWorldTrans( startTrans ),
+        m_centerOfMassOffset( centerOfMassOffset ),
+        m_startWorldTrans( startTrans ),
+        m_userPointer( 0 )
     {
         ;
     }

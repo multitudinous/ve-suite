@@ -47,13 +47,13 @@ class GLTransformInfo;
 
 //Typedef for a SmartPtr type for GLTransformInfo
 typedef ves::util::ClassPtrDef< GLTransformInfo >::type
-    GLTransformInfoPtr;
+GLTransformInfoPtr;
 typedef ves::util::SharedPtrDef< GLTransformInfo >::type
-    GLTransformInfoSharedPtr;
+GLTransformInfoSharedPtr;
 typedef ves::util::WeakPtrDef< GLTransformInfo >::type
-    GLTransformInfoWeakPtr;
+GLTransformInfoWeakPtr;
 typedef ves::util::ScopedPtrDef< GLTransformInfo >::type
-    GLTransformInfoScopedPtr;
+GLTransformInfoScopedPtr;
 
 } //end scenegraph
 } //end xplorer

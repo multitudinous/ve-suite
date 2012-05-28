@@ -56,7 +56,7 @@ END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////
 TextureBasedIsosurfaceDlg::TextureBasedIsosurfaceDlg( wxWindow* parent, int id, std::string title )
-        : BaseDialog( parent, id, title )
+    : BaseDialog( parent, id, title )
 {
     _buildGUI();
     wxSize displaySize = ::wxGetDisplaySize();
@@ -138,7 +138,7 @@ void TextureBasedIsosurfaceDlg::_onUpdateIsoSurface( wxCommandEvent& WXUNUSED( e
     newCommand->SetCommandName( "UPDATE_ISOSURFACE_SETTINGS" );
 
     ves::open::xml::DataValuePairPtr isosurfaceValue( new ves::open::xml::DataValuePair() );
-    isosurfaceValue->SetData( "Iso-Surface Value", static_cast<double>(( _isoSurfaceSlider->GetValue() ) ) );
+    isosurfaceValue->SetData( "Iso-Surface Value", static_cast<double>( ( _isoSurfaceSlider->GetValue() ) ) );
     newCommand->AddDataValuePair( isosurfaceValue );
 
     ves::open::xml::DataValuePairPtr colorByScalar( new ves::open::xml::DataValuePair() );
@@ -162,10 +162,10 @@ void TextureBasedIsosurfaceDlg::_onUpdateIsoSurface( wxCommandEvent& WXUNUSED( e
     {
         //dynamic_cast<Vistab*>(GetParent())->SendUpdatedSettingsToXplorer(newCommand);
     }
-    catch ( ... )
+    catch( ... )
     {
-            wxMessageBox( _( "Invalid Parent" ), _( "Communication Failure" ),
-                          wxOK | wxICON_INFORMATION );
+        wxMessageBox( _( "Invalid Parent" ), _( "Communication Failure" ),
+                      wxOK | wxICON_INFORMATION );
     }
 }
 //////////////////////////////////////////////////////
@@ -189,7 +189,7 @@ void TextureBasedIsosurfaceDlg::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
 
     int width, height = 0;
     GetSize( &width, &height );
-    scalarSelector.SetSize( wxRect( 2*displayWidth / 3, bbox.GetBottomRight().y,
+    scalarSelector.SetSize( wxRect( 2 * displayWidth / 3, bbox.GetBottomRight().y,
                                     width, height ) );
     scalarSelector.SetSelection( selectionIndex );
     if( scalarSelector.ShowModal() == wxID_OK )

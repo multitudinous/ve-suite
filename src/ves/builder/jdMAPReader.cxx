@@ -154,7 +154,7 @@ void jdMAPReader::translateFluentPartToVTK( void )
         */
 
         input >> position[ 0 ] >> comma[ 0 ] >> position[ 1 ] >> comma[ 0 ] >> position[ 2 ] >> comma[ 0 ]
-        >> rgb[ 0 ] >> comma[ 0 ] >> rgb[ 1 ] >> comma[ 0 ] >> rgb[ 2 ];
+              >> rgb[ 0 ] >> comma[ 0 ] >> rgb[ 1 ] >> comma[ 0 ] >> rgb[ 2 ];
         //std::cout << position[ 2 ] << " " << comma[ 0 ] << position[ 0 ] << " " << comma[ 0 ] << position[ 1 ]<< std::endl;
         id = IDinVTKFile - 1;
 
@@ -171,7 +171,7 @@ void jdMAPReader::translateFluentPartToVTK( void )
                                     ( double )normRGB[ 1 ],
                                     ( double )normRGB[ 2 ] );
 
-        polydata->InsertNextCell( VTK_VERTEX, 1, ( vtkIdType * )&id );
+        polydata->InsertNextCell( VTK_VERTEX, 1, ( vtkIdType* )&id );
         //if ( line != NULL )
         //   std::cout << id << " : " << line << std::endl;
     }
@@ -257,7 +257,7 @@ void jdMAPReader::writePolydata( )
     transFilter->Update();
 
     writer->SetInput( transFilter->GetOutput() );
-    writer->SetFileName(( outVtkFileName ).c_str() );
+    writer->SetFileName( ( outVtkFileName ).c_str() );
     writer->Write();
     //outVtkfile.close();
 }

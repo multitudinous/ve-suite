@@ -63,9 +63,9 @@ PluginLoader::PluginLoader()
     plugins.clear();
 
     ves::xplorer::eventmanager::EventManager::instance()->
-            RegisterSignal( new ves::xplorer::eventmanager::SignalWrapper
-                            < createPluginSignal_type >( &m_createUIPlugin ),
-            "PluginLoader.CreatePlugin" );
+    RegisterSignal( new ves::xplorer::eventmanager::SignalWrapper
+                    < createPluginSignal_type >( &m_createUIPlugin ),
+                    "PluginLoader.CreatePlugin" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 PluginLoader::~PluginLoader()
@@ -85,7 +85,7 @@ PluginLoader::~PluginLoader()
             {
                 libs.at( i )->unload();
             }
-            catch(...)
+            catch( ... )
             {
                 ;
             }
@@ -108,8 +108,8 @@ PluginBase* PluginLoader::CreateObject( std::string _objname )
         if( iter->second->GetName() == _objname )
         {
             selectPlugin = iter->first;
-            vprDEBUG( vesDBG, 1 )  << "|\tCreating plugin " 
-                << _objname << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 )  << "|\tCreating plugin "
+                                   << _objname << std::endl << vprDEBUG_FLUSH;
             break;
         }
     }
@@ -117,7 +117,7 @@ PluginBase* PluginLoader::CreateObject( std::string _objname )
     if( selectPlugin == -1 )
     {
         std::cerr << "|\tPluginLoader::CreateObject : " << _objname
-        << " : Plugin Not Found." << std::endl;
+                  << " : Plugin Not Found." << std::endl;
         return NULL;
     }
 
@@ -133,18 +133,18 @@ void PluginLoader::ScanAndLoad( void )
     //Get the path for the plugins loaded for vesuite
     std::string vesuitePath;
     bool vesuiteHomeDefined = false;
-    vpr::System::getenv( std::string("XPLORER_PLUGINS_DIR"), vesuitePath );
-    vprDEBUG(vesDBG,0) << "|\tSearching XPLORER_PLUGINS_DIR for VES Plugins." 
-        << std::endl 
-        << vprDEBUG_FLUSH;
+    vpr::System::getenv( std::string( "XPLORER_PLUGINS_DIR" ), vesuitePath );
+    vprDEBUG( vesDBG, 0 ) << "|\tSearching XPLORER_PLUGINS_DIR for VES Plugins."
+                          << std::endl
+                          << vprDEBUG_FLUSH;
     //Look for VE-Suite default plugin path
     try
     {
 #if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-        boost::filesystem::path vesuiteDirPath( 
+        boost::filesystem::path vesuiteDirPath(
             vesuitePath );
 #else
-        boost::filesystem::path vesuiteDirPath( 
+        boost::filesystem::path vesuiteDirPath(
             vesuitePath, boost::filesystem::no_check );
 #endif
         if( boost::filesystem::is_directory( vesuiteDirPath ) )
@@ -155,9 +155,9 @@ void PluginLoader::ScanAndLoad( void )
     catch( const std::exception& ex )
     {
         vprDEBUG( vesDBG, 1 ) << ex.what()
-            << std::endl
-            << vprDEBUG_FLUSH;
-    }        
+                              << std::endl
+                              << vprDEBUG_FLUSH;
+    }
 
     //Look for custom plugin path
     std::string modelPath;
@@ -174,19 +174,19 @@ void PluginLoader::ScanAndLoad( void )
 #endif
         if( boost::filesystem::is_directory( dir_path ) )
         {
-            for( boost::filesystem::recursive_directory_iterator itr( dir_path ); 
-                itr !=  boost::filesystem::recursive_directory_iterator(); ++itr )
+            for( boost::filesystem::recursive_directory_iterator itr( dir_path );
+                    itr !=  boost::filesystem::recursive_directory_iterator(); ++itr )
             {
                 if( boost::filesystem::is_directory( itr->status() ) )
                 {
                     vpr::LibraryFinder finder( itr->path().string(), DSO_SUFFIX );
-                    
+
                     vpr::LibraryFinder::LibraryList tempLibs;
                     tempLibs = finder.getLibraries();
                     vprDEBUG( vesDBG, 1 )  << "|\tNumber of user custom libs : "
-                        << tempLibs.size() << " " << itr->path()
-                        << " " << DSO_SUFFIX << std::endl
-                        << vprDEBUG_FLUSH;
+                                           << tempLibs.size() << " " << itr->path()
+                                           << " " << DSO_SUFFIX << std::endl
+                                           << vprDEBUG_FLUSH;
                     if( tempLibs.size() > 0 )
                     {
                         libDir = itr->path().string();
@@ -200,8 +200,8 @@ void PluginLoader::ScanAndLoad( void )
     catch( const std::exception& ex )
     {
         vprDEBUG( vesDBG, 1 ) << ex.what()
-        << std::endl
-        << vprDEBUG_FLUSH;
+                              << std::endl
+                              << vprDEBUG_FLUSH;
         //This is a hack because somehow the if statement above
         //is true in some cases on windows.
         customPlugins = false;
@@ -214,9 +214,9 @@ void PluginLoader::ScanAndLoad( void )
 
         libs = finder.getLibraries();
         vprDEBUG( vesDBG, 1 )  << "|\tNumber of user custom libs : "
-            << libs.size()
-            << " " << DSO_SUFFIX << std::endl
-            << vprDEBUG_FLUSH;
+                               << libs.size()
+                               << " " << DSO_SUFFIX << std::endl
+                               << vprDEBUG_FLUSH;
     }
 
     //Load ves default plugins
@@ -227,23 +227,23 @@ void PluginLoader::ScanAndLoad( void )
         defaultLibs = finder.getLibraries();
 
         vprDEBUG( vesDBG, 1 )  << "|\tNumber of VE-Suite libs : "
-            << defaultLibs.size()
-            << " " << DSO_SUFFIX << std::endl
-            << vprDEBUG_FLUSH;
+                               << defaultLibs.size()
+                               << " " << DSO_SUFFIX << std::endl
+                               << vprDEBUG_FLUSH;
         // Load the default plugin
-         for(size_t i = 0; i < defaultLibs.size(); ++i )
-         {
-             vpr::LibraryPtr tempPtr = defaultLibs.at( i );
+        for( size_t i = 0; i < defaultLibs.size(); ++i )
+        {
+            vpr::LibraryPtr tempPtr = defaultLibs.at( i );
 #ifdef WIN32
-             //This is a hack for windows because without this here
-             //xplorer will crash. I am unsure of why this is the case
-             //and it could not be determined through significant debugging.
-             //If anyone can shed light on the problem a fix here would be
-             //appreciated.
-             Sleep(1000);
+            //This is a hack for windows because without this here
+            //xplorer will crash. I am unsure of why this is the case
+            //and it could not be determined through significant debugging.
+            //If anyone can shed light on the problem a fix here would be
+            //appreciated.
+            Sleep( 1000 );
 #endif
-             libs.push_back( tempPtr );
-         }
+            libs.push_back( tempPtr );
+        }
     }
 
     for( size_t i = 0; i < libs.size(); ++i )
@@ -252,13 +252,13 @@ void PluginLoader::ScanAndLoad( void )
         {
             libs.at( i )->load();
             vprDEBUG( vesDBG, 1 ) << "|\tLoaded lib "
-                << libs.at( i )->getName() << " successfully."
-                << std::endl << vprDEBUG_FLUSH;
+                                  << libs.at( i )->getName() << " successfully."
+                                  << std::endl << vprDEBUG_FLUSH;
         }
         catch( ... )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tLoaded lib failed : "
-                << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
         }
     }
 
@@ -280,12 +280,12 @@ void PluginLoader::LoadPlugins( void )
         {
             plugins[ i ] = test_obj;
             std::cout << "|\tLoaded and created plugin "
-                << test_obj->GetName() << std::endl;
+                      << test_obj->GetName() << std::endl;
         }
         else
         {
             std::cout << "|\tCould not load plugin "
-                << i << std::endl;
+                      << i << std::endl;
         }
     }
 }
@@ -296,7 +296,7 @@ PluginBase* PluginLoader::CreateNewPlugin( unsigned int input )
     PluginBase* test_obj( NULL );
 
     //This came from vpr test code
-    creator = ( void * ( * )() ) libs[ input ]->findSymbol( std::string( "CreateVEPlugin" ) );
+    creator = ( void * (* )() ) libs[ input ]->findSymbol( std::string( "CreateVEPlugin" ) );
     if( NULL != creator )
     {
         vprDEBUG( vesDBG, 1 )  << "|\tCreated plugin " << std::endl << vprDEBUG_FLUSH;

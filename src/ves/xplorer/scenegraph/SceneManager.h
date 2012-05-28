@@ -144,11 +144,11 @@ public:
     ///
     ///\return
     GLTransformInfoPtr const GetCurrentGLTransformInfo();
-    
+
     ///
     ///
     void SetCurrentGLTransformInfo( GLTransformInfoPtr const transformInfo );
-    
+
     ///Return the graphical plugin manager
     Group& GetGraphicalPluginManager() const;
 
@@ -164,7 +164,7 @@ public:
 
     ///Return the network DCS of the scenegraph
     osg::Group* GetNetworkDCS() const;
-    
+
     ///Return the root node of the scenegraph
     osg::Group* GetRootNode() const;
 
@@ -175,7 +175,7 @@ public:
     ///Get the inverted world DCS matrix
     ///\return The inverted matrix
     const gmtl::Matrix44d& GetInvertedNavMatrix() const;
-    
+
     ///Get the inverted world DCS matrix
     ///\return The inverted matrix
     const osg::Matrixd& GetInvertedNavMatrixOSG() const;
@@ -191,11 +191,11 @@ public:
     ///Return the global view matrix
     ///\return The matrix
     const osg::Matrixd& GetGlobalViewMatrixOSG() const;
-    
+
     ///Return the global view matrix
     ///\return The inverted matrix
     const gmtl::Matrix44d& GetInvertedGlobalViewMatrix() const;
-    
+
     ///Return the global view matrix
     ///\return The inverted matrix
     const osg::Matrixd& GetInvertedGlobalViewMatrixOSG() const;
@@ -203,14 +203,14 @@ public:
     ///Return the pure nav matrix
     ///\return The nav matrix
     const gmtl::Matrix44d& GetPureNavMatrix() const;
-    
+
     ///Return the pure nav matrix
     ///\return The nav matrix
     const gmtl::Matrix44d& GetFullMatrix() const;
-    
+
     ///Get the MxCore object used for view matrix manipulation
     osgwMx::MxCore& GetMxCoreViewMatrix() const;
-    
+
     ///Initialize member variables for scene manager
     void Initialize();
 
@@ -278,16 +278,16 @@ public:
 
     ///Set if it is the master node
     void SetMasterNode( bool isMasterNode );
-    
+
     ///Set device handler group node
     void SetDeviceHandlerGroup( osg::Group* deviceGroup );
 
     ///Get device handler group node
     osg::Group& GetDeviceHandlerGroup();
-    
+
     ///Get the center point
     gmtl::Point3d& GetCenterPoint();
-    
+
 #if defined( VE_SOUND ) && defined( ENABLE_SUBSYSTEM_FMOD ) && defined( VPR_OS_Linux )
     ///Configure the System interface of FMOD
     void  ConfigureFMODSystem( FMOD::System* system );
@@ -295,23 +295,23 @@ public:
 
     ///Get the delta frame stamp
     double GetDeltaFrameTime();
-    
+
     ///Get the shader program to null out glow for textured objects
     osg::Program* GetNullGlowTextureProgram();
 
     ///Get the shader program to null out glow for textured objects
     osg::Uniform* GetNullGlowTextureUniform();
-    
+
     ///Get the shader program to null out glow for textured objects
     osg::Program* GetNullGlowProgram();
-    
-    ///Get the users current as defined by the tracking hardware or predefined 
+
+    ///Get the users current as defined by the tracking hardware or predefined
     ///simulated position.
     double const& GetUserHeight() const;
 
     ///Return the current time from the VR Juggler time stamp
     double GetCurrentTime() const;
-    
+
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -440,31 +440,31 @@ private:
 
     ///VRJuggler's head positional interface
     gadget::PositionInterface m_vrjHead;
-    
+
     ///A reference to the device handler group node
     osg::ref_ptr< osg::Group > m_deviceHandlerGroup;
-    
+
     ///The current GLTransformIno pointer
     scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;
-    
+
     ///The center point used for rotation purposes with the kmb and wand
     gmtl::Point3d m_centerPoint;
-    
+
     ///Previous time stamp
     double m_previousTime;
-    
+
     ///Delta framestamp
     double m_deltaTime;
-    
+
     ///Matrix to transform from VR Juggler space to Z up space
     gmtl::Matrix44d m_zUpTransform;
-    
+
     ///Matrix for the default view to transform from Z up to Z out
     gmtl::Matrix44d m_defaultView;
-    
+
     ///Head location for the point
     gmtl::Point3d m_lastHeadLocation;
-    
+
     ///Delta head location for the point
     gmtl::Point3d m_deltaHeadLocation;
 
@@ -476,17 +476,17 @@ private:
 
     ///The MxCore class that is used to control the device controlled
     ///portion of the view matrix
-    osg::ref_ptr< osgwMx::MxCore > m_viewMatrix;    
-    
+    osg::ref_ptr< osgwMx::MxCore > m_viewMatrix;
+
     ///The null glow program for textured objects
-    osg::ref_ptr< osg::Program > m_nullGlowTextureProgram;    
-    osg::ref_ptr< osg::Uniform > m_nullGlowTextureUniform;    
+    osg::ref_ptr< osg::Program > m_nullGlowTextureProgram;
+    osg::ref_ptr< osg::Uniform > m_nullGlowTextureUniform;
 
     ///The null glow program for textured objects
     osg::ref_ptr< osg::Program > m_nullGlowProgram;
-    
+
     ///Store the current height of the user
-    ///This is set via the tracker head position along the Z axis which is the 
+    ///This is set via the tracker head position along the Z axis which is the
     ///distance from the users head to the ground plane defined in VR Juggler
     ///This value is in feet.
     double m_userHeight;

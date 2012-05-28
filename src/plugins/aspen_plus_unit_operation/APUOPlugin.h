@@ -58,14 +58,14 @@ class APUOPlugin : public UIPluginBase
 public:
     ///Constructor
     APUOPlugin();
-    
+
     ///Destructor
     virtual ~APUOPlugin();
 
     ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
     virtual bool ShowAvailable();
-    
+
 protected:
     ///???
     std::string m_unitName;
@@ -77,19 +77,19 @@ private:
 
     ///???
     void OnShowAspenName( wxCommandEvent& event );
-    
+
     ///???
     void OnQueryInputs( wxCommandEvent& event );
-    
+
     ///???
     void OnQueryOutputs( wxCommandEvent& event );
-    
+
     ///???
     void OnReinitBlocks( wxCommandEvent& event );
-    
+
     ///???
     wxString GetConductorName();
-    
+
     DECLARE_EVENT_TABLE()
 };
 }

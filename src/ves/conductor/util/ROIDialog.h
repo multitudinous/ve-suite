@@ -75,8 +75,8 @@ protected:
     /*!\class ROIMinSliderCallback
      *Class that allows the user to do operations based on the min slider events
      */
-class ROIMinSliderCallback:
-                public ves::conductor::util::DualSlider::SliderCallback
+    class ROIMinSliderCallback:
+        public ves::conductor::util::DualSlider::SliderCallback
     {
     public:
         ///Constructors
@@ -102,8 +102,8 @@ class ROIMinSliderCallback:
      *Class that allows the user to do operations based on both sliders moving, i.e.
      *This is caused by the slider buffer being reached.
      */
-class ROIBothMoveCallback:
-                public ves::conductor::util::DualSlider::SliderCallback
+    class ROIBothMoveCallback:
+        public ves::conductor::util::DualSlider::SliderCallback
     {
     public:
         ///Constructors
@@ -127,8 +127,8 @@ class ROIBothMoveCallback:
     /*!\class ROIMaxSliderCallback
      *Class that allows the user to do operations based on the max slider events
      */
-class ROIMaxSliderCallback:
-                public ves::conductor::util::DualSlider::SliderCallback
+    class ROIMaxSliderCallback:
+        public ves::conductor::util::DualSlider::SliderCallback
     {
     public:
         ///Constructors

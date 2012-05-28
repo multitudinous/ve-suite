@@ -45,7 +45,8 @@
 struct SoundData;
 
 template< class T >
-class SoundTable {
+class SoundTable
+{
 public:
     SoundTable();
     ~SoundTable();
@@ -64,7 +65,7 @@ protected:
     typedef std::map< T, SoundData > SoundMap;
     typedef std::map< T, SoundMap > Table;
     //typedef std::map< T, SoundMap >::iterator TableConstIter;
-    
+
     Table _table;
     SoundMap _map;
 
@@ -72,7 +73,8 @@ protected:
 };
 
 
-struct SoundData {
+struct SoundData
+{
     SoundData();
     ~SoundData();
 
@@ -109,7 +111,7 @@ template< class T > void
 SoundTable< T >::addSound( const T& mat0, const T& mat1, std::string& soundFile )
 {
     const bool addToCache( true );
-    osg::ref_ptr< osgAudio::Sample > sample = 
+    osg::ref_ptr< osgAudio::Sample > sample =
         osgAudio::SoundManager::instance()->getSample( soundFile, addToCache );
 
     SoundData& sd0( _table[ mat0 ][ mat1 ] );
@@ -142,7 +144,7 @@ SoundTable< T >::getSound( const T& mat0, const T& mat1 )
         {
             return 0;
         }
-        
+
         //osg::ref_ptr< osgAudio::Sample > sample = new osgAudio::Sample( *_defaultSample.get() );
         //return sample.release();
         return( _defaultSample.get() );
@@ -173,9 +175,13 @@ template< class T > osgAudio::Sample*
 SoundTable< T >::getSound( const T& mat )
 {
     if( _map.find( mat ) == _map.end() )
+    {
         return( _defaultSample.get() );
+    }
     else
+    {
         return( _map[ mat ]._sample.get() );
+    }
 }
 
 

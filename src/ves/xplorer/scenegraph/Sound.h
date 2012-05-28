@@ -89,7 +89,7 @@ public:
 
     ~Sound();
 
-    Sound &operator=( const Sound &sound );
+    Sound& operator=( const Sound& sound );
 
     void Draw();
 

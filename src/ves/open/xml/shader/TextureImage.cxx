@@ -47,7 +47,7 @@ using namespace ves::open::xml;
 //Constructor
 /////////////////////////////////////////////////////////////////////////////////
 TextureImage::TextureImage()
-        : ves::open::xml::XMLObject()
+    : ves::open::xml::XMLObject()
 {
     mTextureDescription = ves::open::xml::CommandPtr( new ves::open::xml::Command() );
     //std::cout<<"New texture image"<<std::endl;
@@ -112,9 +112,9 @@ TextureImage::~TextureImage()
 }
 ///////////////////////////////////////////////////
 TextureImage::TextureImage( const TextureImage& rhs )
-        : ves::open::xml::XMLObject( rhs )
+    : ves::open::xml::XMLObject( rhs )
 {
-    mTextureDescription = ves::open::xml::CommandPtr( new ves::open::xml::Command((  *rhs.mTextureDescription ) ) );
+    mTextureDescription = ves::open::xml::CommandPtr( new ves::open::xml::Command( ( *rhs.mTextureDescription ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////
 void TextureImage::SetWrapMode( const std::string& direction, const std::string& wrapMode )
@@ -260,11 +260,11 @@ const std::string TextureImage::GetImageFile( const std::string& face )
         return faceImageData->GetDataString();
 
     }
-    catch ( char* msg )
+    catch( char* msg )
     {
         std::cout << "TextureImage::GetImageFile() Error: " << msg << ": " << face << std::endl;
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "No image available: TextureImage::GetImageFile()" << std::endl;
     }
@@ -288,13 +288,17 @@ void TextureImage::SetTextureImageType( const std::string& textureType )
         }
         typeData->SetData( "Type", textureType );
         if( textureType == "1D" )
+        {
             SetDimension( 1 );
+        }
         else if( textureType == "2D" )
+        {
             SetDimension( 2 );
+        }
         else if( textureType == "3D" ||
-                  textureType == "Cube" ||
-                  textureType == "Environment" ||
-                  textureType == "Perlin Noise" )
+                 textureType == "Cube" ||
+                 textureType == "Environment" ||
+                 textureType == "Perlin Noise" )
         {
             SetDimension( 3 );
         }
@@ -339,7 +343,7 @@ TextureImage& TextureImage::operator=( const TextureImage& rhs )
     if( this != &rhs )
     {
         XMLObject::operator =( rhs );
-        mTextureDescription = ves::open::xml::CommandPtr( new ves::open::xml::Command((  *rhs.mTextureDescription ) ) );
+        mTextureDescription = ves::open::xml::CommandPtr( new ves::open::xml::Command( ( *rhs.mTextureDescription ) ) );
     }
     return *this;
 }

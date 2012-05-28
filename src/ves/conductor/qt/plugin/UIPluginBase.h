@@ -103,7 +103,7 @@ public:
     //void SetImage( QImage& image );
 
     ///Add port to the plugin
-    void AddPort( unsigned int portType  );
+    void AddPort( unsigned int portType );
 
     ///Delete selected port
     void DeletePort( ves::open::xml::model::PortPtr port );
@@ -113,10 +113,10 @@ public:
     void TogglePlugin( unsigned int );
 
     ///Makes the associated VEModel active in xplorer
-    void ActivateAssociatedModel(  );
+    void ActivateAssociatedModel( );
 
     ///Optimize all of the CAD
-    void OnOptimizeCAD(  );
+    void OnOptimizeCAD( );
 
     //void SetNetwork( Network* network );
 
@@ -162,8 +162,8 @@ protected:
     void RegistVar( std::string vname, std::vector< std::string >* var );
     void RegistVar( std::string vname, std::vector< std::vector<std::string> >* var );
 
-//    ///Check the active id against the plugin id
-//    bool CheckID();
+    //    ///Check the active id against the plugin id
+    //    bool CheckID();
 
     ///Remove all the dialogs that were opened for this plugin
     //void RemovePluginDialogsFromCanvas();
@@ -175,9 +175,9 @@ protected:
     ves::open::xml::model::ModelPtr m_veModel;
     ves::open::xml::model::ModelWeakPtr m_parentModel;
 
-//    //data storage types
-//    std::vector< wxString > v_desc;
-//    std::vector< wxString > v_value;
+    //    //data storage types
+    //    std::vector< wxString > v_desc;
+    //    std::vector< wxString > v_value;
 
     std::map<std::string, long* >                     _int;
     std::map<std::string, double* >                   _double;

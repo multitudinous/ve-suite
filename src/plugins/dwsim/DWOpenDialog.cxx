@@ -34,37 +34,37 @@
 #include <plugins/ConductorPluginEnums.h>
 #include <vector>
 
-BEGIN_EVENT_TABLE(DWOpenDialog,wxDialog)
-    EVT_CLOSE(DWOpenDialog::OnClose)
-    EVT_BUTTON(DWOPENDIALOG_CANCELBUTTON, DWOpenDialog::CancelButtonClick)
-    EVT_BUTTON(DWOPENDIALOG_OKBUTTON, DWOpenDialog::OKButtonClick)
+BEGIN_EVENT_TABLE( DWOpenDialog, wxDialog )
+    EVT_CLOSE( DWOpenDialog::OnClose )
+    EVT_BUTTON( DWOPENDIALOG_CANCELBUTTON, DWOpenDialog::CancelButtonClick )
+    EVT_BUTTON( DWOPENDIALOG_OKBUTTON, DWOpenDialog::OKButtonClick )
 END_EVENT_TABLE()
 
-DWOpenDialog::DWOpenDialog(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
-: wxDialog(parent, id, title, position, size, style)
+DWOpenDialog::DWOpenDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& position, const wxSize& size, long style )
+    : wxDialog( parent, id, title, position, size, style )
 {
     CreateGUIControls();
 }
 
 DWOpenDialog::~DWOpenDialog()
 {
-} 
+}
 
 void DWOpenDialog::CreateGUIControls()
 {
-    SetTitle(wxT("DW File"));
-    SetIcon(wxNullIcon);
-    SetSize(8,8,370,138);
+    SetTitle( wxT( "DW File" ) );
+    SetIcon( wxNullIcon );
+    SetSize( 8, 8, 370, 138 );
     Center();
 
-    Label = new wxStaticText(this, -1, wxT("DWSIM Project"), wxPoint(8,16), wxDefaultSize, 0, wxT("Label"));
-    Label->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
+    Label = new wxStaticText( this, -1, wxT( "DWSIM Project" ), wxPoint( 8, 16 ), wxDefaultSize, 0, wxT( "Label" ) );
+    Label->SetFont( wxFont( 12, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Tahoma" ) ) );
 
-    CancelButton = new wxButton(this, DWOPENDIALOG_CANCELBUTTON, wxT("Cancel"), wxPoint(275,55), wxSize(75,25), 0, wxDefaultValidator, wxT("CancelButton"));
-    CancelButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
+    CancelButton = new wxButton( this, DWOPENDIALOG_CANCELBUTTON, wxT( "Cancel" ), wxPoint( 275, 55 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "CancelButton" ) );
+    CancelButton->SetFont( wxFont( 12, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Tahoma" ) ) );
 
-    OKButton = new wxButton(this, DWOPENDIALOG_OKBUTTON, wxT("Ok"), wxPoint(195,55), wxSize(75,25), 0, wxDefaultValidator, wxT("OKButton"));
-    OKButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
+    OKButton = new wxButton( this, DWOPENDIALOG_OKBUTTON, wxT( "Ok" ), wxPoint( 195, 55 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "OKButton" ) );
+    OKButton->SetFont( wxFont( 12, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Tahoma" ) ) );
 }
 
 void DWOpenDialog::OnClose( wxCloseEvent& )
@@ -102,8 +102,8 @@ void DWOpenDialog::SetPopulateFilenames( )
     }
 
     // construct combo box
-    ComboBox = new wxComboBox(this, -1, wxT(""), wxPoint(149,13), wxSize(208,27), arrayStringFor_ComboBox, wxCB_READONLY, wxDefaultValidator, wxT("ComboBox"));
-    ComboBox->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
+    ComboBox = new wxComboBox( this, -1, wxT( "" ), wxPoint( 149, 13 ), wxSize( 208, 27 ), arrayStringFor_ComboBox, wxCB_READONLY, wxDefaultValidator, wxT( "ComboBox" ) );
+    ComboBox->SetFont( wxFont( 12, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Tahoma" ) ) );
 }
 
 wxString DWOpenDialog::GetFilename( )

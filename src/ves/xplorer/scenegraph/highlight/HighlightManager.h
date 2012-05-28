@@ -117,7 +117,7 @@ public:
 
     ///Set the node this circle highlight is associated with
     bool IsNodeCircled( osg::Node* inNode );
-    
+
     ///
     void RegisterNodeAndHighlight( osg::Node* inNode, CircleHighlight* circle );
 
@@ -142,11 +142,11 @@ private:
 
     ///Store tag names
     std::vector< std::string > m_tagNames;
-    
+
     ///Store nodes associated with highlight circles
     std::map< osg::Node*, CircleHighlight* > m_nodeToCircleHighlights;
-    typedef std::map< osg::Node*, CircleHighlight* >::const_iterator 
-        NodeToCircleHighlightsIter;
+    typedef std::map< osg::Node*, CircleHighlight* >::const_iterator
+    NodeToCircleHighlightsIter;
 };
 } //end highlight
 } //end scenegraph

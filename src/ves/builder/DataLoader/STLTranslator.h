@@ -44,7 +44,7 @@ namespace builder
 namespace DataLoader
 {
 class VE_USER_BUILDER_EXPORTS STLTranslator:
-            public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
+    public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
     STLTranslator();
@@ -52,7 +52,7 @@ public:
     ///Display help for the Fluent translator
     virtual void DisplayHelp( void );
     //////////////////////////////////////////////////////
-class VE_USER_BUILDER_EXPORTS STLTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    class VE_USER_BUILDER_EXPORTS STLTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
     {
     public:
         STLTranslateCbk()
@@ -73,8 +73,8 @@ class VE_USER_BUILDER_EXPORTS STLTranslateCbk: public ves::builder::cfdTranslato
                                 vtkAlgorithm*& dataReader );
     };
     //////////////////////////////////////////////////////
-class VE_USER_BUILDER_EXPORTS STLPreTranslateCbk:
-                public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    class VE_USER_BUILDER_EXPORTS STLPreTranslateCbk:
+        public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
     {
     public:
         STLPreTranslateCbk()

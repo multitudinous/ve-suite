@@ -52,20 +52,20 @@ PreferencesPropertySet::PreferencesPropertySet()
 
     ///Signal for Near-Far Ratio
     {
-        std::string name("PreferencesPropertySet");
+        std::string name( "PreferencesPropertySet" );
         name += boost::lexical_cast<std::string>( this );
         name += ".NearFarRatio";
-        
+
         eventmanager::EventManager::instance()->RegisterSignal(
             new SignalWrapper< UpdateCheckAndValueSignal_type >( &m_nearFarRatio ),
             name, eventmanager::EventManager::unspecified_SignalType );
     }
     ///Signal for DraggerScaling
     {
-        std::string name("PreferencesPropertySet");
+        std::string name( "PreferencesPropertySet" );
         name += boost::lexical_cast<std::string>( this );
         name += ".DraggerScaling";
-        
+
         eventmanager::EventManager::instance()->RegisterSignal(
             new SignalWrapper< UpdateCheckAndValueSignal_type >( &m_draggerScaling ),
             name, eventmanager::EventManager::unspecified_SignalType );
@@ -73,10 +73,10 @@ PreferencesPropertySet::PreferencesPropertySet()
     ///Signal for Background Color
     {
         m_backgroundColor = reinterpret_cast< eventmanager::SignalWrapper< ves::util::BoolAndDoubleVectorSignal_type >* >
-        ( eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
-        ->mSignal;
+                            ( eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
+                            ->mSignal;
     }
-    
+
     mTableName = "XplorerPreferences";
     CreateSkeleton();
 }
@@ -103,9 +103,9 @@ void PreferencesPropertySet::CreateSkeleton()
         SetPropertyAttribute( "GeometryLODScale", "maximumValue", 100.00 );
         mPropertyMap["GeometryLODScale"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< double >( mUUIDString,
-                                                   mPropertyMap["GeometryLODScale"],
-                                                   "PreferencesPropertySet.GeometryLODScale",
-                                                   false ));
+                           mPropertyMap["GeometryLODScale"],
+                           "PreferencesPropertySet.GeometryLODScale",
+                           false ) );
         mLiveObjects.push_back( p );
     }
 
@@ -174,9 +174,9 @@ void PreferencesPropertySet::CreateSkeleton()
         AddProperty( "NavigationZEqual0Lock", false, "Navigation z = 0 Lock" );
         mPropertyMap["NavigationZEqual0Lock"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
-                                                   mPropertyMap["NavigationZEqual0Lock"],
-                                                   "PreferencesPropertySet.NavigationZEqual0Lock",
-                                                   false ));
+                           mPropertyMap["NavigationZEqual0Lock"],
+                           "PreferencesPropertySet.NavigationZEqual0Lock",
+                           false ) );
         mLiveObjects.push_back( p );
     }
 
@@ -184,9 +184,9 @@ void PreferencesPropertySet::CreateSkeleton()
         AddProperty( "NavigationZGreater0Lock", false, "Navigation z > 0 Lock" );
         mPropertyMap["NavigationZGreater0Lock"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
-                                                   mPropertyMap["NavigationZGreater0Lock"],
-                                                   "PreferencesPropertySet.NavigationZGreater0Lock",
-                                                   false ));
+                           mPropertyMap["NavigationZGreater0Lock"],
+                           "PreferencesPropertySet.NavigationZGreater0Lock",
+                           false ) );
         mLiveObjects.push_back( p );
     }
 
@@ -196,22 +196,22 @@ void PreferencesPropertySet::CreateSkeleton()
         stringVector.push_back( "User" );
         stringVector.push_back( "Orbit" );
         SetPropertyAttribute( "NavigationRotationMode", "enumValues", stringVector );
-        
+
         mPropertyMap["NavigationRotationMode"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< std::string >( mUUIDString,
-                                                       mPropertyMap["NavigationRotationMode"],
-                                                       "PreferencesPropertySet.NavigationRotationMode",
-                                                       false ));
+                           mPropertyMap["NavigationRotationMode"],
+                           "PreferencesPropertySet.NavigationRotationMode",
+                           false ) );
         mLiveObjects.push_back( p );
     }
-    
+
     {
         AddProperty( "ShutDownXplorerOption", false, "Shut Down Xplorer Option" );
         mPropertyMap["ShutDownXplorerOption"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
-                                                   mPropertyMap["ShutDownXplorerOption"],
-                                                   "PreferencesPropertySet.ShutDownXplorerOption",
-                                                   false ));
+                           mPropertyMap["ShutDownXplorerOption"],
+                           "PreferencesPropertySet.ShutDownXplorerOption",
+                           false ) );
         mLiveObjects.push_back( p );
     }
 
@@ -219,9 +219,9 @@ void PreferencesPropertySet::CreateSkeleton()
         AddProperty( "PhysicsDebugger", false, "Physics Debugger" );
         mPropertyMap["PhysicsDebugger"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< const bool& >( mUUIDString,
-                                                   mPropertyMap["PhysicsDebugger"],
-                                                   "PreferencesPropertySet.PhysicsDebugger",
-                                                   false ));
+                           mPropertyMap["PhysicsDebugger"],
+                           "PreferencesPropertySet.PhysicsDebugger",
+                           false ) );
         mLiveObjects.push_back( p );
     }
 
@@ -229,19 +229,19 @@ void PreferencesPropertySet::CreateSkeleton()
         AddProperty( "CADSelection", false, "CAD Selection" );
         mPropertyMap["CADSelection"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
-                                                   mPropertyMap["CADSelection"],
-                                                   "PreferencesPropertySet.CADSelection",
-                                                   false ));
+                           mPropertyMap["CADSelection"],
+                           "PreferencesPropertySet.CADSelection",
+                           false ) );
         mLiveObjects.push_back( p );
     }
-    
+
     {
         AddProperty( "ScriptLogger", false, "Script Logger" );
         mPropertyMap["ScriptLogger"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
-                                                   mPropertyMap["ScriptLogger"],
-                                                   "PreferencesPropertySet.ScriptLogger",
-                                                   false ));
+                           mPropertyMap["ScriptLogger"],
+                           "PreferencesPropertySet.ScriptLogger",
+                           false ) );
         mLiveObjects.push_back( p );
     }
 
@@ -249,9 +249,9 @@ void PreferencesPropertySet::CreateSkeleton()
         AddProperty( "ScreenAlignedNormals", false, "Screen Aligned Normals" );
         mPropertyMap["ScreenAlignedNormals"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
-                                                   mPropertyMap["ScreenAlignedNormals"],
-                                                   "PreferencesPropertySet.ScreenAlignedNormals",
-                                                   false ));
+                           mPropertyMap["ScreenAlignedNormals"],
+                           "PreferencesPropertySet.ScreenAlignedNormals",
+                           false ) );
         mLiveObjects.push_back( p );
     }
 
@@ -259,9 +259,9 @@ void PreferencesPropertySet::CreateSkeleton()
         AddProperty( "DisplayFrameRate", false, "Display Frame Rate" );
         mPropertyMap["DisplayFrameRate"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< const bool& >( mUUIDString,
-                                                   mPropertyMap["DisplayFrameRate"],
-                                                   "PreferencesPropertySet.DisplayFrameRate",
-                                                   false ));
+                           mPropertyMap["DisplayFrameRate"],
+                           "PreferencesPropertySet.DisplayFrameRate",
+                           false ) );
         mLiveObjects.push_back( p );
     }
 
@@ -269,9 +269,9 @@ void PreferencesPropertySet::CreateSkeleton()
         AddProperty( "DisplayGlobalAxis", false, "Display Global Axis" );
         mPropertyMap["DisplayGlobalAxis"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
-                                                   mPropertyMap["DisplayGlobalAxis"],
-                                                   "PreferencesPropertySet.DisplayGlobalAxis",
-                                                   false ));
+                           mPropertyMap["DisplayGlobalAxis"],
+                           "PreferencesPropertySet.DisplayGlobalAxis",
+                           false ) );
         mLiveObjects.push_back( p );
     }
 
@@ -279,21 +279,21 @@ void PreferencesPropertySet::CreateSkeleton()
         AddProperty( "DeviceGloveDisplay", false, "Display Glove Models" );
         mPropertyMap["DeviceGloveDisplay"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
-                                                mPropertyMap["DeviceGloveDisplay"],
-                                                "PreferencesPropertySet.DeviceGloveDisplay",
-                                                false ));
+                           mPropertyMap["DeviceGloveDisplay"],
+                           "PreferencesPropertySet.DeviceGloveDisplay",
+                           false ) );
         mLiveObjects.push_back( p );
     }
-    
+
     {
-        AddProperty( "AmbientAudioSoundFile", std::string("null"), "Ambient Audio File" );
+        AddProperty( "AmbientAudioSoundFile", std::string( "null" ), "Ambient Audio File" );
         SetPropertyAttribute( "AmbientAudioSoundFile", "isFilePath", true );
         mPropertyMap["AmbientAudioSoundFile"]->
-            SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         MakeLiveBasePtr p( new MakeLive< std::string const& >( mUUIDString,
-                                                       mPropertyMap["AmbientAudioSoundFile"],
-                                                       "PreferencesPropertySet.AmbientAudioSoundFile",
-                                                       false ));
+                           mPropertyMap["AmbientAudioSoundFile"],
+                           "PreferencesPropertySet.AmbientAudioSoundFile",
+                           false ) );
         mLiveObjects.push_back( p );
     }
 }
@@ -301,7 +301,7 @@ void PreferencesPropertySet::CreateSkeleton()
 void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr& property )
 {
     bool value = boost::any_cast<bool>( property->GetValue() );
-    
+
     if( value )
     {
         GetProperty( "NearFarRatio_Ratio" )->SetEnabled();
@@ -310,7 +310,7 @@ void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr& property )
     {
         GetProperty( "NearFarRatio_Ratio" )->SetDisabled();
     }
-    
+
     PropertyPtr ptr = GetProperty( "NearFarRatio_Ratio" );
     UpdateNearFarRatio( ptr );
 }
@@ -318,7 +318,7 @@ void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr& property )
 void PreferencesPropertySet::EnableBackgroundColor( PropertyPtr& property )
 {
     bool value = boost::any_cast<bool>( property->GetValue() );
-    
+
     if( value )
     {
         GetProperty( "UsePreferredBackgroundColor_Red" )->SetEnabled();
@@ -331,7 +331,7 @@ void PreferencesPropertySet::EnableBackgroundColor( PropertyPtr& property )
         GetProperty( "UsePreferredBackgroundColor_Blue" )->SetDisabled();
         GetProperty( "UsePreferredBackgroundColor_Green" )->SetDisabled();
     }
-    
+
     UpdateBackgroundColor( property );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -347,7 +347,7 @@ void PreferencesPropertySet::EnableDraggerScaling( PropertyPtr& property )
     {
         GetProperty( "DraggerScaling_Scale" )->SetDisabled();
     }
-    
+
     PropertyPtr ptr = GetProperty( "DraggerScaling_Scale" );
     UpdateDraggerScaling( ptr );
 }
@@ -361,7 +361,7 @@ void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr& )
     colors.push_back( r );
     colors.push_back( g );
     colors.push_back( b );
-    
+
     m_backgroundColor->operator()( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
 }
 ////////////////////////////////////////////////////////////////////////////////

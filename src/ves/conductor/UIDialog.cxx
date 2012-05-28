@@ -40,12 +40,12 @@ using namespace ves::conductor;
 
 ////////////////////////////////////////////////////////////////////////////////
 UIDialog::UIDialog( wxWindow* parent, int id, wxString title )
-        : wxDialog(
-            parent, id, title,
-            wxDefaultPosition,
-            wxDefaultSize,
-            ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP
-        )
+    : wxDialog(
+        parent, id, title,
+        wxDefaultPosition,
+        wxDefaultSize,
+        ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP
+    )
 {
     CenterOnParent();
 }

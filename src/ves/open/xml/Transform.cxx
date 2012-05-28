@@ -39,7 +39,7 @@ using namespace ves::open::xml;
 //Constructor           //
 //////////////////////////
 Transform::Transform()
-        : XMLObject()
+    : XMLObject()
 {
     std::vector< double > temp;
     temp.assign( 3, 0.0f );
@@ -47,13 +47,13 @@ Transform::Transform()
     std::vector< double > temp1;
     temp1.assign( 3, 1.0f );
 
-    mRotationArray= FloatArrayPtr( new FloatArray() );
+    mRotationArray = FloatArrayPtr( new FloatArray() );
     mRotationArray->SetArray( temp );
 
-    mScaleArray= FloatArrayPtr( new FloatArray() );
+    mScaleArray = FloatArrayPtr( new FloatArray() );
     mScaleArray->SetArray( temp1 );
 
-    mTranslationArray= FloatArrayPtr( new FloatArray() );
+    mTranslationArray = FloatArrayPtr( new FloatArray() );
     mTranslationArray->SetArray( temp );
     SetObjectType( "Transform" );
 }
@@ -66,11 +66,11 @@ Transform::~Transform()
 }
 ///////////////////////////////////////////
 Transform::Transform( const Transform& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
-    mRotationArray = FloatArrayPtr( new FloatArray(  *input.mRotationArray ) );
-    mScaleArray = FloatArrayPtr( new FloatArray(  *input.mScaleArray ) );
-    mTranslationArray = FloatArrayPtr( new FloatArray(  *input.mTranslationArray ) );
+    mRotationArray = FloatArrayPtr( new FloatArray( *input.mRotationArray ) );
+    mScaleArray = FloatArrayPtr( new FloatArray( *input.mScaleArray ) );
+    mTranslationArray = FloatArrayPtr( new FloatArray( *input.mTranslationArray ) );
 }
 /////////////////////////////////////////////////////
 Transform& Transform::operator=( const Transform& input )
@@ -150,26 +150,26 @@ void Transform::SetObjectFromXMLData( DOMNode* xmlInput )
         {
 
             // do we need to delete the old one or does xerces handle this???
-            mTranslationArray->SetObjectFromXMLData( 
-                currentElement->getElementsByTagName( 
-                ves::open::xml::Convert( "translation" ).toXMLString() )->
+            mTranslationArray->SetObjectFromXMLData(
+                currentElement->getElementsByTagName(
+                    ves::open::xml::Convert( "translation" ).toXMLString() )->
                 item( 0 ) );
 
-            mScaleArray->SetObjectFromXMLData( 
-                currentElement->getElementsByTagName( 
-                ves::open::xml::Convert( "scale" ).toXMLString() )->
+            mScaleArray->SetObjectFromXMLData(
+                currentElement->getElementsByTagName(
+                    ves::open::xml::Convert( "scale" ).toXMLString() )->
                 item( 0 ) );
 
-            mRotationArray->SetObjectFromXMLData( 
-                currentElement->getElementsByTagName( 
-                ves::open::xml::Convert( "rotation" ).toXMLString() )->
+            mRotationArray->SetObjectFromXMLData(
+                currentElement->getElementsByTagName(
+                    ves::open::xml::Convert( "rotation" ).toXMLString() )->
                 item( 0 ) );
         }
     }
     else
     {
         std::cerr << " ERROR : Transform::SetObjectFromXMLData :" <<
-        " This node has no children which means there is probably a problem." << std::endl;
+                  " This node has no children which means there is probably a problem." << std::endl;
     }
 }
 //////////////////////////////////////////////////////////////

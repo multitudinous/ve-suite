@@ -162,7 +162,9 @@ CADNodePtr CADTreeBuilder::GetCADNode( std::string name )
     for( size_t i = 0; i < nNodes; i++ )
     {
         if( _nodeList.at( i )->GetNodeName() == name )
+        {
             return _nodeList.at( i );
+        }
     }
     return CADNodePtr();
 }
@@ -209,20 +211,20 @@ void CADTreeBuilder::RemoveNodeFromGraph( wxTreeItemId nodeToRemove )
     _treeCtrl->Delete( nodeToRemove );
 }
 ////////////////////////////////////////////////////////////////////////////////////////
-wxTreeItemId CADTreeBuilder::AddAssemblyToGraph(CADNodePtr assembly, wxTreeItemId parent )
+wxTreeItemId CADTreeBuilder::AddAssemblyToGraph( CADNodePtr assembly, wxTreeItemId parent )
 {
     wxTreeItemId currentId;
 
     currentId = _treeCtrl->AppendItem( parent,
-                               wxString( assembly->GetNodeName().c_str(), wxConvUTF8 ),
-                               0, 2, new TreeNodeData( assembly ) );
+                                       wxString( assembly->GetNodeName().c_str(), wxConvUTF8 ),
+                                       0, 2, new TreeNodeData( assembly ) );
     _treeCtrl->SetItemImage( currentId, 2, wxTreeItemIcon_Expanded );
     _treeCtrl->SetItemImage( currentId, 2, wxTreeItemIcon_SelectedExpanded );
 
     return currentId;
 }
 ////////////////////////////////////////////////////////////////////////
-void CADTreeBuilder::AddPartToGraph(CADNodePtr part, wxTreeItemId parent )
+void CADTreeBuilder::AddPartToGraph( CADNodePtr part, wxTreeItemId parent )
 {
     _treeCtrl->AppendItem( parent,
                            wxString( part->GetNodeName().c_str(), wxConvUTF8 ),
@@ -233,7 +235,9 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply( CADNodeTraverser* treeBuilder,
 {
     CADTreeBuilder* treeGraph = dynamic_cast<CADTreeBuilder*>( treeBuilder );
     if( !treeGraph )
+    {
         return;
+    }
 
     //add the transform to the current parent
     if( treeGraph->GetWXTreeCtrl()->GetRootItem().IsOk() )
@@ -243,8 +247,8 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply( CADNodeTraverser* treeBuilder,
         if( node->GetNodeType() == std::string( "Assembly" ) )
         {
             currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem( treeGraph->GetCurrentParentNode(),
-                                                                      wxString( node->GetNodeName().c_str(), wxConvUTF8 )
-                                                                      , 0, 2, new TreeNodeData( node ) );
+                              wxString( node->GetNodeName().c_str(), wxConvUTF8 )
+                              , 0, 2, new TreeNodeData( node ) );
 
             //update the current parent
             treeGraph->SetCurrentParentNode( currentParentId );
@@ -255,8 +259,8 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply( CADNodeTraverser* treeBuilder,
         else if( node->GetNodeType() == std::string( "Part" ) )
         {
             currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem( treeGraph->GetCurrentParentNode(),
-                                                                      wxString( node->GetNodeName().c_str(), wxConvUTF8 )
-                                                                      , 0, 1, new TreeNodeData( node ) );
+                              wxString( node->GetNodeName().c_str(), wxConvUTF8 )
+                              , 0, 1, new TreeNodeData( node ) );
         }
     }
     else
@@ -275,7 +279,7 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply( CADNodeTraverser* treeBuilder,
 void CADTreeBuilder::_createImageList()
 {
     // Make an image list containing small icons
-    wxImageList *images = new wxImageList( 32, 32, true );
+    wxImageList* images = new wxImageList( 32, 32, true );
 
     // should correspond to TreeCtrlIcon_xxx enum
     wxBusyCursor wait;

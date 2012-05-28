@@ -74,7 +74,7 @@ public:
      * Default Ctor
      */
     TextureData()
-            : mOrigin( NULL )
+        : mOrigin( NULL )
     {}
 
     /**
@@ -92,8 +92,8 @@ public:
                  const ScalarDataSet& scalars,
                  const gmtl::Vec3f& spacing,
                  gmtl::Vec3f* origin = NULL )
-            : mName( name ), mVectorData( data ), mScalarData( scalars ),
-            mSpacing( spacing ), mOrigin( origin )
+        : mName( name ), mVectorData( data ), mScalarData( scalars ),
+          mSpacing( spacing ), mOrigin( origin )
     {}
 
     /**
@@ -206,12 +206,12 @@ public:
     }
 
     /**
-     * Returns the TimestepData associated with the 
+     * Returns the TimestepData associated with the
      * specified timetep.
      *
      * @param   idx      the index of the data to retrieve.
      *
-     * @return     The timestep data associated with idx. 
+     * @return     The timestep data associated with idx.
      *
      * @note    No bounds checking is performed on idx.
      */

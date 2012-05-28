@@ -49,7 +49,7 @@ namespace volume
 void HideVizFeature( std::string const& uuid, std::vector< bool > const& hide );
 
 ///Play, stop, step an animation
-void SetTransientMode( std::string const& uuid, std::vector< std::string > const& playMode);
+void SetTransientMode( std::string const& uuid, std::vector< std::string > const& playMode );
 
 ///Set the duration of the animation
 void SetTransientDuration( std::string const& uuid, std::vector< double > const& duration );
@@ -73,9 +73,9 @@ void UpdateIsoSurfaceValue( std::string const& uuid, std::vector< double > const
 void EnableIsoSurfaces( std::string const& uuid, std::vector< bool > const& enable );
 
 ///
-void UpdateClipPlaneSettings( std::string const& planeDirection, 
-    std::string const& planeCoordinate, double const& roiValue, 
-    double const& minRoiValue, double const& maxRoiValue );
+void UpdateClipPlaneSettings( std::string const& planeDirection,
+                              std::string const& planeCoordinate, double const& roiValue,
+                              double const& minRoiValue, double const& maxRoiValue );
 
 ///
 void UpdateROIBounds( std::string const& uuid, std::vector< double > const& roi );
@@ -87,9 +87,9 @@ void TurnOnBBox( bool const& enable );
 void ActivateTBDataset( std::string const& activeDataset );
 
 ///
-void UpdateTBSolution( std::string const& dataName, std::string const& dataType, 
-    double const& minRange, double const& maxRange );
-    
+void UpdateTBSolution( std::string const& dataName, std::string const& dataType,
+                       double const& minRange, double const& maxRange );
+
 ///Update the current scalar range
 void UpdateScalarRange( double const& minRange, double const& maxRange );
 

@@ -40,10 +40,10 @@
 
 using namespace ves::conductor::qt::minerva;
 
-AddFileSystemWidget::AddFileSystemWidget ( QWidget *parent ) : BaseClass ( parent ),
-  _ui ( new Ui::AddFileSystemWidget )
+AddFileSystemWidget::AddFileSystemWidget( QWidget* parent ) : BaseClass( parent ),
+    _ui( new Ui::AddFileSystemWidget )
 {
-    _ui->setupUi ( this );
+    _ui->setupUi( this );
 }
 
 void AddFileSystemWidget::on_addFilesButton_clicked()
@@ -53,44 +53,44 @@ void AddFileSystemWidget::on_addFilesButton_clicked()
 
 void AddFileSystemWidget::on_removeSelectedFilesButton_clicked()
 {
-    typedef QList<QListWidgetItem *> Items;
-    Items items ( _ui->listWidget->selectedItems() );
-    for ( Items::iterator iter = items.begin(); iter != items.end(); ++iter )
+    typedef QList<QListWidgetItem*> Items;
+    Items items( _ui->listWidget->selectedItems() );
+    for( Items::iterator iter = items.begin(); iter != items.end(); ++iter )
     {
-        _ui->listWidget->takeItem ( _ui->listWidget->row ( *iter ) );
+        _ui->listWidget->takeItem( _ui->listWidget->row( *iter ) );
         delete *iter;
     }
-  
+
     _ui->listWidget->update();
 }
 
 void AddFileSystemWidget::onFilesSelected( const QStringList& fileNames )
 {
-    for ( unsigned int i = 0; i < fileNames.size(); ++i )
+    for( unsigned int i = 0; i < fileNames.size(); ++i )
     {
-        _ui->listWidget->addItem ( fileNames.at ( i ) );
+        _ui->listWidget->addItem( fileNames.at( i ) );
     }
 }
 
 void AddFileSystemWidget::onFileSelected( const QString& fileName )
 {
-    _ui->listWidget->addItem ( fileName );
+    _ui->listWidget->addItem( fileName );
 }
 
-void AddFileSystemWidget::AddLayersToFeature ( Minerva::Core::Data::Container* container )
+void AddFileSystemWidget::AddLayersToFeature( Minerva::Core::Data::Container* container )
 {
-    if ( 0x0 != container )
+    if( 0x0 != container )
     {
-        const unsigned int size ( _ui->listWidget->count() );
-        for ( unsigned int i = 0; i < size; ++i )
+        const unsigned int size( _ui->listWidget->count() );
+        for( unsigned int i = 0; i < size; ++i )
         {
-            if ( QListWidgetItem* item = _ui->listWidget->item ( i ) )
+            if( QListWidgetItem* item = _ui->listWidget->item( i ) )
             {
-                const std::string filename ( item->text().toStdString() );
-                Minerva::Core::Data::Feature::RefPtr feature ( Minerva::Core::Functions::readFile ( filename ) );
-                if ( feature.valid() )
+                const std::string filename( item->text().toStdString() );
+                Minerva::Core::Data::Feature::RefPtr feature( Minerva::Core::Functions::readFile( filename ) );
+                if( feature.valid() )
                 {
-                    container->add ( feature );
+                    container->add( feature );
                 }
             }
         }

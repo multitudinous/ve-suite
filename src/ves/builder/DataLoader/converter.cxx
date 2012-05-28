@@ -40,20 +40,20 @@
 using namespace ves::builder::DataLoader;
 
 void ves::builder::DataLoader::letUsersAddParamsToField( const int numParams, vtkFloatArray** data,
-                                                         vtkPointData* pointData, int verbose )
+        vtkPointData* pointData, int verbose )
 {
     int debug  = 0;
 
     if( debug )
         std::cout << "in letUsersAddParamsToField with numParams = "
-        << numParams << std::endl;
+                  << numParams << std::endl;
 
     char response;
     for( int i = 0; i < numParams; i++ )
     {
         if( debug > 1 )
             std::cout << "data[" << i << "]->GetNumberOfTuples() = "
-            << data[i]->GetNumberOfTuples() << std::endl;
+                      << data[i]->GetNumberOfTuples() << std::endl;
 
         // if there is just one scalar/vector then write it to field without
         // checking with user.  Otherwise, check with user if the scalar/vector
@@ -64,9 +64,13 @@ void ves::builder::DataLoader::letUsersAddParamsToField( const int numParams, vt
             do
             {
                 if( data[i]->GetNumberOfComponents() == 1 )
+                {
                     std::cout << "Do you want to store scalar value \"";
+                }
                 else
+                {
                     std::cout << "Do you want to store vector value \"";
+                }
 
                 std::cout << data[i]->GetName() << "\" in flowdata.vtk? (y/n): ";
                 std::cout.flush();
@@ -79,7 +83,9 @@ void ves::builder::DataLoader::letUsersAddParamsToField( const int numParams, vt
 
             // if other than y/Y was input then don't write parameter to field...
             if( response != 'y' && response != 'Y' )
+            {
                 continue;
+            }
         }
         pointData->AddArray( data[i] );
     }

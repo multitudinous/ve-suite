@@ -62,7 +62,7 @@ osgDB::RegisterDotOsgWrapperProxy MetaNode_Proxy
 /*bool readMatrix( osg::Matrix& matrix, osgDB::Input& fr, const char* keyword="Matrix" )
 {
     bool iteratorAdvanced = false;
-    
+
     if (fr[0].matchWord(keyword) && fr[1].isOpenBracket())
     {
         int entry = fr[0].getNoNestedBrackets();
@@ -89,8 +89,8 @@ osgDB::RegisterDotOsgWrapperProxy MetaNode_Proxy
         }
         ++fr; // last closing bracket
         iteratorAdvanced = true;
-    }        
-        
+    }
+
     return iteratorAdvanced;
 }
 
@@ -122,27 +122,27 @@ bool MetaNode_readLocalData( osg::Object& obj, osgDB::Input& fr )
         //pd._fileName = fr[1].getStr();
         std::string tempString = fr[1].getStr();
         boost::any uuidString = tempString;
-        std::string uuid("ves uuid ");
+        std::string uuid( "ves uuid " );
         pd.add( uuid, uuidString );
-        fr+=2;
+        fr += 2;
         advance = true;
-        
+
         osg::notify( osg::INFO ) << "uves: ves uuid " << tempString << std::endl;
     }
-    
+
     if( fr.matchSequence( "ves reference " ) )
     {
         //pd._fileName = fr[1].getStr();
         std::string tempString = fr[1].getStr();
         boost::any uuidString = tempString;
-        std::string uuid("ves reference ");
+        std::string uuid( "ves reference " );
         pd.add( uuid, uuidString );
-        fr+=2;
+        fr += 2;
         advance = true;
-        
+
         osg::notify( osg::INFO ) << "uves: ves reference " << tempString << std::endl;
     }
-    
+
     /*if( fr.matchSequence( "Version %i" ) )
     {
         fr[1].getUInt( pd._version );
@@ -183,14 +183,14 @@ bool MetaNode_readLocalData( osg::Object& obj, osgDB::Input& fr )
         {
             fr[1].getFloat( pd._friction );
             fr += 2;
-            
+
             osg::notify( osg::INFO ) << "OSGB: Found friction " << pd._friction << std::endl;
         }
         if( fr.matchSequence( "Restitution %f" ) )
         {
             fr[1].getFloat( pd._restitution );
             fr += 2;
-            
+
             osg::notify( osg::INFO ) << "OSGB: Found restitution " << pd._restitution << std::endl;
         }
     }
@@ -213,50 +213,50 @@ bool MetaNode_writeLocalData( const osg::Object& obj, osgDB::Output& fw )
 
     //fw.indent() << "Version " << pd._version << std::endl;
     //fw.indent() << "ves Meta Node"<< std::endl;
-    std::string uuid("ves uuid ");
+    std::string uuid( "ves uuid " );
     std::string tempUuid = pd.get< std::string >( uuid );
     fw.indent() << "ves uuid \"" << tempUuid << "\"" << std::endl;
-/*
-    fw.writeObject( *(pd._cr) );
+    /*
+        fw.writeObject( *(pd._cr) );
 
-    // The AMT matrix is different from the RB matrix. We need to save it
-    // separately here so that we can display the OSG subgraph transformed
-    // correctly while waiting for physics data to load.
-    btMotionState* motion = pd._body->getMotionState();
-    osgbBullet::MotionState* ms = dynamic_cast< osgbBullet::MotionState* >( motion );
-    if( ms != NULL )
-    {
-        osg::Transform* trans = ms->getTransform();
-        if( trans->asMatrixTransform() != NULL )
+        // The AMT matrix is different from the RB matrix. We need to save it
+        // separately here so that we can display the OSG subgraph transformed
+        // correctly while waiting for physics data to load.
+        btMotionState* motion = pd._body->getMotionState();
+        osgbBullet::MotionState* ms = dynamic_cast< osgbBullet::MotionState* >( motion );
+        if( ms != NULL )
         {
-            const osg::Matrix& mt( trans->asMatrixTransform()->getMatrix() );
-            writeMatrix( mt, fw, "OSGTransform" );
-        }
-        else
-        {
-            osgwTools::AbsoluteModelTransform* amt = dynamic_cast< osgwTools::AbsoluteModelTransform* >( trans );
-            if( amt != NULL )
+            osg::Transform* trans = ms->getTransform();
+            if( trans->asMatrixTransform() != NULL )
             {
-                const osg::Matrix& mt( amt->getMatrix() );
+                const osg::Matrix& mt( trans->asMatrixTransform()->getMatrix() );
                 writeMatrix( mt, fw, "OSGTransform" );
             }
+            else
+            {
+                osgwTools::AbsoluteModelTransform* amt = dynamic_cast< osgwTools::AbsoluteModelTransform* >( trans );
+                if( amt != NULL )
+                {
+                    const osg::Matrix& mt( amt->getMatrix() );
+                    writeMatrix( mt, fw, "OSGTransform" );
+                }
+            }
         }
-    }
 
-    // Save rigid body state.
-    osg::Matrix m( osgbBullet::asOsgMatrix( pd._body->getWorldTransform() ) );
-    writeMatrix( m, fw, "BodyWorldTransform" );
-    osg::Vec3 lv( osgbBullet::asOsgVec3( pd._body->getLinearVelocity() ) );
-    fw.indent() << "Linear velocity " << lv << std::endl;
-    osg::Vec3 av( osgbBullet::asOsgVec3( pd._body->getAngularVelocity() ) );
-    fw.indent() << "Angular velocity " << av << std::endl;
+        // Save rigid body state.
+        osg::Matrix m( osgbBullet::asOsgMatrix( pd._body->getWorldTransform() ) );
+        writeMatrix( m, fw, "BodyWorldTransform" );
+        osg::Vec3 lv( osgbBullet::asOsgVec3( pd._body->getLinearVelocity() ) );
+        fw.indent() << "Linear velocity " << lv << std::endl;
+        osg::Vec3 av( osgbBullet::asOsgVec3( pd._body->getAngularVelocity() ) );
+        fw.indent() << "Angular velocity " << av << std::endl;
 
-    fw.indent() << "Friction " << pd._body->getFriction() << std::endl;
+        fw.indent() << "Friction " << pd._body->getFriction() << std::endl;
 
-    fw.indent() << "Restitution " << pd._body->getRestitution() << std::endl;
+        fw.indent() << "Restitution " << pd._body->getRestitution() << std::endl;
 
-    if( !pd._fileName.empty() )
-        fw.indent() << "FileName \"" << pd._fileName << "\"" << std::endl;
-*/
+        if( !pd._fileName.empty() )
+            fw.indent() << "FileName \"" << pd._fileName << "\"" << std::endl;
+    */
     return( true );
 }

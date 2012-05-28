@@ -235,14 +235,18 @@ void initNoise( void )
     for( i = 0 ; i < B ; i++ )
     {
         p[i] = i;
-        g1[i] = ( double )(( rand() % ( B + B ) ) - B ) / B;
+        g1[i] = ( double )( ( rand() % ( B + B ) ) - B ) / B;
 
         for( j = 0 ; j < 2 ; j++ )
-            g2[i][j] = ( double )(( rand() % ( B + B ) ) - B ) / B;
+        {
+            g2[i][j] = ( double )( ( rand() % ( B + B ) ) - B ) / B;
+        }
         normalize2( g2[i] );
 
         for( j = 0 ; j < 3 ; j++ )
-            g3[i][j] = ( double )(( rand() % ( B + B ) ) - B ) / B;
+        {
+            g3[i][j] = ( double )( ( rand() % ( B + B ) ) - B ) / B;
+        }
         normalize3( g3[i] );
     }
 
@@ -258,9 +262,13 @@ void initNoise( void )
         p[B + i] = p[i];
         g1[B + i] = g1[i];
         for( j = 0 ; j < 2 ; j++ )
+        {
             g2[B + i][j] = g2[i][j];
+        }
         for( j = 0 ; j < 3 ; j++ )
+        {
             g3[B + i][j] = g3[i][j];
+        }
     }
 }
 
@@ -279,7 +287,7 @@ double PerlinNoise1D( double x, double alpha, double beta, int n )
     double p, scale = 1;
 
     p = x;
-    for( i = 0;i < n;i++ )
+    for( i = 0; i < n; i++ )
     {
         val = noise1( p );
         sum += val / scale;
@@ -297,7 +305,7 @@ double PerlinNoise2D( double x, double y, double alpha, double beta, int n )
 
     p[0] = x;
     p[1] = y;
-    for( i = 0;i < n;i++ )
+    for( i = 0; i < n; i++ )
     {
         val = noise2( p );
         sum += val / scale;
@@ -317,7 +325,7 @@ double PerlinNoise3D( double x, double y, double z, double alpha, double beta, i
     p[0] = x;
     p[1] = y;
     p[2] = z;
-    for( i = 0;i < n;i++ )
+    for( i = 0; i < n; i++ )
     {
         val = noise3( p );
         sum += val / scale;

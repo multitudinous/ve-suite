@@ -250,17 +250,17 @@ bool cfdTranslatorToVTK::_writeToVTK( unsigned int fileNum )
         {
             std::stringstream tempName;
             tempName << _outputDir << "/"
-            << _outputFile << ".vtu";
+                     << _outputFile << ".vtu";
             _outfileNames.push_back( tempName.str() );
         }
         else
         {
             std::stringstream tempName;
             tempName << _outputDir << "/"
-            << _outputFile << "_"
-            << std::setfill( '0' )
-            << std::setw( 6 )
-            << fileNum << ".vtu";
+                     << _outputFile << "_"
+                     << std::setfill( '0' )
+                     << std::setw( 6 )
+                     << fileNum << ".vtu";
             _outfileNames.push_back( tempName.str() );
         }
 
@@ -270,9 +270,9 @@ bool cfdTranslatorToVTK::_writeToVTK( unsigned int fileNum )
     }
     else
     {
-        std::cerr 
-            << "|\tcfdTranslatorToVTK::_writeToVTK : Invalid output vtk dataset" 
-            << std::endl;
+        std::cerr
+                << "|\tcfdTranslatorToVTK::_writeToVTK : Invalid output vtk dataset"
+                << std::endl;
         return false;
     }
 }
@@ -285,9 +285,9 @@ vtkDataObject* cfdTranslatorToVTK::GetVTKFile( unsigned int )
     }
     else
     {
-        std::cerr 
-            << "|\tcfdTranslatorToVTK::GetVTKFile : Invalid output vtk dataset." 
-            << std::endl;
+        std::cerr
+                << "|\tcfdTranslatorToVTK::GetVTKFile : Invalid output vtk dataset."
+                << std::endl;
         return 0;
     }
 }
@@ -301,7 +301,7 @@ vtkAlgorithm* cfdTranslatorToVTK::GetVTKAlgorithm()
 //command line.                                                                   //
 ////////////////////////////////////////////////////////////////////////////////////
 void cfdTranslatorToVTK::PreTranslateCallback::Preprocess( int argc, char** argv,
-                                                           cfdTranslatorToVTK* toVTK )
+        cfdTranslatorToVTK* toVTK )
 {
     if( toVTK )
     {
@@ -334,7 +334,7 @@ void cfdTranslatorToVTK::PreTranslateCallback::Preprocess( int argc, char** argv
         {
             toVTK->SetExtractGeometry( true );
         }
-        
+
         std::string writeOption;
         if( toVTK->_extractOptionFromCmdLine( argc, argv, std::string( "-w" ), writeOption ) )
         {
@@ -395,8 +395,8 @@ void cfdTranslatorToVTK::AddFoundFile( std::string singleFile )
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool cfdTranslatorToVTK::_extractOptionFromCmdLine( int argc, char** argv,
-                                                    std::string optionFlag,
-                                                    std::string& optionArg )
+        std::string optionFlag,
+        std::string& optionArg )
 {
     for( int i = 0; i < argc; i++ )
     {

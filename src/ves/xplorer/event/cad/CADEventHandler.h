@@ -43,7 +43,7 @@
 
 namespace osg
 {
-    class Node;
+class Node;
 }
 
 namespace ves

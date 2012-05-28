@@ -76,7 +76,7 @@ wxMenu* DSUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     {
         return baseMenu;
     }
-    
+
     //set the vendor name of the current plugin to the parents
     if( GetVEModel()->GetParentModel() )
     {
@@ -90,7 +90,7 @@ wxMenu* DSUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 
     mDynSimMenu = new wxMenu();
     baseMenu->Insert( 0, DSUOPLUGIN_DYNSIM_MENU,   _( "DynSim" ), mDynSimMenu,
-                    _( "Used in conjunction with Sim" ) );
+                      _( "Used in conjunction with Sim" ) );
     baseMenu->Enable( DSUOPLUGIN_DYNSIM_MENU, true );
     return baseMenu;
 }

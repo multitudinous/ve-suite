@@ -50,12 +50,12 @@ class DynamicDataDlg : public wxDialog
 {
 public:
     ///Constructor
-    DynamicDataDlg(wxWindow *parent, wxWindowID id = 1,
-        const wxString &title = wxT("Dynamic Data"),
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxDefaultSize,
-        long style = wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT |
-        wxMINIMIZE_BOX | wxCLOSE_BOX);
+    DynamicDataDlg( wxWindow* parent, wxWindowID id = 1,
+                    const wxString& title = wxT( "Dynamic Data" ),
+                    const wxPoint& pos = wxDefaultPosition,
+                    const wxSize& size = wxDefaultSize,
+                    long style = wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT |
+                                 wxMINIMIZE_BOX | wxCLOSE_BOX );
 
     ///Destructor
     virtual ~DynamicDataDlg();
@@ -71,14 +71,14 @@ public:
         ves::conductor::util::CORBAServiceList* servicelist );
 
 private:
-    wxTextCtrl *WxEdit1;
-    wxStaticText *WxStaticText2;
-    wxButton *closeButton;
-    wxButton *setButton;
+    wxTextCtrl* WxEdit1;
+    wxStaticText* WxStaticText2;
+    wxButton* closeButton;
+    wxButton* setButton;
     std::string compName;
     ves::conductor::util::CORBAServiceList* serviceList;
-    wxTimer * m_timer;
-    
+    wxTimer* m_timer;
+
     enum
     {
         ID_WXEDIT1 = 1005,
@@ -90,7 +90,7 @@ private:
     };
 
     ///???
-    void OnClose(wxCloseEvent& event);
+    void OnClose( wxCloseEvent& event );
 
     ///???
     void CreateGUIControls();
@@ -99,10 +99,10 @@ private:
     void OnTimer( wxTimerEvent& event );
 
     ///???
-    void closeButtonClick(wxCommandEvent& event);
+    void closeButtonClick( wxCommandEvent& event );
 
     ///???
-    void setButtonClick(wxCommandEvent& event);
+    void setButtonClick( wxCommandEvent& event );
 
     DECLARE_EVENT_TABLE();
 };

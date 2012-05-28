@@ -82,27 +82,27 @@ void SetupLogger( const std::string& logFile );
 int main( int argc, char* argv[] )
 {
     std::cout
-        << "|-----------------------------------------------------------------|"
-        << std::endl
-        << "|\tVE-Xplorer Version "
-        << VES_MAJOR_VERSION << "."
-        << VES_MINOR_VERSION << "."
-        << VES_PATCH_VERSION << "."
-        << SVN_VES_REVISION << std::endl
-        << "|-----------------------------------------------------------------|"
-        << std::endl;
-    
+            << "|-----------------------------------------------------------------|"
+            << std::endl
+            << "|\tVE-Xplorer Version "
+            << VES_MAJOR_VERSION << "."
+            << VES_MINOR_VERSION << "."
+            << VES_PATCH_VERSION << "."
+            << SVN_VES_REVISION << std::endl
+            << "|-----------------------------------------------------------------|"
+            << std::endl;
+
     //Start the juggler kernel here so that we can run on darwin
     vrj::Kernel* kernel = vrj::Kernel::instance();
     //Check to make sure the jccl env var is defined properly
     std::cout
-        << "|-----------------------------------------------------------------|"
-        << std::endl
-        << "| Be sure that the JCCL_CFG_PATH is set properly by VR Juggler."
-        << std::endl
-        << "|-----------------------------------------------------------------|"
-        << std::endl;
-    
+            << "|-----------------------------------------------------------------|"
+            << std::endl
+            << "| Be sure that the JCCL_CFG_PATH is set properly by VR Juggler."
+            << std::endl
+            << "|-----------------------------------------------------------------|"
+            << std::endl;
+
     /*const char* env_dir = std::getenv("JCCL_CFG_PATH");
     if( env_dir )
     {
@@ -132,79 +132,79 @@ int main( int argc, char* argv[] )
         std::cerr << "JCCL_CFG_PATH environment variable is not defined properly." << std::endl;
         return 0;
     }*/
-    
-    po::options_description xplorer_desc("VE-Xplorer Options");
+
+    po::options_description xplorer_desc( "VE-Xplorer Options" );
     po::options_description& general_desc = kernel->getGeneralOptions();
     po::options_description& cluster_desc = kernel->getClusterOptions();
-    xplorer_desc.add(general_desc).add(cluster_desc);
+    xplorer_desc.add( general_desc ).add( cluster_desc );
     po::options_description& config_desc = kernel->getConfigOptions();
-    xplorer_desc.add(config_desc);
-    
-    xplorer_desc.add_options()("VESRTT", po::bool_switch(), 
-        "Enable render-to-texture mode");
+    xplorer_desc.add( config_desc );
+
+    xplorer_desc.add_options()( "VESRTT", po::bool_switch(),
+                                "Enable render-to-texture mode" );
     //This tells ves to automatically determine what the desktop size is and then
-    //run with that screen size rather than require it be passed in on the 
+    //run with that screen size rather than require it be passed in on the
     //command line. Currently this only works on windows.
-    xplorer_desc.add_options()("VESDesktopMode", po::bool_switch(), 
-        "Enable automatic desktop mode");
+    xplorer_desc.add_options()( "VESDesktopMode", po::bool_switch(),
+                                "Enable automatic desktop mode" );
 
-    xplorer_desc.add_options()("VESDesktop", po::value< std::vector< int > >(), 
-        "Enable desktop mode with the resolution of the desktop");
+    xplorer_desc.add_options()( "VESDesktop", po::value< std::vector< int > >(),
+                                "Enable desktop mode with the resolution of the desktop" );
     //-VESDesktop', '1440', '900'
-    
-    xplorer_desc.add_options()("VESCluster", po::value< std::string >(), 
-        "Cluster master node machine name");
 
-    xplorer_desc.add_options()("ORBInitRef", po::value< std::string >(), 
-        "CORBA name server reference");
+    xplorer_desc.add_options()( "VESCluster", po::value< std::string >(),
+                                "Cluster master node machine name" );
+
+    xplorer_desc.add_options()( "ORBInitRef", po::value< std::string >(),
+                                "CORBA name server reference" );
     //-ORBInitRef', 'NameService=corbaloc:iiop:localhost:1239/NameService'
 
-    xplorer_desc.add_options()("VESLog", po::value< std::string >(),
-        "Logging level: fatal, critical, error, warning, notice, information, debug, trace");
+    xplorer_desc.add_options()( "VESLog", po::value< std::string >(),
+                                "Logging level: fatal, critical, error, warning, notice, information, debug, trace" );
 
-    xplorer_desc.add_options()("VESLogPath", po::value< std::string >(),
-        "Full path to log file, including filename");
+    xplorer_desc.add_options()( "VESLogPath", po::value< std::string >(),
+                                "Full path to log file, including filename" );
 
-    xplorer_desc.add_options()("RegionDamaging", po::bool_switch(),
-        "Use region damaging with the UI");
+    xplorer_desc.add_options()( "RegionDamaging", po::bool_switch(),
+                                "Use region damaging with the UI" );
 
     // jconf files can be given as positional arguments.
     //po::positional_options_description pos_desc;
     //pos_desc.add("jconf", -1);
-    
+
     // Construct a parser and do the actual parsing.
-    po::command_line_parser parser(argc, argv );
-    //po::parsed_options parsed = 
+    po::command_line_parser parser( argc, argv );
+    //po::parsed_options parsed =
     //    parser.options(xplorer_desc).positional(pos_desc).allow_unregistered().run();
-    po::parsed_options parsed = 
-        parser.options(xplorer_desc).allow_unregistered().run();
-    
+    po::parsed_options parsed =
+        parser.options( xplorer_desc ).allow_unregistered().run();
+
     // Finally store our options and use them.
     po::variables_map vm;
-    po::store(parsed, vm);
-    po::notify(vm);
-    
-    if( vm.count("help") )
+    po::store( parsed, vm );
+    po::notify( vm );
+
+    if( vm.count( "help" ) )
     {
         std::cout << xplorer_desc << std::endl;
         return 0;
     }
 
-    if( vm.count("VESLogPath") )
+    if( vm.count( "VESLogPath" ) )
     {
         std::string logPath = vm["VESLogPath"].as< std::string >();
         SetupLogger( logPath );
     }
     else
     {
-        SetupLogger("");
+        SetupLogger( "" );
     }
 
-    Poco::Logger& rootLogger( Poco::Logger::get("") );
+    Poco::Logger& rootLogger( Poco::Logger::get( "" ) );
     Poco::Logger& m_logger( Poco::Logger::get( "xplorer" ) );
     LogStreamPtr m_logStream;
     m_logStream = LogStreamPtr( new Poco::LogStream( m_logger ) );
-    if( vm.count("VESLog") )
+    if( vm.count( "VESLog" ) )
     {
         Poco::Message::Priority priority = Poco::Message::PRIO_ERROR;
         std::string level = vm["VESLog"].as< std::string >();
@@ -259,16 +259,16 @@ int main( int argc, char* argv[] )
     //bool cluster_master = vm["vrjmaster"].as<bool>();
     bool cluster_slave = vm["vrjslave"].as<bool>();
 
-    if( !vm.count("jconf") && !cluster_slave )
+    if( !vm.count( "jconf" ) && !cluster_slave )
     {
         std::cerr << std::endl << std::endl
-            << "************************************************" << std::endl
-            << "*** The --jconf argument is not specified as ***" << std::endl
-            << "*** an option for ves_xplorer. Please update ***" << std::endl
-            << "*** the command line arguments to properly   ***" << std::endl
-            << "*** launch ves_xplorer.                      ***" << std::endl
-            << "************************************************" << std::endl
-            << std::endl << std::endl;
+                  << "************************************************" << std::endl
+                  << "*** The --jconf argument is not specified as ***" << std::endl
+                  << "*** an option for ves_xplorer. Please update ***" << std::endl
+                  << "*** the command line arguments to properly   ***" << std::endl
+                  << "*** launch ves_xplorer.                      ***" << std::endl
+                  << "************************************************" << std::endl
+                  << std::endl << std::endl;
         std::cout << xplorer_desc << std::endl;
         return 0;
     }
@@ -282,27 +282,27 @@ int main( int argc, char* argv[] )
             //std::string Advanced_Resource_Factory( "static Advanced_Resource_Factory \"-ORBReactorType select_st -ORBInputCDRAllocator null -ORBConnectionCacheLock null -ORBFlushingStrategy blocking\"" );
             //std::string Client_Strategy_Factory( "static Client_Strategy_Factory \"-ORBProfileLock null -ORBClientConnectionHandler RW\"" );
             //std::string  Server_Strategy_Factory( "static Server_Strategy_Factory \"-ORBConcurrency thread-per-connection -ORBPOALock thread -ORBThreadPerConnectionTimeout 1\"" );
-            
+
             //resource factory args, server strategy factory args, client args
             //TAO::ORB::default_svc_conf_entries( 0, Server_Strategy_Factory.c_str(), 0 );
             CORBA::ORB_var orb = CORBA::ORB_init( argc, argv, "VE_Suite_ORB" );
-            
+
             //Here is the part to contact the naming service and get the reference for the executive
             CORBA::Object_var naming_context_object =
                 orb->resolve_initial_references( "NameService" );
             //orb->perform_work();
             //CORBA::String_var sior1( orb->object_to_string( naming_context_object.in() ) );
             //std::cout << "|\tIOR of the server side : " << std::endl << sior1 << std::endl;
-            CosNaming::NamingContext_var naming_context = 
+            CosNaming::NamingContext_var naming_context =
                 CosNaming::NamingContext::_narrow( naming_context_object.in() );
             //orb->perform_work();
             //Here is the code to set up the server
             // get the root poa
-            CORBA::Object_var poa_object = 
-                orb->resolve_initial_references( "RootPOA" ); 
-            PortableServer::POA_var poa = 
+            CORBA::Object_var poa_object =
+                orb->resolve_initial_references( "RootPOA" );
+            PortableServer::POA_var poa =
                 PortableServer::POA::_narrow( poa_object.in() );
-            PortableServer::POAManager_var poa_manager = 
+            PortableServer::POAManager_var poa_manager =
                 poa->the_POAManager();
 
             // Create policy with BiDirPolicy::BOTH
@@ -318,7 +318,7 @@ int main( int argc, char* argv[] )
             // will receive request in the same connection in which it sent
             // the request
 
-            PortableServer::POA_var child_poa = 
+            PortableServer::POA_var child_poa =
                 poa->create_POA( "childPOA", poa_manager.in(), policies );
 
             // Creation of childPOA is over. Destroy the Policy objects.
@@ -330,8 +330,8 @@ int main( int argc, char* argv[] )
 
             //Initialize Xplorer CORBA interfaces
             vjobsWrapper = new VjObsWrapper();
-            vjobsWrapper->init( naming_context.in(), orb.in(), 
-                               child_poa.in(), 0, argc, argv );
+            vjobsWrapper->init( naming_context.in(), orb.in(),
+                                child_poa.in(), 0, argc, argv );
         }
         else
         {
@@ -342,36 +342,36 @@ int main( int argc, char* argv[] )
         kernel->init( vm );
 
         // If we have configuration files, load them.
-        if( vm.count("jconf") > 0 )
+        if( vm.count( "jconf" ) > 0 )
         {
             {
                 //const char* jccl_dir = std::getenv("JCCL_CFG_PATH");
-                const char* vjbase_dir = std::getenv("VJ_BASE_DIR");
-                const char* vjdata_dir = std::getenv("VJ_DATA_DIR");
+                const char* vjbase_dir = std::getenv( "VJ_BASE_DIR" );
+                const char* vjdata_dir = std::getenv( "VJ_DATA_DIR" );
                 //std::cout << "JCCL_CFG_PATH=" << jccl_dir << std::endl
                 std::cout << "VJ_BASE_DIR=" << vjbase_dir << std::endl
-                    << "VJ_DATA_DIR=" << vjdata_dir << std::endl;
+                          << "VJ_DATA_DIR=" << vjdata_dir << std::endl;
             }
             std::vector<std::string> jconfs =
                 vm["jconf"].as< std::vector<std::string> >();
-            
+
             std::vector<std::string>::iterator i;
-            for ( i = jconfs.begin(); i != jconfs.end(); ++i )
+            for( i = jconfs.begin(); i != jconfs.end(); ++i )
             {
                 std::cout << "Reading: " << *i << std::endl;
-                kernel->loadConfigFile(*i);
+                kernel->loadConfigFile( *i );
             }
         }
         else if( !cluster_slave )
         {
             std::cerr << std::endl << std::endl
-                << "************************************************" << std::endl
-                << "*** The --jconf argument is not specified as ***" << std::endl
-                << "*** an option for ves_xplorer. Please update ***" << std::endl
-                << "*** the command line arguments to properly   ***" << std::endl
-                << "*** launch ves_xplorer.                      ***" << std::endl
-                << "************************************************" << std::endl
-                << std::endl << std::endl << xplorer_desc << std::endl;
+                      << "************************************************" << std::endl
+                      << "*** The --jconf argument is not specified as ***" << std::endl
+                      << "*** an option for ves_xplorer. Please update ***" << std::endl
+                      << "*** the command line arguments to properly   ***" << std::endl
+                      << "*** launch ves_xplorer.                      ***" << std::endl
+                      << "************************************************" << std::endl
+                      << std::endl << std::endl << xplorer_desc << std::endl;
             return 0;
         }
 
@@ -393,27 +393,27 @@ int main( int argc, char* argv[] )
         //appWrapper->m_thread->new_thread->join();
         delete appWrapper;
     }
-    catch ( CORBA::SystemException& ex )
+    catch( CORBA::SystemException& ex )
     {
         std::cerr << "Caught CORBA::SystemException." << std::endl
-            << ex._info().c_str() << std::endl
-            << " VE-Xplorer is unable to connect to the        " << std::endl
-            << " computer that the nameserver is supposed to   " << std::endl
-            << " be running on. Some potential causes of this  " << std::endl
-            << " problem are: " << std::endl
-            << " - The ip address for the nameserver computer  " << std::endl
-            << "   cannot be resolved properly. The hosts file " << std::endl
-            << "   may not be configured properly.             " << std::endl
-            << " - The nameserver is probably not started yet. " << std::endl
-            << " - The computer name and port number passed    " << std::endl
-            << "   into VE-Xplorer do not match the computer   " << std::endl
-            << "   name and port number specified in the       " << std::endl
-            << "   launcher for the nameserver.                " << std::endl;
+                  << ex._info().c_str() << std::endl
+                  << " VE-Xplorer is unable to connect to the        " << std::endl
+                  << " computer that the nameserver is supposed to   " << std::endl
+                  << " be running on. Some potential causes of this  " << std::endl
+                  << " problem are: " << std::endl
+                  << " - The ip address for the nameserver computer  " << std::endl
+                  << "   cannot be resolved properly. The hosts file " << std::endl
+                  << "   may not be configured properly.             " << std::endl
+                  << " - The nameserver is probably not started yet. " << std::endl
+                  << " - The computer name and port number passed    " << std::endl
+                  << "   into VE-Xplorer do not match the computer   " << std::endl
+                  << "   name and port number specified in the       " << std::endl
+                  << "   launcher for the nameserver.                " << std::endl;
     }
     catch( CORBA::Exception& ex )
     {
         std::cerr << "Caught CORBA::Exception." << std::endl
-            << ex._info().c_str() << std::endl ;
+                  << ex._info().c_str() << std::endl ;
     }
     catch( vpr::Exception& e )
     {
@@ -422,17 +422,17 @@ int main( int argc, char* argv[] )
     catch( std::exception& e )
     {
         std::cerr << "VE-Xplorer Init: Caught unknown exception." << std::endl
-            << e.what() << std::endl
-            << vpr::System::getCallStack() << std::endl << std::flush;
+                  << e.what() << std::endl
+                  << vpr::System::getCallStack() << std::endl << std::flush;
 
         for( int i = 1; i < argc; ++i )
         {
             std::cerr << "argv[ " << i << " ] = " << argv[ i ] << std::endl;
         }
         std::cerr << "NOTE: If you are running VE-Suite from the " << std::endl
-            << "launcher and are receiving this error be sure " << std::endl
-            << "that you are using the --dev flag for "
-            << "development work." << std::endl;
+                  << "launcher and are receiving this error be sure " << std::endl
+                  << "that you are using the --dev flag for "
+                  << "development work." << std::endl;
     }
 
     LOG_FATAL( "Exiting VE-Xplorer" );
@@ -449,7 +449,7 @@ int main( int argc, char* argv[] )
 {
     std::cout << "#### Starting up test Qt App ####" << std::endl << std::flush;
     QApplication a( argc, argv );
-    QPushButton aButton("Test");
+    QPushButton aButton( "Test" );
     nonQtMainThread everythingElse( argc, argv );
     everythingElse.start();
     aButton.show();
@@ -462,7 +462,7 @@ void SetupLogger( const std::string& logFile )
 {
     //Create a root logger that contains the output channels, pattern formatters,
     //etc. This also lets us easily create an xplorer child, conductor child, etc.
-    Poco::Logger& rootLogger( Poco::Logger::get("") );
+    Poco::Logger& rootLogger( Poco::Logger::get( "" ) );
     //Poco::SimpleFileChannel* fileChannel = new Poco::SimpleFileChannel;
     Poco::FileChannel* fileChannel = new Poco::FileChannel;
     std::string logPath;
@@ -479,16 +479,16 @@ void SetupLogger( const std::string& logFile )
         logPath = "C:/Temp/";
 #endif // BOOST_VERSION
 #else
-    // Standard log path for POSIX
+        // Standard log path for POSIX
         logPath = "/var/tmp/ves-";
-        logPath.append( std::string( std::getenv("LOGNAME") ) );
+        logPath.append( std::string( std::getenv( "LOGNAME" ) ) );
         logPath.append( "/" );
-    // Create ves-LOGNAME subdir if needed
+        // Create ves-LOGNAME subdir if needed
 #if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-        boost::filesystem::path p(logPath);
-        if( !boost::filesystem::exists(p) )
+        boost::filesystem::path p( logPath );
+        if( !boost::filesystem::exists( p ) )
         {
-            boost::filesystem::create_directory(p);
+            boost::filesystem::create_directory( p );
         }
 #endif // BOOST_VERSION
 
@@ -508,8 +508,8 @@ void SetupLogger( const std::string& logFile )
     // Format the logged output as
     // time_with_microseconds [thread number] (priority) source message extra_crlf
     Poco::PatternFormatter* formatter = new Poco::PatternFormatter;
-    formatter->setProperty("pattern", "%H:%M:%S:%F [%I] (%l) %s: %t");
-    formatter->setProperty("times", "local");
+    formatter->setProperty( "pattern", "%H:%M:%S:%F [%I] (%l) %s: %t" );
+    formatter->setProperty( "times", "local" );
     Poco::FormattingChannel* formattingChannel = new Poco::FormattingChannel( formatter , m_splitterChannel );
 
     rootLogger.setChannel( formattingChannel );

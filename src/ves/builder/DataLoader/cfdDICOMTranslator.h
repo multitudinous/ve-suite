@@ -43,7 +43,7 @@ namespace builder
 namespace DataLoader
 {
 class VE_USER_BUILDER_EXPORTS cfdDICOMTranslator:
-            public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
+    public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 
 public:
@@ -52,7 +52,7 @@ public:
     ///Display help for the DICOM translator
     virtual void DisplayHelp( void );
 
-class VE_USER_BUILDER_EXPORTS DICOMTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    class VE_USER_BUILDER_EXPORTS DICOMTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
     {
     public:
         DICOMTranslateCbk()
@@ -64,12 +64,12 @@ class VE_USER_BUILDER_EXPORTS DICOMTranslateCbk: public ves::builder::cfdTransla
         //appropriately by the translate callback.      //
         //////////////////////////////////////////////////
         virtual void Translate( vtkDataObject*& outputDataset,
-                               cfdTranslatorToVTK* toVTK,
-                               vtkAlgorithm*& dataReader );
+                                cfdTranslatorToVTK* toVTK,
+                                vtkAlgorithm*& dataReader );
 
     protected:
     };
-class VE_USER_BUILDER_EXPORTS DICOMPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    class VE_USER_BUILDER_EXPORTS DICOMPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
     {
     public:
         DICOMPreTranslateCbk()

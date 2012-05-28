@@ -154,7 +154,10 @@ public:
     void UnbindORB();
 
     ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-    virtual void UpdateCommand(){;}
+    virtual void UpdateCommand()
+    {
+        ;
+    }
 
     ///This function returns the map of the current plugins
     ///so that evehenthandlers can manipulate the plugins while
@@ -194,7 +197,7 @@ public:
 
     ///Discover plugins when changing directories
     void DiscoverPlugins( std::string const& fileName );
-    
+
     ///Remove a plugin from the plugin map and the event handler map
     void RemovePlugin( std::string const& pluginId );
 

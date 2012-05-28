@@ -47,7 +47,7 @@ class VE_CE_UTILS_EXPORTS node_loop : public node_base
 {
 public:
 
-    node_loop( VE_CE::Utilities::Network * );
+    node_loop( VE_CE::Utilities::Network* );
     node_loop( const node_loop& );
     virtual ~node_loop();
 
@@ -55,9 +55,9 @@ public:
     {
         return ( int )_nodes.size();
     };
-    virtual void get_mods( std::set<int> & );
-    virtual void get_ins( std::set<int> &, std::set<int> connid_ignore );
-    virtual void get_outs( std::set<int> &, std::set<int> connid_ignore );
+    virtual void get_mods( std::set<int>& );
+    virtual void get_ins( std::set<int>&, std::set<int> connid_ignore );
+    virtual void get_outs( std::set<int>&, std::set<int> connid_ignore );
     virtual void print_mods();
     virtual int  execute_mods();
     virtual void need_execute();

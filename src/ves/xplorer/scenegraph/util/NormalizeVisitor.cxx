@@ -49,7 +49,7 @@
 
 using namespace ves::xplorer::scenegraph::util;
 //Here are the use cases for this visitor:
-//parent node 
+//parent node
 //supported in both cases
 //scale == 1 but children are != 1
 //supported in both cases
@@ -60,8 +60,8 @@ using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 NormalizeVisitor::NormalizeVisitor( osg::Node* osg_node, bool normalize )
-        :NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-         mNormalize( normalize )
+    : NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+      mNormalize( normalize )
 {
     osg_node->accept( *this );
 }
@@ -93,9 +93,9 @@ void NormalizeVisitor::apply( osg::PositionAttitudeTransform& node )
         {
             //If a parent assembly node has a scale of 1 and is trying to
             //normalize all the sub children BUT the children nodes have a
-            //scale != 1 then we do not want to traverse any farther 
+            //scale != 1 then we do not want to traverse any farther
             //as normalization needs to be on still. If the children
-            //nodes have a scale == 1 then no big deal, go ahead and 
+            //nodes have a scale == 1 then no big deal, go ahead and
             //turn off normalization
             //NOTE::This is neccessary due to how statesets are managed in OSG
             //if( !mNormalize && node.getScale()[ 0 ] != 1.0f )
@@ -115,14 +115,14 @@ void NormalizeVisitor::apply( osg::PositionAttitudeTransform& node )
     osg::NodeVisitor::traverse( node );
 }
 ////////////////////////////////////////////////////////////////////////
-void NormalizeVisitor::SetupNormalizeForStateSet( osg::StateSet* stateset, 
-    osg::Node* )
+void NormalizeVisitor::SetupNormalizeForStateSet( osg::StateSet* stateset,
+        osg::Node* )
 {
-    ///Do this so that the normals will not be affected by the 
+    ///Do this so that the normals will not be affected by the
     ///scaling applied by the user - See osg post on April 19, 2007
     if( mNormalize )
     {
-        //This is a new setting that can be used when the scaling is 
+        //This is a new setting that can be used when the scaling is
         //uniform. In general we are going to use this because non-uniform
         //scaling does not occur frequently.
         //http://www.opengl.org/resources/features/KilgardTechniques/oglpitfall/
@@ -132,15 +132,15 @@ void NormalizeVisitor::SetupNormalizeForStateSet( osg::StateSet* stateset,
     else
     {
         //If the node path above this part node contains a scale anywhere then
-        //the resulting matrix will have a scale value other than 1. In this 
+        //the resulting matrix will have a scale value other than 1. In this
         //case do not turn off normalization
         osg::NodePath nodePath = getNodePath();
         osg::Matrix m;
         if( nodePath.size() > 0 )
-        { 
+        {
             m = osg::computeLocalToWorld( nodePath );
         }
-        if( (m.getScale()[ 0 ] == 1.0f) && (m.getScale()[ 1 ] == 1.0f) && (m.getScale()[ 2 ] == 1.0f) )
+        if( ( m.getScale()[ 0 ] == 1.0f ) && ( m.getScale()[ 1 ] == 1.0f ) && ( m.getScale()[ 2 ] == 1.0f ) )
         {
             stateset->setMode( GL_RESCALE_NORMAL, osg::StateAttribute::OFF );
         }

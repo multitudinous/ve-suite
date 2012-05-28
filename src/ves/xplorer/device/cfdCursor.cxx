@@ -79,7 +79,7 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
-cfdCursor::cfdCursor( vtkPolyData * arrow, ves::xplorer::scenegraph::DCS* worldDCS, ves::xplorer::scenegraph::Group* rootNode )
+cfdCursor::cfdCursor( vtkPolyData* arrow, ves::xplorer::scenegraph::DCS* worldDCS, ves::xplorer::scenegraph::Group* rootNode )
 {
     veCommand = ves::open::xml::CommandPtr();
     cursorId = NONE;
@@ -94,21 +94,27 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, ves::xplorer::scenegraph::DCS* worldD
     Vec3d r;
 
     for( unsigned int i = 0; i < 3; i++ )
+    {
         r[ i ] = mat[ 0 ][ i ];
+    }
     float xscale = length( r );
 
     for( unsigned int i = 0; i < 3; i++ )
+    {
         r[ i ] = mat[ 1 ][ i ];
+    }
     float yscale = length( r );
 
     for( unsigned int i = 0; i < 3; i++ )
+    {
         r[ i ] = mat[ 2 ][ i ];
+    }
     float zscale = length( r );
 
 
     vprDEBUG( vesDBG, 1 ) << "cfdCursor: scale = "
-    << xscale << " : " << yscale << " : "  << zscale
-    << std::endl << vprDEBUG_FLUSH;
+                          << xscale << " : " << yscale << " : "  << zscale
+                          << std::endl << vprDEBUG_FLUSH;
 
     this->sphereSrc = vtkSphereSource::New();
     this->sphereNorm = vtkPolyDataNormals::New();
@@ -159,7 +165,7 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, ves::xplorer::scenegraph::DCS* worldD
     this->last_cursor_type = XPLANE;
 
     sphereRadius = 0.05f;
-//   command = 0;
+    //   command = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdCursor::~cfdCursor()
@@ -217,7 +223,7 @@ void cfdCursor::Initialize( double x[3], double v[3] )
     this->BuildPlaneSource();
 
     this->cursorGeode->TranslateToGeode( this->sphereActor );
-    (( ves::xplorer::scenegraph::DCS* )this->cursorDCS->GetChild( 0 ) )->AddChild( this->cursorGeode.get() );
+    ( ( ves::xplorer::scenegraph::DCS* )this->cursorDCS->GetChild( 0 ) )->AddChild( this->cursorGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 int cfdCursor::GetCursorID( void )
@@ -365,7 +371,7 @@ void cfdCursor::UpdateCube( void )
 {
     //added for box cursor
     vprDEBUG( vesDBG, 1 ) << " updating cube source "
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     this->cursorGeode->TranslateToGeode( this->cubeActor );
 }
@@ -373,7 +379,7 @@ void cfdCursor::UpdateCube( void )
 void cfdCursor::UpdateLineSource( int direction )
 {
     vprDEBUG( vesDBG, 1 ) << " updating line source "
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     if( direction == XLINE )
     {
@@ -407,7 +413,7 @@ void cfdCursor::UpdateLineSource( int direction )
 void cfdCursor::UpdatePlaneSource( int i )
 {
     vprDEBUG( vesDBG, 1 ) << " updating plane source " << i
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     //if ( this->last_pSize != this->pSize )
     {
@@ -439,7 +445,7 @@ void cfdCursor::UpdatePlaneSource( int i )
     }
 
     vprDEBUG( vesDBG, 1 ) << " updating plane source " << last_direction
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     this->planeSphereS->SetRadius( sphereRadius );
     this->planeSphereS->Update();
@@ -460,65 +466,65 @@ void cfdCursor::Update( double x[3], double v[3], double wx[3] )
         this->pos_c[i] = this->pos[i] + wx[i]; //compensate for world translation
     }
     vprDEBUG( vesDBG, 3 ) << "|\tcfdCursor::Update " << std::endl
-    << "\twx:" << wx[0] << "," << wx[1] << "," << wx[2]
-    << std::endl
-    << "\tpos:" << pos[0] << "," << pos[1] << "," << pos[2]
-    << std::endl
-    << "\tpos_c:" << pos_c[0] << "," << pos_c[1] << "," << pos_c[2]
-    << std::endl
-    << this->last_cursor_type << " : " << this->cursorId
-    << std::endl
-    << this->last_pReso << " : " << this->pReso
-    << std::endl
-    << this->last_pSize << " : " << this->pSize
-    << std::endl << vprDEBUG_FLUSH;
+                          << "\twx:" << wx[0] << "," << wx[1] << "," << wx[2]
+                          << std::endl
+                          << "\tpos:" << pos[0] << "," << pos[1] << "," << pos[2]
+                          << std::endl
+                          << "\tpos_c:" << pos_c[0] << "," << pos_c[1] << "," << pos_c[2]
+                          << std::endl
+                          << this->last_cursor_type << " : " << this->cursorId
+                          << std::endl
+                          << this->last_pReso << " : " << this->pReso
+                          << std::endl
+                          << this->last_pSize << " : " << this->pSize
+                          << std::endl << vprDEBUG_FLUSH;
 
-    if (( this->last_cursor_type != this->cursorId ) ||
+    if( ( this->last_cursor_type != this->cursorId ) ||
             ( this->last_pReso != this->pReso ) ||
             ( this->last_pSize != this->pSize ) ||
             ( sphereRadius != last_sphereRadius )
-       )
+      )
     {
-        switch ( this->cursorId )
+        switch( this->cursorId )
         {
-            case XPLANE:
-                this->UpdatePlaneSource( XPLANE );
-                break;
+        case XPLANE:
+            this->UpdatePlaneSource( XPLANE );
+            break;
 
-            case YPLANE:
-                this->UpdatePlaneSource( YPLANE );
-                break;
+        case YPLANE:
+            this->UpdatePlaneSource( YPLANE );
+            break;
 
-            case ZPLANE:
-                this->UpdatePlaneSource( ZPLANE );
-                break;
+        case ZPLANE:
+            this->UpdatePlaneSource( ZPLANE );
+            break;
 
-            case SPHERE:
-                this->UpdateSphere();
-                break;
+        case SPHERE:
+            this->UpdateSphere();
+            break;
 
-            case ARROW:
-                this->UpdateArrowSource();
-                break;
+        case ARROW:
+            this->UpdateArrowSource();
+            break;
 
-            case CUBE:
-                this->UpdateCube();
-                break;
+        case CUBE:
+            this->UpdateCube();
+            break;
 
-            case XLINE:
-                this->UpdateLineSource( XLINE );
-                break;
+        case XLINE:
+            this->UpdateLineSource( XLINE );
+            break;
 
-            case YLINE:
-                this->UpdateLineSource( YLINE );
-                break;
+        case YLINE:
+            this->UpdateLineSource( YLINE );
+            break;
 
-            case ZLINE:
-                this->UpdateLineSource( ZLINE );
-                break;
+        case ZLINE:
+            this->UpdateLineSource( ZLINE );
+            break;
 
-            default:
-                break;
+        default:
+            break;
         }
         this->last_cursor_type = this->cursorId;
         this->last_pReso = this->pReso;
@@ -545,7 +551,7 @@ void cfdCursor::getExtent( double boxExtent[6] )
     boxExtent[5] = pos_c[2] + BOX_LENGTH / 2;
 }
 ////////////////////////////////////////////////////////////////////////////////
-vtkCubeSource * cfdCursor::getBox()
+vtkCubeSource* cfdCursor::getBox()
 {
     return this->cubeSrc;
 }
@@ -566,7 +572,7 @@ void cfdCursor::SetPlaneSize( float size )
     this->pSize = size;
 
     vprDEBUG( vesDBG, 1 ) << "Setting plane size : " << size
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::SetPlaneReso( int size )
@@ -575,7 +581,7 @@ void cfdCursor::SetPlaneReso( int size )
     this->pReso = size;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdCursor::GetPlaneSize( float &size )
+void cfdCursor::GetPlaneSize( float& size )
 {
     size = this->pSize;
 }
@@ -585,7 +591,7 @@ float cfdCursor::GetPlaneSize()
     return this->pSize;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdCursor::GetPlaneReso( int &size )
+void cfdCursor::GetPlaneReso( int& size )
 {
     size = this->pReso;
 }
@@ -610,80 +616,80 @@ vtkPolyData* cfdCursor::GetSourcePoints( void )
 {
     this->GetLocalLocationVector();
 
-    switch ( this->cursorId )
+    switch( this->cursorId )
     {
-        case XPLANE:
-            this->planeSrc->SetCenter( this->localLocation );
-            this->planeSrc->Update();
-            return this->planeSrc->GetOutput();
-            break;
+    case XPLANE:
+        this->planeSrc->SetCenter( this->localLocation );
+        this->planeSrc->Update();
+        return this->planeSrc->GetOutput();
+        break;
 
-        case YPLANE:
-            this->planeSrc->SetCenter( this->localLocation );
-            this->planeSrc->Update();
-            return this->planeSrc->GetOutput();
-            break;
+    case YPLANE:
+        this->planeSrc->SetCenter( this->localLocation );
+        this->planeSrc->Update();
+        return this->planeSrc->GetOutput();
+        break;
 
-        case ZPLANE:
-            this->planeSrc->SetCenter( this->localLocation );
-            this->planeSrc->Update();
-            return this->planeSrc->GetOutput();
-            break;
+    case ZPLANE:
+        this->planeSrc->SetCenter( this->localLocation );
+        this->planeSrc->Update();
+        return this->planeSrc->GetOutput();
+        break;
 
-        case SPHERE:
-            this->sphereSrc->SetCenter( this->localLocation );
-            this->sphereSrc->Update();
-            return this->sphereSrc->GetOutput();
-            break;
+    case SPHERE:
+        this->sphereSrc->SetCenter( this->localLocation );
+        this->sphereSrc->Update();
+        return this->sphereSrc->GetOutput();
+        break;
 
-        case ARROW:
-            this->arrowPlaneS->SetCenter( this->localLocation );
-            this->arrowPlaneS->Update();
-            return this->arrowPlaneS->GetOutput();
-            break;
+    case ARROW:
+        this->arrowPlaneS->SetCenter( this->localLocation );
+        this->arrowPlaneS->Update();
+        return this->arrowPlaneS->GetOutput();
+        break;
 
-        case CUBE:
-            this->cubeSrc->SetCenter( this->localLocation );
-            this->cubeSrc->Update();
-            return this->cubeSrc->GetOutput();
-            break;
+    case CUBE:
+        this->cubeSrc->SetCenter( this->localLocation );
+        this->cubeSrc->Update();
+        return this->cubeSrc->GetOutput();
+        break;
 
-        case XLINE:
-            this->lineSrc->SetPoint1( this->localLocation[0] - this->pSize,
-                                      this->localLocation[1],
-                                      this->localLocation[2] );
-            this->lineSrc->SetPoint2( this->localLocation[0] + this->pSize,
-                                      this->localLocation[1],
-                                      this->localLocation[2] );
-            this->lineSrc->Update();
-            return this->lineSrc->GetOutput();
-            break;
+    case XLINE:
+        this->lineSrc->SetPoint1( this->localLocation[0] - this->pSize,
+                                  this->localLocation[1],
+                                  this->localLocation[2] );
+        this->lineSrc->SetPoint2( this->localLocation[0] + this->pSize,
+                                  this->localLocation[1],
+                                  this->localLocation[2] );
+        this->lineSrc->Update();
+        return this->lineSrc->GetOutput();
+        break;
 
-        case YLINE:
-            this->lineSrc->SetPoint1( this->localLocation[0],
-                                      this->localLocation[1] - this->pSize,
-                                      this->localLocation[2] );
-            this->lineSrc->SetPoint2( this->localLocation[0],
-                                      this->localLocation[1] + this->pSize,
-                                      this->localLocation[2] );
-            this->lineSrc->Update();
-            return this->lineSrc->GetOutput();
-            break;
+    case YLINE:
+        this->lineSrc->SetPoint1( this->localLocation[0],
+                                  this->localLocation[1] - this->pSize,
+                                  this->localLocation[2] );
+        this->lineSrc->SetPoint2( this->localLocation[0],
+                                  this->localLocation[1] + this->pSize,
+                                  this->localLocation[2] );
+        this->lineSrc->Update();
+        return this->lineSrc->GetOutput();
+        break;
 
-        case ZLINE:
-            this->lineSrc->SetPoint1( this->localLocation[0],
-                                      this->localLocation[1],
-                                      this->localLocation[2] - this->pSize );
-            this->lineSrc->SetPoint2( this->localLocation[0],
-                                      this->localLocation[1],
-                                      this->localLocation[2] + this->pSize );
-            this->lineSrc->Update();
-            return this->lineSrc->GetOutput();
-            break;
+    case ZLINE:
+        this->lineSrc->SetPoint1( this->localLocation[0],
+                                  this->localLocation[1],
+                                  this->localLocation[2] - this->pSize );
+        this->lineSrc->SetPoint2( this->localLocation[0],
+                                  this->localLocation[1],
+                                  this->localLocation[2] + this->pSize );
+        this->lineSrc->Update();
+        return this->lineSrc->GetOutput();
+        break;
 
-        default:
-            return NULL;
-            break;
+    default:
+        return NULL;
+        break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -743,9 +749,9 @@ void cfdCursor::GetLocalLocationVector( void )
     }
 
     vprDEBUG( vesDBG, 1 ) << "global position rel to performer: "
-    << this->loc[ 0 ] << " : "
-    << this->loc[ 1 ] << " : "
-    << this->loc[ 2 ] << std::endl << vprDEBUG_FLUSH;
+                          << this->loc[ 0 ] << " : "
+                          << this->loc[ 1 ] << " : "
+                          << this->loc[ 2 ] << std::endl << vprDEBUG_FLUSH;
 
     // store the global location in a performer vector...
     gmtl::Vec4d jugglerVec;
@@ -783,10 +789,10 @@ void cfdCursor::GetLocalLocationVector( void )
     this->localLocation[ 2 ] = ( double )pfLocXX[ 2 ];
     this->localLocation[ 1 ] = ( double )pfLocXX[ 1 ];
     vprDEBUG( vesDBG, 1 ) << " NOTE : local position rel to Juggler: "
-    << this->localLocation[ 0 ] << " : "
-    << this->localLocation[ 1 ] << " : "
-    << this->localLocation[ 2 ]
-    << std::endl << vprDEBUG_FLUSH;
+                          << this->localLocation[ 0 ] << " : "
+                          << this->localLocation[ 1 ] << " : "
+                          << this->localLocation[ 2 ]
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 double* cfdCursor::ReturnLocalLocationVector( void )
@@ -803,7 +809,9 @@ void cfdCursor::SetActiveDataSet( ves::xplorer::DataSet* input )
 {
     _activeDataSet = input;
     if( _activeDataSet != NULL )
+    {
         this->SetActiveDataSetDCS( _activeDataSet->GetDCS() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::ProcessCommand()
@@ -829,41 +837,57 @@ void cfdCursor::ProcessCommand()
         if( !newCommand.compare( "CHANGE_STREAMLINE_CURSOR" ) )
         {
             vprDEBUG( vesDBG, 1 ) << "this->id = " << commandData->GetDataName()
-            << ", this->min = " << commandIds.at( 1 )
-            << ", this->max = " << commandIds.at( 2 )
-            << std::endl << vprDEBUG_FLUSH;
+                                  << ", this->min = " << commandIds.at( 1 )
+                                  << ", this->max = " << commandIds.at( 2 )
+                                  << std::endl << vprDEBUG_FLUSH;
 
             if( commandIds.at( 0 ) == NO_CURSOR )
             {
                 vprDEBUG( vesDBG, 1 )
-                << "removing cursor with cursor->GetpfDCS() = "
-                << this->GetDCS() << std::endl << vprDEBUG_FLUSH;
+                        << "removing cursor with cursor->GetpfDCS() = "
+                        << this->GetDCS() << std::endl << vprDEBUG_FLUSH;
 
                 this->cursorId = NONE;
                 if( this->_rootNode->SearchChild( this->GetDCS() ) )
+                {
                     this->_rootNode->RemoveChild( this->GetDCS() );
+                }
             }
             else
             {
                 if( commandIds.at( 0 ) == POINT_CURSOR )
+                {
                     this->cursorId = SPHERE;
+                }
                 else if( commandIds.at( 0 ) == X_PLANE_CURSOR )
+                {
                     this->cursorId = XPLANE;
+                }
                 else if( commandIds.at( 0 ) == Y_PLANE_CURSOR )
+                {
                     this->cursorId = YPLANE;
+                }
                 else if( commandIds.at( 0 ) == Z_PLANE_CURSOR )
+                {
                     this->cursorId = ZPLANE;
+                }
                 else if( commandIds.at( 0 ) == X_LINE_CURSOR )
+                {
                     this->cursorId = XLINE;
+                }
                 else if( commandIds.at( 0 ) == Y_LINE_CURSOR )
+                {
                     this->cursorId = YLINE;
+                }
                 else if( commandIds.at( 0 ) == Z_LINE_CURSOR )
+                {
                     this->cursorId = ZLINE;
+                }
                 else
                 {
                     vprDEBUG( vesDBG, 0 )
-                    << "ERROR: Unknown cursorId -- Setting cursor to XPLANE"
-                    << std::endl << vprDEBUG_FLUSH;
+                            << "ERROR: Unknown cursorId -- Setting cursor to XPLANE"
+                            << std::endl << vprDEBUG_FLUSH;
 
                     this->cursorId = XPLANE;
                 }
@@ -873,8 +897,8 @@ void cfdCursor::ProcessCommand()
                 // this->chgMod = true;
 
                 vprDEBUG( vesDBG, 1 )
-                << "adding cursor with cursor->GetpfDCS() = "
-                << this->GetDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
+                        << "adding cursor with cursor->GetpfDCS() = "
+                        << this->GetDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
 
                 // if disconnected from scene graph, add
                 if( !this->_rootNode->SearchChild( this->GetDCS() ) )
@@ -882,9 +906,9 @@ void cfdCursor::ProcessCommand()
                     this->_rootNode->AddChild( this->GetDCS() );
 
                     vprDEBUG( vesDBG, 2 )
-                    << "added cursor with cursor->GetpfDCS() = "
-                    << this->GetDCS() << std::endl
-                    << this->cursorDCS->GetMat() << vprDEBUG_FLUSH;
+                            << "added cursor with cursor->GetpfDCS() = "
+                            << this->GetDCS() << std::endl
+                            << this->cursorDCS->GetMat() << vprDEBUG_FLUSH;
                 }
             }
 
@@ -933,18 +957,20 @@ void cfdCursor::SetCursorType( int type )
     if( cursorId == NONE )
     {
         vprDEBUG( vesDBG, 1 )
-        << "removing cursor with cursor->GetpfDCS() = "
-        << this->GetDCS() << std::endl << vprDEBUG_FLUSH;
+                << "removing cursor with cursor->GetpfDCS() = "
+                << this->GetDCS() << std::endl << vprDEBUG_FLUSH;
 
         if( this->_rootNode->SearchChild( this->GetDCS() ) )
+        {
             this->_rootNode->RemoveChild( this->GetDCS() );
+        }
     }
     else
     {
 
         vprDEBUG( vesDBG, 1 )
-        << "adding cursor with cursor->GetpfDCS() = "
-        << this->GetDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
+                << "adding cursor with cursor->GetpfDCS() = "
+                << this->GetDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
 
         // if disconnected from scene graph, add
         if( !this->_rootNode->SearchChild( this->GetDCS() ) )
@@ -952,9 +978,9 @@ void cfdCursor::SetCursorType( int type )
             this->_rootNode->AddChild( this->GetDCS() );
 
             vprDEBUG( vesDBG, 2 )
-            << "added cursor with cursor->GetpfDCS() = "
-            << this->GetDCS() << std::endl
-            << this->cursorDCS->GetMat() << vprDEBUG_FLUSH;
+                    << "added cursor with cursor->GetpfDCS() = "
+                    << this->GetDCS() << std::endl
+                    << this->cursorDCS->GetMat() << vprDEBUG_FLUSH;
         }
     }
 }

@@ -50,8 +50,8 @@ DatasetPropertySet::DatasetPropertySet()
     mTableName = "Dataset";
 
     std::string prependTag( mTableName );
-    prependTag.append(" ");
-    std::string tag = boost::any_cast<std::string>(GetPropertyValue("NameTag"));
+    prependTag.append( " " );
+    std::string tag = boost::any_cast<std::string>( GetPropertyValue( "NameTag" ) );
     SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
 
     CreateSkeleton();
@@ -121,19 +121,19 @@ void DatasetPropertySet::CreateSkeleton()
     SetPropertyAttribute( "Transform_Scale_X", "DisplayPrecision", 6 );
     SetPropertyAttribute( "Transform_Scale_Y", "DisplayPrecision", 6 );
     SetPropertyAttribute( "Transform_Scale_Z", "DisplayPrecision", 6 );
-    GetProperty("Transform_Scale_X")->
-        SignalValueChanged.connect( boost::bind( &DatasetPropertySet::Scale, this, _1 ) );
-    GetProperty("Transform_Scale_Y")->
-        SignalValueChanged.connect( boost::bind( &DatasetPropertySet::Scale, this, _1 ) );
-    GetProperty("Transform_Scale_Z")->
-        SignalValueChanged.connect( boost::bind( &DatasetPropertySet::Scale, this, _1 ) );
-    
+    GetProperty( "Transform_Scale_X" )->
+    SignalValueChanged.connect( boost::bind( &DatasetPropertySet::Scale, this, _1 ) );
+    GetProperty( "Transform_Scale_Y" )->
+    SignalValueChanged.connect( boost::bind( &DatasetPropertySet::Scale, this, _1 ) );
+    GetProperty( "Transform_Scale_Z" )->
+    SignalValueChanged.connect( boost::bind( &DatasetPropertySet::Scale, this, _1 ) );
+
     //***** The following properties should all eventually make use of
     // of userVisibile = false to hide them from the user. They are intended
     // to provide persistence and access mechanisms to dataset info without
     // having to go through xplorer directly.
 
-    AddProperty( "Filename", std::string(""), "File name");
+    AddProperty( "Filename", std::string( "" ), "File name" );
     SetPropertyAttribute( "Filename", "userVisible", false );
 
     //AddProperty( "LongFilename", std::string(""), "Long File name");
@@ -152,10 +152,10 @@ void DatasetPropertySet::CreateSkeleton()
     AddProperty( "ScalarMaxes", doubleVector, "Scalar Maxes" );
     SetPropertyAttribute( "ScalarMaxes", "userVisible", false );
 
-    AddProperty( "StepLength", 0.0f, "Integration Step Length");
+    AddProperty( "StepLength", 0.0f, "Integration Step Length" );
     SetPropertyAttribute( "StepLength", "userVisible", false );
 
-    AddProperty( "TimeStep", 0.0f, "Integration Time Step");
+    AddProperty( "TimeStep", 0.0f, "Integration Time Step" );
     SetPropertyAttribute( "TimeStep", "userVisible", false );
 
     AddProperty( "MaxTime", 0.0f, "Max Integration Time" );
@@ -164,16 +164,16 @@ void DatasetPropertySet::CreateSkeleton()
     AddProperty( "Type", 0, "Type" );
     SetPropertyAttribute( "Type", "userVisible", false );
 
-    AddProperty( "PrecomputedDataSliceDir", std::string(""), "Precomputed Data Slice Dir" );
+    AddProperty( "PrecomputedDataSliceDir", std::string( "" ), "Precomputed Data Slice Dir" );
     SetPropertyAttribute( "PrecomputedDataSliceDir", "userVisible", false );
 
-    AddProperty( "PrecomputedSurfaceDir", std::string(""), "Precomputed Surface Dir" );
+    AddProperty( "PrecomputedSurfaceDir", std::string( "" ), "Precomputed Surface Dir" );
     SetPropertyAttribute( "PrecomputedSurfaceDir", "userVisible", false );
-    
-    AddProperty( "TBETScalarChooser", std::string("null"), "TBET Scalar Chooser" );
+
+    AddProperty( "TBETScalarChooser", std::string( "null" ), "TBET Scalar Chooser" );
     SetPropertyAttribute( "TBETScalarChooser", "isFilePath", true );
     mPropertyMap["TBETScalarChooser"]->SignalValueChanged.connect( boost::bind( &DatasetPropertySet::LoadVTIScalars, this, _1 ) );
-    
+
     AddProperty( "TBETScalarNames", stringVector, "TBET Scalar Names" );
     SetPropertyAttribute( "TBETScalarNames", "userVisible", false );
 }
@@ -198,23 +198,23 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
         MakeLiveBasePtr p;
 
         p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
-                                                     GetProperty( "SurfaceWrap" ),
-                                                     "SetDatasetSurfaceWrap" ) );
+                             GetProperty( "SurfaceWrap" ),
+                             "SetDatasetSurfaceWrap" ) );
         mLiveObjects.push_back( p );
 
         p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
-                                                     GetProperty( "BoundingBox" ),
-                                                     "ShowDatasetBBox" ) );
+                             GetProperty( "BoundingBox" ),
+                             "ShowDatasetBBox" ) );
         mLiveObjects.push_back( p );
 
         p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
-                                                       GetProperty( "ScalarBar" ),
-                                                       "ShowDatasetScalarBar" ) );
+                             GetProperty( "ScalarBar" ),
+                             "ShowDatasetScalarBar" ) );
         mLiveObjects.push_back( p );
 
         p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
-                                                       GetProperty( "Axes" ),
-                                                       "ShowDatasetAxes" ) );
+                             GetProperty( "Axes" ),
+                             "ShowDatasetAxes" ) );
         mLiveObjects.push_back( p );
 
         // Link up all the transform properties so that a single signal named
@@ -229,16 +229,16 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
         transformLink.push_back( GetProperty( "Transform_Scale_X" ) );
         transformLink.push_back( GetProperty( "Transform_Scale_Y" ) );
         transformLink.push_back( GetProperty( "Transform_Scale_Z" ) );
-        p = MakeLiveBasePtr(new MakeLiveLinked< double >(
-                mUUIDString,
-                transformLink,
-                "TransformDataNode"));
-        mLiveObjects.push_back(p);
-        
-        p = MakeLiveBasePtr(new MakeLive<bool const&>( mUUIDString,
-                                               GetProperty("Visible"),
-                                               "ToggleDataNode" ));
-        mLiveObjects.push_back(p);        
+        p = MakeLiveBasePtr( new MakeLiveLinked< double >(
+                                 mUUIDString,
+                                 transformLink,
+                                 "TransformDataNode" ) );
+        mLiveObjects.push_back( p );
+
+        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
+                             GetProperty( "Visible" ),
+                             "ToggleDataNode" ) );
+        mLiveObjects.push_back( p );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -249,7 +249,7 @@ void DatasetPropertySet::LoadVTIScalars( PropertyPtr& )
         return;
     }
 
-    std::string const filename = 
+    std::string const filename =
         boost::any_cast<std::string>( GetPropertyValue( "TBETScalarChooser" ) );
 
     std::string extension( boost::filesystem::extension( filename ) );
@@ -260,26 +260,26 @@ void DatasetPropertySet::LoadVTIScalars( PropertyPtr& )
         return;
     }
 
-    
+
     //Now extract the directory from the filename string handed back from the
     //file selection dialog
     boost::filesystem::path tmp( filename );
     std::string const directory = tmp.remove_filename().string();
-    
-    PSVectorOfStrings enumValues = 
-        boost::any_cast< std::vector<std::string> >( 
-        GetPropertyValue( "TBETScalarNames" ) );
+
+    PSVectorOfStrings enumValues =
+        boost::any_cast< std::vector<std::string> >(
+            GetPropertyValue( "TBETScalarNames" ) );
 
     std::string scalarName = tmp.filename().string();
     enumValues.push_back( scalarName );
     SetPropertyValue( "TBETScalarNames", enumValues );
 
     std::cout << "DatasetPropertySet::LoadVTIScalars: "  << directory << " " << filename << " " << scalarName << std::endl;
-    
+
     ves::util::TwoStringSignal_type* addTexture =
-    reinterpret_cast< eventmanager::SignalWrapper< ves::util::TwoStringSignal_type >* >
-    ( eventmanager::EventFactory::instance()->GetSignal( "DatasetPropertySet.TBETAddScalarSignal" ) )
-    ->mSignal;
+        reinterpret_cast< eventmanager::SignalWrapper< ves::util::TwoStringSignal_type >* >
+        ( eventmanager::EventFactory::instance()->GetSignal( "DatasetPropertySet.TBETAddScalarSignal" ) )
+        ->mSignal;
 
     std::string const nodeID = GetUUIDAsString();
     addTexture->operator()( nodeID, directory );
@@ -293,7 +293,7 @@ void DatasetPropertySet::Scale( PropertyPtr& property )
     if( uniform )
     {
         double scale = boost::any_cast<double>( property->GetValue() );
-        std::string name = boost::any_cast<std::string>(property->GetAttribute("nameInSet"));
+        std::string name = boost::any_cast<std::string>( property->GetAttribute( "nameInSet" ) );
         if( name == "Transform_Scale_X" )
         {
             SetPropertyValue( "Transform_Scale_Y", scale );

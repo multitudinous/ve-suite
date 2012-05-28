@@ -51,7 +51,7 @@ public:
 
     JuliusNetworkClient();
 
-   ~JuliusNetworkClient();
+    ~JuliusNetworkClient();
 
     /**
      * Connects to the Julius Network daemon on the specified host and port.
@@ -61,7 +61,7 @@ public:
      *
      * @return     true if successful, false otherwise.
      */
-    bool connect(const std::string& host, const unsigned short port=10500);
+    bool connect( const std::string& host, const unsigned short port = 10500 );
 
     /**
      * Disconnects from the Julius Network daemon; this is a no-op if
@@ -78,12 +78,12 @@ public:
     }
 
     /**
-     * Sets the parser that this client will use to parse the results 
+     * Sets the parser that this client will use to parse the results
      * received from Julius.
      *
      * @param   parser   the parser to use.
      */
-    void setParser(const JuliusXMLParserPtr& parser)
+    void setParser( const JuliusXMLParserPtr& parser )
     {
         mParser = parser;
     }

@@ -51,18 +51,18 @@ using namespace ves::open::xml::model;
 //Constructor                             //
 ////////////////////////////////////////////
 Model::Model()
-        : 
-        XMLObject(),
-        boost::enable_shared_from_this<Model>(),
-        mUniqueModelID( 0 ),
-        mGeometry( CADAssemblyPtr() ),
-        mModelAttribute( CommandPtr() ),
-        mIconScale( 1.0f ),
-        mIconRotation( 0.0f ),
-        mIconHiddenFlag( 0 ),
-        mIconMirror( 0 ),
-        mParentModel( ModelPtr() ),
-        m_parentSystem( SystemPtr() )
+    :
+    XMLObject(),
+    boost::enable_shared_from_this<Model>(),
+    mUniqueModelID( 0 ),
+    mGeometry( CADAssemblyPtr() ),
+    mModelAttribute( CommandPtr() ),
+    mIconScale( 1.0f ),
+    mIconRotation( 0.0f ),
+    mIconHiddenFlag( 0 ),
+    mIconMirror( 0 ),
+    mParentModel( ModelPtr() ),
+    m_parentSystem( SystemPtr() )
 {
     mIconLocation = PointPtr( new Point() );
     SetObjectType( "Model" );
@@ -77,7 +77,7 @@ Model::~Model()
     }
     mSubSystem = SystemPtr();
     m_parentSystem = SystemPtr();
-    
+
     mPorts.clear();
 
     mResults.clear();
@@ -88,9 +88,9 @@ Model::~Model()
 }
 ///////////////////////////////////////////
 Model::Model( const Model& input )
-        : 
-        XMLObject( input ),
-        boost::enable_shared_from_this<Model>( input )
+    :
+    XMLObject( input ),
+    boost::enable_shared_from_this<Model>( input )
 {
     mPluginName = input.mPluginName;
     mPluginType = input.mPluginType;
@@ -109,7 +109,7 @@ Model::Model( const Model& input )
     }
 
     m_parentSystem = input.m_parentSystem;
-    
+
     mPorts.clear();
     std::copy( input.mPorts.begin(),
                input.mPorts.end(),
@@ -187,13 +187,13 @@ Model& Model::operator=( const Model& input )
         //std::copy( input.mResults.begin(),
         //           input.mResults.end(),
         //           mResults );
-        
+
         mInputs.clear();
         mInputs = input.mInputs;
         //std::copy( input.mInputs.begin(),
         //           input.mInputs.end(),
         //           mInputs );
-        
+
 
         mInformationPackets.clear();
         std::copy( input.mInformationPackets.begin(),
@@ -351,10 +351,10 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     //get the geometry nodes
     {
         DOMNodeList* childNodes = currentElement->getElementsByTagName(
-            Convert( "geometry" ).toXMLString() );
+                                      Convert( "geometry" ).toXMLString() );
         if( childNodes->getLength() > 0 )
         {
-            DOMElement* child = 
+            DOMElement* child =
                 static_cast< DOMElement* >( childNodes->item( 0 ) );
             //dataValueStringName = GetSubElement( currentElement, "geometry", 0 );
             if( child->getParentNode() == currentElement )
@@ -364,14 +364,14 @@ void Model::SetObjectFromXMLData( DOMNode* element )
             }
         }
     }
-    //Get ports 
+    //Get ports
     {
         DOMNodeList* childNodes = currentElement->getElementsByTagName(
-                              Convert( "ports" ).toXMLString() );
+                                      Convert( "ports" ).toXMLString() );
         unsigned int numberOfPortData = childNodes->getLength();
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
-            DOMElement* child = 
+            DOMElement* child =
                 static_cast< DOMElement* >( childNodes->item( i ) );
             if( child->getParentNode() == currentElement )
             {
@@ -388,11 +388,11 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     //Get Results
     {
         DOMNodeList* childNodes = currentElement->getElementsByTagName(
-                Convert( "results" ).toXMLString() );
+                                      Convert( "results" ).toXMLString() );
         unsigned int numberOfPortData = childNodes->getLength();
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
-            DOMElement* child = 
+            DOMElement* child =
                 static_cast< DOMElement* >( childNodes->item( i ) );
             if( child->getParentNode() == currentElement )
             {
@@ -410,11 +410,11 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     //Get Inputs
     {
         DOMNodeList* childNodes = currentElement->getElementsByTagName(
-                Convert( "inputs" ).toXMLString() );
+                                      Convert( "inputs" ).toXMLString() );
         unsigned int numberOfPortData = childNodes->getLength();
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
-            DOMElement* child = 
+            DOMElement* child =
                 static_cast< DOMElement* >( childNodes->item( i ) );
             if( child->getParentNode() == currentElement )
             {
@@ -432,11 +432,11 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     //Get Information packets
     {
         DOMNodeList* childNodes = currentElement->getElementsByTagName(
-            Convert( "informationPackets" ).toXMLString() );
+                                      Convert( "informationPackets" ).toXMLString() );
         unsigned int numberOfPortData = childNodes->getLength();
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
-            DOMElement* child = 
+            DOMElement* child =
                 static_cast< DOMElement* >( childNodes->item( i ) );
             if( child->getParentNode() == currentElement )
             {
@@ -454,10 +454,10 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     //get the model attribute nodes
     {
         DOMNodeList* childNodes = currentElement->getElementsByTagName(
-                Convert( "modelAttributes" ).toXMLString() );
+                                      Convert( "modelAttributes" ).toXMLString() );
         if( childNodes->getLength() > 0 )
         {
-            DOMElement* child = 
+            DOMElement* child =
                 static_cast< DOMElement* >( childNodes->item( 0 ) );
             if( child->getParentNode() == currentElement )
             {
@@ -471,10 +471,10 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     {
         //dataValueStringName = GetSubElement( currentElement, "modelSubSystem", 0 );
         DOMNodeList* childNodes = currentElement->getElementsByTagName(
-                Convert( "modelSubSystem" ).toXMLString() );
+                                      Convert( "modelSubSystem" ).toXMLString() );
         if( childNodes->getLength() > 0 )
         {
-            DOMElement* child = 
+            DOMElement* child =
                 static_cast< DOMElement* >( childNodes->item( 0 ) );
             if( child->getParentNode() == currentElement )
             {
@@ -537,19 +537,19 @@ PointPtr Model::GetIconLocation( void )
 ////////////////////////////////////////////////
 CommandPtr Model::GetResult( const std::string& inputName )
 {
-    std::map< std::string, CommandPtr >::iterator iter = 
+    std::map< std::string, CommandPtr >::iterator iter =
         mResults.find( inputName );
     if( iter != mResults.end() )
     {
         return iter->second;
     }
-    
+
     return CommandPtr();
 }
 ////////////////////////////////////////////////
 CommandPtr Model::GetInput( const std::string& inputName )
 {
-    std::map< std::string, CommandPtr >::iterator iter = 
+    std::map< std::string, CommandPtr >::iterator iter =
         mInputs.find( inputName );
     if( iter != mInputs.end() )
     {
@@ -594,13 +594,13 @@ PortPtr Model::GetPort( int i )
     {
         return mPorts.at( i );
     }
-    catch ( ... )
+    catch( ... )
     {
         //if ( i > (mPorts.size() + 1) )
         if( i >= 0 )
         {
             std::cerr << "The element request is out of sequence."
-            << " Please ask for a lower number point." << std::endl;
+                      << " Please ask for a lower number point." << std::endl;
             return PortPtr();
         }
         else
@@ -685,7 +685,7 @@ ParameterBlockPtr Model::GetInformationPacket( const std::string& name )
     for( std::vector<ParameterBlockPtr>::iterator iter = mInformationPackets.begin();
             iter != mInformationPackets.end(); ++iter )
     {
-        if (( *iter )->GetName() == name )
+        if( ( *iter )->GetName() == name )
         {
             return ( *iter );
         }
@@ -701,18 +701,18 @@ ParameterBlockPtr Model::GetInformationPacket( int i )
     {
         return mInformationPackets.at( i );
     }
-    catch ( ... )
+    catch( ... )
     {
         if( i >= 0 )
         {
             std::cerr << "The element request is out of sequence."
-            << " Please ask for a lower number point." << std::endl;
+                      << " Please ask for a lower number point." << std::endl;
             return ParameterBlockPtr();
         }
         else
         {
             mInformationPackets.push_back(
-                        ParameterBlockPtr( new ParameterBlock( ) ) );
+                ParameterBlockPtr( new ParameterBlock( ) ) );
 
             return mInformationPackets.back();
         }
@@ -732,14 +732,16 @@ CADNodePtr Model::GetGeometry( void )
 CADNodePtr Model::AddGeometry( void )
 {
     if( mGeometry == 0 )
-        mGeometry = CADAssemblyPtr( new CADAssembly(  "Model_Geometry" ) );
+    {
+        mGeometry = CADAssemblyPtr( new CADAssembly( "Model_Geometry" ) );
+    }
 
     return mGeometry;
 }
 ////////////////////////////////////////////////////////////
 void Model::AddGeometry( const ves::open::xml::cad::CADAssemblyPtr& input )
 {
-    mGeometry = input;    
+    mGeometry = input;
 }
 ////////////////////////////////////////////////////////////
 void Model::DeleteGeometry( void )
@@ -768,7 +770,7 @@ void Model::RemoveInformationPacket( const std::string& name )
     for( std::vector<ves::open::xml::ParameterBlockPtr>::iterator iter = mInformationPackets.begin();
             iter != mInformationPackets.end(); ++iter )
     {
-        if (( *iter )->GetName() == name )
+        if( ( *iter )->GetName() == name )
         {
             mInformationPackets.erase( iter );
             return;
@@ -779,7 +781,7 @@ void Model::RemoveInformationPacket( const std::string& name )
 void Model::_updateVEElement( const std::string& input )
 {
     boost::ignore_unused_variable_warning( input );
-    // write all the elements according to verg_model.xsd    
+    // write all the elements according to verg_model.xsd
     SetAttribute( "name", mPluginName );
 
     if( mPluginType.empty() )
@@ -832,36 +834,36 @@ void Model::_updateVEElement( const std::string& input )
     }
 
     SetSubElement<ves::open::xml::XMLObjectPtr>( "iconLocation", mIconLocation );
-    SetSubElements("ports", mPorts );
-    
+    SetSubElements( "ports", mPorts );
+
     std::vector< CommandPtr > tempResults;
     for( std::map< std::string, CommandPtr >::iterator
-        iter = mResults.begin(); iter != mResults.end(); ++iter )
+            iter = mResults.begin(); iter != mResults.end(); ++iter )
     {
         tempResults.push_back( iter->second );
     }
-    SetSubElements("results", tempResults );
+    SetSubElements( "results", tempResults );
 
     std::vector< CommandPtr > tempInputs;
     for( std::map< std::string, CommandPtr >::iterator
-        iter = mInputs.begin(); iter != mInputs.end(); ++iter )
+            iter = mInputs.begin(); iter != mInputs.end(); ++iter )
     {
         tempInputs.push_back( iter->second );
     }
-    SetSubElements("inputs", tempInputs );
-    
-    SetSubElements("informationPackets", mInformationPackets );
+    SetSubElements( "inputs", tempInputs );
+
+    SetSubElements( "informationPackets", mInformationPackets );
 
     if( mGeometry )
     {
         SetSubElement<ves::open::xml::XMLObjectPtr>( "geometry", mGeometry );
     }
-    
+
     if( mModelAttribute )
     {
         SetSubElement<ves::open::xml::XMLObjectPtr>( "modelAttributes", mModelAttribute );
     }
-    
+
     if( mSubSystem )
     {
         SetSubElement<ves::open::xml::XMLObjectPtr>( "modelSubSystem", mSubSystem );
@@ -962,7 +964,7 @@ const std::vector< CommandPtr > Model::GetResults()
 {
     std::vector< CommandPtr > tempResults;
     for( std::map< std::string, CommandPtr >::iterator
-        iter = mResults.begin(); iter != mResults.end(); ++iter )
+            iter = mResults.begin(); iter != mResults.end(); ++iter )
     {
         tempResults.push_back( iter->second );
     }
@@ -973,7 +975,7 @@ const std::vector< CommandPtr > Model::GetInputs()
 {
     std::vector< CommandPtr > tempResults;
     for( std::map< std::string, CommandPtr >::iterator
-        iter = mInputs.begin(); iter != mInputs.end(); ++iter )
+            iter = mInputs.begin(); iter != mInputs.end(); ++iter )
     {
         tempResults.push_back( iter->second );
     }

@@ -200,17 +200,27 @@ void cfdPBufferManager::cleanUpPBuffer()
 {
 #ifdef WIN32
     if( _pBufferGLContext )
+    {
         wglDeleteContext( _pBufferGLContext );
+    }
     if( _pBufferDeviceContext )
+    {
         wglReleasePbufferDCARB( _hBuffer, _pBufferDeviceContext );
+    }
     if( _hBuffer )
+    {
         wglDestroyPbufferARB( _hBuffer );
+    }
 #else
     if( _pBufferGLContext )
+    {
         glXDestroyContext( _oldDisplay, _pBufferGLContext );
+    }
 
     if( _hBuffer )
+    {
         glXDestroyPbuffer( _oldDisplay, _hBuffer );
+    }
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -233,20 +243,20 @@ bool cfdPBufferManager::initializePBuffer( int width, int height )
     _frameBDGLContext = wglGetCurrentContext();
 
     int attribList[] =
-        {
-            WGL_RED_BITS_ARB,              8,
-            WGL_GREEN_BITS_ARB,             8,
-            WGL_BLUE_BITS_ARB,              8,
-            WGL_ALPHA_BITS_ARB,             8,
-            WGL_DOUBLE_BUFFER_ARB,         false,
-            WGL_TRANSPARENT_ARB,           true,
-            WGL_DEPTH_BITS_ARB,             16,
-            WGL_SUPPORT_OPENGL_ARB,        true,
-            WGL_DRAW_TO_PBUFFER_ARB,        true,
-            WGL_PIXEL_TYPE_ARB,
-            WGL_TYPE_RGBA_ARB,
-            0
-        };
+    {
+        WGL_RED_BITS_ARB,              8,
+        WGL_GREEN_BITS_ARB,             8,
+        WGL_BLUE_BITS_ARB,              8,
+        WGL_ALPHA_BITS_ARB,             8,
+        WGL_DOUBLE_BUFFER_ARB,         false,
+        WGL_TRANSPARENT_ARB,           true,
+        WGL_DEPTH_BITS_ARB,             16,
+        WGL_SUPPORT_OPENGL_ARB,        true,
+        WGL_DRAW_TO_PBUFFER_ARB,        true,
+        WGL_PIXEL_TYPE_ARB,
+        WGL_TYPE_RGBA_ARB,
+        0
+    };
     // Now obtain a list of pixel formats that meet these minimum
     // requirements.
 #define MAX_PFORMATS 10
@@ -254,11 +264,11 @@ bool cfdPBufferManager::initializePBuffer( int width, int height )
     int pformat[MAX_PFORMATS];
     unsigned int nformats = 0;
     if( !wglChoosePixelFormatARB( _frameBufferDeviceContext,
-                                   attribList,
-                                   NULL,
-                                   MAX_PFORMATS,
-                                   pformat,
-                                   &nformats ) )
+                                  attribList,
+                                  NULL,
+                                  MAX_PFORMATS,
+                                  pformat,
+                                  &nformats ) )
     {
         fprintf( stderr, "pbuffer creation error:  Couldn't find a \
                  suitable pixel format.\n" );
@@ -320,17 +330,19 @@ bool cfdPBufferManager::initializePBuffer( int width, int height )
     int configCount;
 
     glxConfig = glXGetFBConfigs( _oldDisplay, screen, &configCount );
-    int attrib[] = {
-                       GLX_RENDER_TYPE, GLX_RGBA_BIT,
-                       GLX_DRAWABLE_TYPE, GLX_PBUFFER_BIT,
-                       GLX_DOUBLEBUFFER, 0,
-                       GLX_RED_SIZE, 8,
-                       GLX_GREEN_SIZE, 8,
-                       GLX_BLUE_SIZE, 8,
-                       GLX_ALPHA_SIZE, 8,
-                       GLX_STENCIL_SIZE, 0,
-                       GLX_DEPTH_SIZE, 0,
-                       0 };
+    int attrib[] =
+    {
+        GLX_RENDER_TYPE, GLX_RGBA_BIT,
+        GLX_DRAWABLE_TYPE, GLX_PBUFFER_BIT,
+        GLX_DOUBLEBUFFER, 0,
+        GLX_RED_SIZE, 8,
+        GLX_GREEN_SIZE, 8,
+        GLX_BLUE_SIZE, 8,
+        GLX_ALPHA_SIZE, 8,
+        GLX_STENCIL_SIZE, 0,
+        GLX_DEPTH_SIZE, 0,
+        0
+    };
     if( !glxConfig )
     {
         std::cout << "pbuffer creation error:  glXGetFBConfigs() failed" << std::endl;
@@ -356,13 +368,14 @@ bool cfdPBufferManager::initializePBuffer( int width, int height )
         return false;
     }
 
-    int attr[] = {
-                     GLX_PBUFFER_WIDTH, _w,
-                     GLX_PBUFFER_HEIGHT, _h,
-                     GLX_LARGEST_PBUFFER, True,
-                     GLX_PRESERVED_CONTENTS, True,
-                     None
-                 };
+    int attr[] =
+    {
+        GLX_PBUFFER_WIDTH, _w,
+        GLX_PBUFFER_HEIGHT, _h,
+        GLX_LARGEST_PBUFFER, True,
+        GLX_PRESERVED_CONTENTS, True,
+        None
+    };
 
     _hBuffer = glXCreatePbuffer( _oldDisplay,
                                  glxConfig[0],

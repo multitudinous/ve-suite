@@ -40,7 +40,7 @@ BEGIN_EVENT_TABLE( Splitter, wxSplitterWindow )
 END_EVENT_TABLE()
 
 Splitter::Splitter( wxWindow* parent, wxWindowID id )
-        : wxSplitterWindow( parent, id )
+    : wxSplitterWindow( parent, id )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 void Splitter::OnDClick( wxSplitterEvent& event )

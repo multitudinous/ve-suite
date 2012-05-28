@@ -71,7 +71,7 @@ RemoveEarthHandler::~RemoveEarthHandler()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void RemoveEarthHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void RemoveEarthHandler::Execute( CommandPtr command, MinervaManager& manager )
 {
-  manager.Clear();
+    manager.Clear();
 }

@@ -44,17 +44,17 @@ using namespace ves::conductor;
 //END_EVENT_TABLE()
 
 PortDialog::PortDialog( const wxString& title )
-        : wxDialog(( wxWindow * ) NULL, -1, title, wxDefaultPosition, wxDefaultSize )
+    : wxDialog( ( wxWindow* ) NULL, -1, title, wxDefaultPosition, wxDefaultSize )
 {
     wxSize sz1, sz2, syn;
 
     sz1.Set( 120, 17 );
     sz2.Set( 250, 300 );
-    wxBoxSizer *top_sizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* top_sizer = new wxBoxSizer( wxVERTICAL );
 
-    wxBoxSizer *first_row = new wxBoxSizer( wxHORIZONTAL );
-    wxBoxSizer *second_row = new wxBoxSizer( wxHORIZONTAL );
-    wxBoxSizer *third_row = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* first_row = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* second_row = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* third_row = new wxBoxSizer( wxHORIZONTAL );
 
     syngas = new ListTable( this, -1, wxDefaultPosition,
                             sz2 );
@@ -108,12 +108,18 @@ void PortDialog::Set3Cols( const std::vector<wxString>& col1, const std::vector<
 PortDialog::~PortDialog()
 {}
 
-void PortDialog::SetVal( const wxString &var, const wxString &val )
+void PortDialog::SetVal( const wxString& var, const wxString& val )
 {
     if( var == _( "TEMP" ) )
+    {
         temp->SetValue( val );
+    }
     else if( var == _( "PRES" ) )
+    {
         pres->SetValue( val );
+    }
     else if( var == _( "FLRT" ) )
+    {
         flrt->SetValue( val );
+    }
 }

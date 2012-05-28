@@ -72,8 +72,8 @@ public:
     virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject );
 
     ///The LOD scale
-    void UpdateLODScale( const double lodScale  );
-    
+    void UpdateLODScale( const double lodScale );
+
 protected:
     ves::xplorer::Model* m_activeModel;///<The active cfdModel
 };

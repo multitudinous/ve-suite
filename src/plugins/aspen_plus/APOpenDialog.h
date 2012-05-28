@@ -47,43 +47,43 @@
  * This class is the dialog for Aspen Plus files.
  */
 class APOpenDialog : public wxDialog
-{    
+{
 public:
     ///Constructor
-    APOpenDialog(wxWindow *parent, wxWindowID id = 1,
-        const wxString &title = wxT("BKP/APW File"),
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxDefaultSize,
-        long style = wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT |
-        wxMINIMIZE_BOX | wxCLOSE_BOX);
-    
+    APOpenDialog( wxWindow* parent, wxWindowID id = 1,
+                  const wxString& title = wxT( "BKP/APW File" ),
+                  const wxPoint& pos = wxDefaultPosition,
+                  const wxSize& size = wxDefaultSize,
+                  long style = wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT |
+                               wxMINIMIZE_BOX | wxCLOSE_BOX );
+
     ///Destructor
     virtual ~APOpenDialog();
-    
+
     ///???
     void SetPopulateFilenames( );
-    
+
     ///???
     wxString GetFilename( );
 
 private:
-    wxStaticText *Label;
-    wxButton *CancelButton;
-    wxButton *OKButton;
-    wxComboBox *ComboBox;
+    wxStaticText* Label;
+    wxButton* CancelButton;
+    wxButton* OKButton;
+    wxComboBox* ComboBox;
     wxArrayString arrayStringFor_ComboBox;
 
     ///???
-    void OnClose(wxCloseEvent& event);
-    
+    void OnClose( wxCloseEvent& event );
+
     ///???
     void CreateGUIControls();
 
     ///???
-    void OKButtonClick(wxCommandEvent& event);
-    
+    void OKButtonClick( wxCommandEvent& event );
+
     ///???
-    void CancelButtonClick(wxCommandEvent& event);
+    void CancelButtonClick( wxCommandEvent& event );
 
     DECLARE_EVENT_TABLE();
 };

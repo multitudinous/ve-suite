@@ -55,14 +55,14 @@ AVSTranslator::~AVSTranslator()
 {}
 //////////////////////////////////////////////////////////////////////////
 void AVSTranslator::AVSPreTranslateCbk::Preprocess( int argc, char** argv,
-                                                    cfdTranslatorToVTK* toVTK )
+        cfdTranslatorToVTK* toVTK )
 {
     PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AVSTranslator::AVSTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                               cfdTranslatorToVTK* toVTK,
-                                               vtkAlgorithm*& )
+        cfdTranslatorToVTK* toVTK,
+        vtkAlgorithm*& )
 {
     AVSTranslator* AVSToVTK =
         dynamic_cast<AVSTranslator*>( toVTK );
@@ -108,6 +108,6 @@ void AVSTranslator::AVSTranslateCbk::Translate( vtkDataObject*& outputDataset,
 void AVSTranslator::DisplayHelp( void )
 {
     std::cout << "|\tAVS Translator Usage:" << std::endl
-    << "\t -singleFile <filename_to_load> -o <output_dir> "
-    << "-outFileName <output_filename> -loader avs -w file" << std::endl;
+              << "\t -singleFile <filename_to_load> -o <output_dir> "
+              << "-outFileName <output_filename> -loader avs -w file" << std::endl;
 }

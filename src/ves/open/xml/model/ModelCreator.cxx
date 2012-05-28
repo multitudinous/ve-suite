@@ -96,52 +96,52 @@ ModelCreator::CreateNewXMLObjectCopy( const std::string& objectType,
     if( objectType == "Link" )
     {
         tmp = LinkPtr( new Link(
-            *( boost::dynamic_pointer_cast<Link>( objectToCopy ) ) ) );
+                           *( boost::dynamic_pointer_cast<Link>( objectToCopy ) ) ) );
     }
     else if( objectType == "Model" )
     {
         tmp = ModelPtr( new Model(
-            *( boost::dynamic_pointer_cast<Model>( objectToCopy ) ) ) );
+                            *( boost::dynamic_pointer_cast<Model>( objectToCopy ) ) ) );
     }
     else if( objectType == "Network" )
     {
         tmp = NetworkPtr( new Network(
-            *( boost::dynamic_pointer_cast<Network>( objectToCopy ) ) ) );
+                              *( boost::dynamic_pointer_cast<Network>( objectToCopy ) ) ) );
     }
     else if( objectType == "veModel" )
     {
         tmp = ModelPtr( new Model(
-            *( boost::dynamic_pointer_cast<Model>( objectToCopy ) ) ) );
+                            *( boost::dynamic_pointer_cast<Model>( objectToCopy ) ) ) );
     }
     else if( objectType == "veNetwork" )
     {
         tmp = NetworkPtr( new Network(
-            *( boost::dynamic_pointer_cast<Network>( objectToCopy ) ) ) );
+                              *( boost::dynamic_pointer_cast<Network>( objectToCopy ) ) ) );
     }
     else if( objectType == "Point" )
     {
         tmp = PointPtr( new Point(
-            *( boost::dynamic_pointer_cast<Point>( objectToCopy ) ) ) );
+                            *( boost::dynamic_pointer_cast<Point>( objectToCopy ) ) ) );
     }
     else if( objectType == "Port" )
     {
         tmp = PortPtr( new Port(
-            *( boost::dynamic_pointer_cast<Port>( objectToCopy ) ) ) );
+                           *( boost::dynamic_pointer_cast<Port>( objectToCopy ) ) ) );
     }
     else if( objectType == "Tag" )
     {
         tmp = TagPtr( new Tag(
-            *( boost::dynamic_pointer_cast<Tag>( objectToCopy ) ) ) );
+                          *( boost::dynamic_pointer_cast<Tag>( objectToCopy ) ) ) );
     }
     else if( objectType == "System" )
     {
         tmp = SystemPtr( new System(
-            *( boost::dynamic_pointer_cast<System>( objectToCopy ) ) ) );
+                             *( boost::dynamic_pointer_cast<System>( objectToCopy ) ) ) );
     }
     else if( objectType == "veSystem" )
     {
         tmp = SystemPtr( new System(
-            *( boost::dynamic_pointer_cast<System>( objectToCopy ) ) ) );
+                             *( boost::dynamic_pointer_cast<System>( objectToCopy ) ) ) );
     }
     return tmp;
 }

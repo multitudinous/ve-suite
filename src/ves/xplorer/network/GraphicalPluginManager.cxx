@@ -121,21 +121,21 @@ GraphicalPluginManager::GraphicalPluginManager()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameContext,
-                               PortableServer::POA* child_poa )
+        PortableServer::POA* child_poa )
 {
     std::cout << "| Initializing.............................. GraphicalPluginManager |" << std::endl;
     naming_context = inputNameContext;
     m_ChildPOA = child_poa;
-    
+
     try
     {
         XMLPlatformUtils::Initialize();
     }
-    catch ( const XMLException &toCatch )
+    catch( const XMLException& toCatch )
     {
         std::cerr << "Error during Xerces-c Initialization.\n"
-            << "  Exception message:"
-            << XMLString::transcode( toCatch.getMessage() ) << std::endl;
+                  << "  Exception message:"
+                  << XMLString::transcode( toCatch.getMessage() ) << std::endl;
         return;
     }
 
@@ -143,7 +143,7 @@ void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameCont
 
     std::ostringstream dirStringStream;
     dirStringStream << "VEClient-" << vpr::System::getHostname()
-        << "-" <<  vpr::GUID( vpr::GUID::generateTag ).toString();
+                    << "-" <<  vpr::GUID( vpr::GUID::generateTag ).toString();
     m_UINAME = dirStringStream.str();
 
     ConnectToCE();
@@ -152,43 +152,43 @@ void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameCont
         ui_i->GetNetworkFromCE();
         LoadDataFromCE();
     }
-    
-    _eventHandlers[std::string( "DELETE_OBJECT_FROM_NETWORK" )] = 
+
+    _eventHandlers[std::string( "DELETE_OBJECT_FROM_NETWORK" )] =
         new DeleteObjectFromNetworkEventHandler();
-    _eventHandlers[std::string( "DELETE_NETWORK_SYSTEM_VIEW" )] = 
+    _eventHandlers[std::string( "DELETE_NETWORK_SYSTEM_VIEW" )] =
         new DeleteNetworkViewEventHandler();
-    _eventHandlers[std::string( "CHANGE_XPLORER_VIEW" )] = 
+    _eventHandlers[std::string( "CHANGE_XPLORER_VIEW" )] =
         new SwitchXplorerViewEventHandler();
-    _eventHandlers[std::string( "Plugin_Control" )] = 
+    _eventHandlers[std::string( "Plugin_Control" )] =
         new ReloadPluginsEventHandler();
-    _eventHandlers[std::string( "veNetwork Update" )] = 
+    _eventHandlers[std::string( "veNetwork Update" )] =
         new UpdateNetworkEventHandler();
-    _eventHandlers[std::string( "LOAD_VES_FILE" )]=
+    _eventHandlers[std::string( "LOAD_VES_FILE" )] =
         new LoadVesFileEventHandler();
 
     ///Delete everything before loading things up
     CONNECTSIGNALS_1( "%VesFileLoading%",
-                     void( std::string const& ),
-                     &GraphicalPluginManager::NewFileLoading,
-                     m_connections, any_SignalType, normal_Priority );
+                      void( std::string const& ),
+                      &GraphicalPluginManager::NewFileLoading,
+                      m_connections, any_SignalType, normal_Priority );
 
     ///Reload plugins
     CONNECTSIGNALS_1( "%WorkingDirectoryChanged%",
-        void( std::string const& ),
-        &GraphicalPluginManager::DiscoverPlugins,
-        m_connections, any_SignalType, normal_Priority );
-    
+                      void( std::string const& ),
+                      &GraphicalPluginManager::DiscoverPlugins,
+                      m_connections, any_SignalType, normal_Priority );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, ves::xplorer::plugin::PluginBase* >* 
-    GraphicalPluginManager::GetTheCurrentPlugins()
+std::map< std::string, ves::xplorer::plugin::PluginBase* >*
+GraphicalPluginManager::GetTheCurrentPlugins()
 {
     return &mPluginsMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 GraphicalPluginManager::~GraphicalPluginManager()
 {
-    
+
     mPluginsMap.clear();
     _id_map.clear();
     pluginEHMap.clear();
@@ -204,7 +204,7 @@ GraphicalPluginManager::~GraphicalPluginManager()
         mAvailableModules = 0;
     }
 
-    if(netSystemView)
+    if( netSystemView )
     {
         delete netSystemView;
     }
@@ -238,7 +238,7 @@ void GraphicalPluginManager::UnRegisterExecutive()
             std::cout << "|\tDisconnect from VE-CE succeeded!" << std::endl;
         }
     }
-    catch ( CORBA::Exception& ex )
+    catch( CORBA::Exception& ex )
     {
         std::cerr << "|\tDisconnect from VE_CE failed!" << std::endl;
         std::cerr << ex._info().c_str() << std::endl;
@@ -254,27 +254,27 @@ void GraphicalPluginManager::UnbindORB()
 
     CosNaming::Name UIname( 1 );
     UIname.length( 1 );
-    UIname[0].id = CORBA::string_dup(( ui_i->UIName_ ).c_str() );
+    UIname[0].id = CORBA::string_dup( ( ui_i->UIName_ ).c_str() );
     //UIname[0].id = CORBA::string_dup( "Executive" );
     //UIname[0].kind = CORBA::string_dup( "VE-CE" );
     try
     {
         naming_context->unbind( UIname );
     }
-    catch ( CosNaming::NamingContext::InvalidName& ex )
+    catch( CosNaming::NamingContext::InvalidName& ex )
     {
         vprDEBUG( vesDBG, 1 ) << "|\t\tGraphicalPluginManager : Invalid Name! "
-            << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
+                              << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
     }
-    catch ( CosNaming::NamingContext::NotFound& ex )
+    catch( CosNaming::NamingContext::NotFound& ex )
     {
         vprDEBUG( vesDBG, 1 ) << "|\t\tGraphicalPluginManager : Not Found! "
-            << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
+                              << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
     }
-    catch ( CosNaming::NamingContext::CannotProceed& ex )
+    catch( CosNaming::NamingContext::CannotProceed& ex )
     {
         vprDEBUG( vesDBG, 1 ) << "|\t\tGraphicalPluginManager : Cannot Proceed! "
-            << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
+                              << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -299,7 +299,7 @@ void GraphicalPluginManager::GetNetwork()
     const std::string network = temp;
     veNetwork = network;
     vprDEBUG( vesDBG, 2 ) << "|\t\tNetwork String : " << network
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     // Load from the nt file loaded through wx
     // Get a list of all the command elements
@@ -323,8 +323,8 @@ void GraphicalPluginManager::GetNetwork()
 
     if( currentModels.size() > 1 )
     {
-        std::cerr << "There is a problem in the Xplorer network parser" 
-            << std::endl;
+        std::cerr << "There is a problem in the Xplorer network parser"
+                  << std::endl;
     }
 
     //Store top level systems
@@ -349,34 +349,34 @@ void GraphicalPluginManager::GetEverything()
     if( CORBA::is_nil( this->_exec ) )
     {
         vprDEBUG( vesDBG, 3 ) << "ERROR : The Executive has not been intialized!"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         // Don't fail out for now -RPT
         //return;
     }
 
-    vprDEBUG( vesDBG, 0 ) << "|\t\tGetting Network From Executive" 
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\t\tGetting Network From Executive"
+                          << std::endl << vprDEBUG_FLUSH;
     GetNetwork();
 
     std::map< std::string, std::string >::iterator iter;
     // Remove any plugins that aren't present in the current network
-    for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator 
-        foundPlugin = mPluginsMap.begin(); foundPlugin != mPluginsMap.end(); )
+    for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator
+            foundPlugin = mPluginsMap.begin(); foundPlugin != mPluginsMap.end(); )
     {
         // When we clear the _plugin map will
         // loop over all plugins
         iter = _id_map.find( foundPlugin->first );
         if( iter == _id_map.end() )
         {
-            //Set active model to null so that if the previous active model 
+            //Set active model to null so that if the previous active model
             //is deleted that we don't get errors in our code other places.
-            if(  ModelHandler::instance()->GetActiveModel() ==
-                foundPlugin->second->GetCFDModel() )
+            if( ModelHandler::instance()->GetActiveModel() ==
+                    foundPlugin->second->GetCFDModel() )
             {
                 std::string nullString;
-                ModelHandler::instance()->SetActiveModel( nullString );    
+                ModelHandler::instance()->SetActiveModel( nullString );
             }
-            
+
             // if a module is on the pugins map but not on the id map
             foundPlugin->second->RemoveSelfFromSG();
             ModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
@@ -393,17 +393,17 @@ void GraphicalPluginManager::GetEverything()
         {
             // plugin already present...
             vprDEBUG( vesDBG, 1 ) << "|\t\tPlugin [ " << iter->first
-                << " ]-> " << iter->second
-                << " is already on the plugin and id map."
-                << std::endl << vprDEBUG_FLUSH;
+                                  << " ]-> " << iter->second
+                                  << " is already on the plugin and id map."
+                                  << std::endl << vprDEBUG_FLUSH;
             ++foundPlugin;
         }
         // The above code is from : The C++ Standard Library by:Josuttis pg. 205
     }
     ves::xplorer::communication::CommunicationHandler::instance()
-        ->SendConductorMessage( "Finished loading data in VE-Xplorer." );
+    ->SendConductorMessage( "Finished loading data in VE-Xplorer." );
     vprDEBUG( vesDBG, 0 ) << "|\t\tDone Getting Network From Executive"
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::InitModules()
@@ -414,7 +414,7 @@ void GraphicalPluginManager::InitModules()
 void GraphicalPluginManager::PreFrameUpdate()
 {
     vprDEBUG( vesDBG, 3 ) << "|\tGraphicalPluginManager::PreFrameUpdate"
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
     if( !ui_i )
     {
         ConnectToCE();
@@ -433,7 +433,7 @@ void GraphicalPluginManager::PreFrameUpdate()
         if( currentEventHandler != _eventHandlers.end() )
         {
             vprDEBUG( vesDBG, 0 ) << "|\t\tExecuting: " << tempCommand->GetCommandName()
-                << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tempCommand );
         }
@@ -443,27 +443,27 @@ void GraphicalPluginManager::PreFrameUpdate()
     // Commenting this out since new normal is CORBA-less. Need to figure out
     // how to deal with step #4 below since it relies on value of
     // boolean updatePluginResults -RPT
-//    const std::string tempNetworkCommand = ui_i->GetStatusString();
+    //    const std::string tempNetworkCommand = ui_i->GetStatusString();
     bool updatePluginResults = false;
-//    if( tempNetworkCommand.compare( 0, 35, "VE-Suite Network Execution Complete" ) == 0 )
-//    {
-//        std::cout << "|\tLoading data into plugins" << std::endl;
-//        //LoadDataFromCE();
-//        updatePluginResults = true;
-//    }
+    //    if( tempNetworkCommand.compare( 0, 35, "VE-Suite Network Execution Complete" ) == 0 )
+    //    {
+    //        std::cout << "|\tLoading data into plugins" << std::endl;
+    //        //LoadDataFromCE();
+    //        updatePluginResults = true;
+    //    }
 
-    std::map< std::string, std::map< std::string, 
+    std::map < std::string, std::map < std::string,
         ves::xplorer::plugin::PluginBase* > >::const_iterator pluginEHMapIter;
 
     ///process the standard plugin stuff
-    for( std::map< std::string, PluginBase* >::const_iterator 
-        foundPlugin = mPluginsMap.begin(); foundPlugin != mPluginsMap.end();
-        ++foundPlugin )
+    for( std::map< std::string, PluginBase* >::const_iterator
+            foundPlugin = mPluginsMap.begin(); foundPlugin != mPluginsMap.end();
+            ++foundPlugin )
     {
         //1. Set the current command on all plugins
         /*if ( ModelHandler::instance()->GetActiveModel() )
         {
-           CommandPtr tempCommand = 
+           CommandPtr tempCommand =
                     ModelHandler::instance()->GetActiveModel()->GetVECommand();
            foundPlugin->second->SetCurrentCommand( tempCommand );
         }*/
@@ -475,25 +475,25 @@ void GraphicalPluginManager::PreFrameUpdate()
             {
                 //Process a special plugin command
                 const std::string cmdName = tempCommand->GetCommandName();
-                std::map< std::string, ves::xplorer::plugin::PluginBase* >::const_iterator 
+                std::map< std::string, ves::xplorer::plugin::PluginBase* >::const_iterator
                 foundCommand = pluginEHMapIter->second.find( cmdName );
                 //PluginBase* const tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
                 if( foundCommand != pluginEHMapIter->second.end() )
                 {
                     foundPlugin->second->SetCurrentCommand( tempCommand );
 
-                    /*std::vector< ves::open::xml::CommandPtr > tempCommands = 
+                    /*std::vector< ves::open::xml::CommandPtr > tempCommands =
                     CommandManager::instance()->GetXMLCommands( cmdName );
                     foundPlugin->second->SetCurrentCommands( tempCommands );*/
                 }
             }
         }
-        
+
         //2. if active model is the plugin's model...
         if( ModelHandler::instance()->GetActiveModel() &&
                 ( ModelHandler::instance()->GetActiveModel() ==
                   foundPlugin->second->GetCFDModel() )
-           )
+          )
         {
             //Update the draw function
             //only if you are selected
@@ -509,22 +509,22 @@ void GraphicalPluginManager::PreFrameUpdate()
         }
     }
     vprDEBUG( vesDBG, 3 ) << "|\tGraphicalPluginManager::PreFrameUpdate End"
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::PostFrameUpdate()
 {
     vprDEBUG( vesDBG, 3 ) << "|\tGraphicalPluginManager::PostFrameUpdate"
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::LoadDataFromCE()
 {
     if( CORBA::is_nil( this->_exec ) )
     {
-        std::cerr 
-            << "|\tTried to load data from VE-CE but there is no connection." 
-            << std::endl << std::flush;
+        std::cerr
+                << "|\tTried to load data from VE-CE but there is no connection."
+                << std::endl << std::flush;
         // Don't fail out here for now -RPT
         //return;
     }
@@ -538,7 +538,7 @@ void GraphicalPluginManager::LoadDataFromCE()
 #endif
         //Clear the highlight circles
         ves::xplorer::scenegraph::SceneManager::instance()->
-            GetHighlightManager().removeChildren();
+        GetHighlightManager().removeChildren();
         // Get Network and parse it
         GetEverything();
         ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( false );
@@ -581,23 +581,23 @@ void GraphicalPluginManager::LoadDataFromCE()
             {
                 Command returnState;
                 returnState.SetCommandName("Get XML Model Results");
-                
-                DataValuePairPtr data(  new DataValuePair() );      
+
+                DataValuePairPtr data(  new DataValuePair() );
                 data->SetData("moduleName", idMap->second );
                 returnState.AddDataValuePair( data );
-                
+
                 data = new DataValuePair();
-                data->SetData("vendorUnit", 
+                data->SetData("vendorUnit",
                       idToModel[ foundPlugin->first ]->GetVendorName() );
                 returnState.AddDataValuePair( data );
-                
+
                 data = new DataValuePair();
-                data->SetData("moduleId", 
+                data->SetData("moduleId",
                       static_cast< unsigned int >( idMap->first ) );
                 returnState.AddDataValuePair( data );
-                
+
                 std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-                nodes.push_back( std::pair< XMLObjectPtr, 
+                nodes.push_back( std::pair< XMLObjectPtr,
                       std::string >( &returnState, "vecommand" ) );
                 XMLReaderWriter commandWriter;
                 std::string status="returnString";
@@ -646,7 +646,7 @@ void GraphicalPluginManager::ConnectToCE()
     {
         return;
     }
-    
+
     try
     {
         std::cout << "|\tTrying to register " << m_UINAME << std::endl << std::flush;
@@ -658,26 +658,26 @@ void GraphicalPluginManager::ConnectToCE()
 
         CORBA::Object_var exec_object = this->naming_context->resolve( name );
         _exec = Body::Executive::_narrow( exec_object.in() );
-        
+
         //Create the Servant
         ui_i = new VE_i( _exec, m_UINAME );
-        
+
         PortableServer::ObjectId_var id =
             PortableServer::string_to_ObjectId( "GraphicalPluginManager" );
-        
+
         //activate it with this child POA
         m_ChildPOA->activate_object_with_id( id.in(), &( *ui_i ) );
-        
+
         // obtain the object reference
         CORBA::Object_var objectRef = m_ChildPOA->id_to_reference( id.in() );
         Body::UI_var unit = Body::UI::_narrow( objectRef.in() );
-        
+
         // Don't register it to the naming service anymore
         // the bind call will hang if you try to register
         // Instead, the new idl make the ref part of the register call
         // Naming Service now is only used for boot trap
         // to get the ref for Executive
-        
+
         //Call the Executive CORBA call to register it to the Executive
         std::cout << "|\tRegistering " << m_UINAME << std::endl << std::flush;
         _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
@@ -686,10 +686,10 @@ void GraphicalPluginManager::ConnectToCE()
     catch( CORBA::Exception& ex )
     {
         std::cerr << "|\tExecutive not present or VEClient registration error"
-            << ex._info().c_str() << std::endl << std::flush;
+                  << ex._info().c_str() << std::endl << std::flush;
         ui_i = 0;
     }
-}    
+}
 ////////////////////////////////////////////////////////////////////////////////
 std::string GraphicalPluginManager::GetCurrentNetwork()
 {
@@ -703,21 +703,21 @@ NetworkSystemView* GraphicalPluginManager::GetNetworkSystemView()
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::DeleteNetworkSystemView()
 {
-    if(netSystemView)
+    if( netSystemView )
     {
         delete netSystemView;
         netSystemView = NULL;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr system, 
-    bool getResults, osg::Group* parentNode )
+void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr system,
+        bool getResults, osg::Group* parentNode )
 {
     //add the system to the map
     mIDToSystem[ system->GetID() ] = system;
-    
+
     std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator
-        foundPlugin;
+    foundPlugin;
     //Parse out the subsystems
     std::vector< model::ModelPtr > tempModels = system->GetModels();
     size_t modelCount = system->GetNumberOfModels();
@@ -737,23 +737,23 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
         {
             // if a new module is on the id map but not on the plugins map
             // create it...
-            PluginBase* temp = 
-                static_cast< ves::xplorer::plugin::PluginBase* >( 
-                mAvailableModules->GetLoader()->CreateObject( 
-                model->GetPluginType() ) );
+            PluginBase* temp =
+                static_cast< ves::xplorer::plugin::PluginBase* >(
+                    mAvailableModules->GetLoader()->CreateObject(
+                        model->GetPluginType() ) );
 
             if( temp == 0 )
             {
                 //load the default plugin
-                temp = static_cast< ves::xplorer::plugin::PluginBase* >( 
-                    mAvailableModules->GetLoader()->
-                    CreateObject( "DefaultPlugin" ) );
+                temp = static_cast< ves::xplorer::plugin::PluginBase* >(
+                           mAvailableModules->GetLoader()->
+                           CreateObject( "DefaultPlugin" ) );
             }
 
             mPluginsMap[ modelID ] = temp;
             // When we create the _plugin map here we will do the following
             temp->SetPhysicsSimulator( ves::xplorer::scenegraph::
-                PhysicsSimulator::instance() );
+                                       PhysicsSimulator::instance() );
 #ifdef VE_SOUND
             temp->SetSoundManager( osgAudio::SoundManager::instance() );
 #endif
@@ -764,8 +764,8 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
             temp->SetCommunicationHandler( ves::xplorer::communication::CommunicationHandler::instance() );
             temp->SetGraphicalPluginManager( this );
             temp->SetInteractionDevice( DeviceHandler::instance()->GetDevice(
-                device::Device::KEYBOARD_MOUSE ) );
-            
+                                            device::Device::KEYBOARD_MOUSE ) );
+
             temp->InitializeNode( parentNode );
             temp->AddSelfToSG();
             Model* tempCFDModel = temp->GetCFDModel();
@@ -773,11 +773,11 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
             ModelHandler::instance()->AddModel( tempCFDModel );
             //Need to pass an active device in here or something
             //This needs to be fixed
-            //mPluginsMap[ iter->first ]->SetNavigate( 
-                //EnvironmentHandler::instance()->GetNavigate() );
+            //mPluginsMap[ iter->first ]->SetNavigate(
+            //EnvironmentHandler::instance()->GetNavigate() );
             pluginEHMap[ modelID ] = temp->GetCommandNameMap();
         }
-        // this call always returns something because it is up to 
+        // this call always returns something because it is up to
         // date with the id map
         ves::xplorer::plugin::PluginBase* newPlugin = mPluginsMap[ modelID ];
         newPlugin->SetXMLModel( model );
@@ -786,26 +786,26 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
         {
             std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
             XMLReaderWriter commandWriter;
-            CommandPtr returnState(  new Command() );
+            CommandPtr returnState( new Command() );
             returnState->SetCommandName( "Get XML Model Results" );
-            
-            DataValuePairPtr data(  new DataValuePair() );
+
+            DataValuePairPtr data( new DataValuePair() );
             data->SetData( "vendorUnit", model->GetVendorName() );
             returnState->AddDataValuePair( data );
-            
+
             data = DataValuePairPtr( new DataValuePair() );
             data->SetData( "moduleName", model->GetPluginType() );
             returnState->AddDataValuePair( data );
-            
+
             //This needs to pass in the uuid not the fake id
             data = DataValuePairPtr( new DataValuePair() );
             data->SetData( "moduleId", static_cast< unsigned int >(
-                model->GetModelID() ) );
+                               model->GetModelID() ) );
             returnState->AddDataValuePair( data );
-            
+
             std::string status = "returnString";
             nodes.push_back( std::pair< XMLObjectPtr, std::string >(
-                            returnState, "vecommand" ) );
+                                 returnState, "vecommand" ) );
             commandWriter.UseStandaloneDOMDocumentManager();
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
             nodes.clear();
@@ -827,12 +827,12 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
                     {
                         delete tempResult;
                     }
-                 }
+                }
             }
             catch( CORBA::Exception& ex )
             {
                 std::cerr << "|\tExecutive Query error: "
-                    << ex._info().c_str() << std::endl << std::flush;
+                          << ex._info().c_str() << std::endl << std::flush;
             }
         }
 
@@ -840,14 +840,14 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
         newPlugin->PreFrameUpdate();
         newPlugin->CreateCustomVizFeature( 0 );
         vprDEBUG( vesDBG, 1 ) << "|\t\tPlugin [ " << modelID
-            << " ]-> " << newPlugin << " is updated."
-            << std::endl << vprDEBUG_FLUSH;
+                              << " ]-> " << newPlugin << " is updated."
+                              << std::endl << vprDEBUG_FLUSH;
 
         //Now lets find systems
         if( system->GetModel( i )->GetSubSystem() )
         {
             ParseSystem( system->GetModel( i )->GetSubSystem(),
-                !parentResultsFailed, newPlugin->GetPluginDCS() );
+                         !parentResultsFailed, newPlugin->GetPluginDCS() );
         }
     }
 }
@@ -857,15 +857,15 @@ void GraphicalPluginManager::NewFileLoading( std::string const& )
     //Set active model to null so that if the previous active model is deleted
     //that we don't get errors in our code other places.
     std::string nullString;
-    ModelHandler::instance()->SetActiveModel( nullString );    
-    
+    ModelHandler::instance()->SetActiveModel( nullString );
+
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::DiscoverPlugins( std::string const& )
 {
-    for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter = 
-        mPluginsMap.begin(); iter != mPluginsMap.end(); )
+    for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter =
+                mPluginsMap.begin(); iter != mPluginsMap.end(); )
     {
         // if a module is on the plugins map then remove it
         iter->second->RemoveSelfFromSG();
@@ -880,23 +880,23 @@ void GraphicalPluginManager::DiscoverPlugins( std::string const& )
     //Set active model to null so that if the previous active model is deleted
     //that we don't get errors in our code other places.
     std::string nullString;
-    ModelHandler::instance()->SetActiveModel( nullString );  
+    ModelHandler::instance()->SetActiveModel( nullString );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::RemovePlugin( std::string const& pluginId )
 {
-    std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter 
+    std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter
         = mPluginsMap.find( pluginId );
     if( iter != mPluginsMap.end() )
     {
         ///First lets cleanup the event map for the plugin
-        std::map< std::string, std::map< std::string, PluginBase* > >::iterator 
-            cmdIter = pluginEHMap.find( pluginId );
+        std::map< std::string, std::map< std::string, PluginBase* > >::iterator
+        cmdIter = pluginEHMap.find( pluginId );
         if( cmdIter != pluginEHMap.end() )
         {
             pluginEHMap.erase( cmdIter );
         }
-        
+
         ///Now lets remove it from the graph and remove the model from the env
         iter->second->RemoveSelfFromSG();
         ModelHandler::instance()->RemoveModel( iter->second->GetCFDModel() );

@@ -44,11 +44,11 @@ using namespace ves::xplorer::scenegraph::util;
 //Constructors                      //
 //////////////////////////////////////
 PhongLoader::PhongLoader()
-        : ShaderHelper()
+    : ShaderHelper()
 {}
 ////////////////////////////////////////////////////////////////////////////////
 PhongLoader::PhongLoader( const PhongLoader& rhs )
-        : ShaderHelper( rhs )
+    : ShaderHelper( rhs )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 PhongLoader& PhongLoader::operator=( const PhongLoader& rhs )
@@ -67,15 +67,15 @@ PhongLoader::~PhongLoader()
 ////////////////////////////////////////////////////////////////////////////////
 void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSource )
 {
-    ShaderPtr vertShader(  new Shader() );
+    ShaderPtr vertShader( new Shader() );
     vertShader->SetShaderType( "Vertex" );
     vertShader->SetShaderSource( vertexSource );
 
-    ShaderPtr fragShader(  new Shader() );
+    ShaderPtr fragShader( new Shader() );
     fragShader->SetShaderType( "Fragment" );
     fragShader->SetShaderSource( fragmentSource );
 
-    UniformPtr amaterial(  new Uniform() );
+    UniformPtr amaterial( new Uniform() );
     amaterial->SetType( "Float" );
     amaterial->SetName( "ambientMaterial" );
     amaterial->SetSize( 3 );
@@ -85,7 +85,7 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     ambient.push_back( 0.368421 );
     amaterial->SetValues( ambient );
 
-    UniformPtr dmaterial(  new Uniform() );
+    UniformPtr dmaterial( new Uniform() );
     dmaterial->SetType( "Float" );
     dmaterial->SetName( "diffuseMaterial" );
     dmaterial->SetSize( 3 );
@@ -95,7 +95,7 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     diffuse.push_back( 0.885003 );
     dmaterial->SetValues( diffuse );
 
-    UniformPtr smaterial(  new Uniform() );
+    UniformPtr smaterial( new Uniform() );
     smaterial->SetType( "Float" );
     smaterial->SetName( "specularMaterial" );
     smaterial->SetSize( 3 );
@@ -105,7 +105,7 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     specular.push_back( 0.488722 );
     smaterial->SetValues( specular );
 
-    UniformPtr specularValues(  new Uniform() );
+    UniformPtr specularValues( new Uniform() );
     specularValues->SetType( "Float" );
     specularValues->SetName( "specularPower" );
     specularValues->SetSize( 1 );
@@ -122,8 +122,8 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     vertShader->AddUniform( dmaterial );
     vertShader->AddUniform( smaterial );
     vertShader->AddUniform( specularValues );
-    
-    ProgramPtr glslProgram(  new Program() );
+
+    ProgramPtr glslProgram( new Program() );
     glslProgram->SetProgramName( "Phong Shader" );
     glslProgram->SetVertexShader( vertShader );
     glslProgram->SetFragmentShader( fragShader );
@@ -163,11 +163,11 @@ void PhongLoader::SyncShaderAndStateSet()
         "    vec3 N=normalize(normal);\n"
         "    vec3 L=normalize(lightPos);\n"
         "    float NDotL=max(dot(N,L),0.0);\n"
-        
+
         "    vec3 V=normalize(eyePos);\n"
         "    vec3 R=reflect(V,N);\n"
         "    float RDotL=max(dot(R,L),0.0);\n"
-        
+
         "    vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*color;\n"
         "    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
         "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
@@ -183,7 +183,7 @@ void PhongLoader::SyncShaderAndStateSet()
         "    NDotL=max(dot(N,L),0.0);\n"
         "    R=reflect(V,N);\n"
         "    RDotL=max(dot(R,L),0.0);\n"
-        
+
         "    TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*color;\n"
         "    TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
         "    TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"

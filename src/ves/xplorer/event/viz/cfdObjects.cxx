@@ -75,7 +75,7 @@ cfdObjects::cfdObjects( void )
         center[ i ] = 0;
         normal[ i ] = 0;
     }
-    
+
     for( size_t i = 0; i < 6; ++i )
     {
         box_size[ i ] = 0;
@@ -83,7 +83,7 @@ cfdObjects::cfdObjects( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdObjects::cfdObjects( const cfdObjects& src )
-    : 
+    :
     GlobalBase( src ),
     activeDataSet( 0 ),
     pointSource( src.pointSource ),
@@ -104,7 +104,7 @@ cfdObjects::cfdObjects( const cfdObjects& src )
         center[ i ] = 0;
         normal[ i ] = 0;
     }
-    
+
     for( size_t i = 0; i < 6; ++i )
     {
         box_size[ i ] = 0;
@@ -141,7 +141,7 @@ void cfdObjects::SetOrigin( float o[ 3 ] )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-double * cfdObjects::GetOrigin()
+double* cfdObjects::GetOrigin()
 {
     return this->origin;
 }
@@ -192,7 +192,7 @@ vtkAlgorithmOutput* cfdObjects::ApplyGeometryFilterNew( vtkAlgorithmOutput* inpu
     if( this->activeDataSet->GetDataSet()->IsA( "vtkCompositeDataSet" ) )
     {
         m_multiGroupGeomFilter->SetInputConnection( input );
-        return m_multiGroupGeomFilter->GetOutputPort(0);
+        return m_multiGroupGeomFilter->GetOutputPort( 0 );
     }
     else
     {
@@ -225,17 +225,17 @@ bool cfdObjects::IsGPUTools()
 vtkPolyData* cfdObjects::ComputeVolumeFlux( vtkPolyData* inputPD )
 {
     vtkPolyData* normalsOutputPD = inputPD;
-    
-    vtkDataArray* normalsArray = 
+
+    vtkDataArray* normalsArray =
         normalsOutputPD->GetPointData()->GetNormals();
     vtkIdType n_points = normalsOutputPD->GetNumberOfPoints();
-	
+
     vtkDoubleArray* vol_flux_array = vtkDoubleArray::New();
-    vol_flux_array->SetNumberOfTuples(n_points);
-    vol_flux_array->SetName("VolumeFlux");
-	
+    vol_flux_array->SetNumberOfTuples( n_points );
+    vol_flux_array->SetName( "VolumeFlux" );
+
     normalsOutputPD->Update();
-	
+
     vtkPointData* pointData = normalsOutputPD->GetPointData();
     if( pointData == NULL )
     {
@@ -243,38 +243,38 @@ vtkPolyData* cfdObjects::ComputeVolumeFlux( vtkPolyData* inputPD )
         return 0;
     }
 
-    vtkDataArray* vectorArray = 
-        pointData->GetVectors( 
-        GetActiveDataSet()->GetActiveVectorName().c_str() );
-	
+    vtkDataArray* vectorArray =
+        pointData->GetVectors(
+            GetActiveDataSet()->GetActiveVectorName().c_str() );
+
     if( vectorArray == NULL )
     {
         std::cout << " vectors are null " << std::endl;
         return 0;
     }
-	
+
     if( normalsArray == NULL )
     {
         std::cout << " normals are null " << std::endl;
         return 0;
     }
-	
+
     double normalVec[3], vectorVec[3], volume_flux;
-	
+
     for( vtkIdType i = 0; i < n_points; ++i )
     {
         vectorArray->GetTuple( i, vectorVec );
         normalsArray->GetTuple( i, normalVec );
-        volume_flux = 
-            vectorVec[0]*normalVec[0]+
-            vectorVec[1]*normalVec[1]+
-            vectorVec[2]*normalVec[2];
-        vol_flux_array->SetTuple1(i, volume_flux);
+        volume_flux =
+            vectorVec[0] * normalVec[0] +
+            vectorVec[1] * normalVec[1] +
+            vectorVec[2] * normalVec[2];
+        vol_flux_array->SetTuple1( i, volume_flux );
     }
-    
+
     normalsOutputPD->GetPointData()->AddArray( vol_flux_array );
     vol_flux_array->Delete();
-    
+
     return normalsOutputPD;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -47,7 +47,7 @@ namespace conductor
 {
 class IconStack : public QToolBar
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     explicit IconStack( QWidget* positionParent, QWidget* parent = 0 );
 
@@ -91,7 +91,7 @@ private:
     QAction* _connectAction( QAction* action );
 
 };
-    
+
 }
 }
 #endif // ICONSTACK_H

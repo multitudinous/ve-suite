@@ -53,7 +53,9 @@ cfdQuatCam::cfdQuatCam( gmtl::Matrix44d& m, double* worldTrans )
     gmtl::Matrix44d unScaleInput = tempScaleMat * nextMatrix;
     set( NextPosQuat, unScaleInput );
     for( int i = 0; i < 3; i++ )
+    {
         vjVecNextTrans[i] = worldTrans[i];
+    }
     /*
              gmtl::Vec3d scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
              gmtl::Vec3d scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );
@@ -69,7 +71,9 @@ cfdQuatCam::cfdQuatCam( gmtl::Matrix44d& m, double* worldTrans )
 void cfdQuatCam::SetCamPos( double* worldTrans, ves::xplorer::scenegraph::DCS* worldDCS )
 {
     for( int i = 0; i < 3; i++ )
+    {
         vjVecLastTrans[i] = worldTrans[i];
+    }
 
     gmtl::Matrix44d vjm;
     vjm = worldDCS->GetMat();

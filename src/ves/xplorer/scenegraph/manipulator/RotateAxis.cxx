@@ -109,7 +109,7 @@ void RotateAxis::SetHelpCircle( HelpCircle* const helpCircle )
 
     osg::ref_ptr< osg::StateSet > stateSet =
         m_rotateGeode->getOrCreateStateSet();
-    m_helpCircle->GetClipNode()->setStateSetModes( 
+    m_helpCircle->GetClipNode()->setStateSetModes(
         *stateSet.get(), osg::StateAttribute::ON );
 }
 ////////////////////////////////////////////////////////////////////////////////

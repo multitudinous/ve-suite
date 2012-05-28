@@ -43,7 +43,7 @@
 #include <osg/NodeVisitor>
 namespace osg
 {
-    class StateSet;
+class StateSet;
 }
 namespace ves
 {
@@ -67,7 +67,7 @@ public:
     virtual void apply( osg::Group& node );
 
 private:
-    
+
     void CheckStateSet( osg::StateSet* stateSet );
 };
 }

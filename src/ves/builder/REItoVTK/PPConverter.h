@@ -47,7 +47,7 @@ public:
     int makeVTK( std::string pp_file, std::string pd_file );
 
 private:
-    void swap_4_range( char *mem_ptr1, int num );
+    void swap_4_range( char* mem_ptr1, int num );
     void swap_4( char* data );
 
     std::string pplot1_file;

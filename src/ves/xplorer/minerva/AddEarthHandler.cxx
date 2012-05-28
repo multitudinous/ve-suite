@@ -71,7 +71,7 @@ AddEarthHandler::~AddEarthHandler()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void AddEarthHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void AddEarthHandler::Execute( CommandPtr command, MinervaManager& manager )
 {
-  manager.AddEarthToScene();
+    manager.AddEarthToScene();
 }

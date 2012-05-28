@@ -50,15 +50,15 @@ using namespace ves::open::xml;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 CADInitializePhysicsEventHandler::CADInitializePhysicsEventHandler()
-        :
-        ves::xplorer::event::CADEventHandler()
+    :
+    ves::xplorer::event::CADEventHandler()
 {
     ;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADInitializePhysicsEventHandler::CADInitializePhysicsEventHandler( const CADInitializePhysicsEventHandler& rhs )
-        :
-        ves::xplorer::event::CADEventHandler( rhs )
+    :
+    ves::xplorer::event::CADEventHandler( rhs )
 {
     ;
 }
@@ -88,18 +88,18 @@ void CADInitializePhysicsEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 
         if( nodeType->GetDataString() == std::string( "Part" ) )
         {
-            vprDEBUG( vesDBG, 1 ) << "|\tInitialized Physics: " 
-                << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() 
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\tInitialized Physics: "
+                                  << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename()
+                                  << std::endl << vprDEBUG_FLUSH;
             m_cadHandler->GetPart( nodeID->GetDataString() )->InitPhysics();
         }
     }
     catch( ... )
     {
         std::cout << "Error!!" << std::endl;
-        std::cerr << "CADInitializePhysicsEventHandler::_operateOnNode : There was an " 
-            << "exception generated somewhere in the CAD event handlers." 
-            << std::endl;                
+        std::cerr << "CADInitializePhysicsEventHandler::_operateOnNode : There was an "
+                  << "exception generated somewhere in the CAD event handlers."
+                  << std::endl;
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////

@@ -41,7 +41,7 @@ using namespace ves::open::xml::model;
 //Constructor                                     //
 ////////////////////////////////////////////////////
 Point::Point()
-        : XMLObject()
+    : XMLObject()
 {
     mPoint.first = 0;
     mPoint.second = 0;
@@ -57,7 +57,7 @@ Point::~Point()
 }
 ///////////////////////////////////////////
 Point::Point( const Point& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mPoint = input.mPoint;
 }
@@ -107,8 +107,8 @@ void Point::SetObjectFromXMLData( DOMNode* xmlInput )
     if( !currentElement )
     {
         std::cerr << " ERROR : Point::SetObjectFromXMLData :" <<
-        "This node has no children which means there is probably a problem."
-        << std::endl;
+                  "This node has no children which means there is probably a problem."
+                  << std::endl;
     }
 
     // Let's get the X location

@@ -75,10 +75,14 @@ ShaderHelper::ShaderHelper( const ShaderHelper& rhs )
     }
 
     if( rhs.m_vshader.valid() )
+    {
         m_vshader = new osg::Shader( *rhs.m_vshader.get() );
+    }
 
     if( rhs.m_fshader.valid() )
+    {
         m_fshader = new osg::Shader( *rhs.m_fshader.get() );
+    }
 
     m_glslProgram = new osg::Program( *m_glslProgram.get() );
     m_ss = new osg::StateSet( *rhs.m_ss );
@@ -100,10 +104,14 @@ ShaderHelper& ShaderHelper::operator=( const ShaderHelper& rhs )
         }
 
         if( rhs.m_vshader.valid() )
+        {
             m_vshader = rhs.m_vshader;
+        }
 
         if( rhs.m_fshader.valid() )
+        {
             m_fshader = rhs.m_fshader;
+        }
 
         m_glslProgram = rhs.m_glslProgram;
         m_ss = rhs.m_ss;
@@ -126,7 +134,7 @@ void ShaderHelper::SetStateSet( osg::StateSet* shader )
 ////////////////////////////////////////////////////////////////////////////////
 void ShaderHelper::LoadTransparencyProgram()
 {
-    ShaderPtr vertShader(  new Shader() );
+    ShaderPtr vertShader( new Shader() );
     vertShader->SetShaderType( "Vertex" );
     std::string vertexSource( " varying vec3 N;\n"
                               "varying vec3 I;\n"
@@ -142,7 +150,7 @@ void ShaderHelper::LoadTransparencyProgram()
                               "}\n" );
     vertShader->SetShaderSource( vertexSource );
 
-    ShaderPtr fragShader(  new Shader() );
+    ShaderPtr fragShader( new Shader() );
     fragShader->SetShaderType( "Fragment" );
     std::string fragmentSource( "varying vec3 N;\n"
                                 " varying vec3 I;\n"
@@ -158,7 +166,7 @@ void ShaderHelper::LoadTransparencyProgram()
                               );
     fragShader->SetShaderSource( fragmentSource );
 
-    ProgramPtr glslProgram(  new Program() );
+    ProgramPtr glslProgram( new Program() );
     glslProgram->SetProgramName( "Dataset Transparency" );
     glslProgram->SetVertexShader( vertShader );
     glslProgram->SetFragmentShader( fragShader );
@@ -193,8 +201,8 @@ void ShaderHelper::LoadGLSLProgram( ProgramPtr glslProgram )
     }
     ///two-sided lighting hack until gl_FrontFacing works in glsl...
     ///only works if the shader implements it though...
-    ///This is required to make two sided lighting work in a shader. 
-    ///gl_FrontFacing can be used in the fragment shader but it requires 
+    ///This is required to make two sided lighting work in a shader.
+    ///gl_FrontFacing can be used in the fragment shader but it requires
     ///per fragment lighting which is expensive.
     if( m_twoSidedLighting )
     {
@@ -335,18 +343,24 @@ void ShaderHelper::_extractTextureFromShader( TextureImagePtr textureImage )
         //osg::Texture::WrapMode swrapMode = osg::Texture::CLAMP;
 
         if( textureImage->GetWrapMode( "Wrap S", sWrap ) )
+        {
             _setWrapOnTexture( genericTexture.get(), osg::Texture::WRAP_S, sWrap );
+        }
 
         if( dimension != 1 )
         {
             if( textureImage->GetWrapMode( "Wrap T", tWrap ) )
+            {
                 _setWrapOnTexture( genericTexture.get(), osg::Texture::WRAP_T, tWrap );
+            }
         }
 
         if( dimension == 3 )
         {
             if( textureImage->GetWrapMode( "Wrap R", rWrap ) )
+            {
                 _setWrapOnTexture( genericTexture.get(), osg::Texture::WRAP_R, rWrap );
+            }
         }
 
         //std::cout<<"Is this the problem??"<<std::endl;
@@ -354,10 +368,14 @@ void ShaderHelper::_extractTextureFromShader( TextureImagePtr textureImage )
         m_ss->setTextureAttributeAndModes( tUnit, genericTexture.get(), osg::StateAttribute::ON );
 
         if( dimension == 1 )
+        {
             m_ss->setTextureMode( tUnit, GL_TEXTURE_1D, osg::StateAttribute::ON );
+        }
 
         if( dimension == 2 )
+        {
             m_ss->setTextureMode( tUnit, GL_TEXTURE_2D, osg::StateAttribute::ON );
+        }
 
         if( dimension == 3 )
         {
@@ -533,15 +551,15 @@ void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
             else if( uniformSize == 3 )
             {
                 m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec3f( uniformValues.at( 0 ),
-                                                   uniformValues.at( 1 ),
-                                                   uniformValues.at( 2 ) ) ) );
+                                                    uniformValues.at( 1 ),
+                                                    uniformValues.at( 2 ) ) ) );
             }
             else if( uniformSize == 4 )
             {
                 m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec4f( uniformValues.at( 0 ),
-                                                   uniformValues.at( 1 ),
-                                                   uniformValues.at( 2 ),
-                                                   uniformValues.at( 3 ) ) ) );
+                                                    uniformValues.at( 1 ),
+                                                    uniformValues.at( 2 ),
+                                                    uniformValues.at( 3 ) ) ) );
             }
         }
         else if( uniformType == "Int" )
@@ -553,20 +571,20 @@ void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
             else if( uniformSize == 2 )
             {
                 m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec2( static_cast<int>( uniformValues.at( 0 ) ),
-                                                   static_cast<int>( uniformValues.at( 1 ) ) ) ) );
+                                                    static_cast<int>( uniformValues.at( 1 ) ) ) ) );
             }
             else if( uniformSize == 3 )
             {
                 m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec3( static_cast<int>( uniformValues.at( 0 ) ),
-                                                   static_cast<int>( uniformValues.at( 1 ) ),
-                                                   static_cast<int>( uniformValues.at( 2 ) ) ) ) );
+                                                    static_cast<int>( uniformValues.at( 1 ) ),
+                                                    static_cast<int>( uniformValues.at( 2 ) ) ) ) );
             }
             else if( uniformSize == 4 )
             {
                 m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec4( static_cast<int>( uniformValues.at( 0 ) ),
-                                                   static_cast<int>( uniformValues.at( 1 ) ),
-                                                   static_cast<int>( uniformValues.at( 2 ) ),
-                                                   static_cast<int>( uniformValues.at( 3 ) ) ) ) );
+                                                    static_cast<int>( uniformValues.at( 1 ) ),
+                                                    static_cast<int>( uniformValues.at( 2 ) ),
+                                                    static_cast<int>( uniformValues.at( 3 ) ) ) ) );
             }
         }
         else if( uniformType == "Bool" )
@@ -590,20 +608,20 @@ void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
             else if( uniformSize == 2 )
             {
                 m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec2( boolValues.at( 0 ),
-                                                   boolValues.at( 1 ) ) ) );
+                                                    boolValues.at( 1 ) ) ) );
             }
             else if( uniformSize == 3 )
             {
                 m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec3( boolValues.at( 0 ),
-                                                   boolValues.at( 1 ),
-                                                   boolValues.at( 2 ) ) ) );
+                                                    boolValues.at( 1 ),
+                                                    boolValues.at( 2 ) ) ) );
             }
             else if( uniformSize == 4 )
             {
                 m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec4( boolValues.at( 0 ),
-                                                   boolValues.at( 1 ),
-                                                   boolValues.at( 2 ),
-                                                   boolValues.at( 3 ) ) ) );
+                                                    boolValues.at( 1 ),
+                                                    boolValues.at( 2 ),
+                                                    boolValues.at( 3 ) ) ) );
             }
         }
         else if( uniformType == "Sampler" )

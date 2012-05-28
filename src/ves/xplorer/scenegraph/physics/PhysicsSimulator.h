@@ -73,7 +73,7 @@ class PhysicsThread;
 
 namespace osgbCollision
 {
-    class GLDebugDrawer;
+class GLDebugDrawer;
 }
 
 // --- STL Includes --- //

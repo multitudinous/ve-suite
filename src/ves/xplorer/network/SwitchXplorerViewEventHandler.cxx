@@ -70,16 +70,16 @@ using namespace ves::xplorer::network;
 
 ////////////////////////////////////////////////////////////////////////////////
 SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler( const SwitchXplorerViewEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler( rhs )
+    :
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -150,17 +150,17 @@ void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
 void SwitchXplorerViewEventHandler::UpdateNetworkView( const ves::open::xml::CommandPtr& cmd )
 {
     osg::ref_ptr< osg::Group > tempDCS = SceneManager::instance()->GetNetworkDCS();
-    if (tempDCS->getNumChildren() > 0)
+    if( tempDCS->getNumChildren() > 0 )
     {
         tempDCS->removeChildren( 0, tempDCS->getNumChildren() );
     }
 
-    DataValuePairPtr dvp = cmd->GetDataValuePair("SUBNET_ID");
-    std::string netId; 
-    dvp->GetData(netId);
+    DataValuePairPtr dvp = cmd->GetDataValuePair( "SUBNET_ID" );
+    std::string netId;
+    dvp->GetData( netId );
     //osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
     osg::ref_ptr< osg::Group > tempGroup = GraphicalPluginManager::instance()->
-        GetNetworkSystemView()->DrawNetwork( netId );
+                                           GetNetworkSystemView()->DrawNetwork( netId );
     if( tempGroup.valid() )
     {
         tempDCS->addChild( tempGroup.get() );

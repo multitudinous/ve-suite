@@ -79,8 +79,8 @@ public:
 
     vpr::LibraryFinder::LibraryList libs;
 
-    typedef boost::signals2::signal< void ( const std::string&,
-                      ves::xplorer::plugin::PluginBase* ) > createPluginSignal_type;
+    typedef boost::signals2::signal < void ( const std::string&,
+            ves::xplorer::plugin::PluginBase* ) > createPluginSignal_type;
     createPluginSignal_type m_createUIPlugin;
 };
 }

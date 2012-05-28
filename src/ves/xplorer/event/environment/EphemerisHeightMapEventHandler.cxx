@@ -52,7 +52,7 @@ EphemerisHeightMapEventHandler::EphemerisHeightMapEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 EphemerisHeightMapEventHandler::EphemerisHeightMapEventHandler( const EphemerisHeightMapEventHandler& ceh )
-    : 
+    :
     ves::xplorer::event::EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
@@ -91,7 +91,7 @@ void EphemerisHeightMapEventHandler::Execute( const ves::open::xml::XMLObjectPtr
             ephemerisModel->getGroundPlane()->UpdateBaseTerrainFromImage( heightMap );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
         std::cout << "Invalid command passed to EphemerisAutoDateTimeEventHandler!!" << std::endl;
@@ -113,7 +113,7 @@ void EphemerisHeightMapEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBa
                 ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
     }

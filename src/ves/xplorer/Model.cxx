@@ -129,8 +129,8 @@ Model::~Model()
      }
      _eventHandlers.clear();*/
 
-    for( std::vector< DataSet* >::iterator iter = mVTKDataSets.begin(); 
-        iter != mVTKDataSets.end(); )
+    for( std::vector< DataSet* >::iterator iter = mVTKDataSets.begin();
+            iter != mVTKDataSets.end(); )
     {
         //std::cout << "Deleteing " << ( *iter )->GetFileName() << std::endl;
         delete *iter;
@@ -307,11 +307,17 @@ DataSet* Model::GetCfdDataSet( int dataset )
     // if not return null
     // to get the last added dataset pass in -1
     if( mVTKDataSets.empty() )
+    {
         return NULL;
+    }
     else if( dataset == -1 )
+    {
         return mVTKDataSets.back();
+    }
     else
+    {
         return mVTKDataSets.at( dataset );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int Model::GetIndexOfDataSet( std::string dataSetName )
@@ -381,11 +387,17 @@ CADEntity* Model::GetGeomDataSet( int dataset )
     // if not return null
     // to get the last added dataset pass in -1
     if( mGeomDataSets.empty() )
+    {
         return NULL;
+    }
     else if( dataset == -1 )
+    {
         return mGeomDataSets.back();
+    }
     else
+    {
         return mGeomDataSets.at( dataset );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int Model::GetNumberOfGeomDataSets( void )
@@ -396,7 +408,7 @@ unsigned int Model::GetNumberOfGeomDataSets( void )
 void Model::GetDataFromUnit()
 {
 
-//std::vector<VTKSmartPtr<vtkUnstructuredGrid> > _gridList;
+    //std::vector<VTKSmartPtr<vtkUnstructuredGrid> > _gridList;
     //char answer;
 
     vpr::Uint32 data_length = 0;
@@ -424,10 +436,10 @@ void Model::GetDataFromUnit()
             {
                 //connection.recvn( (void*)(&data_length), sizeof(data_length), bytes_read);
             }
-            catch ( ... )
+            catch( ... )
             {
                 std::cerr << "[ERR] Unable to receive data length "
-                << __FILE__ << ":" << __LINE__ << std::endl;
+                          << __FILE__ << ":" << __LINE__ << std::endl;
             }
         }
         mValueLock.release();
@@ -439,10 +451,10 @@ void Model::GetDataFromUnit()
                 //connection.recvn( (void*)(&compressed_data_length),
                 //                         sizeof(compressed_data_length), bytes_read);
             }
-            catch ( ... )
+            catch( ... )
             {
                 std::cerr << "[ERR] Unable to receive compressed data length "
-                << __FILE__ << ":" << __LINE__ << std::endl;
+                          << __FILE__ << ":" << __LINE__ << std::endl;
                 //return 1;
             }
         }
@@ -491,14 +503,14 @@ void Model::GetDataFromUnit()
            //return 1;
          }*/
         std::cout << "[DBG] Read " << data_length << " of "
-        << compressed_data_length << " bytes."
-        << std::endl;
+                  << compressed_data_length << " bytes."
+                  << std::endl;
         // Uncompress the data
         vtkZLibDataCompressor* compressor = vtkZLibDataCompressor::New();
         vtkUnsignedCharArray* vtk_data = vtkUnsignedCharArray::New();
         vtk_data = compressor->Uncompress( compressed_data, compressed_data_length, data_length );
         /*VTKSmartPtr<vtkUnsignedCharArray> vtk_data =
-                    compressor->Uncompress( compressed_data, 
+                    compressor->Uncompress( compressed_data,
                                             compressed_data_length,
                                             data_length );*/
         //VTKSmartPtr<vtkUnstructuredGridReader> reader;
@@ -566,21 +578,21 @@ const std::string Model::MakeSurfaceFile( vtkDataSet* ugrid, int datasetindex )
 
     newStlName = currentStlFileName;
 
-    vtkPolyData * surface = NULL;
+    vtkPolyData* surface = NULL;
     std::cout << "[DBG]... after readVtkThing" << std::endl;
     // Create a polydata surface file that completely envelopes the solution space
     float deciVal = 0.7;
     surface = cfdGrid2Surface( ugrid , deciVal );
 
-    vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
-    vtkGeometryFilter *gFilter = NULL;
+    vtkTriangleFilter* tFilter = vtkTriangleFilter::New();
+    vtkGeometryFilter* gFilter = NULL;
 
     // convert dataset to vtkPolyData
-    tFilter->SetInput(( vtkPolyData* )surface );
+    tFilter->SetInput( ( vtkPolyData* )surface );
 
     std::cout << "Writing \"" << newStlName << "\"... ";
     std::cout.flush();
-    vtkSTLWriter *writer = vtkSTLWriter::New();
+    vtkSTLWriter* writer = vtkSTLWriter::New();
     writer->SetInput( tFilter->GetOutput() );
     writer->SetFileName( newStlName.c_str() );
     writer->SetFileTypeToBinary();
@@ -591,9 +603,11 @@ const std::string Model::MakeSurfaceFile( vtkDataSet* ugrid, int datasetindex )
     tFilter->Delete();
 
     if( gFilter )
+    {
         gFilter->Delete();
+    }
 
-//clean up
+    //clean up
     surface->Delete();
     std::cout << "\ndone\n";
     return newStlName;
@@ -604,19 +618,19 @@ void Model::DeleteDataSet( std::string dataSetName )
     for( std::vector< DataSet* >::iterator iter = mVTKDataSets.begin();
             iter != mVTKDataSets.end(); ++iter )
     {
-        if( (*iter)->GetFileName() == dataSetName )
+        if( ( *iter )->GetFileName() == dataSetName )
         {
-            vprDEBUG( vesDBG, 1 ) << "Deleting " << ( *iter )->GetFileName() 
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "Deleting " << ( *iter )->GetFileName()
+                                  << std::endl << vprDEBUG_FLUSH;
             delete *iter;
             mVTKDataSets.erase( iter );
             break;
         }
         else
         {
-            vprDEBUG( vesDBG, 1 ) << (*iter)->GetFileName() 
-                << " is available not " << dataSetName 
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << ( *iter )->GetFileName()
+                                  << " is available not " << dataSetName
+                                  << std::endl << vprDEBUG_FLUSH;
         }
     }
 }
@@ -629,31 +643,31 @@ void Model::RenderTextualDisplay( bool onOff )
         if( !mModelText.valid() )
         {
             mModelText = new ves::xplorer::scenegraph::TextTexture();
-            
-            osg::ref_ptr< ves::xplorer::scenegraph::DCS > textTrans = 
-            new ves::xplorer::scenegraph::DCS();
+
+            osg::ref_ptr< ves::xplorer::scenegraph::DCS > textTrans =
+                new ves::xplorer::scenegraph::DCS();
             textTrans->addChild( mModelText.get() );
-            
+
             _worldDCS->addChild( textTrans.get() );
-            
-            mModelText->setUpdateCallback( 
+
+            mModelText->setUpdateCallback(
                 new ves::xplorer::environment::TextTextureCallback( mModelText.get() ) );
-            textTrans->setUpdateCallback( 
+            textTrans->setUpdateCallback(
                 new ves::xplorer::scenegraph::HeadPositionCallback() );
-            static_cast< osg::PositionAttitudeTransform* >( 
+            static_cast< osg::PositionAttitudeTransform* >(
                 mModelText->getParent( 0 ) )->setPosition(
-                osg::Vec3d( 0, 0, 0 ) );
+                    osg::Vec3d( 0, 0, 0 ) );
         }
         else
         {
             mModelText->setNodeMask( 1 );
         }
-        
-         
+
+
         std::string displayString = _worldDCS->getName() + "\n" + GetID();
-        std::vector< std::string > filenames = 
-        GetModelCADHandler()->GetCADFilenames();
-        
+        std::vector< std::string > filenames =
+            GetModelCADHandler()->GetCADFilenames();
+
         for( size_t i = 0; i < filenames.size(); ++i )
         {
             displayString = displayString + "\n" + filenames.at( i );

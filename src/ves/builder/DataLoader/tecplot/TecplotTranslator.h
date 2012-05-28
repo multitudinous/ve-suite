@@ -48,7 +48,7 @@ public:
     virtual ~TecplotTranslator();
     virtual void DisplayHelp( void );
 
-class VE_USER_BUILDER_EXPORTS TecplotTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    class VE_USER_BUILDER_EXPORTS TecplotTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
     {
     public:
         TecplotTranslateCbk() {};
@@ -61,7 +61,7 @@ class VE_USER_BUILDER_EXPORTS TecplotTranslateCbk: public ves::builder::cfdTrans
     protected:
     };
 
-class VE_USER_BUILDER_EXPORTS TecplotPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    class VE_USER_BUILDER_EXPORTS TecplotPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
     {
     public:
         TecplotPreTranslateCbk() {};

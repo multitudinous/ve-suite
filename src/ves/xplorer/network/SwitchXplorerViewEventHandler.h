@@ -104,7 +104,7 @@ public:
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
 private:
-    NetworkSystemView * networkLayout;
+    NetworkSystemView* networkLayout;
     void UpdateNetworkView( const ves::open::xml::CommandPtr& cmd );
 
 };

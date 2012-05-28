@@ -81,7 +81,7 @@ void TextureBasedActivateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject 
             datasetName->GetData( activeDatasetName );
 
             DataSet* dataSet = _activeModel->GetCfdDataSet(
-                      _activeModel->GetIndexOfDataSet( activeDatasetName ) );
+                                   _activeModel->GetIndexOfDataSet( activeDatasetName ) );
 
             _activeModel->SetActiveDataSet( dataSet );
 
@@ -90,14 +90,14 @@ void TextureBasedActivateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject 
             if( !_activeModel->GetDCS()->SearchChild( _activeModel->GetActiveDataSet()->GetDCS() ) )
             {
                 vprDEBUG( vesDBG, 2 ) << "|\t\tadding active switch node to worldDCS"
-                << std::endl << vprDEBUG_FLUSH;
+                                      << std::endl << vprDEBUG_FLUSH;
                 _activeModel->GetDCS()->AddChild( _activeModel->GetActiveDataSet()->GetDCS() );
             }
             ves::xplorer::scenegraph::Switch* temp = _activeModel->GetActiveDataSet()->GetSwitchNode();
             if( !_activeModel->GetActiveDataSet()->GetDCS()->SearchChild( temp ) )
             {
                 vprDEBUG( vesDBG, 2 ) << "|\t\tadding active dcs node to worldDCS for classic ss "
-                << std::endl << vprDEBUG_FLUSH;
+                                      << std::endl << vprDEBUG_FLUSH;
                 _activeModel->GetActiveDataSet()->GetDCS()->AddChild( temp );
             }
             ///what happens if texture is somehow added first? Is that possible?
@@ -107,7 +107,7 @@ void TextureBasedActivateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject 
 
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid Model!!" << std::endl;
         std::cout << "TextureBasedActivateEventHandler::_operateOnNode()" << std::endl;

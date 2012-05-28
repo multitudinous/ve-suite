@@ -325,7 +325,7 @@ public:
      * Request a strong monopoly on a signal.
      * @param connection Shared pointer to the scoped_connection object associated with the
      * signal that should be monopolized.
-     * 
+     *
      * A strong monopoly is similar to a weak monopoly as described in
      * EventManager::MonopolizeConnectionWeak, with the difference that new connections to the
      * signal will be affected as well as existing connections. In the example
@@ -374,7 +374,7 @@ public:
      *
      * // Wrap the functored slot in a slotwrapper
      * SlotWrapper< signal_t > slotWrapper( slotFunctor );
-     * 
+     *
      * // Call into EventManager to connect this instance of Receiver::MyIntSlot
      * // to the signal named "ExactSignalName"
      * ConnectSignal( "ExactSignalName", &slotWrapper, rec.mConnections, normal_Priority );
@@ -432,10 +432,10 @@ public:
     void Shutdown();
 
 private:
-    
+
     /// Constructor
     EventManager();
-    
+
     /// Destructor
     virtual ~EventManager();
 

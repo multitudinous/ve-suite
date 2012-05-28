@@ -60,7 +60,7 @@ public:
      * Initializes the connection to NULL.
      */
     SQLiteDriver()
-            : mConnection( NULL ), mOpen( false )
+        : mConnection( NULL ), mOpen( false )
     {}
 
     /**

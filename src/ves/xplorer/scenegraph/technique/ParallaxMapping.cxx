@@ -122,10 +122,10 @@ void ParallaxMapping::DefinePasses()
         //    "glsl/parallax_mapping.fs", fragmentOptions.get() );
 
         std::string shaderName = osgDB::findDataFile( "parallax_mapping.fs" );
-        osg::ref_ptr< osg::Shader > fragmentShader = 
+        osg::ref_ptr< osg::Shader > fragmentShader =
             osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
         shaderName = osgDB::findDataFile( "parallax_mapping.vs" );
-        osg::ref_ptr< osg::Shader > vertexShader = 
+        osg::ref_ptr< osg::Shader > vertexShader =
             osg::Shader::readShaderFile( osg::Shader::VERTEX, shaderName );
 
         osg::ref_ptr< osg::Program > program = new osg::Program();

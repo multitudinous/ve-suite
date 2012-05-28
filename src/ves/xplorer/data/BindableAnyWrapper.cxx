@@ -52,38 +52,38 @@ BindableAnyWrapper::~BindableAnyWrapper()
 }
 
 bool BindableAnyWrapper::BindValue( Poco::Data::Statement* statement,
-                                   boost::any value )
+                                    boost::any value )
 {
     bool returnValue = false;
 
-    if( value.type( ) == typeid ( bool ) )
+    if( value.type( ) == typeid( bool ) )
     {
         mBool = boost::any_cast< bool >( value );
-        (*statement), Poco::Data::use( mBool );
+        ( *statement ), Poco::Data::use( mBool );
         returnValue = true;
     }
-    else if( value.type( ) == typeid (int ) )
+    else if( value.type( ) == typeid( int ) )
     {
         mInt = boost::any_cast< int >( value );
-        (*statement), Poco::Data::use( mInt );
+        ( *statement ), Poco::Data::use( mInt );
         returnValue = true;
     }
-    else if( value.type( ) == typeid (float ) )
+    else if( value.type( ) == typeid( float ) )
     {
         mFloat = boost::any_cast< float >( value );
-        (*statement), Poco::Data::use( mFloat );
+        ( *statement ), Poco::Data::use( mFloat );
         returnValue = true;
     }
-    else if( value.type( ) == typeid (double ) )
+    else if( value.type( ) == typeid( double ) )
     {
         mDouble = boost::any_cast< double >( value );
-        (*statement), Poco::Data::use( mDouble );
+        ( *statement ), Poco::Data::use( mDouble );
         returnValue = true;
     }
     else if( boost::any_cast< std::string > ( &value ) )
     {
         mString = boost::any_cast< std::string > ( value );
-        (*statement), Poco::Data::use( mString );
+        ( *statement ), Poco::Data::use( mString );
         returnValue = true;
     }
 

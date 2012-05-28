@@ -71,7 +71,7 @@ class QApplication;
 
 namespace Poco
 {
-    class SplitterChannel;
+class SplitterChannel;
 }
 
 namespace osg
@@ -198,20 +198,20 @@ public:
 
     ///Start up in-process user interface thread
     void LoadUI();
-    
+
     ///Calls LoadUI and other Qt initialization tools
     void preRun();
-    
+
     ///Calls the Qt event loop
     void runLoop();
-    
+
 #if defined( _DARWIN )
     ///Acquire qt lock
     bool AcquireQtLock();
-    
+
     ///Release qt lock
     void ReleaseQtLock();
-    
+
     ///Test whether the Qt mutex can be locked
     bool Test();
 #endif
@@ -301,7 +301,7 @@ private:
     size_t m_numInitialized;
     ///Tell when things should render
     bool m_render;
-    
+
     ///File name for screen capture filename
     std::string m_filename;
 

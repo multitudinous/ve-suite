@@ -61,7 +61,7 @@ void HideVizFeature( std::string const&, std::vector< bool > const& hide )
     ves::xplorer::TextureBasedVizHandler::instance()->ViewTextureBasedVis( !hide.at( 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SetTransientMode( std::string const&, std::vector< std::string > const& playMode)
+void SetTransientMode( std::string const&, std::vector< std::string > const& playMode )
 {
     if( playMode.at( 0 ) == "Step Forward" )
     {
@@ -81,9 +81,9 @@ void SetTransientMode( std::string const&, std::vector< std::string > const& pla
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SetTransientDuration( std::string const&, std::vector< double > const& duration)
-{    
-    ves::xplorer::TextureBasedVizHandler::instance()->UpdateTransientDuration( duration.at( 0 ) );        
+void SetTransientDuration( std::string const&, std::vector< double > const& duration )
+{
+    ves::xplorer::TextureBasedVizHandler::instance()->UpdateTransientDuration( duration.at( 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnablePhoneShader( std::string const&, std::vector< bool > const& enable )
@@ -99,7 +99,7 @@ void SetActiveShaderManager( std::string const& activeShaderManager )
 void UpdateNumberOfSlicePlanes( std::string const&, std::vector< int > const& numberOfSlices )
 {
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateNumberOfSlicePlanes( numberOfSlices.at( 0 ) );
-    
+
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateGraph();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -115,28 +115,28 @@ void UpdateIsoSurfaceValue( std::string const&, std::vector< double > const& val
 ////////////////////////////////////////////////////////////////////////////////
 void EnableIsoSurfaces( std::string const&, std::vector< bool > const& enable )
 {
-    ves::xplorer::TextureBasedVizHandler::instance()->EnsureIsosurface( enable.at( 0 ) );    
+    ves::xplorer::TextureBasedVizHandler::instance()->EnsureIsosurface( enable.at( 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateClipPlaneSettings( std::string const& planeDirection, 
-    std::string const& planeCoordinate, double const& roiValue, 
-    double const& minRoiValue, double const& maxRoiValue )
+void UpdateClipPlaneSettings( std::string const& planeDirection,
+                              std::string const& planeCoordinate, double const& roiValue,
+                              double const& minRoiValue, double const& maxRoiValue )
 {
     if( planeDirection != "Both" )
     {
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane( planeCoordinate,
-                                                                          planeDirection,
-                                                                          roiValue );
+                planeDirection,
+                roiValue );
     }
     else if( planeDirection == "Both" )
     {
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane( planeCoordinate,
-                                                                          "Positive",
-                                                                          minRoiValue );
+                "Positive",
+                minRoiValue );
 
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane( planeCoordinate,
-                                                                          "Negative",
-                                                                          maxRoiValue );
+                "Negative",
+                maxRoiValue );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -152,26 +152,26 @@ void TurnOnBBox( bool const& enable )
 ////////////////////////////////////////////////////////////////////////////////
 void ActivateTBDataset( std::string const& activeDataset )
 {
-    ves::xplorer::Model* activeModel = 
+    ves::xplorer::Model* activeModel =
         ves::xplorer::ModelHandler::instance()->GetActiveModel();
     DataSet* dataSet = activeModel->GetCfdDataSet(
-            activeModel->GetIndexOfDataSet( activeDataset ) );
-    
+                           activeModel->GetIndexOfDataSet( activeDataset ) );
+
     activeModel->SetActiveDataSet( dataSet );
-    
+
     //make the CAD transparent
     activeModel->GetModelCADHandler()->MakeCADRootTransparent();
     if( !activeModel->GetDCS()->SearchChild( activeModel->GetActiveDataSet()->GetDCS() ) )
     {
         vprDEBUG( vesDBG, 1 ) << "|\t\tadding active switch node to worldDCS"
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         activeModel->GetDCS()->AddChild( activeModel->GetActiveDataSet()->GetDCS() );
     }
     ves::xplorer::scenegraph::Switch* temp = activeModel->GetActiveDataSet()->GetSwitchNode();
     if( !activeModel->GetActiveDataSet()->GetDCS()->SearchChild( temp ) )
     {
         vprDEBUG( vesDBG, 1 ) << "|\t\tadding active dcs node to worldDCS for classic ss "
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         activeModel->GetActiveDataSet()->GetDCS()->AddChild( temp );
     }
     ///what happens if texture is somehow added first? Is that possible?
@@ -183,7 +183,7 @@ void ActivateTBDataset( std::string const& activeDataset )
 void UpdateScalarRange( double const& minRange, double const& maxRange )
 {
     SetActiveTextureDataset();
-    
+
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
 
     float floatRange[2];
@@ -194,27 +194,27 @@ void UpdateScalarRange( double const& minRange, double const& maxRange )
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::volume::cfdTextureDataSet* SetActiveTextureDataset()
 {
-    ves::xplorer::Model* activeModel = 
+    ves::xplorer::Model* activeModel =
         ves::xplorer::ModelHandler::instance()->GetActiveModel();
     if( activeModel )
     {
         //This assumes there is only one texture dataset per model which isn't quite right---biv
-        ves::xplorer::volume::cfdTextureDataSet* activeTDSet = 
+        ves::xplorer::volume::cfdTextureDataSet* activeTDSet =
             activeModel->GetTextureDataSet( 0 );
         activeModel->SetActiveTextureDataSet( activeTDSet );
         ves::xplorer::TextureBasedVizHandler::instance()->
-            SetActiveTextureDataSet( activeTDSet );
+        SetActiveTextureDataSet( activeTDSet );
         return activeTDSet;
     }
-    
+
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UpdateTBSolution( std::string const& dataName, std::string const& dataType, double const& minRange, double const& maxRange )
-{    
+{
     //TB_ACTIVE_SOLUTION
-    
-    ves::xplorer::volume::cfdTextureDataSet* activeTDSet = 
+
+    ves::xplorer::volume::cfdTextureDataSet* activeTDSet =
         SetActiveTextureDataset();
     if( !activeTDSet )
     {
@@ -226,16 +226,16 @@ void UpdateTBSolution( std::string const& dataName, std::string const& dataType,
         //std::cout << dataName << std::endl;
 
         activeTDSet->SetActiveScalar( dataName );
-        
+
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
-        
+
         float floatRange[2];
         floatRange[0] = minRange;
         floatRange[1] = maxRange;
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateScalarRange( floatRange );
 
         //need to pass the scalar range command to update it
-        DataSet* dataSet = 
+        DataSet* dataSet =
             ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
         if( !dataSet )
         {
@@ -253,9 +253,9 @@ void UpdateTBSolution( std::string const& dataName, std::string const& dataType,
     {
         activeTDSet->SetActiveVector( dataName );
     }
-    
+
     EnablePreIntegration( true );
-    
+
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateGraph();
 }
 ////////////////////////////////////////////////////////////////////////////////

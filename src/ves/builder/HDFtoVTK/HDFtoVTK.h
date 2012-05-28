@@ -51,7 +51,7 @@ public:
     cfdHDFToVTK( char* inHDFFileName );
     cfdHDFToVTK( char* inHDFFileName, char* outputVTKDir );
 
-    enum HDFFILETYPE{DCLARKE, HDF4, HDF5, OTHER};
+    enum HDFFILETYPE {DCLARKE, HDF4, HDF5, OTHER};
     ~cfdHDFToVTK();
 
     void setType( HDFFILETYPE type )
@@ -94,8 +94,8 @@ protected:
                              int nTuples,
                              int pointCellGrid = 0 );
     void _writeRectilinearCellDataToPointDataFile( vtkRectilinearGrid* cellGrid,
-                                                   char* fileName,
-                                                   int asciiFile = 1 );
+            char* fileName,
+            int asciiFile = 1 );
     char* _inHDFFile;
     char* _outVTKDirectory;
     char* _outFile;

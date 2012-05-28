@@ -134,16 +134,16 @@ void MaterialHelper::LoadMaterial( CADMaterialPtr material )
         std::cout << "SceneGraphBuilderSceneGraphCallback::Apply()" << std::endl;
     }
     m_material->setDiffuse( faceToApply,
-                           osg::Vec4( diffuse.at( 0 ), diffuse.at( 1 ), diffuse.at( 2 ), opacity ) );
+                            osg::Vec4( diffuse.at( 0 ), diffuse.at( 1 ), diffuse.at( 2 ), opacity ) );
 
     m_material->setAmbient( faceToApply,
-                           osg::Vec4( ambient.at( 0 ), ambient.at( 1 ), ambient.at( 2 ), opacity ) );
+                            osg::Vec4( ambient.at( 0 ), ambient.at( 1 ), ambient.at( 2 ), opacity ) );
 
     m_material->setEmission( faceToApply,
-                            osg::Vec4( emmissive.at( 0 ), emmissive.at( 1 ), emmissive.at( 2 ), opacity ) );
+                             osg::Vec4( emmissive.at( 0 ), emmissive.at( 1 ), emmissive.at( 2 ), opacity ) );
 
     m_material->setSpecular( faceToApply,
-                            osg::Vec4( specular.at( 0 ), specular.at( 1 ), specular.at( 2 ), opacity ) );
+                             osg::Vec4( specular.at( 0 ), specular.at( 1 ), specular.at( 2 ), opacity ) );
 
     //_material->setName(materialName);
     m_material->setShininess( faceToApply, shininess );

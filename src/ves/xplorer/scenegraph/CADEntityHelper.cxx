@@ -134,28 +134,28 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
     if( !input.mCadNode.valid() )
     {
         std::cerr << "ERROR : CADEntityHelper::CADEntityHelper not a valid node"
-        << std::endl;
+                  << std::endl;
         return;
     }
 
     m_occlusionSettings = input.m_occlusionSettings;
-    
+
     ///We deep copy nodes so that picking is accurate
     ///and so that physics will work properly in the future
     if( input.mCadNode->asGroup() )
     {
         mCadNode = new osg::Group( *input.mCadNode->asGroup(),
-           osg::CopyOp::DEEP_COPY_NODES | 
-           osg::CopyOp::DEEP_COPY_STATESETS | 
-           osg::CopyOp::DEEP_COPY_STATEATTRIBUTES );
+                                   osg::CopyOp::DEEP_COPY_NODES |
+                                   osg::CopyOp::DEEP_COPY_STATESETS |
+                                   osg::CopyOp::DEEP_COPY_STATEATTRIBUTES );
     }
     else if( dynamic_cast< osg::Geode* >( input.mCadNode.get() ) )
     {
         mCadNode = new osg::Geode( *static_cast< osg::Geode* >(
-                                        input.mCadNode.get() ),
-           osg::CopyOp::DEEP_COPY_NODES | 
-           osg::CopyOp::DEEP_COPY_STATESETS | 
-           osg::CopyOp::DEEP_COPY_STATEATTRIBUTES );
+                                       input.mCadNode.get() ),
+                                   osg::CopyOp::DEEP_COPY_NODES |
+                                   osg::CopyOp::DEEP_COPY_STATESETS |
+                                   osg::CopyOp::DEEP_COPY_STATEATTRIBUTES );
     }
     else
     {
@@ -231,7 +231,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                                 const bool isStream )
 {
     if( strstr( filename.c_str(), ".stl" ) ||
-        strstr( filename.c_str(), ".stla" ) )
+            strstr( filename.c_str(), ".stla" ) )
     {
         mIsSTLFile = true;
     }
@@ -241,12 +241,12 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     {
         if( osgDB::getLowerCaseFileExtension( filename ) == "osg" )
         {
-            osgDB::ReaderWriter *rw =
+            osgDB::ReaderWriter* rw =
                 osgDB::Registry::instance()->getReaderWriterForExtension(
                     osgDB::getLowerCaseFileExtension( filename ) );
             if( !rw )
             {
-                std::cerr << "Error: could not find a suitable " 
+                std::cerr << "Error: could not find a suitable "
                           << "reader/writer to load the specified file"
                           << std::endl;
                 return;
@@ -272,7 +272,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             if( !tempCADNode.valid() )
             {
                 std::cerr << "Error: could not load file `"
-                << filename << "'" << std::endl;
+                          << filename << "'" << std::endl;
             }
         }
         else if( osgDB::getLowerCaseFileExtension( filename ) == "ven" )
@@ -329,9 +329,9 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                         break;
                     }
                 }
-                tempCADNode = restorPhysics.getSceneGraph();*/          
+                tempCADNode = restorPhysics.getSceneGraph();*/
             }
-                        
+
             ///Check for cached file when reloading file with ves file
             //osgDB::fileExists( destFile );
             //osgDB::Registry::instance()->getReaderWriterForExtension( "osg" );
@@ -354,10 +354,10 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                         if( restorPhysics.status() == osgbBulletPlus::RestorePhysics::RESTORE_ERROR )
                         {
                             break;
-                        }                    
+                        }
                     }
                     tempCADNode = restorPhysics.getSceneGraph();*/
-                }           
+                }
             }
         }
     }
@@ -372,7 +372,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     if( !tempCADNode.valid() )
     {
         std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: "
-            << filename << std::endl;
+                  << filename << std::endl;
         return;
     }
 
@@ -382,17 +382,17 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         lightModel = new osg::LightModel;
         lightModel->setTwoSided( true );
         tempCADNode->getOrCreateStateSet()->setAttributeAndModes(
-            lightModel.get(), 
+            lightModel.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        
-       /* osg::ref_ptr< osg::BlendColor > bc = new osg::BlendColor();
-        bc->setConstantColor( osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        tempCADNode->getOrCreateStateSet()->setAttributeAndModes( 
-            bc.get(), 
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );*/
-        
+
+        /* osg::ref_ptr< osg::BlendColor > bc = new osg::BlendColor();
+         bc->setConstantColor( osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+         tempCADNode->getOrCreateStateSet()->setAttributeAndModes(
+             bc.get(),
+             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );*/
+
         /*osg::ref_ptr< osg::StateSet > stateset = tempCADNode->getOrCreateStateSet();
-        
+
         osg::ref_ptr< osg::Material > material = new osg::Material();
         material->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.56862f, 0.56842f, 0.56842f, 1.0f ) );
         material->setColorMode( osg::Material::AMBIENT_AND_DIFFUSE );
@@ -401,14 +401,14 @@ void CADEntityHelper::LoadFile( const std::string& filename,
 
 #if OSGWORKS_VERSION >= 10002
     {
-        osg::notify( osg::INFO ) << "|\tRunning osgwTools::RemoveLOD" 
-            << std::endl;
+        osg::notify( osg::INFO ) << "|\tRunning osgwTools::RemoveLOD"
+                                 << std::endl;
         //Run the LOD optimizer that will strip all LOD nodes down to one LOD
         //This is not optimal but provides a way to remove LODs that are
         //problematic. We often run into problem LOD nodes when working with
         //data from the Priority 5 JT2OSG converter.
         osgwTools::RemoveLOD removeLOD;
-        tempCADNode->accept( removeLOD );            
+        tempCADNode->accept( removeLOD );
     }
 #endif
     //Run the draw array optimization
@@ -418,7 +418,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     //mechanism, as it tells OSG/OpenGL up front how much vertex array data to
     //download. Also, a single DrawElementsUInt can replace possibly hundreds of
     //DrawArrays because of the use of indices.
-    
+
     //There isn't more vertices in the new files, but they are larger because
     //DrawElementsUInt requires index data. However, as noted above, the benefits
     //of using the index data outweigh the cost of additional storage.
@@ -426,11 +426,11 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         CountsVisitor cv;
         tempCADNode->accept( cv );
         cv.dump();
-        const float da2Verts( (float)( cv.getDrawArrays() ) / (float)( cv.getVertices() ) );
-        const float ratioThreshold=.05f;
+        const float da2Verts( ( float )( cv.getDrawArrays() ) / ( float )( cv.getVertices() ) );
+        const float ratioThreshold = .05f;
         if( da2Verts < ratioThreshold )
         {
-           osg::notify( osg::INFO ) << "|\tDrawArrays to vertices ratio too small. No optimization." << std::endl;
+            osg::notify( osg::INFO ) << "|\tDrawArrays to vertices ratio too small. No optimization." << std::endl;
         }
         else
         {
@@ -446,39 +446,39 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     //Run the optimizer to improve performance
     {
         osgUtil::Optimizer graphOpti;
-        graphOpti.optimize( tempCADNode.get(), 
-                           //Had to comment out this flag because of a bug in OSG
-                           //osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
-                           //osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
-                           osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
-                           osgUtil::Optimizer::COMBINE_ADJACENT_LODS |
-                           //This one can cause problems with opacity settings
-                           //osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
-                           osgUtil::Optimizer::MERGE_GEOMETRY |
-                           osgUtil::Optimizer::CHECK_GEOMETRY |
-                           //This one causes problems when creating physics
-                           //meshes for osgBullet
-                           //osgUtil::Optimizer::SPATIALIZE_GROUPS |
-                           osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
-                           osgUtil::Optimizer::MERGE_GEODES |
-                           osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
+        graphOpti.optimize( tempCADNode.get(),
+                            //Had to comment out this flag because of a bug in OSG
+                            //osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
+                            //osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
+                            osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
+                            osgUtil::Optimizer::COMBINE_ADJACENT_LODS |
+                            //This one can cause problems with opacity settings
+                            //osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
+                            osgUtil::Optimizer::MERGE_GEOMETRY |
+                            osgUtil::Optimizer::CHECK_GEOMETRY |
+                            //This one causes problems when creating physics
+                            //meshes for osgBullet
+                            //osgUtil::Optimizer::SPATIALIZE_GROUPS |
+                            osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
+                            osgUtil::Optimizer::MERGE_GEODES |
+                            osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
     }
 
-    //ves::xplorer::scenegraph::util::RescaleTextureVisitor 
+    //ves::xplorer::scenegraph::util::RescaleTextureVisitor
     //    textureVisitor( tempCADNode.get() );
 
-/*#if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
-    osg::ref_ptr< osg::OcclusionQueryNode > root;
-    root = dynamic_cast< osg::OcclusionQueryNode* >( tempCADNode.get() );
-#else
-    osg::ref_ptr< osgOQ::OcclusionQueryNode > root;
-    root = dynamic_cast< osgOQ::OcclusionQueryNode* >( tempCADNode.get() );
-#endif*/
+    /*#if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
+        osg::ref_ptr< osg::OcclusionQueryNode > root;
+        root = dynamic_cast< osg::OcclusionQueryNode* >( tempCADNode.get() );
+    #else
+        osg::ref_ptr< osgOQ::OcclusionQueryNode > root;
+        root = dynamic_cast< osgOQ::OcclusionQueryNode* >( tempCADNode.get() );
+    #endif*/
 
     unsigned int occlusionThreshold = 1000;
     unsigned int visibilityThreshold = 100;
     bool occlude = false;
-    
+
     if( m_occlusionSettings == "Off" )
     {
         occlude = false;
@@ -501,7 +501,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         occlusionThreshold = 2500;
         visibilityThreshold = 500;
     }
-    
+
     //if( !root.valid() && occlude )
     if( occlude )
     {
@@ -509,7 +509,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         tempGroup->addChild( tempCADNode.get() );
         /*
         osgOQ::OcclusionQueryNonFlatVisitor oqv;
-        //Specify the vertex count threshold for performing 
+        //Specify the vertex count threshold for performing
         // occlusion query tests.
         //Settings others use are:
         //Fairly lax culling
@@ -535,11 +535,11 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         tempGroup->accept( visibilityThresholdVisitor );
 
         mCadNode = tempGroup.get();*/
-        
+
 
         // Any models using occlusion query must render in front-to-back order.
         tempGroup->getOrCreateStateSet()->setRenderBinDetails( 0, _QUERY_FRONT_TO_BACK_BIN_NAME );
-        
+
         // Realized the viewer, then root's parent should
         // be the top-level Camera. We want to add queries starting at that node.
         osgwQuery::AddQueries aqs;
@@ -563,20 +563,20 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             mCadNode->setName( "NULL_FILENAME" );
         }
     }
-    
+
     //Set per vertex lighting on all files that are loaded
     //osgUtil::SmoothingVisitor smoother;
     //mCadNode->accept( smoother );
-    
+
     {
         osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
-        mCadNode->accept(cbbv);
+        mCadNode->accept( cbbv );
         osg::BoundingBox bb = cbbv.getBoundingBox();
-        osg::notify( osg::INFO ) << "|\tBounding Box Info" << std::endl 
-            << "|\tCenter " << bb.center() << std::endl
-            << "|\tRadius " << bb.radius() << std::endl
-            << "|\tMin " << bb._min << std::endl
-            << "|\tMax " << bb._max << std::endl;
+        osg::notify( osg::INFO ) << "|\tBounding Box Info" << std::endl
+                                 << "|\tCenter " << bb.center() << std::endl
+                                 << "|\tRadius " << bb.radius() << std::endl
+                                 << "|\tMin " << bb._min << std::endl
+                                 << "|\tMax " << bb._max << std::endl;
     }
 
     {
@@ -586,11 +586,11 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         //osg::ref_ptr< osg::StateSet > stateset =
         //    mCadNode->getOrCreateStateSet();
     }
-    
+
     {
         util::UnRefImageDataVisitor uridv( mCadNode.get() );
     }
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntityHelper::
@@ -627,7 +627,7 @@ ComputeIntermediateFileNameAndPath( const std::string& srcFile ) const
     {
         return objTest;
     }
-    
+
     objTest = intermediateFileNameAndPath + ".obj";
     if( osgDB::fileExists( objTest ) )
     {
@@ -653,7 +653,7 @@ osg::Node* CADEntityHelper::parseOCCNURBSFile( const std::string& directory )
     size_t nPatches = patchFiles.size();
     ves::xplorer::scenegraph::nurbs::util::OCCNURBSFileReader patchReader;
 
-    for( size_t i = 0; i < nPatches;i++ )
+    for( size_t i = 0; i < nPatches; i++ )
     {
         ves::xplorer::scenegraph::nurbs::NURBSSurface* surface =
             patchReader.ReadPatchFile( patchFiles.at( i ) );
@@ -689,23 +689,23 @@ osg::Node* CADEntityHelper::parseOCCNURBSFile( const std::string& directory )
 osg::Node* CADEntityHelper::LoadTextureFile( std::string const& filename )
 {
     osg::Image* image = osgDB::readImageFile( filename );
-    
+
     //double aspectRatio = double(image->s())/double(image->t());
     double s = image->s();
     double t = image->t();
     if( t > s )
     {
-        s = s/t;
+        s = s / t;
         t = 1;
     }
-    else 
+    else
     {
-        t = t/s;
+        t = t / s;
         s = 1;
     }
 
     //corner, width, height
-    osg::Geometry* geom = osg::createTexturedQuadGeometry( osg::Vec3(0,0,0), osg::Vec3( s,0,0), osg::Vec3(0,0,t) );
+    osg::Geometry* geom = osg::createTexturedQuadGeometry( osg::Vec3( 0, 0, 0 ), osg::Vec3( s, 0, 0 ), osg::Vec3( 0, 0, t ) );
 
     osg::Texture2D* texture = new osg::Texture2D();
     texture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
@@ -713,18 +713,18 @@ osg::Node* CADEntityHelper::LoadTextureFile( std::string const& filename )
     texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
     texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
     texture->setImage( image );
-    
-    
+
+
     osg::Geode* geode = new osg::Geode();
     geode->setName( "Texture Geode" );
     geode->setCullingActive( false );
     geode->addDrawable( geom );
-    
+
     osg::ref_ptr< osg::StateSet > stateset =
         geode->getOrCreateStateSet();
-    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );    
+    stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
     stateset->setTextureAttributeAndModes( 0, texture, osg::StateAttribute::ON );
-    
+
     return geode;
 }
 ////////////////////////////////////////////////////////////////////////////////

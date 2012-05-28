@@ -74,10 +74,10 @@ void TextureBasedBoundingBoxEventHandler::_operateOnNode( XMLObjectPtr veXMLObje
     {
         CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
         DataValuePairPtr bboxFlag = command->GetDataValuePair( "BBox Flag" );
-        ves::xplorer::TextureBasedVizHandler::instance()->UpdateBoundingBox(( bboxFlag->GetUIntData() == 1 ) ? true : false );
+        ves::xplorer::TextureBasedVizHandler::instance()->UpdateBoundingBox( ( bboxFlag->GetUIntData() == 1 ) ? true : false );
 
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid TextureDataSet!!" << std::endl;
         std::cout << "TextureBasedBoundingBoxEventHandler::_operateOnNode()" << std::endl;

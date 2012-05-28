@@ -40,7 +40,7 @@ using namespace ves::conductor;
 
 paraThread::paraThread( Network* network ) : wxThread( wxTHREAD_JOINABLE )
 {
-//  nw = network;
+    //  nw = network;
 }
 paraThread::~paraThread()
 {}

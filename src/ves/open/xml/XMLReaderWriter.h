@@ -147,8 +147,8 @@ protected:
     ///\param objectNamespace The namespace the object to populate belongs to.
     ///\param tagName The tag name of the object to populate.
     virtual void _populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
-                                                 std::string objectNamespace,
-                                                 std::string tagName );
+            std::string objectNamespace,
+            std::string tagName );
 
     ///The XMLObjects read in from a document file.
     std::vector<XMLObjectPtr> mInternalXmlObjects;

@@ -115,7 +115,7 @@ void AdvancedIsosurface::CreateControls()
     wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC, _( "Select Scalar to Color Isosurface by" ), wxDefaultPosition, wxDefaultSize, 0 );
     selectScalarSizer->Add( itemStaticText4, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
 
-// _vectorSelection = new wxListBox( itemDialog1, ID_LISTBOX1, wxDefaultPosition, wxSize(125, 75), _availableSolutions["MESH_VECTORS"], wxLB_SINGLE|wxLB_NEEDED_SB );
+    // _vectorSelection = new wxListBox( itemDialog1, ID_LISTBOX1, wxDefaultPosition, wxSize(125, 75), _availableSolutions["MESH_VECTORS"], wxLB_SINGLE|wxLB_NEEDED_SB );
     scalarSelection = new wxListBox( itemDialog1, ADVANCEDISOSURFACE_SELECT_SCALAR, wxDefaultPosition, wxDefaultSize, _availableSolutions["MESH_SCALARS"], wxLB_SINGLE | wxLB_NEEDED_SB );
     scalarSelection->SetSelection( 0 );
     selectScalarSizer->Add( scalarSelection, 0, wxALIGN_CENTER_HORIZONTAL | wxALL | wxEXPAND, 5 );
@@ -193,24 +193,24 @@ void AdvancedIsosurface::OnMinSpinCtrl( wxScrollEvent& WXUNUSED( event ) )
         return;
     }
 
-    minValue = (( _minSpinner->GetValue() - _colorScalarRange.at( 0 ) )
-                / ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) ) * 100 );
+    minValue = ( ( _minSpinner->GetValue() - _colorScalarRange.at( 0 ) )
+                 / ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) ) * 100 );
 
     if( minValue == 100 )
     {
-        _minSlider->SetValue(( int )minValue );
-        _maxSlider->SetValue(( int )minValue + 1 );
+        _minSlider->SetValue( ( int )minValue );
+        _maxSlider->SetValue( ( int )minValue + 1 );
     }
     else if( _maxSlider->GetValue() <= ( int )minValue )
     {
-        _minSlider->SetValue(( int )minValue );
-        _maxSlider->SetValue(( int )minValue + 1 );
-        _maxSpinner->SetValue( _colorScalarRange.at( 1 ) - (( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) )
-                                                            *( 100 - ( double )_maxSlider->GetValue() ) / 100 ) );
+        _minSlider->SetValue( ( int )minValue );
+        _maxSlider->SetValue( ( int )minValue + 1 );
+        _maxSpinner->SetValue( _colorScalarRange.at( 1 ) - ( ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) )
+                               * ( 100 - ( double )_maxSlider->GetValue() ) / 100 ) );
     }
     else
     {
-        _minSlider->SetValue(( int )minValue );
+        _minSlider->SetValue( ( int )minValue );
     }
 }
 //////////////////////////////////////////////////////////////////
@@ -226,25 +226,25 @@ void AdvancedIsosurface::OnMaxSpinCtrl( wxScrollEvent& WXUNUSED( event ) )
         return;
     }
 
-    maxValue = (( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 )
-                  - ( _colorScalarRange.at( 1 ) - _maxSpinner->GetValue() ) )
-                / ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) ) * 100 );
+    maxValue = ( ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 )
+                   - ( _colorScalarRange.at( 1 ) - _maxSpinner->GetValue() ) )
+                 / ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) ) * 100 );
 
     if( maxValue == 0 )
     {
-        _minSlider->SetValue(( int )maxValue + 1 );
-        _maxSlider->SetValue(( int )maxValue );
+        _minSlider->SetValue( ( int )maxValue + 1 );
+        _maxSlider->SetValue( ( int )maxValue );
     }
     else if( _minSlider->GetValue() >= ( int )maxValue )
     {
-        _minSlider->SetValue(( int )maxValue - 1 );
-        _maxSlider->SetValue(( int )maxValue );
-        _minSpinner->SetValue(( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) )
-                              *( double )_minSlider->GetValue() / 100 + _colorScalarRange.at( 0 ) );
+        _minSlider->SetValue( ( int )maxValue - 1 );
+        _maxSlider->SetValue( ( int )maxValue );
+        _minSpinner->SetValue( ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) )
+                               * ( double )_minSlider->GetValue() / 100 + _colorScalarRange.at( 0 ) );
     }
     else
     {
-        _maxSlider->SetValue(( int )maxValue );
+        _maxSlider->SetValue( ( int )maxValue );
     }
 }
 //////////////////////////////////////////////////////////////////
@@ -265,8 +265,8 @@ void AdvancedIsosurface::OnMinSlider( wxScrollEvent& WXUNUSED( event ) )
         _ensureSliders( ADVANCEDISOSURFACE_MIN_SLIDER );
     }
 
-    _minSpinner->SetValue( range *( double )_minSlider->GetValue() / 100  + _colorScalarRange.at( 0 ) );
-    _maxSpinner->SetValue( _colorScalarRange.at( 1 ) - ( range *( 100 - ( double )_maxSlider->GetValue() ) / 100 ) );
+    _minSpinner->SetValue( range * ( double )_minSlider->GetValue() / 100  + _colorScalarRange.at( 0 ) );
+    _maxSpinner->SetValue( _colorScalarRange.at( 1 ) - ( range * ( 100 - ( double )_maxSlider->GetValue() ) / 100 ) );
 }
 //////////////////////////////////////////////////////////////////
 void AdvancedIsosurface::OnMaxSlider( wxScrollEvent& WXUNUSED( event ) )
@@ -286,8 +286,8 @@ void AdvancedIsosurface::OnMaxSlider( wxScrollEvent& WXUNUSED( event ) )
         _ensureSliders( ADVANCEDISOSURFACE_MAX_SLIDER );
     }
 
-    _minSpinner->SetValue(( range *( double )_minSlider->GetValue() ) / 100 + _colorScalarRange.at( 0 ) );
-    _maxSpinner->SetValue( _colorScalarRange.at( 1 ) - ( range *( 100 - ( double )_maxSlider->GetValue() ) / 100 ) );
+    _minSpinner->SetValue( ( range * ( double )_minSlider->GetValue() ) / 100 + _colorScalarRange.at( 0 ) );
+    _maxSpinner->SetValue( _colorScalarRange.at( 1 ) - ( range * ( 100 - ( double )_maxSlider->GetValue() ) / 100 ) );
 }
 bool AdvancedIsosurface::_ensureSliders( int activeSliderID )
 {
@@ -322,7 +322,7 @@ bool AdvancedIsosurface::_ensureSliders( int activeSliderID )
 ////////////////////////////////////////////////////////////////////////
 void AdvancedIsosurface::UpdateMinSlider( wxCommandEvent& event )
 {
-//   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
+    //   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
     double minValue = 0;
 
     if( _colorScalarName.empty() )
@@ -333,24 +333,24 @@ void AdvancedIsosurface::UpdateMinSlider( wxCommandEvent& event )
         return;
     }
 
-    minValue = (( _minSpinner->GetValue() - _colorScalarRange.at( 0 ) )
-                / ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) ) * 100 );
+    minValue = ( ( _minSpinner->GetValue() - _colorScalarRange.at( 0 ) )
+                 / ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) ) * 100 );
 
     if( minValue == 100 )
     {
-        _minSlider->SetValue(( int )minValue );
-        _maxSlider->SetValue(( int )minValue + 1 );
+        _minSlider->SetValue( ( int )minValue );
+        _maxSlider->SetValue( ( int )minValue + 1 );
     }
     else if( _maxSlider->GetValue() <= ( int )minValue )
     {
-        _minSlider->SetValue(( int )minValue );
-        _maxSlider->SetValue(( int )minValue + 1 );
-        _maxSpinner->SetValue( _colorScalarRange.at( 1 ) - (( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) )
-                                                            *( 100 - ( double )_maxSlider->GetValue() ) / 100 ) );
+        _minSlider->SetValue( ( int )minValue );
+        _maxSlider->SetValue( ( int )minValue + 1 );
+        _maxSpinner->SetValue( _colorScalarRange.at( 1 ) - ( ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) )
+                               * ( 100 - ( double )_maxSlider->GetValue() ) / 100 ) );
     }
     else
     {
-        _minSlider->SetValue(( int )minValue );
+        _minSlider->SetValue( ( int )minValue );
     }
 }
 ////////////////////////////////////////////////////////////////////////
@@ -366,25 +366,25 @@ void AdvancedIsosurface::UpdateMaxSlider( wxCommandEvent& event )
         return;
     }
 
-    maxValue = (( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 )
-                  - ( _colorScalarRange.at( 1 ) - _maxSpinner->GetValue() ) )
-                / ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) ) * 100 );
+    maxValue = ( ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 )
+                   - ( _colorScalarRange.at( 1 ) - _maxSpinner->GetValue() ) )
+                 / ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) ) * 100 );
 
     if( maxValue == 0 )
     {
-        _minSlider->SetValue(( int )maxValue + 1 );
-        _maxSlider->SetValue(( int )maxValue );
+        _minSlider->SetValue( ( int )maxValue + 1 );
+        _maxSlider->SetValue( ( int )maxValue );
     }
     else if( _minSlider->GetValue() >= ( int )maxValue )
     {
-        _minSlider->SetValue(( int )maxValue - 1 );
-        _maxSlider->SetValue(( int )maxValue );
-        _minSpinner->SetValue(( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) )
-                              *( double )_minSlider->GetValue() / 100 + _colorScalarRange.at( 0 ) );
+        _minSlider->SetValue( ( int )maxValue - 1 );
+        _maxSlider->SetValue( ( int )maxValue );
+        _minSpinner->SetValue( ( _colorScalarRange.at( 1 ) - _colorScalarRange.at( 0 ) )
+                               * ( double )_minSlider->GetValue() / 100 + _colorScalarRange.at( 0 ) );
     }
     else
     {
-        _maxSlider->SetValue(( int )maxValue );
+        _maxSlider->SetValue( ( int )maxValue );
     }
 }
 //////////////////////////////////////////////////////////////////

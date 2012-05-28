@@ -107,12 +107,12 @@ wxString ADPlugin::GetConductorName()
 }
 /////////////////////////////////////////////////////////////////////////////
 void ADPlugin::OnUnitName( wxCommandEvent& event )
-{    
+{
     UIPLUGIN_CHECKID( event )
     wxTextEntryDialog newUnitName( 0,
-                                 _( "Enter the name for your unit:" ),
-                                 _( "Set Unit Name..." ),
-                                 "VE-PSI", wxOK | wxCANCEL );
+                                   _( "Enter the name for your unit:" ),
+                                   _( "Set Unit Name..." ),
+                                   "VE-PSI", wxOK | wxCANCEL );
     //check for existing unit
 
     if( newUnitName.ShowModal() == wxID_OK )
@@ -126,15 +126,15 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
     //wxString dynext( "Aspen Dynamics files (*.dynf)|*.dynf", wxConvUTF8);
     //wxString extText = dynext;
-    //wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""), 
+    //wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""),
     //    extText, wxOPEN );
 
     if( mIsSheetOpen )
     {
-        wxMessageDialog md( m_canvas, 
-            wxT( "Simulation already open.\nClose it and open another?" ),
-            wxT( "Confirm" ),
-            wxYES_NO);
+        wxMessageDialog md( m_canvas,
+                            wxT( "Simulation already open.\nClose it and open another?" ),
+                            wxT( "Confirm" ),
+                            wxYES_NO );
         if( md.ShowModal() == wxCANCEL )
         {
             return;
@@ -160,9 +160,9 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
 
     wxFileName dynFileName;
     dynFileName.ClearExt();
-    dynFileName.SetName( fd.GetFilename() + wxT(".dynf") );
+    dynFileName.SetName( fd.GetFilename() + wxT( ".dynf" ) );
 
-    CommandPtr returnState ( new Command() );
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "getNetwork" );
     returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
@@ -184,17 +184,17 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
 
     if( nw_str.empty() )
     {
-        wxMessageDialog md( m_canvas, wxT("No Aspen Unit connected.\nPlease launch Aspen Unit."), wxT("Error"), wxOK);
+        wxMessageDialog md( m_canvas, wxT( "No Aspen Unit connected.\nPlease launch Aspen Unit." ), wxT( "Error" ), wxOK );
         md.ShowModal();
         return;
     }
 
     // If there is nothing on the CE
-    if( nw_str.compare("DYNDNE") == 0 )
+    if( nw_str.compare( "DYNDNE" ) == 0 )
     {
         return;
-    }    
-    
+    }
+
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
@@ -208,7 +208,7 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     ves::open::xml::model::SystemPtr tempSystem;
     tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
     //set parent model on topmost level
-    for( int modelCount = 0; modelCount < tempSystem->GetNumberOfModels(); modelCount++)
+    for( int modelCount = 0; modelCount < tempSystem->GetNumberOfModels(); modelCount++ )
     {
         tempSystem->GetModel( modelCount )->SetParentModel( m_veModel );
     }
@@ -217,14 +217,14 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     m_veModel->SetSubSystem( tempSystem );
     mDataBufferEngine->ParseSystem( tempSystem );
 
-    Network * network = m_canvas->GetActiveNetwork();
+    Network* network = m_canvas->GetActiveNetwork();
 
     //if( network->modules.empty() )
     //{
     //network->Load( nw_str, true );
     m_canvas->AddSubNetworks( );
 #if 0
-    std::ofstream netdump ("netdump.txt");
+    std::ofstream netdump( "netdump.txt" );
     netdump << nw_str;
     netdump.close();
 #endif
@@ -233,7 +233,7 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     ::wxPostEvent( m_canvas, event );
 
     //create hierarchy page
-    //hierarchyTree->PopulateTree( 
+    //hierarchyTree->PopulateTree(
     //    mDataBufferEngine->GetTopSystemId() );
 
     //Log( "Simulation Opened.\n" );
@@ -243,7 +243,7 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     aspenDynFile->AddDataValuePair( vendorData );
     data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "DYNFileName",
-        ConvertUnicode( dynFileName.GetFullName().c_str() ) );
+                   ConvertUnicode( dynFileName.GetFullName().c_str() ) );
     aspenDynFile->AddDataValuePair( data );
     mUserPrefBuffer->SetCommand( "Aspen_Dynamics_Preferences", aspenDynFile );
 
@@ -274,7 +274,7 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     //    Log( "Simulation is already open.\n" );
     //}
 }////////////////////////////////////////////////////////////////////////////////
-void ADPlugin::ShowAspenSimulation( wxCommandEvent& event  )
+void ADPlugin::ShowAspenSimulation( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     //Log( "Show Simulation.\n" );
@@ -321,7 +321,7 @@ void ADPlugin::HideAspenSimulation( wxCommandEvent& event )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ADPlugin::CloseAspenSimulation( void )
-{    
+{
     //Log( "Close Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
@@ -342,7 +342,7 @@ void ADPlugin::CloseAspenSimulation( void )
     //Log( nw_str.c_str() );
     //AspenSimOpen = false;
     mIsSheetOpen = false;
-    SetName( _("ADPlugin") );
+    SetName( _( "ADPlugin" ) );
     wxCommandEvent event;
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
     GlobalNameUpdate( event );
@@ -529,7 +529,7 @@ wxMenu* ADPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mAspenMenu->Append( ADPLUGIN_SAVE_SIMULATION, _( "Save" ) );
     mAspenMenu->Append( ADPLUGIN_SAVEAS_SIMULATION, _( "SaveAs" ) );
     baseMenu->Insert( 0, ADPLUGIN_ASPEN_MENU,   _( "Aspen" ), mAspenMenu,
-                    _( "Used in conjunction with Aspen" ) );
+                      _( "Used in conjunction with Aspen" ) );
     baseMenu->Enable( ADPLUGIN_ASPEN_MENU, true );
 
     if( GetVEModel()->GetSubSystem() != NULL )

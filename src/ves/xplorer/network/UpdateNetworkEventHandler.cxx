@@ -59,16 +59,16 @@ using namespace ves::xplorer::network;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 UpdateNetworkEventHandler::UpdateNetworkEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     CONNECTSIGNALS_0( "UpdateNetwork",
-        void( ),
-        &UpdateNetworkEventHandler::UpdateNetwork,
-        m_connections, any_SignalType, normal_Priority );
+                      void( ),
+                      &UpdateNetworkEventHandler::UpdateNetwork,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UpdateNetworkEventHandler::UpdateNetworkEventHandler( const UpdateNetworkEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -93,7 +93,7 @@ UpdateNetworkEventHandler& UpdateNetworkEventHandler::operator=( const UpdateNet
 ////////////////////////////////////////////////////////////////////////////////
 void UpdateNetworkEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-    boost::ignore_unused_variable_warning( model ); 
+    boost::ignore_unused_variable_warning( model );
 }
 //////////////////////////////////////////////////////////////////////////
 void UpdateNetworkEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )

@@ -87,7 +87,7 @@ protected:
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
-    
+
     UIPluginBase* mUIPluginBase;
     util::CORBAServiceList* mCORBAService;
     bool lock ;

@@ -37,7 +37,7 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 VectorFieldData::VectorFieldData()
-    : 
+    :
     _pos( 0 ),
     _dir( 0 ),
     _scalar( 0 ),
@@ -90,40 +90,44 @@ void VectorFieldData::internalLoad()
 {
     // TBD Actual data size would come from file.
     _dataSize = 0;
-    
+
     // Determine optimal 3D texture dimensions.
     int s, t, p;
     compute3DTextureSize( getDataCount(), s, t, p );
     _texSizes = osg::Vec3s( s, t, p );
-    
+
     // Allocate memory for data.
     unsigned int size( getDataCount() );
     _pos = new float[ size * 3 ];
     _dir = new float[ size * 3 ];
     _scalar = new float[ size ];
-    
+
     // TBD You would replace this line with code to load the data from file.
     // In this example, we just generate test data.
-    
-    _texPos = makeFloatTexture( (unsigned char*)_pos, 3, osg::Texture2D::NEAREST );
-    _texDir = makeFloatTexture( (unsigned char*)_dir, 3, osg::Texture2D::NEAREST );
-    _texScalar = makeFloatTexture( (unsigned char*)_scalar, 1, osg::Texture2D::NEAREST );
+
+    _texPos = makeFloatTexture( ( unsigned char* )_pos, 3, osg::Texture2D::NEAREST );
+    _texDir = makeFloatTexture( ( unsigned char* )_dir, 3, osg::Texture2D::NEAREST );
+    _texScalar = makeFloatTexture( ( unsigned char* )_scalar, 1, osg::Texture2D::NEAREST );
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned short VectorFieldData::ceilPower2( unsigned short x )
 {
     if( x == 0 )
+    {
         return( 1 );
-    
-    if( (x & (x-1)) == 0 )
+    }
+
+    if( ( x & ( x - 1 ) ) == 0 )
         // x is a power of 2.
+    {
         return( x );
-    
+    }
+
     x |= x >> 1;
     x |= x >> 2;
     x |= x >> 4;
     x |= x >> 8;
-    return( x+1 );
+    return( x + 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VectorFieldData::compute3DTextureSize( unsigned int dataCount, int& s, int& t, int& p )
@@ -132,25 +136,37 @@ void VectorFieldData::compute3DTextureSize( unsigned int dataCount, int& s, int&
     // NVIDIA seems to support 2048.
     s = 256;
     while( dataCount / s == 0 )
+    {
         s >>= 1;
-    
-    float sliceSize( (float) dataCount / (float) s );
+    }
+
+    float sliceSize( ( float ) dataCount / ( float ) s );
     float tDim = sqrtf( sliceSize );
     if( tDim > 65535.f )
+    {
         osg::notify( osg::FATAL ) << "compute3DTextureSize: Value too large " << tDim << std::endl;
-    if( tDim == (int)tDim )
-        t = ceilPower2( (unsigned short)( tDim ) );
+    }
+    if( tDim == ( int )tDim )
+    {
+        t = ceilPower2( ( unsigned short )( tDim ) );
+    }
     else
-        t = ceilPower2( (unsigned short)( tDim ) + 1 );
-    
-    float pDim = sliceSize / ((float)t);
-    if( pDim == ((int)sliceSize) / t)
-        p = ceilPower2( (unsigned short)( pDim ) );
+    {
+        t = ceilPower2( ( unsigned short )( tDim ) + 1 );
+    }
+
+    float pDim = sliceSize / ( ( float )t );
+    if( pDim == ( ( int )sliceSize ) / t )
+    {
+        p = ceilPower2( ( unsigned short )( pDim ) );
+    }
     else
-        p = ceilPower2( (unsigned short)( pDim ) + 1 );
+    {
+        p = ceilPower2( ( unsigned short )( pDim ) + 1 );
+    }
     osg::notify( osg::DEBUG_INFO ) << "dataCount " << dataCount <<
-    " produces tex size (" << s << "," << t << "," << p <<
-    "), total storage: " << s*t*p << std::endl;
+                                   " produces tex size (" << s << "," << t << "," << p <<
+                                   "), total storage: " << s* t* p << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Texture3D* VectorFieldData::makeFloatTexture( unsigned char* data, int numComponents, osg::Texture::FilterMode filter )
@@ -158,7 +174,7 @@ osg::Texture3D* VectorFieldData::makeFloatTexture( unsigned char* data, int numC
     int s( _texSizes.x() );
     int t( _texSizes.y() );
     int p( _texSizes.z() );
-    
+
     GLenum intFormat, pixFormat;
     if( numComponents == 1 )
     {
@@ -174,7 +190,7 @@ osg::Texture3D* VectorFieldData::makeFloatTexture( unsigned char* data, int numC
     osg::Image* image = new osg::Image();
     //We will let osg manage the raw image data
     image->setImage( s, t, p, intFormat, pixFormat, GL_FLOAT,
-        data, osg::Image::USE_NEW_DELETE );
+                     data, osg::Image::USE_NEW_DELETE );
     osg::Texture3D* texture = new osg::Texture3D( image );
     texture->setFilter( osg::Texture::MIN_FILTER, filter );
     texture->setFilter( osg::Texture::MAG_FILTER, filter );

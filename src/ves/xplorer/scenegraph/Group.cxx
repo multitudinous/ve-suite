@@ -99,8 +99,8 @@ void Group::SetName( std::string name )
 int Group::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 {
     return replaceChild(
-        dynamic_cast< Node* >( childToBeReplaced ),
-        dynamic_cast< Node* >( newChild ) );
+               dynamic_cast< Node* >( childToBeReplaced ),
+               dynamic_cast< Node* >( newChild ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Group::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )

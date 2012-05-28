@@ -52,7 +52,7 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS ComputeVectorMagnitudeRangeCallback:
-            public DataObjectHandler::DatasetOperatorCallback
+    public DataObjectHandler::DatasetOperatorCallback
 {
 public:
     ///Constructor

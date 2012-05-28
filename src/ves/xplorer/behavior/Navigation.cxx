@@ -114,7 +114,7 @@ Navigation::Navigation()
     m_manipulatorManager( m_sceneManager.GetManipulatorManager() ),
     m_cameraManager( m_sceneManager.GetCameraManager() ),
     m_lineSegmentIntersector( new osgUtil::LineSegmentIntersector(
-        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
+                                  osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
     m_currX( 0 ),
     m_currY( 0 ),
     m_pickedBody( 0 ),
@@ -123,30 +123,30 @@ Navigation::Navigation()
     mDeltaTranslation( 0.0, 0.0, 0.0 ),
     mCenterPointThreshold( 0.1 ),
     mCenterPointJump( 10.0 )
-{    
+{
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
-                      eventmanager::BooleanPropagationCombiner, &Navigation::ProcessNavigation,
-                      m_connections, any_SignalType, lowest_Priority );
+                               eventmanager::BooleanPropagationCombiner, &Navigation::ProcessNavigation,
+                               m_connections, any_SignalType, lowest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
-                     eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
-                     m_connections, any_SignalType, lowest_Priority );
+                               eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
+                               m_connections, any_SignalType, lowest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ),
-                     eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
-                     m_connections, any_SignalType, lowest_Priority );
+                               eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
+                               m_connections, any_SignalType, lowest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ),
-                     eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
-                     m_connections, any_SignalType, lowest_Priority );
-    
-    CONNECTSIGNALS_1( "MainWindow.JumpSignal", void( const std::string ), 
-                     &Navigation::SetCenterPointJumpMode,
-                     m_connections, any_SignalType, normal_Priority );
+                               eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
+                               m_connections, any_SignalType, lowest_Priority );
 
-    CONNECTSIGNALS_0( "ResetNavToGlobalOrigin", void(), 
-                     &Navigation::ResetToGlobalOrigin,
-                     m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_1( "MainWindow.JumpSignal", void( const std::string ),
+                      &Navigation::SetCenterPointJumpMode,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_0( "ResetNavToGlobalOrigin", void(),
+                      &Navigation::ResetToGlobalOrigin,
+                      m_connections, any_SignalType, normal_Priority );
     //eventmanager::EventManager::instance()->RegisterSignal(
     //    new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
     //    "KeyboardMouse.ObjectPickedSignal" );
@@ -175,51 +175,51 @@ bool Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonStat
 {
     boost::ignore_unused_variable_warning( zPos );
 
-    if( buttonState == 0 || buttonState&gadget::KEY_SHIFT )
+    if( buttonState == 0 || buttonState & gadget::KEY_SHIFT )
     {
         return false;
     }
     m_currX = xPos;
     m_currY = yPos;
-    
-/*#if defined( VPR_OS_Windows )
-    double dx = mouse_evt->getScrollDeltaX();
-    double dy = mouse_evt->getScrollDeltaY();
-#else*/
+
+    /*#if defined( VPR_OS_Windows )
+        double dx = mouse_evt->getScrollDeltaX();
+        double dy = mouse_evt->getScrollDeltaY();
+    #else*/
     //double dx = m_currX - m_prevX;
     //double dy = m_currY - m_prevY;
     double dx = m_prevX - m_currX;
     double dy = m_prevY - m_currY;
-//#endif
-    
-//#if !defined( VPR_OS_Windows )
+    //#endif
+
+    //#if !defined( VPR_OS_Windows )
     m_prevX = m_currX;
     m_prevY = m_currY;
-//#endif
-    
+    //#endif
+
     const int& windowWidth = m_sceneManager.GetCurrentGLTransformInfo()->GetWindowWidth();
     const int& windowHeight = m_sceneManager.GetCurrentGLTransformInfo()->GetWindowHeight();
     SetWindowValues( windowWidth, windowHeight );
-    
+
     dx /= m_windowWidth;
     dy /= m_windowHeight;
-    
+
     double mMagnitude = sqrt( dx * dx + dy * dy );
 
-    if( buttonState&gadget::BUTTON1_MASK )
+    if( buttonState & gadget::BUTTON1_MASK )
     {
         if( ( m_currX > 0.1 * m_windowWidth ) &&
-           ( m_currX < 0.9 * m_windowWidth ) &&
-           ( m_currY > 0.1 * m_windowHeight ) &&
-           ( m_currY < 0.9 * m_windowHeight ) )
+                ( m_currX < 0.9 * m_windowWidth ) &&
+                ( m_currY > 0.1 * m_windowHeight ) &&
+                ( m_currY < 0.9 * m_windowHeight ) )
         {
             double angle = mMagnitude * 7.0;
             //Rotate( angle, gmtl::Vec3d( -dy, 0.0, dx )  );
-            //m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle, 
+            //m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle,
             //    osg::Vec3d( axis[ 0 ], axis[ 1 ], axis[ 2 ] ) );
             /*m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
-                osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ], 
-                            m_sceneManager.GetCenterPoint().mData[ 1 ], 
+                osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ],
+                            m_sceneManager.GetCenterPoint().mData[ 1 ],
                             m_sceneManager.GetCenterPoint().mData[ 2 ] ) );*/
 
             gmtl::Vec3d axis = gmtl::Vec3d( -dy, 0.0, dx );
@@ -237,15 +237,15 @@ bool Navigation::ProcessNavigation( int xPos, int yPos, int zPos, int buttonStat
         //Mod key shift
         return false;
     }
-    
-    if( buttonState&gadget::BUTTON2_MASK )
+
+    if( buttonState & gadget::BUTTON2_MASK )
     {
         Pan( dx, dy );
         ProcessNavigation();
         return false;
     }
-    
-    if( buttonState&gadget::BUTTON3_MASK )
+
+    if( buttonState & gadget::BUTTON3_MASK )
     {
         Zoom( dy );
         ProcessNavigation();
@@ -261,37 +261,37 @@ void Navigation::Twist( double dx, double dy )
     double tempY = 1.0 / m_windowHeight;
     double currTheta = atan2( m_currX * tempX - 0.5, m_currY * tempY - 0.5 );
     double prevTheta =
-    atan2( m_currX * tempX - dx - 0.5, m_currY * tempY - dy - 0.5 );
+        atan2( m_currX * tempX - dx - 0.5, m_currY * tempY - dy - 0.5 );
     double angle = currTheta - prevTheta;
-    
+
     //Twist about the y-axis
     //Rotate( angle, gmtl::Vec3d( 0.0, 1.0, 0.0 ) );
-    
+
     /*m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
-        osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ], 
-                m_sceneManager.GetCenterPoint().mData[ 1 ], 
+        osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ],
+                m_sceneManager.GetCenterPoint().mData[ 1 ],
                 m_sceneManager.GetCenterPoint().mData[ 2 ] ) );*/
-    
-    m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle, m_sceneManager.GetMxCoreViewMatrix().getDir() );    
+
+    m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle, m_sceneManager.GetMxCoreViewMatrix().getDir() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Navigation::Zoom( double dy )
 {
     /*
      gmtl::Matrix44d vpwMatrix = m_currentGLTransformInfo->GetVPWMatrix();
-     
+
      double viewlength = mCenterPoint->mData[ 1 ];
      double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
-     
+
      gmtl::Point3d yTransform = *mCenterPoint;
      yTransform.mData[ 1 ] += d;
      yTransform = vpwMatrix * yTransform;
-     
+
      gmtl::Point3d position = vpwMatrix * *mCenterPoint;
      position.mData[ 2 ] = yTransform.mData[ 2 ];
      position = gmtl::invert( vpwMatrix ) * position;
      mDeltaTranslation = position - *mCenterPoint;
-     
+
      //Test if center point has breached our specified threshold
      if( position.mData[ 1 ] < *mCenterPointThreshold )
      {
@@ -300,16 +300,16 @@ void Navigation::Zoom( double dy )
      if( selectedDCS )
      {
      mDeltaTranslation.set( 0.0, 0.0, 0.0 );
-     
+
      return;
      }
-     
+
      position.mData[ 1 ] = *mCenterPointJump;
      }
-     
+
      *mCenterPoint = position;
      */
-    
+
     //double viewlength = m_sceneManager.GetCenterPoint().mData[ 1 ];
     //double viewlength = m_sceneManager.GetMxCoreViewMatrix().getOrbitCenterPoint().y();
     osg::Vec3d distance = m_sceneManager.GetMxCoreViewMatrix().getOrbitCenterPoint() - m_sceneManager.GetMxCoreViewMatrix().getPosition();
@@ -318,7 +318,7 @@ void Navigation::Zoom( double dy )
     {
         viewlength *= -1.;
     }
-    
+
     if( viewlength > 11. )
     {
         osg::Vec3d newCenter;
@@ -329,7 +329,7 @@ void Navigation::Zoom( double dy )
     double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
     mDeltaTranslation.mData[ 1 ] = d;
     //m_sceneManager.GetCenterPoint().mData[ 1 ] += d;
-    
+
     //Test if center point has breached our specified threshold
     //if( m_sceneManager.GetCenterPoint().mData[ 1 ] < mCenterPointThreshold )
     {
@@ -353,7 +353,7 @@ void Navigation::Pan( double dx, double dz )
 {
     /*
      gmtl::Matrix44d vpwMatrix = m_currentGLTransformInfo->GetVPWMatrix();
-     
+
      //std::cout << "mCenterPoint: " << *mCenterPoint << std::endl;
      gmtl::Point3d position = vpwMatrix * *mCenterPoint;
      //std::cout << "vpwMatrix * *mCenterPoint: " << position << std::endl;
@@ -361,10 +361,10 @@ void Navigation::Pan( double dx, double dz )
      position.mData[ 1 ] += dz * m_windowHeight;
      position = gmtl::invert( vpwMatrix ) * position;
      //std::cout << "gmtl::invert( vpwMatrix ) * position: " << position << std::endl;
-     
+
      mDeltaTranslation = position - *mCenterPoint;
      *mCenterPoint = position;
-     
+
      //std::cout << std::endl;
      */
     double fovz = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ();
@@ -375,28 +375,28 @@ void Navigation::Pan( double dx, double dz )
     {
         d *= -1.;
     }
-    
+
     if( d > 11. )
     {
         osg::Vec3d newCenter;
         newCenter = m_sceneManager.GetMxCoreViewMatrix().getDir() * 15. + m_sceneManager.GetMxCoreViewMatrix().getPosition();
         //std::cout << newCenter << std::endl;
         m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( newCenter );
-    } 
-    
+    }
+
     double theta = fovz * 0.5 ;
     double b = 2.0 * d * tan( theta );
     double dwx = dx * b;
     double dwz =  dz * b;
-    
+
     if( mAspectRatio > 1.0 )
     {
         dwx *= mAspectRatio;
     }
-    
+
     mDeltaTranslation.mData[ 0 ] = dwx;
     mDeltaTranslation.mData[ 2 ] = dwz;
-    
+
     //m_sceneManager.GetCenterPoint().mData[ 0 ] += dwx;
     //m_sceneManager.GetCenterPoint().mData[ 2 ] += dwz;
 }
@@ -408,69 +408,69 @@ void Navigation::Rotate( double angle, gmtl::Vec3d axis )
     mDeltaRotation = gmtl::makeRot< gmtl::Quatd >( axisAngle );
 
     /*m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint(
-        osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ], 
-                   -m_sceneManager.GetCenterPoint().mData[ 2 ], 
+        osg::Vec3d( m_sceneManager.GetCenterPoint().mData[ 0 ],
+                   -m_sceneManager.GetCenterPoint().mData[ 2 ],
                    m_sceneManager.GetCenterPoint().mData[ 1 ] ) );*/
 
-    m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle, 
-        osg::Vec3d( axis[ 0 ], axis[ 1 ], axis[ 2 ] ) );
+    m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( angle,
+            osg::Vec3d( axis[ 0 ], axis[ 1 ], axis[ 2 ] ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Navigation::SetWindowValues( unsigned int w, unsigned int h )
 {
     m_windowWidth = w;
     m_windowHeight = h;
-    
+
     mAspectRatio =
-    static_cast< double >( m_windowWidth ) / static_cast< double >( m_windowHeight );
+        static_cast< double >( m_windowWidth ) / static_cast< double >( m_windowHeight );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Navigation::ProcessNavigation()
 {
     gmtl::Matrix44d newTransform;
     gmtl::Matrix44d currentTransform;
-    
+
     scenegraph::DCS* const activeDCS = DeviceHandler::instance()->GetActiveDCS();
     //Get the node where are all the geometry is handled
     osg::Group* const activeSwitchNode = m_sceneManager.GetActiveSwitchNode();
     //Get the node where all the nav matrix's are handled
     scenegraph::DCS* const cameraDCS = m_sceneManager.GetActiveNavSwitchNode();
-    
+
     osg::ref_ptr< scenegraph::CoordinateSystemTransform > coordinateSystemTransform;
     //Test if we are manipulating the camera dcs or a model dcs
     if( activeDCS->GetName() != cameraDCS->GetName() )
     {
         //If local dcs, transform to camera space
-        coordinateSystemTransform = 
+        coordinateSystemTransform =
             new scenegraph::CoordinateSystemTransform( activeSwitchNode, activeDCS, true );
-        
+
         currentTransform = coordinateSystemTransform->GetTransformationMatrix();
     }
     else
     {
-        m_sceneManager.GetMxCoreViewMatrix().moveLocal( 
+        m_sceneManager.GetMxCoreViewMatrix().moveLocal(
             osg::Vec3d( mDeltaTranslation[ 0 ], mDeltaTranslation[ 2 ], -mDeltaTranslation[ 1 ] ) );
 
         //If manipulating camera, no transformations are needed
         currentTransform = activeDCS->GetMat();
     }
-    
+
     //Translate current transform origin back by the center point position
     gmtl::Matrix44d negCenterPointMatrix =
-    gmtl::makeTrans< gmtl::Matrix44d >( -m_sceneManager.GetCenterPoint() );
+        gmtl::makeTrans< gmtl::Matrix44d >( -m_sceneManager.GetCenterPoint() );
     newTransform = negCenterPointMatrix * currentTransform;
-    
+
     //Apply the delta transform at this new position
     gmtl::Matrix44d deltaTransform;
     gmtl::setRot( deltaTransform, mDeltaRotation );
     gmtl::setTrans( deltaTransform, mDeltaTranslation );
     newTransform = deltaTransform * newTransform;
-    
+
     //Add back the center point position to the transform
     gmtl::Matrix44d posCenterPointMatrix =
         gmtl::makeTrans< gmtl::Matrix44d >( m_sceneManager.GetCenterPoint() );
     newTransform = posCenterPointMatrix * newTransform;
-    
+
     //Convert matrix back to local space after delta transform has been applied
     if( activeDCS->GetName() != cameraDCS->GetName() )
     {
@@ -478,13 +478,13 @@ void Navigation::ProcessNavigation()
         //We are multiplying by a new transformed local matrix
         currentTransform =
             coordinateSystemTransform->GetTransformationMatrix( false );
-        
+
         newTransform = gmtl::invert( currentTransform ) * newTransform;
     }
-    
+
     //Set the activeDCS w/ new transform
     activeDCS->SetMat( newTransform );
-    
+
     //Reset the delta transform
     mDeltaRotation.set( 0.0, 0.0, 0.0, 1.0 );
     mDeltaTranslation.set( 0.0, 0.0, 0.0 );

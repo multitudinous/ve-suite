@@ -46,8 +46,8 @@ END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////////
 WPDialog::WPDialog( wxWindow* parent, int id, std::string title )
-        :
-        BaseDialog( parent, id, title )
+    :
+    BaseDialog( parent, id, title )
 {
     _xBounds = 0;
     _yBounds = 0;
@@ -207,7 +207,7 @@ void WPDialog::_updateDimensions( wxSpinEvent& event )
 ///////////////////////////////////
 void WPDialog::_createDualSliders()
 {
-//X Slider
+    //X Slider
     _xBounds = new DualSlider( this, -1, 1, 0, 100, 0, 100, wxDefaultPosition,
                                wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS,
                                wxString( _T( "X Bounds" ) ) );
@@ -219,7 +219,7 @@ void WPDialog::_createDualSliders()
     _xBounds->SetMaxSliderCallback( maxX );
     _xBounds->SetBothSliderUpdateCallback( bothX );
 
-//Y slider
+    //Y slider
     _yBounds = new DualSlider( this, -1, 1, 0, 100, 0, 100, wxDefaultPosition,
                                wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS,
                                wxString( _T( "Y Bounds" ) ) );
@@ -231,7 +231,7 @@ void WPDialog::_createDualSliders()
     _yBounds->SetMaxSliderCallback( maxY );
     _yBounds->SetBothSliderUpdateCallback( bothY );
 
-//Z slider
+    //Z slider
 
     _zBounds = new DualSlider( this, -1, 1, 0, 100, 0, 100, wxDefaultPosition,
                                wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS,

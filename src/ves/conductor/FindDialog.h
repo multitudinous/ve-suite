@@ -59,27 +59,27 @@ namespace conductor
 class VE_GUIPLUGINS_EXPORTS FindDialog : public wxDialog
 {
 public:
-    FindDialog( wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT( "Untitled1" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = FindDialog_STYLE );
+    FindDialog( wxWindow* parent, wxWindowID id = 1, const wxString& title = wxT( "Untitled1" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = FindDialog_STYLE );
     virtual ~FindDialog();
 
     void SetModuleList( std::vector< std::string > );
     void SetStreamList( std::vector< std::string > );
-    const char * GetSelectedModule();
+    const char* GetSelectedModule();
     std::pair< int, int > GetSelectedModulePos();
 
 private:
-    wxStaticText *UnitLabel;
-    wxStaticText *StreamLabel;
-    wxChoice *WxChoice1;
-    wxChoice *WxChoice2;
-    wxButton *CancelButton;
-    wxButton *FindButton;
+    wxStaticText* UnitLabel;
+    wxStaticText* StreamLabel;
+    wxChoice* WxChoice1;
+    wxChoice* WxChoice2;
+    wxButton* CancelButton;
+    wxButton* FindButton;
     wxString selectedModule;
     int selectedModulePos;
     int type;
     int mLastChoice;
     void FindButtonClick( wxCommandEvent& event );
-    void GetChoice(wxCommandEvent &event);
+    void GetChoice( wxCommandEvent& event );
     //void OnClose( wxCloseEvent& event );
     void CreateGUIControls();
 

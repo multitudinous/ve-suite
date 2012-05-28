@@ -74,7 +74,7 @@ void TextTextureCallback::operator()(
 {
     //osg::ref_ptr< osg::TextTexture > t =
     //    static_cast< osg::TextTexture* >( node );
-    m_textTexture->GetChart()->setValue( nv->getTraversalNumber(), nv->getTraversalNumber()%20 );
+    m_textTexture->GetChart()->setValue( nv->getTraversalNumber(), nv->getTraversalNumber() % 20 );
     traverse( node, nv );
 }
 ////////////////////////////////////////////////////////////////////////////////

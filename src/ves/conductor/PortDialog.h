@@ -62,12 +62,12 @@ public:
     virtual ~PortDialog();
 
     void Set3Cols( const std::vector<wxString>& col1, const std::vector<wxString>& col2, const std::vector<wxString>& col3 );
-    ListTable *syngas;
-    wxTextCtrl *temp;
-    wxTextCtrl *pres;
-    wxTextCtrl *flrt;
-    wxButton *ok;
-    void SetVal( const wxString &var, const wxString &val );
+    ListTable* syngas;
+    wxTextCtrl* temp;
+    wxTextCtrl* pres;
+    wxTextCtrl* flrt;
+    wxButton* ok;
+    void SetVal( const wxString& var, const wxString& val );
     //DECLARE_EVENT_TABLE()
 };
 }

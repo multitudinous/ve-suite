@@ -41,8 +41,9 @@
 #include <QtCore/QModelIndex>
 
 
-namespace Ui {
-    class PreferencesTab;
+namespace Ui
+{
+class PreferencesTab;
 }
 
 
@@ -59,22 +60,23 @@ namespace conductor
 {
 class PropertyBrowser;
 
-class PreferencesTab : public QWidget {
+class PreferencesTab : public QWidget
+{
     Q_OBJECT
 public:
-    PreferencesTab(QWidget *parent = 0);
+    PreferencesTab( QWidget* parent = 0 );
     ~PreferencesTab();
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent( QEvent* e );
 
 protected Q_SLOTS:
 
 private:
-    Ui::PreferencesTab *ui;
-    
+    Ui::PreferencesTab* ui;
+
     ves::xplorer::data::PropertySetPtr m_propertySet;
-    
+
     PropertyBrowser* m_featureBrowser;
 };
 

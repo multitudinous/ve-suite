@@ -65,7 +65,7 @@ public:
      * Initializes the driver to NULL.
      */
     Database_t()
-            : mCurrentDriver( NULL )
+        : mCurrentDriver( NULL )
     {}
 
     /**

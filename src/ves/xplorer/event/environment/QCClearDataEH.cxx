@@ -48,7 +48,7 @@ QuatCamClearDataEventHandler::QuatCamClearDataEventHandler()
 ///////////////////////////////////////////////////////////////////
 QuatCamClearDataEventHandler
 ::QuatCamClearDataEventHandler( const QuatCamClearDataEventHandler& ceh )
-    : 
+    :
     ves::xplorer::event::EventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ void QuatCamClearDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& 
         velFile->GetData( clearCmdDummy );
         ves::xplorer::cfdQuatCamHandler::instance()->ClearQuaternionData();
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
         std::cout << "QuatCamClearDataEventHandler::_operateOnNode()" << std::endl;

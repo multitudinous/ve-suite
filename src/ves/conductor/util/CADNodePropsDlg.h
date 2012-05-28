@@ -136,10 +136,10 @@ public:
 
     /// Return the panel for geographic properties.
     wxPanel* GetGeographicPanel();
-    
+
     ///Return occlusion panel
     wxPanel* GetOcculsionPanel();
-    
+
 protected:
     ///Internally build the GUI.
     void _buildGUI();
@@ -177,7 +177,7 @@ protected:
     ///Update the physics mesh of a node
     ///\param event The wxCommand event.
     void UpdateCullingSettings( wxCommandEvent& event );
-    
+
     ///Update whether uniform scaling is used
     ///\param event The wxCommand event
     void UpdateUniformScale( wxCommandEvent& event );
@@ -187,10 +187,10 @@ protected:
     void _updateAttributeType( wxCommandEvent& event );
 
     ///Update the geographic information.
-    void _updateGeographic ( wxSpinEvent& event );
+    void _updateGeographic( wxSpinEvent& event );
 
     ///Set geographic information from geocode event.
-    void _onGeocodeEvent ( wxCommandEvent& event );
+    void _onGeocodeEvent( wxCommandEvent& event );
 
     ///Update the active attribute.
     ///\param event The wxListEvent event.
@@ -264,7 +264,7 @@ protected:
 
     ///Build the occlusion settings panel
     void _buildOcclusionSettings();
-    
+
     ///Send the Command back to VE-Xplorer.
     void _sendCommandsToXplorer();
 
@@ -300,7 +300,7 @@ protected:
     wxArrayString _availableShaders;///<The shader names.
     wxArrayString _availableMaterials;///<The material names.
     wxRadioBox* m_cullingRB;
-    
+
     ///Physics panel controls
     ///Mass control
     wxSpinCtrlDbl* _physicsMassCtrl;
@@ -327,7 +327,7 @@ protected:
     wxTextCtrl* _geocodeTextControl;
     wxSpinCtrlDbl* _longitudeControl;
     wxSpinCtrlDbl* _latitudeControl;
-    
+
     unsigned int _nMaterials;///<The number of materials.
     unsigned int _nShaders;///<The number of shaders.
     std::string _commandName;///<The command name.

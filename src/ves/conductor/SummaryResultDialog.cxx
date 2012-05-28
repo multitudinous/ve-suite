@@ -52,12 +52,12 @@ using namespace ves::conductor;
 //EVT_BUTTON(wxID_OK, SummaryResultDialog::OnOK)
 //END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
-SummaryResultDialog::SummaryResultDialog( wxWindow * parent, 
-                                         const wxString& title,
-                                         wxSize tabsize,
-                                         const std::vector< 
-                                         ves::open::xml::CommandPtr > command)
-: UIDialog(( wxWindow * )parent, -1, title )
+SummaryResultDialog::SummaryResultDialog( wxWindow* parent,
+        const wxString& title,
+        wxSize tabsize,
+        const std::vector <
+        ves::open::xml::CommandPtr > command )
+    : UIDialog( ( wxWindow* )parent, -1, title )
 {
     wxSize syn;
     wxBoxSizer* toptop = new wxBoxSizer( wxHORIZONTAL );
@@ -112,11 +112,13 @@ SummaryResultDialog::~SummaryResultDialog()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SummaryResultDialog::Set2Cols( const std::vector<wxString>& col1, 
-                                   const std::vector<wxString>& col2 )
+void SummaryResultDialog::Set2Cols( const std::vector<wxString>& col1,
+                                    const std::vector<wxString>& col2 )
 {
     if( syngas == NULL )
+    {
         return;
+    }
 
     std::vector< wxString > row;
     row.resize( 2 );
@@ -135,7 +137,9 @@ void SummaryResultDialog::TabTitle( const wxString& title )
     size_t i = tabs->GetPageCount();
 
     if( i < 1 )
+    {
         return;
+    }
 
     tabs->SetPageText( i - 1, title );
 }
@@ -161,9 +165,9 @@ void SummaryResultDialog::NewTab( const wxString& title )
 void SummaryResultDialog::GetDataTables( ves::open::xml::CommandPtr inputCommand )
 {
     size_t numDVP = inputCommand->GetNumberOfDataValuePairs();
-    for( size_t i=0; i<numDVP ; ++i )
+    for( size_t i = 0; i < numDVP ; ++i )
     {
-        ves::open::xml::DataValuePairPtr tempDVP = 
+        ves::open::xml::DataValuePairPtr tempDVP =
             inputCommand->GetDataValuePair( i );
         std::string dataType = tempDVP->GetDataType();
         mDataName = tempDVP->GetDataName();
@@ -172,39 +176,39 @@ void SummaryResultDialog::GetDataTables( ves::open::xml::CommandPtr inputCommand
         if( dataType == std::string( "XMLOBJECT" ) )
         {
             if( inputCommand->GetDataValuePair( i )->
-                GetDataXMLObject()->GetObjectType() == "Command" )
+                    GetDataXMLObject()->GetObjectType() == "Command" )
             {
-                ves::open::xml::CommandPtr tempCommand = 
-                    boost::dynamic_pointer_cast< ves::open::xml::Command >( 
-                    inputCommand->GetDataValuePair( i )->GetDataXMLObject());
+                ves::open::xml::CommandPtr tempCommand =
+                    boost::dynamic_pointer_cast< ves::open::xml::Command >(
+                        inputCommand->GetDataValuePair( i )->GetDataXMLObject() );
                 size_t numDVPs = tempCommand->GetNumberOfDataValuePairs();
-                for( size_t j=0; j<numDVPs; ++j )
+                for( size_t j = 0; j < numDVPs; ++j )
                 {
                     tempDVP = tempCommand->GetDataValuePair( j );
                     mDataName = tempDVP->GetDataName();
                     GetDataValue( tempDVP );
-                }            
+                }
             }
             else if( inputCommand->GetDataValuePair( i )->
-                GetDataXMLObject()->GetObjectType() == "OneDStringArray" ) 
+                     GetDataXMLObject()->GetObjectType() == "OneDStringArray" )
             {
-                std::vector< std::string > tempStringArray = 
-                boost::dynamic_pointer_cast< 
-                ves::open::xml::OneDStringArray >(inputCommand->
-                GetDataValuePair( 0 )->GetDataXMLObject())->GetArray();
+                std::vector< std::string > tempStringArray =
+                    boost::dynamic_pointer_cast <
+                    ves::open::xml::OneDStringArray > ( inputCommand->
+                                                        GetDataValuePair( 0 )->GetDataXMLObject() )->GetArray();
 
-                for( size_t j=0; j<tempStringArray.size(); ++j )
+                for( size_t j = 0; j < tempStringArray.size(); ++j )
                 {
-                    mValues.push_back( wxString( 
-                        tempStringArray.at( j ).c_str(), wxConvUTF8 ) );
+                    mValues.push_back( wxString(
+                                           tempStringArray.at( j ).c_str(), wxConvUTF8 ) );
                     mTagNames.push_back( wxString( mDataName.c_str(), wxConvUTF8 ) );
-                }          
+                }
             }
         }
         else
         {
             GetDataValue( tempDVP );
-        }        
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,19 +240,19 @@ void SummaryResultDialog::GetDataValue( ves::open::xml::DataValuePairPtr tempDVP
     }
     else if( dataType == std::string( "XMLOBJECT" ) )
     {
-        std::vector< std::string > tempStringArray = 
-            boost::dynamic_pointer_cast< 
-            ves::open::xml::OneDStringArray >(
-            tempDVP->GetDataXMLObject())->GetArray();
+        std::vector< std::string > tempStringArray =
+            boost::dynamic_pointer_cast <
+            ves::open::xml::OneDStringArray > (
+                tempDVP->GetDataXMLObject() )->GetArray();
 
-        for( size_t i=0; i<tempStringArray.size(); ++i )
+        for( size_t i = 0; i < tempStringArray.size(); ++i )
         {
-            mValues.push_back( wxString( 
-                tempStringArray.at( i ).c_str(), wxConvUTF8 ) );
+            mValues.push_back( wxString(
+                                   tempStringArray.at( i ).c_str(), wxConvUTF8 ) );
             mTagNames.push_back( wxString( mDataName.c_str(), wxConvUTF8 ) );
         }
     }
-    
+
     if( dataType != std::string( "XMLOBJECT" ) )
     {
         mTagNames.push_back( wxString( mDataName.c_str(), wxConvUTF8 ) );

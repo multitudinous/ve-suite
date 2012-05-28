@@ -97,18 +97,18 @@ void ExternalPixelBufferObject::unbindBuffer( unsigned int contextID ) const
 
     switch( _mode[ contextID ] )
     {
-    /*
-    case READ:
-    {
-        extensions->glBindBuffer( GL_PIXEL_UNPACK_BUFFER_ARB, 0 );
-        break;
-    }
-    case WRITE:
-    {
-        extensions->glBindBuffer( GL_PIXEL_PACK_BUFFER_ARB, 0 );
-        break;
-    }
-    */
+        /*
+        case READ:
+        {
+            extensions->glBindBuffer( GL_PIXEL_UNPACK_BUFFER_ARB, 0 );
+            break;
+        }
+        case WRITE:
+        {
+            extensions->glBindBuffer( GL_PIXEL_PACK_BUFFER_ARB, 0 );
+            break;
+        }
+        */
     default:
     {
         extensions->glBindBuffer( _profile._target, 0 );
@@ -142,7 +142,7 @@ void ExternalPixelBufferObject::compileBuffer( osg::State& state ) const
     }
     else
     {
-         bo->bindBuffer();
+        bo->bindBuffer();
     }
 
     bo->_extensions->glBindBuffer( _profile._target, bo->getGLObjectID() );
@@ -162,8 +162,8 @@ void ExternalPixelBufferObject::compileBuffer( osg::State& state ) const
     {
         return;
     }
-    
-    osg::BufferObject::Extensions* extensions = getExtensions(contextID,true);
+
+    osg::BufferObject::Extensions* extensions = getExtensions( contextID, true );
 
     GLuint& pbo = buffer( contextID );
     if( pbo == 0 )
@@ -214,10 +214,10 @@ void ExternalPixelBufferObject::compileBuffer( osg::State& state ) const
     extensions->glUnmapBuffer( _target );
 
     //osg::notify( osg::NOTICE )
-        //<< "pbo _totalSize = " << _totalSize << std::endl;
+    //<< "pbo _totalSize = " << _totalSize << std::endl;
     //osg::notify( osg::NOTICE )
-        //<< "pbo " << osg::Timer::instance()->delta_m(
-            //start_tick, osg::Timer::instance()->tick() ) << "ms" << std::endl;
+    //<< "pbo " << osg::Timer::instance()->delta_m(
+    //start_tick, osg::Timer::instance()->tick() ) << "ms" << std::endl;
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -86,22 +86,22 @@ void Geode::TranslateToGeode( vtkActor* actor )
     ves::xplorer::scenegraph::vtkActorToOSG( actor, this, _vtkDebugLevel );
     osg::ref_ptr< osg::LightModel > lightModel = new osg::LightModel();
     lightModel->setTwoSided( true );
-    getOrCreateStateSet()->setAttributeAndModes( 
+    getOrCreateStateSet()->setAttributeAndModes(
         lightModel.get(), osg::StateAttribute::ON );
     osgUtil::Optimizer geodeOpti;
-    geodeOpti.optimize( this, 
-                       osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
-                       osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
-                       osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
-                       osgUtil::Optimizer::COMBINE_ADJACENT_LODS |
-                       osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
-                       osgUtil::Optimizer::MERGE_GEOMETRY |
-                       osgUtil::Optimizer::CHECK_GEOMETRY |
-                       osgUtil::Optimizer::SPATIALIZE_GROUPS |
-                       osgUtil::Optimizer::TRISTRIP_GEOMETRY |
-                       osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
-                       osgUtil::Optimizer::MERGE_GEODES |
-                       osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
+    geodeOpti.optimize( this,
+                        osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
+                        osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
+                        osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
+                        osgUtil::Optimizer::COMBINE_ADJACENT_LODS |
+                        osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
+                        osgUtil::Optimizer::MERGE_GEOMETRY |
+                        osgUtil::Optimizer::CHECK_GEOMETRY |
+                        osgUtil::Optimizer::SPATIALIZE_GROUPS |
+                        osgUtil::Optimizer::TRISTRIP_GEOMETRY |
+                        osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
+                        osgUtil::Optimizer::MERGE_GEODES |
+                        osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Geode::StreamLineToGeode( vtkActor* actor )

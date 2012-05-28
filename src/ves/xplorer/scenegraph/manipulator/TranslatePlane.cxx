@@ -103,7 +103,7 @@ bool TranslatePlane::ComputeProjectedPoint(
 
     //Exit if the intersection is invalid
     if( !GetLinePlaneIntersection(
-            lineStart, lineEnd, GetPlane(), projectedPoint ) )
+                lineStart, lineEnd, GetPlane(), projectedPoint ) )
     {
         return false;
     }
@@ -126,25 +126,25 @@ void TranslatePlane::SetupDefaultGeometry()
     const double outerDistance = 0.55;
     m_triangleVertices = new osg::Vec3Array();
     m_triangleVertices->resize( 16 );
-    (*m_triangleVertices)[  0 ] = osg::Vec3d( 0.0,  innerDistance, 0.0 );
-    (*m_triangleVertices)[  1 ] = osg::Vec3d(  innerDistance, 0.0, 0.0 );
-    (*m_triangleVertices)[  2 ] = osg::Vec3d( 0.0,  outerDistance, 0.0 );
-    (*m_triangleVertices)[  3 ] = osg::Vec3d(  outerDistance, 0.0, 0.0 );
+    ( *m_triangleVertices )[  0 ] = osg::Vec3d( 0.0,  innerDistance, 0.0 );
+    ( *m_triangleVertices )[  1 ] = osg::Vec3d( innerDistance, 0.0, 0.0 );
+    ( *m_triangleVertices )[  2 ] = osg::Vec3d( 0.0,  outerDistance, 0.0 );
+    ( *m_triangleVertices )[  3 ] = osg::Vec3d( outerDistance, 0.0, 0.0 );
 
-    (*m_triangleVertices)[  4 ] = osg::Vec3d(  innerDistance, 0.0, 0.0 );
-    (*m_triangleVertices)[  5 ] = osg::Vec3d( 0.0, -innerDistance, 0.0 );
-    (*m_triangleVertices)[  6 ] = osg::Vec3d(  outerDistance, 0.0, 0.0 );
-    (*m_triangleVertices)[  7 ] = osg::Vec3d( 0.0, -outerDistance, 0.0 );
+    ( *m_triangleVertices )[  4 ] = osg::Vec3d( innerDistance, 0.0, 0.0 );
+    ( *m_triangleVertices )[  5 ] = osg::Vec3d( 0.0, -innerDistance, 0.0 );
+    ( *m_triangleVertices )[  6 ] = osg::Vec3d( outerDistance, 0.0, 0.0 );
+    ( *m_triangleVertices )[  7 ] = osg::Vec3d( 0.0, -outerDistance, 0.0 );
 
-    (*m_triangleVertices)[  8 ] = osg::Vec3d( 0.0, -innerDistance, 0.0 );
-    (*m_triangleVertices)[  9 ] = osg::Vec3d( -innerDistance, 0.0, 0.0 );
-    (*m_triangleVertices)[ 10 ] = osg::Vec3d( 0.0, -outerDistance, 0.0 );
-    (*m_triangleVertices)[ 11 ] = osg::Vec3d( -outerDistance, 0.0, 0.0 );
+    ( *m_triangleVertices )[  8 ] = osg::Vec3d( 0.0, -innerDistance, 0.0 );
+    ( *m_triangleVertices )[  9 ] = osg::Vec3d( -innerDistance, 0.0, 0.0 );
+    ( *m_triangleVertices )[ 10 ] = osg::Vec3d( 0.0, -outerDistance, 0.0 );
+    ( *m_triangleVertices )[ 11 ] = osg::Vec3d( -outerDistance, 0.0, 0.0 );
 
-    (*m_triangleVertices)[ 12 ] = osg::Vec3d( -innerDistance, 0.0, 0.0 );
-    (*m_triangleVertices)[ 13 ] = osg::Vec3d( 0.0,  innerDistance, 0.0 );
-    (*m_triangleVertices)[ 14 ] = osg::Vec3d( -outerDistance, 0.0, 0.0 );
-    (*m_triangleVertices)[ 15 ] = osg::Vec3d( 0.0,  outerDistance, 0.0 );
+    ( *m_triangleVertices )[ 12 ] = osg::Vec3d( -innerDistance, 0.0, 0.0 );
+    ( *m_triangleVertices )[ 13 ] = osg::Vec3d( 0.0,  innerDistance, 0.0 );
+    ( *m_triangleVertices )[ 14 ] = osg::Vec3d( -outerDistance, 0.0, 0.0 );
+    ( *m_triangleVertices )[ 15 ] = osg::Vec3d( 0.0,  outerDistance, 0.0 );
 
     //Create a triangle
     {

@@ -46,7 +46,7 @@ using namespace ves::open::xml::model;
 //Constructor                             //
 ////////////////////////////////////////////////////////////////////////////////
 Network::Network( )
-        : XMLObject( )
+    : XMLObject( )
 {
     SetObjectType( "Network" );
     SetObjectNamespace( "Model" );
@@ -67,7 +67,7 @@ Network::~Network()
 }
 ////////////////////////////////////////////////////////////////////////////////
 Network::Network( const Network& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     for( size_t i = 0; i < input.mLinks.size(); ++i )
     {
@@ -139,11 +139,11 @@ LinkPtr Network::GetLink( int i )
     {
         return mLinks.at( i );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cerr << " Network::GetLink The element request "
-            << "is out of sequence. Please ask for a lower number point."
-            << std::endl;
+                  << "is out of sequence. Please ask for a lower number point."
+                  << std::endl;
     }
     return LinkPtr();
 }
@@ -162,8 +162,8 @@ DataValuePairPtr Network::GetDataValuePair( size_t index )
     catch( ... )
     {
         std::cerr << " Network::GetDataValuePair The element request "
-        << "is out of sequence. Please ask for a lower number point."
-        << std::endl;
+                  << "is out of sequence. Please ask for a lower number point."
+                  << std::endl;
 
         return DataValuePairPtr();
     }
@@ -233,10 +233,10 @@ TagPtr Network::GetTag( size_t i )
     {
         return mTags.at( i );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cerr << "Network::GetTag value greater than number of mTags present"
-        << std::endl;
+                  << std::endl;
         return TagPtr();
     }
 }

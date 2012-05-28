@@ -47,7 +47,7 @@ using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 RescaleTextureVisitor::RescaleTextureVisitor( osg::Node* osg_node )
-        :NodeVisitor( TRAVERSE_ALL_CHILDREN )
+    : NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
     osg_node->accept( *this );
 }
@@ -57,61 +57,61 @@ RescaleTextureVisitor::~RescaleTextureVisitor()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RescaleTextureVisitor::apply(osg::Node& node)
+void RescaleTextureVisitor::apply( osg::Node& node )
 {
-    
+
     osg::StateSet* ss = node.getStateSet();
     if( ss )
     {
-        apply(*ss);
+        apply( *ss );
     }
-    
-    traverse(node);
+
+    traverse( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RescaleTextureVisitor::apply(osg::Geode& geode)
-{    
+void RescaleTextureVisitor::apply( osg::Geode& geode )
+{
     osg::StateSet* ss = geode.getStateSet();
-    
+
     if( ss )
     {
-        apply(*ss);
+        apply( *ss );
     }
-    
-    for( unsigned int i=0;i<geode.getNumDrawables();++i)
+
+    for( unsigned int i = 0; i < geode.getNumDrawables(); ++i )
     {
-        osg::Drawable* drawable = geode.getDrawable(i);
+        osg::Drawable* drawable = geode.getDrawable( i );
         if( drawable )
         {
             ss = drawable->getStateSet();
             if( ss )
             {
-                apply(*ss);
+                apply( *ss );
             }
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RescaleTextureVisitor::apply(osg::StateSet& stateset)
+void RescaleTextureVisitor::apply( osg::StateSet& stateset )
 {
-    for( size_t i=0; i < stateset.getTextureAttributeList().size(); ++i )
+    for( size_t i = 0; i < stateset.getTextureAttributeList().size(); ++i )
     {
-        osg::StateAttribute* sa = stateset.getTextureAttribute(i,osg::StateAttribute::TEXTURE);
-        osg::Texture* texture = dynamic_cast<osg::Texture*>(sa);
+        osg::StateAttribute* sa = stateset.getTextureAttribute( i, osg::StateAttribute::TEXTURE );
+        osg::Texture* texture = dynamic_cast<osg::Texture*>( sa );
         if( texture )
         {
-            apply(*texture);
+            apply( *texture );
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RescaleTextureVisitor::apply(osg::Texture& texture)
+void RescaleTextureVisitor::apply( osg::Texture& texture )
 {
     unsigned int numImages = texture.getNumImages();
     osg::ref_ptr< osg::Image > tempImage;
-    for( unsigned int i=0; i<numImages; ++i)
+    for( unsigned int i = 0; i < numImages; ++i )
     {
-        tempImage = texture.getImage(i);
+        tempImage = texture.getImage( i );
         if( !tempImage.valid() )
         {
             continue;

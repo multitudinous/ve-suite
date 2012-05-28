@@ -67,20 +67,20 @@ void EnablePhysicsDebugging( bool const& enable )
 void DisplayFrameRate( bool const& display )
 {
     ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()
-            ->SetFrameRateFlag( display );
+    ->SetFrameRateFlag( display );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayCoordinateSystem( bool const& display )
 {
     ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()
-            ->SetCoordSysFlag( display );
+    ->SetCoordSysFlag( display );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SetAmbientAudioFile( std::string const& filename )
 {
 #ifdef VE_SOUND
     // Create a sample, load a .wav file.
-    osg::ref_ptr< osgAudio::SoundState > sound_state = 
+    osg::ref_ptr< osgAudio::SoundState > sound_state =
         osgAudio::SoundManager::instance()->findSoundState( filename );
     if( !sound_state.valid() )
     {
@@ -89,7 +89,7 @@ void SetAmbientAudioFile( std::string const& filename )
         sound_state->allocateSource( 10 );
         ///Add the sound sample
         sound_state->
-            setSample( new osgAudio::Sample( osgDB::findDataFile( filename ) ) );
+        setSample( new osgAudio::Sample( osgDB::findDataFile( filename ) ) );
         //sound_state->setGain(0.7f);
         //sound_state->setReferenceDistance(10);
         // Make it an ambient (heard everywhere) sound
@@ -98,12 +98,12 @@ void SetAmbientAudioFile( std::string const& filename )
         sound_state->setLooping( true );
         // Start playing the music!
         sound_state->setPlay( true );
-        
-        osgAudio::SoundManager::instance()->addSoundState(sound_state.get());
+
+        osgAudio::SoundManager::instance()->addSoundState( sound_state.get() );
     }
 #else
-    std::cout << "VE-Suite is not compiled with audio support " 
-        << filename << "." << std::endl;
+    std::cout << "VE-Suite is not compiled with audio support "
+              << filename << "." << std::endl;
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ void UpdateBackgroundColor( bool const, std::vector< double > const& color )
 {
     ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor( color );
     ves::xplorer::EnvironmentHandler::instance()->
-        GetHeadsUpDisplay()->SetTextColor( color );
+    GetHeadsUpDisplay()->SetTextColor( color );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

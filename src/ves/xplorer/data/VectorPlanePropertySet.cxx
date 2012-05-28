@@ -74,16 +74,16 @@ void VectorPlanePropertySet::CreateSkeleton()
 {
     {
         AddProperty( "Hide", false, "Toggle Viz Off" );
-        const std::string slotName = 
-        boost::lexical_cast<std::string>( this ) +".HideVizFeature";
+        const std::string slotName =
+            boost::lexical_cast<std::string>( this ) + ".HideVizFeature";
         std::vector< PropertyPtr > dataLink;
         dataLink.push_back( GetProperty( "Hide" ) );
-        MakeLiveBasePtr p( 
-                          new MakeLiveLinked< bool >( mUUIDString, dataLink,
-                                                                  slotName ) );
+        MakeLiveBasePtr p(
+            new MakeLiveLinked< bool >( mUUIDString, dataLink,
+                                        slotName ) );
         mLiveObjects.push_back( p );
     }
-    
+
     AddProperty( "DataSet", 0, "Data Set" );
     PSVectorOfStrings enumValues;
 
@@ -112,7 +112,7 @@ void VectorPlanePropertySet::CreateSkeleton()
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
     mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
-    
+
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
     // connections between DataSet and its subproperties would have been in
@@ -141,7 +141,7 @@ void VectorPlanePropertySet::CreateSkeleton()
     enumValues.push_back( "By Surface" );
     SetPropertyAttribute( "Direction", "enumValues", enumValues );
 
-    AddProperty( "DataMapping", 0, "Data Mapping");
+    AddProperty( "DataMapping", 0, "Data Mapping" );
     enumValues.clear();
     enumValues.push_back( "Map Scalar Data" );
     enumValues.push_back( "Map Volume Flux Data" );
@@ -152,7 +152,7 @@ void VectorPlanePropertySet::CreateSkeleton()
     enumValues.push_back( "Specify a Single Plane" );
     enumValues.push_back( "Use All Precomputed Surfaces" );
     SetPropertyAttribute( "Mode", "enumValues", enumValues );
-    
+
     AddProperty( "UseGPUTools", false, "Use GPU Tools" );
 
     // Connect SignalValueChanged of "Mode" to a function that enables and disables
@@ -200,7 +200,7 @@ void VectorPlanePropertySet::CreateSkeleton()
         AddProperty( "Advanced_Greyscale", false, "Greyscale" );
         /*std::vector< PropertyPtr > greyscale;
         greyscale.push_back( GetProperty( "Advanced_Greyscale" ) );
-        const std::string slotName = 
+        const std::string slotName =
             boost::lexical_cast<std::string>( this ) +".SetVectorPlaneGreyscale";
         MakeLiveBasePtr p( new MakeLiveLinked< bool >(
                 mUUIDString,

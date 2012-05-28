@@ -65,21 +65,21 @@
 
 #include <iostream>
 
-Q_DECLARE_METATYPE(osg::NodePath)
-Q_DECLARE_METATYPE(std::string)
+Q_DECLARE_METATYPE( osg::NodePath )
+Q_DECLARE_METATYPE( std::string )
 
 namespace ves
 {
 namespace conductor
 {
 
-TreeTab::TreeTab(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::TreeTab),
-    m_logger( Poco::Logger::get("conductor.TreeTab") ),
+TreeTab::TreeTab( QWidget* parent ) :
+    QWidget( parent ),
+    ui( new Ui::TreeTab ),
+    m_logger( Poco::Logger::get( "conductor.TreeTab" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
-    ui->setupUi(this);
+    ui->setupUi( this );
 
     ////////////// Making a Tree /////////////////////
     // Create a tree model and set the column headers on it
@@ -90,7 +90,7 @@ TreeTab::TreeTab(QWidget *parent) :
 
     // Connect the tree model up to a tree view.
     ui->mTreeView->setModel( mModel );
-    ui->mTreeView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    ui->mTreeView->header()->setResizeMode( QHeaderView::ResizeToContents );
 
     mBrowser = new PropertyBrowser( this );
 
@@ -100,36 +100,36 @@ TreeTab::TreeTab(QWidget *parent) :
                       this, SLOT( QueuedOnObjectPicked( osg::NodePath ) ),
                       Qt::QueuedConnection );
 
-    QObject::connect( this, SIGNAL(NodeAddedQSignal(std::string)),
-                      this, SLOT(QueuedNodeAdded(std::string)),
+    QObject::connect( this, SIGNAL( NodeAddedQSignal( std::string ) ),
+                      this, SLOT( QueuedNodeAdded( std::string ) ),
                       Qt::QueuedConnection );
 
     // Connect to ObjectPickedSignal so we can update the scenegraph tree view when
     // an object is picked
     CONNECTSIGNALS_1( "%ObjectPickedSignal",
-                     void( osg::NodePath& ),
-                     &TreeTab::OnObjectPicked,
-                     mConnections, any_SignalType, normal_Priority );
+                      void( osg::NodePath& ),
+                      &TreeTab::OnObjectPicked,
+                      mConnections, any_SignalType, normal_Priority );
 
     ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-            new ves::xplorer::eventmanager::SignalWrapper<
-            boost::signals2::signal< void( osg::NodePath& ) > >( &m_highlightAndSetManipulators ),
+        new ves::xplorer::eventmanager::SignalWrapper <
+        boost::signals2::signal< void( osg::NodePath& ) > > ( &m_highlightAndSetManipulators ),
         "TreeTab.HighlightAndSetManipulators" );
 
     ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-        new ves::xplorer::eventmanager::SignalWrapper<
-        boost::signals2::signal< void( osg::NodePath& ) > >( &m_highlightNode ),
+        new ves::xplorer::eventmanager::SignalWrapper <
+        boost::signals2::signal< void( osg::NodePath& ) > > ( &m_highlightNode ),
         "TreeTab.HighlightNode" );
-    
+
     ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-            new ves::xplorer::eventmanager::SignalWrapper<
-            ves::util::StringSignal_type >( &m_CADNodeSelected ),
+        new ves::xplorer::eventmanager::SignalWrapper <
+        ves::util::StringSignal_type > ( &m_CADNodeSelected ),
         "TreeTab.CADNodeSelected" );
 
     CONNECTSIGNALS_1( "%NodeAdded",
-                     void ( std::string const& ),
-                     &TreeTab::OnNodeAdded,
-                     mConnections, any_SignalType, normal_Priority );
+                      void ( std::string const& ),
+                      &TreeTab::OnNodeAdded,
+                      mConnections, any_SignalType, normal_Priority );
 
     CONNECTSIGNAL_1( "AddVTKDataSetEventHandler.DatafileLoaded",
                      void ( std::string const& ),
@@ -150,12 +150,13 @@ TreeTab::~TreeTab()
     delete ui;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TreeTab::changeEvent(QEvent *e)
+void TreeTab::changeEvent( QEvent* e )
 {
-    QWidget::changeEvent(e);
-    switch (e->type()) {
+    QWidget::changeEvent( e );
+    switch( e->type() )
+    {
     case QEvent::LanguageChange:
-        ui->retranslateUi(this);
+        ui->retranslateUi( this );
         break;
     default:
         break;
@@ -173,15 +174,15 @@ void TreeTab::Clear()
 void TreeTab::PopulateWithRoot( osg::Node* root )
 {
     mModel->BeginReset();
-    
+
     mModel->Clear();
     QList<QVariant> rootData;
     rootData << "Node Name";
     mModel->CreateRootItem( rootData );
-    
+
     // Create a node visitor that will add items into the tree model, and
     // turn it loose on the root node of the scenegraph
-    osgQtTree::PopulateTreeControlWithNodeVisitor populator( (ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()), mModel );
+    osgQtTree::PopulateTreeControlWithNodeVisitor populator( ( ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() ), mModel );
     root->accept( populator );
 
     mModel->EndReset();
@@ -273,34 +274,34 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     if( !found )
     {
         LOG_DEBUG( "No matching DCS" );
-        
+
         ///Because we want to be able to select nodes for constraints and
         ///other per part operations we need to highlight the selected node
         ///even if it is not a top level node
         if( node )
         {
-            ves::xplorer::scenegraph::FindParentsVisitor 
-                parentVisitor( node, ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
+            ves::xplorer::scenegraph::FindParentsVisitor
+            parentVisitor( node, ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
             LOG_DEBUG( "Trying to select " << node->getName() );
             osg::NodePath nodePath = parentVisitor.GetParentNodePath();
-        
+
             std::string uuid = CreateSubNodePropertySet( node, nodePath );
-            mActiveSet = 
+            mActiveSet =
                 ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CADSubNodePropertySet() );
             mActiveSet->SetUUID( uuid );
 
             mBrowser->ParsePropertySet( mActiveSet );
-            
+
             ui->cadPropertyBrowser->setPropertyBrowser( mBrowser );
             // Don't autosize the columns when we refresh the propertybrowser
             ui->cadPropertyBrowser->RefreshContents( false );
             ui->cadPropertyBrowser->show();
-            
+
             // Load properties from db
             mActiveSet->LoadFromDatabase();
 
             mBrowser->RefreshAll();
-            
+
             m_highlightNode( nodePath );
         }
         else
@@ -315,11 +316,11 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     }
     LOG_DEBUG( "Node is of type " << type );
 
-    ves::xplorer::scenegraph::DCS* newSelectedDCS = 
+    ves::xplorer::scenegraph::DCS* newSelectedDCS =
         static_cast< ves::xplorer::scenegraph::DCS* >( node );
 
     // Create a CADPropertySet and load it in the browser
-    if( type == "CAD")
+    if( type == "CAD" )
     {
         mActiveSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CADPropertySet() );
         mActiveSet->SetUUID( newSelectedDCS->GetCADPart()->GetID() );
@@ -327,7 +328,7 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     else if( type == "DATA" )
     {
         mActiveSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::DatasetPropertySet() );
-        mActiveSet->SetUUID( node->getDescriptions().at(1) );
+        mActiveSet->SetUUID( node->getDescriptions().at( 1 ) );
     }
     mBrowser->ParsePropertySet( mActiveSet );
 
@@ -352,7 +353,7 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     {
         //Set the selected DCS
         osg::NodePath nodePath = osgwTools::stringToNodePath( nodepath,
-             ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode());
+                                 ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
         m_highlightAndSetManipulators( nodePath );
     }
 
@@ -374,8 +375,8 @@ void TreeTab::SyncTransformFromDCS( ves::xplorer::scenegraph::DCS* dcs )
     //ves::xplorer::ModelCADHandler* mch = model->GetModelCADHandler();
     //if( mch->PartExists( mActiveSet->GetUUIDAsString() ) )
     {
-      //  ves::xplorer::scenegraph::CADEntity* cad = mch->GetPart( mActiveSet->GetUUIDAsString() );
-      //  ves::xplorer::scenegraph::DCS* dcs = cad->GetDCS();
+        //  ves::xplorer::scenegraph::CADEntity* cad = mch->GetPart( mActiveSet->GetUUIDAsString() );
+        //  ves::xplorer::scenegraph::DCS* dcs = cad->GetDCS();
 
         double* trans = dcs->GetVETranslationArray();
         mActiveSet->SetPropertyValue( "Transform_Translation_X", trans[0] );
@@ -410,9 +411,9 @@ void TreeTab::on_OKButton_clicked()
     if( mActiveSet )
     {
         mActiveSet->WriteToDatabase();
-//        ves::xplorer::ModelHandler::instance()->GetActiveModel()->
-//                GetModelCADHandler()->
-//                UpdateCADNode( mActiveSet->GetUUIDAsString() );
+        //        ves::xplorer::ModelHandler::instance()->GetActiveModel()->
+        //                GetModelCADHandler()->
+        //                UpdateCADNode( mActiveSet->GetUUIDAsString() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -462,7 +463,7 @@ void TreeTab::RefreshTree()
 {
     // Read the scenegraph and rebuild tree.
     PopulateWithRoot(
-        &(ves::xplorer::scenegraph::SceneManager::instance()->GetGraphicalPluginManager()) );
+        &( ves::xplorer::scenegraph::SceneManager::instance()->GetGraphicalPluginManager() ) );
     ui->m_expandAllButton->setText( "Expand All" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -475,7 +476,7 @@ void TreeTab::on_m_searchBox_textEdited( const QString& pattern )
 void TreeTab::on_m_deleteButton_clicked()
 {
     ves::xplorer::Model* model = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-    if(!model)
+    if( !model )
     {
         return;
     }
@@ -554,34 +555,34 @@ std::string TreeTab::CreateSubNodePropertySet( osg::Node* node, osg::NodePath& p
     std::string uuid = QUuid::createUuid().toString().toStdString();
     newSet.SetUUID( uuid );
     newSet.SetPropertyValue( "NameTag", node->getName() );
-/*    
-    //if( newPart->HasPhysics() )
-    {
-        newSet.SetPropertyValue( "Physics",
-                                newPart->HasPhysics() );
-        newSet.SetPropertyValue( "Physics_Mass",
-                                newPart->GetMass() );
-        newSet.SetPropertyValue( "Physics_Friction",
-                                newPart->GetFriction() );
-        newSet.SetPropertyValue( "Physics_Restitution",
-                                newPart->GetRestitution() );
-        newSet.SetPropertyValue( "Physics_MotionType",
-                                newPart->GetPhysicsMotionType() );
-        newSet.SetPropertyValue( "Physics_LODType",
-                                newPart->GetPhysicsLODType() );
-        newSet.SetPropertyValue( "Physics_MeshType",
-                                newPart->GetPhysicsMeshType() );
-        newSet.SetPropertyValue( "Physics_MeshDecimation",
-                                newPart->GetPhysicsDecimationValue() );
-    }
-*/
-    
+    /*
+        //if( newPart->HasPhysics() )
+        {
+            newSet.SetPropertyValue( "Physics",
+                                    newPart->HasPhysics() );
+            newSet.SetPropertyValue( "Physics_Mass",
+                                    newPart->GetMass() );
+            newSet.SetPropertyValue( "Physics_Friction",
+                                    newPart->GetFriction() );
+            newSet.SetPropertyValue( "Physics_Restitution",
+                                    newPart->GetRestitution() );
+            newSet.SetPropertyValue( "Physics_MotionType",
+                                    newPart->GetPhysicsMotionType() );
+            newSet.SetPropertyValue( "Physics_LODType",
+                                    newPart->GetPhysicsLODType() );
+            newSet.SetPropertyValue( "Physics_MeshType",
+                                    newPart->GetPhysicsMeshType() );
+            newSet.SetPropertyValue( "Physics_MeshDecimation",
+                                    newPart->GetPhysicsDecimationValue() );
+        }
+    */
+
     // Calculate and store the NodePath
     std::string pathString = osgwTools::nodePathToString( path );
     newSet.SetPropertyValue( "NodePath", pathString );
-    
+
     //newSet.SetPropertyValue( "Visibile", newPart->GetVisibility() );
-    
+
     newSet.WriteToDatabase();
     return uuid;
 }

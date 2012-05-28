@@ -52,13 +52,13 @@ GeometryLODScaleEventHandler::GeometryLODScaleEventHandler()
 {
     m_activeModel = 0;
     CONNECTSIGNALS_1( "%GeometryLODScale",
-                     void ( const double lodScale ),
-                     &GeometryLODScaleEventHandler::UpdateLODScale,
-                     m_connections, any_SignalType, normal_Priority );        
+                      void ( const double lodScale ),
+                      &GeometryLODScaleEventHandler::UpdateLODScale,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 GeometryLODScaleEventHandler::GeometryLODScaleEventHandler( const GeometryLODScaleEventHandler& ceh )
-    : 
+    :
     ves::xplorer::event::EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
@@ -82,7 +82,7 @@ void GeometryLODScaleEventHandler::Execute( const ves::open::xml::XMLObjectPtr& 
     try
     {
         ves::open::xml::CommandPtr geometryLODScaleCmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
-        if(  geometryLODScaleCmd )
+        if( geometryLODScaleCmd )
         {
             ves::open::xml::DataValuePairPtr scaleValue =
                 geometryLODScaleCmd->GetDataValuePair( "Geometry LOD Scale" );
@@ -91,7 +91,7 @@ void GeometryLODScaleEventHandler::Execute( const ves::open::xml::XMLObjectPtr& 
             UpdateLODScale( alpha );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
         std::cout << "Invalid command passed to EphemerisAutoDateTimeEventHandler!!" << std::endl;
@@ -115,15 +115,15 @@ void GeometryLODScaleEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase
                 ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GeometryLODScaleEventHandler::UpdateLODScale( const double lodScale  )
+void GeometryLODScaleEventHandler::UpdateLODScale( const double lodScale )
 {
-    double scale = .0001*exp( lodScale * .18420680745);
+    double scale = .0001 * exp( lodScale * .18420680745 );
     ves::xplorer::EnvironmentHandler::instance()->SetGlobalLODScale( scale );
 }
 ////////////////////////////////////////////////////////////////////////////////

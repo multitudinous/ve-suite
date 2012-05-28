@@ -59,34 +59,34 @@ using namespace ves::xplorer::volume;
 
 //the shader inline source
 static const char* volumeTransferFragSource =
-    {
+{
 
-        "uniform sampler1D mat1Func;\n"
-        "uniform sampler1D mat2Func;\n"
-        "uniform sampler1D mat3Func;\n"
-        "uniform sampler1D mat4Func;\n"
-        "uniform sampler3D densityTexture;\n"
-        "void main(void)\n"
-        "{\n"
-        "//get the density for each material\n"
-        "vec4 density = texture3D(densityTexture,gl_TexCoord[0].xyz);\n"
+    "uniform sampler1D mat1Func;\n"
+    "uniform sampler1D mat2Func;\n"
+    "uniform sampler1D mat3Func;\n"
+    "uniform sampler1D mat4Func;\n"
+    "uniform sampler3D densityTexture;\n"
+    "void main(void)\n"
+    "{\n"
+    "//get the density for each material\n"
+    "vec4 density = texture3D(densityTexture,gl_TexCoord[0].xyz);\n"
 
-        "vec4 red = texture1D(mat4Func,density.x);\n"
-        "vec4 dye = vec4(red.x,0,0,red.a);\n"
+    "vec4 red = texture1D(mat4Func,density.x);\n"
+    "vec4 dye = vec4(red.x,0,0,red.a);\n"
 
-        "vec4 ink = texture1D(mat1Func,density.y);\n"
+    "vec4 ink = texture1D(mat1Func,density.y);\n"
 
-        "vec4 hole = texture1D(mat2Func,density.z);\n"
-        "ink = clamp((ink - hole),vec4(0,0,0,0),vec4(1,1,1,1));\n"
+    "vec4 hole = texture1D(mat2Func,density.z);\n"
+    "ink = clamp((ink - hole),vec4(0,0,0,0),vec4(1,1,1,1));\n"
 
-        "gl_FragColor = clamp(ink +dye,vec4(0,0,0,0),vec4(1,1,1,1));\n"
-        "gl_FragColor.w *= gl_Color.a;\n"
-        "}\n"
-    };
+    "gl_FragColor = clamp(ink +dye,vec4(0,0,0,0),vec4(1,1,1,1));\n"
+    "gl_FragColor.w *= gl_Color.a;\n"
+    "}\n"
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::cfdOSGTransferShaderManager()
-        : cfdOSGShaderManager()
+    : cfdOSGShaderManager()
 {
     _reinit = true;
     _useTM = false;
@@ -102,8 +102,8 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager()
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::cfdOSGTransferShaderManager( const
-                                                          cfdOSGTransferShaderManager& sm )
-        : cfdOSGShaderManager( sm )
+        cfdOSGTransferShaderManager& sm )
+    : cfdOSGShaderManager( sm )
 {
     _property = new osg::Texture3D( *( sm._property.get() ) );
     int nTransferFuncts = sm._transferFunctions.size();
@@ -189,10 +189,10 @@ void cfdOSGTransferShaderManager::Init()
         //_ss->setDataVariance( osg::Object::DYNAMIC );
         _ss->setMode( GL_BLEND, osg::StateAttribute::ON );
         _ss->setAttributeAndModes( new osg::AlphaFunc( osg::AlphaFunc::GEQUAL, .1 ) );
-        osg::BlendColor* bc = 
+        osg::BlendColor* bc =
             new osg::BlendColor( osg::Vec4( 0., 0., 0., 0.5 ) );
         _ss->setAttributeAndModes( bc, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
-        
+
         _ss->setMode( GL_LIGHTING, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
         osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
         bf->setFunction( osg::BlendFunc::SRC_ALPHA,
@@ -207,10 +207,10 @@ void cfdOSGTransferShaderManager::Init()
         {
             _ss->setTextureAttributeAndModes( i, _transferFunctions.at( i ).get(),
                                               osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
-//         _ss->setTextureMode(i,GL_TEXTURE_1D,
-//                          osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
-//          _ss->setTextureMode(i,GL_TEXTURE_2D,
-//                           osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
+            //         _ss->setTextureMode(i,GL_TEXTURE_1D,
+            //                          osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
+            //          _ss->setTextureMode(i,GL_TEXTURE_2D,
+            //                           osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
 
 
             _ss->setTextureMode( i, GL_TEXTURE_3D,
@@ -268,7 +268,7 @@ void cfdOSGTransferShaderManager::_initTransferFunctions()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::_createTransferFunction( bool useGamma,
-                                                           bool clearList )
+        bool clearList )
 {
     if( clearList )
     {
@@ -281,7 +281,7 @@ void cfdOSGTransferShaderManager::_createTransferFunction( bool useGamma,
     GLfloat taoA = .10;
     for( unsigned int i = 0; i < 256; i++ )
     {
-        if( i < taoA*255 )
+        if( i < taoA * 255 )
         {
             ga[i] = 0;
         }
@@ -290,7 +290,7 @@ void cfdOSGTransferShaderManager::_createTransferFunction( bool useGamma,
             ga[i] = 255.0 * ( i -/*255  */taoA * 255 ) / ( 255.0 - taoA * 255 );
         }
     }
-    GLubyte* lutex = new GLubyte[256*256*4];
+    GLubyte* lutex = new GLubyte[256 * 256 * 4];
     //gamma table
     GLubyte gTable[256];
     double gamma = 2.4;
@@ -312,17 +312,17 @@ void cfdOSGTransferShaderManager::_createTransferFunction( bool useGamma,
             {
                 if( i == j )
                 {
-                    lutex[j*4*256 + i*4    ] =
-                        lutex[j*4*256 + i*4 + 1] =
-                            lutex[j*4*256 + i*4 + 2] =
-                                lutex[j*4*256 + i*4 + 3] = ( GLubyte )gTable[i];
+                    lutex[j * 4 * 256 + i * 4    ] =
+                        lutex[j * 4 * 256 + i * 4 + 1] =
+                            lutex[j * 4 * 256 + i * 4 + 2] =
+                                lutex[j * 4 * 256 + i * 4 + 3] = ( GLubyte )gTable[i];
                 }
                 else
                 {
-                    lutex[j*4*256 + i*4    ] =
-                        lutex[j*4*256 + i*4 + 1] =
-                            lutex[j*4*256 + i*4 + 2] =
-                                lutex[j*4*256 + i*4 + 3] = 0;
+                    lutex[j * 4 * 256 + i * 4    ] =
+                        lutex[j * 4 * 256 + i * 4 + 1] =
+                            lutex[j * 4 * 256 + i * 4 + 2] =
+                                lutex[j * 4 * 256 + i * 4 + 3] = 0;
                 }
                 //std::cout<<lutex[j*4*256 + i]<<",";
             }
@@ -334,17 +334,17 @@ void cfdOSGTransferShaderManager::_createTransferFunction( bool useGamma,
             {
                 if( i == j )
                 {
-                    lutex[j*( 256*4 ) + i*4    ] =
-                        lutex[j*( 256*4 ) + i*4 + 1] =
-                            lutex[j*( 256*4 ) + i*4 + 2] = ( GLubyte )gTable[i];
-                    lutex[j*( 256*4 ) + i*4 + 3] = ( GLubyte )ga[i];
+                    lutex[j * ( 256 * 4 ) + i * 4    ] =
+                        lutex[j * ( 256 * 4 ) + i * 4 + 1] =
+                            lutex[j * ( 256 * 4 ) + i * 4 + 2] = ( GLubyte )gTable[i];
+                    lutex[j * ( 256 * 4 ) + i * 4 + 3] = ( GLubyte )ga[i];
                 }
                 else
                 {
-                    lutex[j*( 256*4 ) + i*4    ] =
-                        lutex[j*( 256*4 ) + i*4 + 1] =
-                            lutex[j*( 256*4 ) + i*4 + 2] =
-                                lutex[j*( 256*4 ) + i*4 + 3] = 0;
+                    lutex[j * ( 256 * 4 ) + i * 4    ] =
+                        lutex[j * ( 256 * 4 ) + i * 4 + 1] =
+                            lutex[j * ( 256 * 4 ) + i * 4 + 2] =
+                                lutex[j * ( 256 * 4 ) + i * 4 + 3] = 0;
                 }
                 //std::cout<<lutex[j*(256*4) + i*4]<<",";
             }
@@ -436,7 +436,7 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::UpdateTransferFunction( cfdUpdateableOSGTexture1d::TransType type,
-                                                          float param, int whichFunction )
+        float param, int whichFunction )
 {
     cfdUpdateableOSGTexture1d* temp;
     if( !_transferFunctions.size() )
@@ -444,21 +444,21 @@ void cfdOSGTransferShaderManager::UpdateTransferFunction( cfdUpdateableOSGTextur
         std::cout << "Transfer functions not initialized!!!" << std::endl;
         return;
     }
-    switch ( whichFunction )
+    switch( whichFunction )
     {
-        case 0:
-            temp = dynamic_cast<cfdUpdateableOSGTexture1d*>( _transferFunctions.at( 0 )->getSubloadCallback() );
-            break;
-        case 1:
-            temp = dynamic_cast<cfdUpdateableOSGTexture1d*>( _transferFunctions.at( 1 )->getSubloadCallback() );
-            break;
-        case 2:
-            temp = dynamic_cast<cfdUpdateableOSGTexture1d*>( _transferFunctions.at( 2 )->getSubloadCallback() );
-            break;
-        case 3:
-        default:
-            temp = dynamic_cast<cfdUpdateableOSGTexture1d*>( _transferFunctions.at( 3 )->getSubloadCallback() );
-            break;
+    case 0:
+        temp = dynamic_cast<cfdUpdateableOSGTexture1d*>( _transferFunctions.at( 0 )->getSubloadCallback() );
+        break;
+    case 1:
+        temp = dynamic_cast<cfdUpdateableOSGTexture1d*>( _transferFunctions.at( 1 )->getSubloadCallback() );
+        break;
+    case 2:
+        temp = dynamic_cast<cfdUpdateableOSGTexture1d*>( _transferFunctions.at( 2 )->getSubloadCallback() );
+        break;
+    case 3:
+    default:
+        temp = dynamic_cast<cfdUpdateableOSGTexture1d*>( _transferFunctions.at( 3 )->getSubloadCallback() );
+        break;
     };
     temp->UpdateParam( type, param );
 }

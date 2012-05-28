@@ -126,9 +126,9 @@ class VE_XPLORER_EXPORTS DataSet
 {
 public:
     // Construct vtkUnstructuredGrid and vtkLookupTable objects.
-    DataSet();    
+    DataSet();
     // Destruct vtkUnstructuredGrid and vtkLookupTable objects.
-    ~DataSet();   
+    ~DataSet();
 
     void CreateCompositeDataSets();
 
@@ -153,15 +153,15 @@ public:
     void SetRange( double dataRange[2] );
     void SetRange( double dataMin, double dataMax );
     void GetRange( double dataRange[2] );
-    void GetRange( double &dataMin, double &dataMax );
-    double * GetRange();
+    void GetRange( double& dataMin, double& dataMax );
+    double* GetRange();
 
     // Set/get the min/max velocity, used defined.
     void SetUserRange( double userRange[2] );
     void SetUserRange( double userMin, double userMax );
     void GetUserRange( double userRange[2] );
-    void GetUserRange( double &userMin, double &userMax );
-    double * GetUserRange();
+    void GetUserRange( double& userMin, double& userMax );
+    double* GetUserRange();
 
     // Set/get the length of the diagonal of the bounding box for data set.
     void SetLength( float len );
@@ -174,17 +174,17 @@ public:
 
     // Set/get the step length for streamline integration.
     void SetStepLength( float sLen );
-    void GetStepLength( float &sLen );
+    void GetStepLength( float& sLen );
     float GetStepLength();
 
     // Set/get the maximum streamline integration time.
     void SetMaxTime( float mT );
-    void GetMaxTime( float &mT );
+    void GetMaxTime( float& mT );
     float GetMaxTime();
 
     // Set/get time step for streamline integration
     void SetTimeStep( float tStep );
-    void GetTimeStep( float &tStep );
+    void GetTimeStep( float& tStep );
     float GetTimeStep();
 
     // Get the vtk look up table.
@@ -229,20 +229,20 @@ public:
     void SetPrecomputedSurfaceDir( const std::string& newDir );
     const std::string& GetPrecomputedSurfaceDir();
 
-    cfdPlanes * GetPrecomputedXSlices();
-    cfdPlanes * GetPrecomputedYSlices();
-    cfdPlanes * GetPrecomputedZSlices();
-    cfdPlanes * GetPrecomputedSlices( int xyz );
+    cfdPlanes* GetPrecomputedXSlices();
+    cfdPlanes* GetPrecomputedYSlices();
+    cfdPlanes* GetPrecomputedZSlices();
+    cfdPlanes* GetPrecomputedSlices( int xyz );
 
     void StoreScalarInfo();
 
 #ifdef USE_OMP
-    vtkUnstructuredGrid * GetData( int i );
+    vtkUnstructuredGrid* GetData( int i );
     int GetNoOfDataForProcs();       // Set/get number of data for parallel process.
 #endif
 
-    void SetArrow( vtkPolyData * );
-    vtkPolyData * GetArrow();
+    void SetArrow( vtkPolyData* );
+    vtkPolyData* GetArrow();
 
     void SetNewlyActivated();
     void SetNotNewlyActivated();
@@ -255,22 +255,22 @@ public:
     const std::string GetVectorName( int );
     const std::string GetActiveVectorName();
 
-    DataSet * GetParent();
-    void SetParent( DataSet * );
+    DataSet* GetParent();
+    void SetParent( DataSet* );
 
-    void SetActualScalarRange( int, double * );
-    void GetActualScalarRange( int, double * );
+    void SetActualScalarRange( int, double* );
+    void GetActualScalarRange( int, double* );
     double* GetActualScalarRange( int );
     double* GetActualScalarRange( std::string name );
 
     // returns displayed range of active scalar
-    double * GetDisplayedScalarRange();
+    double* GetDisplayedScalarRange();
 
     // get/set displayed range of any scalar
-    double * GetDisplayedScalarRange( int );
-    void SetDisplayedScalarRange( int , double * );
+    double* GetDisplayedScalarRange( int );
+    void SetDisplayedScalarRange( int , double* );
 
-    double * GetVectorMagRange();
+    double* GetVectorMagRange();
 
     // get/set this dataset's DCS
     ves::xplorer::scenegraph::DCS* GetDCS();
@@ -327,7 +327,7 @@ public:
     unsigned int GetNumberOfPoints();
     ///Set the model for this dataset
     void SetModel( ves::xplorer::Model* model );
-    
+
     ///Create a surface wrap of this dataset
     void CreateSurfaceWrap();
     ///Set the active data arrays to load
@@ -338,7 +338,7 @@ public:
     ///Get Transient vectors for dataset
     ///\return The vector of datasets associated with this transient series
     const std::vector< DataSet* >& GetTransientDataSets();
-    
+
     ///Set the transient dataset vector so that sub transient datasets
     ///can tell other pipelines what the other datasets in the series are.
     void SetTransientDataSetsList( std::vector< DataSet* >& tempTransientData );
@@ -352,12 +352,12 @@ private:
     ///Load a VTK Temporal data set
     ///\param temporalDataSet The temporal data object
     void LoadTemporalDataSet( vtkDataObject* temporalDataSet );
-    
+
     ///Initialize a VTK data object and run all of our preprocessing filters
     ///on the data object.
     ///\param tempDataObject The data set to initialize
     void InitializeVTKDataObject( vtkDataObject* tempDataObject );
-    
+
     ///Sets the lookuptable to greyscale.
     void SetGreyscale();
     ///Sets the lookuptable to a blue to red scale.
@@ -365,7 +365,7 @@ private:
 
     ///Model pointer to the model that is holding this dataset
     ves::xplorer::Model* m_tempModel;
-    
+
     ///Operator callbacks for DataObjectHandler
     std::map<std::string, ves::xplorer::util::DataObjectHandler::DatasetOperatorCallback* > m_dataObjectOps;
     std::map< std::string, std::string > dataSetUUIDMap;
@@ -398,7 +398,7 @@ private:
     ///Lookup table.
     vtkLookupTable* lut;
     ///Original piece of vtk data
-    vtkDataObject* m_dataSet;   
+    vtkDataObject* m_dataSet;
     ///holder for new vtk pipeline
     vtkAlgorithm* mDataReader;
     ///used by gui to place in appropriate column
@@ -428,7 +428,7 @@ private:
     std::vector< std::string > vectorName;
     ///Null vector name
     std::string m_nullVectorName;
-    
+
     osg::ref_ptr< ves::xplorer::scenegraph::Geode > wireframeGeode;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > m_visualBBox;
 
@@ -447,7 +447,7 @@ private:
     int partOfTransientSeries;
     ///Translator interface
     ves::builder::DataLoader::DataLoader* m_externalFileLoader;
-    
+
     ///Easy way to tell if this dataset is a child of a composite dataset
     bool m_isPartOfCompositeDataset;
     ///List of child datasets for this dataset
@@ -465,7 +465,7 @@ private:
     Poco::Logger& m_logger;
     ///Actual stream for this class
     ves::xplorer::LogStreamPtr m_logStream;
-    
+
 };
 }
 }

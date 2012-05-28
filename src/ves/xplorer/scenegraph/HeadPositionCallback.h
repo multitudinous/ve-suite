@@ -62,10 +62,10 @@ public:
     HeadPositionCallback( gmtl::Point3d transformPoint = gmtl::Point3d( -3.5, 9.0, 0.0 ) );
 
     //META_Object(ves::xplorer::scenegraph, HeadPositionCallback);
-    
+
     ///Copy Constructor
-    HeadPositionCallback( const HeadPositionCallback& ctc, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
-    
+    HeadPositionCallback( const HeadPositionCallback& ctc, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
     ///Override operator
     virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 

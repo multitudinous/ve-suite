@@ -53,10 +53,10 @@ public:
     NURBSControlMesh();
 
     ///Constructor
-    ///\param controlPoints The control points of the NURBS 
-    ///\param numU The number of control points in the U direction 
-    ///\param numV The number of control points in the V direction 
-    ///\param isSurface Flag describing type of NURBS 
+    ///\param controlPoints The control points of the NURBS
+    ///\param numU The number of control points in the U direction
+    ///\param numV The number of control points in the V direction
+    ///\param isSurface Flag describing type of NURBS
     NURBSControlMesh( std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> controlPoints,
                       unsigned int numU,
                       unsigned int numV, bool isSurface = false );
@@ -68,14 +68,14 @@ public:
     META_Object( NURBS, ves::xplorer::scenegraph::nurbs::NURBSControlMesh )
 
     ///Set the control points
-    ///\param controlPoints The control points of the NURBS 
-    ///\param numU The number of control points in the U direction 
-    ///\param numV The number of control points in the V direction 
-    ///\param isSurface Flag describing type of NURBS 
+    ///\param controlPoints The control points of the NURBS
+    ///\param numU The number of control points in the U direction
+    ///\param numV The number of control points in the V direction
+    ///\param isSurface Flag describing type of NURBS
     void SetControlPoints( std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> controlPoints,
                            unsigned int numU,
                            unsigned int numV, bool isSurface = false );
-    
+
     ///Update the position of a specific ControlPoint
     ///\param controlPointIndex The index of the ControlPoint to move
     ///\param position The new position of the ControlPoint
@@ -83,8 +83,8 @@ public:
 
 protected:
     ///Destructor
-    virtual ~NURBSControlMesh(){}
-   
+    virtual ~NURBSControlMesh() {}
+
     ///Update the control point primative verts
     void _updateControlMeshPrimitives();
     ///Update the points

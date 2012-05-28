@@ -48,8 +48,8 @@ BEGIN_EVENT_TABLE( GlobalParamDialog, wxDialog )
     EVT_RADIOBUTTON( GLOBALPARAMDIALOG_RADIO_B, GlobalParamDialog::OnChange )
 END_EVENT_TABLE()
 
-GlobalParamDialog::GlobalParamDialog( wxWindow *parent, wxWindowID id )
-        : wxDialog(( wxWindow * )parent, id, wxT( "Global Parameters" ), wxDefaultPosition, wxDefaultSize )
+GlobalParamDialog::GlobalParamDialog( wxWindow* parent, wxWindowID id )
+    : wxDialog( ( wxWindow* )parent, id, wxT( "Global Parameters" ), wxDefaultPosition, wxDefaultSize )
 {
     wxSize entry_size( 100, 17 );
     wxSize tag_size( 250, 15 );
@@ -84,13 +84,13 @@ GlobalParamDialog::GlobalParamDialog( wxWindow *parent, wxWindowID id )
     toptop->Add( top_sizer, 0,  wxALIGN_CENTER_HORIZONTAL );
     toptop->Add( right_margin, 0, wxALIGN_RIGHT );
 
-    wxStaticBox *glb_lbl = new wxStaticBox( this, -1, _( "Global Parameters" ) );
-    wxStaticBoxSizer *glb_sizer = new wxStaticBoxSizer( glb_lbl, wxHORIZONTAL );
+    wxStaticBox* glb_lbl = new wxStaticBox( this, -1, _( "Global Parameters" ) );
+    wxStaticBoxSizer* glb_sizer = new wxStaticBoxSizer( glb_lbl, wxHORIZONTAL );
 
-    wxStaticBox *finance_lbl = new wxStaticBox( this, -1, _( "Financial Parameters" ) );
-    wxStaticBoxSizer *finance_sizer = new wxStaticBoxSizer( finance_lbl, wxVERTICAL );
+    wxStaticBox* finance_lbl = new wxStaticBox( this, -1, _( "Financial Parameters" ) );
+    wxStaticBoxSizer* finance_sizer = new wxStaticBoxSizer( finance_lbl, wxVERTICAL );
 
-    wxBoxSizer *ok_row = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* ok_row = new wxBoxSizer( wxHORIZONTAL );
 
     top_sizer->Add( 5, 10 );
     top_sizer->Add( glb_sizer, 0, wxALIGN_CENTER_HORIZONTAL );
@@ -114,8 +114,8 @@ GlobalParamDialog::GlobalParamDialog( wxWindow *parent, wxWindowID id )
     glb_sizer->Add( label0 );
     glb_sizer->Add( plant_capacity );
 
-    wxBoxSizer * fin_sizer[16];
-    wxStaticText * fin_lbl[16];
+    wxBoxSizer* fin_sizer[16];
+    wxStaticText* fin_lbl[16];
 
     finance_sizer->Add( 5, 10 );
     for( i = 0; i < 16; i++ )
@@ -138,7 +138,8 @@ GlobalParamDialog::GlobalParamDialog( wxWindow *parent, wxWindowID id )
 
     wxString years[] = {_( "1977" ), _( "1978" ), _( "1979" ), _( "1980" ), _( "1981" ), _( "1982" ), _( "1983" ), _( "1984" ), _( "1985" ), _( "1986" ),
                         _( "1987" ), _( "1988" ), _( "1989" ), _( "1990" ), _( "1991" ), _( "1992" ), _( "1993" ), _( "1994" ), _( "1995" ), _( "1996" ),
-                        _( "1997" ), _( "1998" ), _( "1999" ), _( "2000" ), _( "2001" ), _( "2002" ), _( "2003" )};
+                        _( "1997" ), _( "1998" ), _( "1999" ), _( "2000" ), _( "2001" ), _( "2002" ), _( "2003" )
+                       };
 
     year_costs = new wxComboBox( this, GLOBALPARAMDIALOG_YEAR_COSTS, _T( "2002" ), wxDefaultPosition, entry_size, 27, years, wxCB_DROPDOWN | wxCB_READONLY );
 
@@ -223,7 +224,7 @@ GlobalParamDialog::GlobalParamDialog( wxWindow *parent, wxWindowID id )
     fin_sizer[15]->Add( fin_lbl[15], 0, wxALIGN_CENTER_HORIZONTAL );
     fin_sizer[15]->Add( invest_tax_credit, 0, wxALIGN_CENTER_HORIZONTAL );
 
-//The ok row
+    //The ok row
     ok_b = new wxButton( this, wxID_OK, _( "OK" ) );
     cancel_b = new wxButton( this, wxID_CANCEL, _( "Cancel" ) );
     ok_row->Add( ok_b, 0, wxALIGN_CENTER_HORIZONTAL );
@@ -415,14 +416,14 @@ bool GlobalParamDialog::TransferDataFromWindow()
     return true;
 }
 
-void GlobalParamDialog::double2entry( wxTextCtrl* entry, double * value )
+void GlobalParamDialog::double2entry( wxTextCtrl* entry, double* value )
 {
     wxString txt;
     txt << ( *value );
     entry->SetValue( txt );
 }
 
-void GlobalParamDialog::entry2double( wxTextCtrl* entry, double * value )
+void GlobalParamDialog::entry2double( wxTextCtrl* entry, double* value )
 {
     wxString txt;
     txt = entry->GetValue();

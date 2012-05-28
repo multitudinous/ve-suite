@@ -76,13 +76,13 @@ RemoveElevationLayerHandler::~RemoveElevationLayerHandler()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void RemoveElevationLayerHandler::Execute ( CommandPtr command, MinervaManager& manager )
+void RemoveElevationLayerHandler::Execute( CommandPtr command, MinervaManager& manager )
 {
-  ves::open::xml::DataValuePairPtr guidData ( command->GetDataValuePair ( ves::util::names::UNIQUE_ID ) );
+    ves::open::xml::DataValuePairPtr guidData( command->GetDataValuePair( ves::util::names::UNIQUE_ID ) );
 
-  std::string guid;
-  guidData->GetData ( guid );
+    std::string guid;
+    guidData->GetData( guid );
 
-  manager.RemoveElevationLayer ( guid );
+    manager.RemoveElevationLayer( guid );
 
 }

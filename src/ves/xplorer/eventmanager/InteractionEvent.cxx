@@ -64,7 +64,7 @@ InteractionEvent::InteractionEvent( eventType eType,
     Y( y ),
     Z( z )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 InteractionEvent::~InteractionEvent()

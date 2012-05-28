@@ -54,7 +54,7 @@ public:
         ;
     }
 
-    VESKeyPressEater(QObject *parent = 0)
+    VESKeyPressEater( QObject* parent = 0 )
         :
         QObject( parent ),
         m_app( 0 ),
@@ -76,42 +76,42 @@ public:
 protected:
     ves::xplorer::App* m_app;
     bool m_paint;
-    
-    bool ProcessEvent( QObject *obj, QEvent *event)
+
+    bool ProcessEvent( QObject* obj, QEvent* event )
     {
 #if defined( _DARWIN )
         m_app->AcquireQtLock();
 #endif
-        bool temp = QObject::eventFilter(obj, event);
+        bool temp = QObject::eventFilter( obj, event );
         //bool temp = obj->eventFilter( obj, event);
         //bool consumed = obj->event(event);
-        //event->spont = false;     
+        //event->spont = false;
 #if defined( _DARWIN )
         m_app->ReleaseQtLock();
 #endif
         std::cout << " consumed " << temp << std::endl << std::flush;
-        return temp;   
+        return temp;
     }
 
-    bool eventFilter(QObject *obj, QEvent *event)
+    bool eventFilter( QObject* obj, QEvent* event )
     {
         if( event->type() == QEvent::Paint )
         {
-            bool temp = QObject::eventFilter(obj, event);
+            bool temp = QObject::eventFilter( obj, event );
             return temp;
         }
 
         if( event->type() == QEvent::Timer )
         {
-            bool temp = QObject::eventFilter(obj, event);
+            bool temp = QObject::eventFilter( obj, event );
             return temp;
         }
-        
+
         if( event->type() == QEvent::None )
         {
             return ProcessEvent( obj, event );
         }
-        
+
         //Look for the various event types in qcoreevent.h
         if( event->type() == QEvent::KeyPress )
         {
@@ -122,7 +122,7 @@ protected:
         {
             return ProcessEvent( obj, event );
         }
-        
+
         if( event->type() == QEvent::MouseButtonPress )
         {
             return ProcessEvent( obj, event );
@@ -142,22 +142,22 @@ protected:
         {
             return ProcessEvent( obj, event );
         }
-        
+
         if( event->type() == QEvent::MetaCall )
         {
             return ProcessEvent( obj, event );
         }
-        
+
         if( event->type() == QEvent::NonClientAreaMouseButtonDblClick )
         {
             return ProcessEvent( obj, event );
         }
-        
+
         if( event->type() == QEvent::MouseButtonDblClick )
         {
             return ProcessEvent( obj, event );
         }
-        
+
         if( event->type() == QEvent::DeferredDelete )
         {
             return ProcessEvent( obj, event );
@@ -167,13 +167,13 @@ protected:
         {
             return ProcessEvent( obj, event );
         }
-        
-        
+
+
         std::cout << event->type() << std::endl << std::flush;
 
         //return ProcessEvent( obj, event );
-        
-        bool temp = QObject::eventFilter(obj, event);
+
+        bool temp = QObject::eventFilter( obj, event );
         return temp;
     }
 };

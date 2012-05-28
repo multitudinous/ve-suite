@@ -89,18 +89,18 @@
 
 using namespace ves::xplorer::minerva;
 
-vprSingletonImp ( MinervaManager );
+vprSingletonImp( MinervaManager );
 
 namespace Detail
 {
-  void setenv ( const std::string& variable, const std::string& value )
-  {
+void setenv( const std::string& variable, const std::string& value )
+{
 #ifdef _MSC_VER
-    ::_putenv_s ( variable.c_str(), value.c_str() );
+    ::_putenv_s( variable.c_str(), value.c_str() );
 #else
-    ::setenv ( variable.c_str(), value.c_str(), 0 );
+    ::setenv( variable.c_str(), value.c_str(), 0 );
 #endif
-  }
+}
 }
 
 typedef Minerva::Common::IPlanetCoordinates IPlanetCoordinates;
@@ -113,7 +113,7 @@ typedef Minerva::Common::IElevationDatabase IElevationDatabase;
 ///////////////////////////////////////////////////////////////////////////////
 
 MinervaManager::MinervaManager()
-    : 
+    :
     _eventHandlers(),
     _currentCommand( CommandPtr() ),
     _body( 0x0 ),
@@ -121,17 +121,17 @@ MinervaManager::MinervaManager()
     _scene( 0x0 ),
     _models()
 {
-    std::string xplorerDataDir = Usul::System::Environment::get ( "XPLORER_DATA_DIR" );
+    std::string xplorerDataDir = Usul::System::Environment::get( "XPLORER_DATA_DIR" );
     std::string minervaDir = xplorerDataDir + std::string( "/minerva" );
     std::cout << "|\tMinerva data directory = " << minervaDir << std::endl;
     bool vesuiteHomeDefined = false;
     try
     {
 #if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
-        boost::filesystem::path minervaDirPath( 
+        boost::filesystem::path minervaDirPath(
             minervaDir );
 #else
-        boost::filesystem::path minervaDirPath( 
+        boost::filesystem::path minervaDirPath(
             minervaDir, boost::filesystem::no_check );
 #endif
         if( boost::filesystem::is_directory( minervaDirPath ) )
@@ -143,13 +143,13 @@ MinervaManager::MinervaManager()
     catch( const std::exception& ex )
     {
         vprDEBUG( vesDBG, 1 ) << ex.what()
-            << std::endl
-            << vprDEBUG_FLUSH;
-    }    
-    Detail::setenv ( MINERVA_DATA_DIR_VARIABLE, minervaDir );
+                              << std::endl
+                              << vprDEBUG_FLUSH;
+    }
+    Detail::setenv( MINERVA_DATA_DIR_VARIABLE, minervaDir );
 
     // Set the program name since the cache is based on this.
-    Usul::App::Application::instance().program ( "Minerva" );
+    Usul::App::Application::instance().program( "Minerva" );
 
     _eventHandlers[ves::util::commands::ADD_EARTH_COMMAND_NAME] = new AddEarthHandler;
     _eventHandlers[ves::util::commands::REMOVE_EARTH_COMMAND_NAME] = new RemoveEarthHandler;
@@ -177,24 +177,24 @@ MinervaManager::MinervaManager()
 
 MinervaManager::~MinervaManager()
 {
-  Usul::Functions::safeCall ( boost::bind ( &MinervaManager::_unloadPlugins, this ) );
+    Usul::Functions::safeCall( boost::bind( &MinervaManager::_unloadPlugins, this ) );
 
-  // Delete the event handlers.
-  EventHandlers::iterator iter ( _eventHandlers.begin() );
-  while ( iter != _eventHandlers.end() )
-  {
-      delete iter->second;
-      _eventHandlers.erase( iter++ );
-  }
+    // Delete the event handlers.
+    EventHandlers::iterator iter( _eventHandlers.begin() );
+    while( iter != _eventHandlers.end() )
+    {
+        delete iter->second;
+        _eventHandlers.erase( iter++ );
+    }
 
-  for ( Models::iterator iter = _models.begin(); iter != _models.end(); ++iter )
-  {
-    Usul::Pointers::unreference ( iter->second );
-    iter->second = 0x0;
-  }
-  _models.clear();
+    for( Models::iterator iter = _models.begin(); iter != _models.end(); ++iter )
+    {
+        Usul::Pointers::unreference( iter->second );
+        iter->second = 0x0;
+    }
+    _models.clear();
 
-  this->Clear();
+    this->Clear();
 }
 
 
@@ -206,31 +206,31 @@ MinervaManager::~MinervaManager()
 
 void MinervaManager::PreFrameUpdate()
 {
-    vprDEBUG( vesDBG, 3 ) << "|\tMinervaManager::LatePreFrameUpdate" 
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tMinervaManager::LatePreFrameUpdate"
+                          << std::endl << vprDEBUG_FLUSH;
     const ves::open::xml::CommandPtr tempCommand =
         ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
-    if ( tempCommand )
+    if( tempCommand )
     {
-        const std::string name ( tempCommand->GetCommandName() );
+        const std::string name( tempCommand->GetCommandName() );
 
-        EventHandlers::iterator iter ( _eventHandlers.find ( name ) );
-        if ( iter != _eventHandlers.end() )
+        EventHandlers::iterator iter( _eventHandlers.find( name ) );
+        if( iter != _eventHandlers.end() )
         {
             if( !_manager && ( name != ves::util::commands::ADD_EARTH_COMMAND_NAME ) )
             {
                 return;
             }
 
-            EventHandler *handler ( iter->second );
-            if ( 0x0 != handler )
+            EventHandler* handler( iter->second );
+            if( 0x0 != handler )
             {
                 vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager executing: " << name << std::endl << vprDEBUG_FLUSH;
                 try
                 {
-                    handler->Execute ( tempCommand, *this );
+                    handler->Execute( tempCommand, *this );
                 }
-                catch ( ... )
+                catch( ... )
                 {
                     ;
                 }
@@ -245,8 +245,8 @@ void MinervaManager::PreFrameUpdate()
         // Remove all tiles that are ready for deletion.
         _body->purgeTiles();
     }
-    vprDEBUG( vesDBG, 3 ) << "|\tMinervaManager::LatePreFrameUpdate End" 
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tMinervaManager::LatePreFrameUpdate End"
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -259,58 +259,58 @@ void MinervaManager::AddEarthToScene()
     // Make sure.
     this->Clear();
 
-    vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager adding earth to the scene." 
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager adding earth to the scene."
+                          << std::endl << vprDEBUG_FLUSH;
 
-    _manager = new Usul::Jobs::Manager ( "VE-Suite Minerva Job Manager", 4 );
+    _manager = new Usul::Jobs::Manager( "VE-Suite Minerva Job Manager", 4 );
 
     using Minerva::Core::TileEngine::MeshSize;
     using Minerva::Core::TileEngine::ImageSize;
 
-    const MeshSize meshSize ( 32, 32 );
-    const ImageSize imageSize ( 256, 256 );
+    const MeshSize meshSize( 32, 32 );
+    const ImageSize imageSize( 256, 256 );
     //const ImageSize imageSize ( 512, 512 );
-    const double splitDistance ( osg::WGS_84_RADIUS_EQUATOR * 3.0 );
+    const double splitDistance( osg::WGS_84_RADIUS_EQUATOR * 3.0 );
 
-    _body = Minerva::Core::Functions::makeEarth ( _manager, meshSize, imageSize, splitDistance );
+    _body = Minerva::Core::Functions::makeEarth( _manager, meshSize, imageSize, splitDistance );
 
-    Usul::Pointers::reference ( _body );
+    Usul::Pointers::reference( _body );
 
     // Set the log to print to vprDBG.
-    _body->logSet ( new Log );
+    _body->logSet( new Log );
 
     _scene = _body->scene();
 
     osg::ref_ptr< osg::StateSet > stateset = _scene->getOrCreateStateSet();
 
-    osg::ref_ptr< osg::Program > program = 
+    osg::ref_ptr< osg::Program > program =
         ves::xplorer::scenegraph::SceneManager::instance()->
         GetNullGlowTextureProgram();
 
-    stateset->addUniform( 
+    stateset->addUniform(
         ves::xplorer::scenegraph::SceneManager::instance()->
         GetNullGlowTextureUniform() );
-    
-    stateset->setAttributeAndModes( program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-    osg::ref_ptr<osg::Group> root = 
+    stateset->setAttributeAndModes( program.get(),
+                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    osg::ref_ptr<osg::Group> root =
         ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot();
     if( root.valid() )
     {
-        root->addChild ( _scene.get() );
+        root->addChild( _scene.get() );
     }
 
     for( Models::const_iterator iter = _models.begin(); iter != _models.end(); ++iter )
     {
         ModelWrapper::RefPtr model( iter->second );
-        if ( model.valid() )
+        if( model.valid() )
         {
-            Minerva::Core::Data::DataObject::RefPtr dataObject = 
+            Minerva::Core::Data::DataObject::RefPtr dataObject =
                 new Minerva::Core::Data::DataObject();
             model->SetParent( dataObject.get() );
 
-            _body->vectorData()->add ( dataObject.get() );
+            _body->vectorData()->add( dataObject.get() );
             this->UpdateModel( model );
         }
     }
@@ -344,7 +344,7 @@ void MinervaManager::Clear()
     if( 0x0 != _manager )
     {
         vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager canceling all threads." << std::endl << vprDEBUG_FLUSH;
-        
+
         // Remove all queued jobs and cancel running jobs.
         _manager->cancel();
 
@@ -377,25 +377,25 @@ void MinervaManager::ClearModels()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void MinervaManager::AddModel ( const std::string& guid, ModelWrapper* model )
+void MinervaManager::AddModel( const std::string& guid, ModelWrapper* model )
 {
-  // Remove anything we may have.
-  this->RemoveModel ( guid );
-  
-  // Add the model to our map, even though the body may be null.
-  // When the body is created, add the models.
-  Usul::Pointers::reference ( model );
-  _models[guid] = model;
+    // Remove anything we may have.
+    this->RemoveModel( guid );
 
-  if ( 0x0 != _body )
-  {
-    Minerva::Core::Data::DataObject::RefPtr dataObject ( new Minerva::Core::Data::DataObject );
-    model->SetParent ( dataObject.get() );
+    // Add the model to our map, even though the body may be null.
+    // When the body is created, add the models.
+    Usul::Pointers::reference( model );
+    _models[guid] = model;
 
-    _body->vectorData()->add ( dataObject.get() );
+    if( 0x0 != _body )
+    {
+        Minerva::Core::Data::DataObject::RefPtr dataObject( new Minerva::Core::Data::DataObject );
+        model->SetParent( dataObject.get() );
 
-    this->UpdateModel ( model );
-  }
+        _body->vectorData()->add( dataObject.get() );
+
+        this->UpdateModel( model );
+    }
 }
 
 
@@ -405,10 +405,10 @@ void MinervaManager::AddModel ( const std::string& guid, ModelWrapper* model )
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-ModelWrapper* MinervaManager::GetModel ( const std::string& guid ) const
+ModelWrapper* MinervaManager::GetModel( const std::string& guid ) const
 {
-  Models::const_iterator iter ( _models.find ( guid ) );
-  return ( iter != _models.end() ? iter->second : 0x0 );
+    Models::const_iterator iter( _models.find( guid ) );
+    return ( iter != _models.end() ? iter->second : 0x0 );
 }
 
 
@@ -418,10 +418,10 @@ ModelWrapper* MinervaManager::GetModel ( const std::string& guid ) const
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-bool MinervaManager::HasModel ( const std::string& guid ) const
+bool MinervaManager::HasModel( const std::string& guid ) const
 {
-  Models::const_iterator iter ( _models.find ( guid ) );
-  return iter != _models.end();
+    Models::const_iterator iter( _models.find( guid ) );
+    return iter != _models.end();
 }
 
 
@@ -431,14 +431,14 @@ bool MinervaManager::HasModel ( const std::string& guid ) const
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void MinervaManager::UpdateModel ( ModelWrapper* model )
+void MinervaManager::UpdateModel( ModelWrapper* model )
 {
-  if ( 0x0 != model && 0x0 != _body )
-  {
-    IPlanetCoordinates::QueryPtr planet ( _body );
-    IElevationDatabase::QueryPtr elevation ( _body );
-    model->UpdateMatrix ( planet.get(), elevation.get() );
-  }
+    if( 0x0 != model && 0x0 != _body )
+    {
+        IPlanetCoordinates::QueryPtr planet( _body );
+        IElevationDatabase::QueryPtr elevation( _body );
+        model->UpdateMatrix( planet.get(), elevation.get() );
+    }
 }
 
 
@@ -448,19 +448,19 @@ void MinervaManager::UpdateModel ( ModelWrapper* model )
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void MinervaManager::RemoveModel ( const std::string& guid )
+void MinervaManager::RemoveModel( const std::string& guid )
 {
-  ModelWrapper::RefPtr wrapper ( this->GetModel ( guid ) );
-  if ( wrapper.valid() )
-  {
-    if ( 0x0 != _body )
+    ModelWrapper::RefPtr wrapper( this->GetModel( guid ) );
+    if( wrapper.valid() )
     {
-      _body->vectorData()->remove ( wrapper->GetParent() );
-    }
+        if( 0x0 != _body )
+        {
+            _body->vectorData()->remove( wrapper->GetParent() );
+        }
 
-    Usul::Pointers::unreference ( _models[guid] );
-    _models.erase ( guid );
-  }
+        Usul::Pointers::unreference( _models[guid] );
+        _models.erase( guid );
+    }
 }
 
 
@@ -470,26 +470,30 @@ void MinervaManager::RemoveModel ( const std::string& guid )
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void MinervaManager::GetViewMatrix ( Minerva::Core::Data::Camera* camera, gmtl::Matrix44d& matrix ) const
+void MinervaManager::GetViewMatrix( Minerva::Core::Data::Camera* camera, gmtl::Matrix44d& matrix ) const
 {
-  if ( 0x0 == _body || 0x0 == camera )
-    return;
+    if( 0x0 == _body || 0x0 == camera )
+    {
+        return;
+    }
 
-  Minerva::Core::TileEngine::LandModel::RefPtr landModel ( _body->landModel() );
-  if ( !landModel.valid() )
-    return;
+    Minerva::Core::TileEngine::LandModel::RefPtr landModel( _body->landModel() );
+    if( !landModel.valid() )
+    {
+        return;
+    }
 
-  typedef Minerva::Core::Data::Camera::Matrix Matrix;
-  Matrix m ( camera->viewMatrix ( landModel.get() ) );
+    typedef Minerva::Core::Data::Camera::Matrix Matrix;
+    Matrix m( camera->viewMatrix( landModel.get() ) );
 
-  matrix.set ( &m[0] );
+    matrix.set( &m[0] );
 
-  gmtl::AxisAngled axisAngle ( -osg::PI_2, 1, 0, 0 );
-  gmtl::Matrix44d R;
-  gmtl::setRot( R, gmtl::make< gmtl::Quatd >( axisAngle ) );
+    gmtl::AxisAngled axisAngle( -osg::PI_2, 1, 0, 0 );
+    gmtl::Matrix44d R;
+    gmtl::setRot( R, gmtl::make< gmtl::Quatd >( axisAngle ) );
 
-  gmtl::postMult( matrix, R );
-  gmtl::invert( matrix );
+    gmtl::postMult( matrix, R );
+    gmtl::invert( matrix );
 }
 
 
@@ -499,13 +503,15 @@ void MinervaManager::GetViewMatrix ( Minerva::Core::Data::Camera* camera, gmtl::
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void MinervaManager::AddElevationLayer ( Minerva::Core::Layers::RasterLayer* layer )
+void MinervaManager::AddElevationLayer( Minerva::Core::Layers::RasterLayer* layer )
 {
-  if ( 0x0 == _body || 0x0 == layer )
-    return;
+    if( 0x0 == _body || 0x0 == layer )
+    {
+        return;
+    }
 
 
-  _body->elevationAppend ( layer );
+    _body->elevationAppend( layer );
 }
 
 
@@ -515,12 +521,14 @@ void MinervaManager::AddElevationLayer ( Minerva::Core::Layers::RasterLayer* lay
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void MinervaManager::AddRasterLayer ( Minerva::Core::Layers::RasterLayer* layer )
+void MinervaManager::AddRasterLayer( Minerva::Core::Layers::RasterLayer* layer )
 {
-  if ( 0x0 == _body || 0x0 == layer )
-    return;
+    if( 0x0 == _body || 0x0 == layer )
+    {
+        return;
+    }
 
-  _body->rasterAppend ( layer );
+    _body->rasterAppend( layer );
 }
 
 
@@ -530,15 +538,17 @@ void MinervaManager::AddRasterLayer ( Minerva::Core::Layers::RasterLayer* layer 
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void MinervaManager::RemoveElevationLayer ( const std::string& guid )
+void MinervaManager::RemoveElevationLayer( const std::string& guid )
 {
-  if ( 0x0 == _body )
-    return;
+    if( 0x0 == _body )
+    {
+        return;
+    }
 
-  typedef Minerva::Core::Data::Container Container;
-  Container::RefPtr group ( _body->elevationData() );
-  Extents extents;
-  this->_removeLayer ( group.get(), guid, extents );
+    typedef Minerva::Core::Data::Container Container;
+    Container::RefPtr group( _body->elevationData() );
+    Extents extents;
+    this->_removeLayer( group.get(), guid, extents );
 }
 
 
@@ -548,20 +558,22 @@ void MinervaManager::RemoveElevationLayer ( const std::string& guid )
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void MinervaManager::RemoveRasterLayer ( const std::string& guid )
+void MinervaManager::RemoveRasterLayer( const std::string& guid )
 {
-  if ( 0x0 == _body )
-    return;
+    if( 0x0 == _body )
+    {
+        return;
+    }
 
-  // This dynamic cast should always be true.
-  typedef Minerva::Core::Data::Container Container;
-  Container::RefPtr group ( _body->rasterData() );
+    // This dynamic cast should always be true.
+    typedef Minerva::Core::Data::Container Container;
+    Container::RefPtr group( _body->rasterData() );
 
-  Extents extents;
-  if ( this->_removeLayer ( group.get(), guid, extents ) )
-  {
-    _body->dirtyTextures ( extents );
-  }
+    Extents extents;
+    if( this->_removeLayer( group.get(), guid, extents ) )
+    {
+        _body->dirtyTextures( extents );
+    }
 }
 
 
@@ -571,18 +583,18 @@ void MinervaManager::RemoveRasterLayer ( const std::string& guid )
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-bool MinervaManager::_removeLayer ( Minerva::Core::Data::Container *group, const std::string& guid, Extents& extents )
+bool MinervaManager::_removeLayer( Minerva::Core::Data::Container* group, const std::string& guid, Extents& extents )
 {
     typedef Minerva::Core::Data::Container Container;
 
     if( 0x0 != group )
     {
-        Minerva::Core::Data::Feature::RefPtr feature ( group->find ( guid ) );
-        
+        Minerva::Core::Data::Feature::RefPtr feature( group->find( guid ) );
+
         // If we found a layer, remove it.
-        if ( feature.valid() )
+        if( feature.valid() )
         {
-            group->remove ( feature.get() );
+            group->remove( feature.get() );
             extents = feature->extents();
 
             return true;
@@ -601,26 +613,26 @@ bool MinervaManager::_removeLayer ( Minerva::Core::Data::Container *group, const
 
 void MinervaManager::_loadPlugins()
 {
-//#ifdef __APPLE__
-  Usul::Components::Manager::instance().load( std::string("GDALReadImage.plug") );
-//#endif
-  // this causes huge problems because the output is never flushed.
-  //This can probably be corrected but I am not sure how.
-  if( vpr::Debug::instance()->isDebugEnabled() && vpr::Debug::instance()->isCategoryAllowed( vesDBG ) )
-  {
-      //Usul::Components::Manager::instance().print ( vpr::Debug::instance()->getStream( vesDBG, 0, true ) );
-      Usul::Components::Manager::instance().print( std::cout );
-  }
+    //#ifdef __APPLE__
+    Usul::Components::Manager::instance().load( std::string( "GDALReadImage.plug" ) );
+    //#endif
+    // this causes huge problems because the output is never flushed.
+    //This can probably be corrected but I am not sure how.
+    if( vpr::Debug::instance()->isDebugEnabled() && vpr::Debug::instance()->isCategoryAllowed( vesDBG ) )
+    {
+        //Usul::Components::Manager::instance().print ( vpr::Debug::instance()->getStream( vesDBG, 0, true ) );
+        Usul::Components::Manager::instance().print( std::cout );
+    }
 
 #ifdef _MSC_VER
-  const std::string minervaGdalName ( "MinervaGDAL.dll" );
+    const std::string minervaGdalName( "MinervaGDAL.dll" );
 #elif __APPLE__
-  const std::string minervaGdalName ( "libMinervaGDAL.bundle" );
+    const std::string minervaGdalName( "libMinervaGDAL.bundle" );
 #else
-  const std::string minervaGdalName ( "libMinervaGDAL.so" );
+    const std::string minervaGdalName( "libMinervaGDAL.so" );
 #endif
-  
-  Usul::Components::Manager::instance().load ( minervaGdalName );
+
+    Usul::Components::Manager::instance().load( minervaGdalName );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -631,34 +643,37 @@ void MinervaManager::_loadPlugins()
 
 void MinervaManager::_unloadPlugins()
 {
-  Usul::Components::Manager::instance().clear ( 0x0 );
+    Usul::Components::Manager::instance().clear( 0x0 );
 }
 ///////////////////////////////////////////////////////////////////////////////
-namespace {
-  struct FindLayer : public Minerva::Core::Visitor
-  {
-    FindLayer ( const std::string& guid ) : Minerva::Core::Visitor(), guid ( guid ), layer ( 0x0 ){}
+namespace
+{
+struct FindLayer : public Minerva::Core::Visitor
+{
+    FindLayer( const std::string& guid ) : Minerva::Core::Visitor(), guid( guid ), layer( 0x0 ) {}
     virtual ~FindLayer() {}
-    virtual void visit ( Minerva::Core::Layers::RasterLayer & currentLayer )
+    virtual void visit( Minerva::Core::Layers::RasterLayer& currentLayer )
     {
-      if ( guid == currentLayer.objectId() )
-      {
-        layer = &currentLayer;
-      }
+        if( guid == currentLayer.objectId() )
+        {
+            layer = &currentLayer;
+        }
     }
     std::string guid;
     Minerva::Core::Layers::RasterLayer::RefPtr layer;
-  };
+};
 }
 ///////////////////////////////////////////////////////////////////////////////
 Minerva::Core::Layers::RasterLayer* MinervaManager::GetLayer( const std::string& guid ) const
 {
-  if ( 0x0 == _body )
-    return 0x0;
+    if( 0x0 == _body )
+    {
+        return 0x0;
+    }
 
-  ::FindLayer visitor ( guid );
-  _body->accept ( visitor );
-  return visitor.layer.get();
+    ::FindLayer visitor( guid );
+    _body->accept( visitor );
+    return visitor.layer.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Minerva::Core::TileEngine::Body* MinervaManager::GetTileEngineBody()

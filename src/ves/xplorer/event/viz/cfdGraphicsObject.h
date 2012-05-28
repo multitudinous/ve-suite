@@ -133,10 +133,10 @@ public:
 
     ///Set the uui for the current feature
     void SetUUID( std::string const& uuid );
-    
+
     ///Set the uui for the current feature
     std::string const& GetUUID() const;
-        
+
 protected:
     ///SceneGraph Geode
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;

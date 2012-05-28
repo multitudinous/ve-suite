@@ -93,8 +93,8 @@ public:
     ///\param nodeType The node type.
     ///\param attributeName The name of the CADAttribute to activate on the CADNode.
     void SetActiveDataset( std::string nodeID,
-                                   std::string nodeType,
-                                   std::string attributeName );
+                           std::string nodeType,
+                           std::string attributeName );
 
     ///Create a new part
     void CreateDataset( std::string fileName );

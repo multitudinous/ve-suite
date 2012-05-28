@@ -78,38 +78,38 @@ void IsosurfaceFeatureMaker::UpdateContourInformation( xplorer::data::PropertySe
 
     ves::open::xml::DataValuePairPtr isosurfaceValue( new ves::open::xml::DataValuePair() );
     isosurfaceValue->SetData( "Iso-Surface Value", boost::any_cast<double>
-        ( set.GetPropertyValue( "IsosurfaceValue" ) ) );
+                              ( set.GetPropertyValue( "IsosurfaceValue" ) ) );
     m_contourInformation.push_back( isosurfaceValue );
-    
+
     ves::open::xml::DataValuePairPtr colorByScalar( new ves::open::xml::DataValuePair() );
     colorByScalar->SetData( "Color By Scalar", boost::any_cast<std::string >
-        ( set.GetPropertyAttribute( "ColorByScalar", "enumCurrentString" ) ) );
+                            ( set.GetPropertyAttribute( "ColorByScalar", "enumCurrentString" ) ) );
     m_contourInformation.push_back( colorByScalar );
-    
+
     ves::open::xml::DataValuePairPtr minValue( new ves::open::xml::DataValuePair() );
     minValue->SetData( "Minimum Scalar Value", boost::any_cast<double>
-        ( set.GetPropertyValue( "ColorByScalar_ScalarRange_Min" ) ) );
+                       ( set.GetPropertyValue( "ColorByScalar_ScalarRange_Min" ) ) );
     m_contourInformation.push_back( minValue );
-    
+
     ves::open::xml::DataValuePairPtr maxValue( new ves::open::xml::DataValuePair() );
     maxValue->SetData( "Maximum Scalar Value", boost::any_cast<double>
-        ( set.GetPropertyValue( "ColorByScalar_ScalarRange_Max" ) ) );
+                       ( set.GetPropertyValue( "ColorByScalar_ScalarRange_Max" ) ) );
     m_contourInformation.push_back( maxValue );
-    
+
     ves::open::xml::DataValuePairPtr nearestPrecomputed( new ves::open::xml::DataValuePair() );
     nearestPrecomputed->SetData( "Use Nearest Precomputed", static_cast<unsigned int>( 0 ) );
     m_contourInformation.push_back( nearestPrecomputed );
 
     ves::open::xml::DataValuePairPtr gpuTools( new ves::open::xml::DataValuePair() );
     gpuTools->SetDataBool( "Use GPU Tools", boost::any_cast<bool>
-        ( set.GetPropertyValue( "UseGPUTools" ) ) );
+                           ( set.GetPropertyValue( "UseGPUTools" ) ) );
     m_contourInformation.push_back( gpuTools );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IsosurfaceFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
 {
     UpdateContourInformation( set );
-    
+
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
 
     newCommand->SetCommandName( "UPDATE_ISOSURFACE_SETTINGS" );
@@ -132,7 +132,7 @@ void IsosurfaceFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
 void IsosurfaceFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
 {
     m_advancedSettings.clear();
-    
+
     // With a bit of re-thinking here and some normalization of names, we may be
     // able to convert much of the following code to something like:
     //
@@ -148,46 +148,46 @@ void IsosurfaceFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet&
     //              appropriate cast -- esp for enums, to use associated enumCurrentString
     //      ...4. Add DVP to _advancedSettings
     // }
-    
+
     if( set.PropertyExists( "Advanced_Opacity" ) )
     {
         ves::open::xml::DataValuePairPtr contourOpacity( new ves::open::xml::DataValuePair() );
         contourOpacity->SetData( "Contour Opacity",
-                                boost::any_cast<double>
-                                ( set.GetPropertyValue( "Advanced_Opacity" ) ) );
+                                 boost::any_cast<double>
+                                 ( set.GetPropertyValue( "Advanced_Opacity" ) ) );
         m_advancedSettings.push_back( contourOpacity );
     }
-    
+
     if( set.PropertyExists( "Advanced_WarpedContourScale" ) )
     {
         ves::open::xml::DataValuePairPtr warpedScale( new ves::open::xml::DataValuePair() );
         warpedScale->SetData( "Warped Contour Scale",
-                             boost::any_cast<double>
-                             ( set.GetPropertyValue( "Advanced_WarpedContourScale" ) ) );
+                              boost::any_cast<double>
+                              ( set.GetPropertyValue( "Advanced_WarpedContourScale" ) ) );
         m_advancedSettings.push_back( warpedScale );
     }
-    
+
     if( set.PropertyExists( "Advanced_ContourLOD" ) )
     {
         ves::open::xml::DataValuePairPtr LODSetting( new ves::open::xml::DataValuePair() );
         LODSetting->SetData( "Contour LOD",
-                            boost::any_cast<double>
-                            ( set.GetPropertyValue( "Advanced_ContourLOD" ) ) );
+                             boost::any_cast<double>
+                             ( set.GetPropertyValue( "Advanced_ContourLOD" ) ) );
         m_advancedSettings.push_back( LODSetting );
     }
-    
+
     if( set.PropertyExists( "Advanced_ContourType" ) )
     {
         ves::open::xml::DataValuePairPtr contourType( new ves::open::xml::DataValuePair() );
         contourType->SetDataType( "STRING" );
         contourType->SetDataName( std::string( "Type" ) );
         std::string _planeType = boost::any_cast<std::string >
-        ( set.GetPropertyAttribute
-         ( "Advanced_ContourType", "enumCurrentString" ) );
+                                 ( set.GetPropertyAttribute
+                                   ( "Advanced_ContourType", "enumCurrentString" ) );
         contourType->SetDataString( _planeType );
         m_advancedSettings.push_back( contourType );
     }
-    
+
     if( set.PropertyExists( "Advanced_WarpOption" ) )
     {
         ves::open::xml::DataValuePairPtr warpOptionFlag( new ves::open::xml::DataValuePair() );
@@ -195,30 +195,30 @@ void IsosurfaceFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet&
         warpOptionFlag->SetDataType( "UNSIGNED INT" );
         if( boost::any_cast<bool>( set.GetPropertyValue( "Advanced_WarpOption" ) ) )
         {
-            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 1 ) );
+            warpOptionFlag->SetDataValue( static_cast < unsigned int >( 1 ) );
         }
         else
         {
-            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 0 ) );
+            warpOptionFlag->SetDataValue( static_cast < unsigned int >( 0 ) );
         }
         m_advancedSettings.push_back( warpOptionFlag );
     }
-    
+
     if( set.PropertyExists( "UseGPUTools" ) )
     {
-        unsigned int checkBox = 
+        unsigned int checkBox =
             boost::any_cast<bool>( set.GetPropertyValue( "UseGPUTools" ) );
         ves::open::xml::DataValuePairPtr gpuToolsDVP( new ves::open::xml::DataValuePair() );
         gpuToolsDVP->SetData( "GPU Tools", checkBox );
         m_advancedSettings.push_back( gpuToolsDVP );
     }
-    
+
     //    if( m_datasetSelection->IsEnabled() )
     //    {
     //        ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
     //        surfToolsDVP->SetData( "SURF Tools", ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
     //        _advancedSettings.push_back( surfToolsDVP );
     //    }
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////

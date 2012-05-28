@@ -40,64 +40,64 @@ BEGIN_EVENT_TABLE( VarDialog, wxDialog )
     EVT_GRID_CELL_CHANGE( VarDialog::WxGridCellChange )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
-VarDialog::VarDialog(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
-: wxDialog(parent, id, title, position, size, style)
+VarDialog::VarDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& position, const wxSize& size, long style )
+    : wxDialog( parent, id, title, position, size, style )
 {
     CreateGUIControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VarDialog::~VarDialog()
 {
-} 
+}
 ////////////////////////////////////////////////////////////////////////////////
 void VarDialog::CreateGUIControls()
 {
-    WxFlexGridSizer = new wxFlexGridSizer(0, 1, 0, 0);
-    this->SetSizer(WxFlexGridSizer);
-    this->SetAutoLayout(true);
+    WxFlexGridSizer = new wxFlexGridSizer( 0, 1, 0, 0 );
+    this->SetSizer( WxFlexGridSizer );
+    this->SetAutoLayout( true );
 
-    WxGrid = new wxGrid(this, ID_WXGRID, wxPoint(5,5), wxSize(320,120), wxVSCROLL | wxHSCROLL);
-    WxGrid->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
-    WxGrid->SetDefaultColSize(50);
-    WxGrid->SetDefaultRowSize(25);
-    WxGrid->SetRowLabelSize(50);
-    WxGrid->SetColLabelSize(25);
-    WxGrid->CreateGrid(0,3,wxGrid::wxGridSelectCells);
-    WxFlexGridSizer->Add(WxGrid,0,wxEXPAND | wxALL,5);
+    WxGrid = new wxGrid( this, ID_WXGRID, wxPoint( 5, 5 ), wxSize( 320, 120 ), wxVSCROLL | wxHSCROLL );
+    WxGrid->SetFont( wxFont( 12, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Tahoma" ) ) );
+    WxGrid->SetDefaultColSize( 50 );
+    WxGrid->SetDefaultRowSize( 25 );
+    WxGrid->SetRowLabelSize( 50 );
+    WxGrid->SetColLabelSize( 25 );
+    WxGrid->CreateGrid( 0, 3, wxGrid::wxGridSelectCells );
+    WxFlexGridSizer->Add( WxGrid, 0, wxEXPAND | wxALL, 5 );
 
-    WxBoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
-    WxFlexGridSizer->Add(WxBoxSizer1, 0, wxALIGN_CENTER | wxALL, 5);
+    WxBoxSizer1 = new wxBoxSizer( wxHORIZONTAL );
+    WxFlexGridSizer->Add( WxBoxSizer1, 0, wxALIGN_CENTER | wxALL, 5 );
 
-    SetButton = new wxButton(this, ID_SETBUTTON, wxT("Set"), wxPoint(5,5), wxSize(75,25), 0, wxDefaultValidator, wxT("SetButton"));
-    SetButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
-    WxBoxSizer1->Add(SetButton,0,wxALIGN_CENTER | wxALL,5);
+    SetButton = new wxButton( this, ID_SETBUTTON, wxT( "Set" ), wxPoint( 5, 5 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "SetButton" ) );
+    SetButton->SetFont( wxFont( 12, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Tahoma" ) ) );
+    WxBoxSizer1->Add( SetButton, 0, wxALIGN_CENTER | wxALL, 5 );
 
-    CancelButton = new wxButton(this, ID_CANCELBUTTON, wxT("Close"), wxPoint(90,5), wxSize(75,25), 0, wxDefaultValidator, wxT("CancelButton"));
-    CancelButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
-    WxBoxSizer1->Add(CancelButton,0,wxALIGN_CENTER | wxALL,5);
+    CancelButton = new wxButton( this, ID_CANCELBUTTON, wxT( "Close" ), wxPoint( 90, 5 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "CancelButton" ) );
+    CancelButton->SetFont( wxFont( 12, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Tahoma" ) ) );
+    WxBoxSizer1->Add( CancelButton, 0, wxALIGN_CENTER | wxALL, 5 );
 
-    SetTitle(wxT("VarDialog"));
-    SetIcon(wxNullIcon);
-    
+    SetTitle( wxT( "VarDialog" ) );
+    SetIcon( wxNullIcon );
+
     GetSizer()->Layout();
-    GetSizer()->Fit(this);
-    GetSizer()->SetSizeHints(this);
+    GetSizer()->Fit( this );
+    GetSizer()->SetSizeHints( this );
     Center();
-    
-    WxGrid->SetColLabelValue( 0, _("Description") );
-    WxGrid->SetColLabelValue( 1, _("Value") );
-    WxGrid->SetColLabelValue( 2, _("Units") );
+
+    WxGrid->SetColLabelValue( 0, _( "Description" ) );
+    WxGrid->SetColLabelValue( 1, _( "Value" ) );
+    WxGrid->SetColLabelValue( 2, _( "Units" ) );
 
     //this should be done dynamically
     WxGrid->SetRowLabelSize( 500 );
 
-    wxGridCellAttr * readOnly = new wxGridCellAttr();
-    readOnly->SetReadOnly(true);
+    wxGridCellAttr* readOnly = new wxGridCellAttr();
+    readOnly->SetReadOnly( true );
     WxGrid->SetColAttr( 0, readOnly );
     WxGrid->SetColAttr( 2, readOnly );
-    WxFlexGridSizer->SetFlexibleDirection(wxBOTH);
-    WxFlexGridSizer->AddGrowableCol(0);
-    WxFlexGridSizer->AddGrowableRow(0);
+    WxFlexGridSizer->SetFlexibleDirection( wxBOTH );
+    WxFlexGridSizer->AddGrowableCol( 0 );
+    WxFlexGridSizer->AddGrowableRow( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 //for closing
@@ -114,16 +114,16 @@ void VarDialog::CancelButtonClick( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 // SetButtonClick
 void VarDialog::SetButtonClick( wxCommandEvent& WXUNUSED( event ) )
-{  
+{
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     //input variables;
     params->SetCommandName( "setLinkParam" );
 
     int numOfChanges = rowsChanged.size();
-    for(int i = 0; i < numOfChanges; i++)
-    {        
+    for( int i = 0; i < numOfChanges; i++ )
+    {
         std::vector<std::string> paramList;
-        
+
         //component name
         paramList.push_back( ConvertUnicode( CompName.c_str() ) );
 
@@ -139,39 +139,39 @@ void VarDialog::SetButtonClick( wxCommandEvent& WXUNUSED( event ) )
 
         //add list to DVP
         ves::open::xml::DataValuePairPtr
-            inpParams( new ves::open::xml::DataValuePair() );
-        inpParams->SetData("params",paramList);
+        inpParams( new ves::open::xml::DataValuePair() );
+        inpParams->SetData( "params", paramList );
         params->AddDataValuePair( inpParams );
     }
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
-        nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, 
-    std::string >( params, "vecommand" ) );
+    nodes;
+    nodes.push_back( std::pair < ves::open::xml::XMLObjectPtr,
+                     std::string > ( params, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
-    std::string status="returnString";
+    std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     ServiceList->Query( status );
 
-    wxMessageDialog popup( this, _("Data has been sent to Aspen Dynamics") );
-    popup.ShowModal(); 
+    wxMessageDialog popup( this, _( "Data has been sent to Aspen Dynamics" ) );
+    popup.ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 // SetData
 void VarDialog::SetData( wxString name, wxString description,
-                                     wxString value, wxString units )
+                         wxString value, wxString units )
 {
     //add a new row
     WxGrid->AppendRows( 1 );
     int index = WxGrid->GetNumberRows() - 1;
 
     //remove the name of the block from the variable name
-    int remove = name.Find( wxT( ".") );
+    int remove = name.Find( wxT( "." ) );
     prefix = name.SubString( 0, remove );
-    name = name.SubString( remove + 1,name.Length() );
-    
+    name = name.SubString( remove + 1, name.Length() );
+
     //insert all data
     WxGrid->SetRowLabelValue( index, name );
     WxGrid->SetCellValue( index, 0, description );
@@ -187,7 +187,7 @@ void VarDialog::UpdateSizes()
 }
 ////////////////////////////////////////////////////////////////////////////////
 //WxGridCellChange
-void VarDialog::WxGridCellChange(wxGridEvent& event)
+void VarDialog::WxGridCellChange( wxGridEvent& event )
 {
     rowsChanged.push_back( event.GetRow() );
 }
@@ -199,7 +199,7 @@ void VarDialog::SetComponentName( wxString name )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VarDialog::SetServiceList(
-    ves::conductor::util::CORBAServiceList * serviceList )
+    ves::conductor::util::CORBAServiceList* serviceList )
 {
     this->ServiceList = serviceList;
 }

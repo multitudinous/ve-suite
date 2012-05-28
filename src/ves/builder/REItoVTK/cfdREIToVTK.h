@@ -40,7 +40,7 @@
 namespace VE_Builder
 {
 class /*VE_BUILDER_EXPORTS*/ cfdREItoVTK:
-            public VE_Builder::cfdTranslatorToVTK
+    public VE_Builder::cfdTranslatorToVTK
 {
 
 public:
@@ -63,7 +63,7 @@ public:
     void Setwrv_file( std::string );
     void Setscalars( std::set<std::string> );
 
-class REITranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+    class REITranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
     {
     public:
         REITranslateCbk()
@@ -78,7 +78,7 @@ class REITranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
                                 cfdTranslatorToVTK* toVTK );
     protected:
     };
-class REIPreTranslateCbk: public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
+    class REIPreTranslateCbk: public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
     {
     public:
         REIPreTranslateCbk()

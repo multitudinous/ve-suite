@@ -71,9 +71,9 @@ END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
 ViewLocPane::ViewLocPane( wxWindow* parent )
-        : wxDialog( parent, -1, _( "Viewpoints Pane" ),
-                    wxDefaultPosition, wxDefaultSize,
-                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP )
+    : wxDialog( parent, -1, _( "Viewpoints Pane" ),
+                wxDefaultPosition, wxDefaultSize,
+                ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP )
 {
     _numStoredLocations = 0;
     _numStoredFlythroughs = 0;
@@ -96,7 +96,7 @@ ViewLocPane::ViewLocPane( wxWindow* parent )
     GetSizer()->Fit( this );
     GetSizer()->SetSizeHints( this );
     Centre();
-    
+
     SetIcon( ve_icon32x32_xpm );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -116,7 +116,7 @@ void ViewLocPane::_onLoadStoredPointsFile( wxCommandEvent& event )
                          wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_PREVIEW,
                          wxDefaultPosition );
     dialog.CentreOnParent();
-    
+
     if( dialog.ShowModal() == wxID_OK )
     {
         wxFileName viewPtsFilename( dialog.GetPath() );
@@ -169,7 +169,7 @@ void ViewLocPane::_onSaveStoredPointsFile( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_buildPage()
 {
-//*******Setting up the widgets for making and naming a new view point
+    //*******Setting up the widgets for making and naming a new view point
     wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
 
     wxString choices[] = { _( "Choose a View Point" )};
@@ -212,7 +212,7 @@ void ViewLocPane::_buildPage()
     _allVPCtrlsGroup->Add( _viewpointRemoveControlsSizer, 1, wxALIGN_CENTER_HORIZONTAL | wxEXPAND );
 
     wxStaticBox* _FlythroughControls = new wxStaticBox( this, -1, _( "Flythrough Control" ),
-                                                        wxDefaultPosition, wxDefaultSize, wxCAPTION );
+            wxDefaultPosition, wxDefaultSize, wxCAPTION );
     wxStaticBoxSizer* _FlythroughGroup = new wxStaticBoxSizer( _FlythroughControls, wxVERTICAL );
 
     wxBoxSizer* _moveToViewpointSizer = new wxBoxSizer( wxVERTICAL );
@@ -455,7 +455,7 @@ void ViewLocPane::_onRemoveVP( wxCommandEvent& WXUNUSED( event ) )
 void ViewLocPane::_onMoveToVP( wxCommandEvent& WXUNUSED( event ) )
 {
     {
-        for( unsigned int i = 0;i < _numStoredLocations;i++ )
+        for( unsigned int i = 0; i < _numStoredLocations; i++ )
         {
             if( _movetovwptSel->GetValue() == _locationName[i] )
             {
@@ -557,7 +557,9 @@ void ViewLocPane::_onSpeedChange( wxSpinEvent& WXUNUSED( event ) )
 void ViewLocPane::_rebuildPage()
 {
     if( _movetovwptSel )
+    {
         _movetovwptSel->Clear();
+    }
 
     _movetovwptSel->Insert( wxT( "Select a View Point" ), 0 );
     if( _movetovwptSel )
@@ -610,7 +612,7 @@ void ViewLocPane::SendCommandsToXplorer()
         // CORBA releases the allocated memory so we do not have to
         CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
     }
-    catch ( ... )
+    catch( ... )
     {
         wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
                       _( "Communication Failure" ), wxOK | wxICON_INFORMATION );

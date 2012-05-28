@@ -442,42 +442,42 @@ herr_t groupTraverserCallback( hid_t objectID,
     herr_t ret = 1;
     H5Gget_objinfo( objectID, name, 1, &statbuf );
 
-    switch ( statbuf.type )
+    switch( statbuf.type )
     {
-        case H5G_LINK:
-            if( xlatr->_verbose )
-            {
-                std::cout << "Link" << std::endl;
-            }
-            break;
-        case H5G_GROUP:
-            if( xlatr->_verbose )
-            {
-                std::cout << "Group" << std::endl;
-            }
-            xlatr->_traverseGroup( objectID, name );
+    case H5G_LINK:
+        if( xlatr->_verbose )
+        {
+            std::cout << "Link" << std::endl;
+        }
+        break;
+    case H5G_GROUP:
+        if( xlatr->_verbose )
+        {
+            std::cout << "Group" << std::endl;
+        }
+        xlatr->_traverseGroup( objectID, name );
 
-            break;
-        case H5G_DATASET:
-            if( xlatr->_verbose )
-            {
-                std::cout << "Dataset" << std::endl;
-            }
-            xlatr->_extractDatasetInfo( objectID, name );
-            break;
-        case H5G_TYPE:
-            if( xlatr->_verbose )
-            {
-                std::cout << "Type" << std::endl;
-            }
-            break;
-        default:
-            if( xlatr->_verbose )
-            {
-                std::cout << "Something else" << std::endl;
-            }
-            ret = 0;
-            break;
+        break;
+    case H5G_DATASET:
+        if( xlatr->_verbose )
+        {
+            std::cout << "Dataset" << std::endl;
+        }
+        xlatr->_extractDatasetInfo( objectID, name );
+        break;
+    case H5G_TYPE:
+        if( xlatr->_verbose )
+        {
+            std::cout << "Type" << std::endl;
+        }
+        break;
+    default:
+        if( xlatr->_verbose )
+        {
+            std::cout << "Something else" << std::endl;
+        }
+        ret = 0;
+        break;
     };
 
     return ret;
@@ -523,7 +523,7 @@ void cfdHDFToVTK::_extractDatasetInfo( int groupID,
     dims = new hsize_t[rank];
 
     status = H5Sget_simple_extent_dims( dSpaceID, dims, NULL );
-    std::cout << "rank " << rank 
+    std::cout << "rank " << rank
               << ", dimensions " << ( unsigned long )( dims[0] )
               << " x " << ( unsigned long )( dims[1] )
               << std::endl;
@@ -531,14 +531,14 @@ void cfdHDFToVTK::_extractDatasetInfo( int groupID,
     typeClass = H5Tget_class( dTypeID );
 
     size = H5Tget_size( dTypeID );
-    std::cout << " Data size is " <<  ( int )size ) << std::endl;
+    std::cout << " Data size is " << ( int )size ) << std::endl;
 
     H5Tclose( dTypeID );
     H5Sclose( dSpaceID );
     H5Dclose( datasetID );
     if( dims )
-    {
-        delete [] dims;
+{
+    delete [] dims;
         dims = 0;
     }
 
@@ -824,10 +824,10 @@ int cfdHDFToVTK::_readDCHDFFile( char* inDCFile )
     _az = new double[_dimensions[2] + 1];
 
     double xSquared = 0;
-    for( int i = 1; i < _dimensions[0] - 1;i++ )
+    for( int i = 1; i < _dimensions[0] - 1; i++ )
     {
-        xSquared = ( _bx[i] - _bx[i-1] ) * ( _bx[i] - _bx[i-1] );
-        _ax[i] = _bx[i-1] + xSquared / ( _bx[i+1] - _bx[i-1] );
+        xSquared = ( _bx[i] - _bx[i - 1] ) * ( _bx[i] - _bx[i - 1] );
+        _ax[i] = _bx[i - 1] + xSquared / ( _bx[i + 1] - _bx[i - 1] );
     }
     //need to check the array index conversion here from fortran to C
     _ax[_dimensions[0] - 1] = 2.0 * _bx[_dimensions[0] - 2]
@@ -838,10 +838,10 @@ int cfdHDFToVTK::_readDCHDFFile( char* inDCFile )
 
 
     double ySquared = 0;
-    for( int i = 1; i < _dimensions[1] - 1;i++ )
+    for( int i = 1; i < _dimensions[1] - 1; i++ )
     {
-        ySquared = ( _by[i] - _by[i-1] ) * ( _by[i] - _by[i-1] );
-        _ay[i] = _by[i-1] + ySquared / ( _by[i+1] - _by[i-1] );
+        ySquared = ( _by[i] - _by[i - 1] ) * ( _by[i] - _by[i - 1] );
+        _ay[i] = _by[i - 1] + ySquared / ( _by[i + 1] - _by[i - 1] );
     }
     //need to check the array index conversion here from fortran to C
     _ay[_dimensions[1] - 1] = 2.0 * _by[_dimensions[1] - 2]
@@ -852,10 +852,10 @@ int cfdHDFToVTK::_readDCHDFFile( char* inDCFile )
 
 
     double zSquared = 0;
-    for( int i = 1; i < _dimensions[2] - 1;i++ )
+    for( int i = 1; i < _dimensions[2] - 1; i++ )
     {
-        zSquared = ( _bz[i] - _bz[i-1] ) * ( _bz[i] - _bz[i-1] );
-        _az[i] = _bz[i-1] + zSquared / ( _bz[i+1] - _bz[i-1] );
+        zSquared = ( _bz[i] - _bz[i - 1] ) * ( _bz[i] - _bz[i - 1] );
+        _az[i] = _bz[i - 1] + zSquared / ( _bz[i + 1] - _bz[i - 1] );
     }
 
     //need to check the array index conversion here from fortran to C
@@ -1018,7 +1018,7 @@ void cfdHDFToVTK::_createRectilinearVTKGrid()
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 void cfdHDFToVTK::_writeRectilinearCellDataToPointDataFile( vtkRectilinearGrid* cellGrid,
-                                                            char* fileName, int asciiFile )
+        char* fileName, int asciiFile )
 {
     vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();
     vtkRectilinearGrid* rGridPt = vtkRectilinearGrid::New();
@@ -1091,7 +1091,7 @@ void cfdHDFToVTK::_addCellDataToGrid( vtkDataSet* dSet,
 ////////////////////////////////////////////////////
 void cfdHDFToVTK::_createVelocityMagnitudeScalars()
 {
-    if (( !_vX ) || ( !_vY ) || ( !_vZ ) )
+    if( ( !_vX ) || ( !_vY ) || ( !_vZ ) )
     {
         std::cout << "ERROR!!!" << std::endl;
         std::cout << "Velocity vectors not found!!" << std::endl;
@@ -1116,7 +1116,7 @@ void cfdHDFToVTK::_createVelocityMagnitudeScalars()
 ////////////////////////////////////////////////////
 void cfdHDFToVTK::_createMagneticMagnitudeScalars()
 {
-    if (( !_b1 ) || ( !_b2 ) || ( !_b3 ) )
+    if( ( !_b1 ) || ( !_b2 ) || ( !_b3 ) )
     {
         std::cout << "ERROR!!!" << std::endl;
         std::cout << "Magnetic Field vectors not found!!" << std::endl;
@@ -1159,7 +1159,7 @@ void cfdHDFToVTK::setVTKOutFileName( char* outfileName )
         delete [] _outFile;
         _outFile = 0;
     }
-    _outFile = new char[strlen( outfileName )+1];
+    _outFile = new char[strlen( outfileName ) + 1];
     strcpy( _outFile, outfileName );
 
 }

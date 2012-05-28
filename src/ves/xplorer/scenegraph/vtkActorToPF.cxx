@@ -73,7 +73,7 @@
 using namespace std;
 using namespace ves::xplorer::scenegraph;
 
-pfGeode* ves::xplorer::scenegraph::vtkActorToPF( vtkActor *actor, pfGeode *geode, int verbose )
+pfGeode* ves::xplorer::scenegraph::vtkActorToPF( vtkActor* actor, pfGeode* geode, int verbose )
 {
     // performance instrumentation
     float beforeTime = 0.0f;
@@ -99,10 +99,12 @@ pfGeode* ves::xplorer::scenegraph::vtkActorToPF( vtkActor *actor, pfGeode *geode
 
     // if geode doesn't exist, then create a new one
     if( geode == NULL )
+    {
         geode = new pfGeode;
+    }
 
     // create new gsets for this geode
-    pfGeoSet *gsets[4];
+    pfGeoSet* gsets[4];
     vtkActorToGeoSets( actor, gsets, verbose );
 
     // remove old gsets and delete them
@@ -110,7 +112,7 @@ pfGeode* ves::xplorer::scenegraph::vtkActorToPF( vtkActor *actor, pfGeode *geode
     int i;
     for( i = 0; i < numGSets; i++ )
     {
-        pfGeoSet *g = geode->getGSet( 0 );  // children shift after a removal
+        pfGeoSet* g = geode->getGSet( 0 );  // children shift after a removal
         geode->removeGSet( g );
         pfDelete( g );
     }
@@ -118,7 +120,9 @@ pfGeode* ves::xplorer::scenegraph::vtkActorToPF( vtkActor *actor, pfGeode *geode
     // put in new gsets
     for( i = 0; i < 4; i++ )
         if( gsets[i] != NULL )
+        {
             geode->addGSet( gsets[i] );
+        }
 
     // performance instrumentation
     if( verbose )
@@ -130,8 +134,8 @@ pfGeode* ves::xplorer::scenegraph::vtkActorToPF( vtkActor *actor, pfGeode *geode
     return geode;
 }
 
-void ves::xplorer::scenegraph::vtkActorToGeoSets( vtkActor *actor, pfGeoSet *gsets[],
-                                                  int verbose )
+void ves::xplorer::scenegraph::vtkActorToGeoSets( vtkActor* actor, pfGeoSet* gsets[],
+        int verbose )
 {
     // this could possibly be any type of DataSet, vtkActorToPF assumes polyData
     if( strcmp( actor->GetMapper()->GetInput()->GetClassName(), "vtkPolyData" ) )
@@ -146,21 +150,25 @@ void ves::xplorer::scenegraph::vtkActorToGeoSets( vtkActor *actor, pfGeoSet *gse
     }
 
     // get poly data
-    vtkPolyData *polyData = ( vtkPolyData * ) actor->GetMapper()->GetInput();
+    vtkPolyData* polyData = ( vtkPolyData* ) actor->GetMapper()->GetInput();
 
     // If verbose, check for normals
     // Note: vtk doesn't neccesarily give you normals - USE vtkPolyDataNormals
     if( verbose )
     {
-        vtkDataArray *normals = polyData->GetPointData()->GetNormals();
+        vtkDataArray* normals = polyData->GetPointData()->GetNormals();
         if( normals == NULL )
+        {
             normals = polyData->GetCellData()->GetNormals();
+        }
         if( normals == NULL )
+        {
             cerr << "no normals...";
+        }
     }
 
     // get primitive arrays
-    vtkCellArray *points, *lines, *polys, *strips;
+    vtkCellArray* points, *lines, *polys, *strips;
     points = polyData->GetVerts();
     lines = polyData->GetLines();
     polys = polyData->GetPolys();
@@ -175,13 +183,21 @@ void ves::xplorer::scenegraph::vtkActorToGeoSets( vtkActor *actor, pfGeoSet *gse
         //cerr << "pts = "     << numPts   << " lines = "  << numLines
         //     << " polys = "  << numPolys << " strips = " << numStrips << "...";
         if( numPts > 0 )
+        {
             cerr << " " << numPts << " points";
+        }
         if( numLines > 0 )
+        {
             cerr << " " << numLines << " lines";
+        }
         if( numPolys > 0 )
+        {
             cerr << " " << numPolys << " polys";
+        }
         if( numStrips > 0 )
+        {
             cerr << " " << numStrips << " strips";
+        }
         cerr << "...";
         cerr.flush();
     }
@@ -193,18 +209,20 @@ void ves::xplorer::scenegraph::vtkActorToGeoSets( vtkActor *actor, pfGeoSet *gse
     gsets[3] = processPrimitive( actor, strips, PFGS_TRISTRIPS, verbose );
 }
 
-pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellArray *primArray,
-                                                      int primType, int verbose )
+pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor* actor, vtkCellArray* primArray,
+        int primType, int verbose )
 {
     // get polyData from vtkActor
-    vtkPolyData *polyData = ( vtkPolyData * ) actor->GetMapper()->GetInput();
+    vtkPolyData* polyData = ( vtkPolyData* ) actor->GetMapper()->GetInput();
 
     int numPrimitives = primArray->GetNumberOfCells();
     if( numPrimitives == 0 )
+    {
         return NULL;
+    }
 
     //Initialize the gset
-    pfGeoSet *gset = new pfGeoSet;
+    pfGeoSet* gset = new pfGeoSet;
     gset->setPrimType( primType );
     // get number of indices in the vtk prim array. Each vtkCell has the length
     // (not counted), followed by the indices.
@@ -212,18 +230,20 @@ pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellAr
     int numIndices = primArraySize - numPrimitives;
 
     // get shared memory arena
-    void *pfArena = pfGetSharedArena();
+    void* pfArena = pfGetSharedArena();
 
     // set number of primitives and allocate lengths array
     gset->setNumPrims( numPrimitives );
-    int *lengths = ( int * )pfMalloc( numPrimitives * sizeof( int ), pfArena );
+    int* lengths = ( int* )pfMalloc( numPrimitives * sizeof( int ), pfArena );
     if( !lengths )
+    {
         return 0;
+    }
     gset->setPrimLengths( lengths );
 
     // allocate as many verts as there are indices in vtk prim array
-    pfVec3 *verts;
-    verts = ( pfVec3 * ) pfMalloc( numIndices * sizeof( pfVec3 ), pfArena );
+    pfVec3* verts;
+    verts = ( pfVec3* ) pfMalloc( numIndices * sizeof( pfVec3 ), pfArena );
     if( !verts )
     {
         pfDelete( lengths );
@@ -232,23 +252,29 @@ pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellAr
     // check to see if there are normals
     int normalPerVertex = 0;
     int normalPerCell = 0;
-    vtkDataArray *normals = polyData->GetPointData()->GetNormals();
+    vtkDataArray* normals = polyData->GetPointData()->GetNormals();
     if( actor->GetProperty()->GetInterpolation() == VTK_FLAT )
+    {
         normals = NULL;
+    }
 
     if( normals != NULL )
+    {
         normalPerVertex = 1;
+    }
     else
     {
         normals = polyData->GetCellData()->GetNormals();
         if( normals != NULL )
+        {
             normalPerCell = 1;
+        }
     }
 
-    pfVec3 *norms = NULL;
+    pfVec3* norms = NULL;
     if( normalPerVertex )
     {
-        norms = ( pfVec3 * ) pfMalloc( numIndices * sizeof( pfVec3 ), pfArena );
+        norms = ( pfVec3* ) pfMalloc( numIndices * sizeof( pfVec3 ), pfArena );
         if( !norms )
         {
             pfDelete( lengths );
@@ -259,7 +285,7 @@ pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellAr
 
     if( normalPerCell )
     {
-        norms = ( pfVec3 * ) pfMalloc( numPrimitives * sizeof( pfVec3 ), pfArena );
+        norms = ( pfVec3* ) pfMalloc( numPrimitives * sizeof( pfVec3 ), pfArena );
         if( !norms )
         {
             pfDelete( lengths );
@@ -272,20 +298,24 @@ pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellAr
     int colorPerVertex = 0;
     int colorPerCell = 0;
     double opacity = actor->GetProperty()->GetOpacity();
-    vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars( opacity );
+    vtkUnsignedCharArray* colorArray = actor->GetMapper()->MapScalars( opacity );
     if( actor->GetMapper()->GetScalarVisibility() && colorArray != NULL )
     {
         int scalarMode = actor->GetMapper()->GetScalarMode();
         if( scalarMode == VTK_SCALAR_MODE_USE_CELL_DATA || !polyData->GetPointData()->GetScalars() )    // there is no point data
+        {
             colorPerCell = 1;
+        }
         else
+        {
             colorPerVertex = 1;
+        }
     }
 
-    pfVec4 *colors = NULL;
+    pfVec4* colors = NULL;
     if( colorPerVertex )
     {
-        colors = ( pfVec4 * ) pfMalloc( numIndices * sizeof( pfVec4 ), pfArena );
+        colors = ( pfVec4* ) pfMalloc( numIndices * sizeof( pfVec4 ), pfArena );
         if( !colors )
         {
             pfDelete( lengths );
@@ -297,7 +327,7 @@ pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellAr
 
     if( colorPerCell )
     {
-        colors = ( pfVec4 * ) pfMalloc( numPrimitives * sizeof( pfVec4 ), pfArena );
+        colors = ( pfVec4* ) pfMalloc( numPrimitives * sizeof( pfVec4 ), pfArena );
         if( !colors )
         {
             pfDelete( lengths );
@@ -308,11 +338,11 @@ pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellAr
     }
 
     // check to see if there are texture coordinates
-    vtkDataArray *texCoords = polyData->GetPointData()->GetTCoords();
-    pfVec2 *tcoords = NULL;
+    vtkDataArray* texCoords = polyData->GetPointData()->GetTCoords();
+    pfVec2* tcoords = NULL;
     if( texCoords != NULL )
     {
-        tcoords = ( pfVec2 * ) pfMalloc( numIndices * sizeof( pfVec2 ), pfArena );
+        tcoords = ( pfVec2* ) pfMalloc( numIndices * sizeof( pfVec2 ), pfArena );
         if( !tcoords )
         {
             pfDelete( lengths );
@@ -332,41 +362,45 @@ pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellAr
         lengths[prim] = npts;
         if( colorPerCell )
         {
-            unsigned char *aColor = colorArray->GetPointer( 4 * prim );
+            unsigned char* aColor = colorArray->GetPointer( 4 * prim );
             colors[prim].set( aColor[0] / 255.0f, aColor[1] / 255.0f,
                               aColor[2] / 255.0f, aColor[3] / 255.0f );
             if( aColor[3] / 255.0f < 1 )
+            {
                 transparentFlag = 1;
+            }
         }
 
         if( normalPerCell )
         {
-            double *aNormal = normals->GetTuple( prim );
+            double* aNormal = normals->GetTuple( prim );
             norms[prim].set( ( float )aNormal[0], ( float )aNormal[1], ( float )aNormal[2] );
         }
         // go through points in cell (verts)
         for( i = 0; i < npts; i++ )
         {
-            double *aVertex = polyData->GetPoint( pts[i] );
+            double* aVertex = polyData->GetPoint( pts[i] );
             verts[vert].set( ( float )aVertex[0], ( float )aVertex[1], ( float )aVertex[2] );
             if( normalPerVertex )
             {
-                double *aNormal = normals->GetTuple( pts[i] );
+                double* aNormal = normals->GetTuple( pts[i] );
                 norms[vert].set( ( float )aNormal[0], ( float )aNormal[1], ( float )aNormal[2] );
             }
 
             if( colorPerVertex )
             {
-                unsigned char *aColor = colorArray->GetPointer( 4 * pts[i] );
+                unsigned char* aColor = colorArray->GetPointer( 4 * pts[i] );
                 colors[vert].set( aColor[0] / 255.0f, aColor[1] / 255.0f,
                                   aColor[2] / 255.0f, aColor[3] / 255.0f );
                 if( aColor[3] / 255.0f < 1 )
+                {
                     transparentFlag = 1;
+                }
             }
 
             if( texCoords != NULL )
             {
-                double *aTCoord = texCoords->GetTuple( pts[i] );
+                double* aTCoord = texCoords->GetTuple( pts[i] );
                 tcoords[vert].set( ( float )aTCoord[0], ( float )aTCoord[1] );
             }
             vert++;
@@ -376,36 +410,48 @@ pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellAr
     // add attribute arrays to gset
     gset->setAttr( PFGS_COORD3, PFGS_PER_VERTEX, verts, NULL );
     if( normalPerVertex )
+    {
         gset->setAttr( PFGS_NORMAL3, PFGS_PER_VERTEX, norms, NULL );
+    }
 
     if( normalPerCell )
+    {
         gset->setAttr( PFGS_NORMAL3, PFGS_PER_PRIM, norms, NULL );
+    }
 
     if( colorPerVertex )
+    {
         gset->setAttr( PFGS_COLOR4, PFGS_PER_VERTEX, colors, NULL );
+    }
     else if( colorPerCell )
+    {
         gset->setAttr( PFGS_COLOR4, PFGS_PER_PRIM, colors, NULL );
+    }
     else
     {
         // use overall color (get from Actor)
-        double *actorColor = actor->GetProperty()->GetColor();
+        double* actorColor = actor->GetProperty()->GetColor();
         double opacity = actor->GetProperty()->GetOpacity();
 
-        pfVec4 *color = ( pfVec4 * ) pfMalloc( sizeof( pfVec4 ), pfArena );
+        pfVec4* color = ( pfVec4* ) pfMalloc( sizeof( pfVec4 ), pfArena );
         color->set( ( float )actorColor[0], ( float )actorColor[1], ( float )actorColor[2],
                     ( float )opacity );
         gset->setAttr( PFGS_COLOR4, PFGS_OVERALL, color, NULL );
     }
 
     if( texCoords != NULL )
+    {
         gset->setAttr( PFGS_TEXCOORD2, PFGS_PER_VERTEX, tcoords, NULL );
+    }
 
     // create a geostate for this geoset
-    pfGeoState *gstate = new pfGeoState;
+    pfGeoState* gstate = new pfGeoState;
 
     // check if a texture needs to be translated
     if( texCoords != NULL )
+    {
         updateTexture( actor, gset, gstate, verbose );
+    }
 
     // if not opaque
     if( actor->GetProperty()->GetOpacity() < 1.0 || transparentFlag )
@@ -427,24 +473,32 @@ pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellAr
     {
         gset->setPrimType( PFGS_POINTS );
         gset->setPntSize( actor->GetProperty()->GetPointSize() );
-        pfLPointState *lpState = new pfLPointState;
+        pfLPointState* lpState = new pfLPointState;
         gstate->setMode( PFSTATE_ENLPOINTSTATE, PF_ON );
         gstate->setAttr( PFSTATE_LPOINTSTATE, lpState );
     }
 
     // backface culling
     if( !actor->GetProperty()->GetBackfaceCulling() )
+    {
         gstate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
+    }
 
     // lighting
     if( normals != NULL )
+    {
         gstate->setMode( PFSTATE_ENLIGHTING, PF_ON );
+    }
     else
+    {
         gstate->setMode( PFSTATE_ENLIGHTING, PF_OFF );
+    }
 
     // if it is lines, turn off lighting.
     if( primType == PFGS_LINESTRIPS )
+    {
         gstate->setMode( PFSTATE_ENLIGHTING, PF_OFF );
+    }
 
     gset->setGState( gstate );
     return gset;
@@ -453,23 +507,25 @@ pfGeoSet* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellAr
 // texturing - note: since we always create new geosets, we need to
 //   retranslate texture as well. Maybe there is a better way (have
 //   separate function from vtkActorToPF for texture.
-void ves::xplorer::scenegraph::updateTexture( vtkActor *actor, pfGeoSet *gset,
-                                              pfGeoState *gstate, int verbose )
+void ves::xplorer::scenegraph::updateTexture( vtkActor* actor, pfGeoSet* gset,
+        pfGeoState* gstate, int verbose )
 {
     // no texture!
     if( !actor->GetTexture() )
+    {
         return;
+    }
 
     // update texture
     actor->GetTexture()->GetInput()->Update();
 
-    pfTexture *texture = new pfTexture;
-    pfTexEnv *texEnv = new pfTexEnv;
+    pfTexture* texture = new pfTexture;
+    pfTexEnv* texEnv = new pfTexEnv;
 
     // get image data
-    vtkImageData *img = actor->GetTexture()->GetInput();
-    int *dims = img->GetDimensions();
-    vtkDataArray *scalars = img->GetPointData()->GetScalars();
+    vtkImageData* img = actor->GetTexture()->GetInput();
+    int* dims = img->GetDimensions();
+    vtkDataArray* scalars = img->GetPointData()->GetScalars();
     int bytesPerPixel = scalars->GetNumberOfComponents();
 
     // determine tex dimensions
@@ -483,12 +539,16 @@ void ves::xplorer::scenegraph::updateTexture( vtkActor *actor, pfGeoSet *gset,
     {
         xsize = dims[0];
         if( dims[1] == 1 )
+        {
             ysize = dims[2];
+        }
         else
         {
             ysize = dims[1];
             if( dims[2] != 1 )
+            {
                 cerr << "3D texture maps currently are not supported!" << endl;
+            }
         }
     }
 
@@ -500,23 +560,31 @@ void ves::xplorer::scenegraph::updateTexture( vtkActor *actor, pfGeoSet *gset,
     }
 
     // copy data to performer texture
-    uint *texels = ( uint * ) pfMalloc( xsize * ysize * bytesPerPixel, pfGetSharedArena() );
-    unsigned char *texelData = ( unsigned char * )texels;
-    unsigned char *dataPtr = NULL;
-    dataPtr = ( unsigned char * )scalars->GetVoidPointer( 0 );
+    uint* texels = ( uint* ) pfMalloc( xsize * ysize * bytesPerPixel, pfGetSharedArena() );
+    unsigned char* texelData = ( unsigned char* )texels;
+    unsigned char* dataPtr = NULL;
+    dataPtr = ( unsigned char* )scalars->GetVoidPointer( 0 );
 
     memcpy( texelData, dataPtr, xsize * ysize * bytesPerPixel );
     texture->setImage( texels, bytesPerPixel, xsize, ysize, 0 );
 
     // set image format for texture (lum, lum-alpha, rgb, rgba)
     if( bytesPerPixel == 1 )
+    {
         texture->setFormat( PFTEX_IMAGE_FORMAT, PFTEX_LUMINANCE );
+    }
     if( bytesPerPixel == 2 )
+    {
         texture->setFormat( PFTEX_IMAGE_FORMAT, PFTEX_LUMINANCE_ALPHA );
+    }
     if( bytesPerPixel == 3 )
+    {
         texture->setFormat( PFTEX_IMAGE_FORMAT, PFTEX_RGB );
+    }
     if( bytesPerPixel == 4 )
+    {
         texture->setFormat( PFTEX_IMAGE_FORMAT, PFTEX_RGBA );
+    }
 
     // for textures with alpha
     if( bytesPerPixel == 2 || bytesPerPixel == 4 )

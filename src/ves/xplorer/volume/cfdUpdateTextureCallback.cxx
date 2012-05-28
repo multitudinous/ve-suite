@@ -46,19 +46,19 @@ using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::cfdUpdateTextureCallback():
-        _subloadMode( AUTO ),
-        _textureWidth( 0 ),
-        _textureHeight( 0 ),
-        _textureDepth( 0 ),
-        _subloadTextureOffsetX( 0 ),
-        _subloadTextureOffsetY( 0 ),
-        _subloadTextureOffsetZ( 0 ),
-        _subloadImageOffsetX( 0 ),
-        _subloadImageOffsetY( 0 ),
-        _subloadImageOffsetZ( 0 ),
-        _subloadImageWidth( 0 ),
-        _subloadImageHeight( 0 ),
-        _subloadImageDepth( 0 )
+    _subloadMode( AUTO ),
+    _textureWidth( 0 ),
+    _textureHeight( 0 ),
+    _textureDepth( 0 ),
+    _subloadTextureOffsetX( 0 ),
+    _subloadTextureOffsetY( 0 ),
+    _subloadTextureOffsetZ( 0 ),
+    _subloadImageOffsetX( 0 ),
+    _subloadImageOffsetY( 0 ),
+    _subloadImageOffsetZ( 0 ),
+    _subloadImageWidth( 0 ),
+    _subloadImageHeight( 0 ),
+    _subloadImageDepth( 0 )
 {
     _tm = 0;
     _delay = 0.0001f;
@@ -69,7 +69,7 @@ cfdUpdateTextureCallback::cfdUpdateTextureCallback():
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::cfdUpdateTextureCallback( const cfdUpdateTextureCallback& cb )
-        : osg::Texture3D::SubloadCallback( cb )
+    : osg::Texture3D::SubloadCallback( cb )
 {
     _tm = cb._tm;
     _delay = cb._delay;
@@ -118,7 +118,7 @@ unsigned int cfdUpdateTextureCallback::GetCurrentFrame()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::SetCurrentFrame( unsigned int cFrame,
-                                                bool forceUpdate )
+        bool forceUpdate )
 {
     if( _tm )
     {
@@ -132,23 +132,23 @@ void cfdUpdateTextureCallback::SetCurrentFrame( unsigned int cFrame,
 ////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::load( const osg::Texture3D& texture, osg::State& state )const
 {
-    unsigned char* dataMinusOffset=0;
-    unsigned char* dataPlusOffset=0;
+    unsigned char* dataMinusOffset = 0;
+    unsigned char* dataPlusOffset = 0;
     const unsigned int contextID = state.getContextID();
     if( m_pbo.valid() && m_pbo->isPBOSupported( contextID ) )
     {
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 9 ) && ( OSG_VERSION_PATCH >= 6 ) )
         m_pbo->compileBuffer( state );
-        
+
         //dataPlusOffset = reinterpret_cast< unsigned char* >( m_pbo->offset() );
 #else
         if( m_pbo->isDirty( contextID ) )
         {
-             m_pbo->compileBuffer( state );
+            m_pbo->compileBuffer( state );
         }
         else
         {
-             m_pbo->bindBuffer( contextID );
+            m_pbo->bindBuffer( contextID );
         }
 
         dataPlusOffset = reinterpret_cast< unsigned char* >( m_pbo->offset() );
@@ -165,7 +165,7 @@ void cfdUpdateTextureCallback::load( const osg::Texture3D& texture, osg::State& 
                 _textureDepth,
                 0, GL_LUMINANCE_ALPHA,
                 GL_UNSIGNED_BYTE,
-                ( unsigned char* )_tm->dataField( 0 )-dataMinusOffset+dataPlusOffset );
+                ( unsigned char* )_tm->dataField( 0 ) - dataMinusOffset + dataPlusOffset );
 
     }
     else
@@ -177,7 +177,7 @@ void cfdUpdateTextureCallback::load( const osg::Texture3D& texture, osg::State& 
                 _textureDepth,
                 0, GL_RGBA,
                 GL_UNSIGNED_BYTE,
-                ( unsigned char* )_tm->dataField( 0 ) -dataMinusOffset+dataPlusOffset);
+                ( unsigned char* )_tm->dataField( 0 ) - dataMinusOffset + dataPlusOffset );
     }
     if( m_pbo.valid() )
     {
@@ -206,8 +206,8 @@ void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::Stat
     //master node in the cluster
     if( _tm->TimeToUpdate() || _update )
     {
-        unsigned char* dataMinusOffset=0;
-        unsigned char* dataPlusOffset=0;
+        unsigned char* dataMinusOffset = 0;
+        unsigned char* dataPlusOffset = 0;
         const unsigned int contextID = state.getContextID();
         if( m_pbo.valid() && m_pbo->isPBOSupported( contextID ) )
         {
@@ -216,9 +216,9 @@ void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::Stat
             {
                 m_pbo->compileBuffer( state );
             }
-            
+
             //dataPlusOffset =
-                //reinterpret_cast< unsigned char* >( m_pbo->offset() );
+            //reinterpret_cast< unsigned char* >( m_pbo->offset() );
 #else
             m_pbo->UpdateData( _tm->getCurrentField() );
             {
@@ -242,8 +242,8 @@ void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::Stat
                     _textureDepth,
                     GL_LUMINANCE_ALPHA,
                     GL_UNSIGNED_BYTE,
-                    ( unsigned char* )_tm->getCurrentField() -dataMinusOffset+dataPlusOffset);
-                   // ( unsigned char* )_tm->getCurrentField() );
+                    ( unsigned char* )_tm->getCurrentField() - dataMinusOffset + dataPlusOffset );
+            // ( unsigned char* )_tm->getCurrentField() );
 
         }
         else
@@ -256,12 +256,12 @@ void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::Stat
                     _textureDepth,
                     GL_RGBA,
                     GL_UNSIGNED_BYTE,
-                    ( unsigned char* )_tm->getCurrentField() -dataMinusOffset+dataPlusOffset);
-                    //( unsigned char* )_tm->getCurrentField() );
+                    ( unsigned char* )_tm->getCurrentField() - dataMinusOffset + dataPlusOffset );
+            //( unsigned char* )_tm->getCurrentField() );
         }
         ///reset the update flag so we don't subload every frame!!
         _update = false;
-        if ( m_pbo.valid() )
+        if( m_pbo.valid() )
         {
             m_pbo->unbindBuffer( contextID );
         }

@@ -82,18 +82,18 @@ FrameAll::~FrameAll()
 void FrameAll::DoFrameAll()
 {
     scenegraph::SceneManager& m_sceneManager =
-            *( ves::xplorer::scenegraph::SceneManager::instance() );
+        *( ves::xplorer::scenegraph::SceneManager::instance() );
 
     osg::Group* activeSwitchNode = m_sceneManager.GetActiveSwitchNode();
     osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
-    activeSwitchNode->accept(cbbv);
+    activeSwitchNode->accept( cbbv );
     osg::BoundingBox bb = cbbv.getBoundingBox();
-    osg::notify( osg::INFO ) 
-        << "|\tBounding Box Info" << std::endl 
-        << "|\tCenter " << bb.center() << std::endl
-        << "|\tRadius " << bb.radius() << std::endl
-        << "|\tMin " << bb._min << std::endl
-        << "|\tMax " << bb._max << std::endl;
+    osg::notify( osg::INFO )
+            << "|\tBounding Box Info" << std::endl
+            << "|\tCenter " << bb.center() << std::endl
+            << "|\tRadius " << bb.radius() << std::endl
+            << "|\tMin " << bb._min << std::endl
+            << "|\tMax " << bb._max << std::endl;
     //osg::BoundingSphered bs( bb.center(), bb.radius() );
     osgwMx::MxCore& core = m_sceneManager.GetMxCoreViewMatrix();
     double mFoVZ = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ();
@@ -121,7 +121,7 @@ void FrameAll::DoFrameAll()
     //osg::Vec3d center =
     //bb.center() * osg::Matrixd( activeNavSwitchNode->GetMat().getData() );
     //m_sceneManager.GetCenterPoint().set( center.x(), center.y(), center.z() );
-     
+
     return;*/
     //Meters to feet conversion
     double m2ft = 3.2808399;
@@ -131,7 +131,7 @@ void FrameAll::DoFrameAll()
     {
         //Note: for osg we are in z up land
         gmtl::Point3d jugglerHeadPoint =
-        gmtl::makeTrans< gmtl::Point3d >( m_sceneManager.GetHeadMatrix() );
+            gmtl::makeTrans< gmtl::Point3d >( m_sceneManager.GetHeadMatrix() );
 
         //We have to offset negative m_currX because the
         //view and frustum are drawn for the left eye
@@ -143,9 +143,9 @@ void FrameAll::DoFrameAll()
 
     // Get the screen corner values from EnvironmentHandler
     ves::xplorer::cfdDisplaySettings* displaySettings =
-            ves::xplorer::EnvironmentHandler::instance()->GetDisplaySettings();
+        ves::xplorer::EnvironmentHandler::instance()->GetDisplaySettings();
     std::map< std::string, double > screenCornerValues =
-            displaySettings->GetScreenCornerValues();
+        displaySettings->GetScreenCornerValues();
     double mXMinScreen = screenCornerValues[ "xmin" ];
     double mXMaxScreen = screenCornerValues[ "xmax" ];
     double mYMinScreen = screenCornerValues[ "ymin" ];
@@ -158,7 +158,7 @@ void FrameAll::DoFrameAll()
     unsigned int m_windowHeight = screenDims.second;
 
     double mAspectRatio =
-            static_cast< double >( m_windowWidth ) / static_cast< double >( m_windowHeight );
+        static_cast< double >( m_windowWidth ) / static_cast< double >( m_windowHeight );
 
     mFoVZ = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ();
 
@@ -183,7 +183,7 @@ void FrameAll::DoFrameAll()
         //Get the screen position in osg world coordinates
         osg::Vec3d centerPosition(
             vrjCenterScreenPosition.x(),
-           -vrjCenterScreenPosition.z(),
+            -vrjCenterScreenPosition.z(),
             vrjCenterScreenPosition.y() );
 
         //Calculate the distance we need to move along the center vector to fit

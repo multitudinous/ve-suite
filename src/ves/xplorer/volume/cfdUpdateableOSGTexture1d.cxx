@@ -61,7 +61,7 @@ cfdUpdateableOSGTexture1d::cfdUpdateableOSGTexture1d()
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGTexture1d::cfdUpdateableOSGTexture1d( const
-                                                      cfdUpdateableOSGTexture1d& cb )
+        cfdUpdateableOSGTexture1d& cb )
     :
     osg::Texture1D::SubloadCallback( cb )
 {
@@ -117,7 +117,7 @@ void cfdUpdateableOSGTexture1d::SetAlphaCutoff( GLfloat aCutoff )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGTexture1d::subload( const osg::Texture1D&,
-                                         osg::State& ) const
+        osg::State& ) const
 {
     glTexImage1D( GL_TEXTURE_1D, 0, GL_RGBA, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, _data );
 
@@ -138,11 +138,11 @@ bool cfdUpdateableOSGTexture1d::_needsUpdate() const
 {
     if( _type == GAMMA_CORRECTION )
     {
-        return (( _lastGamma == _gamma ) ? false : true );
+        return ( ( _lastGamma == _gamma ) ? false : true );
     }
     else
     {
-        return (( _lastAlpha == _alphaCutoff ) ? false : true );
+        return ( ( _lastAlpha == _alphaCutoff ) ? false : true );
     }
     return false;
 }
@@ -158,9 +158,9 @@ void cfdUpdateableOSGTexture1d::_updateData()
         int* gTable = new int[256];
         for( int i = 0; i < 256; i++ )
         {
-            double y = ( double )( i ) / (( double )( _textureWidth - 1.0 ) );
+            double y = ( double )( i ) / ( ( double )( _textureWidth - 1.0 ) );
             y = pow( y, 1.0 / _gamma );
-            gTable[i] = ( int ) floor(( _textureWidth - 1.0 ) * y + 0.5 );
+            gTable[i] = ( int ) floor( ( _textureWidth - 1.0 ) * y + 0.5 );
         }
         for( int i = 0; i < 256; i++ )
         {

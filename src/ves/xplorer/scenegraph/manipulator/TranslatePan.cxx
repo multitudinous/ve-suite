@@ -58,7 +58,7 @@ TranslatePan::TranslatePan()
         //If cave mode
         SetAutoRotateMode( AutoTransform::NO_ROTATION );
     }
-    
+
     osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
     stateSet->setRenderBinDetails( 11, std::string( "RenderBin" ) );
 
@@ -120,7 +120,7 @@ bool TranslatePan::ComputeProjectedPoint(
 
     //Exit if the intersection is invalid
     if( !GetLinePlaneIntersection(
-            lineStart, lineEnd, GetPlane(), projectedPoint ) )
+                lineStart, lineEnd, GetPlane(), projectedPoint ) )
     {
         return false;
     }

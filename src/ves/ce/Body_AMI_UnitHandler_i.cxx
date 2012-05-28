@@ -37,12 +37,12 @@
 using namespace ves::ce;
 ////////////////////////////////////////////////////////////////////////////////
 Body_AMI_UnitHandler_i::Body_AMI_UnitHandler_i( PortableServer::POA_ptr p,
-    Body::AMH_ExecutiveResponseHandler_ptr rh)
+        Body::AMH_ExecutiveResponseHandler_ptr rh )
     :
     m_poa( PortableServer::POA::_duplicate( p ) ),
     m_responseHandler( Body::AMH_ExecutiveResponseHandler::_duplicate( rh ) )
 {
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation skeleton constructor
@@ -62,7 +62,7 @@ void Body_AMI_UnitHandler_i::StartCalc()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::StartCalc_excep(
-    ::Messaging::ExceptionHolder* excep_holder)
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
@@ -76,7 +76,7 @@ void Body_AMI_UnitHandler_i::StopCalc()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::StopCalc_excep(
-    ::Messaging::ExceptionHolder* excep_holder)
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
@@ -90,7 +90,7 @@ void Body_AMI_UnitHandler_i::PauseCalc()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::PauseCalc_excep(
-    ::Messaging::ExceptionHolder* excep_holder)
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
@@ -104,7 +104,7 @@ void Body_AMI_UnitHandler_i::Resume()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::Resume_excep(
-    ::Messaging::ExceptionHolder* excep_holder)
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
@@ -119,7 +119,7 @@ void Body_AMI_UnitHandler_i::GetStatusMessage( const char* ami_return_val )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::GetStatusMessage_excep(
-    ::Messaging::ExceptionHolder* excep_holder)
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
@@ -134,7 +134,7 @@ void Body_AMI_UnitHandler_i::GetUserData( const char* ami_return_val )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::GetUserData_excep(
-    ::Messaging::ExceptionHolder* excep_holder)
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
@@ -148,7 +148,7 @@ void Body_AMI_UnitHandler_i::SetParams()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::SetParams_excep(
-    ::Messaging::ExceptionHolder* excep_holder)
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
@@ -161,8 +161,8 @@ void Body_AMI_UnitHandler_i::SetID()
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_AMI_UnitHandler_i::SetID_excep (
-    ::Messaging::ExceptionHolder* excep_holder)
+void Body_AMI_UnitHandler_i::SetID_excep(
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
@@ -191,7 +191,7 @@ void Body_AMI_UnitHandler_i::GetID( const ::Types::ArrayLong& ami_return_val )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::GetID_excep(
-    ::Messaging::ExceptionHolder* excep_holder)
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
@@ -206,7 +206,7 @@ void Body_AMI_UnitHandler_i::GetCurID( ::CORBA::Long ami_return_val )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::GetCurID_excep(
-    ::Messaging::ExceptionHolder* excep_holder)
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
@@ -220,14 +220,14 @@ void Body_AMI_UnitHandler_i::SetName()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::SetName_excep(
-    ::Messaging::ExceptionHolder* excep_holder)
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_AMI_UnitHandler_i::GetName( const char* ami_return_val)
+void Body_AMI_UnitHandler_i::GetName( const char* ami_return_val )
 {
     boost::ignore_unused_variable_warning( ami_return_val );
     // Add your implementation here
@@ -235,7 +235,7 @@ void Body_AMI_UnitHandler_i::GetName( const char* ami_return_val)
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::GetName_excep(
-    ::Messaging::ExceptionHolder* excep_holder)
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here
@@ -246,14 +246,14 @@ void Body_AMI_UnitHandler_i::Query( const char* ami_return_val )
 {
     //std::cout << "Body_AMI_UnitHandler_i::Query " << ami_return_val << std::endl;
     m_responseHandler->Query( ami_return_val );
-    
+
     //std::cout << "Body_AMI_UnitHandler_i deactivating self " << ami_return_val <<"."<< std::endl;
     PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
     m_poa->deactivate_object( oid.in() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_AMI_UnitHandler_i::Query_excep (
-    ::Messaging::ExceptionHolder* excep_holder)
+void Body_AMI_UnitHandler_i::Query_excep(
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     // Here, we need to extract the exception from this holder, and package
     // it in another so the AMH response handler may forward it on.
@@ -261,26 +261,26 @@ void Body_AMI_UnitHandler_i::Query_excep (
     {
         excep_holder->raise_exception();
     }
-    catch(const CORBA::Exception& ex)
+    catch( const CORBA::Exception& ex )
     {
         CORBA::Exception* local_ex = ex._tao_duplicate();
         ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( local_ex );
         m_responseHandler->Query_excep( &amh_excep_holder );
     }
-    catch(...)
+    catch( ... )
     {
         std::cout
-            << "Query_excep got an unknown exception"
-            << std::endl;
-        
-        CORBA::Exception *unknown_ex = new CORBA::UNKNOWN;
+                << "Query_excep got an unknown exception"
+                << std::endl;
+
+        CORBA::Exception* unknown_ex = new CORBA::UNKNOWN;
         ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( unknown_ex );
         m_responseHandler->Query_excep( &amh_excep_holder );
     }
-    
+
     //std::cout << "Body_AMI_UnitHandler_i deactivating self" << std::endl;
-    PortableServer::ObjectId_var oid = m_poa->servant_to_id(this);
-    m_poa->deactivate_object (oid.in());
+    PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
+    m_poa->deactivate_object( oid.in() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UnitHandler_i::DeleteModuleInstance()
@@ -289,8 +289,8 @@ void Body_AMI_UnitHandler_i::DeleteModuleInstance()
     throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_AMI_UnitHandler_i::DeleteModuleInstance_excep (
-    ::Messaging::ExceptionHolder* excep_holder)
+void Body_AMI_UnitHandler_i::DeleteModuleInstance_excep(
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     boost::ignore_unused_variable_warning( excep_holder );
     // Add your implementation here

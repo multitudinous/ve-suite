@@ -53,7 +53,7 @@ namespace conductor
 class VE_GUIPLUGINS_EXPORTS ListTable : public wxListCtrl
 {
 public:
-    ListTable( wxWindow *parent = NULL,
+    ListTable( wxWindow* parent = NULL,
                const wxWindowID id = -1,
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize );

@@ -54,24 +54,24 @@ class PSPlugin : public UIPluginBase
 public:
     ///Constructor
     PSPlugin();
-    
+
     ///Destructor
     virtual ~PSPlugin();
-    
+
     ///???
     virtual wxString GetConductorName();
 
-protected:        
+protected:
     ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
-private:        
+private:
     ///???
     bool IsSIPOpen();
-    
+
     ///???
     void OnOpen( wxCommandEvent& event );
-    
+
     ///???
     wxMenu* m_powersimMenu;
 

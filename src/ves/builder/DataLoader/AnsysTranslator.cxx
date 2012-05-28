@@ -53,14 +53,14 @@ AnsysTranslator::~AnsysTranslator()
 {}
 //////////////////////////////////////////////////////////////////////////
 void AnsysTranslator::AnsysPreTranslateCbk::Preprocess( int argc, char** argv,
-                                                        cfdTranslatorToVTK* toVTK )
+        cfdTranslatorToVTK* toVTK )
 {
     PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AnsysTranslator::AnsysTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                   cfdTranslatorToVTK* toVTK,
-                                                   vtkAlgorithm*& dataReader )
+        cfdTranslatorToVTK* toVTK,
+        vtkAlgorithm*& dataReader )
 {
     AnsysTranslator* ansysTransVTK =
         dynamic_cast<AnsysTranslator*>( toVTK );
@@ -81,7 +81,7 @@ void AnsysTranslator::AnsysTranslateCbk::Translate( vtkDataObject*& outputDatase
 void AnsysTranslator::DisplayHelp( void )
 {
     std::cout << "|\tAnsys Translator Usage:" << std::endl
-    << "\t -singleFile <rst_filename_to_load> -o <output_dir> "
-    << "-outFileName <output_filename> -loader rst -w file" << std::endl;
+              << "\t -singleFile <rst_filename_to_load> -o <output_dir> "
+              << "-outFileName <output_filename> -loader rst -w file" << std::endl;
 }
 

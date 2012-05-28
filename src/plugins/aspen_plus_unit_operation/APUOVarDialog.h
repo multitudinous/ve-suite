@@ -64,99 +64,99 @@ class APUOVarDialog : public wxDialog
 {
 public:
     ///Constructor
-    APUOVarDialog( wxWindow *parent, wxWindowID id = 1,
-        const wxString &title = wxT( "ParamsDialog" ),
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxDefaultSize,
-        long style = wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP |
-        wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX );
-    
+    APUOVarDialog( wxWindow* parent, wxWindowID id = 1,
+                   const wxString& title = wxT( "ParamsDialog" ),
+                   const wxPoint& pos = wxDefaultPosition,
+                   const wxSize& size = wxDefaultSize,
+                   long style = wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP |
+                                wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX );
+
     ///Destructor
     virtual ~APUOVarDialog();
-    
+
     ///???
-    void AppendList( const char * );
-    
+    void AppendList( const char* );
+
     ///???
-    void SetCompName( const char * );
-    
+    void SetCompName( const char* );
+
     ///???
-    void SetServiceList( ves::conductor::util::CORBAServiceList * );
-    
+    void SetServiceList( ves::conductor::util::CORBAServiceList* );
+
     ///???
-    void SetDialogType( const char * );
-    
+    void SetDialogType( const char* );
+
     ///???
     void SetIsBlock( bool );
 
 private:
     wxString CompName;
     wxString DialogType;
-    ves::conductor::util::CORBAServiceList * serviceList;
+    ves::conductor::util::CORBAServiceList* serviceList;
 
-    wxButton *SetButton;
-    wxTextCtrl *WxMemo3;
-    wxTextCtrl *PromptMemo;
-    wxTextCtrl *OptionsMemo;
-    wxStaticText *ChildrenLabel;
-    wxStaticText *HasLabel;
-    wxTextCtrl *HasChildrenEdit;
-    wxStaticBox *OABox;
-    wxTextCtrl *PortTypeEdit;
-    wxStaticText *PortTypeLabel;
-    wxStaticText *MultiportLabel;
-    wxTextCtrl *MultiportEdit;
-    wxTextCtrl *GenderEdit;
-    wxStaticText *GenderLabel;
-    wxStaticText *InOrOutLabel;
-    wxTextCtrl *InOrOutEdit;
-    wxStaticBox *FCPBox;
-    wxStaticText *TypeLabel;
-    wxTextCtrl *WxEdit16;
-    wxStaticBox *CSBox;
-    wxStaticText *DValueLabel;
-    wxStaticText *ListLabel;
-    wxStaticText *MeasureLabel;
-    wxStaticText *QuantityLabel;
-    wxStaticText *PromptLabel;
-    wxTextCtrl *DefaultValueEdit;
-    wxStaticText *DefaultLabel;
-    wxTextCtrl *LowerLimitEdit;
-    wxStaticText *LowerLimitLabel;
-    wxStaticText *UpperLimitLabel;
-    wxTextCtrl *UpperLimitEdit;
-    wxTextCtrl *EnterableEdit;
-    wxStaticText *EnterableLabel;
-    wxStaticText *OutputLabel;
-    wxTextCtrl *OutputEdit;
-    wxStaticBox *AVNBox;
-    wxStaticText *RecordLabel;
-    wxTextCtrl *RecordTypeEdit;
-    wxStaticBox *MARBox;
-    wxStaticText *OptionsLabel;
-    wxStaticText *OptionLabel;
-    wxTextCtrl *OptionListEdit;
-    wxStaticText *BasisLabel;
-    wxTextCtrl *BasisEdit;
-    wxStaticText *UnitLabel;
-    wxTextCtrl *UnitEdit;
-    wxStaticText *PhysicalLabel;
-    wxTextCtrl *QuantityEdit;
-    wxTextCtrl *ValueEdit;
-    wxStaticText *ValueLabel;
-    wxStaticBox *VARBox;
-    wxStaticText *DimensionLabel;
-    wxTextCtrl *DimensionEdit;
-    wxTreeCtrl *ParamChoice;
-    wxStaticText *NodePathLabel;
-    wxTextCtrl *NodePath;
-    wxStaticText *ParameterLabel;
+    wxButton* SetButton;
+    wxTextCtrl* WxMemo3;
+    wxTextCtrl* PromptMemo;
+    wxTextCtrl* OptionsMemo;
+    wxStaticText* ChildrenLabel;
+    wxStaticText* HasLabel;
+    wxTextCtrl* HasChildrenEdit;
+    wxStaticBox* OABox;
+    wxTextCtrl* PortTypeEdit;
+    wxStaticText* PortTypeLabel;
+    wxStaticText* MultiportLabel;
+    wxTextCtrl* MultiportEdit;
+    wxTextCtrl* GenderEdit;
+    wxStaticText* GenderLabel;
+    wxStaticText* InOrOutLabel;
+    wxTextCtrl* InOrOutEdit;
+    wxStaticBox* FCPBox;
+    wxStaticText* TypeLabel;
+    wxTextCtrl* WxEdit16;
+    wxStaticBox* CSBox;
+    wxStaticText* DValueLabel;
+    wxStaticText* ListLabel;
+    wxStaticText* MeasureLabel;
+    wxStaticText* QuantityLabel;
+    wxStaticText* PromptLabel;
+    wxTextCtrl* DefaultValueEdit;
+    wxStaticText* DefaultLabel;
+    wxTextCtrl* LowerLimitEdit;
+    wxStaticText* LowerLimitLabel;
+    wxStaticText* UpperLimitLabel;
+    wxTextCtrl* UpperLimitEdit;
+    wxTextCtrl* EnterableEdit;
+    wxStaticText* EnterableLabel;
+    wxStaticText* OutputLabel;
+    wxTextCtrl* OutputEdit;
+    wxStaticBox* AVNBox;
+    wxStaticText* RecordLabel;
+    wxTextCtrl* RecordTypeEdit;
+    wxStaticBox* MARBox;
+    wxStaticText* OptionsLabel;
+    wxStaticText* OptionLabel;
+    wxTextCtrl* OptionListEdit;
+    wxStaticText* BasisLabel;
+    wxTextCtrl* BasisEdit;
+    wxStaticText* UnitLabel;
+    wxTextCtrl* UnitEdit;
+    wxStaticText* PhysicalLabel;
+    wxTextCtrl* QuantityEdit;
+    wxTextCtrl* ValueEdit;
+    wxStaticText* ValueLabel;
+    wxStaticBox* VARBox;
+    wxStaticText* DimensionLabel;
+    wxTextCtrl* DimensionEdit;
+    wxTreeCtrl* ParamChoice;
+    wxStaticText* NodePathLabel;
+    wxTextCtrl* NodePath;
+    wxStaticText* ParameterLabel;
     bool IsBlock;
     wxTreeItemId m_rootId;
     std::map< std::string, wxTreeItemId > m_prevIds;
     wxTreeItemId m_prevSelection;
     wxTreeItemId mParentId;
-    
+
     enum
     {
         ID_SETBUTTON = 1235,
@@ -226,16 +226,16 @@ private:
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >
-            ( wxConvCurrent->cWX2MB( data ) ) );
+                             ( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
 
     ///???
     void WxButton1Click( wxCommandEvent& event );
-    
+
     ///???
     void ParamChoiceSelected( wxTreeEvent& event );
-    
+
     ///???
     void SetButtonClick( wxCommandEvent& event );
 

@@ -57,14 +57,14 @@ void RTTCameraImageCaptureCallback::operator()( osg::RenderInfo& ri ) const
 {
     osg::ref_ptr< osg::Image > image = m_texture2D->getImage();
 
-    osg::notify( osg::ALWAYS ) << "Reading image for file " 
-        << m_filename << " ... " << std::endl;
+    osg::notify( osg::ALWAYS ) << "Reading image for file "
+                               << m_filename << " ... " << std::endl;
 
     m_texture2D->apply( *( ri.getState() ) );
     image->readImageFromCurrentTexture( ri.getContextID(), false, GL_UNSIGNED_BYTE );
-    
-    osg::notify( osg::ALWAYS ) << "Writing file " 
-        << m_filename << " ... " << std::endl;
+
+    osg::notify( osg::ALWAYS ) << "Writing file "
+                               << m_filename << " ... " << std::endl;
 
     osgDB::writeImageFile( *image.get(), m_filename );
     osg::notify( osg::ALWAYS ) << "Capture complete." << std::endl;

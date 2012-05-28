@@ -88,10 +88,10 @@ private:
     int elementOffset;
     vtkPoints* vertex;
     vtkDoubleArray** parameterData;
-    int * timeToInitVtk;
-    int * numZonesAtTimestep;
+    int* timeToInitVtk;
+    int* numZonesAtTimestep;
     LgIndex_t IMax, JMax, KMax;
-    
+
     ///???
     void ReadVariable( const EntIndex_t currentZone, int varNumber, const char* varName, vtkDoubleArray* scalarData );
     ///???
@@ -109,8 +109,8 @@ private:
     ///???
     void InitializeVtkData();
     ///???
-    void ReadElementInfoInZone( const EntIndex_t currentZone, ZoneType_e & zoneType, LgIndex_t & numElementsInZone,
-                                int & numNodesPerElement, int & numFacesPerCell, int & numNodalPointsInZone );
+    void ReadElementInfoInZone( const EntIndex_t currentZone, ZoneType_e& zoneType, LgIndex_t& numElementsInZone,
+                                int& numNodesPerElement, int& numFacesPerCell, int& numNodalPointsInZone );
     ///???
     void ReadZoneName( const EntIndex_t currentZone );
     ///???
@@ -127,7 +127,7 @@ private:
                               const int numNodalPointsInZone, int parNum );
     ///???
     void AttachPointsAndDataToGrid();
-    
+
     void CountNumberOfTimestepsUsingSolnTime();
     ///???
     int GetStartingZoneForTimestep( const int timestep );

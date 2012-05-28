@@ -128,9 +128,9 @@ private:
 
     ///Typdef
     typedef std::pair< std::string, std::pair< std::string, std::string > > VizKeyPair;
-    
+
     typedef std::map< VizKeyPair, ves::xplorer::cfdObjects* >::const_iterator VisObjectConstIter;
-    
+
 public:
     ///Destructor functions since destructors don't get called yet
     //void CleanUp();
@@ -177,7 +177,7 @@ public:
 
     ///Hide a given viz feature
     void HideVizFeature( const std::string& uuid, const std::vector< bool >& onOff );
-    
+
     ///Create the map of viz objects
     void CreateVizObjectMap();
 
@@ -190,13 +190,13 @@ private:
     ///- to be used by the addvis eh
     ///\param actorsReady Bool that tells sshandler to add geodes
     void SetActorsAreReady( bool actorsReady );
-    
+
     //Common objects for all functions
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;
     ///A queue to stack active objects in to enable commands
     ///to send multiple vis objec requests
     std::queue< cfdObjects* > m_visObjectQueue;
-    
+
     ///THe queue that holds the objects that need to be added to the sg
     std::queue< cfdObjects* > m_visObjectSGQueue;
 
@@ -238,7 +238,7 @@ private:
     ///Actual stream for this class
     ves::xplorer::LogStreamPtr m_logStream;
     ///The container for all of the cfdObjects
-    std::map< std::pair< std::string, std::pair< std::string, std::string > > , ves::xplorer::cfdObjects* > m_visObjectMap;    
+    std::map< std::pair< std::string, std::pair< std::string, std::string > > , ves::xplorer::cfdObjects* > m_visObjectMap;
 
 };
 }

@@ -61,19 +61,19 @@ public:
     /**
     * Constructs a SignalWrapper of type T.
     * @param signal Pointer to a boost::signals2::signal<T> object.
-     * 
+     *
      * Example usage:
      * @code
      * // Create a signal that takes a double and an int and returns nothing.
      * boost::signals2::signal< void (double, int) > mySignal;
-     * 
+     *
      * // Wrap it in an appropriate SignalWrapper. Notice the template parameter
      * // matches the type of mySignal exactly.
      * SignalWrapper< boost::signals2::signal< void (double, int) > > myWrapper( &mySignal );
      * @endcode
     **/
     SignalWrapper( T* signal ) :
-    mSignal( signal )
+        mSignal( signal )
     {
     }
 
@@ -85,14 +85,14 @@ public:
                               ScopedConnectionList& connections,
                               int priority )
     {
-        SlotWrapper<T>* castSlot = dynamic_cast < SlotWrapper<T>* > ( slot );
-        if ( castSlot )
+        SlotWrapper<T>* castSlot = dynamic_cast < SlotWrapper<T>* >( slot );
+        if( castSlot )
         {
             boost::shared_ptr< boost::signals2::scoped_connection > connection( new boost::signals2::scoped_connection );
             *( connection.get() ) = mSignal->connect( priority, castSlot->GetSlot() );
 
             // If the connection was successful, we store the details of it
-            if ( connection->connected() )
+            if( connection->connected() )
             {
                 connections.AddConnection( connection );
                 boost::weak_ptr< boost::signals2::scoped_connection > weakConnection( connection );
@@ -112,7 +112,7 @@ public:
 
     virtual long unsigned int GetSignalAddress()
     {
-        return reinterpret_cast<long unsigned int>(mSignal);
+        return reinterpret_cast<long unsigned int>( mSignal );
     }
 
 

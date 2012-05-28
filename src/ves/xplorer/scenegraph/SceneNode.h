@@ -74,7 +74,7 @@ public:
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy.
     SceneNode( const SceneNode& rhs );
-    
+
 protected:
     ///Destructor
     virtual ~SceneNode();

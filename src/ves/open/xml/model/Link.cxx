@@ -45,7 +45,7 @@ using namespace ves::open::xml::model;
 //Constructor                             //
 ////////////////////////////////////////////
 Link::Link()
-        : XMLObject()
+    : XMLObject()
 {
     mLinkName = "NameHere";
     mType = -9999;
@@ -67,7 +67,7 @@ Link::~Link()
 }
 ///////////////////////////////////////////
 Link::Link( const Link& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mLinkName = input.mLinkName;
     mType = input.mType;
@@ -159,12 +159,12 @@ PointPtr Link::GetLinkPoint( unsigned int i )
     {
         return mLinkPoints.at( i );
     }
-    catch ( ... )
+    catch( ... )
     {
         if( i > ( mLinkPoints.size() + 1 ) )
         {
             std::cerr << "The element request is out of sequence."
-            << " Please ask for a lower number point." << std::endl;
+                      << " Please ask for a lower number point." << std::endl;
             return PointPtr();
         }
         else
@@ -212,7 +212,7 @@ void Link::SetObjectFromXMLData( DOMNode* element )
             else
             {
                 GetAttribute( currentElement, "name", mLinkName );
-                //There is an option for name to be empty therefore if it is 
+                //There is an option for name to be empty therefore if it is
                 //empty by default then we need to keep it empty.
                 /*if( mLinkName.empty() )
                 {
@@ -227,14 +227,14 @@ void Link::SetObjectFromXMLData( DOMNode* element )
         // for module location
         {
             dataValueStringName = GetSubElement( currentElement, "fromModule", 0 );
-            mModuleInfo.first = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair(  "FLOAT" ) );
+            mModuleInfo.first = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair( "FLOAT" ) );
             mModuleInfo.first->SetObjectFromXMLData( dataValueStringName );
         }
         // for module location
         {
             dataValueStringName = GetSubElement( currentElement, "toModule", 0 );
 
-            mModuleInfo.second = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair(  "FLOAT" ) );
+            mModuleInfo.second = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair( "FLOAT" ) );
             mModuleInfo.second->SetObjectFromXMLData( dataValueStringName );
         }
 
@@ -246,8 +246,8 @@ void Link::SetObjectFromXMLData( DOMNode* element )
 
         // for link points
         {
-            unsigned int numberOfPortData = currentElement->getElementsByTagName(  
-                Convert( "linkPoints" ).toXMLString() )->getLength();
+            unsigned int numberOfPortData = currentElement->getElementsByTagName(
+                                                Convert( "linkPoints" ).toXMLString() )->getLength();
 
             for( unsigned int i = 0; i < numberOfPortData; ++i )
             {
@@ -259,7 +259,7 @@ void Link::SetObjectFromXMLData( DOMNode* element )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::SetLinkType( int type)
+void Link::SetLinkType( int type )
 {
     mType = type;
 }

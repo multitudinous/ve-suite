@@ -66,7 +66,7 @@ public:
     virtual ~cfdAnimatedStreamlineCone();
 
     void SetStreamlineSource( cfdStreamers* streamers );
-    
+
     ///Set the Polydata Source
     ///\param polySource
     void SetPolyDataSource( vtkPolyData* polySource );
@@ -84,11 +84,11 @@ private:
     ///Determine is a streamline is going backwards
     ///\return Return true if streamline is going backwards
     bool IsStreamlineBackwards( vtkIdType cellId );
-    
-    vtkPolyDataMapper *mapper;///<Mapper for vtk polydata
-    vtkPolyData *polyData;///<polyData
-    vtkGlyph3D *glyph;///<glyph
-    vtkSphereSource *sphere;///<sphere source
+
+    vtkPolyDataMapper* mapper;///<Mapper for vtk polydata
+    vtkPolyData* polyData;///<polyData
+    vtkGlyph3D* glyph;///<glyph
+    vtkSphereSource* sphere;///<sphere source
 
     float particleDiameter;///<Diameter of particle
     enum STREAM_DIRECTION
@@ -99,7 +99,7 @@ private:
     };
 
     STREAM_DIRECTION streamDir;///<Stream direction
-    
+
     cfdStreamers* m_streamers;
     ///Forward and backward points for streamlines
     std::vector< std::pair< vtkIdType, vtkIdType > > m_streamlines;

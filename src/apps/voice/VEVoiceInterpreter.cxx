@@ -186,7 +186,7 @@ bool VEVoiceInterpreter::ProcessPhrase( std::string phrase )
     else
     {
         vprDEBUG( vesDBG, 2 ) << "Interpreter doesn't know what to do with: "
-        << phrase << "\n" << vprDEBUG_FLUSH;
+                              << phrase << "\n" << vprDEBUG_FLUSH;
         return false;
     }
     return true;

@@ -35,11 +35,11 @@
 #include <QtGui/QFileDialog>
 #include <QtCore/QSettings>
 
-LauncherMainWindow::LauncherMainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::LauncherMainWindow)
+LauncherMainWindow::LauncherMainWindow( QWidget* parent ) :
+    QMainWindow( parent ),
+    ui( new Ui::LauncherMainWindow )
 {
-    ui->setupUi(this);
+    ui->setupUi( this );
     QDesktopWidget* dw = QApplication::desktop();
     const QRect geom = dw->screenGeometry( dw->screenNumber( this ) );
     ui->m_width->setValue( geom.width() );
@@ -58,7 +58,7 @@ LauncherMainWindow::LauncherMainWindow(QWidget *parent) :
         int xplorerWidth = settings.value( "xplorer/width" ).toInt();
         int xplorerHeight = settings.value( "xplorer/height" ).toInt();
 
-        if( (xplorerWidth != 0) && (xplorerHeight != 0) )
+        if( ( xplorerWidth != 0 ) && ( xplorerHeight != 0 ) )
         {
             ui->m_width->setValue( xplorerWidth );
             ui->m_height->setValue( xplorerHeight );
@@ -69,15 +69,15 @@ LauncherMainWindow::LauncherMainWindow(QWidget *parent) :
         ui->m_showStdout->setChecked( settings.value( "xplorer/showStdout" ).toBool() );
 
         int width = settings.value( "launcher/width" ).toInt();
-        int height = settings.value( "launcher/height").toInt();
+        int height = settings.value( "launcher/height" ).toInt();
 
         if( width != 0 && height != 0 )
         {
             this->resize( settings.value( "launcher/width" ).toInt(),
-                          settings.value( "launcher/height").toInt() );
+                          settings.value( "launcher/height" ).toInt() );
         }
-        this->move( settings.value( "launcher/xposition").toInt(),
-                    settings.value( "launcher/yposition").toInt() );
+        this->move( settings.value( "launcher/xposition" ).toInt(),
+                    settings.value( "launcher/yposition" ).toInt() );
     }
 }
 
@@ -86,12 +86,13 @@ LauncherMainWindow::~LauncherMainWindow()
     delete ui;
 }
 
-void LauncherMainWindow::changeEvent(QEvent *e)
+void LauncherMainWindow::changeEvent( QEvent* e )
 {
-    QMainWindow::changeEvent(e);
-    switch (e->type()) {
+    QMainWindow::changeEvent( e );
+    switch( e->type() )
+    {
     case QEvent::LanguageChange:
-        ui->retranslateUi(this);
+        ui->retranslateUi( this );
         break;
     default:
         break;
@@ -125,7 +126,7 @@ void LauncherMainWindow::on_launch_clicked()
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     m_process = new QProcess( 0 );
     m_process->setProcessEnvironment( env );
-    m_process->start(program, arguments);
+    m_process->start( program, arguments );
 
     // Open a textedit window and use it to display contents of stdoutput from
     // xplorer
@@ -135,7 +136,7 @@ void LauncherMainWindow::on_launch_clicked()
         m_stdout->resize( 640, 360 );
         m_stdout->show();
         m_stdout->setWindowTitle( "VE-Suite stdoutput" );
-        connect( m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(onReadyReadStandardOutput()) );
+        connect( m_process, SIGNAL( readyReadStandardOutput() ), this, SLOT( onReadyReadStandardOutput() ) );
     }
 
     QSettings settings( "VESuite.org", "VELauncher" );
@@ -159,10 +160,10 @@ void LauncherMainWindow::on_launch_clicked()
 void LauncherMainWindow::on_m_workingDirButton_clicked()
 {
     // Get the new working dir and change current path to it
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Select Working Directory"),
-                                                     "",
-                                                     QFileDialog::ShowDirsOnly
-                                                     | QFileDialog::DontResolveSymlinks);
+    QString dir = QFileDialog::getExistingDirectory( this, tr( "Select Working Directory" ),
+                  "",
+                  QFileDialog::ShowDirsOnly
+                  | QFileDialog::DontResolveSymlinks );
 
     if( !dir.isEmpty() )
     {
@@ -173,9 +174,9 @@ void LauncherMainWindow::on_m_workingDirButton_clicked()
 
 void LauncherMainWindow::on_m_configurationButton_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Select configuration file"),
-                                                     "",
-                                                     tr("Juggler configuration (*.jconf)"));
+    QString fileName = QFileDialog::getOpenFileName( this, tr( "Select configuration file" ),
+                       "",
+                       tr( "Juggler configuration (*.jconf)" ) );
 
     if( !fileName.isEmpty() )
     {

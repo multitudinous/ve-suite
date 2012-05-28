@@ -87,12 +87,12 @@ public:
 
     std::multimap<int, fluentParticle> mfluentParticles;
 
-    vtkPolyDataWriter          *writer;
-    vtkPolyData                *polydata;
-    vtkPoints                  *points;
-    vtkFloatArray              **parameterData;
-    vtkTransform               *transform;
-    vtkTransformPolyDataFilter *transFilter;
+    vtkPolyDataWriter*          writer;
+    vtkPolyData*                polydata;
+    vtkPoints*                  points;
+    vtkFloatArray**              parameterData;
+    vtkTransform*               transform;
+    vtkTransformPolyDataFilter* transFilter;
     int particleID[500];
 
 };

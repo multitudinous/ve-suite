@@ -58,9 +58,9 @@ SeedPointBoundsEventHandler::SeedPointBoundsEventHandler()
     _activeModel = 0;
 
     CONNECTSIGNALS_1( "%UpdateSeedPointBounds",
-                     void ( const std::vector< double >& bounds ),
-                     &SeedPointBoundsEventHandler::UpdateAllBounds,
-                     m_connections, any_SignalType, normal_Priority );
+                      void ( const std::vector< double >& bounds ),
+                      &SeedPointBoundsEventHandler::UpdateAllBounds,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ///////////////////////////////////////////////////////////////////
 SeedPointBoundsEventHandler
@@ -97,7 +97,7 @@ void SeedPointBoundsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         std::cout << "Invalid object passed to SeedPointBoundsEventHandler!" << std::endl;
@@ -107,7 +107,9 @@ void SeedPointBoundsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
 void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     if( !_activeModel )
+    {
         throw;
+    }
     try
     {
         CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
@@ -143,7 +145,7 @@ void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
                 //udpate the correct bound
                 unsigned int index = ( boundCoordinate == "X" ) ? 0 : ( boundCoordinate == "Y" ) ? 2 : 4;
                 double newValue = 0;
-                newValue = databounds[index] + alpha * ( databounds[index+1] - databounds[index] );
+                newValue = databounds[index] + alpha * ( databounds[index + 1] - databounds[index] );
                 ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds( newValue,
                         boundCoordinate,
                         minMaxUpdate );
@@ -163,7 +165,7 @@ void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
                 unsigned int index = ( boundCoordinate == "X" ) ? 0 : ( boundCoordinate == "Y" ) ? 2 : 4;
 
                 double newValue = 0;
-                newValue = databounds[index] + minAlpha * ( databounds[index+1] - databounds[index] );
+                newValue = databounds[index] + minAlpha * ( databounds[index + 1] - databounds[index] );
                 ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds( newValue,
                         boundCoordinate,
                         "Min" );
@@ -171,7 +173,7 @@ void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
                 double maxAlpha;
                 maxValue->GetData( maxAlpha );
 
-                newValue = databounds[index] + maxAlpha * ( databounds[index+1] - databounds[index] );
+                newValue = databounds[index] + maxAlpha * ( databounds[index + 1] - databounds[index] );
                 ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds( newValue,
                         boundCoordinate,
                         "Max" );
@@ -179,7 +181,7 @@ void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
             }
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid Bounds!!" << std::endl;
         std::cout << "SeedPointBoundsEventHandler::Execute()" << std::endl;
@@ -207,13 +209,13 @@ void SeedPointBoundsEventHandler::UpdateAllBounds( const std::vector< double >& 
     newValue[3] = databounds[2] + bounds.at( 3 ) * ( databounds[3] - databounds[2] );
     newValue[4] = databounds[4] + bounds.at( 4 ) * ( databounds[5] - databounds[4] );
     newValue[5] = databounds[4] + bounds.at( 5 ) * ( databounds[5] - databounds[4] );
-    
+
     ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
-        SetBounds( newValue[0],
-                    newValue[1],
-                    newValue[2],
-                    newValue[3],
-                    newValue[4],
-                    newValue[5] );
+    SetBounds( newValue[0],
+               newValue[1],
+               newValue[2],
+               newValue[3],
+               newValue[4],
+               newValue[5] );
 }
 ////////////////////////////////////////////////////////////////////////////////

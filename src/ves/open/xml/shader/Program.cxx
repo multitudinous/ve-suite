@@ -44,7 +44,7 @@ using namespace ves::open::xml;
 //Constructor                                                           //
 //////////////////////////////////////////////////////////////////////////
 Program::Program()
-        : XMLObject()
+    : XMLObject()
 {
     mName = std::string( "VEProgram" );
     mVertexShader = ShaderPtr();
@@ -68,17 +68,17 @@ Program::~Program()
 //Copy constructor                 //
 /////////////////////////////////////
 Program::Program( const Program& rhs )
-        : XMLObject( rhs )
+    : XMLObject( rhs )
 {
     mName = std::string( "VEProgram" );
 
     if( rhs.mVertexShader )
     {
-        mVertexShader = ShaderPtr( new Shader(  *rhs.mVertexShader ) );
+        mVertexShader = ShaderPtr( new Shader( *rhs.mVertexShader ) );
     }
     if( rhs.mFragmentShader )
     {
-        mFragmentShader = ShaderPtr( new Shader(  *rhs.mFragmentShader ) );
+        mFragmentShader = ShaderPtr( new Shader( *rhs.mFragmentShader ) );
     }
     mName = rhs.mName;
 }
@@ -175,10 +175,10 @@ void Program::_updateVEElement( const std::string& )
 void Program::_updateProgramName()
 {
     DOMElement* nameElement = mRootDocument->createElement(
-                              Convert( "name" ).toXMLString() );
+                                  Convert( "name" ).toXMLString() );
 
     DOMText* name = mRootDocument->createTextNode(
-                    Convert( mName ).toXMLString() );
+                        Convert( mName ).toXMLString() );
 
     nameElement->appendChild( name );
     mVeElement->appendChild( nameElement );
@@ -192,11 +192,11 @@ Program& Program::operator=( const Program& rhs )
         XMLObject::operator=( rhs );
         if( rhs.mVertexShader )
         {
-            mVertexShader = ShaderPtr( new Shader(  *rhs.mVertexShader ) );
+            mVertexShader = ShaderPtr( new Shader( *rhs.mVertexShader ) );
         }
         if( rhs.mFragmentShader )
         {
-            mFragmentShader = ShaderPtr( new Shader(  *rhs.mFragmentShader ) );
+            mFragmentShader = ShaderPtr( new Shader( *rhs.mFragmentShader ) );
         }
         mName = rhs.mName;
     }

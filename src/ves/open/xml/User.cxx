@@ -39,7 +39,7 @@ using namespace ves::open::xml;
 //Constructors//
 ////////////////////////////////////////////////////////////////////////////////
 User::User()
-        : XMLObject()
+    : XMLObject()
 {
     mUserId = std::string( "User_0" );
     mControlStatus = std::string( "MASTER" );
@@ -50,14 +50,14 @@ User::~User()
 {}
 ////////////////////////////////////////////////////////////////////////////////
 User::User( const User& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mUserId = input.mUserId;
     mControlStatus = input.mControlStatus;
 
     if( input.mStateInfo )
     {
-        mStateInfo = StateInfoPtr( new StateInfo( *(  input.mStateInfo ) ) );
+        mStateInfo = StateInfoPtr( new StateInfo( *( input.mStateInfo ) ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +71,7 @@ User& User::operator=( const User& input )
 
         if( input.mStateInfo )
         {
-            mStateInfo = StateInfoPtr( new StateInfo( *(  input.mStateInfo ) ) );
+            mStateInfo = StateInfoPtr( new StateInfo( *( input.mStateInfo ) ) );
         }
     }
     return *this;

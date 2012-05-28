@@ -69,7 +69,7 @@ END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////
 TextureBasedToolBar::TextureBasedToolBar( wxWindow* parent, int id )
-        : ves::conductor::util::BaseDialog( parent, id, "Texture-Based Tools" )
+    : ves::conductor::util::BaseDialog( parent, id, "Texture-Based Tools" )
 {
     wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
 
@@ -107,7 +107,7 @@ void TextureBasedToolBar::SetSubDialogSize( wxRect subSize )
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::_updateAvailableSolutions( wxArrayString scalarNames,
-                                                     wxArrayString vectorNames )
+        wxArrayString vectorNames )
 {}
 ////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::SetScalars( wxArrayString scalarNames )
@@ -263,51 +263,51 @@ void TextureBasedToolBar::_onTransient( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::_handleToolButtons( wxCommandEvent& event )
 {
-    switch ( event.GetId() )
+    switch( event.GetId() )
     {
-        case SCALAR_ID:
+    case SCALAR_ID:
+    {
+        if( _availableScalars.GetCount() )
         {
-            if( _availableScalars.GetCount() )
-            {
-                _scalarToolsDlg->UpdateScalarList( _availableScalars );
-                _scalarToolsDlg->SetSize( _subDialogSize );
-                _scalarToolsDlg->CentreOnParent();
-                if( _scalarToolsDlg->ShowModal() == wxID_OK )
-                {
-                    ;
-                }
-            }
-            else
-            {
-                wxMessageBox( _( "ERROR!" ),
-                              _( "No scalar data available!!" ), wxOK | wxICON_ERROR );
-
-            }
-        }
-
-        break;
-        case VECTOR_ID:
-            wxMessageBox( _( "Unavailable!!" ), _( "Vector tools" ),
-                          wxOK | wxICON_INFORMATION );
-            break;
-        case TRANSFER_FUNCS_ID:
-            _transferFunctionDlg->SetSize( _subDialogSize );
-            _transferFunctionDlg->CentreOnParent();
-            if( _transferFunctionDlg->ShowModal() == wxID_OK )
-            {
-                ;
-            }
-            break;
-        case ROI_ID:
-        {
-            _roiDlg->SetSize( _subDialogSize );
-            _roiDlg->CentreOnParent();
-            if( _roiDlg->ShowModal() == wxID_OK )
+            _scalarToolsDlg->UpdateScalarList( _availableScalars );
+            _scalarToolsDlg->SetSize( _subDialogSize );
+            _scalarToolsDlg->CentreOnParent();
+            if( _scalarToolsDlg->ShowModal() == wxID_OK )
             {
                 ;
             }
         }
+        else
+        {
+            wxMessageBox( _( "ERROR!" ),
+                          _( "No scalar data available!!" ), wxOK | wxICON_ERROR );
+
+        }
+    }
+
+    break;
+    case VECTOR_ID:
+        wxMessageBox( _( "Unavailable!!" ), _( "Vector tools" ),
+                      wxOK | wxICON_INFORMATION );
         break;
+    case TRANSFER_FUNCS_ID:
+        _transferFunctionDlg->SetSize( _subDialogSize );
+        _transferFunctionDlg->CentreOnParent();
+        if( _transferFunctionDlg->ShowModal() == wxID_OK )
+        {
+            ;
+        }
+        break;
+    case ROI_ID:
+    {
+        _roiDlg->SetSize( _subDialogSize );
+        _roiDlg->CentreOnParent();
+        if( _roiDlg->ShowModal() == wxID_OK )
+        {
+            ;
+        }
+    }
+    break;
 
     };
 }

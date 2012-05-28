@@ -56,9 +56,9 @@ DraggerScalingEventHandler::DraggerScalingEventHandler()
     m_activeModel = 0;
 
     CONNECTSIGNALS_2( "%DraggerScaling",
-                     void ( bool const& enable, double const& draggerScale ),
-                     &DraggerScalingEventHandler::UpdateDraggerScaling,
-                     m_connections, any_SignalType, normal_Priority );    
+                      void ( bool const & enable, double const & draggerScale ),
+                      &DraggerScalingEventHandler::UpdateDraggerScaling,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DraggerScalingEventHandler::DraggerScalingEventHandler( const DraggerScalingEventHandler& ceh )
@@ -85,9 +85,9 @@ void DraggerScalingEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xm
 {
     try
     {
-        ves::open::xml::CommandPtr geometryLODScaleCmd = 
+        ves::open::xml::CommandPtr geometryLODScaleCmd =
             boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
-        if(  geometryLODScaleCmd )
+        if( geometryLODScaleCmd )
         {
             ves::open::xml::DataValuePairPtr scaleValue =
                 geometryLODScaleCmd->GetDataValuePair( "Dragger Scaling Toggle Value" );
@@ -96,7 +96,7 @@ void DraggerScalingEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xm
             UpdateDraggerScaling( true, alpha );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
         std::cout << "Invalid command passed to DraggerScalingEventHandler!!" << std::endl;
@@ -126,10 +126,10 @@ void DraggerScalingEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* 
 void DraggerScalingEventHandler::UpdateDraggerScaling( bool const&, double const& draggerScaling )
 {
     scenegraph::SceneManager::instance()->
-        GetManipulatorManager().SetDraggerScale( draggerScaling );
+    GetManipulatorManager().SetDraggerScale( draggerScaling );
     scenegraph::SceneManager::instance()->
-        GetManipulatorManager().GetSceneManipulator()->SetScale( draggerScaling );
+    GetManipulatorManager().GetSceneManipulator()->SetScale( draggerScaling );
 }
 ////////////////////////////////////////////////////////////////////////////////
-    
+
 

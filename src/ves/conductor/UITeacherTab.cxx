@@ -58,9 +58,9 @@ using namespace ves::conductor::util;
 //Constructor//
 ///////////////
 UITeacherTab::UITeacherTab( wxWindow* tControl )
-        : wxDialog( tControl, -1, _( "Record Scenes" ),
-                    wxDefaultPosition, wxDefaultSize,
-                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP )
+    : wxDialog( tControl, -1, _( "Record Scenes" ),
+                wxDefaultPosition, wxDefaultSize,
+                ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP )
 {
     _parent = tControl;
     _teacherRBox = 0;
@@ -171,7 +171,7 @@ void UITeacherTab::_onTeacher( wxCommandEvent& WXUNUSED( event ) )
         // CORBA releases the allocated memory so we do not have to
         CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
     }
-    catch ( ... )
+    catch( ... )
     {
         wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
                       _( "Communication Failure" ), wxOK | wxICON_INFORMATION );
@@ -198,7 +198,7 @@ void UITeacherTab::_onClear( wxCommandEvent& event )
         CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
         _buildPage();
     }
-    catch ( ... )
+    catch( ... )
     {
         wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
                       _( "Communication Failure" ), wxOK | wxICON_INFORMATION );

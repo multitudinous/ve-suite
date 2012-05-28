@@ -78,7 +78,7 @@ UIElement::UIElement():
     m_desktopSize = std::make_pair< int, int >( 0, 0 );
     //Request connection to UIManager.EnterLeaveUI signal
     CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &UIElement::UIEnterLeave,
-                    m_connections, highest_Priority );
+                     m_connections, highest_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UIElement::~UIElement()
@@ -92,25 +92,25 @@ void UIElement::PostConstructor()
     if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
         m_vertices->push_back( osg::Vec3( -1.0f, -1.0f, -1.0f ) );
-        m_vertices->push_back( osg::Vec3(  1.0f, -1.0f, -1.0f ) );
-        m_vertices->push_back( osg::Vec3(  1.0f,  1.0f, -1.0f ) );
+        m_vertices->push_back( osg::Vec3( 1.0f, -1.0f, -1.0f ) );
+        m_vertices->push_back( osg::Vec3( 1.0f,  1.0f, -1.0f ) );
         m_vertices->push_back( osg::Vec3( -1.0f,  1.0f, -1.0f ) );
     }
     else
     {
-        m_pixelUIRatio = double( 967 )/double( 6 );
+        m_pixelUIRatio = double( 967 ) / double( 6 );
         m_uiSize.first = 600;
         m_uiSize.second = 967;
 
-        double tempWidth = 0.5f * double( 600 ) * (double( 6 )/double( 967 ));
+        double tempWidth = 0.5f * double( 600 ) * ( double( 6 ) / double( 967 ) );
         //600 x 967 - 3/967 = 0.00310237
-        // 1.8614 x 3 
+        // 1.8614 x 3
         m_vertices->push_back( osg::Vec3( -tempWidth, 0.1f, -3.0 ) ); //ll
-        m_vertices->push_back( osg::Vec3(  tempWidth, 0.1f, -3.0 ) ); //lr
-        m_vertices->push_back( osg::Vec3(  tempWidth, 0.1f,  3.0 ) ); //ur
+        m_vertices->push_back( osg::Vec3( tempWidth, 0.1f, -3.0 ) );  //lr
+        m_vertices->push_back( osg::Vec3( tempWidth, 0.1f,  3.0 ) );  //ur
         m_vertices->push_back( osg::Vec3( -tempWidth, 0.1f,  3.0 ) ); //ul
     }
-    
+
     //
     osg::Vec4f coordinates = GetTextureCoordinates();
     float m_left = coordinates.w();
@@ -142,7 +142,7 @@ void UIElement::PostConstructor()
     geode->addDrawable( geometry.get() );
     mGeode = geode.get();
     mGeode->setName( "Qt UI" );
-    
+
     //Create an empty image
     osg::ref_ptr< osg::Image > image = new osg::Image();
 
@@ -341,7 +341,7 @@ void UIElement::Update()
             mUITransform->setUpdateCallback( 0 );
             mAnimationOn = false;
         }*/
-        
+
         //m_animationPath->get
     }
 
@@ -351,7 +351,7 @@ void UIElement::Update()
     }
 
     if( !ves::xplorer::scenegraph::SceneManager::instance()->
-       GetCurrentGLTransformInfo() )
+            GetCurrentGLTransformInfo() )
     {
         return;
     }
@@ -364,7 +364,7 @@ void UIElement::Update()
         osg::Vec3d trans = tempUIMatrix.getTrans();
         osg::Vec3d scale = tempUIMatrix.getScale();
 
-        osg::Matrixd const& windowMat = 
+        osg::Matrixd const& windowMat =
             ves::xplorer::scenegraph::SceneManager::instance()->
             GetCurrentGLTransformInfo()->GetInvertedWindowMatrixOSG();
         osg::Vec3 min = trans * windowMat;
@@ -378,10 +378,10 @@ void UIElement::Update()
         m_vertices->at( 1 ) = osg::Vec3( max.x(), min.y(), -1.0 ); //lr
         m_vertices->at( 2 ) = osg::Vec3( max.x(), max.y(), -1.0 ); //ur
         m_vertices->at( 3 ) = osg::Vec3( min.x(), max.y(), -1.0 ); //ul
-        
+
         mGeode->getDrawable( 0 )->dirtyDisplayList();
         mGeode->dirtyBound();
-        
+
         //Now update the stored corners for the UI
         ComputeMouseBoundsForElement();
     }
@@ -480,9 +480,9 @@ void UIElement::GetPointIntersectionInPixels( int& x, int& y, osg::Vec3d& point 
 {
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
-        double xVal = (point.x() - (*m_vertices)[0].x()) * m_pixelUIRatio;
+        double xVal = ( point.x() - ( *m_vertices )[0].x() ) * m_pixelUIRatio;
         //Z is up in OSG and VE-Suite land
-        double yVal = (point.z() - (*m_vertices)[0].z()) * m_pixelUIRatio;
+        double yVal = ( point.z() - ( *m_vertices )[0].z() ) * m_pixelUIRatio;
         x = boost::math::itrunc( xVal );
         y = boost::math::itrunc( yVal );
     }
@@ -498,17 +498,17 @@ void UIElement::ComputeMouseBoundsForElement()
     //This function basically is creating the screen coordinates to do
     //mouse testing against to see if the mouse is over the ui
     //osg::ref_ptr< osg::Geode > geode = element->GetGeode();
-    osg::Vec3Array* vertexArray = 
-    static_cast< osg::Vec3Array* >( mGeode->getDrawable( 0 )->asGeometry()->getVertexArray() );
+    osg::Vec3Array* vertexArray =
+        static_cast< osg::Vec3Array* >( mGeode->getDrawable( 0 )->asGeometry()->getVertexArray() );
     osg::Vec3& ll = vertexArray->at( 0 );
     osg::Vec3& ur = vertexArray->at( 2 );
-    
-    osg::Matrixd const& windowMat = 
-    ves::xplorer::scenegraph::SceneManager::instance()->
-    GetCurrentGLTransformInfo()->GetWindowMatrixOSG();
+
+    osg::Matrixd const& windowMat =
+        ves::xplorer::scenegraph::SceneManager::instance()->
+        GetCurrentGLTransformInfo()->GetWindowMatrixOSG();
     osg::Vec3 min = ll * windowMat;
     osg::Vec3 max = ur * windowMat;
-    
+
     // Return in the form (left, right, bottom, top)
     m_uiCorners = osg::Vec4( min.x(), max.x(), min.y(), max.y() );
 }
@@ -519,7 +519,7 @@ bool UIElement::TestQuadIntersection( int x, int y )
      << quadPos.x() << ", " << quadPos.y() << ", " << quadPos.z()
      << ", " << quadPos.w() << ")\n";*/
     if( ( x >= m_uiCorners.x() ) && ( x <= m_uiCorners.y() ) &&
-       ( y >= m_uiCorners.z() ) && ( y <= m_uiCorners.w() ) )
+            ( y >= m_uiCorners.z() ) && ( y <= m_uiCorners.w() ) )
     {
         return true;
     }

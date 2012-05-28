@@ -72,7 +72,7 @@ class wxSpinCtrlDbl;
 
 class VE_GUIPLUGINS_EXPORTS CameraPlacementToolUIDialog
     :
-    public ves::conductor::UIDialog
+public ves::conductor::UIDialog
 {
 public:
     CameraPlacementToolUIDialog();
@@ -258,7 +258,7 @@ private:
     wxSlider* mMaxCircleOfConfusionSlider;
 
     wxChoice* m_aspectRatioChoice;
-    
+
     wxTimer m_timer;
 
     ves::conductor::util::CORBAServiceList* mServiceList;

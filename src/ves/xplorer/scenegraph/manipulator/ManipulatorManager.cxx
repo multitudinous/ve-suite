@@ -66,9 +66,9 @@ ManipulatorManager::ManipulatorManager()
     setCullingActive( false );
 
     stateSet->setMode(
-                      GL_DEPTH_TEST,
-                      osg::StateAttribute::OFF |
-                      osg::StateAttribute::PROTECTED );
+        GL_DEPTH_TEST,
+        osg::StateAttribute::OFF |
+        osg::StateAttribute::PROTECTED );
 
     //Manipulators are off on the gui by default
     //Enable();
@@ -208,8 +208,8 @@ bool ManipulatorManager::Handle(
     {
         if( !TestForIntersections( lineSegmentIntersector ) )
         {
-            vprDEBUG( vesDBG, 3 ) << "|\tNo manipulator intersections, event = " 
-                << event << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 3 ) << "|\tNo manipulator intersections, event = "
+                                  << event << std::endl << vprDEBUG_FLUSH;
             return false;
         }
     }
@@ -217,8 +217,8 @@ bool ManipulatorManager::Handle(
     //Make sure the root drager is valid
     if( !m_rootDragger )
     {
-        vprDEBUG( vesDBG, 3 ) << "|\tNo root dragger." 
-            << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 3 ) << "|\tNo root dragger."
+                              << std::endl << vprDEBUG_FLUSH;
         return false;
     }
 
@@ -242,8 +242,8 @@ bool ManipulatorManager::Handle(
             m_rootDragger->Push( *m_deviceInput, m_nodePath, m_nodePathItr );
         if( !m_leafDragger )
         {
-            vprDEBUG( vesDBG, 1 ) << "|\tFailed to activate a dragger." 
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\tFailed to activate a dragger."
+                                  << std::endl << vprDEBUG_FLUSH;
         }
         m_leafDraggerIsActive = true;
         ///What does this logic mean???

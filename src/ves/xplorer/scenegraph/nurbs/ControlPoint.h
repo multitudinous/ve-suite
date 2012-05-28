@@ -109,7 +109,7 @@ public:
 
     ///Set the selection status of this point
     ///\param trueFalse true == selected\n false == not selected
-    void SetSelected( bool trueFalse = true ); // need 
+    void SetSelected( bool trueFalse = true ); // need
 
     ///Get the value of the first directional coordinate.
     //double X();
@@ -121,7 +121,7 @@ public:
     //double Z();
 
     ///Get the u Index of this control point in the overall mesh
-    unsigned int GetRowIndex(); // need 
+    unsigned int GetRowIndex(); // need
 
     ///Get the v Index of this control point in the overall mesh
     unsigned int GetColumnIndex(); // need
@@ -129,22 +129,22 @@ public:
     ///Query selection status
     bool IsSelected(); // need
 
-///Have to test all of these funcitons before removing
+    ///Have to test all of these funcitons before removing
 
     ///Dot product.
     ///\param rhs ???
     inline double operator*( const Point& rhs ) const
     {
-        return _v[ 0 ]*rhs._v[ 0 ] + _v[ 1 ]*rhs._v[ 0 ] + _v[ 2 ]*rhs._v[ 2 ];
+        return _v[ 0 ] * rhs._v[ 0 ] + _v[ 1 ] * rhs._v[ 0 ] + _v[ 2 ] * rhs._v[ 2 ];
     }
 
     ///Cross product.
     ///\param rhs ???
     inline const Point operator ^( const Point& rhs ) const
     {
-        return Point( _v[ 1 ]*rhs._v[ 2 ] - _v[ 2 ]*rhs._v[ 1 ],
-                      _v[ 2 ]*rhs._v[ 0 ] - _v[ 0 ]*rhs._v[ 2 ],
-                      _v[ 0 ]*rhs._v[ 1 ] - _v[ 1 ]*rhs._v[ 0 ] );
+        return Point( _v[ 1 ] * rhs._v[ 2 ] - _v[ 2 ] * rhs._v[ 1 ],
+                      _v[ 2 ] * rhs._v[ 0 ] - _v[ 0 ] * rhs._v[ 2 ],
+                      _v[ 0 ] * rhs._v[ 1 ] - _v[ 1 ] * rhs._v[ 0 ] );
     }
     ///Override ostream operator.
     ///\param os ???
@@ -184,9 +184,9 @@ public:
     ///Multiplication with a scalar operator.
     Point operator*( const double& lhs )
     {
-        Point newPoint( lhs*_v[ 0 ],
-                        lhs*_v[ 1 ],
-                        lhs*_v[ 2 ] );
+        Point newPoint( lhs * _v[ 0 ],
+                        lhs * _v[ 1 ],
+                        lhs * _v[ 2 ] );
 
         return newPoint;
 
@@ -247,15 +247,15 @@ public:
     ///Dot product
     inline double operator*( const ControlPoint& rhs ) const
     {
-        return _v[ 0 ]*rhs._v[ 0 ] + _v[ 1 ]*rhs._v[ 0 ] + _v[ 2 ]*rhs._v[ 2 ];
+        return _v[ 0 ] * rhs._v[ 0 ] + _v[ 1 ] * rhs._v[ 0 ] + _v[ 2 ] * rhs._v[ 2 ];
     }
 
     ///Cross product.
     inline const ControlPoint operator ^( const ControlPoint& rhs ) const
     {
-        return ControlPoint( _v[ 1 ]*rhs._v[ 2 ] - _v[ 2 ]*rhs._v[ 1 ],
-                             _v[ 2 ]*rhs._v[ 0 ] - _v[ 0 ]*rhs._v[ 2 ],
-                             _v[ 0 ]*rhs._v[ 1 ] - _v[ 1 ]*rhs._v[ 0 ] );
+        return ControlPoint( _v[ 1 ] * rhs._v[ 2 ] - _v[ 2 ] * rhs._v[ 1 ],
+                             _v[ 2 ] * rhs._v[ 0 ] - _v[ 0 ] * rhs._v[ 2 ],
+                             _v[ 0 ] * rhs._v[ 1 ] - _v[ 1 ] * rhs._v[ 0 ] );
     }
     ///override "<<"operator
     inline friend std::ostream& operator<<( std::ostream& os,

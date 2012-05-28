@@ -43,13 +43,13 @@
 #include <ves/VEConfig.h>
 
 /*!\file ControlMeshPointFunctor.h
-  Select a control point of a NURBSObject 
+  Select a control point of a NURBSObject
   */
 /*!\file ControlMeshPointFunctor.cxx
-  Select a control point of a NURBSObject 
+  Select a control point of a NURBSObject
   */
 /*!\class ves::xplorer::scenegraph::nurbs::ControlMeshPointFunctor
- * Class implementing selection of a control point of a NURBSObject 
+ * Class implementing selection of a control point of a NURBSObject
   */
 
 namespace ves
@@ -62,17 +62,17 @@ namespace nurbs
 {
 struct VE_NURBS_EXPORTS PointIntersection
 {
-   PointIntersection(unsigned int index, float r1, const osg::Vec3* v1):
-        _index(index),
-        _r1(r1),
-        _v1(v1){}
+    PointIntersection( unsigned int index, float r1, const osg::Vec3* v1 ):
+        _index( index ),
+        _r1( r1 ),
+        _v1( v1 ) {}
 
     unsigned int        _index;
     float               _r1;
     const osg::Vec3*    _v1;
 };
 
-typedef std::multimap<float,PointIntersection> PointIntersections;
+typedef std::multimap<float, PointIntersection> PointIntersections;
 class VE_NURBS_EXPORTS ControlMeshPointFunctor: public osg::Drawable::AttributeFunctor
 {
 public:
@@ -81,10 +81,10 @@ public:
 
     ///Destructor
     virtual ~ControlMeshPointFunctor();
-    
+
     //META_Node( ves::xplorer::scenegraph::nurbs, ControlMeshPointFunctor );
 
-    ///The current "selecting" LineSegment 
+    ///The current "selecting" LineSegment
     void SetLineSegment( osg::LineSegment* line );
 
     ///Iterate over the ControlMeshDrawable to check for selection
@@ -103,13 +103,13 @@ public:
 
     ///Equal operator
     ///\param rhs Right hand side of the operator
-    ControlMeshPointFunctor& operator=(const ControlMeshPointFunctor& rhs);
-    
+    ControlMeshPointFunctor& operator=( const ControlMeshPointFunctor& rhs );
+
     ///Get the PointIntersection
-    PointIntersections& GetPointIntersections(); 
+    PointIntersections& GetPointIntersections();
 protected:
     PointIntersections m_intersections;
-    osg::ref_ptr<osg::LineSegment> m_lineSegment;///<The selecting LineSegment 
+    osg::ref_ptr<osg::LineSegment> m_lineSegment;///<The selecting LineSegment
 };
 }
 }

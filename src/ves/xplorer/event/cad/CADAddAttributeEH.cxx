@@ -52,11 +52,11 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADAddAttributeEventHandler::CADAddAttributeEventHandler()
-        : ves::xplorer::event::CADEventHandler()
+    : ves::xplorer::event::CADEventHandler()
 {}
 ///////////////////////////////////////////////////////////////////////////////////////
 CADAddAttributeEventHandler::CADAddAttributeEventHandler( const CADAddAttributeEventHandler& rhs )
-        : ves::xplorer::event::CADEventHandler( rhs )
+    : ves::xplorer::event::CADEventHandler( rhs )
 {}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
@@ -90,7 +90,7 @@ void CADAddAttributeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         std::cout << "Attribute:" << rawAttribute->GetAttributeName() << std::endl;
         m_cadHandler->AddAttributeToNode( nodeID->GetDataString(), rawAttribute );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Couldn't add attribute to node!!!" << std::endl;
         std::cout << "CADAddAttributeEventHandler." << std::endl;

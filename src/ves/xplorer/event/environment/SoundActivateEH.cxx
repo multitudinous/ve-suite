@@ -83,7 +83,7 @@ void SoundActivateEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* b
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         std::cout << "Invalid object passed to TextureBasedEventHandler!" << std::endl;
@@ -107,7 +107,7 @@ void SoundActivateEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veX
             //( onOff == 1 ) ? _activeModel->ActivateSound( name ) : _activeModel->DeactivateSound( name );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid Model!!" << std::endl;
         std::cout << "SoundActivateEventHandler::_operateOnNode()" << std::endl;

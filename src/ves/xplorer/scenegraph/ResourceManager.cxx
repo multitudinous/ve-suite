@@ -42,12 +42,12 @@ vprSingletonImpLifetime( ResourceManager, 11 );
 
 ResourceManager::ResourceManager()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ResourceManager::~ResourceManager()
 {
-    for( ResourceMapIterator iter = mResourceMap.begin(); iter != mResourceMap.end();)
+    for( ResourceMapIterator iter = mResourceMap.begin(); iter != mResourceMap.end(); )
     {
         mResourceMap.erase( iter++ );
     }/*
@@ -61,13 +61,13 @@ ResourceManager::~ResourceManager()
     }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceManager::add(const std::string& resourceName, boost::any& resourceValue)
+void ResourceManager::add( const std::string& resourceName, boost::any& resourceValue )
 {
-   ResourcePair resource_pair(resourceName, resourceValue);
-   mResourceMap.insert(resource_pair);
+    ResourcePair resource_pair( resourceName, resourceValue );
+    mResourceMap.insert( resource_pair );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ResourceManager::remove(const std::string& resourceName )
+bool ResourceManager::remove( const std::string& resourceName )
 {
     ResourceMapIterator iter = mResourceMap.find( resourceName );
     if( iter != mResourceMap.end() )
@@ -77,7 +77,7 @@ bool ResourceManager::remove(const std::string& resourceName )
     }
     return false;
 }
-        
+
 } // end scenegraph
 } // end xplorer
 } // end ves

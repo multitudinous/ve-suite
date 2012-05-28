@@ -45,14 +45,14 @@ std::string stripExtension( const std::string& s )
 {
     char sep = '.';
 
-    size_t i = s.rfind(sep, s.length());
+    size_t i = s.rfind( sep, s.length() );
     if( i != std::string::npos )
     {
-        return( s.substr(0, i ) );
+        return( s.substr( 0, i ) );
     }
 
     return( s );
-} 
+}
 
 std::string extractFileNameFromFullPath( const std::string& s )
 {
@@ -62,14 +62,14 @@ std::string extractFileNameFromFullPath( const std::string& s )
     sep = '\\';
 #endif
 
-    size_t i = s.rfind(sep, s.length());
+    size_t i = s.rfind( sep, s.length() );
     if( i != std::string::npos )
     {
-        return( s.substr(i+1, s.length() - i) );
+        return( s.substr( i + 1, s.length() - i ) );
     }
 
     return( s );
-} 
+}
 
 TecplotTranslator::TecplotTranslator()
 {
@@ -81,14 +81,14 @@ TecplotTranslator::~TecplotTranslator()
 {}
 
 void TecplotTranslator::TecplotPreTranslateCbk::Preprocess( int argc, char** argv,
-                                                            cfdTranslatorToVTK* toVTK )
+        cfdTranslatorToVTK* toVTK )
 {
     PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 
 void TecplotTranslator::TecplotTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                        cfdTranslatorToVTK* toVTK,
-                                                        vtkAlgorithm*& dataReader )
+        cfdTranslatorToVTK* toVTK,
+        vtkAlgorithm*& dataReader )
 {
     TecplotTranslator* tecplotTransVTK = dynamic_cast<TecplotTranslator*>( toVTK );
     if( ! tecplotTransVTK )
@@ -104,7 +104,7 @@ void TecplotTranslator::TecplotTranslateCbk::Translate( vtkDataObject*& outputDa
 
     for( int i = 0; i < numFiles; i++ )
     {
-        vtkUnstructuredGrid * ugrid = tecplot->GetOutputFile( i );
+        vtkUnstructuredGrid* ugrid = tecplot->GetOutputFile( i );
 
         std::string outputFileName;
         if( numFiles == 1 )
@@ -116,12 +116,12 @@ void TecplotTranslator::TecplotTranslateCbk::Translate( vtkDataObject*& outputDa
         {
             // Using a zero-based incremental naming scheme, create a *.vtu output filename to be written to current location...
             // Use boost for number-to-string conversion:
-            outputFileName = stripExtension( extractFileNameFromFullPath( tecplotTransVTK->GetFile( 0 ) ) ) 
-                                    + "-" + boost::lexical_cast<std::string>( i ) + ".vtu";
+            outputFileName = stripExtension( extractFileNameFromFullPath( tecplotTransVTK->GetFile( 0 ) ) )
+                             + "-" + boost::lexical_cast<std::string>( i ) + ".vtu";
         }
         std::cout << "Writing to file \"" << outputFileName << "\"\n" << std::endl;
 
-        vtkXMLUnstructuredGridWriter *writer = vtkXMLUnstructuredGridWriter::New();
+        vtkXMLUnstructuredGridWriter* writer = vtkXMLUnstructuredGridWriter::New();
         writer->SetInput( ugrid );
         writer->SetFileName( outputFileName.c_str() );
         writer->SetDataModeToAscii();
@@ -135,7 +135,7 @@ void TecplotTranslator::TecplotTranslateCbk::Translate( vtkDataObject*& outputDa
 void TecplotTranslator::DisplayHelp( void )
 {
     std::cout << "|\tTecplot Translator Usage:" << std::endl
-    << "\t -singleFile <rst_filename_to_load> -o <output_dir> "
-    << "-outFileName <output_filename> -loader rst -w file" << std::endl;
+              << "\t -singleFile <rst_filename_to_load> -o <output_dir> "
+              << "-outFileName <output_filename> -loader rst -w file" << std::endl;
 }
 

@@ -184,7 +184,7 @@ bool cfdTextureManager::IsOnSlaveNode()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTextureManager::SetCurrentFrame( unsigned int frame,
-                                         bool isSlave )
+        bool isSlave )
 {
     _curField = frame;
     m_isSlave = isSlave;
@@ -273,7 +273,7 @@ void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
         else
         {
             std::cerr << " ERROR : cfdTextureManager::addFieldTextureFromFile :" <<
-            " There are too many components in this texture " << std::endl;
+                      " There are too many components in this texture " << std::endl;
         }
 
         //data range(magnitude) for scalars
@@ -298,9 +298,9 @@ void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
         }*/
 
         int oldResolution[3] =
-            {
-                0, 0, 0
-            };
+        {
+            0, 0, 0
+        };
         if( !_resolution )
         {
             _resolution = new int[3];
@@ -322,11 +322,11 @@ void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
         }
 
         if( _dataFields.size() &&
-                (( oldResolution[0] != _resolution[0] ) ||
-                 ( oldResolution[1] != _resolution[1] ) ||
-                 ( oldResolution[2] != _resolution[2] )
+                ( ( oldResolution[0] != _resolution[0] ) ||
+                  ( oldResolution[1] != _resolution[1] ) ||
+                  ( oldResolution[2] != _resolution[2] )
                 )
-           )
+          )
         {
             std::cout << "Error!!!" << std::endl;
             std::cout << "Texture resolutions are non-consistent within the set!!" << std::endl;
@@ -364,16 +364,16 @@ void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
         invSRange = 1.0 / ( _range[1] - _range[0] );
         if( curType == VECTOR )
         {
-            pixels = new unsigned char[nPixels*4];
+            pixels = new unsigned char[nPixels * 4];
             for( int p = 0; p < nPixels; p++ )
             {
                 double* rawData = flowData->GetTuple4( p );
-                pixels[p*4   ]  = static_cast< unsigned char >( rawData[ 0 ] );
-                pixels[p*4 + 1] = static_cast< unsigned char >( rawData[ 1 ] );
-                pixels[p*4 + 2] = static_cast< unsigned char >( rawData[ 2 ] );
+                pixels[p * 4   ]  = static_cast< unsigned char >( rawData[ 0 ] );
+                pixels[p * 4 + 1] = static_cast< unsigned char >( rawData[ 1 ] );
+                pixels[p * 4 + 2] = static_cast< unsigned char >( rawData[ 2 ] );
                 A = static_cast< unsigned char>( rawData[ 3 ] );
                 alpha = ( A - _range[0] ) * invSRange;
-                pixels[p*4 + 3] = ( unsigned char )( alpha * 255 );
+                pixels[p * 4 + 3] = ( unsigned char )( alpha * 255 );
             }
         }
         else if( curType == SCALAR )
@@ -382,11 +382,11 @@ void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
             float scalarValue = 0;
             if( _useShaders )
             {
-                pixels = new unsigned char[nPixels*2];
+                pixels = new unsigned char[nPixels * 2];
             }
             else
             {
-                pixels = new unsigned char[nPixels*4];
+                pixels = new unsigned char[nPixels * 4];
             }
             unsigned char negValue = 0;
             for( int p = 0; p < nPixels; p++ )
@@ -410,8 +410,8 @@ void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
                 }
                 if( _useShaders )
                 {
-                    pixels[p*2   ]  = ( unsigned char )negValue;
-                    pixels[p*2 + 1]  = ( unsigned char )( 255.0 * alpha );
+                    pixels[p * 2   ]  = ( unsigned char )negValue;
+                    pixels[p * 2 + 1]  = ( unsigned char )( 255.0 * alpha );
                 }
                 else
                 {
@@ -420,7 +420,7 @@ void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
                     {
                         R = 0;
                         G = ( 2.0 * alpha ) * 255,
-                            B = ( 1.0 - 2.0 * alpha ) * 255;
+                        B = ( 1.0 - 2.0 * alpha ) * 255;
                         A = 255 * alpha * .5;
                     }
                     else
@@ -430,10 +430,10 @@ void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
                         B = 0.;
                         A = 255 * alpha * .5;
                     }
-                    pixels[p*4   ]  = ( unsigned char )R;
-                    pixels[p*4 + 1] = ( unsigned char )G;
-                    pixels[p*4 + 2] = ( unsigned char )B;
-                    pixels[p*4 + 3] = ( unsigned char )A;
+                    pixels[p * 4   ]  = ( unsigned char )R;
+                    pixels[p * 4 + 1] = ( unsigned char )G;
+                    pixels[p * 4 + 2] = ( unsigned char )B;
+                    pixels[p * 4 + 3] = ( unsigned char )A;
                 }
             }
         }
@@ -531,14 +531,17 @@ unsigned char* cfdTextureManager::getNextField()
     {
         return field;//_dataFields[_curField];
     }
-    else return 0;
+    else
+    {
+        return 0;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTextureManager::CalculateUpdateTime( double curTime, double delay )
 {
     size_t numFields = _dataFields.size();
 
-    if (( numFields > 1 ) && _mode == PLAY )
+    if( ( numFields > 1 ) && _mode == PLAY )
     {
         //This requires VRJ Start Barrier to work properly
         if( curTime - _prevTime >= delay )
@@ -589,7 +592,10 @@ cfdTextureManager& cfdTextureManager::operator=( const cfdTextureManager& tm )
         }
         _curField = tm._curField;
 
-        if( !_resolution )_resolution = new int[3];
+        if( !_resolution )
+        {
+            _resolution = new int[3];
+        }
         _resolution[0] = tm._resolution[0];
         _resolution[1] = tm._resolution[1];
         _resolution[2] = tm._resolution[2];

@@ -54,7 +54,7 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS CreateDataObjectBBoxActorsCallback:
-            public DataObjectHandler::DatasetOperatorCallback
+    public DataObjectHandler::DatasetOperatorCallback
 {
 public:
     ///Constructor

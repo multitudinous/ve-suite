@@ -62,29 +62,29 @@ ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObject( const std::strin
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObjectCopy(
-                                    const std::string& objectType,
-                                    const ves::open::xml::XMLObjectPtr& objectToCopy )
+    const std::string& objectType,
+    const ves::open::xml::XMLObjectPtr& objectToCopy )
 {
     ves::open::xml::XMLObjectPtr tmp = ves::open::xml::XMLObjectPtr();
     if( objectType == "Program" )
     {
         tmp = ProgramPtr( new Program(
-            *( boost::dynamic_pointer_cast<Program>( objectToCopy ) ) ) );
+                              *( boost::dynamic_pointer_cast<Program>( objectToCopy ) ) ) );
     }
     else if( objectType == "Shader" )
     {
         tmp = ShaderPtr( new Shader(
-            *( boost::dynamic_pointer_cast<Shader>( objectToCopy ) ) ) );
+                             *( boost::dynamic_pointer_cast<Shader>( objectToCopy ) ) ) );
     }
     else if( objectType == "Uniform" )
     {
         tmp = UniformPtr( new Uniform(
-            *( boost::dynamic_pointer_cast<Uniform>( objectToCopy ) ) ) );
+                              *( boost::dynamic_pointer_cast<Uniform>( objectToCopy ) ) ) );
     }
     else if( objectType == "TextureImage" )
     {
         tmp = TextureImagePtr( new TextureImage(
-            *( boost::dynamic_pointer_cast<TextureImage>( objectToCopy ) ) ) );
+                                   *( boost::dynamic_pointer_cast<TextureImage>( objectToCopy ) ) ) );
     }
     return tmp;
 }

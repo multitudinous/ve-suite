@@ -236,8 +236,8 @@ public:
 
     ///Connect to the signal that sets the start and end points for the wand
     void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
-    
-    ///Test wether the wand ray is interesting the UI plane. This will emit the 
+
+    ///Test wether the wand ray is interesting the UI plane. This will emit the
     ///bool to let all slots know if the wand ray is within the UI plane.
     bool TestWandIntersection();
 
@@ -256,7 +256,7 @@ public:
     /// UIElement. It cannot not be changed thereafter.
     /// It is controlled through --SubloadUI command line argument.
     void SetRegionDamaging( bool useRegionDamaging );
-    
+
     ///Update the UI quad with new position information
     void UpdateUIQuadPosition();
 private:
@@ -375,7 +375,7 @@ private:
 
     ///Update the mElementPositionsOrtho2D map with any new element changes
     void UpdateElementBoundingBoxes();
-    
+
     osg::Vec4 _computeMouseBoundsForElement( UIElement* element );
 
     void _monopolizeInput( bool monopolize );

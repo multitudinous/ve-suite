@@ -40,7 +40,7 @@ using namespace ves::open::xml::model;
 //Constructor                             //
 ////////////////////////////////////////////
 Tag::Tag()
-        : XMLObject()
+    : XMLObject()
 {
     SetObjectType( "Tag" );
     SetObjectNamespace( "Model" );
@@ -52,7 +52,7 @@ Tag::~Tag()
 }
 ////////////////////////////////////////////////////////////////////////////////
 Tag::Tag( const Tag& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mTagText = input.mTagText;
 
@@ -104,10 +104,10 @@ PointPtr Tag::GetPoint( size_t i )
     {
         return mTagPoints.at( i );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cerr << "The element request is out of sequence."
-        << " Please ask for a lower number point." << std::endl;
+                  << " Please ask for a lower number point." << std::endl;
         return PointPtr();
     }
 }

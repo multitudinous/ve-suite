@@ -71,7 +71,7 @@ namespace manipulator
 class ManipulatorManager;
 }
 }
-    
+
 namespace behavior
 {
 
@@ -102,7 +102,7 @@ private:
     bool ProcessUndoEvent( gadget::Keys keyPress, int modifierState, char keyChar );
     ///Clear the point constraints
     void ClearPointConstraint();
-    ///Setup the start and end point for a mouse pick 
+    ///Setup the start and end point for a mouse pick
     void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
     ///Update the selection line
     void UpdateSelectionLine();
@@ -121,47 +121,47 @@ private:
 
     /// Required connections list for connecting to events via EventManager
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
-    
+
     ///Object picked
-    typedef boost::signals2::signal< void (osg::NodePath&) > ObjectPickedSignal_type;
+    typedef boost::signals2::signal< void ( osg::NodePath& ) > ObjectPickedSignal_type;
     ObjectPickedSignal_type m_objectPickedSignal;
-    
+
     ///Physics simulator pointer
     scenegraph::PhysicsSimulator& m_physicsSimulator;
-    
+
     ///Scene manager pointer
     scenegraph::SceneManager& m_sceneManager;
-    
+
     ///Character controller pointer
     scenegraph::CharacterController& m_characterController;
-    
+
     ///Manipulator pointer
     scenegraph::manipulator::ManipulatorManager& m_manipulatorManager;
-    
+
     ///Camera manager
-    scenegraph::camera::CameraManager& m_cameraManager;    
+    scenegraph::camera::CameraManager& m_cameraManager;
 
     ///The ray intersector test
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
-    
+
     ///The current X mouse position
     int m_currX;
-    
+
     ///The current Y mouse position
     int m_currY;
-    
+
     ///The rigid body that has been selected during physics mouse picking
     btRigidBody* m_pickedBody;
-    
+
     ///Bullet constraint used for physics mouse picking
     btTypedConstraint* m_pickConstraint;
-    
+
     ///GL transform info about the scene
     scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;
-    
+
     ///Control cad selection
     bool m_cadSelectionMode;
-    
+
     ///Keep track fo the cad files that the user has unselected with the wand
     std::vector< osg::Node* > m_unselectedCADFiles;
 };

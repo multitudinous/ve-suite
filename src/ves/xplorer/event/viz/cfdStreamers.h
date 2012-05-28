@@ -80,9 +80,9 @@ public:
     ///Get polydata output
     vtkPolyData* GetStreamersOutput();
 
-    ///Get arrow diameter size 
+    ///Get arrow diameter size
     double GetArrowDiameter();
-    
+
     ///Set the inttegration direction for the streamlines, 0=Both, 1=Forward, 2=Backward
     void SetIntegrationDirection( int );
 
@@ -109,7 +109,7 @@ private:
     int integrationDirection;
     int streamArrows;
     int m_streamRibbons;
-    
+
     float propagationTime;
     float integrationStepLength;
     float lineDiameter;

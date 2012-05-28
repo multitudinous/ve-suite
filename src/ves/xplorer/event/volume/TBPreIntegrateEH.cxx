@@ -76,9 +76,9 @@ void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode( XMLObjectPtr ve
         DataValuePairPtr enable = command->GetDataValuePair( "Recalculate Pre-Integration" );
         unsigned int onOff;
         enable->GetData( onOff );
-        ves::xplorer::TextureBasedVizHandler::instance()->UpdatePreIntegrationTable(( onOff == 1 ) ? true : false );
+        ves::xplorer::TextureBasedVizHandler::instance()->UpdatePreIntegrationTable( ( onOff == 1 ) ? true : false );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid TextureDataSet!!" << std::endl;
         std::cout << "TextureBasedPreIntegrateEnableEventHandler::_operateOnNode()" << std::endl;

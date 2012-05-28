@@ -50,11 +50,11 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADSetNameEventHandler::CADSetNameEventHandler()
-        : ves::xplorer::event::CADEventHandler()
+    : ves::xplorer::event::CADEventHandler()
 {}
 ///////////////////////////////////////////////////////////////////////////////////////
 CADSetNameEventHandler::CADSetNameEventHandler( const CADSetNameEventHandler& rhs )
-        : ves::xplorer::event::CADEventHandler( rhs )
+    : ves::xplorer::event::CADEventHandler( rhs )
 {}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
@@ -125,11 +125,11 @@ void CADSetNameEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             }
         }
     }
-    catch ( std::string str )
+    catch( std::string str )
     {
         std::cout << str << std::endl;
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
         std::cout << "---Invalid node specified to rename!---" << std::endl;

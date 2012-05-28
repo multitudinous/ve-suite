@@ -75,13 +75,13 @@ public:
     ~OSGStreamlineStage();
 
     ///create a Group of Stream Lines
-    ves::xplorer::scenegraph::Geode* createInstanced(vtkPolyData* polyData, 
-        int mult, const char* scalarName, const std::string& activeVector );
+    ves::xplorer::scenegraph::Geode* createInstanced( vtkPolyData* polyData,
+            int mult, const char* scalarName, const std::string& activeVector );
 
     void SetParticleDiameter( int pDiameter );
 
 private:
-    
+
     ///Test if a particular line is backwards
     bool IsStreamlineBackwards( vtkIdType cellId, vtkPolyData* polydata );
 
@@ -97,14 +97,14 @@ private:
     //float* createPositionArray( int numPoints , int mult, std::deque< Point > pointList, int &tm, int &tn);
 
     ///create strealines
-    void createStreamLines(vtkPolyData* polyData, ves::xplorer::scenegraph::Geode* geode, int mult, const char* scalarName);
-    
+    void createStreamLines( vtkPolyData* polyData, ves::xplorer::scenegraph::Geode* geode, int mult, const char* scalarName );
+
     ///create the coloring scalar array
     //float* createScalarArray( vtkIdType numPoints , int mult, vtkPointData* pointdata, std::deque< Point > pointList, int &tm, int &tn, const char* scalarName);
 
-    ///The map of points to create a streamline line segment    
+    ///The map of points to create a streamline line segment
     std::vector< std::deque< ves::xplorer::scenegraph::VTKStreamlineTextureCreator::Point > > m_streamlineList;
-    
+
     std::string m_activeVector;
 
     float m_particleDiameter;

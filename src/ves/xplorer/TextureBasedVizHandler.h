@@ -235,7 +235,7 @@ private:
     // Required so that vpr::Singleton can instantiate this class.
     //friend class vpr::Singleton< TextureBasedVizHandler >;
     TextureBasedVizHandler();
-    ///Destructor 
+    ///Destructor
     ~TextureBasedVizHandler();
     ///VPR singleton
     vprSingletonHeader( TextureBasedVizHandler );

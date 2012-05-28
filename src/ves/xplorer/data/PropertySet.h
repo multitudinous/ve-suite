@@ -127,13 +127,13 @@ public:
     /// Returns a vector containing the identifying names of all attributes
     /// owned by property propertyName
     virtual const PSVectorOfStrings& GetPropertyAttributeList( std::string const&
-                                                            propertyName );
+            propertyName );
 
     ///
     /// Returns boost::any value of the property attribute identified by
     /// attributeName and owned by property propertyName
     virtual boost::any GetPropertyAttribute( std::string const& propertyName,
-                                             std::string const& attributeName );
+            std::string const& attributeName );
 
     ///
     /// Returns true if the property with name propertyName is currently enabled.
@@ -182,7 +182,7 @@ public:
 
     ///
     /// Sets the record ID for this property. This should generally be used only
-    /// to identify this property set before asking it to read data with a 
+    /// to identify this property set before asking it to read data with a
     /// matching record ID from the database.
     virtual void SetRecordID( const long unsigned int id );
 
@@ -251,7 +251,7 @@ protected:
 
     ///
     /// Slot that should be connected to any state-change signal emitted by any
-    /// property in this set. This connection is taken care of in the 
+    /// property in this set. This connection is taken care of in the
     /// AddProperty method through a call to _connectChanges. Derived classes
     /// that override AddProperty should be sure to call _connectChanges if
     /// change accumulation is desired.

@@ -43,8 +43,8 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 Body_VEXplorer_i::Body_VEXplorer_i( void )
-        :
-        m_xplorerAMIHandler()
+    :
+    m_xplorerAMIHandler()
 {
     bufferCommand = CommandPtr( new Command() );
     bufferCommand->AddDataValuePair( DataValuePairPtr( new DataValuePair() ) );

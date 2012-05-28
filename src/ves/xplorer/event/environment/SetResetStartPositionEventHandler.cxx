@@ -83,11 +83,11 @@ void SetResetStartPositionEventHandler::Execute( const ves::open::xml::XMLObject
         {
             return;
         }
-        
+
         CommandPtr viewPointGUIData( new Command() );
         viewPointGUIData->SetCommandName( "START_POSITION" );
-        
-        DataValuePairPtr quatStartPosition( new DataValuePair());
+
+        DataValuePairPtr quatStartPosition( new DataValuePair() );
         OneDDoubleArrayPtr quatData( new OneDDoubleArray( 0 ) );
         osg::Quat quat = ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->getAttitude();
         quatData->AddElementToArray( quat[ 0 ] );
@@ -96,7 +96,7 @@ void SetResetStartPositionEventHandler::Execute( const ves::open::xml::XMLObject
         quatData->AddElementToArray( quat[ 3 ] );
         quatStartPosition->SetData( "QUAT_START_POSITION", quatData );
         viewPointGUIData->AddDataValuePair( quatStartPosition );
-        
+
         DataValuePairPtr positionStartPosition( new DataValuePair() );
         OneDDoubleArrayPtr positionsData( new OneDDoubleArray( 0 ) );
         osg::Vec3d trans = ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->getPosition();
@@ -105,14 +105,14 @@ void SetResetStartPositionEventHandler::Execute( const ves::open::xml::XMLObject
         positionsData->AddElementToArray( trans[ 2 ] );
         positionStartPosition->SetData( "POSITION_START_POSITION", positionsData );
         viewPointGUIData->AddDataValuePair( positionStartPosition );
-        
+
         ves::xplorer::communication::CommunicationHandler::instance()->
-            SetXMLCommand( viewPointGUIData );
-        
+        SetXMLCommand( viewPointGUIData );
+
         std::vector< double > tempPos = positionsData->GetArray();
         ves::xplorer::DeviceHandler::instance()->SetResetWorldPosition( quat, tempPos );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
         std::cout << "SetResetStartPositionEventHandler::_operateOnNode()" << std::endl;

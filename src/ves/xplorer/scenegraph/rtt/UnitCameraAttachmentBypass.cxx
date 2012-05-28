@@ -93,10 +93,10 @@ void UnitCameraAttachmentBypass::SetInputTexturesFromParents()
             if( !input )
             {
                 osg::notify( osg::WARN )
-                    << "rtt::UnitCameraAttachmentBypass::"
-                    << "SetInputTexturesFromParents(): "
-                    << "Processor's camera has no specified buffer attachment!"
-                    << std::endl;
+                        << "rtt::UnitCameraAttachmentBypass::"
+                        << "SetInputTexturesFromParents(): "
+                        << "Processor's camera has no specified buffer attachment!"
+                        << std::endl;
             }
             else
             {
@@ -110,10 +110,10 @@ void UnitCameraAttachmentBypass::SetInputTexturesFromParents()
         else
         {
             osg::notify( osg::WARN )
-                << "rtt::UnitCameraAttachmentBypass::"
-                << "SetInputTexturesFromParents(): "
-                << "unit is not a direct child of processor!"
-                << std::endl;
+                    << "rtt::UnitCameraAttachmentBypass::"
+                    << "SetInputTexturesFromParents(): "
+                    << "unit is not a direct child of processor!"
+                    << std::endl;
         }
     }
 }

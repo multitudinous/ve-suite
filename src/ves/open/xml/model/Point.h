@@ -52,13 +52,13 @@ namespace model
 {
 class VE_MODEL_EXPORTS Point : public ves::open::xml::XMLObject
 {
-/*!\file Point.h
-  2D Point API
-  */
-/*!\class ves::open::xml::model::Point
- *This class basically manages two unsigned ints for constructing points
- *on the design canvas.
- */
+    /*!\file Point.h
+      2D Point API
+      */
+    /*!\class ves::open::xml::model::Point
+     *This class basically manages two unsigned ints for constructing points
+     *on the design canvas.
+     */
 public:
     ///Constructor
     Point( );

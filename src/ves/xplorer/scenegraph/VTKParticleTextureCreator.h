@@ -59,13 +59,13 @@ class VE_SCENEGRAPH_EXPORTS VTKParticleTextureCreator : public VectorFieldData
 {
 public:
     VTKParticleTextureCreator();
-    
+
     virtual osg::BoundingBox getBoundingBox();
-    
+
     void SetScalarData( std::vector< std::pair< std::string, std::vector< double > > >& rawScalarData );
-        
-    void SetActiveVectorAndScalar( const std::string& vectorName, 
-        const std::string& scalarName );
+
+    void SetActiveVectorAndScalar( const std::string& vectorName,
+                                   const std::string& scalarName );
 
     osg::Image* CreateColorTextures( double* dataRange );
 
@@ -79,21 +79,21 @@ public:
     void SetPointQueue( std::deque< Point >& pointList );
 
 protected:
-    
+
     osg::Vec3 _sizes;
     std::vector< std::pair< std::string, std::vector< double > > >* m_rawScalarData;
     std::string m_vectorName;
     std::string m_scalarName;
     std::deque< Point > m_pointList;
-    
+
     size_t m_pointMultiplier;
-    
+
     virtual ~VTKParticleTextureCreator();
-    
+
     virtual void internalLoad();
-    
+
     void createDataArrays( float* pos, float* dia, float* scalar );
-    
+
 };
 }
 }

@@ -79,7 +79,7 @@ void TextureBasedTransientDurationUpdateEventHandler::_operateOnNode( XMLObjectP
 
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateTransientDuration( value );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid TextureDataSet!!" << std::endl;
         std::cout << "TextureBasedTransientDurationUpdateEventHandler::_operateOnNode()" << std::endl;

@@ -75,14 +75,14 @@ EnSightTranslator::~EnSightTranslator()
 {}
 //////////////////////////////////////////////////////////////////////////
 void EnSightTranslator::EnSightPreTranslateCbk::Preprocess( int argc, char** argv,
-                                                            cfdTranslatorToVTK* toVTK )
+        cfdTranslatorToVTK* toVTK )
 {
     PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                       cfdTranslatorToVTK* toVTK,
-                                                       vtkAlgorithm*& )
+        cfdTranslatorToVTK* toVTK,
+        vtkAlgorithm*& )
 {
     EnSightTranslator* EnSightToVTK =
         dynamic_cast< EnSightTranslator* >( toVTK );
@@ -92,38 +92,38 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
     }
 
     std::vector< std::string > activeArrays = toVTK->GetActiveArrays();
-    
+
     vtkGenericEnSightReader* reader = vtkGenericEnSightReader::New();
     //reader->DebugOn();
     reader->SetCaseFileName( EnSightToVTK->GetFile( 0 ).c_str() );
     reader->Update();
-    
+
     if( !activeArrays.empty() )
     {
         //Disable user choosen arrays
-        vtkDataArraySelection* arraySelector = 
+        vtkDataArraySelection* arraySelector =
             reader->GetPointDataArraySelection();
         arraySelector->DisableAllArrays();
         for( size_t i = 0; i < activeArrays.size(); ++i )
         {
-            std::cout << "Passed arrays are: " 
-                << activeArrays[ i ] << std::endl;
+            std::cout << "Passed arrays are: "
+                      << activeArrays[ i ] << std::endl;
             arraySelector->EnableArray( activeArrays[ i ].c_str() );
         }
-        
-        arraySelector = 
+
+        arraySelector =
             reader->GetCellDataArraySelection();
         arraySelector->DisableAllArrays();
         for( size_t i = 0; i < activeArrays.size(); ++i )
         {
-            std::cout << "Passed arrays are: " 
-                << activeArrays[ i ] << std::endl;
+            std::cout << "Passed arrays are: "
+                      << activeArrays[ i ] << std::endl;
             arraySelector->EnableArray( activeArrays[ i ].c_str() );
         }
         //Need to update again before the output of the reader is read
-        reader->Update();         
+        reader->Update();
     }
-    
+
     vtkDataArrayCollection* tempArray = reader->GetTimeSets();
     //this must be an int because i goes negative
     if( tempArray->GetNumberOfItems() == 0 )
@@ -140,7 +140,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
         //can still work with new datasets where there is only one timestep
         for( int i = tempArray->GetNumberOfItems() - 1; i >= 0; --i )
         {
-            int numTimeSteps = 
+            int numTimeSteps =
                 tempArray->GetItem( i )->GetNumberOfTuples();
             std::cout << "Number of Timesteps = " << numTimeSteps << std::endl;
 
@@ -149,17 +149,17 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
             {
                 outputDataset = vtkTemporalDataSet::New();
                 vtkTemporalDataSet::SafeDownCast( outputDataset )->
-                    SetNumberOfTimeSteps( numTimeSteps );
+                SetNumberOfTimeSteps( numTimeSteps );
             }
 
             // This allows the timesteps to go through the loop with positive values.
-            for( int j = numTimeSteps-1; j >= 0; --j )
+            for( int j = numTimeSteps - 1; j >= 0; --j )
             {
                 float currentTimeStep = tempArray->GetItem( i )->GetTuple1( j );
                 std::cout << "Translating Timestep = " << currentTimeStep << std::endl;
                 reader->SetTimeValue( currentTimeStep );
                 reader->Update();
-                
+
                 //Now dump geometry if it is available
                 if( toVTK->GetExtractGeometry() )
                 {
@@ -169,14 +169,14 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                     //geomFilter->PointClippingOn();
                     //geomFilter->CellClippingOn();
                     //geomFilter->Update();
-                    
-                    
+
+
                     vtkTriangleFilter* triFilter = vtkTriangleFilter::New();
                     triFilter->SetInputConnection( geomFilter->GetOutputPort() );
                     triFilter->PassVertsOn();
                     triFilter->PassLinesOff();
                     //triFilter->Update();
-                    
+
                     /*
                     vtkPolyDataNormals* pdNormals = vtkPolyDataNormals::New();
                     pdNormals->SplittingOff();
@@ -185,14 +185,14 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                     pdNormals->SetInputConnection( triFilter->GetOutputPort() );
                     pdNormals->Update();
                     */
-                    
+
                     std::ostringstream strm;
                     strm << EnSightToVTK->GetOutputFileName()
-                        << "_"
-                        << std::setfill( '0' )
-                        << std::setw( 6 )
-                        << j << ".iv";
-                    
+                         << "_"
+                         << std::setfill( '0' )
+                         << std::setw( 6 )
+                         << j << ".iv";
+
                     vtkIVWriter* ivWriter = vtkIVWriter::New();
                     ivWriter->SetInputConnection( triFilter->GetOutputPort() );
                     ivWriter->SetFileName( strm.str().c_str() );
@@ -202,7 +202,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                     ivWriter->Delete();
                     geomFilter->Delete();
                 }
-                
+
                 if( toVTK->GetWriteOption() == "file" )
                 {
                     if( !outputDataset )
@@ -217,11 +217,11 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                     {
                         std::ostringstream strm;
                         strm << EnSightToVTK->GetOutputFileName()
-                            << "_"
-                            << std::setfill( '0' )
-                            << std::setw( 6 )
-                            << j << ".vtu";
-                        
+                             << "_"
+                             << std::setfill( '0' )
+                             << std::setw( 6 )
+                             << j << ".vtu";
+
                         ves::xplorer::util::cfdVTKFileHandler* trans = new ves::xplorer::util::cfdVTKFileHandler();
                         trans->WriteDataSet( outputDataset, strm.str() );
                         delete trans;
@@ -236,7 +236,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                     tempDataSet->ShallowCopy( reader->GetOutput() );
                     tempDataSet->Update();
                     vtkTemporalDataSet::SafeDownCast( outputDataset )->
-                        SetTimeStep( j, tempDataSet );
+                    SetTimeStep( j, tempDataSet );
 
                     /*std::ostringstream strm;
                     strm << EnSightToVTK->GetOutputFileName()
@@ -244,7 +244,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                             << std::setfill( '0' )
                             << std::setw( 6 )
                             << j << ".vtm";
-                        
+
                     ves::xplorer::util::cfdVTKFileHandler* trans = new ves::xplorer::util::cfdVTKFileHandler();
                     trans->WriteDataSet( tempDataSet, strm.str() );
                     delete trans;*/
@@ -262,14 +262,14 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
     ///For traversal of nested multigroupdatasets
     mgdIterator->VisitOnlyLeavesOn();
     mgdIterator->GoToFirstItem();
-    
+
     while( !mgdIterator->IsDoneWithTraversal() )
     {
         vtkDataSet* currentDataset = dynamic_cast<vtkDataSet*>( mgdIterator->GetCurrentDataObject() );
-        
+
         vtkCharArray* tempChar = dynamic_cast< vtkCharArray* >( currentDataset->GetFieldData()->GetArray( "Name" ) );
         std::cout << "test out " << tempChar->WritePointer( 0, 0 ) << std::endl;
-        
+
         mgdIterator->GoToNextItem();
     }
     //if( mgdIterator )
@@ -284,6 +284,6 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
 void EnSightTranslator::DisplayHelp( void )
 {
     std::cout << "|\tEnSight Translator Usage:" << std::endl
-    << "\t -singleFile <filename_to_load> -o <output_dir> "
-    << "-outFileName <output_filename> -loader ens -w file" << std::endl;
+              << "\t -singleFile <filename_to_load> -o <output_dir> "
+              << "-outFileName <output_filename> -loader ens -w file" << std::endl;
 }

@@ -50,7 +50,7 @@ EphemerisAutoDateTimeEventHandler::EphemerisAutoDateTimeEventHandler()
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 EphemerisAutoDateTimeEventHandler::EphemerisAutoDateTimeEventHandler( const EphemerisAutoDateTimeEventHandler& ceh )
-    : 
+    :
     ves::xplorer::event::EventHandler( ceh )
 {
     m_activeModel = ceh.m_activeModel;
@@ -84,10 +84,10 @@ void EphemerisAutoDateTimeEventHandler::Execute( const ves::open::xml::XMLObject
             osgEphemeris::EphemerisModel* ephemerisModel =
                 ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel( true );
 
-            ephemerisModel->setAutoDateTime(( onOff == 0 ) ? false : true );
+            ephemerisModel->setAutoDateTime( ( onOff == 0 ) ? false : true );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
         std::cout << "Invalid command passed to EphemerisAutoDateTimeEventHandler!!" << std::endl;
@@ -111,7 +111,7 @@ void EphemerisAutoDateTimeEventHandler::SetGlobalBaseObject( ves::xplorer::Globa
                 ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
     }

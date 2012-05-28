@@ -45,8 +45,8 @@ BEGIN_EVENT_TABLE( FindDialog, wxDialog )
     EVT_CHOICE( FINDDIALOG_WXCHOICE2, FindDialog::GetChoice )
 END_EVENT_TABLE()
 
-FindDialog::FindDialog( wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style )
-        : wxDialog( parent, id, title, position, size, style )
+FindDialog::FindDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& position, const wxSize& size, long style )
+    : wxDialog( parent, id, title, position, size, style )
 {
     CreateGUIControls();
 }
@@ -78,7 +78,7 @@ void FindDialog::CreateGUIControls()
     CancelButton = new wxButton( this, wxID_CANCEL, wxT( "Cancel" ), wxPoint( 165, 67 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "CancelButton" ) );
 
     FindButton = new wxButton( this, FINDDIALOG_FINDBUTTON, wxT( "Find" ), wxPoint( 86, 67 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "FindButton" ) );
-    
+
     //initialize member variables
     selectedModulePos = wxNOT_FOUND;
     type = wxNOT_FOUND;
@@ -88,7 +88,7 @@ void FindDialog::CreateGUIControls()
 
 void FindDialog::FindButtonClick( wxCommandEvent& event )
 {
-    if ( mLastChoice == FINDDIALOG_WXCHOICE1 )
+    if( mLastChoice == FINDDIALOG_WXCHOICE1 )
     {
         selectedModule = WxChoice1->GetString( WxChoice1->GetSelection() );
         selectedModulePos = WxChoice1->GetSelection();
@@ -106,16 +106,20 @@ void FindDialog::FindButtonClick( wxCommandEvent& event )
 void FindDialog::SetModuleList( std::vector< std::string > modules )
 {
     for( int i = 0; i < ( int )modules.size(); i++ )
+    {
         WxChoice1->Insert( wxString( modules[i].c_str(), wxConvUTF8 ), i );
+    }
 }
 
 void FindDialog::SetStreamList( std::vector< std::string > modules )
 {
     for( int i = 0; i < ( int )modules.size(); i++ )
+    {
         WxChoice2->Insert( wxString( modules[i].c_str(), wxConvUTF8 ), i );
+    }
 }
 
-const char * FindDialog::GetSelectedModule()
+const char* FindDialog::GetSelectedModule()
 {
     return selectedModule.mb_str();
 }
@@ -127,7 +131,7 @@ std::pair< int, int > FindDialog::GetSelectedModulePos()
     returnValue.second = selectedModulePos;
     return returnValue;
 }
-void FindDialog::GetChoice(wxCommandEvent &event)
+void FindDialog::GetChoice( wxCommandEvent& event )
 {
     mLastChoice = event.GetId();
 }

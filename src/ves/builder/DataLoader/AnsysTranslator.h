@@ -50,7 +50,7 @@ public:
     ///Display help for the StarCD translator
     virtual void DisplayHelp( void );
 
-class VE_USER_BUILDER_EXPORTS AnsysTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    class VE_USER_BUILDER_EXPORTS AnsysTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
     {
     public:
         AnsysTranslateCbk()
@@ -66,7 +66,7 @@ class VE_USER_BUILDER_EXPORTS AnsysTranslateCbk: public ves::builder::cfdTransla
                                 vtkAlgorithm*& dataReader );
     protected:
     };
-class VE_USER_BUILDER_EXPORTS AnsysPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    class VE_USER_BUILDER_EXPORTS AnsysPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
     {
     public:
         AnsysPreTranslateCbk()

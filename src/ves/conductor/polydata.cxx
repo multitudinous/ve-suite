@@ -124,11 +124,11 @@ void Polydata::CreateControls()
     _useWarpedSurfaceCheckBox = new wxCheckBox( itemDialog1, POLYDATA_WARPED_SURFACE_CHK, _T( "Use Warped Surface" ), wxDefaultPosition, wxDefaultSize, 0 );
     _useWarpedSurfaceCheckBox->SetValue( false );
     topLevelControls->Add( _useWarpedSurfaceCheckBox, 0, wxGROW | wxALL, 5 );
-    
+
     m_particlesChk = new wxCheckBox( itemDialog1, POLYDATA_PARTICLES_CHK, _T( "Particles" ), wxDefaultPosition, wxDefaultSize, 0 );
     m_particlesChk->SetValue( false );
     topLevelControls->Add( m_particlesChk, 0, wxGROW | wxALL, 5 );
-    
+
     itemStaticBoxSizer3->Add( topLevelControls, 0, wxGROW | wxALL, 5 );
     /////////////////////////////////////////
     wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Scale Factor" ), wxDefaultPosition, wxDefaultSize, 0 );
@@ -140,23 +140,23 @@ void Polydata::CreateControls()
     wxStaticBox* gpuToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "GPU Tools" ) );
     wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
-    
+
     m_gpuToolsChkBox = new wxCheckBox( itemDialog1, POLYDATA_GPU_TOOLS_CHK, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
     m_gpuToolsChkBox->SetValue( false );
     itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
-    
+
     wxButton* scalarButton = new wxButton( itemDialog1, POLYDATA_SCALAR_CONTROL_BUTTON, _T( "Scalar Control" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer10->Add( scalarButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
+
     m_twoSidedLighting = new wxCheckBox( itemDialog1, POLYDATA_TWO_SIDED_LIGHTING_CHK, _T( "Two Sided Lighting" ), wxDefaultPosition, wxDefaultSize, 0 );
     m_twoSidedLighting->SetValue( false );
     itemStaticBoxSizer10->Add( m_twoSidedLighting, 0, wxALIGN_LEFT | wxALL, 5 );
     /////////////////////////////////////////
     wxStaticText* opacityStaticText = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Opacity" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( opacityStaticText, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
-    
+
     m_opacitySlider = new wxSlider( itemDialog1, POLYDATA_OPACITY_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
-    itemStaticBoxSizer3->Add( m_opacitySlider, 0, wxGROW | wxALL, 5 );    
+    itemStaticBoxSizer3->Add( m_opacitySlider, 0, wxGROW | wxALL, 5 );
     ////////////////////////////////////////
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer8, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
@@ -225,11 +225,11 @@ void Polydata::OnPolydataOpacity( wxCommandEvent& WXUNUSED( event ) )
     }
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
     newCommand->SetCommandName( "LIVE_POLYDATA_UPDATE" );
-    
+
     ves::open::xml::DataValuePairPtr warpSurface( new ves::open::xml::DataValuePair() );
-    warpSurface->SetData( "opacity", static_cast<double>(( m_opacitySlider->GetValue() ) ) );
+    warpSurface->SetData( "opacity", static_cast<double>( ( m_opacitySlider->GetValue() ) ) );
     newCommand->AddDataValuePair( warpSurface );
-    
+
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
 }
 /////////////////////////////////////////////////////////////
@@ -243,7 +243,7 @@ void Polydata::_onPolydataPlane( wxCommandEvent& WXUNUSED( event ) )
     newCommand->SetCommandName( "LIVE_POLYDATA_UPDATE" );
 
     ves::open::xml::DataValuePairPtr warpSurface( new ves::open::xml::DataValuePair() );
-    warpSurface->SetData( "warpScale", static_cast<double>(( _polydataSlider->GetValue() ) ) );
+    warpSurface->SetData( "warpScale", static_cast<double>( ( _polydataSlider->GetValue() ) ) );
     newCommand->AddDataValuePair( warpSurface );
 
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
@@ -262,7 +262,7 @@ void Polydata::_onAddPolydata( wxCommandEvent& WXUNUSED( event ) )
     }
 
     ves::open::xml::DataValuePairPtr polydataValue( new ves::open::xml::DataValuePair() );
-    polydataValue->SetData( "Polydata Value", static_cast<double>(( _polydataSlider->GetValue() ) ) );
+    polydataValue->SetData( "Polydata Value", static_cast<double>( ( _polydataSlider->GetValue() ) ) );
     newCommand->AddDataValuePair( polydataValue );
 
     ves::open::xml::DataValuePairPtr colorByScalar( new ves::open::xml::DataValuePair() );
@@ -286,16 +286,16 @@ void Polydata::_onAddPolydata( wxCommandEvent& WXUNUSED( event ) )
     ves::open::xml::DataValuePairPtr useGPUTools( new ves::open::xml::DataValuePair() );
     useGPUTools->SetData( "GPU Tools", checkBox );
     newCommand->AddDataValuePair( useGPUTools );
-    
+
     try
     {
         dynamic_cast<Vistab*>( GetParent() )->SendUpdatedSettingsToXplorer( newCommand );
     }
-    catch ( ... )
+    catch( ... )
     {
-            wxMessageBox( _( "Invalid Parent" ),
-                          _( "Communication Failure" ),
-                          wxOK | wxICON_INFORMATION );
+        wxMessageBox( _( "Invalid Parent" ),
+                      _( "Communication Failure" ),
+                      wxOK | wxICON_INFORMATION );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -352,11 +352,11 @@ void Polydata::OnTwoSidedLightingChk( wxCommandEvent& WXUNUSED( event ) )
     }
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
     newCommand->SetCommandName( "LIVE_POLYDATA_UPDATE" );
-    
+
     ves::open::xml::DataValuePairPtr warpSurface( new ves::open::xml::DataValuePair() );
     warpSurface->SetData( "twoSidedLighting", static_cast<unsigned int>( m_twoSidedLighting->GetValue() ) );
     newCommand->AddDataValuePair( warpSurface );
-    
+
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////

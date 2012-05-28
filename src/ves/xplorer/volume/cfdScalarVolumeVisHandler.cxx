@@ -48,13 +48,13 @@ using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdScalarVolumeVisHandler::cfdScalarVolumeVisHandler()
-        : cfdVolumeVisNodeHandler()
+    : cfdVolumeVisNodeHandler()
 {
     //_transferSM = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdScalarVolumeVisHandler::cfdScalarVolumeVisHandler( const cfdScalarVolumeVisHandler& vvnh )
-        : cfdVolumeVisNodeHandler( vvnh )
+    : cfdVolumeVisNodeHandler( vvnh )
 {
     //_transferSM = new cfdScalarShaderManager(*vvnh._transferSM);
 }

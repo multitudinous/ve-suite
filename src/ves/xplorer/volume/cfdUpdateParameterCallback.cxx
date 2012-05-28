@@ -70,26 +70,26 @@ void cfdUpdateParameterCallback::operator()( osg::Uniform* uniVar, osg::NodeVisi
 {
     if( _type == VECTOR )
     {
-        switch ( _size )
+        switch( _size )
         {
-            case ONE:
-                uniVar->set( _value[0] );
-                break;
-            case TWO:
-                uniVar->set( osg::Vec2( _value[0], _value[1] ) );
-                break;
-            case THREE:
-                uniVar->set( osg::Vec3( _value[0], _value[1], _value[2] ) );
-                break;
-            case FOUR:
-            default:
-                uniVar->set( osg::Vec4( _value[0], _value[1], _value[2], _value[3] ) );
-                break;
+        case ONE:
+            uniVar->set( _value[0] );
+            break;
+        case TWO:
+            uniVar->set( osg::Vec2( _value[0], _value[1] ) );
+            break;
+        case THREE:
+            uniVar->set( osg::Vec3( _value[0], _value[1], _value[2] ) );
+            break;
+        case FOUR:
+        default:
+            uniVar->set( osg::Vec4( _value[0], _value[1], _value[2], _value[3] ) );
+            break;
         };
     }
     else if( _type == TIME )
     {
-        uniVar->set(( float )nv->getFrameStamp()->getReferenceTime() );
+        uniVar->set( ( float )nv->getFrameStamp()->getReferenceTime() );
     }
     else
     {
@@ -99,27 +99,27 @@ void cfdUpdateParameterCallback::operator()( osg::Uniform* uniVar, osg::NodeVisi
 ////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateParameterCallback::updateParameter( float* v )
 {
-    switch ( _size )
+    switch( _size )
     {
-        case ONE:
-            _value[0] = v[0];
-            break;
-        case TWO:
-            _value[0] = v[0];
-            _value[1] = v[1];
-            break;
-        case THREE:
-            _value[0] = v[0];
-            _value[1] = v[1];
-            _value[2] = v[2];
-            break;
-        case FOUR:
-        default:
-            _value[0] = v[0];
-            _value[1] = v[1];
-            _value[2] = v[2];
-            _value[3] = v[3];
-            break;
+    case ONE:
+        _value[0] = v[0];
+        break;
+    case TWO:
+        _value[0] = v[0];
+        _value[1] = v[1];
+        break;
+    case THREE:
+        _value[0] = v[0];
+        _value[1] = v[1];
+        _value[2] = v[2];
+        break;
+    case FOUR:
+    default:
+        _value[0] = v[0];
+        _value[1] = v[1];
+        _value[2] = v[2];
+        _value[3] = v[3];
+        break;
     };
 }
 ////////////////////////////////////////////////////////////////////////////////

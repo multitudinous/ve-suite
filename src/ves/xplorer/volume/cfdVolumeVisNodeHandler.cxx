@@ -70,7 +70,7 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler( const
-                                                  cfdVolumeVisNodeHandler& vvnh )
+        cfdVolumeVisNodeHandler& vvnh )
 {
     _activeShader = vvnh._activeShader;
     _bbox = vvnh._bbox;
@@ -126,7 +126,9 @@ void cfdVolumeVisNodeHandler::SetSwitchNode( osg::Switch* vvn )
 void cfdVolumeVisNodeHandler::SetTextureManager( cfdTextureManager* tm )
 {
     if( _tm != tm )
+    {
         _tm = tm;
+    }
     /*if(!_tm)
        _tm = new cfdTextureManager(*tm);
     else
@@ -268,7 +270,7 @@ bool cfdVolumeVisNodeHandler::IsThisActive()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetBoundingBoxName( std::string name )
 {
-    if (( !name.empty() ) && _bboxSwitch.valid() )
+    if( ( !name.empty() ) && _bboxSwitch.valid() )
     {
         _bboxSwitch->setName( name );
     }
@@ -276,7 +278,7 @@ void cfdVolumeVisNodeHandler::SetBoundingBoxName( std::string name )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetDecoratorName( std::string name )
 {
-    if (( !name.empty() ) && _decoratorGroup.valid() )
+    if( ( !name.empty() ) && _decoratorGroup.valid() )
     {
         _decoratorGroup->setName( name );
     }
@@ -284,7 +286,7 @@ void cfdVolumeVisNodeHandler::SetDecoratorName( std::string name )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetActiveShader( std::string name )
 {
-    if (( !name.empty() ) && _decoratorGroup.valid() )
+    if( ( !name.empty() ) && _decoratorGroup.valid() )
     {
         _activeShader = name;
         _decoratorGroup->setStateSet( GetShaderManager( name )->GetShaderStateSet() );
@@ -364,7 +366,7 @@ void cfdVolumeVisNodeHandler::_createVisualBBox()
         bboxCube->setColorArray( colors.get() );
         bboxCube->setColorBinding( osg::Geometry::BIND_OVERALL );
         bboxCube->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES,
-                                                        0, coords->size() ) );
+                                   0, coords->size() ) );
 
         osg::ref_ptr<osg::Geode> geode = new osg::Geode;
         geode->addDrawable( bboxCube.get() );
@@ -379,8 +381,8 @@ void cfdVolumeVisNodeHandler::_createVisualBBox()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::AddShaderManager( std::string name,
-                                                ves::xplorer::volume::cfdOSGShaderManager* newShader,
-                                                bool isScalar )
+        ves::xplorer::volume::cfdOSGShaderManager* newShader,
+        bool isScalar )
 {
     int* fieldSize = _tm->fieldResolution();
     if( isScalar )
@@ -400,7 +402,7 @@ cfdVolumeVisNodeHandler::GetShaderManager( std::string name )
     {
         return _shaderManagers[name];
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "The shader:" << name << " was not added!!" << std::endl;
     }

@@ -45,13 +45,13 @@ class SceneRenderToTexture;
 
 //Typedef for a SmartPtr type for SceneRenderToTexture
 typedef ves::util::ClassPtrDef< SceneRenderToTexture >::type
-    SceneRenderToTexturePtr;
+SceneRenderToTexturePtr;
 typedef ves::util::SharedPtrDef< SceneRenderToTexture >::type
-    SceneRenderToTextureSharedPtr;
+SceneRenderToTextureSharedPtr;
 typedef ves::util::WeakPtrDef< SceneRenderToTexture >::type
-    SceneRenderToTextureWeakPtr;
+SceneRenderToTextureWeakPtr;
 typedef ves::util::ScopedPtrDef< SceneRenderToTexture >::type
-    SceneRenderToTextureScopedPtr;
+SceneRenderToTextureScopedPtr;
 
 } //end xplorer
 } //end ves

@@ -67,7 +67,7 @@ PropertySet::PropertySet():
     m_timer( 0 ),
     m_writeDirty( false ),
     m_liveWriteDirty( false ),
-    m_logger( Poco::Logger::get("xplorer.PropertySet") )
+    m_logger( Poco::Logger::get( "xplorer.PropertySet" ) )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
 
@@ -79,7 +79,7 @@ PropertySet::PropertySet():
     mUUIDString = boost::lexical_cast< std::string >( mUUID );
 
     // Set NameTag to the first 4-characters of the uuid
-    AddProperty("NameTag", mUUIDString.substr( 0, 4 ), "Name Tag");
+    AddProperty( "NameTag", mUUIDString.substr( 0, 4 ), "Name Tag" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 PropertySet::PropertySet( const PropertySet& orig ):
@@ -92,7 +92,7 @@ PropertySet::PropertySet( const PropertySet& orig ):
 PropertySet::~PropertySet()
 {
     mPropertyMap.clear();
-    if(m_timer)
+    if( m_timer )
     {
         m_timer->restart( 0 );
         delete m_timer;
@@ -151,7 +151,7 @@ PropertyPtr PropertySet::GetProperty( std::string const& propertyName ) const
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
     if( iterator != mPropertyMap.end() )
     {
-        return (*iterator ).second;
+        return ( *iterator ).second;
     }
 
     return PropertyPtr();
@@ -162,24 +162,24 @@ boost::any PropertySet::GetPropertyValue( std::string const& propertyName ) cons
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
     if( iterator != mPropertyMap.end() )
     {
-        return (*iterator ).second->GetValue();
+        return ( *iterator ).second->GetValue();
     }
     else
     {
         std::cout << "Error: This set (" <<  mTableName <<  ") does not contain a property named " <<
-                propertyName << std::endl << std::flush;
+                  propertyName << std::endl << std::flush;
         return boost::any();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 const PropertySet::PSVectorOfStrings& PropertySet::GetPropertyAttributeList( std::string const&
-                                                                             propertyName
-                                                                             )
+        propertyName
+                                                                           )
 {
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
     if( iterator != mPropertyMap.end() )
     {
-        return (*iterator ).second->GetAttributeList();
+        return ( *iterator ).second->GetAttributeList();
     }
     else
     {
@@ -189,12 +189,12 @@ const PropertySet::PSVectorOfStrings& PropertySet::GetPropertyAttributeList( std
 }
 ////////////////////////////////////////////////////////////////////////////////
 boost::any PropertySet::GetPropertyAttribute( std::string const& propertyName,
-                                              std::string const& attributeName )
+        std::string const& attributeName )
 {
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
     if( iterator != mPropertyMap.end() )
     {
-        return (*iterator ).second->GetAttribute( attributeName );
+        return ( *iterator ).second->GetAttribute( attributeName );
     }
     else
     {
@@ -207,7 +207,7 @@ bool PropertySet::GetPropertyEnabled( std::string const& propertyName ) const
     PropertyMap::const_iterator iterator = mPropertyMap.find( propertyName );
     if( iterator != mPropertyMap.end() )
     {
-        return (*iterator ).second->GetEnabled();
+        return ( *iterator ).second->GetEnabled();
     }
     else
     {
@@ -345,7 +345,7 @@ bool PropertySet::DeleteFromDatabase( Poco::Data::Session* const session, std::s
     bool returnValue = false;
 
     // Check for existence of TableName in db and fail if false.
-    if( !_tableExists(session, TableName) )
+    if( !_tableExists( session, TableName ) )
     {
         return false;
     }
@@ -442,7 +442,7 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* const session,
     }
 
     // Check for existence of TableName in db and fail if false.
-    if( !_tableExists(session, TableName) )
+    if( !_tableExists( session, TableName ) )
     {
         return false;
     }
@@ -547,9 +547,9 @@ bool PropertySet::LoadFromDatabase( Poco::Data::Session* const session,
             std::string fieldName = iterator->first;
             Poco::Data::Statement statement( ( *session ) );
             statement << "SELECT " << fieldName << " FROM " << mTableName
-                    << "_" << iterator->first << " WHERE PropertySetParentID=:0"
-                    //, Poco::Data::use( mID );
-                    , Poco::Data::use( mUUIDString );
+                      << "_" << iterator->first << " WHERE PropertySetParentID=:0"
+                      //, Poco::Data::use( mID );
+                      , Poco::Data::use( mUUIDString );
             statement.execute();
             Poco::Data::RecordSet recordset( statement );
             //std::cout << fieldName << " " << mTableName << " " << iterator->first << std::endl;
@@ -640,7 +640,7 @@ bool PropertySet::LoadByKey( Poco::Data::Session* const session, std::string con
     }
 
     // Check for existence of mTableName in db and fail if false.
-    if( !_tableExists(session, mTableName) )
+    if( !_tableExists( session, mTableName ) )
     {
         return false;
     }
@@ -659,7 +659,7 @@ bool PropertySet::LoadByKey( Poco::Data::Session* const session, std::string con
     {
         statement.execute();
     }
-    catch( Poco::Data::DataException &e )
+    catch( Poco::Data::DataException& e )
     {
         std::cout << "PropertySet::LoadByKey: " << e.displayText() << std::endl;
     }
@@ -690,7 +690,7 @@ bool PropertySet::LoadByKey( std::string const& DatabaseName, std::string const&
         // Close db connection
         Poco::Data::SQLite::Connector::unregisterConnector();
     }
-    catch( Poco::Data::DataException &e )
+    catch( Poco::Data::DataException& e )
     {
         std::cout <<  "PropertySet::LoadByKey: " << e.displayText() << std::endl;
     }
@@ -736,7 +736,7 @@ bool PropertySet::WriteToDatabase( std::string const& DatabaseName,
         // Close db connection
         Poco::Data::SQLite::Connector::unregisterConnector();
     }
-    catch( Poco::Data::DataException &e )
+    catch( Poco::Data::DataException& e )
     {
         std::cout << "PropertySet::WriteToDatabase: " << e.displayText() << std::endl;
     }
@@ -799,14 +799,14 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::stri
         //int idTest = 0;
         std::string idTest;
 
-//        ( *session ) << "SELECT id FROM " << m_TableName << " WHERE id=:id",
-//                Poco::Data::into( idTest ),
-//                Poco::Data::use( mID ),
-//                Poco::Data::now;
+        //        ( *session ) << "SELECT id FROM " << m_TableName << " WHERE id=:id",
+        //                Poco::Data::into( idTest ),
+        //                Poco::Data::use( mID ),
+        //                Poco::Data::now;
         ( *session ) << "SELECT uuid FROM " << m_TableName << " WHERE uuid=:uuid",
-                Poco::Data::into( idTest ),
-                Poco::Data::use( mUUIDString ),
-                Poco::Data::now;
+                     Poco::Data::into( idTest ),
+                     Poco::Data::use( mUUIDString ),
+                     Poco::Data::now;
 
         // Since the data binding part will be the same for INSERT and UPDATE
         // operations on this PropertySet, we only need to build the string part
@@ -817,7 +817,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::stri
         // Will hold the list of fields in the order added to query.
         std::vector< std::string > fieldNames;
 
-//        if( idTest == 0 ) //  Record does not exist; perform an INSERT
+        //        if( idTest == 0 ) //  Record does not exist; perform an INSERT
         if( idTest.empty() )
         {
             // Build a query that looks like this:
@@ -861,9 +861,9 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::stri
             query.append( ") VALUES (" );
             // Put in uuid explicitly since it appears only in INSERT and not
             // in UPDATE queries
-            query.append( "\"");
+            query.append( "\"" );
             query.append( mUUIDString );
-            query.append( "\",");
+            query.append( "\"," );
 
             // Put in the binding labels (:0,:1,...) for Poco::Data
             size_t max = fieldNames.size();
@@ -924,11 +924,11 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::stri
                 query.erase( --query.end() );
             }
 
-//            query.append( " WHERE id=" );
-//            query.append( boost::lexical_cast<std::string > ( mID ) );
+            //            query.append( " WHERE id=" );
+            //            query.append( boost::lexical_cast<std::string > ( mID ) );
             query.append( " WHERE uuid=\"" );
             query.append( mUUIDString );
-            query.append("\"");
+            query.append( "\"" );
             //std::cout << query << std::endl << std::flush;
         }
 
@@ -972,11 +972,11 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::stri
         if( statement.toString().substr( 0, 6 ) == "INSERT" )
         {
             ( *session ) << "SELECT MAX(id) FROM " << TableName,
-                    Poco::Data::into( mID ),
-                    Poco::Data::now;
+                         Poco::Data::into( mID ),
+                         Poco::Data::now;
         }
     }
-    catch( Poco::Data::DataException &e )
+    catch( Poco::Data::DataException& e )
     {
         std::cout << "PropertySet::WriteToDatabase: " << e.displayText() << std::endl;
     }
@@ -987,10 +987,10 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::stri
 
     // Delete the BindableAnyWrapperS that were created in the binding loop
     std::vector< BindableAnyWrapper* >::iterator biterator =
-            bindableVector.begin();
+        bindableVector.begin();
     while( biterator != bindableVector.end() )
     {
-        delete ( *biterator );
+        delete( *biterator );
         biterator++;
     }
 
@@ -1065,12 +1065,12 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::stri
                 // Check for existing table; if table doesn't exist, create it.
                 if( !_tableExists( session, newTableName ) )
                 {
-//                    ( *session ) << "CREATE TABLE " << newTableName <<
-//                            " (id INTEGER PRIMARY KEY,PropertySetParentID INTEGER,"
-//                            << fieldName << " " << columnType << ")", Poco::Data::now;
+                    //                    ( *session ) << "CREATE TABLE " << newTableName <<
+                    //                            " (id INTEGER PRIMARY KEY,PropertySetParentID INTEGER,"
+                    //                            << fieldName << " " << columnType << ")", Poco::Data::now;
                     ( *session ) << "CREATE TABLE " << newTableName <<
-                            " (id INTEGER PRIMARY KEY,PropertySetParentID TEXT,"
-                            << fieldName << " " << columnType << ")", Poco::Data::now;
+                                 " (id INTEGER PRIMARY KEY,PropertySetParentID TEXT,"
+                                 << fieldName << " " << columnType << ")", Poco::Data::now;
                 }
 
                 // First part of query will delete everything from the sub-table
@@ -1152,7 +1152,7 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::stri
                         break;
                     }
                     case UNKNOWN:
-                    {    
+                    {
                         break;
                     }
                     }
@@ -1176,12 +1176,13 @@ bool PropertySet::WriteToDatabase( Poco::Data::Session* const session, std::stri
     // Close the db transaction
     session->commit();
 
-    { // Braces protect scoping of biterator
+    {
+        // Braces protect scoping of biterator
         std::vector< BindableAnyWrapper* >::iterator biterator =
-                bindVector.begin();
+            bindVector.begin();
         while( biterator != bindVector.end() )
         {
-            delete ( *biterator );
+            delete( *biterator );
             biterator++;
         }
     }
@@ -1199,9 +1200,9 @@ bool PropertySet::_tableExists( Poco::Data::Session* const session, std::string 
     // "SELECT 1 ... will put a 1 (true) into the boolean value if the tablename
     // is found in the database.
     ( *session ) << "SELECT 1 FROM sqlite_master WHERE name=:name",
-            Poco::Data::into( tableExists ),
-            Poco::Data::use( TableName ),
-            Poco::Data::now;
+                 Poco::Data::into( tableExists ),
+                 Poco::Data::use( TableName ),
+                 Poco::Data::now;
 
     return tableExists;
 }
@@ -1259,9 +1260,9 @@ std::string PropertySet::_buildColumnHeaderString()
             dataType = "UNKNOWN";
 
             std::cout << "Error: Property " << iterator->first << " contains a"
-                    << " disallowed character. Allowed characters are digits"
-                    << " 0-9, letters, and underscore. This property will not"
-                    << " be written to the database." << std::endl;
+                      << " disallowed character. Allowed characters are digits"
+                      << " 0-9, letters, and underscore. This property will not"
+                      << " be written to the database." << std::endl;
         }
         // Put the property's name string in as the column name
         // If the property is of an unknown type, we skip it for now
@@ -1299,7 +1300,7 @@ std::string PropertySet::_buildColumnHeaderString()
 bool PropertySet::_containsIllegalCharacter( std::string const& value )
 {
     size_t position = value.find_first_not_of(
-                                               "1234567890_aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ" );
+                          "1234567890_aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ" );
     if( position != value.npos )
     {
         return true;
@@ -1313,20 +1314,20 @@ bool PropertySet::_containsIllegalCharacter( std::string const& value )
 void PropertySet::_connectChanges( PropertyPtr property )
 {
     property->SignalAttributeChanged.connect( boost::bind( &PropertySet::
-                                                           ChangeAccumulator,
-                                                           this, ::_1 ) );
+            ChangeAccumulator,
+            this, ::_1 ) );
 
     property->SignalDisabled.connect( boost::bind( &PropertySet::
-                                                   ChangeAccumulator,
-                                                   this, ::_1 ) );
+                                      ChangeAccumulator,
+                                      this, ::_1 ) );
 
     property->SignalEnabled.connect( boost::bind( &PropertySet::
-                                                  ChangeAccumulator,
-                                                  this, ::_1 ) );
+                                     ChangeAccumulator,
+                                     this, ::_1 ) );
 
     property->SignalValueChanged.connect( boost::bind( &PropertySet::
-                                                       ChangeAccumulator,
-                                                       this, ::_1 ) );
+                                          ChangeAccumulator,
+                                          this, ::_1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PropertySet::ChangeAccumulator( PropertyPtr property )
@@ -1335,7 +1336,7 @@ void PropertySet::ChangeAccumulator( PropertyPtr property )
     m_writeDirty = true;
 
     // Ask the property for its name
-    const std::string nameInSet = 
+    const std::string nameInSet =
         boost::any_cast< std::string > ( property->GetAttribute( "nameInSet" ) );
 
     // See if we already have changes recorded for this property
@@ -1362,12 +1363,12 @@ void PropertySet::ChangeAccumulator( PropertyPtr property )
         if( !m_liveWriteDirty )
         {
             std::vector< MakeLiveBasePtr >::const_iterator mlb =
-                    mLiveObjects.begin();
+                mLiveObjects.begin();
             while( mlb != mLiveObjects.end() )
             {
-                std::vector<std::string> liveNames = (*mlb)->GetNames();
+                std::vector<std::string> liveNames = ( *mlb )->GetNames();
                 std::vector<std::string>::const_iterator name =
-                        liveNames.begin();
+                    liveNames.begin();
                 while( name != liveNames.end() )
                 {
                     if( *name == nameInSet )
@@ -1449,7 +1450,7 @@ void PropertySet::EnableLiveProperties( bool live )
             // Create timer that fires every two seconds
             m_timer = new Poco::Timer( 2000, 2000 );
         }
-        Poco::TimerCallback<PropertySet> callback(*this, &PropertySet::SaveLiveProperties);
+        Poco::TimerCallback<PropertySet> callback( *this, &PropertySet::SaveLiveProperties );
         m_timer->start( callback );
     }
     else if( m_timer )
@@ -1464,7 +1465,7 @@ void PropertySet::SaveLiveProperties( Poco::Timer& timer )
     if( m_liveWriteDirty )
     {
         LOG_INFO( "Changes detected in live property in propertyset " << mUUIDString <<
-                ": auto-saving." );
+                  ": auto-saving." );
         WriteToDatabaseNoOverride();
     }
     else

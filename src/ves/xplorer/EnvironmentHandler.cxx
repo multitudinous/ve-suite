@@ -237,27 +237,27 @@ EnvironmentHandler::EnvironmentHandler()
     _eventHandlers[ "CHANGE_IMAGE_DIRECTORY" ] =
         new ves::xplorer::event::environment::CameraPlacementEventHandler();
 
-    CONNECTSIGNALS_STATIC( "%PhysicsDebugger", void( bool const& enable ),
-                     &ves::xplorer::event::environment::EnablePhysicsDebugging,
-                     m_connections, any_SignalType, normal_Priority );    
+    CONNECTSIGNALS_STATIC( "%PhysicsDebugger", void( bool const & enable ),
+                           &ves::xplorer::event::environment::EnablePhysicsDebugging,
+                           m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%DisplayFrameRate", void( bool const& enable ),
-                     &ves::xplorer::event::environment::DisplayFrameRate,
-                     m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_STATIC( "%DisplayFrameRate", void( bool const & enable ),
+                           &ves::xplorer::event::environment::DisplayFrameRate,
+                           m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%DisplayGlobalAxis", void( bool const& enable ),
-                     &ves::xplorer::event::environment::DisplayCoordinateSystem,
-                     m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_STATIC( "%DisplayGlobalAxis", void( bool const & enable ),
+                           &ves::xplorer::event::environment::DisplayCoordinateSystem,
+                           m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "%AmbientAudioSoundFile", void( std::string const& filename ),
-                          &ves::xplorer::event::environment::SetAmbientAudioFile,
-                          m_connections, any_SignalType, normal_Priority );
-    
+    CONNECTSIGNALS_STATIC( "%AmbientAudioSoundFile", void( std::string const & filename ),
+                           &ves::xplorer::event::environment::SetAmbientAudioFile,
+                           m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_STATIC( "%UsePreferredBackgroundColor",
-                     void( bool const enable, std::vector< double > const& color ),
-                     &ves::xplorer::event::environment::UpdateBackgroundColor,
-                     m_connections, any_SignalType, normal_Priority );    
-    
+                           void( bool const enable, std::vector< double > const & color ),
+                           &ves::xplorer::event::environment::UpdateBackgroundColor,
+                           m_connections, any_SignalType, normal_Priority );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()
@@ -337,7 +337,7 @@ void EnvironmentHandler::SetDesktopSize( int width, int height )
     desktopHeight = height;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EnvironmentHandler::GetDesktopSize( int &width, int &height )
+void EnvironmentHandler::GetDesktopSize( int& width, int& height )
 {
     width = desktopWidth;
     height = desktopHeight;
@@ -345,40 +345,40 @@ void EnvironmentHandler::GetDesktopSize( int &width, int &height )
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::InitScene()
 {
-    std::cout << 
-        "| ***************************************************************** |" 
-        << std::endl;
+    std::cout <<
+              "| ***************************************************************** |"
+              << std::endl;
 
     //
     // Initiate quatcam
     //
-    ves::xplorer::cfdQuatCamHandler::instance()->SetDCS( 
+    ves::xplorer::cfdQuatCamHandler::instance()->SetDCS(
         ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
-    
+
     //
     // Initiate the Performer Stored Binary objects.
     //
-    std::cout << 
-        "| Initializing....................................... Stored Scenes |" 
-        << std::endl;
+    std::cout <<
+              "| Initializing....................................... Stored Scenes |"
+              << std::endl;
     _teacher = new cfdTeacher( std::string( "STORED_FILES" ),
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+                               ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
 
-    if( (desktopWidth > 0) && (desktopHeight > 0) )
+    if( ( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
     {
-        std::cout << 
-            "| Initializing....................................  Desktop Display |" 
-            << std::endl;
+        std::cout <<
+                  "| Initializing....................................  Desktop Display |"
+                  << std::endl;
         // Create the command and data value pairs
         // to adjust the desktop settings.
         ves::open::xml::DataValuePairPtr dvpDesktopWidth( new ves::open::xml::DataValuePair( std::string( "FLOAT" ) ) );
         dvpDesktopWidth->SetDataName( "desktop_width" );
         dvpDesktopWidth->SetDataValue( static_cast< double >( desktopWidth ) );
-        
+
         ves::open::xml::DataValuePairPtr dvpDesktopHeight( new ves::open::xml::DataValuePair( std::string( "FLOAT" ) ) );
         dvpDesktopHeight->SetDataName( "desktop_height" );
         dvpDesktopHeight->SetDataValue( static_cast< double >( desktopHeight ) );
-        
+
         ves::open::xml::CommandPtr displayCommand( new ves::open::xml::Command() );
         displayCommand->SetCommandName( std::string( "Juggler_Desktop_Data" ) );
         displayCommand->AddDataValuePair( dvpDesktopWidth );
@@ -392,8 +392,8 @@ void EnvironmentHandler::InitScene()
     //
     std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
 
-    std::cout 
-        << "| Initializing.................................... Heads Up Display |" << std::endl;
+    std::cout
+            << "| Initializing.................................... Heads Up Display |" << std::endl;
     mHeadsUpDisplay = new ves::xplorer::scenegraph::HeadsUpDisplay( screenDims );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -427,8 +427,8 @@ void EnvironmentHandler::LatePreFrameUpdate()
         if( currentEventHandler != _eventHandlers.end() )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tEnvironmentHandler::LatePreFrameUpdate Executing: "
-                << commandName
-                << std::endl << vprDEBUG_FLUSH;
+                                  << commandName
+                                  << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tempCommand );
         }

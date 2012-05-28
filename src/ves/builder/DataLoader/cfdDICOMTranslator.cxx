@@ -56,8 +56,8 @@ cfdDICOMTranslator::~cfdDICOMTranslator()
 {}
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDICOMTranslator::DICOMTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                      cfdTranslatorToVTK* toVTK,
-                                                      vtkAlgorithm*& )
+        cfdTranslatorToVTK* toVTK,
+        vtkAlgorithm*& )
 {
     cfdDICOMTranslator* dicomToVTK =
         dynamic_cast<cfdDICOMTranslator*>( toVTK );
@@ -74,9 +74,9 @@ void cfdDICOMTranslator::DICOMTranslateCbk::Translate( vtkDataObject*& outputDat
         outputDataset->Update();
 
 
-//      double delta[3] = {0,0,0};
-//      double origin[3] = {0,0,0};
-//     dicomTranslator->GetOutput()->GetOrigin(origin);
+        //      double delta[3] = {0,0,0};
+        //      double origin[3] = {0,0,0};
+        //     dicomTranslator->GetOutput()->GetOrigin(origin);
         //    dicomTranslator->GetOutput()->GetSpacing(delta);
 
         //   int dims[3];
@@ -94,7 +94,7 @@ void cfdDICOMTranslator::DICOMTranslateCbk::Translate( vtkDataObject*& outputDat
          vtkStructuredGrid* tempGrid = vtkStructuredGrid::New();
          vtkPoints* tempPoints = vtkPoints::New();
          tempPoints->Allocate(dims[0]*dims[1]*dims[2]);
-         
+
          unsigned int kOffset = 0;
          unsigned int jOffset = 0;
          double pt[3] = {0,0,0};
@@ -102,12 +102,12 @@ void cfdDICOMTranslator::DICOMTranslateCbk::Translate( vtkDataObject*& outputDat
          {
             pt[2] = k*delta[2] + origin[2];
             kOffset = k * dims[0] * dims[1];
-            for (int j=0; j<dims[1]; j++) 
+            for (int j=0; j<dims[1]; j++)
             {
                jOffset = j * dims[0];
                pt[1] = j*delta[1] + origin[1];
-             
-                for(int i=0; i<dims[0]; i++) 
+
+                for(int i=0; i<dims[0]; i++)
                 {
                   pt[0] = i*delta[0] + origin[0];
                   tempPoints->InsertPoint((i + jOffset + kOffset),pt);
@@ -135,6 +135,6 @@ void cfdDICOMTranslator::DICOMTranslateCbk::Translate( vtkDataObject*& outputDat
 void cfdDICOMTranslator::DisplayHelp( void )
 {
     std::cout << "|\tDICOM Translator Usage:" << std::endl
-    << "\t -i <input_directory> -o <output_dir> "
-    << "-outFileName <output_filename> -loader dcm -w file" << std::endl;
+              << "\t -i <input_directory> -o <output_dir> "
+              << "-outFileName <output_filename> -loader dcm -w file" << std::endl;
 }

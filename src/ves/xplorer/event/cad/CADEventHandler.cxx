@@ -62,8 +62,8 @@
 #include <ves/xplorer/Debug.h>
 
 #ifdef MINERVA_GIS_SUPPORT
-    #include <ves/xplorer/minerva/MinervaManager.h>
-    #include <ves/xplorer/minerva/ModelWrapper.h>
+#include <ves/xplorer/minerva/MinervaManager.h>
+#include <ves/xplorer/minerva/ModelWrapper.h>
 #endif
 
 #include <boost/filesystem/path.hpp>
@@ -81,7 +81,7 @@ using namespace ves::xplorer::scenegraph;
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 CADEventHandler::CADEventHandler()
-: ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     m_cadNode = CADNodePtr();
     m_activeModel = 0;
@@ -89,7 +89,7 @@ CADEventHandler::CADEventHandler()
 }
 ////////////////////////////////////////////////////////////
 CADEventHandler::CADEventHandler( const CADEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     m_cadNode = rhs.m_cadNode;
     m_activeModel = rhs.m_activeModel;
@@ -122,7 +122,7 @@ void CADEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
             m_cadHandler = m_activeModel->GetModelCADHandler();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
         m_cadHandler = 0;
@@ -210,10 +210,10 @@ void CADEventHandler::_setTransformOnNode( CADNodePtr activeNode )
 }
 ///////////////////////////////////////////////////////////////////////
 void CADEventHandler::SetNodeDescriptors( std::string nodeID,
-                                          std::string nodeType,
-                                          std::string descriptorName,
-                                          std::string descriptorValue,
-                                          CADNodePtr inputNodePtr )
+        std::string nodeType,
+        std::string descriptorName,
+        std::string descriptorValue,
+        CADNodePtr inputNodePtr )
 {
     //set the uuid on the osg node so that we can get back to vexml
     osg::Node::DescriptionList descriptorsList;
@@ -222,7 +222,7 @@ void CADEventHandler::SetNodeDescriptors( std::string nodeID,
     descriptorsList.push_back( nodeType );
     descriptorsList.push_back( "VE_XML_MODEL_ID" );
     descriptorsList.push_back( m_activeModel->GetID() );
-  
+
     if( inputNodePtr )
     {
         descriptorsList.push_back( "Opacity" );
@@ -230,7 +230,7 @@ void CADEventHandler::SetNodeDescriptors( std::string nodeID,
         temp << inputNodePtr->GetOpacity();
         descriptorsList.push_back( temp.str() );
     }
-    
+
     if( nodeType == "Assembly" )
     {
         ves::xplorer::scenegraph::DCS* assemblyNode = m_cadHandler->GetAssembly( nodeID );
@@ -257,7 +257,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
     parentAssembly = m_cadHandler->GetAssembly( parentID );
 
     vprDEBUG( vesDBG, 1 ) << "|---Adding node to parent--- id = " << parentID
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
     if( !parentAssembly )
     {
         std::cout << "|---No parent found--- id = " << parentID << std::endl;
@@ -267,16 +267,16 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
     if( activeNode->GetNodeType() == "Assembly" )
     {
         CADAssemblyPtr newAssembly( boost::dynamic_pointer_cast<CADAssembly>( activeNode ) );
-        vprDEBUG( vesDBG, 2 ) <<"|---Assembly---"<<std::endl<< vprDEBUG_FLUSH;
-        vprDEBUG( vesDBG, 2 )<<"|\t---"<<newAssembly->GetID()<<"---"
-            <<std::endl<< vprDEBUG_FLUSH;
-        vprDEBUG( vesDBG, 2 )<<"|\t---"<<newAssembly->GetNodeName()
-            <<"---"<<std::endl<< vprDEBUG_FLUSH;
-        vprDEBUG( vesDBG, 2 )<<"|\t--- ("<<newAssembly->GetNumberOfChildren()
-            <<") child nodes---"<<std::endl<< vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 2 ) << "|---Assembly---" << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 2 ) << "|\t---" << newAssembly->GetID() << "---"
+                              << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 2 ) << "|\t---" << newAssembly->GetNodeName()
+                              << "---" << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 2 ) << "|\t--- (" << newAssembly->GetNumberOfChildren()
+                              << ") child nodes---" << std::endl << vprDEBUG_FLUSH;
 
         m_cadHandler->CreateAssembly( newAssembly->GetID() );
-        ves::xplorer::scenegraph::DCS* tempAssem = 
+        ves::xplorer::scenegraph::DCS* tempAssem =
             m_cadHandler->GetAssembly( newAssembly->GetID() );
         tempAssem->SetName( newAssembly->GetNodeName() );
 
@@ -285,37 +285,37 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         unsigned int nChildren = newAssembly->GetNumberOfChildren();
         for( unsigned int i = 0; i < nChildren; ++i )
         {
-            vprDEBUG( vesDBG, 2 )<<"|\tAdding child: "
-                <<newAssembly->GetChild(i)->GetNodeName()
-                <<std::endl<< vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 2 ) << "|\tAdding child: "
+                                  << newAssembly->GetChild( i )->GetNodeName()
+                                  << std::endl << vprDEBUG_FLUSH;
             _addNodeToNode( newAssembly->GetID(), newAssembly->GetChild( i ) );
         }
         //Add the properties to the nodes AFTER all the children
         //are added so that vistor traversals will work properly
-        vprDEBUG( vesDBG, 2 )<<"|\t---Setting Assembly node properties---"
-            <<std::endl<< vprDEBUG_FLUSH;
-        SetNodeDescriptors( newAssembly->GetID(), "Assembly", "VE_XML_ID", 
-            newAssembly->GetID(), newAssembly );
-        //Now that we have tags on the node we can use our visitors        
+        vprDEBUG( vesDBG, 2 ) << "|\t---Setting Assembly node properties---"
+                              << std::endl << vprDEBUG_FLUSH;
+        SetNodeDescriptors( newAssembly->GetID(), "Assembly", "VE_XML_ID",
+                            newAssembly->GetID(), newAssembly );
+        //Now that we have tags on the node we can use our visitors
         _setTransformOnNode( newAssembly );
-        vprDEBUG( vesDBG, 2 )<<"|\t---Set Assembly Transform---"
-            <<std::endl<< vprDEBUG_FLUSH;
-        
+        vprDEBUG( vesDBG, 2 ) << "|\t---Set Assembly Transform---"
+                              << std::endl << vprDEBUG_FLUSH;
+
         _setAttributesOnNode( newAssembly );
-        vprDEBUG( vesDBG, 2 )<<"|\t---Set Assembly Attributes---"
-            <<std::endl<< vprDEBUG_FLUSH;
-        
+        vprDEBUG( vesDBG, 2 ) << "|\t---Set Assembly Attributes---"
+                              << std::endl << vprDEBUG_FLUSH;
+
         ///Setup the scale for any sub children
         {
             ves::xplorer::scenegraph::util::NormalizeVisitor normVis( tempAssem, false );
         }
-        
+
         tempAssem->ToggleDisplay( newAssembly->GetVisibility() );
 
-        vprDEBUG( vesDBG, 1 ) << "|\t---Set Assembly Opacity---" 
-            << std::endl << vprDEBUG_FLUSH;
-        vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " 
-            << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\t---Set Assembly Opacity---"
+                              << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = "
+                              << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
 
         m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity() );
 
@@ -325,15 +325,15 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
     {
         CADPartPtr newPart( boost::dynamic_pointer_cast<CADPart>( activeNode ) );
         vprDEBUG( vesDBG, 1 ) << "|\t---Part---"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\t---" << newPart->GetID()
-            << "---" << std::endl << vprDEBUG_FLUSH;
+                              << "---" << std::endl << vprDEBUG_FLUSH;
         std::string tempFilename = newPart->GetCADFileName();
 #if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
         boost::filesystem::path correctedPath( newPart->GetCADFileName() );
         vprDEBUG( vesDBG, 1 ) << "|\t---" << tempFilename << "---"
-            << correctedPath.string()
-            << std::endl << vprDEBUG_FLUSH;
+                              << correctedPath.string()
+                              << std::endl << vprDEBUG_FLUSH;
         m_cadHandler->CreatePart( correctedPath.string(),
                                   newPart->GetID(),
                                   parentID,
@@ -341,15 +341,15 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
 #else
         boost::filesystem::path correctedPath( newPart->GetCADFileName(), boost::filesystem::no_check );
         vprDEBUG( vesDBG, 1 ) << "|\t---" << tempFilename << "---"
-            << correctedPath.native_file_string()
-            << std::endl << vprDEBUG_FLUSH;
+                              << correctedPath.native_file_string()
+                              << std::endl << vprDEBUG_FLUSH;
         m_cadHandler->CreatePart( correctedPath.native_file_string(),
                                   newPart->GetID(),
                                   parentID,
                                   newPart->GetOcclusionSettings() );
 #endif
 
-        ves::xplorer::scenegraph::CADEntity* partNode = 
+        ves::xplorer::scenegraph::CADEntity* partNode =
             m_cadHandler->GetPart( newPart->GetID() );
         if( partNode->GetNode()->GetNode() )
         {
@@ -360,95 +360,95 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             partNode->SetOpacityValue( newPart->GetOpacity() );
             partNode->SetTransparencyFlag( newPart->GetTransparentFlag() );
 
-            vprDEBUG( vesDBG, 1 ) << "|\t---Setting node properties---" 
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\t---Setting node properties---"
+                                  << std::endl << vprDEBUG_FLUSH;
             //set the uuid on the osg node so that we can get back to vexml
-            SetNodeDescriptors( newPart->GetID(), "Part", "VE_XML_ID", 
-                newPart->GetID(), newPart );
-                
+            SetNodeDescriptors( newPart->GetID(), "Part", "VE_XML_ID",
+                                newPart->GetID(), newPart );
+
             //Now that we have tags on the node we can use our visitors
             _setTransformOnNode( newPart );
-            vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Transform---" 
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Transform---"
+                                  << std::endl << vprDEBUG_FLUSH;
             _setAttributesOnNode( newPart );
-            vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Attributes---" 
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Attributes---"
+                                  << std::endl << vprDEBUG_FLUSH;
 
             //Set a default material on nodes that have no initial material
-            ves::xplorer::scenegraph::util::MaterialInitializer 
-                material_initializer( partNode->GetDCS() );
-            vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Opacity---" 
-                << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " 
-                << newPart->GetOpacity() << std::endl << vprDEBUG_FLUSH;
+            ves::xplorer::scenegraph::util::MaterialInitializer
+            material_initializer( partNode->GetDCS() );
+            vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Opacity---"
+                                  << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = "
+                                  << newPart->GetOpacity() << std::endl << vprDEBUG_FLUSH;
             m_cadHandler->UpdateOpacity( newPart->GetID(), newPart->GetOpacity() );
-            
+
             //m_activeModel->RenderTextualDisplay( true );
 
             //Setup the physics properties on the file
             //must be set AFTER all of the transforms have been applied
             if( newPart->HasPhysics() )
             {
-                vprDEBUG( vesDBG, 1 ) 
-                    << "|\t---Set Part Physics Properties---" 
-                    << std::endl << vprDEBUG_FLUSH;
+                vprDEBUG( vesDBG, 1 )
+                        << "|\t---Set Part Physics Properties---"
+                        << std::endl << vprDEBUG_FLUSH;
                 partNode->InitPhysics();
-                
+
                 partNode->GetPhysicsRigidBody()->SetMass( newPart->GetMass() );
                 partNode->GetPhysicsRigidBody()->SetFriction( newPart->GetFriction() );
                 partNode->GetPhysicsRigidBody()->SetRestitution( newPart->GetRestitution() );
-                partNode->GetPhysicsRigidBody()->CreateRigidBody( 
-                    newPart->GetPhysicsLODType(), 
-                    newPart->GetPhysicsMotionType(), 
+                partNode->GetPhysicsRigidBody()->CreateRigidBody(
+                    newPart->GetPhysicsLODType(),
+                    newPart->GetPhysicsMotionType(),
                     newPart->GetPhysicsMeshType(),
                     newPart->GetPhysicsDecimationValue() );
 
-                vprDEBUG( vesDBG, 1 ) 
-                    << "|\t---End Part Physics Properties---" 
-                    << std::endl << vprDEBUG_FLUSH;
+                vprDEBUG( vesDBG, 1 )
+                        << "|\t---End Part Physics Properties---"
+                        << std::endl << vprDEBUG_FLUSH;
             }
 
 #ifdef MINERVA_GIS_SUPPORT
             // Add the part to the MinervaManager so the cad is placed at the right place on the planet if it's added.
-            const double longitude ( newPart->GetLongitude() );
-            const double latitude ( newPart->GetLatitude() );
-            const std::string id ( newPart->GetID() );
+            const double longitude( newPart->GetLongitude() );
+            const double latitude( newPart->GetLatitude() );
+            const std::string id( newPart->GetID() );
 
-            ves::xplorer::minerva::ModelWrapper::RefPtr modelWrapper ( new ves::xplorer::minerva::ModelWrapper );
-            modelWrapper->SetCADEntity ( partNode );
+            ves::xplorer::minerva::ModelWrapper::RefPtr modelWrapper( new ves::xplorer::minerva::ModelWrapper );
+            modelWrapper->SetCADEntity( partNode );
 
-            modelWrapper->location ( osg::Vec3d ( longitude, latitude, 0.0 ) );
+            modelWrapper->location( osg::Vec3d( longitude, latitude, 0.0 ) );
 
-            ves::open::xml::TransformPtr transform ( newPart->GetTransform() );
-            if ( transform )
+            ves::open::xml::TransformPtr transform( newPart->GetTransform() );
+            if( transform )
             {
-              ves::open::xml::FloatArrayPtr scaleArray ( transform->GetScaleArray() );
-              ves::open::xml::FloatArrayPtr rotationArray ( transform->GetRotationArray() );
-              ves::open::xml::FloatArrayPtr translationArray ( transform->GetTranslationArray() );
+                ves::open::xml::FloatArrayPtr scaleArray( transform->GetScaleArray() );
+                ves::open::xml::FloatArrayPtr rotationArray( transform->GetRotationArray() );
+                ves::open::xml::FloatArrayPtr translationArray( transform->GetTranslationArray() );
 
-              modelWrapper->scale ( osg::Vec3d ( scaleArray->GetElement ( 0 ), scaleArray->GetElement ( 1 ), scaleArray->GetElement ( 2 ) ) );
-              modelWrapper->orientation ( rotationArray->GetElement ( 0 ), rotationArray->GetElement ( 1 ), rotationArray->GetElement ( 2 ) );
-              modelWrapper->setTranslationOffset ( translationArray->GetElement ( 0 ), translationArray->GetElement ( 1 ), translationArray->GetElement ( 2 ) );
+                modelWrapper->scale( osg::Vec3d( scaleArray->GetElement( 0 ), scaleArray->GetElement( 1 ), scaleArray->GetElement( 2 ) ) );
+                modelWrapper->orientation( rotationArray->GetElement( 0 ), rotationArray->GetElement( 1 ), rotationArray->GetElement( 2 ) );
+                modelWrapper->setTranslationOffset( translationArray->GetElement( 0 ), translationArray->GetElement( 1 ), translationArray->GetElement( 2 ) );
             }
 
-            ves::xplorer::minerva::MinervaManager::instance()->AddModel ( id, modelWrapper.get() );
+            ves::xplorer::minerva::MinervaManager::instance()->AddModel( id, modelWrapper.get() );
 #endif
             WritePartToDB( newPart );
-            
+
             //Is the node off or on?
             //This call must be last after all other properties are processed
             //so that visitors and other internal osg visitors will
             //travers the node even if it is turned off
-            partNode->GetDCS()->ToggleDisplay( newPart->GetVisibility() );            
+            partNode->GetDCS()->ToggleDisplay( newPart->GetVisibility() );
         }
         else
         {
 #if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
             std::cerr << "|\t---ERROR: (CADEventHandler::_addNodeToNode) Unable to load file name: "
-            << correctedPath.string() << std::endl;
+                      << correctedPath.string() << std::endl;
 #else
             std::cerr << "|\t---ERROR: (CADEventHandler::_addNodeToNode) Unable to load file name: "
-            << correctedPath.native_file_string() << std::endl;
+                      << correctedPath.native_file_string() << std::endl;
 #endif
         }
     }
@@ -463,35 +463,35 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
         newSet.LoadFromDatabase();
     }
 
-    // Calculate and store the NodePath - for all methods whether import or 
+    // Calculate and store the NodePath - for all methods whether import or
     // file load or ves load
     {
         std::string pathString;
         if( newPart->GetNodeType() == "Assembly" )
         {
-            ves::xplorer::scenegraph::DCS* transform = 
+            ves::xplorer::scenegraph::DCS* transform =
                 m_cadHandler->GetAssembly( newPart->GetID() );
-            
+
             pathString = GetNodePathString(
-                scenegraph::SceneManager::instance()->GetRootNode(), transform);
+                             scenegraph::SceneManager::instance()->GetRootNode(), transform );
         }
         else if( newPart->GetNodeType() == "Part" )
         {
-            osg::Node* node = 
+            osg::Node* node =
                 m_cadHandler->GetPart( newPart->GetID() )->GetNode()->GetNode();
-            
+
             pathString = GetNodePathString(
-                scenegraph::SceneManager::instance()->GetRootNode(), node );
+                             scenegraph::SceneManager::instance()->GetRootNode(), node );
         }
         newSet.SetPropertyValue( "NodePath", pathString );
     }
-    
+
     ///Only write to the DB if are importing an old file
     if( ves::xplorer::ModelHandler::instance()->GetDBPresent() )
     {
         return;
     }
-    
+
     newSet.SetPropertyValue( "NameTag", newPart->GetNodeName() );
     newSet.SetPropertyValue( "Opacity", static_cast<double>( newPart->GetOpacity() ) );
     newSet.SetPropertyValue( "TransparencyFlag", newPart->GetTransparentFlag() );
@@ -500,11 +500,11 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
     {
 
         ves::open::xml::FloatArrayPtr nodeTranslation =
-                nodeTransform->GetTranslationArray();
+            nodeTransform->GetTranslationArray();
         ves::open::xml::FloatArrayPtr nodeRotation =
-                nodeTransform->GetRotationArray();
+            nodeTransform->GetRotationArray();
         ves::open::xml::FloatArrayPtr nodeScale =
-                nodeTransform->GetScaleArray();
+            nodeTransform->GetScaleArray();
 
         newSet.SetPropertyValue( "Transform_Translation_X",
                                  nodeTranslation->GetElement( 0 ) );
@@ -519,8 +519,8 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
         newSet.SetPropertyValue( "Transform_Rotation_Z",
                                  nodeRotation->GetElement( 0 ) );
 
-        if( (nodeScale->GetElement( 0 ) == nodeScale->GetElement( 1 )) &&  
-           (nodeScale->GetElement( 1 ) == nodeScale->GetElement( 2 )) )
+        if( ( nodeScale->GetElement( 0 ) == nodeScale->GetElement( 1 ) ) &&
+                ( nodeScale->GetElement( 1 ) == nodeScale->GetElement( 2 ) ) )
         {
             newSet.SetPropertyValue( "Transform_Scale_Uniform", true );
         }
@@ -542,11 +542,11 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
         newSet.SetPropertyValue( "Physics_Enable",
                                  newPart->HasPhysics() );
         newSet.SetPropertyValue( "Physics_Mass",
-                                newPart->GetMass() );
+                                 newPart->GetMass() );
         newSet.SetPropertyValue( "Physics_Friction",
-                                newPart->GetFriction() );
+                                 newPart->GetFriction() );
         newSet.SetPropertyValue( "Physics_Restitution",
-                                newPart->GetRestitution() );
+                                 newPart->GetRestitution() );
         newSet.SetPropertyValue( "Physics_MotionType",
                                  newPart->GetPhysicsMotionType() );
         newSet.SetPropertyValue( "Physics_LODType",
@@ -560,14 +560,14 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
     newSet.SetPropertyValue( "Culling", newPart->GetOcclusionSettings() );
 
     // What needs to be tested to turn GPS on/off?
-//    if( ??minerva_gps_condition?? )
-//    {
-//        newSet.SetPropertyValue( "GPS", true );
-//    }
-//    else
-//    {
-//        newSet.SetPropertyValue( "GPS", false );
-//    }
+    //    if( ??minerva_gps_condition?? )
+    //    {
+    //        newSet.SetPropertyValue( "GPS", true );
+    //    }
+    //    else
+    //    {
+    //        newSet.SetPropertyValue( "GPS", false );
+    //    }
     newSet.SetPropertyValue( "GPS_Longitude", newPart->GetLongitude() );
     newSet.SetPropertyValue( "GPS_Latitude", newPart->GetLatitude() );
 
@@ -584,12 +584,12 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEventHandler::GetNodePathString( osg::Node* const startNode,
-                                                 osg::Node* endNode )
+        osg::Node* endNode )
 {
     // Walk up from end to start
     osg::NodePath nodePath;
     nodePath.push_back( endNode );
-    while( (endNode->getNumParents() != 0) && (endNode != startNode) )
+    while( ( endNode->getNumParents() != 0 ) && ( endNode != startNode ) )
     {
         endNode = endNode->getParent( 0 );
         nodePath.push_back( endNode );

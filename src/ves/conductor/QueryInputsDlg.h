@@ -58,25 +58,25 @@ namespace conductor
 class VE_GUIPLUGINS_EXPORTS QueryInputsDlg : public wxDialog
 {
 public:
-    QueryInputsDlg( wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT( "Query Inputs" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = QueryInputsDlg_STYLE );
+    QueryInputsDlg( wxWindow* parent, wxWindowID id = 1, const wxString& title = wxT( "Query Inputs" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = QueryInputsDlg_STYLE );
     virtual ~QueryInputsDlg();
 
     void WxButton1Click( wxCommandEvent& event );
     void WxButton2Click( wxCommandEvent& event );
     void WxButton3Click( wxCommandEvent& event );
     void WxButton4Click( wxCommandEvent& event );
-    void AppendList( const char * );
+    void AppendList( const char* );
     bool IsSubmit();
     wxString GetDataString( int );
     int GetDataSize();
-    wxStaticText *WxStaticText2;
-    wxStaticText *WxStaticText1;
-    wxButton *WxButton4;
-    wxButton *WxButton3;
-    wxButton *WxButton2;
-    wxButton *WxButton1;
-    wxListBox *WxListBox2;
-    wxListBox *WxListBox1;
+    wxStaticText* WxStaticText2;
+    wxStaticText* WxStaticText1;
+    wxButton* WxButton4;
+    wxButton* WxButton3;
+    wxButton* WxButton2;
+    wxButton* WxButton1;
+    wxListBox* WxListBox2;
+    wxListBox* WxListBox1;
     bool submit;
 
 private:

@@ -55,8 +55,8 @@ namespace util
 class VE_SCENEGRAPH_UTILS_EXPORTS ToggleNodeVisitor : public osg::NodeVisitor
 {
 public:
-    ToggleNodeVisitor( osg::Node* osg_node, bool state, 
-        const std::string& nodeID );
+    ToggleNodeVisitor( osg::Node* osg_node, bool state,
+                       const std::string& nodeID );
     virtual ~ToggleNodeVisitor();
 
     virtual void apply( osg::Group& node );

@@ -88,36 +88,36 @@ public:
     const ves::open::xml::CommandPtr GetXplorerData( const std::string& commandName );
 
     virtual void UpdateNetwork(
-        const char * network
+        const char* network
     );
 
     virtual void UpdateModuleUI(
         CORBA::Long module_id,
-        const char * msg
+        const char* msg
     );
 
     virtual void UpdateModuleResult(
         CORBA::Long module_id,
-        const char * msg
+        const char* msg
     );
 
     virtual void UpdateLinkContent(
         CORBA::Long id,
-        const char * msg
+        const char* msg
     );
 
     virtual void Raise(
-        const char * notification
+        const char* notification
     );
 
     virtual
     void SetXplorerData(
-        const char * xplorerData
+        const char* xplorerData
     );
-    
+
     virtual
-    void SetCommand( const char * openXMLCommand );
-    
+    void SetCommand( const char* openXMLCommand );
+
 
     std::map<int, std::string> m_idToModelName;
     std::map<std::string, ves::open::xml::XMLObjectPtr > m_objectToModel;

@@ -45,8 +45,8 @@ using namespace ves::xplorer::scenegraph::util;
 ///This visitor was inspired by the TogglePluginVisitor. It may be necessary to
 ///grab some of the more complex features of the visitor in the future.
 ////////////////////////////////////////////////////////////////////////////////
-ToggleNodeVisitor::ToggleNodeVisitor( osg::Node* osg_node, bool toggle, 
-    const std::string& nodeID )
+ToggleNodeVisitor::ToggleNodeVisitor( osg::Node* osg_node, bool toggle,
+                                      const std::string& nodeID )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
     mToggle( toggle ),
@@ -74,7 +74,7 @@ ToggleNodeVisitor::~ToggleNodeVisitor()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ToggleNodeVisitor::apply( osg::Group& node )
-{    
+{
     //Lets see if the node is a plugin base
     osg::Node::DescriptionList descriptorsList;
     descriptorsList = node.getDescriptions();

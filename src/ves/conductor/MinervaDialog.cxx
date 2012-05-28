@@ -72,14 +72,15 @@
 
 const wxString WINDOW_TITLE( wxT( "Minerva Properties" ) );
 
-namespace Detail {
+namespace Detail
+{
 
 template<class T>
-inline ves::open::xml::DataValuePairPtr MakeDVP ( const std::string& name, T value )
+inline ves::open::xml::DataValuePairPtr MakeDVP( const std::string& name, T value )
 {
-  ves::open::xml::DataValuePairPtr dvp ( new ves::open::xml::DataValuePair );
-  dvp->SetData ( name, value );
-  return dvp;
+    ves::open::xml::DataValuePairPtr dvp( new ves::open::xml::DataValuePair );
+    dvp->SetData( name, value );
+    return dvp;
 }
 
 }
@@ -93,14 +94,14 @@ inline ves::open::xml::DataValuePairPtr MakeDVP ( const std::string& name, T val
 
 enum
 {
-  MINERVA_DIALOG_ADD_ELEVATION_WMS_LAYER,
-  MINERVA_DIALOG_ADD_ELEVATION_LAYER_FILE_SYSTEM,
-  MINERVA_DIALOG_REMOVE_ELEVATION_LAYER,
-  MINERVA_DIALOG_ADD_RASTER_WMS_LAYER,
-  MINERVA_DIALOG_ADD_RASTER_LAYER_FILE_SYSTEM,
-  MINERVA_DIALOG_REMOVE_RASTER_LAYER,
-  MINERVA_DIALOG_ELEVATION_LAYER_LIST,
-  MINERVA_DIALOG_RASTER_LAYER_LIST
+    MINERVA_DIALOG_ADD_ELEVATION_WMS_LAYER,
+    MINERVA_DIALOG_ADD_ELEVATION_LAYER_FILE_SYSTEM,
+    MINERVA_DIALOG_REMOVE_ELEVATION_LAYER,
+    MINERVA_DIALOG_ADD_RASTER_WMS_LAYER,
+    MINERVA_DIALOG_ADD_RASTER_LAYER_FILE_SYSTEM,
+    MINERVA_DIALOG_REMOVE_RASTER_LAYER,
+    MINERVA_DIALOG_ELEVATION_LAYER_LIST,
+    MINERVA_DIALOG_RASTER_LAYER_LIST
 };
 
 
@@ -123,8 +124,8 @@ END_EVENT_TABLE()
 
 
 ///////////////////////////////////////////////////////////////////////////////
-MinervaDialog::MinervaDialog( wxWindow *parent, wxWindowID id )
-    : 
+MinervaDialog::MinervaDialog( wxWindow* parent, wxWindowID id )
+    :
     BaseClass( parent, id, WINDOW_TITLE, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
     _elevationLayersList( 0x0 ),
     _addElevationLayerButton( 0x0 ),
@@ -137,14 +138,14 @@ MinervaDialog::MinervaDialog( wxWindow *parent, wxWindowID id )
     _sdbSizer1Cancel( 0x0 ),
     _elevationLayers(),
     _rasterLayers(),
-    _rasterGroupCommand ( new ves::open::xml::Command ),
-    _elevationGroupCommand ( new ves::open::xml::Command )
+    _rasterGroupCommand( new ves::open::xml::Command ),
+    _elevationGroupCommand( new ves::open::xml::Command )
 {
-    _rasterGroupCommand->SetCommandName ( ves::util::commands::ADD_RASTER_GROUP );
-    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand ( ves::util::commands::ADD_RASTER_GROUP, _rasterGroupCommand );
+    _rasterGroupCommand->SetCommandName( ves::util::commands::ADD_RASTER_GROUP );
+    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand( ves::util::commands::ADD_RASTER_GROUP, _rasterGroupCommand );
 
-    _elevationGroupCommand->SetCommandName ( ves::util::commands::ADD_ELEVATION_GROUP );
-    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand ( ves::util::commands::ADD_ELEVATION_GROUP, _elevationGroupCommand );
+    _elevationGroupCommand->SetCommandName( ves::util::commands::ADD_ELEVATION_GROUP );
+    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand( ves::util::commands::ADD_ELEVATION_GROUP, _elevationGroupCommand );
 
     SetSizeHints( wxDefaultSize, wxDefaultSize );
 
@@ -154,53 +155,53 @@ MinervaDialog::MinervaDialog( wxWindow *parent, wxWindowID id )
     // Create interface for elevation layers.
     {
         wxStaticBoxSizer* elevationSizer;
-        elevationSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Elevation") ), wxVERTICAL );
+        elevationSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT( "Elevation" ) ), wxVERTICAL );
 
-        _elevationLayersList = new wxListBox( this, MINERVA_DIALOG_ELEVATION_LAYER_LIST, wxDefaultPosition, wxSize( 300, 200 ), 0, NULL, 0 ); 
+        _elevationLayersList = new wxListBox( this, MINERVA_DIALOG_ELEVATION_LAYER_LIST, wxDefaultPosition, wxSize( 300, 200 ), 0, NULL, 0 );
         elevationSizer->Add( _elevationLayersList, 0, wxALL | wxEXPAND, 5 );
 
         //wxGridSizer* buttonSizer;
         //buttonSizer = new wxGridSizer( 3, 2, 0, 0 );
         wxBoxSizer* buttonSizer = new wxBoxSizer( wxHORIZONTAL );
 
-        wxButton* addFileSystem = new wxButton( this, MINERVA_DIALOG_ADD_ELEVATION_LAYER_FILE_SYSTEM, wxT("Add file..."), wxDefaultPosition, wxDefaultSize, 0 );
+        wxButton* addFileSystem = new wxButton( this, MINERVA_DIALOG_ADD_ELEVATION_LAYER_FILE_SYSTEM, wxT( "Add file..." ), wxDefaultPosition, wxDefaultSize, 0 );
         buttonSizer->Add( addFileSystem, 0, wxALL, 5 );
 
-        _addElevationLayerButton = new wxButton( this, MINERVA_DIALOG_ADD_ELEVATION_WMS_LAYER, wxT("Add From WMS..."), wxDefaultPosition, wxDefaultSize, 0 );
+        _addElevationLayerButton = new wxButton( this, MINERVA_DIALOG_ADD_ELEVATION_WMS_LAYER, wxT( "Add From WMS..." ), wxDefaultPosition, wxDefaultSize, 0 );
         buttonSizer->Add( _addElevationLayerButton, 0, wxALL, 5 );
 
-        _removeElevationLayerButton = new wxButton( this, MINERVA_DIALOG_REMOVE_ELEVATION_LAYER, wxT("Remove"), wxDefaultPosition, wxDefaultSize, 0 );
+        _removeElevationLayerButton = new wxButton( this, MINERVA_DIALOG_REMOVE_ELEVATION_LAYER, wxT( "Remove" ), wxDefaultPosition, wxDefaultSize, 0 );
         buttonSizer->Add( _removeElevationLayerButton, 0, wxALL, 5 );
 
         elevationSizer->Add( buttonSizer, 0, wxEXPAND, 5 );
 
-        outerSizer->Add( elevationSizer, 0, wxEXPAND|wxALL|wxFIXED_MINSIZE| wxADJUST_MINSIZE, 5 );
+        outerSizer->Add( elevationSizer, 0, wxEXPAND | wxALL | wxFIXED_MINSIZE | wxADJUST_MINSIZE, 5 );
     }
 
     // Create interface for raster layers.
     {
         wxStaticBoxSizer* rasterSizer;
-        rasterSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Raster") ), wxVERTICAL );
+        rasterSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT( "Raster" ) ), wxVERTICAL );
 
-        _rasterLayersList = new wxListBox( this, MINERVA_DIALOG_RASTER_LAYER_LIST, wxDefaultPosition, wxSize( 300, 200 ), 0, NULL, 0 ); 
+        _rasterLayersList = new wxListBox( this, MINERVA_DIALOG_RASTER_LAYER_LIST, wxDefaultPosition, wxSize( 300, 200 ), 0, NULL, 0 );
         rasterSizer->Add( _rasterLayersList, 0, wxALL | wxEXPAND, 5 );
 
         //wxGridSizer* buttonSizer;
         //buttonSizer = new wxGridSizer( 3, 2, 0, 0 );
         wxBoxSizer* buttonSizer = new wxBoxSizer( wxHORIZONTAL );
-        
-        wxButton* addFileSystem = new wxButton( this, MINERVA_DIALOG_ADD_RASTER_LAYER_FILE_SYSTEM, wxT("Add file..."), wxDefaultPosition, wxDefaultSize, 0 );
+
+        wxButton* addFileSystem = new wxButton( this, MINERVA_DIALOG_ADD_RASTER_LAYER_FILE_SYSTEM, wxT( "Add file..." ), wxDefaultPosition, wxDefaultSize, 0 );
         buttonSizer->Add( addFileSystem, 0, wxALL, 5 );
 
-        _addRasterLayerButton = new wxButton( this, MINERVA_DIALOG_ADD_RASTER_WMS_LAYER, wxT("Add From WMS..."), wxDefaultPosition, wxDefaultSize, 0 );
+        _addRasterLayerButton = new wxButton( this, MINERVA_DIALOG_ADD_RASTER_WMS_LAYER, wxT( "Add From WMS..." ), wxDefaultPosition, wxDefaultSize, 0 );
         buttonSizer->Add( _addRasterLayerButton, 0, wxALL, 5 );
 
-        _removeRasterLayerButton = new wxButton( this, MINERVA_DIALOG_REMOVE_RASTER_LAYER, wxT("Remove"), wxDefaultPosition, wxDefaultSize, 0 );
+        _removeRasterLayerButton = new wxButton( this, MINERVA_DIALOG_REMOVE_RASTER_LAYER, wxT( "Remove" ), wxDefaultPosition, wxDefaultSize, 0 );
         buttonSizer->Add( _removeRasterLayerButton, 0, wxALL, 5 );
 
         rasterSizer->Add( buttonSizer, 0, wxEXPAND, 5 );
 
-        outerSizer->Add( rasterSizer, 0, wxEXPAND|wxALL|wxFIXED_MINSIZE| wxADJUST_MINSIZE, 5 );
+        outerSizer->Add( rasterSizer, 0, wxEXPAND | wxALL | wxFIXED_MINSIZE | wxADJUST_MINSIZE, 5 );
     }
 
     _sdbSizer1 = new wxStdDialogButtonSizer();
@@ -209,8 +210,8 @@ MinervaDialog::MinervaDialog( wxWindow *parent, wxWindowID id )
     _sdbSizer1Cancel = new wxButton( this, wxID_CANCEL );
     _sdbSizer1->AddButton( _sdbSizer1Cancel );
     _sdbSizer1->Realize();
-    
-    outerSizer->Add( _sdbSizer1, 0, wxEXPAND|wxALL, 5 );
+
+    outerSizer->Add( _sdbSizer1, 0, wxEXPAND | wxALL, 5 );
 
     SetMinSize( wxSize( 350, 650 ) );
     SetSizer( outerSizer );
@@ -226,11 +227,11 @@ MinervaDialog::~MinervaDialog()
 ///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::AddDefaultLayers()
 {
-  //const std::string server( "http://onearth.jpl.nasa.gov/wms.cgi" );
-  //MinervaDialog::_addLayer( ves::util::commands::ADD_RASTER_LAYER, server, "BMNG,global_mosaic", "Jul,visual", "image/jpeg", _rasterLayersList, _rasterLayers, _rasterGroupCommand );
+    //const std::string server( "http://onearth.jpl.nasa.gov/wms.cgi" );
+    //MinervaDialog::_addLayer( ves::util::commands::ADD_RASTER_LAYER, server, "BMNG,global_mosaic", "Jul,visual", "image/jpeg", _rasterLayersList, _rasterLayers, _rasterGroupCommand );
 
-  //const std::string server( "http://hypercube.telascience.org/cgi-bin/landsat7" );
-  //MinervaDialog::_addLayer( ves::util::commands::ADD_RASTER_LAYER, server, "landsat7", "", "image/jpeg", _rasterLayersList, _rasterLayers, _rasterGroupCommand );
+    //const std::string server( "http://hypercube.telascience.org/cgi-bin/landsat7" );
+    //MinervaDialog::_addLayer( ves::util::commands::ADD_RASTER_LAYER, server, "landsat7", "", "image/jpeg", _rasterLayersList, _rasterLayers, _rasterGroupCommand );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::AddElevationLayerWMS( wxCommandEvent& WXUNUSED( event ) )
@@ -248,7 +249,7 @@ void MinervaDialog::AddElevationLayerWMS( wxCommandEvent& WXUNUSED( event ) )
 ///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::AddElevationLayerFileSystem( wxCommandEvent& WXUNUSED( event ) )
 {
-    wxFileDialog dialog( this, _("Open"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_MULTIPLE );
+    wxFileDialog dialog( this, _( "Open" ), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_MULTIPLE );
     if( wxID_OK == dialog.ShowModal() )
     {
         wxArrayString paths;
@@ -260,9 +261,9 @@ void MinervaDialog::AddElevationLayerFileSystem( wxCommandEvent& WXUNUSED( event
             wxString vegFileNamePath( vegFileName.GetFullPath() );
             vegFileNamePath.Replace( _( "\\" ), _( "/" ), true );
 
-            MinervaDialog::_addLayerFileSystem( 
-                ves::util::commands::ADD_ELEVATION_LAYER, 
-                ConvertUnicode( vegFileNamePath.c_str() ), 
+            MinervaDialog::_addLayerFileSystem(
+                ves::util::commands::ADD_ELEVATION_LAYER,
+                ConvertUnicode( vegFileNamePath.c_str() ),
                 _elevationLayersList, _elevationLayers, _elevationGroupCommand );
         }
     }
@@ -282,14 +283,14 @@ void MinervaDialog::AddRasterLayerWMS( wxCommandEvent& WXUNUSED( event ) )
         const std::string layers( dialog.layers() );
         const std::string styles( dialog.styles() );
         const std::string format( dialog.format() );
-        MinervaDialog::_addLayer( 
-          ves::util::commands::ADD_RASTER_LAYER, server, layers, styles, format, _rasterLayersList, _rasterLayers, _rasterGroupCommand );
+        MinervaDialog::_addLayer(
+            ves::util::commands::ADD_RASTER_LAYER, server, layers, styles, format, _rasterLayersList, _rasterLayers, _rasterGroupCommand );
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::AddRasterLayerFileSystem( wxCommandEvent& WXUNUSED( event ) )
 {
-    wxFileDialog dialog( this, _("Open"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_MULTIPLE );
+    wxFileDialog dialog( this, _( "Open" ), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_MULTIPLE );
     if( wxID_OK == dialog.ShowModal() )
     {
         wxArrayString paths;
@@ -300,10 +301,10 @@ void MinervaDialog::AddRasterLayerFileSystem( wxCommandEvent& WXUNUSED( event ) 
             vegFileName.MakeRelativeTo( ::wxGetCwd() );
             wxString vegFileNamePath( vegFileName.GetFullPath() );
             vegFileNamePath.Replace( _( "\\" ), _( "/" ), true );
-            
-            MinervaDialog::_addLayerFileSystem( 
-                ves::util::commands::ADD_RASTER_LAYER,  
-                ConvertUnicode( vegFileNamePath.c_str() ), 
+
+            MinervaDialog::_addLayerFileSystem(
+                ves::util::commands::ADD_RASTER_LAYER,
+                ConvertUnicode( vegFileNamePath.c_str() ),
                 _rasterLayersList, _rasterLayers, _rasterGroupCommand );
         }
     }
@@ -314,12 +315,12 @@ void MinervaDialog::RemoveRasterLayer( wxCommandEvent& WXUNUSED( event ) )
     MinervaDialog::_removeLayer( ves::util::commands::REMOVE_RASTER_LAYER, _rasterLayersList, _rasterLayers, _rasterGroupCommand );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::_addLayerFileSystem( 
-  const std::string& commandName, 
-  const std::string& filename, 
-  wxListBox *layersList, 
-  LayerIds &guids,
-  ves::open::xml::CommandPtr groupCommand )
+void MinervaDialog::_addLayerFileSystem(
+    const std::string& commandName,
+    const std::string& filename,
+    wxListBox* layersList,
+    LayerIds& guids,
+    ves::open::xml::CommandPtr groupCommand )
 {
     ves::open::xml::CommandPtr command( new ves::open::xml::Command );
     command->SetCommandName( commandName );
@@ -345,18 +346,18 @@ void MinervaDialog::_addLayerFileSystem(
     layersList->Append( wxString( filename.c_str(), wxConvUTF8 ) );
     guids.push_back( guid.toString() );
 
-    groupCommand->AddDataValuePair ( Detail::MakeDVP ( guid.toString(), command ) );
+    groupCommand->AddDataValuePair( Detail::MakeDVP( guid.toString(), command ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::_addLayer( 
-  const std::string& commandName, 
-  const std::string& server, 
-  const std::string& layers, 
-  const std::string& styles, 
-  const std::string& format,
-  wxListBox *layersList, 
-  LayerIds &guids,
-  ves::open::xml::CommandPtr groupCommand )
+void MinervaDialog::_addLayer(
+    const std::string& commandName,
+    const std::string& server,
+    const std::string& layers,
+    const std::string& styles,
+    const std::string& format,
+    wxListBox* layersList,
+    LayerIds& guids,
+    ves::open::xml::CommandPtr groupCommand )
 {
     // Make the command for adding a raster layer.
     ves::open::xml::CommandPtr command( new ves::open::xml::Command );
@@ -395,14 +396,14 @@ void MinervaDialog::_addLayer(
     layersList->Append( wxString( server.c_str(), wxConvUTF8 ) );
     guids.push_back( guid.toString() );
 
-    groupCommand->AddDataValuePair ( Detail::MakeDVP ( guid.toString(), command ) );
+    groupCommand->AddDataValuePair( Detail::MakeDVP( guid.toString(), command ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::_removeLayer( 
-  const std::string& commandName, 
-  wxListBox *layersList, 
-  LayerIds &guids,
-  ves::open::xml::CommandPtr groupCommand )
+void MinervaDialog::_removeLayer(
+    const std::string& commandName,
+    wxListBox* layersList,
+    LayerIds& guids,
+    ves::open::xml::CommandPtr groupCommand )
 {
     wxArrayInt selectedIndices;
     layersList->GetSelections( selectedIndices );
@@ -424,69 +425,69 @@ void MinervaDialog::_removeLayer(
 
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 
-        groupCommand->RemoveDataValuePair ( guid );
+        groupCommand->RemoveDataValuePair( guid );
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::InitalizeFromCommands( ves::open::xml::CommandPtr elevationGroupCommand, ves::open::xml::CommandPtr rasterGroupCommand )
 {
-  if ( elevationGroupCommand )
-  {
-    _elevationGroupCommand = elevationGroupCommand;
-    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand ( _elevationGroupCommand->GetCommandName(), _elevationGroupCommand );
-    MinervaDialog::_initializeFromCommand ( elevationGroupCommand, _elevationLayersList, _elevationLayers );
-  }
+    if( elevationGroupCommand )
+    {
+        _elevationGroupCommand = elevationGroupCommand;
+        ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand( _elevationGroupCommand->GetCommandName(), _elevationGroupCommand );
+        MinervaDialog::_initializeFromCommand( elevationGroupCommand, _elevationLayersList, _elevationLayers );
+    }
 
-  if ( rasterGroupCommand )
-  {
-    _rasterGroupCommand = rasterGroupCommand;
-    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand ( _rasterGroupCommand->GetCommandName(), _rasterGroupCommand );
-    MinervaDialog::_initializeFromCommand ( rasterGroupCommand, _rasterLayersList, _rasterLayers );
-  }
+    if( rasterGroupCommand )
+    {
+        _rasterGroupCommand = rasterGroupCommand;
+        ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand( _rasterGroupCommand->GetCommandName(), _rasterGroupCommand );
+        MinervaDialog::_initializeFromCommand( rasterGroupCommand, _rasterLayersList, _rasterLayers );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MinervaDialog::_initializeFromCommand (
-      ves::open::xml::CommandPtr groupCommand,
-      wxListBox *layersList, 
-      LayerIds &guids )
+void MinervaDialog::_initializeFromCommand(
+    ves::open::xml::CommandPtr groupCommand,
+    wxListBox* layersList,
+    LayerIds& guids )
 {
-  if ( groupCommand )
-  {
-    const std::size_t numLayers ( groupCommand->GetNumberOfDataValuePairs() );
-    for ( std::size_t i = 0; i < numLayers; ++i )
+    if( groupCommand )
     {
-      ves::open::xml::DataValuePairPtr dvp ( groupCommand->GetDataValuePair ( i ) );
-      if ( dvp )
-      {
-        ves::open::xml::CommandPtr commandForLayer ( boost::dynamic_pointer_cast<ves::open::xml::Command> ( dvp->GetDataXMLObject() ) );
-        if ( commandForLayer )
+        const std::size_t numLayers( groupCommand->GetNumberOfDataValuePairs() );
+        for( std::size_t i = 0; i < numLayers; ++i )
         {
-          ves::open::xml::DataValuePairPtr filenameDVP ( commandForLayer->GetDataValuePair ( ves::util::names::FILENAME ) );
-          ves::open::xml::DataValuePairPtr serverDVP ( commandForLayer->GetDataValuePair ( ves::util::names::SERVER_URL ) );
+            ves::open::xml::DataValuePairPtr dvp( groupCommand->GetDataValuePair( i ) );
+            if( dvp )
+            {
+                ves::open::xml::CommandPtr commandForLayer( boost::dynamic_pointer_cast<ves::open::xml::Command> ( dvp->GetDataXMLObject() ) );
+                if( commandForLayer )
+                {
+                    ves::open::xml::DataValuePairPtr filenameDVP( commandForLayer->GetDataValuePair( ves::util::names::FILENAME ) );
+                    ves::open::xml::DataValuePairPtr serverDVP( commandForLayer->GetDataValuePair( ves::util::names::SERVER_URL ) );
 
-          std::string name ( "unnamed" );
-          if ( filenameDVP )
-          {
-            filenameDVP->GetData ( name );
-          }
-          else if ( serverDVP )
-          {
-            serverDVP->GetData ( name );
-          }
+                    std::string name( "unnamed" );
+                    if( filenameDVP )
+                    {
+                        filenameDVP->GetData( name );
+                    }
+                    else if( serverDVP )
+                    {
+                        serverDVP->GetData( name );
+                    }
 
-          ves::open::xml::DataValuePairPtr guidDVP ( commandForLayer->GetDataValuePair ( ves::util::names::UNIQUE_ID ) );
-          if ( guidDVP )
-          {
-            std::string guid;
-            guidDVP->GetData ( guid );
+                    ves::open::xml::DataValuePairPtr guidDVP( commandForLayer->GetDataValuePair( ves::util::names::UNIQUE_ID ) );
+                    if( guidDVP )
+                    {
+                        std::string guid;
+                        guidDVP->GetData( guid );
 
-            layersList->Append( wxString( name.c_str(), wxConvUTF8 ) );
-            guids.push_back ( guid );
-          }
+                        layersList->Append( wxString( name.c_str(), wxConvUTF8 ) );
+                        guids.push_back( guid );
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void MinervaDialog::NavigateToElevationLayer( wxCommandEvent& WXUNUSED( event ) )

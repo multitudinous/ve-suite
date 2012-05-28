@@ -162,16 +162,16 @@ void cfdStreamers::Update()
     if( seedPoints == NULL )
     {
         vprDEBUG( vesDBG, 0 ) << "|\tcfdStreamers::Update : No Cursor Type Selected"
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         return;
     }
 
     vprDEBUG( vesDBG, 0 ) << "|\tcfdStreamers::Update : "
-        << " Prop Time : " << propagationTime
-        << " Integration Step Length : " << integrationStepLength
-        << " Integration Direction : " << integrationDirection
-        << std::endl << vprDEBUG_FLUSH;
+                          << " Prop Time : " << propagationTime
+                          << " Integration Step Length : " << integrationStepLength
+                          << " Integration Direction : " << integrationDirection
+                          << std::endl << vprDEBUG_FLUSH;
 
     //tubeFilter->SetRadius( lineDiameter );
     //tubeFilter->SetNumberOfSides( 3 );
@@ -188,12 +188,12 @@ void cfdStreamers::Update()
     }
 
     vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
-    c2p->SetInput(  GetActiveDataSet()->GetDataSet() );
-    
+    c2p->SetInput( GetActiveDataSet()->GetDataSet() );
+
     streamTracer->SetInputConnection( c2p->GetOutputPort() );
     //overall length of streamline
     streamTracer->SetMaximumPropagation( propagationTime );
-    
+
     // typically < 1
     streamTracer->SetMaximumIntegrationStep( integrationStepLength );
 
@@ -224,13 +224,13 @@ void cfdStreamers::Update()
     streamTracer->SetIntegrator( integ );
     streamTracer->SetComputeVorticity( true );
     streamTracer->SetInputArrayToProcess( 0, 0, 0,
-       vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-       GetActiveDataSet()->GetActiveVectorName().c_str() );
+                                          vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                          GetActiveDataSet()->GetActiveVectorName().c_str() );
 
     vtkCleanPolyData* cleanPD = vtkCleanPolyData::New();
     cleanPD->PointMergingOn();
     cleanPD->SetInputConnection( streamTracer->GetOutputPort() );
-    
+
     vtkRibbonFilter* ribbon = 0;
     if( m_streamRibbons )
     {
@@ -239,10 +239,10 @@ void cfdStreamers::Update()
         ribbon->SetWidth( arrowDiameter );
         ribbon->SetInputConnection( cleanPD->GetOutputPort() );
         ribbon->SetInputArrayToProcess( 0, 0, 0,
-                                       vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-                                       "Vorticity" );
+                                        vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                        "Vorticity" );
     }
-        
+
     if( streamArrows )
     {
         // Stream Points Section
@@ -259,7 +259,7 @@ void cfdStreamers::Update()
             writer->Write();
             writer->Delete();
         }*/
-        
+
         vtkMaskPoints* ptmask = vtkMaskPoints::New();
         ptmask->RandomModeOff();
         ptmask->SetInputConnection( cleanPD->GetOutputPort() );
@@ -279,16 +279,16 @@ void cfdStreamers::Update()
         cones->SetVectorModeToUseVector();
         //cones->GetOutput()->ReleaseDataFlagOn();
         cones->SetInputArrayToProcess( 1, 0, 0,
-                                             vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-                                             GetActiveDataSet()->GetActiveVectorName().c_str() );
+                                       vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                       GetActiveDataSet()->GetActiveVectorName().c_str() );
         cones->SetInputArrayToProcess( 0, 0, 0,
-                                      vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-                                      GetActiveDataSet()->GetActiveScalarName().c_str() );
+                                       vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                       GetActiveDataSet()->GetActiveScalarName().c_str() );
         cones->SetInputArrayToProcess( 3, 0, 0,
-                                      vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-                                      GetActiveDataSet()->GetActiveScalarName().c_str() );
+                                       vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                       GetActiveDataSet()->GetActiveScalarName().c_str() );
         ptmask->Delete();
-        
+
         normals = vtkPolyDataNormals::New();
         normals->SetInputConnection( cones->GetOutputPort() );
         normals->SplittingOff();
@@ -355,9 +355,9 @@ void cfdStreamers::Update()
         overallNormals->ComputeCellNormalsOff();
         overallNormals->NonManifoldTraversalOff();
         //overallNormals->Update();
-        
+
         mapper->SetInputConnection( overallNormals->GetOutputPort() );
-        
+
         // Stream Points Section
         cone->Delete();
         cones->Delete();
@@ -391,10 +391,10 @@ void cfdStreamers::Update()
     mapper->SetScalarModeToUsePointFieldData();
     mapper->UseLookupTableScalarRangeOn();
     mapper->SelectColorArray( GetActiveDataSet()->
-        GetActiveScalarName().c_str() );
+                              GetActiveScalarName().c_str() );
 
     if( !m_gpuTools )
-    {    
+    {
         vtkActor* temp = vtkActor::New();
         temp->SetMapper( mapper );
         temp->GetProperty()->SetSpecularPower( 20.0f );
@@ -402,7 +402,7 @@ void cfdStreamers::Update()
         //test to see if there is enough memory, if not, filters are deleted
         try
         {
-            osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = 
+            osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode =
                 new ves::xplorer::scenegraph::Geode();
             tempGeode->TranslateToGeode( temp );
             //tempGeode->StreamLineToGeode( temp );
@@ -417,7 +417,7 @@ void cfdStreamers::Update()
             mapper->Delete();
             mapper = vtkPolyDataMapper::New();
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdStreamers "
-                << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
         }
 
         temp->Delete();
@@ -425,19 +425,19 @@ void cfdStreamers::Update()
     }
     // When gpu rendering is on
     else
-    {    
+    {
         try
         {
             OSGStreamlineStage* tempStage = new OSGStreamlineStage();
             tempStage->SetParticleDiameter( int( particleDiameter ) );
-            //This is a multiplier to create extra points using 
+            //This is a multiplier to create extra points using
             //linear interplation to smooth out the animation
-            int mult=10;  
-            
-            osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode1 = 
-                tempStage->createInstanced( cleanPD->GetOutput(), mult, 
-                GetActiveDataSet()->GetActiveScalarName().c_str(),
-                GetActiveDataSet()->GetActiveVectorName().c_str() );
+            int mult = 10;
+
+            osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode1 =
+                tempStage->createInstanced( cleanPD->GetOutput(), mult,
+                                            GetActiveDataSet()->GetActiveScalarName().c_str(),
+                                            GetActiveDataSet()->GetActiveVectorName().c_str() );
             delete tempStage;
 
             size_t numdraw = tempGeode1->getNumDrawables();
@@ -446,7 +446,7 @@ void cfdStreamers::Update()
                 osg::ref_ptr< osg::Uniform > warpScaleUniform =
                     tempGeode1->getDrawable( k )->
                     getStateSet()->getUniform( "scalarMinMax" );
-                double scalarRange[ 2 ] = {0,0};
+                double scalarRange[ 2 ] = {0, 0};
                 GetActiveDataSet()->GetUserRange( scalarRange );
                 osg::Vec2 opacityValVec;
                 warpScaleUniform->get( opacityValVec );
@@ -464,9 +464,9 @@ void cfdStreamers::Update()
             mapper->Delete();
             mapper = vtkPolyDataMapper::New();
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdStreamers "
-                << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
         }
-        c2p->Delete(); 
+        c2p->Delete();
     }
     cleanPD->Delete();
     if( ribbon )
@@ -512,34 +512,34 @@ void cfdStreamers::UpdateCommand()
 
     //Extract the specific commands from the overall command
     ves::open::xml::DataValuePairPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>( activeModelDVP->GetDataXMLObject() );
 
     //Extract the integration direction
     activeModelDVP = objectCommand->GetDataValuePair( "Integration Direction" );
     std::string intDirection;
     activeModelDVP->GetData( intDirection );
-    
+
     vprDEBUG( vesDBG, 0 ) << "|\tStreamline settings"
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     if( !intDirection.compare( "backward" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tBACKWARD_INTEGRATION"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         SetIntegrationDirection( 2 );
     }
     else if( !intDirection.compare( "forward" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tFORWARD_INTEGRATION"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         SetIntegrationDirection( 1 );
     }
     else if( !intDirection.compare( "both directions" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tTWO_DIRECTION_INTEGRATION"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         SetIntegrationDirection( 0 );
     }
@@ -553,15 +553,15 @@ void cfdStreamers::UpdateCommand()
     unsigned int streamRibbons;
     activeModelDVP->GetData( streamRibbons );
     vprDEBUG( vesDBG, 0 ) << "|\t\tUse Stream Ribbons\t" << streamRibbons
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
     m_streamRibbons = streamRibbons;
-    
+
     /////////////////////
     activeModelDVP = objectCommand->GetDataValuePair( "Use Stream Arrows" );
     unsigned int opacity;
     activeModelDVP->GetData( opacity );
     vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_ARROW\t" << opacity
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
     streamArrows = opacity;
 
     /////////////////////
@@ -569,7 +569,7 @@ void cfdStreamers::UpdateCommand()
     double contourLOD;
     activeModelDVP->GetData( contourLOD );
     vprDEBUG( vesDBG, 0 ) << "|\t\tCHANGE_INT_STEP_LENGTH\t"
-        << contourLOD << std::endl << vprDEBUG_FLUSH;
+                          << contourLOD << std::endl << vprDEBUG_FLUSH;
     SetIntegrationStepLength( static_cast< int >( contourLOD ) );
 
     /////////////////////
@@ -577,8 +577,8 @@ void cfdStreamers::UpdateCommand()
     double tempPropagationTime = 1.0f;
     activeModelDVP->GetData( tempPropagationTime );
     vprDEBUG( vesDBG, 0 ) << "|\t\tCHANGE_PROPAGATION_TIME\t"
-        << tempPropagationTime
-        << std::endl << vprDEBUG_FLUSH;
+                          << tempPropagationTime
+                          << std::endl << vprDEBUG_FLUSH;
     SetPropagationTime( tempPropagationTime );
 
     /////////////////////
@@ -586,7 +586,7 @@ void cfdStreamers::UpdateCommand()
     double streamDiamter = 1.0f;
     activeModelDVP->GetData( streamDiamter );
     vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_DIAMETER\t"
-        << streamDiamter << std::endl << vprDEBUG_FLUSH;
+                          << streamDiamter << std::endl << vprDEBUG_FLUSH;
     // diameter is obtained from gui, -100 < vectorScale < 100
     // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
     // convert range to -2.5 < x < 2.5, and compute the exponent...
@@ -600,15 +600,15 @@ void cfdStreamers::UpdateCommand()
     particleDiameter = lineDiameter;
 
     vprDEBUG( vesDBG, 1 ) << "|\t\tNew Streamline Diameter : "
-        << lineDiameter << std::endl << vprDEBUG_FLUSH;
+                          << lineDiameter << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
-    activeModelDVP = 
+    activeModelDVP =
         objectCommand->GetDataValuePair( "Sphere/Arrow/Particle Size" );
     activeModelDVP->GetData( arrowDiameter );
     arrowDiameter = localLineDiameter * 60.0f * arrowDiameter;
     vprDEBUG( vesDBG, 1 ) << "|\t\tNew Arrow Diameter : "
-        << arrowDiameter << std::endl << vprDEBUG_FLUSH;
+                          << arrowDiameter << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
     activeModelDVP = objectCommand->GetDataValuePair( "Use Last Seed Pt" );
@@ -648,7 +648,7 @@ void cfdStreamers::UpdateCommand()
         activeModelDVP = objectCommand->GetDataValuePair( "Num_Z_Points" );
         activeModelDVP->GetData( zValue );
         vprDEBUG( vesDBG, 0 ) << "|\t\tZ Points : " << zValue << std::endl << vprDEBUG_FLUSH;
-    }    
+    }
 
     /////////////////////
     activeModelDVP = objectCommand->GetDataValuePair( "GPU Tools" );
@@ -661,23 +661,23 @@ void cfdStreamers::UpdateCommand()
     else
     {
         m_gpuTools = false;
-    }    
+    }
 
     //Extract the surface flag
     activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
     bool hasSurface = false;
     if( activeModelDVP )
-	{
+    {
         hasSurface = true;
-    	activeModelDVP->GetData( m_surfDataset );
-	}
-	/////////////////////
+        activeModelDVP->GetData( m_surfDataset );
+    }
+    /////////////////////
     if( !hasSurface )
     {
         CreateSeedPoints();
     }
     else
-    { 
+    {
         CreateArbSurface();
     }
 
@@ -741,30 +741,30 @@ void cfdStreamers::CreateSeedPoints()
 }
 //////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::CreateArbSurface()
-{   
-    //First reset seed points so that if the polydata call fails we do not 
+{
+    //First reset seed points so that if the polydata call fails we do not
     //pass along bad seed point information
     if( seedPoints )
     {
         seedPoints->Delete();
         seedPoints = 0;
     }
-    
+
     //Need to set the active datasetname and get the position of the dataset
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
     // set the dataset as the appropriate dastaset type
     // (and the active dataset as well)
-    DataSet* surfDataset = activeModel->GetCfdDataSet( 
-        activeModel->GetIndexOfDataSet( m_surfDataset ) );
+    DataSet* surfDataset = activeModel->GetCfdDataSet(
+                               activeModel->GetIndexOfDataSet( m_surfDataset ) );
     vtkPolyData* pd = surfDataset->GetPolyData();
-    
+
     if( !pd )
     {
         std::cerr << "ERROR: Activate a polydata file to use this function"
-            << std::endl;
+                  << std::endl;
         return;
     }
-    
+
     points = pd->GetPoints();
 
     seedPoints = vtkPolyData::New();
@@ -772,110 +772,110 @@ void cfdStreamers::CreateArbSurface()
 }
 ///////////////////////////////////////////////////////////////////////////
 void cfdStreamers::UpdatePropertySet()
-{    
+{
     //Extract the integration direction
     std::string intDirection = boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "IntegrationDirection", "enumCurrentString" ) );
-    
+
     vprDEBUG( vesDBG, 0 ) << "|\tStreamline settings"
-    << std::endl << vprDEBUG_FLUSH;
-    
+                          << std::endl << vprDEBUG_FLUSH;
+
     if( !intDirection.compare( "backward" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tBACKWARD_INTEGRATION"
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << std::endl << vprDEBUG_FLUSH;
+
         SetIntegrationDirection( 2 );
     }
     else if( !intDirection.compare( "forward" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tFORWARD_INTEGRATION"
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << std::endl << vprDEBUG_FLUSH;
+
         SetIntegrationDirection( 1 );
     }
     else if( !intDirection.compare( "both directions" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tTWO_DIRECTION_INTEGRATION"
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << std::endl << vprDEBUG_FLUSH;
+
         SetIntegrationDirection( 0 );
     }
 
     /////////////////////
     m_streamRibbons = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseStreamRibbons" ) );
     vprDEBUG( vesDBG, 0 ) << "|\t\tUse Stream Ribbons\t" << m_streamRibbons
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
     streamArrows = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseStreamArrows" ) );
     vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_ARROW\t" << streamArrows
-        << std::endl << vprDEBUG_FLUSH;
-    
+                          << std::endl << vprDEBUG_FLUSH;
+
     /////////////////////
     SetIntegrationStepLength( static_cast< int >( boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_IntegrationStepSize" ) ) ) );
-    
+
     /////////////////////
     SetPropagationTime( boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_PropogationTime" ) ) );
-    
+
     /////////////////////
     double streamDiamter = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_Diameter" ) );
     vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_DIAMETER\t"
-        << streamDiamter << std::endl << vprDEBUG_FLUSH;
+                          << streamDiamter << std::endl << vprDEBUG_FLUSH;
     // diameter is obtained from gui, -100 < vectorScale < 100
     // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
     // convert range to -2.5 < x < 2.5, and compute the exponent...
     float range = 2.5f;
     int diameter = static_cast< int >( streamDiamter );
     float localLineDiameter = exp( diameter / ( 100.0 / range ) ) * 1.0f * 0.001f;
-    
+
     // this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
     // note that multiplying by 0.005 is the same as dividing by 200, or the range
     lineDiameter = ( diameter + 110 ) * 0.005 *  20;
     particleDiameter = lineDiameter;
-    
+
     vprDEBUG( vesDBG, 1 ) << "|\t\tNew Streamline Diameter : "
-        << lineDiameter << std::endl << vprDEBUG_FLUSH;
-    
+                          << lineDiameter << std::endl << vprDEBUG_FLUSH;
+
     /////////////////////
     arrowDiameter = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_SphereArrowParticleSize" ) );
     arrowDiameter = localLineDiameter * 60.0f * arrowDiameter;
     vprDEBUG( vesDBG, 1 ) << "|\t\tNew Arrow Diameter : "
-        << arrowDiameter << std::endl << vprDEBUG_FLUSH;
+                          << arrowDiameter << std::endl << vprDEBUG_FLUSH;
 
     ////////////////////
     //Set the number of seed points in each direction and get the %BB info
     //Extract the advanced settings from the commands
     xMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_XMax" ) );
     xMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_XMin" ) );
-    
+
     yMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_YMax" ) );
     yMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_YMin" ) );
-    
+
     zMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_ZMax" ) );
     zMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_ZMin" ) );
 
     xValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInX" ) );
     yValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInY" ) );
     zValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInZ" ) );
-    
-    /////////////////////   
+
+    /////////////////////
     m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
-    
+
     //Extract the surface flag
     //activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
     bool hasSurface = false;
     /*if( activeModelDVP )
-	{
+    {
         hasSurface = true;
     	activeModelDVP->GetData( m_surfDataset );
-	}*/
-	/////////////////////
+    }*/
+    /////////////////////
     if( !hasSurface )
     {
         CreateSeedPoints();
     }
     else
-    { 
+    {
         CreateArbSurface();
     }
 }

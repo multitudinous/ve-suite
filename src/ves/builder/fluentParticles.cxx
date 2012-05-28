@@ -80,7 +80,7 @@ void fluentParticles::translateFluentPartToVTK( void )
     char textLine[256];
 
     inPartfile.open( "Pipe_CEH_DPM.part" );
-    for( i = 0;i < 19;i++ )
+    for( i = 0; i < 19; i++ )
     {
         inPartfile.getline( textLine, 256 );
     }
@@ -92,7 +92,9 @@ void fluentParticles::translateFluentPartToVTK( void )
         {
             ++partCount;
             if( maxtimeStep < timeStep )
+            {
                 maxtimeStep = timeStep;
+            }
             timeStep = 0;
             icount = 0;
         }
@@ -125,16 +127,18 @@ void fluentParticles::translateFluentPartToVTK( void )
     std::cout << "number of files= " << icount << std::endl;
     inPartfile.close();
 
-    for( i = 0;i < 150;i++ )
+    for( i = 0; i < 150; i++ )
     {
         do
         {
             repeated = 0;
             particleID[i] = rand() % partCount;
-            for( k = 1;k < i;k++ )
+            for( k = 1; k < i; k++ )
             {
                 if( particleID[i] == particleID[k] )
+                {
                     repeated = 1;
+                }
             }
         }
         while( repeated == 1 );
@@ -142,7 +146,7 @@ void fluentParticles::translateFluentPartToVTK( void )
     }
 
 
-    for( fileID = 1;fileID <= icount;fileID++ )
+    for( fileID = 1; fileID <= icount; fileID++ )
     {
 
 
@@ -208,7 +212,9 @@ void fluentParticles::deallocatePolydata( void )
     transFilter->Delete();
     //delete parameterData
     for( i = 0; i < numParameters; i++ )
+    {
         parameterData[i]->Delete();
+    }
 
     delete [] parameterData;
     parameterData = NULL;
@@ -226,39 +232,39 @@ void fluentParticles::addToPolydata( int timestep )
 
     std::multimap<int, fluentParticle>::iterator j;
 
-    for( j = mfluentParticles.begin();j != mfluentParticles.end();j++ )
+    for( j = mfluentParticles.begin(); j != mfluentParticles.end(); j++ )
     {
 
         if( j->first == timestep )
         {
             // A particle a timestep fileIO
             // Add to polydata current particles info
-            for( i = 0;i < 250;i++ )
+            for( i = 0; i < 250; i++ )
             {
-                if (( j->second ).mID == particleID[i] )
+                if( ( j->second ).mID == particleID[i] )
                 {
                     IDinVTKFile++;
-                    Velocity_Magnitude = (( j->second ).mVelocityU ) * (( j->second ).mVelocityU )
-                                         + (( j->second ).mVelocityV ) * (( j->second ).mVelocityV )
-                                         + (( j->second ).mVelocityW ) * (( j->second ).mVelocityW );
+                    Velocity_Magnitude = ( ( j->second ).mVelocityU ) * ( ( j->second ).mVelocityU )
+                                         + ( ( j->second ).mVelocityV ) * ( ( j->second ).mVelocityV )
+                                         + ( ( j->second ).mVelocityW ) * ( ( j->second ).mVelocityW );
 
                     Velocity_Magnitude = sqrt( Velocity_Magnitude );
-                    points->InsertNextPoint(( j->second ).mPosX*metertofoot,
-                                            ( j->second ).mPosY*metertofoot,
-                                            ( j->second ).mPosZ*metertofoot );
+                    points->InsertNextPoint( ( j->second ).mPosX * metertofoot,
+                                             ( j->second ).mPosY * metertofoot,
+                                             ( j->second ).mPosZ * metertofoot );
 
-                    parameterData[ 0 ]->InsertNextValue(( j->second ).mVelocityU );
-                    parameterData[ 1 ]->InsertNextValue(( j->second ).mVelocityV );
-                    parameterData[ 2 ]->InsertNextValue(( j->second ).mVelocityW );
+                    parameterData[ 0 ]->InsertNextValue( ( j->second ).mVelocityU );
+                    parameterData[ 1 ]->InsertNextValue( ( j->second ).mVelocityV );
+                    parameterData[ 2 ]->InsertNextValue( ( j->second ).mVelocityW );
                     parameterData[ 3 ]->InsertNextValue( Velocity_Magnitude );
-                    parameterData[ 4 ]->InsertNextValue(( j->second ).mDiameter*metertofoot );
-                    parameterData[ 5 ]->InsertNextValue(( j->second ).mDensity );
-                    parameterData[ 6 ]->InsertNextValue(( j->second ).mTemp );
-                    parameterData[ 7 ]->InsertNextValue(( j->second ).mMass );
+                    parameterData[ 4 ]->InsertNextValue( ( j->second ).mDiameter * metertofoot );
+                    parameterData[ 5 ]->InsertNextValue( ( j->second ).mDensity );
+                    parameterData[ 6 ]->InsertNextValue( ( j->second ).mTemp );
+                    parameterData[ 7 ]->InsertNextValue( ( j->second ).mMass );
                     //std::cout << (j->second).mID << "  "<<std::endl;
                     //vtkIdType id = ((j->second).mID)-1;
                     vtkIdType id = IDinVTKFile - 1;
-                    polydata->InsertNextCell( VTK_VERTEX, 1, ( vtkIdType * )&id );
+                    polydata->InsertNextCell( VTK_VERTEX, 1, ( vtkIdType* )&id );
 
                     break;
                 }
@@ -313,7 +319,7 @@ void fluentParticles::writePolydata( int timestep )
     transFilter->Update();
 
     writer->SetInput( transFilter->GetOutput() );
-    writer->SetFileName(( outVtkFileName ).c_str() );
+    writer->SetFileName( ( outVtkFileName ).c_str() );
     writer->Write();
     //outVtkfile.close();
 }

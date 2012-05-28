@@ -112,7 +112,7 @@ public:
     void CleanUpNetworks();
     ///Set the User scale
     void SetUserScale( double x, double y );
-    void SetMainFrame(wxWindow *window);
+    void SetMainFrame( wxWindow* window );
 
 
 private:
@@ -123,7 +123,7 @@ private:
     ///previous guid
     std::string previousId;
     ///Draw function
-    void DrawNetwork( wxDC &dc, std::string id );
+    void DrawNetwork( wxDC& dc, std::string id );
     //used for adding a system to a plugin
     void CreateNewSystem( wxCommandEvent& event );
     void SetTreeItemName( wxCommandEvent& event );
@@ -146,8 +146,8 @@ private:
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
-    void OnZoom( wxKeyEvent &event );
-    
+    void OnZoom( wxKeyEvent& event );
+
     DECLARE_EVENT_TABLE() // no semicolon needed
 };
 }

@@ -49,7 +49,7 @@ class RemoveSoundVisitor : public osg::NodeVisitor
 {
 public:
     RemoveSoundVisitor()
-      : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
+        : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
     {}
 
     virtual void apply( osg::Node& node )

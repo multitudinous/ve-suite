@@ -53,17 +53,17 @@ using namespace ves::xplorer::event;
 ///Constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
 ActiveModelEventHandler::ActiveModelEventHandler()
-    : 
+    :
     ves::xplorer::event::EventHandler()
 {
     CONNECTSIGNALS_1( "%ActiveModel",
-                     void ( const std::string& activModelID ),
-                     &ActiveModelEventHandler::SetActiveModel,
-                     m_connections, any_SignalType, normal_Priority );    
+                      void ( const std::string & activModelID ),
+                      &ActiveModelEventHandler::SetActiveModel,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ActiveModelEventHandler::ActiveModelEventHandler( const ActiveModelEventHandler& rhs )
-    : 
+    :
     ves::xplorer::event::EventHandler( rhs )
 {
     ;

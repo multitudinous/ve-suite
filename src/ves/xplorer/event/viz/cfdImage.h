@@ -72,7 +72,7 @@ public:
     ///\param origin
     ///\param spacing
     cfdImage( std::string filename, int ex_x, int ex_y, int dim,
-              double *origin, double *spacing );
+              double* origin, double* spacing );
 
     ///Destructor.
     virtual ~cfdImage( );
@@ -96,11 +96,11 @@ private:
     int type;///<Direction: 0=X-plane, 1=Y-plane, and 2=Z-plane.
     char typeLabel;///<'X', 'Y', or 'Z'.
 
-    vtkBMPReader *bmpReader;///<Bitmap reader.
-    vtkImageReader *imgReader;///<Image reader.
-    vtkPlaneSource *plane;///<Plane source for vtk.
-    vtkPolyDataMapper *mapper;///<Polydata mapper for vtk.
-    vtkTexture *texture;///<Texture for vtk.
+    vtkBMPReader* bmpReader;///<Bitmap reader.
+    vtkImageReader* imgReader;///<Image reader.
+    vtkPlaneSource* plane;///<Plane source for vtk.
+    vtkPolyDataMapper* mapper;///<Polydata mapper for vtk.
+    vtkTexture* texture;///<Texture for vtk.
     //char  bmpFileName[ 100 ];
     std::string bmpFileName;///<Stores bitmap filename.
     double bmpPosition[ 3 ];///<Stores bitmap position.

@@ -73,7 +73,7 @@ public:
     ///Test for equality operator
     friend inline bool operator== ( const Link& l1, const Link& l2 )
     {
-        if (
+        if(
             ( l1.Fr_mod == l2.Fr_mod ) &&
             ( l1.To_mod == l2.To_mod ) &&
             ( l1.Fr_port == l2.Fr_port ) &&
@@ -138,17 +138,17 @@ public:
 protected:
     void OnShowLinkContent( wxCommandEvent& event );
     void OnShowAspenName( wxCommandEvent& event );
-    void OnQueryStreamInputs( wxCommandEvent &event );
-    void OnQueryStreamOutputs( wxCommandEvent &event );
-    void OnAddLinkCon( wxCommandEvent &event );
-    void OnDelLink( wxCommandEvent &event );
-    void OnDelLinkCon( wxCommandEvent &event );
-    void OnSetLinkName( wxCommandEvent &event );
-    void OnMRightDown( wxMouseEvent &event );
+    void OnQueryStreamInputs( wxCommandEvent& event );
+    void OnQueryStreamOutputs( wxCommandEvent& event );
+    void OnAddLinkCon( wxCommandEvent& event );
+    void OnDelLink( wxCommandEvent& event );
+    void OnDelLinkCon( wxCommandEvent& event );
+    void OnSetLinkName( wxCommandEvent& event );
+    void OnMRightDown( wxMouseEvent& event );
     void OnSetActiveLinkID( wxUpdateUIEvent& event );
     bool SelectLink( int x, int y );
     void OnShowAspenDynName( wxCommandEvent& event );
-    void OnQueryStreamAllVars( wxCommandEvent &event );
+    void OnQueryStreamAllVars( wxCommandEvent& event );
     ///Check the active id against the plugin id
     bool CheckID();
 
@@ -157,7 +157,7 @@ private:
     wxString linkName;
     wxEvtHandler* mPostHandler;
     //The Type of the link
-    //for aspen material = 0, heat = 1, & work = 2 
+    //for aspen material = 0, heat = 1, & work = 2
     int linkType;
     ///The active link uuid for the network
     std::string activeUUID;

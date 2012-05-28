@@ -89,7 +89,7 @@ void ContourFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& 
     ves::open::xml::DataValuePairPtr selectvecorscalrDisp( new ves::open::xml::DataValuePair() );
     selectvecorscalrDisp->SetDataType( "STRING" );
     selectvecorscalrDisp->SetDataName( "Select Data Mapping" );
-    selectvecorscalrDisp->SetDataString( boost::any_cast<std::string > ( set.GetPropertyAttribute( "DataMapping", "enumCurrentString" ) ));
+    selectvecorscalrDisp->SetDataString( boost::any_cast<std::string > ( set.GetPropertyAttribute( "DataMapping", "enumCurrentString" ) ) );
     m_contourInformation.push_back( selectvecorscalrDisp );
 
     // Mode: Single or Multiple
@@ -168,7 +168,7 @@ void ContourFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     {
         SendUpdatedSettingsToXplorer( newCommand, set );
     }
-    catch ( ... )
+    catch( ... )
     {
         //QMessageBox msg;
         //msg.setText( "Invalid Parent" );
@@ -180,7 +180,7 @@ void ContourFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
 void ContourFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
 {
     m_advancedSettings.clear();
-    
+
     // With a bit of re-thinking here and some normalization of names, we may be
     // able to convert much of the following code to something like:
     //
@@ -196,46 +196,46 @@ void ContourFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& se
     //              appropriate cast -- esp for enums, to use associated enumCurrentString
     //      ...4. Add DVP to _advancedSettings
     // }
-    
+
     if( set.PropertyExists( "Advanced_Opacity" ) )
     {
         ves::open::xml::DataValuePairPtr contourOpacity( new ves::open::xml::DataValuePair() );
         contourOpacity->SetData( "Contour Opacity",
-                                boost::any_cast<double>
-                                ( set.GetPropertyValue( "Advanced_Opacity" ) ) );
+                                 boost::any_cast<double>
+                                 ( set.GetPropertyValue( "Advanced_Opacity" ) ) );
         m_advancedSettings.push_back( contourOpacity );
     }
-    
+
     if( set.PropertyExists( "Advanced_WarpedContourScale" ) )
     {
         ves::open::xml::DataValuePairPtr warpedScale( new ves::open::xml::DataValuePair() );
         warpedScale->SetData( "Warped Contour Scale",
-                             boost::any_cast<double>
-                             ( set.GetPropertyValue( "Advanced_WarpedContourScale" ) ) );
+                              boost::any_cast<double>
+                              ( set.GetPropertyValue( "Advanced_WarpedContourScale" ) ) );
         m_advancedSettings.push_back( warpedScale );
     }
-    
+
     if( set.PropertyExists( "Advanced_ContourLOD" ) )
     {
         ves::open::xml::DataValuePairPtr LODSetting( new ves::open::xml::DataValuePair() );
         LODSetting->SetData( "Contour LOD",
-                            boost::any_cast<double>
-                            ( set.GetPropertyValue( "Advanced_ContourLOD" ) ) );
+                             boost::any_cast<double>
+                             ( set.GetPropertyValue( "Advanced_ContourLOD" ) ) );
         m_advancedSettings.push_back( LODSetting );
     }
-    
+
     if( set.PropertyExists( "Advanced_ContourType" ) )
     {
         ves::open::xml::DataValuePairPtr contourType( new ves::open::xml::DataValuePair() );
         contourType->SetDataType( "STRING" );
         contourType->SetDataName( std::string( "Type" ) );
         std::string _planeType = boost::any_cast<std::string >
-        ( set.GetPropertyAttribute
-         ( "Advanced_ContourType", "enumCurrentString" ) );
+                                 ( set.GetPropertyAttribute
+                                   ( "Advanced_ContourType", "enumCurrentString" ) );
         contourType->SetDataString( _planeType );
         m_advancedSettings.push_back( contourType );
     }
-    
+
     if( set.PropertyExists( "Advanced_WarpOption" ) )
     {
         ves::open::xml::DataValuePairPtr warpOptionFlag( new ves::open::xml::DataValuePair() );
@@ -243,30 +243,30 @@ void ContourFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& se
         warpOptionFlag->SetDataType( "UNSIGNED INT" );
         if( boost::any_cast<bool>( set.GetPropertyValue( "Advanced_WarpOption" ) ) )
         {
-            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 1 ) );
+            warpOptionFlag->SetDataValue( static_cast < unsigned int >( 1 ) );
         }
         else
         {
-            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 0 ) );
+            warpOptionFlag->SetDataValue( static_cast < unsigned int >( 0 ) );
         }
         m_advancedSettings.push_back( warpOptionFlag );
     }
-    
+
     if( set.PropertyExists( "UseGPUTools" ) )
     {
-        unsigned int checkBox = 
+        unsigned int checkBox =
             boost::any_cast<bool>( set.GetPropertyValue( "UseGPUTools" ) );
         ves::open::xml::DataValuePairPtr gpuToolsDVP( new ves::open::xml::DataValuePair() );
         gpuToolsDVP->SetData( "GPU Tools", checkBox );
         m_advancedSettings.push_back( gpuToolsDVP );
     }
-    
+
     //    if( m_datasetSelection->IsEnabled() )
     //    {
     //        ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
     //        surfToolsDVP->SetData( "SURF Tools", ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
     //        _advancedSettings.push_back( surfToolsDVP );
     //    }
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////

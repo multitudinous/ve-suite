@@ -98,7 +98,7 @@ cfdMomentum::cfdMomentum()
 
     this->warper = vtkWarpVector::New();
 #ifdef USE_OMP
-    this->warper->SetInput(( vtkPointSet * )this->append->GetOutput() );
+    this->warper->SetInput( ( vtkPointSet* )this->append->GetOutput() );
 #else
     this->warper->SetInputConnection( cutter->GetOutputPort() );
 #endif
@@ -113,7 +113,7 @@ cfdMomentum::cfdMomentum( cfdMomentum const& src )
     this->plane = vtkPlane::New();
     this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
     this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
-    
+
     // set the cut function
     this->cutter = vtkCutter::New();
     this->cutter->SetCutFunction( this->plane );
@@ -166,7 +166,7 @@ void cfdMomentum::Update( void )
             int i;
             int imax = this->nData;
 
-# pragma omp parallel for private(i)
+            # pragma omp parallel for private(i)
             for( i = 0; i < imax; i++ )
             {
                 this->plane[i]->SetOrigin( this->origin );
@@ -194,13 +194,13 @@ void cfdMomentum::Update( void )
                 geodes.push_back( tempGeode.get() );
                 this->updateFlag = true;
             }
-            catch ( std::bad_alloc )
+            catch( std::bad_alloc )
             {
                 mapper->Delete();
                 mapper = vtkPolyDataMapper::New();
 
                 vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdMomentum "
-                << std::endl << vprDEBUG_FLUSH;
+                                      << std::endl << vprDEBUG_FLUSH;
             }
             //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
             temp->Delete();
@@ -210,7 +210,7 @@ void cfdMomentum::Update( void )
     else
     {
         vprDEBUG( vesDBG, 0 ) << "cfdMomentum requires cursorType == ARROW"
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         this->updateFlag = false;
     }
 }

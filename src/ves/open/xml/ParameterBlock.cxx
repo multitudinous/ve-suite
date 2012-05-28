@@ -44,7 +44,7 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////
 ParameterBlock::ParameterBlock( unsigned int id )
-        : XMLObject()
+    : XMLObject()
 {
     mId = id;
     mDcs = TransformPtr( new Transform() );
@@ -58,7 +58,7 @@ ParameterBlock::~ParameterBlock()
 }
 ///////////////////////////////////////////
 ParameterBlock::ParameterBlock( const ParameterBlock& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mDcs = TransformPtr( new Transform( *input.mDcs ) );
     mId = input.mId;
@@ -86,7 +86,7 @@ ParameterBlock& ParameterBlock::operator=( const ParameterBlock& input )
 
         for( size_t i = 0; i < input.mProperties.size(); ++i )
         {
-            mProperties.push_back( DataValuePairPtr( new DataValuePair( *( input.mProperties.at( i ) ) ) ));
+            mProperties.push_back( DataValuePairPtr( new DataValuePair( *( input.mProperties.at( i ) ) ) ) );
         }
     }
     return *this;
@@ -207,12 +207,12 @@ DataValuePairPtr ParameterBlock::GetProperty( int index )
     {
         return mProperties.at( index );
     }
-    catch ( ... )
+    catch( ... )
     {
         if( index >= 0 )
         {
             std::cerr << "The element request is out of sequence."
-            << " Please ask for a lower number point." << std::endl;
+                      << " Please ask for a lower number point." << std::endl;
             return DataValuePairPtr();
         }
         else

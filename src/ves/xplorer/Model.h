@@ -149,9 +149,11 @@ public:
 
     ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
     virtual void UpdateCommand()
-    {;}
+    {
+        ;
+    }
 
-    void setModelNode( ves::xplorer::scenegraph::CADEntityHelper * );
+    void setModelNode( ves::xplorer::scenegraph::CADEntityHelper* );
     ///four type models right now (experiment, simulation, design, and geometry)
     void setModelType( ModelTypeIndex );
     bool GetMirrorDataFlag( void );
@@ -228,7 +230,7 @@ public:
     ves::xplorer::ModelDatasetHandler* GetModelDatasetHandler();
 
 private:
-    vpr::Thread *loadDataTh;
+    vpr::Thread* loadDataTh;
     vpr::Mutex mValueLock;
     std::vector<vtkDataSet* > waitingdatalist;
     std::string currentsurfacefilename;

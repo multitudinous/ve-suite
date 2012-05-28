@@ -81,9 +81,9 @@ ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
     {
         if( !m_xplorerPlugin->GetCFDModel() )
         {
-            std::cout << 
-             "|\tThe UI plugin does not have access to the ves::open::xml::model."
-             << std::endl;
+            std::cout <<
+                      "|\tThe UI plugin does not have access to the ves::open::xml::model."
+                      << std::endl;
             return ves::open::xml::model::ModelPtr();
         }
         m_veModel = m_xplorerPlugin->GetCFDModel()->GetModelData();
@@ -102,43 +102,43 @@ ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
 
     {
         ///Set the int data
-        std::map<std::string, long *>::iterator iteri;
+        std::map<std::string, long*>::iterator iteri;
         for( iteri = _int.begin(); iteri != _int.end(); iteri++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( iteri->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( iteri->first, *( iteri->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( iteri->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( iteri->first, *( iteri->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
     {
         ///Set the double data
-        std::map<std::string, double *>::iterator iterd;
+        std::map<std::string, double*>::iterator iterd;
         for( iterd = _double.begin(); iterd != _double.end(); iterd++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( iterd->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( iterd->first, *( iterd->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( iterd->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( iterd->first, *( iterd->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
     {
         ///Set the string data
-        std::map<std::string, std::string *>::iterator iters;
+        std::map<std::string, std::string*>::iterator iters;
         for( iters = _string.begin(); iters != _string.end(); iters++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( iters->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( iters->first, *( iters->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( iters->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( iters->first, *( iters->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
@@ -147,12 +147,12 @@ ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<long> * >::iterator itervi;
         for( itervi = _int1D.begin(); itervi != _int1D.end(); itervi++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( itervi->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( itervi->first, *( itervi->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( itervi->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( itervi->first, *( itervi->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
@@ -161,12 +161,12 @@ ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<double> * >::iterator itervd;
         for( itervd = _double1D.begin(); itervd != _double1D.end(); itervd++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( itervd->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( itervd->first, *( itervd->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( itervd->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( itervd->first, *( itervd->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
@@ -175,24 +175,24 @@ ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<std::string>* >::iterator itervs;
         for( itervs = _string1D.begin(); itervs != _string1D.end(); itervs++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( itervs->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( itervs->first, *( itervs->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( itervs->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( itervs->first, *( itervs->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
     {
         ///Set the 2d string data
-        std::map<std::string,
+        std::map < std::string,
             std::vector< std::vector<std::string> >* >::iterator iterv2s;
         for( iterv2s = _string2D.begin(); iterv2s != _string2D.end(); iterv2s++ )
         {
             std::string temp2d( iterv2s->first );
             std::vector< std::vector< std::string > > temp2v;
-            temp2v = *(iterv2s->second);
+            temp2v = *( iterv2s->second );
             CommandPtr tempCommand = CommandPtr( new Command() );
             tempCommand->SetCommandName( iterv2s->first );
             ves::open::xml::DataValuePairPtr dataDVP(
@@ -206,67 +206,67 @@ ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
     // What's the deal here? None of this code actually does anything that I can
     // tell -- RPT
     // EPRI TAG
-//    if( financial_dlg != NULL )
-//    {
-//        CommandPtr tempCommand = CommandPtr( new Command() );
-//        tempCommand->SetCommandName( "EPRI TAG" );
+    //    if( financial_dlg != NULL )
+    //    {
+    //        CommandPtr tempCommand = CommandPtr( new Command() );
+    //        tempCommand->SetCommandName( "EPRI TAG" );
 
-//        ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "USE_FINANCIAL", static_cast< long >( financial_dlg->_use_data ) );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "USE_FINANCIAL", static_cast< long >( financial_dlg->_use_data ) );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "CC00", financial_dlg->_cc00_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "CC00", financial_dlg->_cc00_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "CC01", financial_dlg->_cc01_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "CC01", financial_dlg->_cc01_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "CC02", financial_dlg->_cc02_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "CC02", financial_dlg->_cc02_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "CC03", financial_dlg->_cc03_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "CC03", financial_dlg->_cc03_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "CC04", financial_dlg->_cc04_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "CC04", financial_dlg->_cc04_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "CC05", financial_dlg->_cc05_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "CC05", financial_dlg->_cc05_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "CC06", financial_dlg->_cc06_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "CC06", financial_dlg->_cc06_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "CC07", financial_dlg->_cc07_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "CC07", financial_dlg->_cc07_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "CC08", financial_dlg->_cc08_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "CC08", financial_dlg->_cc08_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "OM00", financial_dlg->_om00_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "OM00", financial_dlg->_om00_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "OM01", financial_dlg->_om01_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "OM01", financial_dlg->_om01_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "OM02", financial_dlg->_om02_d );
-//        tempCommand->AddDataValuePair( dataDVP );
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "OM02", financial_dlg->_om02_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
 
-//        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
-//        dataDVP->SetData( "OM03", financial_dlg->_om03_d );
-//        tempCommand->AddDataValuePair( dataDVP );
-//    }
+    //        dataDVP = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
+    //        dataDVP->SetData( "OM03", financial_dlg->_om03_d );
+    //        tempCommand->AddDataValuePair( dataDVP );
+    //    }
 
     return m_veModel;
 }
@@ -277,12 +277,12 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelPtr tempModel )
     //m_veModel = tempModel.lock();
     m_veModel = tempModel;
 
-//    SetName( wxString( m_veModel->GetPluginName().c_str(), wxConvUTF8 ) );
+    //    SetName( wxString( m_veModel->GetPluginName().c_str(), wxConvUTF8 ) );
     m_id = m_veModel->GetModelID();
     m_parentModel = m_veModel->GetParentModel();
     std::string tempFilename = m_veModel->GetIconFilename();
-//    pos.x = m_veModel->GetIconLocation()->GetPoint().first;
-//    pos.y = m_veModel->GetIconLocation()->GetPoint().second;
+    //    pos.x = m_veModel->GetIconLocation()->GetPoint().first;
+    //    pos.y = m_veModel->GetIconLocation()->GetPoint().second;
 
     //unsigned int numInputs = m_veModel->GetNumberOfInputs();
     const std::vector< CommandPtr > inputsVec = m_veModel->GetInputs();
@@ -306,14 +306,16 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelPtr tempModel )
                 std::map<std::string, std::vector<long>* >::iterator itervi;
                 std::map<std::string, std::vector<double>* >::iterator itervd;
                 std::map<std::string, std::vector<std::string>* >::iterator itervs;
-                std::map<std::string,
+                std::map < std::string,
                     std::vector< std::vector<std::string> >* >::iterator iterv2s;
 
                 if( std::string( "FLOAT" ) == dataType )
                 {
                     iterd = _double.find( dataName );
                     if( iterd != _double.end() )
+                    {
                         tempData->GetData( *( iterd->second ) );
+                    }
                 }
                 else if( std::string( "LONG" ) == dataType )
                 {
@@ -327,31 +329,41 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelPtr tempModel )
                 {
                     iters = _string.find( dataName );
                     if( iters != _string.end() )
+                    {
                         tempData->GetData( *( iters->second ) );
+                    }
                 }
                 else if( std::string( "1DSTRING" ) == dataType )
                 {
                     itervs = _string1D.find( dataName );
                     if( itervs != _string1D.end() )
+                    {
                         tempData->GetData( *( itervs->second ) );
+                    }
                 }
                 else if( std::string( "1DDOUBLE" ) == dataType )
                 {
                     itervd = _double1D.find( dataName );
                     if( itervd != _double1D.end() )
+                    {
                         tempData->GetData( *( itervd->second ) );
+                    }
                 }
                 else if( std::string( "1DLONG" ) == dataType )
                 {
                     itervi = _int1D.find( dataName );
                     if( itervi != _int1D.end() )
+                    {
                         tempData->GetData( *( itervi->second ) );
+                    }
                 }
                 else if( std::string( "2DSTRING" ) == dataType )
                 {
                     iterv2s = _string2D.find( dataName );
                     if( iterv2s != _string2D.end() )
+                    {
                         tempData->GetData( *( iterv2s->second ) );
+                    }
                 }
 
                 /*else if(std::string( "XMLOBJECT" ) == dataType )
@@ -432,9 +444,9 @@ void UIPluginBase::SetXplorerPlugin( ves::xplorer::plugin::PluginBase* plugin )
 ///allows users creating new plugins and change the icon
 //void UIPluginBase::SetImage( QImage& image );
 
-void UIPluginBase::AddPort( unsigned int portType  )
+void UIPluginBase::AddPort( unsigned int portType )
 {
-    if( !(m_veModel.get()) )
+    if( !( m_veModel.get() ) )
     {
         return;
     }
@@ -457,9 +469,9 @@ void UIPluginBase::AddPort( unsigned int portType  )
     port->SetPortNumber( m_outputPorts.size() + m_inputPorts.size() );
 }
 
-void UIPluginBase::DeletePort( ves::open::xml::model::PortPtr port  )
+void UIPluginBase::DeletePort( ves::open::xml::model::PortPtr port )
 {
-    if( !(m_veModel.get()) )
+    if( !( m_veModel.get() ) )
     {
         return;
     }
@@ -488,18 +500,18 @@ void UIPluginBase::TogglePlugin( unsigned int )
     // Unclear why toggling other plugins on would be part of a specific plugin
     //  instance
 
-//    if( flag == UIPLUGINBASE_TOGGLE_ALL_ON )
-//    {
-//        ves::open::xml::DataValuePairPtr dataValuePair(
-//            new ves::open::xml::DataValuePair() );
-//        dataValuePair->SetData( "VE_XPLORER_PLUGIN_ID", "ALL" );
-//        ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-//        veCommand->SetCommandName(
-//            std::string( "Xplorer Toggle Plugin Events" ) );
-//        veCommand->AddDataValuePair( dataValuePair );
+    //    if( flag == UIPLUGINBASE_TOGGLE_ALL_ON )
+    //    {
+    //        ves::open::xml::DataValuePairPtr dataValuePair(
+    //            new ves::open::xml::DataValuePair() );
+    //        dataValuePair->SetData( "VE_XPLORER_PLUGIN_ID", "ALL" );
+    //        ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
+    //        veCommand->SetCommandName(
+    //            std::string( "Xplorer Toggle Plugin Events" ) );
+    //        veCommand->AddDataValuePair( dataValuePair );
 
-//        ves::xplorer::command::CommandManager::Instance()->AddXMLCommand( veCommand );
-//    }
+    //        ves::xplorer::command::CommandManager::Instance()->AddXMLCommand( veCommand );
+    //    }
     //else if( flag == UIPLUGINBASE_TOGGLE_PLUGIN_ON )
     {
         ves::open::xml::DataValuePairPtr dataValuePair(
@@ -528,7 +540,7 @@ void UIPluginBase::SetActiveModel()
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-void UIPluginBase::ActivateAssociatedModel(  )
+void UIPluginBase::ActivateAssociatedModel( )
 {
     //Set the active model so that we do not have to in every function
     SetActiveModel();
@@ -551,14 +563,14 @@ void UIPluginBase::ActivateAssociatedModel(  )
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( veCommand );
 }
 
-void UIPluginBase::OnOptimizeCAD(  )
+void UIPluginBase::OnOptimizeCAD( )
 {
     SetActiveModel();
 
     ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
     veCommand->SetCommandName( std::string( "Optimize CAD" ) );
     ves::open::xml::DataValuePairPtr dataValuePair(
-                                                   new ves::open::xml::DataValuePair() );
+        new ves::open::xml::DataValuePair() );
     dataValuePair->SetData( "Optimize CAD", m_veModel->GetID() );
     veCommand->AddDataValuePair( dataValuePair );
 
@@ -651,7 +663,7 @@ void UIPluginBase::SetNumInputPorts( int num )
     }
 
     // Need to check this else we get trapped in while loops below.
-    if( !(m_veModel.get()) )
+    if( !( m_veModel.get() ) )
     {
         return;
     }
@@ -680,7 +692,7 @@ void UIPluginBase::SetNumOutputPorts( int num )
     }
 
     // Need to check this else we get trapped in while loops below.
-    if( !(m_veModel.get()) )
+    if( !( m_veModel.get() ) )
     {
         return;
     }

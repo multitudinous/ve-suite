@@ -217,7 +217,7 @@ void Property::SetAttribute( const std::string& attributeName,
             if( !attributeValue.empty() )
             {
                 PSVectorOfStrings* enumValues =
-                        boost::any_cast<PSVectorOfStrings > ( &attributeValue );
+                    boost::any_cast<PSVectorOfStrings > ( &attributeValue );
                 // If cast was successful, continue...
                 if( enumValues )
                 {
@@ -230,7 +230,7 @@ void Property::SetAttribute( const std::string& attributeName,
                         // If mValue is outside range allowed by enumValues,
                         // set it to zero.
                         int mainValue = boost::any_cast<int>( mValue );
-                        int size = static_cast < int > ( enumValues->size() );
+                        int size = static_cast < int >( enumValues->size() );
                         if( ( mainValue < 0 ) || ( mainValue >= size ) )
                         {
                             SetValue( 0 );
@@ -267,7 +267,7 @@ boost::any Property::GetAttribute( const std::string& attributeName ) const
     }
 
     AttributeMap::const_iterator iterator = mAttributeMap.find( attributeName );
-    return (*iterator ).second;
+    return ( *iterator ).second;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const Property::PSVectorOfStrings& Property::GetAttributeList() const
@@ -351,22 +351,22 @@ bool Property::IsVectorized() const
 ////////////////////////////////////////////////////////////////////////////////
 bool Property::IsBool( const boost::any& value ) const
 {
-    return value.type() == typeid ( bool );
+    return value.type() == typeid( bool );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Property::IsInt( const boost::any& value ) const
 {
-    return value.type() == typeid ( int );
+    return value.type() == typeid( int );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Property::IsFloat( const boost::any& value ) const
 {
-    return value.type() == typeid ( float );
+    return value.type() == typeid( float );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Property::IsDouble( const boost::any& value ) const
 {
-    return value.type() == typeid ( double );
+    return value.type() == typeid( double );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Property::IsString( const boost::any& value ) const
@@ -400,7 +400,7 @@ bool Property::IsVectorized( const boost::any& value ) const
             ( IsFloatVector( value ) ) ||
             ( IsDoubleVector( value ) ) ||
             ( IsStringVector( value ) )
-            )
+      )
     {
         return true;
     }
@@ -414,11 +414,11 @@ void Property::_cacheDoubleValue( double* store, boost::any value )
 {
     if( IsInt( value ) )
     {
-        *store = static_cast < double > ( boost::any_cast<int>( value ) );
+        *store = static_cast < double >( boost::any_cast<int>( value ) );
     }
     else if( IsFloat( value ) )
     {
-        *store = static_cast < double > ( boost::any_cast<float>( value ) );
+        *store = static_cast < double >( boost::any_cast<float>( value ) );
     }
     else if( IsDouble( value ) )
     {
@@ -433,11 +433,11 @@ bool Property::_compareNumeric( boost::any left, char operation, double right )
 
     if( IsInt( left ) )
     {
-        m_castLeft = static_cast < double > ( boost::any_cast<int>( left ) );
+        m_castLeft = static_cast < double >( boost::any_cast<int>( left ) );
     }
     else if( IsFloat( left ) )
     {
-        m_castLeft = static_cast < double > ( boost::any_cast<float>( left ) );
+        m_castLeft = static_cast < double >( boost::any_cast<float>( left ) );
     }
     else if( IsDouble() )
     {
@@ -476,8 +476,8 @@ bool Property::_checkEnumValue( boost::any value )
     if( !enumVector.empty() )
     {
         // Attempt to cast enumVector as a PSVectorOfStrings
-        PSVectorOfStrings *castEnumVector =
-                boost::any_cast< PSVectorOfStrings > ( &enumVector );
+        PSVectorOfStrings* castEnumVector =
+            boost::any_cast< PSVectorOfStrings > ( &enumVector );
         // If the cast returned NULL, fail out
         if( !castEnumVector )
         {
@@ -504,7 +504,7 @@ bool Property::_checkEnumValue( boost::any value )
             std::string castValue = boost::any_cast<std::string > ( value );
             boost::any enumValues = GetAttribute( "enumValues" );
             PSVectorOfStrings castEnumValues =
-                    boost::any_cast< PSVectorOfStrings > ( enumValues );
+                boost::any_cast< PSVectorOfStrings > ( enumValues );
             PSVectorOfStrings::const_iterator iterator = castEnumValues.begin();
             PSVectorOfStrings::const_iterator end = castEnumValues.end();
             bool found = false;
@@ -538,8 +538,8 @@ void Property::_doExtraEnumSetValueProcessing( boost::any value )
         std::string castValue = boost::any_cast<std::string > ( value );
         boost::any enumValues = GetAttribute( "enumValues" );
         PSVectorOfStrings castEnumValues =
-                boost::any_cast< PSVectorOfStrings > ( enumValues );
-        int max = static_cast < int > ( castEnumValues.size() );
+            boost::any_cast< PSVectorOfStrings > ( enumValues );
+        int max = static_cast < int >( castEnumValues.size() );
         max -= 1;
         bool found = false;
         int count = -1;
@@ -558,7 +558,7 @@ void Property::_doExtraEnumSetValueProcessing( boost::any value )
     int mainValue = boost::any_cast<int>( mValue );
     boost::any enumValues = GetAttribute( "enumValues" );
     PSVectorOfStrings castEnumValues =
-            boost::any_cast< PSVectorOfStrings > ( enumValues );
+        boost::any_cast< PSVectorOfStrings > ( enumValues );
     std::string enumString = castEnumValues[mainValue];
     SetAttribute( "enumCurrentString", enumString );
 }

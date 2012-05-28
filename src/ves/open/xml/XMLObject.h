@@ -121,7 +121,7 @@ public:
         //std::cout << "GetAttribute(" << attributeName << ")" << std::endl;
         try
         {
-            char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( baseElement->getAttribute( Convert(attributeName).toXMLString() ) );
+            char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( baseElement->getAttribute( Convert( attributeName ).toXMLString() ) );
             if( !fUnicodeForm )
             {
                 std::cout << "    attr: FAILED!!!" << std::endl;
@@ -133,7 +133,7 @@ public:
             //std::cout << "    attr: " << float2string.str().c_str() << std::endl;
             delete fUnicodeForm;
         }
-        catch ( ... )
+        catch( ... )
         {
             std::cout << "Invalid element!!" << std::endl;
             std::cout << "XMLObject::GetAttribute()" << std::endl;
@@ -141,7 +141,7 @@ public:
     }
 
     template<class T>
-    inline void GetDataFromElement( const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element, T& dataVal)
+    inline void GetDataFromElement( const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element, T& dataVal )
     {
         try
         {
@@ -158,7 +158,7 @@ public:
             iss >> dataVal;
             //std::cout << dataVal << std::endl;
         }
-        catch ( ... )
+        catch( ... )
         {
             std::cout << "ERROR : ExtractFromSimpleElement " << std::endl;
         }
@@ -174,17 +174,19 @@ public:
     class VE_XML_EXPORTS ElementSetter
     {
     public:
-       ElementSetter( const std::string& value, XMLObject* object ) : mValue(value), mObject(object)
-       {;}
+        ElementSetter( const std::string& value, XMLObject* object ) : mValue( value ), mObject( object )
+        {
+            ;
+        }
 
-       template<typename U>
-       void operator() ( U& object )
-       {
-          mObject->SetSubElement<ves::open::xml::XMLObjectPtr>( mValue, object );
-       }
+        template<typename U>
+        void operator()( U& object )
+        {
+            mObject->SetSubElement<ves::open::xml::XMLObjectPtr>( mValue, object );
+        }
     private:
-       const std::string mValue;
-       XMLObject* mObject;
+        const std::string mValue;
+        XMLObject* mObject;
     };
 
     template<class T>
@@ -248,7 +250,7 @@ public:
         mVeElement->appendChild( childElement );
         return childElement;
     }*/
-    
+
     ///utility functions for creating attribute on mVeElement by default
     ///\param attirbuteName The name of the atrribute to be set
     ///\param attribute The attribute value
@@ -305,7 +307,7 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( cons
         boolValue = "false";
     }
     XERCES_CPP_NAMESPACE_QUALIFIER DOMText* dataValueString =
-                        mRootDocument->createTextNode( Convert( boolValue ).toXMLString() );
+        mRootDocument->createTextNode( Convert( boolValue ).toXMLString() );
     dataValueStringElement->appendChild( dataValueString );
     mVeElement->appendChild( dataValueStringElement );
     return dataValueStringElement;
@@ -318,7 +320,7 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( cons
     {
         return 0;
     }
-    
+
     //std::cout << "SetSubElement( XMLObjectPtr ) for " << subElementTagName.c_str() <<std::endl;
     val->SetOwnerDocument( mRootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
@@ -353,7 +355,7 @@ inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* 
     try
     {
         char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode(
-                  baseElement->getAttribute( Convert( attributeName ).toXMLString() ) );
+                                 baseElement->getAttribute( Convert( attributeName ).toXMLString() ) );
         if( !fUnicodeForm )
         {
             return;
@@ -386,7 +388,7 @@ inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* 
     try
     {
         char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode(
-               baseElement->getAttribute( Convert( attributeName ).toXMLString() ) );
+                                 baseElement->getAttribute( Convert( attributeName ).toXMLString() ) );
         if( !fUnicodeForm )
         {
             return;
@@ -406,7 +408,7 @@ inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* 
 }
 
 template<>
-inline void XMLObject::GetDataFromElement( const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element, std::string& dataVal)
+inline void XMLObject::GetDataFromElement( const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element, std::string& dataVal )
 {
     try
     {
@@ -422,7 +424,7 @@ inline void XMLObject::GetDataFromElement( const XERCES_CPP_NAMESPACE_QUALIFIER 
         }
         dataVal = iss.str();
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "ERROR : ExtractFromSimpleElement " << std::endl;
     }

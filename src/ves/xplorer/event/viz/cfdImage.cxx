@@ -65,13 +65,17 @@ cfdImage::cfdImage( std::string param )
     bmpOrientation = -1;
 
     if( param.empty() )
+    {
         return;
+    }
     _param = param;
     // Fix this if createobjects is true then continue else return
     CreateObjects();
 
     if( bmpOrientation == -1 )
+    {
         return;
+    }
 
     std::string extension = fileIO::getExtension( bmpFileName );
     vprDEBUG( vesDBG, 1 ) << "extension = \"" << extension << "\"\n" << vprDEBUG_FLUSH;
@@ -109,9 +113,13 @@ cfdImage::cfdImage( std::string param )
         this->plane->SetResolution( 1, 1 );
 
         if( bmpOrientation == 1 )
+        {
             this->plane->SetNormal( 0, 1, 0 );
+        }
         else if( bmpOrientation == 2 )
+        {
             this->plane->SetNormal( 0, 0, 1 );
+        }
 
         this->mapper = vtkPolyDataMapper::New();
         this->mapper->SetInput( this->plane->GetOutput() );
@@ -129,9 +137,18 @@ cfdImage::cfdImage( std::string param )
         temp->Delete();
 
         this->type = bmpOrientation;
-        if( this->type == 0 )  this->typeLabel = 'X';
-        else if( this->type == 1 )  this->typeLabel = 'Y';
-        else if( this->type == 2 )  this->typeLabel = 'Z';
+        if( this->type == 0 )
+        {
+            this->typeLabel = 'X';
+        }
+        else if( this->type == 1 )
+        {
+            this->typeLabel = 'Y';
+        }
+        else if( this->type == 2 )
+        {
+            this->typeLabel = 'Z';
+        }
         else
         {
             std::cerr << "ERROR: in cfdImage, xyz must be 0, 1, or 2" << std::endl;
@@ -141,7 +158,7 @@ cfdImage::cfdImage( std::string param )
     else
     {
         vprDEBUG( vesDBG, 0 ) << "ERROR: invalid extension on file \""
-        << bmpFileName << "\"\n" << vprDEBUG_FLUSH;
+                              << bmpFileName << "\"\n" << vprDEBUG_FLUSH;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -157,7 +174,7 @@ cfdImage::cfdImage( cfdImage const& src )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdImage::cfdImage( std::string filename, int resx, int resy, int dim, double *origin, double *spacing )
+cfdImage::cfdImage( std::string filename, int resx, int resy, int dim, double* origin, double* spacing )
 {
     this->bmpReader = NULL;
     this->imgReader = NULL;
@@ -174,9 +191,18 @@ cfdImage::cfdImage( std::string filename, int resx, int resy, int dim, double *o
 
         this->imgReader = vtkImageReader::New();
 
-        if( dim == 0 )      this->imgReader->SetDataExtent( 0, 0,    1, resx, 1, resy );
-        else if( dim == 1 ) this->imgReader->SetDataExtent( 1, resx, 0, 0,    1, resy );
-        else            this->imgReader->SetDataExtent( 1, resx, 1, resy, 0, 0 );
+        if( dim == 0 )
+        {
+            this->imgReader->SetDataExtent( 0, 0,    1, resx, 1, resy );
+        }
+        else if( dim == 1 )
+        {
+            this->imgReader->SetDataExtent( 1, resx, 0, 0,    1, resy );
+        }
+        else
+        {
+            this->imgReader->SetDataExtent( 1, resx, 1, resy, 0, 0 );
+        }
 
         this->imgReader->SetDataSpacing( spacing );
         this->imgReader->SetDataOrigin( origin );
@@ -192,18 +218,18 @@ cfdImage::cfdImage( std::string filename, int resx, int resy, int dim, double *o
 
         if( dim == 0 )
         {
-            plane->SetPoint1( origin[0], origin[1] + resx*spacing[1], origin[2] );
-            plane->SetPoint2( origin[0], origin[1],                 origin[2] + resy*spacing[2] );
+            plane->SetPoint1( origin[0], origin[1] + resx * spacing[1], origin[2] );
+            plane->SetPoint2( origin[0], origin[1],                 origin[2] + resy * spacing[2] );
         }
         else if( dim == 1 )
         {
-            plane->SetPoint1( origin[0] + resx*spacing[0], origin[1], origin[2] );
-            plane->SetPoint2( origin[0],                 origin[1], origin[2] + resy*spacing[2] );
+            plane->SetPoint1( origin[0] + resx * spacing[0], origin[1], origin[2] );
+            plane->SetPoint2( origin[0],                 origin[1], origin[2] + resy * spacing[2] );
         }
         else
         {
-            plane->SetPoint1( origin[0] + resx*spacing[0], origin[1],                 origin[2] );
-            plane->SetPoint2( origin[0],                 origin[1] + resy*spacing[1], origin[2] );
+            plane->SetPoint1( origin[0] + resx * spacing[0], origin[1],                 origin[2] );
+            plane->SetPoint2( origin[0],                 origin[1] + resy * spacing[1], origin[2] );
         }
 
         // Mapper
@@ -234,9 +260,18 @@ cfdImage::cfdImage( std::string filename, int resx, int resy, int dim, double *o
         // Dim stuff
 
         this->type = dim;
-        if( this->type == 0 )  this->typeLabel = 'X';
-        else if( this->type == 1 )  this->typeLabel = 'Y';
-        else if( this->type == 2 )  this->typeLabel = 'Z';
+        if( this->type == 0 )
+        {
+            this->typeLabel = 'X';
+        }
+        else if( this->type == 1 )
+        {
+            this->typeLabel = 'Y';
+        }
+        else if( this->type == 2 )
+        {
+            this->typeLabel = 'Z';
+        }
         else
         {
             std::cerr << "ERROR: in cfdImage, xyz must be 0, 1, or 2" << std::endl;
@@ -248,11 +283,26 @@ cfdImage::cfdImage( std::string filename, int resx, int resy, int dim, double *o
 cfdImage::~cfdImage()
 {
     //vprDEBUG(vesDBG, 1) << "CFDIMAGE DESTRUCTOR\n" << vprDEBUG_FLUSH;
-    if( this->bmpReader != NULL ) this->bmpReader->Delete();
-    if( this->imgReader != NULL ) this->imgReader->Delete();
-    if( this->plane != NULL )     this->plane->Delete();
-    if( this->mapper != NULL )    this->mapper->Delete();
-    if( this->texture != NULL )   this->texture->Delete();
+    if( this->bmpReader != NULL )
+    {
+        this->bmpReader->Delete();
+    }
+    if( this->imgReader != NULL )
+    {
+        this->imgReader->Delete();
+    }
+    if( this->plane != NULL )
+    {
+        this->plane->Delete();
+    }
+    if( this->mapper != NULL )
+    {
+        this->mapper->Delete();
+    }
+    if( this->texture != NULL )
+    {
+        this->texture->Delete();
+    }
 }
 
 void cfdImage::Update( void )
@@ -290,26 +340,26 @@ void cfdImage::CreateObjects( void )
             if( fileIO::isFileReadable( this->bmpFileName ) )
             {
                 vprDEBUG( vesDBG, 0 ) << " BMP file = " << this->bmpFileName
-                << std::endl << vprDEBUG_FLUSH;
+                                      << std::endl << vprDEBUG_FLUSH;
             }
             else
             {
                 std::cerr << "ERROR: unreadable BMP File = " << this->bmpFileName
-                << ".  You may need to correct your param file." << std::endl;
+                          << ".  You may need to correct your param file." << std::endl;
                 exit( 1 );
             }
 
             input >> this->bmpPosition[ 0 ] >> this->bmpPosition[ 1 ]
-            >> this->bmpPosition[ 2 ];
+                  >> this->bmpPosition[ 2 ];
             input.getline( textLine, 256 );   //skip past remainder of line
             vprDEBUG( vesDBG, 0 ) << " BMP Position = " << this->bmpPosition[ 0 ]
-            << "\t" << this->bmpPosition[ 1 ] << "\t" <<  this->bmpPosition[ 2 ]
-            << std::endl << vprDEBUG_FLUSH;
+                                  << "\t" << this->bmpPosition[ 1 ] << "\t" <<  this->bmpPosition[ 2 ]
+                                  << std::endl << vprDEBUG_FLUSH;
 
             input >> this->bmpOrientation;
             input.getline( textLine, 256 );   //skip past remainder of line
             vprDEBUG( vesDBG, 0 ) << " BMP Orientation = " << this->bmpOrientation
-            << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
         }
         else
         {

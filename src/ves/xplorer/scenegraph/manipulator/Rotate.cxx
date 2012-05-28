@@ -87,13 +87,13 @@ void Rotate::CreateGhostDisk()
     osg::Vec3d diskStart = m_startPlaneIntersection * m_worldToLocal;
     diskStart.normalize();
     diskStart *= ROTATE_AXIS_RADIUS;
-    (*m_ghostDiskVertices)[ 1 ] = diskStart;
+    ( *m_ghostDiskVertices )[ 1 ] = diskStart;
 
     //Get the end disk point in local coordinates
     osg::Vec3d diskEnd = m_endPlaneIntersection * m_worldToLocal;
     diskEnd.normalize();
     diskEnd *= ROTATE_AXIS_RADIUS;
-    (*m_ghostDiskVertices)[ NUM_GHOST_DISK_SEGMENTS + 1 ] = diskEnd;
+    ( *m_ghostDiskVertices )[ NUM_GHOST_DISK_SEGMENTS + 1 ] = diskEnd;
 
     //Get the start angle, total angle of rotation, and delta segment rotation
     double angle =
@@ -109,7 +109,7 @@ void Rotate::CreateGhostDisk()
         double sinVal = sin( angle );
         double s = ROTATE_AXIS_RADIUS * cosVal;
         double t = ROTATE_AXIS_RADIUS * sinVal;
-        (*m_ghostDiskVertices)[ i ].set( s, t, 0.0 );
+        ( *m_ghostDiskVertices )[ i ].set( s, t, 0.0 );
     }
 
     //Reset the ghost disk geometry
@@ -216,9 +216,9 @@ void Rotate::CustomReleaseAction()
 ////////////////////////////////////////////////////////////////////////////////
 void Rotate::SetLineEndPoint( const osg::Vec3& endPoint )
 {
-    (*m_lineVertices)[ 1 ] = endPoint * m_worldToLocal;
-    (*m_lineVertices)[ 1 ].normalize();
-    (*m_lineVertices)[ 1 ] *= GetRadius();
+    ( *m_lineVertices )[ 1 ] = endPoint * m_worldToLocal;
+    ( *m_lineVertices )[ 1 ].normalize();
+    ( *m_lineVertices )[ 1 ] *= GetRadius();
 
     m_lineGeometry->dirtyDisplayList();
     m_lineGeometry->dirtyBound();
@@ -238,8 +238,8 @@ void Rotate::SetupDefaultGeometry()
     //The unit axis
     m_lineVertices = new osg::Vec3Array();
     m_lineVertices->resize( 2 );
-    (*m_lineVertices)[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
-    (*m_lineVertices)[ 1 ] =  osg::Vec3d( 0.0, 0.0, 0.0 );
+    ( *m_lineVertices )[ 0 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
+    ( *m_lineVertices )[ 1 ] =  osg::Vec3d( 0.0, 0.0, 0.0 );
 
     //Create a line
     {
@@ -316,7 +316,7 @@ void Rotate::SetupDefaultGeometry()
 
         m_ghostDiskGeometry->setVertexArray( m_ghostDiskVertices.get() );
         m_ghostDiskGeometry->addPrimitiveSet( new osg::DrawArrays(
-            osg::PrimitiveSet::TRIANGLE_FAN, 0, m_ghostDiskVertices->size() ) );
+                osg::PrimitiveSet::TRIANGLE_FAN, 0, m_ghostDiskVertices->size() ) );
 
         m_ghostDiskGeode->addDrawable( m_ghostDiskGeometry.get() );
         m_ghostDiskGeode->setNodeMask( 0 );

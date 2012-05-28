@@ -76,9 +76,9 @@ void TextureBasedPhongShadingEnableEventHandler::_operateOnNode( XMLObjectPtr ve
         DataValuePairPtr enable = command->GetDataValuePair( "Phong Shading State" );
         std::string onOff;
         enable->GetData( onOff );
-        ves::xplorer::TextureBasedVizHandler::instance()->EnsurePhongShading(( onOff == "On" ) ? true : false );
+        ves::xplorer::TextureBasedVizHandler::instance()->EnsurePhongShading( ( onOff == "On" ) ? true : false );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid TextureDataSet!!" << std::endl;
         std::cout << "TextureBasedPhongShadingEnableEventHandler::_operateOnNode()" << std::endl;

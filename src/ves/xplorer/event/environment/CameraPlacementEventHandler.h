@@ -112,7 +112,7 @@ public:
         FOCAL_DISTANCE,
         FOCAL_RANGE,
         MAX_CIRCLE_OF_CONFUSION,
-        
+
         AUTO_COMPUTER_NEAR_FAR_PLANE,
         CAMERA_MANAGER_ON_OFF,
         PICTURE_ON_OFF
@@ -121,7 +121,7 @@ public:
     ///Set the cfdModel
     ///\param modelHandler The ModelHandler to execute the Command on
     void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
-    
+
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
     void Execute( const ves::open::xml::XMLObjectPtr& veXMLObject );

@@ -105,11 +105,11 @@ wxString DWPlugin::GetConductorName()
 }
 /////////////////////////////////////////////////////////////////////////////
 void DWPlugin::OnUnitName( wxCommandEvent& event )
-{    
+{
     wxTextEntryDialog newUnitName( 0,
-                                 _( "Enter the name for your unit:" ),
-                                 _( "Set Unit Name..." ),
-                                 "VE-PSI", wxOK | wxCANCEL );
+                                   _( "Enter the name for your unit:" ),
+                                   _( "Set Unit Name..." ),
+                                   "VE-PSI", wxOK | wxCANCEL );
     //check for existing unit
 
     if( newUnitName.ShowModal() == wxID_OK )
@@ -124,10 +124,10 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
 
     if( mIsSheetOpen )
     {
-        wxMessageDialog md( m_canvas, 
-            wxT( "Simulation already open.\nClose it and open another?" ),
-            wxT( "Confirm" ),
-            wxYES_NO);
+        wxMessageDialog md( m_canvas,
+                            wxT( "Simulation already open.\nClose it and open another?" ),
+                            wxT( "Confirm" ),
+                            wxYES_NO );
         if( md.ShowModal() == wxCANCEL )
         {
             return;
@@ -153,9 +153,9 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
 
     wxFileName dwFileName;
     dwFileName.ClearExt();
-    dwFileName.SetName( fd.GetFilename() + wxT(".dwsim") );
+    dwFileName.SetName( fd.GetFilename() + wxT( ".dwsim" ) );
 
-    CommandPtr returnState ( new Command() );
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "openSimulation" );
     returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
@@ -177,16 +177,16 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
 
     if( nw_str.empty() )
     {
-        wxMessageDialog md( m_canvas, wxT("No VE-PSI connected.\nPlease launch VE-PSI."), wxT("Error"), wxOK);
+        wxMessageDialog md( m_canvas, wxT( "No VE-PSI connected.\nPlease launch VE-PSI." ), wxT( "Error" ), wxOK );
         md.ShowModal();
         return;
     }
 
     // If there is nothing on the CE
-    if( nw_str.compare("DWDNE") == 0 )
+    if( nw_str.compare( "DWDNE" ) == 0 )
     {
         return;
-    }    
+    }
 
     event.SetId( UPDATE_HIER_TREE );
     ::wxPostEvent( m_canvas, event );
@@ -196,7 +196,7 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
     dwsimFile->AddDataValuePair( vendorData );
     data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "DWFileName",
-        ConvertUnicode( dwFileName.GetFullName().c_str() ) );
+                   ConvertUnicode( dwFileName.GetFullName().c_str() ) );
     dwsimFile->AddDataValuePair( data );
     mUserPrefBuffer->SetCommand( "DWSIM_Preferences", dwsimFile );
 
@@ -217,7 +217,7 @@ void DWPlugin::OnOpen( wxCommandEvent& event )
 
 ////////////////////////////////////////////////////////////////////////////////
 void DWPlugin::CloseSimulation( void )
-{    
+{
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
     returnState->AddDataValuePair( vendorData );
@@ -235,7 +235,7 @@ void DWPlugin::CloseSimulation( void )
 
     std::string nw_str = serviceList->Query( status ) + "\n";
     mIsSheetOpen = false;
-    SetName( _("DWPlugin") );
+    SetName( _( "DWPlugin" ) );
     wxCommandEvent event;
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
     GlobalNameUpdate( event );
@@ -300,7 +300,7 @@ wxMenu* DWPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mMenu->Append( DWPLUGIN_CLOSE_SIMULATION, _( "Close" ) );
     mMenu->Enable( DWPLUGIN_CLOSE_SIMULATION, false );
     baseMenu->Insert( 0, DWPLUGIN_MENU,   _( "DWSIM" ), mMenu,
-                    _( "Used in conjunction with DWSIM" ) );
+                      _( "Used in conjunction with DWSIM" ) );
     baseMenu->Enable( DWPLUGIN_MENU, true );
 
     if( GetVEModel()->GetSubSystem() != NULL )
@@ -373,7 +373,7 @@ void DWPlugin::GetInputs( wxCommandEvent& event )
         std::vector< std::string > temp_vector;
         pair->GetData( temp_vector );
         params->SetData( wxString( name.c_str(), wxConvUTF8 ), wxString( temp_vector[1].c_str(), wxConvUTF8 ),
-            wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
+                         wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
     }
     params->UpdateSizes();
     params->ShowModal();
@@ -423,7 +423,7 @@ void DWPlugin::GetOutputs( wxCommandEvent& event )
         std::vector< std::string > temp_vector;
         pair->GetData( temp_vector );
         params->SetData( wxString( name.c_str(), wxConvUTF8 ), wxString( temp_vector[1].c_str(), wxConvUTF8 ),
-            wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
+                         wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
     }
     params->UpdateSizes();
     params->ShowModal();

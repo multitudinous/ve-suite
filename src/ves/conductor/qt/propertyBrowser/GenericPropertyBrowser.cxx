@@ -41,18 +41,18 @@
 
 using namespace ves::conductor;
 
-GenericPropertyBrowser::GenericPropertyBrowser(QWidget* parent) :
-    QtTreePropertyBrowser(parent)
+GenericPropertyBrowser::GenericPropertyBrowser( QWidget* parent ) :
+    QtTreePropertyBrowser( parent )
 {
     // Create the default editor types we want to use
-    mDoubleSpinBoxFactory = new QtDoubleSpinBoxFactory(this);
-    mSpinBoxFactory = new QtSpinBoxFactory(this);
-    mCheckBoxFactory = new QtCheckBoxFactory(this);
-    mLineEditFactory = new QtLineEditFactory(this);
-    mComboBoxFactory = new QtEnumEditorFactory(this);
-    mSliderFactory = new QtSliderFactory(this);
-    mFileEditFactory = new FileEditFactory(this);
-    mNodeSelectFactory = new NodeSelectFactory(this);
+    mDoubleSpinBoxFactory = new QtDoubleSpinBoxFactory( this );
+    mSpinBoxFactory = new QtSpinBoxFactory( this );
+    mCheckBoxFactory = new QtCheckBoxFactory( this );
+    mLineEditFactory = new QtLineEditFactory( this );
+    mComboBoxFactory = new QtEnumEditorFactory( this );
+    mSliderFactory = new QtSliderFactory( this );
+    mFileEditFactory = new FileEditFactory( this );
+    mNodeSelectFactory = new NodeSelectFactory( this );
 }
 
 void GenericPropertyBrowser::setPropertyBrowser( PropertyBrowser* browser )
@@ -77,11 +77,11 @@ void GenericPropertyBrowser::RefreshContents( bool autosize )
     // Tell the browser to auto-resize column widths
     if( autosize )
     {
-        this->setResizeMode(QtTreePropertyBrowser::ResizeToContents);
+        this->setResizeMode( QtTreePropertyBrowser::ResizeToContents );
     }
     else
     {
-        this->setResizeMode(QtTreePropertyBrowser::Interactive);
+        this->setResizeMode( QtTreePropertyBrowser::Interactive );
         this->setSplitterPosition( 175 );
     }
 
@@ -89,13 +89,13 @@ void GenericPropertyBrowser::RefreshContents( bool autosize )
     PropertyBrowser::ItemVector* items = mBrowser->GetItems();
     PropertyBrowser::ItemVector::iterator iterator;
     PropertyBrowser::ItemVector::iterator end = items->end();
-    for( iterator = items->begin(); iterator != end; iterator++)
+    for( iterator = items->begin(); iterator != end; iterator++ )
     {
-        this->addProperty( (*iterator) );
+        this->addProperty( ( *iterator ) );
     }
 
     mBrowser->RefreshAll( );
 
     // Auto-sizing of columns should be complete; allow user to control widths
-    this->setResizeMode(QtTreePropertyBrowser::Interactive);
+    this->setResizeMode( QtTreePropertyBrowser::Interactive );
 }

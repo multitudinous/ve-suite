@@ -40,8 +40,8 @@ using namespace ves::conductor;
 
 ////////////////////////////////////////////////
 Module::Module( void ):
-        pl_mod( 0 ),
-        canvas( 0 )
+    pl_mod( 0 ),
+    canvas( 0 )
 {
     ;
 }

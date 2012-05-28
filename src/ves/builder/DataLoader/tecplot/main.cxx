@@ -53,9 +53,9 @@ int main( int argc, char** argv )
         std::cout << "For more information enter: " << argv[ 0 ] << " --help" << std::endl;
         return( 1 );
     }
-    
-    tecplot::sdk::integration::Manager& manager = 
-        tecplot::sdk::integration::Manager::instance(); 
+
+    tecplot::sdk::integration::Manager& manager =
+        tecplot::sdk::integration::Manager::instance();
 
     // Examine commandline flags...
     int outputToCurrentDirFlag = 0;
@@ -70,7 +70,7 @@ int main( int argc, char** argv )
             // Look for flag that requests help
             if( !std::string( "--help" ).compare( argv[ i ] ) )
             {
-                std::string helpAboutString  = manager.getHelpAbout(); 
+                std::string helpAboutString  = manager.getHelpAbout();
                 std::cout << helpAboutString << std::endl;
                 std::cout << "Description: This program converts ascii and binary tecplot files to vtk format" << std::endl;
                 std::cout << "Usage: " << argv[ 0 ] << " tecplot_file1 tecplot_file2 ..." << std::endl;
@@ -113,10 +113,10 @@ int main( int argc, char** argv )
     for( int i = 1; i < argc; ++i )
     {
         // skip over any of the commmandline flags...
-        if( !std::string("--help").compare( argv[ i ] ) || 
-            !std::string("--outputToCurrentDir").compare( argv[ i ] ) || 
-            !std::string("--ascii").compare( argv[ i ] ) ||
-            !std::string("--multiblock").compare( argv[ i ] ) )
+        if( !std::string( "--help" ).compare( argv[ i ] ) ||
+                !std::string( "--outputToCurrentDir" ).compare( argv[ i ] ) ||
+                !std::string( "--ascii" ).compare( argv[ i ] ) ||
+                !std::string( "--multiblock" ).compare( argv[ i ] ) )
         {
             continue;
         }
@@ -124,8 +124,8 @@ int main( int argc, char** argv )
         // Start a new reader object using the current commandline argument as input filename...
         std::string inputFileNameAndPath( argv[ i ] );
         tecplotReader* reader = new tecplotReader( inputFileNameAndPath );
-        
-        std::string fileExtension(".vtu");
+
+        std::string fileExtension( ".vtu" );
         if( multiBlockFlag )
         {
             reader->SetMultiBlockOn();
@@ -143,7 +143,7 @@ int main( int argc, char** argv )
             std::string outputFileName;
             if( numTimesteps == 1 )
             {
-                outputFileName = 
+                outputFileName =
                     boost::filesystem::path( inputFileNameAndPath ).replace_extension( fileExtension ).string();
             }
             else
@@ -151,9 +151,9 @@ int main( int argc, char** argv )
                 // Using a zero-based incremental naming scheme, create an output filename...
                 std::ostringstream ss;
                 ss << std::setw( 3 ) << std::setfill( '0' ) << j;
-                
-                outputFileName =  
-                    boost::filesystem::path( inputFileNameAndPath ).replace_extension("").string() + 
+
+                outputFileName =
+                    boost::filesystem::path( inputFileNameAndPath ).replace_extension( "" ).string() +
                     "_" + ss.str() + fileExtension;
             }
 
@@ -177,7 +177,7 @@ int main( int argc, char** argv )
                 }
                 writer->SetWriteMetaFile( 1 );  // causes creation of *.vtm meta file
                 writer->Write();
-                writer->Delete();                    
+                writer->Delete();
             }
             else
             {

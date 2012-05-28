@@ -62,7 +62,7 @@ class UIPluginFactory
 {
 public:
     ///Default destructor for plugins
-    virtual ~UIPluginFactory(){};
+    virtual ~UIPluginFactory() {};
 
     /// Creates a new instance of the underlying Plugin class
     virtual ves::conductor::UIPluginInterface* CreateInstance() = 0;

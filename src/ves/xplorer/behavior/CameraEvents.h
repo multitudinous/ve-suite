@@ -72,7 +72,7 @@ namespace manipulator
 class ManipulatorManager;
 }
 }
-    
+
 namespace behavior
 {
 
@@ -104,54 +104,54 @@ private:
 
     void UpdateSelectionLine();
     void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
-    
+
     ///Selection start end point line
     osg::Vec3d m_startPoint;
     osg::Vec3d m_endPoint;
 
     /// Required connections list for connecting to events via EventManager
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
-    
+
     ///Object picked
-    typedef boost::signals2::signal< void (osg::NodePath&) > ObjectPickedSignal_type;
+    typedef boost::signals2::signal< void ( osg::NodePath& ) > ObjectPickedSignal_type;
     ObjectPickedSignal_type m_objectPickedSignal;
-    
+
     ///Physics simulator pointer
     scenegraph::PhysicsSimulator& m_physicsSimulator;
-    
+
     ///Scene manager pointer
     scenegraph::SceneManager& m_sceneManager;
-    
+
     ///Character controller pointer
     scenegraph::CharacterController& m_characterController;
-    
+
     ///Manipulator pointer
     scenegraph::manipulator::ManipulatorManager& m_manipulatorManager;
-    
+
     ///Camera manager
-    scenegraph::camera::CameraManager& m_cameraManager;    
+    scenegraph::camera::CameraManager& m_cameraManager;
 
     ///The ray intersector test
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
-    
+
     ///The current X mouse position
     int m_currX;
-    
+
     ///The current Y mouse position
     int m_currY;
-    
+
     ///The rigid body that has been selected during physics mouse picking
     btRigidBody* m_pickedBody;
-    
+
     ///Bullet constraint used for physics mouse picking
     btTypedConstraint* m_pickConstraint;
-    
+
     ///GL transform info about the scene
     scenegraph::GLTransformInfoPtr m_currentGLTransformInfo;
-    
+
     ///The distance from the head position to the picked btRigidBody point
     ///Used to calculate point to point constraints for physics picking
-    double m_prevPhysicsRayPos;    
+    double m_prevPhysicsRayPos;
 };
 
 }

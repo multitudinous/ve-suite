@@ -44,7 +44,7 @@ NormalizeVisitor API
 #include <osg/NodeVisitor>
 namespace osg
 {
-    class StateSet;
+class StateSet;
 }
 namespace ves
 {

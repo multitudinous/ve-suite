@@ -57,13 +57,13 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 ChangeCursorEventHandler::ChangeCursorEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ChangeCursorEventHandler::ChangeCursorEventHandler( const ChangeCursorEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -99,7 +99,7 @@ void ChangeCursorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mo
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         std::cout << "Invalid object passed to ChangeCursorEventHandler::SetGlobalBaseObject!" << std::endl;
@@ -111,7 +111,7 @@ void ChangeCursorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlO
     //Grab the subdialog settings from streamlines to adjust cursor settings
     CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
     DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
-    CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
+    CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>( activeModelDVP->GetDataXMLObject() );
     if( objectCommand->GetCommandName() != "UPDATE_STREAMLINE_SETTINGS" )
     {
         return;
@@ -136,8 +136,8 @@ void ChangeCursorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlO
     if( pointsDVP )
     {
         pointsDVP->GetData( numPointsPerPlane );
-        vprDEBUG( vesDBG, 2 ) << "Number of seed points " 
-            << numPointsPerPlane << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 2 ) << "Number of seed points "
+                              << numPointsPerPlane << std::endl << vprDEBUG_FLUSH;
         EnvironmentHandler::instance()->GetCursor()->SetPlaneReso( static_cast< int >( numPointsPerPlane ) );
     }
 
@@ -146,8 +146,8 @@ void ChangeCursorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlO
     if( sizeDVP )
     {
         sizeDVP->GetData( planeSize );
-        vprDEBUG( vesDBG, 2 ) << "|\tStreamline planesize " 
-            << planeSize << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 2 ) << "|\tStreamline planesize "
+                              << planeSize << std::endl << vprDEBUG_FLUSH;
         EnvironmentHandler::instance()->GetCursor()->SetPlaneSize( static_cast< int >( planeSize ) );
     }
 

@@ -42,7 +42,7 @@ namespace conductor
 
 QtLogChannel::QtLogChannel()
 {
-    m_logView = new QTextEdit(0);
+    m_logView = new QTextEdit( 0 );
     //m_logView->show();
     UIElementQt* element = new UIElementQt();
     element->SetInitialImageWidthAndHeight( 600, 400 );
@@ -61,4 +61,5 @@ void QtLogChannel::log( const Poco::Message& msg )
     m_logView->append( QString::fromStdString( msg.getText() ) );
 }
 
-}} // ves::conductor
+}
+} // ves::conductor

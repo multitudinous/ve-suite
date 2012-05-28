@@ -141,29 +141,29 @@ IMPLEMENT_DYNAMIC_CLASS( UIPluginBase, wxEvtHandler )
 
 /////////////////////////////////////////////////////////////////////////////
 UIPluginBase::UIPluginBase() :
-        wxEvtHandler(),
-        financial_dlg( 0 ),
-        dlg( 0 ),
-        result_dlg( 0 ),
-        port_dlg( 0 ),
-        m_dataSetLoaderDlg( 0 ),
-        m_veModel( new Model() ),
-        resultsDialog( 0 ),
-        portsDialog( 0 ),
-        inputsDialog( 0 ),
-        serviceList( 0 ),
-        mDataBufferEngine( 0 ),
-        mUserPrefBuffer( 0 ),
-        iconFilename( "DefaultPlugin" ),
-        m_canvas( 0 ),
-        m_network( 0 ),
-        _soundsDlg( 0 ),
-        m_iconChooser( 0 ),
-        vistab( 0 ),        
-        cadDialog( 0 ),
-        highlightFlag( false ),
-        nameFlag( true ),
-        mPopMenu( 0 )
+    wxEvtHandler(),
+    financial_dlg( 0 ),
+    dlg( 0 ),
+    result_dlg( 0 ),
+    port_dlg( 0 ),
+    m_dataSetLoaderDlg( 0 ),
+    m_veModel( new Model() ),
+    resultsDialog( 0 ),
+    portsDialog( 0 ),
+    inputsDialog( 0 ),
+    serviceList( 0 ),
+    mDataBufferEngine( 0 ),
+    mUserPrefBuffer( 0 ),
+    iconFilename( "DefaultPlugin" ),
+    m_canvas( 0 ),
+    m_network( 0 ),
+    _soundsDlg( 0 ),
+    m_iconChooser( 0 ),
+    vistab( 0 ),
+    cadDialog( 0 ),
+    highlightFlag( false ),
+    nameFlag( true ),
+    mPopMenu( 0 )
 {
     pos = wxPoint( 0, 0 ); //default position
 
@@ -190,7 +190,7 @@ UIPluginBase::UIPluginBase() :
     defaultIconMap[ "streamlines.xpm" ] = wxImage( streamlines_xpm );
     defaultIconMap[ "vector.xpm" ] = wxImage( vector_xpm );
     defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
-    
+
     pluginDeleteEvent.SetId( UIPLUGINBASE_DIALOG_PLUGIN_UPDATE );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +213,7 @@ UIPluginBase::~UIPluginBase()
 
     delete [] poly;
     poly = 0;
-    
+
     delete mMyIcon;
     mMyIcon = 0;
 
@@ -241,14 +241,14 @@ UIPluginBase::~UIPluginBase()
         portsDialog->Destroy();
         portsDialog = 0;
     }
-    
+
     m_canvas = 0;
     m_network = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetCanvas( wxScrolledWindow* canvas )
 {
-    m_canvas = dynamic_cast< Canvas * >(canvas);
+    m_canvas = dynamic_cast< Canvas* >( canvas );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetNetwork( ves::conductor::Network* network )
@@ -266,7 +266,7 @@ void UIPluginBase::SetName( wxString pluginName )
     mPluginName = pluginName;
     m_veModel->SetPluginName( mPluginName.c_str() );
     if( mPopMenu )
-    {    
+    {
         wxString menuName = mPluginName + wxString( " Menu", wxConvUTF8 );
         mPopMenu->SetTitle( menuName );
     }
@@ -325,17 +325,17 @@ int UIPluginBase::GetNumIports()
 PORT UIPluginBase::GetIPorts()
 {
     return inputPort;
-    
+
     //for( size_t i = 0; i <  inputPort.size(); ++i )
     {
 
         //iports[ i ] = ( *inputPort.at( i ) );
         /*
-         iports[ i ].GetPortLocation()->SetPoint( 
-                  std::pair< unsigned int, unsigned int >( poly[ 0 ].x, ( poly[ 3 ].y / inputPort.size() ) * i ) 
+         iports[ i ].GetPortLocation()->SetPoint(
+                  std::pair< unsigned int, unsigned int >( poly[ 0 ].x, ( poly[ 3 ].y / inputPort.size() ) * i )
                                                 );
-         inputPort.at( i )->GetPortLocation()->SetPoint( 
-                  std::pair< unsigned int, unsigned int >( poly[ 0 ].x, ( poly[ 3 ].y / inputPort.size() ) * i ) 
+         inputPort.at( i )->GetPortLocation()->SetPoint(
+                  std::pair< unsigned int, unsigned int >( poly[ 0 ].x, ( poly[ 3 ].y / inputPort.size() ) * i )
                                                );
                                     */
         //iports[ i ].x = poly[ 0 ].x;
@@ -357,11 +357,11 @@ PORT UIPluginBase::GetOPorts()
     {
         //oports[ i ] = ( *outputPort.at( i ) );
         /*
-         oports[ i ].GetPortLocation()->SetPoint( 
-                  std::pair< unsigned int, unsigned int >( poly[ 1 ].x, ( poly[ 3 ].y / outputPort.size() ) * i ) 
+         oports[ i ].GetPortLocation()->SetPoint(
+                  std::pair< unsigned int, unsigned int >( poly[ 1 ].x, ( poly[ 3 ].y / outputPort.size() ) * i )
                                                 );
-         outputPort.at( i )->GetPortLocation()->SetPoint( 
-                  std::pair< unsigned int, unsigned int >( poly[ 1 ].x, ( poly[ 3 ].y / outputPort.size() ) * i ) 
+         outputPort.at( i )->GetPortLocation()->SetPoint(
+                  std::pair< unsigned int, unsigned int >( poly[ 1 ].x, ( poly[ 3 ].y / outputPort.size() ) * i )
                                                 );
                                      */
         //oports[ i ].x = outputPort.at( i )->GetPortLocation()->GetPoint().first;
@@ -437,7 +437,7 @@ UIDialog* UIPluginBase::UI( wxWindow* parent )
     long new_id = wxNewId();
     dlg = new UIDialog( parent, new_id, _( "UIDialog" ) );
     ConfigurePluginDialogs( dlg );
-    
+
     return dlg;
 }
 
@@ -454,7 +454,9 @@ UIDialog* UIPluginBase::Result( wxWindow* parent )
     alignments.push_back( wxALIGN_RIGHT );
 
     if( result_dlg == NULL )
+    {
         result_dlg = new TextResultDialog( parent, wxT( "Result Summary" ), wxSize( 560, 400 ) );
+    }
     result_dlg->syngas->Clear();
     result_dlg->syngas->SetColTitles( titles );
     result_dlg->syngas->SetColAlignments( alignments );
@@ -496,7 +498,9 @@ wxString UIPluginBase::GetDesc()
 void UIPluginBase::Lock( bool lock )
 {
     if( dlg != NULL )
+    {
         dlg->Lock( lock );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIPluginBase::Has3Ddata()
@@ -519,43 +523,43 @@ ModelPtr UIPluginBase::GetVEModel( void )
 
     {
         ///Set the int data
-        std::map<std::string, long *>::iterator iteri;
+        std::map<std::string, long*>::iterator iteri;
         for( iteri = _int.begin(); iteri != _int.end(); iteri++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( iteri->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( iteri->first, *( iteri->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( iteri->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( iteri->first, *( iteri->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
     {
         ///Set the double data
-        std::map<std::string, double *>::iterator iterd;
+        std::map<std::string, double*>::iterator iterd;
         for( iterd = _double.begin(); iterd != _double.end(); iterd++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( iterd->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( iterd->first, *( iterd->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( iterd->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( iterd->first, *( iterd->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
     {
         ///Set the string data
-        std::map<std::string, std::string *>::iterator iters;
+        std::map<std::string, std::string*>::iterator iters;
         for( iters = _string.begin(); iters != _string.end(); iters++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( iters->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( iters->first, *( iters->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( iters->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( iters->first, *( iters->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
@@ -564,12 +568,12 @@ ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<long> * >::iterator itervi;
         for( itervi = _int1D.begin(); itervi != _int1D.end(); itervi++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( itervi->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( itervi->first, *( itervi->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( itervi->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( itervi->first, *( itervi->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
@@ -578,12 +582,12 @@ ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<double> * >::iterator itervd;
         for( itervd = _double1D.begin(); itervd != _double1D.end(); itervd++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( itervd->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( itervd->first, *( itervd->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( itervd->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( itervd->first, *( itervd->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
@@ -592,27 +596,27 @@ ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<std::string>* >::iterator itervs;
         for( itervs = _string1D.begin(); itervs != _string1D.end(); itervs++ )
         {
-                CommandPtr tempCommand = CommandPtr( new Command() );
-                tempCommand->SetCommandName( itervs->first );
-                ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
-                dataDVP->SetData( itervs->first, *( itervs->second ) );
-                tempCommand->AddDataValuePair( dataDVP );
-                m_veModel->SetInput( tempCommand );
+            CommandPtr tempCommand = CommandPtr( new Command() );
+            tempCommand->SetCommandName( itervs->first );
+            ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
+            dataDVP->SetData( itervs->first, *( itervs->second ) );
+            tempCommand->AddDataValuePair( dataDVP );
+            m_veModel->SetInput( tempCommand );
         }
     }
 
     {
         ///Set the 2d string data
-        std::map<std::string, 
+        std::map < std::string,
             std::vector< std::vector<std::string> >* >::iterator iterv2s;
         for( iterv2s = _string2D.begin(); iterv2s != _string2D.end(); iterv2s++ )
         {
             std::string temp2d( iterv2s->first );
             std::vector< std::vector< std::string > > temp2v;
-            temp2v = *(iterv2s->second);
+            temp2v = *( iterv2s->second );
             CommandPtr tempCommand = CommandPtr( new Command() );
             tempCommand->SetCommandName( iterv2s->first );
-            ves::open::xml::DataValuePairPtr dataDVP( 
+            ves::open::xml::DataValuePairPtr dataDVP(
                 new ves::open::xml::DataValuePair() );
             dataDVP->SetData( iterv2s->first, *( iterv2s->second ) );
             tempCommand->AddDataValuePair( dataDVP );
@@ -719,14 +723,16 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
                 std::map<std::string, std::vector<long>* >::iterator itervi;
                 std::map<std::string, std::vector<double>* >::iterator itervd;
                 std::map<std::string, std::vector<std::string>* >::iterator itervs;
-                std::map<std::string, 
+                std::map < std::string,
                     std::vector< std::vector<std::string> >* >::iterator iterv2s;
 
                 if( std::string( "FLOAT" ) == dataType )
                 {
                     iterd = _double.find( dataName );
                     if( iterd != _double.end() )
+                    {
                         tempData->GetData( *( iterd->second ) );
+                    }
                 }
                 else if( std::string( "LONG" ) == dataType )
                 {
@@ -740,33 +746,43 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
                 {
                     iters = _string.find( dataName );
                     if( iters != _string.end() )
+                    {
                         tempData->GetData( *( iters->second ) );
+                    }
                 }
                 else if( std::string( "1DSTRING" ) == dataType )
                 {
                     itervs = _string1D.find( dataName );
                     if( itervs != _string1D.end() )
+                    {
                         tempData->GetData( *( itervs->second ) );
+                    }
                 }
                 else if( std::string( "1DDOUBLE" ) == dataType )
                 {
                     itervd = _double1D.find( dataName );
                     if( itervd != _double1D.end() )
+                    {
                         tempData->GetData( *( itervd->second ) );
+                    }
                 }
                 else if( std::string( "1DLONG" ) == dataType )
                 {
                     itervi = _int1D.find( dataName );
                     if( itervi != _int1D.end() )
+                    {
                         tempData->GetData( *( itervi->second ) );
+                    }
                 }
                 else if( std::string( "2DSTRING" ) == dataType )
                 {
                     iterv2s = _string2D.find( dataName );
                     if( iterv2s != _string2D.end() )
+                    {
                         tempData->GetData( *( iterv2s->second ) );
+                    }
                 }
-            
+
                 /*else if(std::string( "XMLOBJECT" ) == dataType )
                 {
                    iteri = _double.find( dataName );
@@ -856,8 +872,8 @@ void UIPluginBase::RegistVar( std::string vname, std::vector<std::string>* var )
     _string1D[vname] = var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::RegistVar( std::string vname, 
-                             std::vector< std::vector<std::string> >* var )
+void UIPluginBase::RegistVar( std::string vname,
+                              std::vector< std::vector<std::string> >* var )
 {
     _string2D[vname] = var;
 }
@@ -865,7 +881,9 @@ void UIPluginBase::RegistVar( std::string vname,
 void UIPluginBase::FinancialData()
 {
     if( financial_dlg == NULL )
+    {
         financial_dlg = new FinancialDialog( m_canvas, wxID_ANY );
+    }
 
     financial_dlg->Show();
 }
@@ -889,7 +907,7 @@ void UIPluginBase::ViewInputVariables( void )
         MessageLog( "Model contains no input variables\n" );
         ///The code below is not robust so...
         return;
-        
+
 
         ///Query for the inputs
         std::string compName = GetVEModel()->GetPluginName();
@@ -910,7 +928,7 @@ void UIPluginBase::ViewInputVariables( void )
 
         //Get inputs
         std::string nw_str = serviceList->Query( status );
-        if( nw_str.empty() || !nw_str.compare( "NULL") )
+        if( nw_str.empty() || !nw_str.compare( "NULL" ) )
         {
             return;
         }
@@ -924,14 +942,14 @@ void UIPluginBase::ViewInputVariables( void )
         networkReader.ReadFromString();
         //serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
         networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-        std::vector< ves::open::xml::XMLObjectPtr > objectVector = 
+        std::vector< ves::open::xml::XMLObjectPtr > objectVector =
             networkReader.GetLoadedXMLObjects();
         //std::ostringstream output;
         //output << objectVector.size()<<std::endl;
         //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
         if( objectVector.size() > 0 )
         {
-            ves::open::xml::CommandPtr cmd = 
+            ves::open::xml::CommandPtr cmd =
                 boost::dynamic_pointer_cast<Command>( objectVector.at( 0 ) );
             ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
         }
@@ -941,13 +959,13 @@ void UIPluginBase::ViewInputVariables( void )
         params->SetCompName(compName.c_str());
         params->SetServiceList(serviceList);
         params->SetDialogType("input");
-        for (int i=0; i < temp_vector.size(); i++) 
+        for (int i=0; i < temp_vector.size(); i++)
             params->AppendList(temp_vector[i].c_str());
         params->ShowModal();*/
     }
 
-    inputsDialog = new SummaryResultDialog( GetPluginParent(), 
-        wxT( "Input Variables" ), wxSize( 560, 400 ), inputsVec );
+    inputsDialog = new SummaryResultDialog( GetPluginParent(),
+                                            wxT( "Input Variables" ), wxSize( 560, 400 ), inputsVec );
     ConfigurePluginDialogs( inputsDialog );
 
     // Get all the results form the model
@@ -972,22 +990,22 @@ void UIPluginBase::ViewResultsVariables( void )
     vendorData->SetData( "vendorUnit", m_veModel->GetPluginName() );
     resultsCommand->AddDataValuePair( vendorData );
     DataValuePairPtr moduleIdData( new DataValuePair() );
-    moduleIdData->SetData( "moduleId", 
-        static_cast< unsigned int >( m_veModel->GetModelID() ) );
+    moduleIdData->SetData( "moduleId",
+                           static_cast< unsigned int >( m_veModel->GetModelID() ) );
     resultsCommand->AddDataValuePair( moduleIdData );
 
     //Then parse command
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
     std::string resultsData( "returnString" );
     nodes.push_back( std::pair< CommandPtr, std::string  >(
-        resultsCommand, std::string( "vecommand" ) ) );
+                         resultsCommand, std::string( "vecommand" ) ) );
 
     XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.WriteXMLDocument( nodes, resultsData, "Command" );
     //Now query the unit for data
     unitResultsData = serviceList->Query( resultsData.c_str() );
-    
+
     std::vector< CommandPtr > resultsVec;
 
     if( unitResultsData != "NULL" )
@@ -996,11 +1014,11 @@ void UIPluginBase::ViewResultsVariables( void )
         networkReader.UseStandaloneDOMDocumentManager();
         networkReader.ReadFromString();
         networkReader.ReadXMLData( unitResultsData, "Command", "vecommand" );
-        std::vector< XMLObjectPtr > objectVector = 
+        std::vector< XMLObjectPtr > objectVector =
             networkReader.GetLoadedXMLObjects();
-        CommandPtr tempResult =  
-            boost::dynamic_pointer_cast<ves::open::xml::Command>( 
-            objectVector.at( 0 ) );
+        CommandPtr tempResult =
+            boost::dynamic_pointer_cast<ves::open::xml::Command>(
+                objectVector.at( 0 ) );
         if( tempResult )
         {
             m_veModel->SetResult( tempResult );
@@ -1010,14 +1028,14 @@ void UIPluginBase::ViewResultsVariables( void )
 
     if( resultsVec.size() == 0 )
     {
-        //serviceList->GetMessageLog()->SetMessage( 
+        //serviceList->GetMessageLog()->SetMessage(
         //    "Model contains no results variables\n" );
         MessageLog( "Model contains no results variables\n" );
         return;
     }
 
-    resultsDialog = new SummaryResultDialog( GetPluginParent(), 
-        wxT( "Results Variables" ), wxSize( 560, 400 ), resultsVec );
+    resultsDialog = new SummaryResultDialog( GetPluginParent(),
+            wxT( "Results Variables" ), wxSize( 560, 400 ), resultsVec );
 
     resultsDialog->Show();
 }
@@ -1112,7 +1130,7 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
     }
 
     double PI = 3.14159265;
-    image = image.Rotate(( rotation * PI ) / 180, wxPoint( 0, 0 ) );
+    image = image.Rotate( ( rotation * PI ) / 180, wxPoint( 0, 0 ) );
 
     mIconW = image.GetWidth() - 1;
     mIconH = image.GetHeight() - 1;
@@ -1134,7 +1152,7 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetImage( wxImage& image )
-{    
+{
     mIconW = static_cast< int >( image.GetWidth() );
     mIconH = static_cast< int >( image.GetHeight() );
 
@@ -1152,7 +1170,7 @@ wxBitmap* UIPluginBase::GetIconImage()
     return mMyIcon;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::OnDClick( wxMouseEvent &event )
+void UIPluginBase::OnDClick( wxMouseEvent& event )
 {
     // This function opens a plugins dialog when double clicked on the design canvas
     wxClientDC dc( m_canvas );
@@ -1171,7 +1189,7 @@ void UIPluginBase::OnDClick( wxMouseEvent &event )
 void UIPluginBase::CreateUserDialog( wxPoint WXUNUSED( extpos ) )
 {
     SetActiveModel();
-    
+
     // now show the custom dialog with no parent for the wxDialog
     UIDialog* hello = UI( GetPluginParent() );
     hello->SetCORBAServiceList( serviceList );
@@ -1213,7 +1231,7 @@ void  UIPluginBase::OnShowResult( wxCommandEvent& event )
     {
         //result = exec->GetModuleResult( id );
     }
-    catch ( CORBA::Exception & )
+    catch( CORBA::Exception& )
     {
         //serviceList->GetMessageLog()->SetMessage( "Maybe Computational Engine is down\n" );
         MessageLog( "Maybe Computational Engine is down\n" );
@@ -1237,7 +1255,7 @@ void  UIPluginBase::OnShowResult( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnShowUserDialog( wxCommandEvent& WXUNUSED( event ) )
 {
-    CreateUserDialog( wxPoint(0,0) );
+    CreateUserDialog( wxPoint( 0, 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnShowFinancial( wxCommandEvent& WXUNUSED( event ) )
@@ -1262,8 +1280,8 @@ void  UIPluginBase::OnShowIconChooser( wxCommandEvent& event )
     //UIPluginBase* tempPlugin = this;
     //if( m_iconChooser == NULL )
     //{
-        m_iconChooser = new IconChooser( GetPluginParent() );
-        m_iconChooser->SetPlugin( this );
+    m_iconChooser = new IconChooser( GetPluginParent() );
+    m_iconChooser->SetPlugin( this );
     //}
     //m_iconChooser->AddIconsDir( wxString( "2dicons", wxConvUTF8 ) );
     //m_iconChooser->SetPlugin( tempPlugin );
@@ -1547,14 +1565,14 @@ void UIPluginBase::OnNavigateTo( wxCommandEvent& event )
 
     ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
     veCommand->SetCommandName( std::string( "Move to cad" ) );
-    ves::open::xml::DataValuePairPtr dataValuePair( 
+    ves::open::xml::DataValuePairPtr dataValuePair(
         new ves::open::xml::DataValuePair() );
     dataValuePair->SetData( "NAVIGATE_TO", m_veModel->GetID() );
     veCommand->AddDataValuePair( dataValuePair );
-    
+
     if( event.GetId() == UIPLUGINBASE_NAVTO_SELECT )
     {
-        ves::open::xml::DataValuePairPtr selectDVP( 
+        ves::open::xml::DataValuePairPtr selectDVP(
             new ves::open::xml::DataValuePair() );
         selectDVP->SetData( "Select", "Glow" );
         veCommand->AddDataValuePair( selectDVP );
@@ -1572,11 +1590,11 @@ void UIPluginBase::OnOptimizeCAD( wxCommandEvent& event )
     {
         return;
     }
-    
+
     ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
     veCommand->SetCommandName( std::string( "Optimize CAD" ) );
-    ves::open::xml::DataValuePairPtr dataValuePair( 
-                                                   new ves::open::xml::DataValuePair() );
+    ves::open::xml::DataValuePairPtr dataValuePair(
+        new ves::open::xml::DataValuePair() );
     dataValuePair->SetData( "Optimize CAD", m_veModel->GetID() );
     veCommand->AddDataValuePair( dataValuePair );
 
@@ -1599,10 +1617,10 @@ void UIPluginBase::OnGeometry( wxCommandEvent& event )
     {
         ves::open::xml::model::ModelPtr veModel = GetVEModel();
         cadDialog = new ves::conductor::util::CADNodeManagerDlg( veModel->AddGeometry(),
-                                                                 GetPluginParent(), ::wxNewId() );
+                GetPluginParent(), ::wxNewId() );
 
         cadDialog->SetSize( dialogSize.x, dialogSize.y, dialogSize.width,
-                        dialogSize.height, wxSIZE_AUTO );
+                            dialogSize.height, wxSIZE_AUTO );
 
         ConfigurePluginDialogs( cadDialog );
     }
@@ -1633,12 +1651,12 @@ void UIPluginBase::OnDataSet( wxCommandEvent& event )
     {
         ves::open::xml::model::ModelPtr veModel = GetVEModel();
         m_dataSetLoaderDlg = new ves::conductor::util::DataSetLoaderUI(
-                                 GetPluginParent(), ::wxNewId(), SYMBOL_DATASETLOADERUI_TITLE,
-                                 SYMBOL_DATASETLOADERUI_POSITION, SYMBOL_DATASETLOADERUI_SIZE,
-                                 SYMBOL_DATASETLOADERUI_STYLE, veModel );
+            GetPluginParent(), ::wxNewId(), SYMBOL_DATASETLOADERUI_TITLE,
+            SYMBOL_DATASETLOADERUI_POSITION, SYMBOL_DATASETLOADERUI_SIZE,
+            SYMBOL_DATASETLOADERUI_STYLE, veModel );
         m_dataSetLoaderDlg->SetSize( dialogSize );
         m_dataSetLoaderDlg->SetSize( dialogSize.x, dialogSize.y, dialogSize.width,
-                        wxDefaultCoord, wxSIZE_AUTO_HEIGHT );
+                                     wxDefaultCoord, wxSIZE_AUTO_HEIGHT );
         ConfigurePluginDialogs( m_dataSetLoaderDlg );
     }
 
@@ -1666,7 +1684,7 @@ void UIPluginBase::OnVisualization( wxCommandEvent& event )
     {
         activeCORBAModel = serviceList->GetXplorerPointer()->GetModel( modelID.c_str() );
     }
-    catch ( CORBA::Exception& )
+    catch( CORBA::Exception& )
     {
         //serviceList->GetMessageLog()->SetMessage( "Couldn't find model\n" );//<< modelID<<std::endl;
         MessageLog( "Couldn't find model\n" );//<< modelID<<std::endl;
@@ -1787,8 +1805,8 @@ void UIPluginBase::OnZoomSelected( wxCommandEvent& WXUNUSED( event ) )
     networkSize.first *= m_network->GetUserScale()->first;
     networkSize.second *= m_network->GetUserScale()->second;
 
-    m_canvas->SetUserScale(m_network->GetUserScale()->first, 
-        m_network->GetUserScale()->second  );
+    m_canvas->SetUserScale( m_network->GetUserScale()->first,
+                            m_network->GetUserScale()->second );
     m_canvas->SetVirtualSize( networkSize.first, networkSize.second );
     m_canvas->Scroll( pos.x, pos.y );
     m_canvas->Refresh( true );
@@ -1819,7 +1837,7 @@ void UIPluginBase::OnModelSounds( wxCommandEvent& event )
         _soundsDlg = new SoundsPane( GetPluginParent(), GetVEModel() );
         //_soundsDlg->SetSize( dialogSize );
         _soundsDlg->SetSize( dialogSize.x, dialogSize.y, dialogSize.width,
-                        wxDefaultCoord, wxSIZE_AUTO_HEIGHT );
+                             wxDefaultCoord, wxSIZE_AUTO_HEIGHT );
 
         ConfigurePluginDialogs( _soundsDlg );
     }
@@ -1902,10 +1920,12 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
 
-    int answer = wxMessageBox( _( "Do you really want to delete this module?" ), 
-        _( "Confirmation" ), wxYES_NO );
+    int answer = wxMessageBox( _( "Do you really want to delete this module?" ),
+                               _( "Confirmation" ), wxYES_NO );
     if( answer != wxYES )
+    {
         return;
+    }
 
     //Now delete the plugin from the module and then remove from the map
     ///This is so that we find the right eventhandler to pop rather than
@@ -1913,7 +1933,7 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
     //networkFrame->RemoveEventHandler( this );
 
     ///Now send the erased module to xplorer to delete it as well
-    ves::open::xml::DataValuePairPtr dataValuePair( 
+    ves::open::xml::DataValuePairPtr dataValuePair(
         new ves::open::xml::DataValuePair() );
     dataValuePair->SetData( "Object ID", m_veModel->GetID() );
     ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
@@ -1924,7 +1944,7 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
     //Clean up memory
     mDataBufferEngine->RemoveModelFromSystem( m_veModel );
     RemovePluginDialogsFromCanvas();
-    
+
     event.SetClientData( &id );
     ::wxPostEvent( m_network, event );
 }
@@ -1933,10 +1953,12 @@ void UIPluginBase::OnMakeIntoHierarchy( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
 
-    int answer = wxMessageBox( _( "Do you really want to make into a hierarchy?" ), 
-        _( "Confirmation" ), wxYES_NO );
+    int answer = wxMessageBox( _( "Do you really want to make into a hierarchy?" ),
+                               _( "Confirmation" ), wxYES_NO );
     if( answer != wxYES )
+    {
         return;
+    }
 
     //add xml system
     ves::open::xml::model::SystemPtr system(
@@ -1948,7 +1970,7 @@ void UIPluginBase::OnMakeIntoHierarchy( wxCommandEvent& event )
 
     //add system to system list
     mDataBufferEngine->AddSubSystem( system );
-    
+
     //disables menu entry for make hierarchy
     SetAsHierarchy( );
 
@@ -1985,7 +2007,7 @@ bool UIPluginBase::GetHighlightFlag()
 void UIPluginBase::DrawPlugin( wxDC* dc )
 {
     //if hidden
-    if(nameFlag)
+    if( nameFlag )
     {
         DrawIcon( dc );
         DrawID( dc );
@@ -1995,7 +2017,7 @@ void UIPluginBase::DrawPlugin( wxDC* dc )
     //if highlighted
     if( highlightFlag )
     {
-        if(nameFlag)
+        if( nameFlag )
         {
             HighlightSelectedIcon( dc );
         }
@@ -2048,7 +2070,7 @@ void UIPluginBase::DrawPorts( bool flag, wxDC* dc )
         dc->GetTextExtent( text, &w, &h );
         dc->DrawText( text, xoff - w - 2, yoff );
     }
-        
+
     dc->SetBrush( *wxCYAN_BRUSH );
 
     // do the same thing as we did for the output ports
@@ -2180,7 +2202,7 @@ void UIPluginBase::DeletePort( wxCommandEvent& event )
     //delete associated links
     if( tempPort )
     {
-        event.SetClientData( &(*tempPort) );
+        event.SetClientData( &( *tempPort ) );
         ::wxPostEvent( m_network, event );
     }
     m_canvas->Refresh( true );
@@ -2188,12 +2210,12 @@ void UIPluginBase::DeletePort( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 double UIPluginBase::computenorm( wxPoint pt1, wxPoint pt2 )
 {
-    return sqrt( double(( pt1.x - pt2.x )*( pt1.x - pt2.x ) + ( pt1.y - pt2.y )*( pt1.y - pt2.y ) ) );
+    return sqrt( double( ( pt1.x - pt2.x ) * ( pt1.x - pt2.x ) + ( pt1.y - pt2.y ) * ( pt1.y - pt2.y ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::OnChildDestroy(wxWindowDestroyEvent& event) 
-{ 
-    wxWindow* w = event.GetWindow(); 
+void UIPluginBase::OnChildDestroy( wxWindowDestroyEvent& event )
+{
+    wxWindow* w = event.GetWindow();
     //std::cout << ConvertUnicode( event.GetEventObject()->GetClassInfo()->GetClassName() ) << std::endl;
     //wxLogMessage( _("destroyed") );
     //std::cout << "destroyed " << std::endl;
@@ -2215,14 +2237,14 @@ void UIPluginBase::OnChildDestroy(wxWindowDestroyEvent& event)
     {
         return;
     }
-    
-    pluginDialogPair = 
+
+    pluginDialogPair =
         std::pair< unsigned int, size_t >( id, mDialogMemoryMap.size() );
     pluginDeleteEvent.SetClientData( &pluginDialogPair );
-    m_network->AddPendingEvent( pluginDeleteEvent );    
+    m_network->AddPendingEvent( pluginDeleteEvent );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::RemovePluginDialogsFromCanvas() 
+void UIPluginBase::RemovePluginDialogsFromCanvas()
 {
     RemoveWindowFromCanvas( dlg );
     RemoveWindowFromCanvas( result_dlg );
@@ -2237,13 +2259,13 @@ void UIPluginBase::RemovePluginDialogsFromCanvas()
     RemoveWindowFromCanvas( cadDialog );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window ) 
+void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window )
 {
     if( !window )
     {
         return;
     }
-    
+
     GetPluginParent()->RemoveChild( window );
     //window->DestroyChildren();
     //delete window;
@@ -2252,7 +2274,7 @@ void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window )
     window = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::ConfigurePluginDialogs( wxWindow* window ) 
+void UIPluginBase::ConfigurePluginDialogs( wxWindow* window )
 {
     if( !window )
     {
@@ -2263,23 +2285,23 @@ void UIPluginBase::ConfigurePluginDialogs( wxWindow* window )
     //for plugins in wxGTK apps to send back info when dialogs are destoryed
 #ifndef __WXGTK__
     /*mDialogMemoryMap[ window->GetId() ] = true;
-    window->Connect( wxEVT_DESTROY, 
-        wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), 
+    window->Connect( wxEVT_DESTROY,
+        wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy),
         NULL, this );*/
 #endif
     window->SetExtraStyle( ~wxWS_EX_BLOCK_EVENTS );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::DisconnectPluginDialogsDestroyEvent( wxWindow* window ) 
+void UIPluginBase::DisconnectPluginDialogsDestroyEvent( wxWindow* window )
 {
     if( !window )
     {
         return;
     }
-    
+
     delete window;
     window = 0;
-    //window->Disconnect( wxEVT_DESTROY, 
+    //window->Disconnect( wxEVT_DESTROY,
     //    wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), NULL, this );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2287,8 +2309,8 @@ void UIPluginBase::CheckPluginMapOnExit()
 {
     if( mDialogMemoryMap.empty() )
     {
-        pluginDialogPair = 
-        std::pair< unsigned int, size_t >( id, mDialogMemoryMap.size() );
+        pluginDialogPair =
+            std::pair< unsigned int, size_t >( id, mDialogMemoryMap.size() );
         pluginDeleteEvent.SetClientData( &pluginDialogPair );
         m_network->AddPendingEvent( pluginDeleteEvent );
     }
@@ -2309,11 +2331,11 @@ void UIPluginBase::TogglePlugin( wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
     if( event.GetId() == UIPLUGINBASE_TOGGLE_ALL_ON )
     {
-        ves::open::xml::DataValuePairPtr dataValuePair( 
+        ves::open::xml::DataValuePairPtr dataValuePair(
             new ves::open::xml::DataValuePair() );
         dataValuePair->SetData( "VE_XPLORER_PLUGIN_ID", "ALL" );
         ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-        veCommand->SetCommandName( 
+        veCommand->SetCommandName(
             std::string( "Xplorer Toggle Plugin Events" ) );
         veCommand->AddDataValuePair( dataValuePair );
         bool connected = serviceList->SendCommandStringToXplorer( veCommand );
@@ -2321,11 +2343,11 @@ void UIPluginBase::TogglePlugin( wxCommandEvent& event )
     }
     else if( event.GetId() == UIPLUGINBASE_TOGGLE_PLUGIN_ON )
     {
-        ves::open::xml::DataValuePairPtr dataValuePair( 
+        ves::open::xml::DataValuePairPtr dataValuePair(
             new ves::open::xml::DataValuePair() );
         dataValuePair->SetData( "VE_XPLORER_PLUGIN_ID", m_veModel->GetID() );
         ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-        veCommand->SetCommandName( 
+        veCommand->SetCommandName(
             std::string( "Xplorer Toggle Plugin Events" ) );
         veCommand->AddDataValuePair( dataValuePair );
         bool connected = serviceList->SendCommandStringToXplorer( veCommand );
@@ -2385,11 +2407,11 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     //mPopMenu->Enable( UIPLUGINBASE_SHOW_FINANCIAL, true );
 
     //Conductor Menu
-    wxMenu * con_menu = new wxMenu();        
+    wxMenu* con_menu = new wxMenu();
     mPopMenu->Append( UIPLUGINBASE_CONDUCTOR_MENU,   _( "Conductor" ), con_menu,
-                     _( "Controls for Conductor" ) );
-    mPopMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );    
-    
+                      _( "Controls for Conductor" ) );
+    mPopMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );
+
     //UI for input variables
     con_menu->Append( UIPLUGINBASE_MODEL_INPUTS, _( "Inputs" ) );
     con_menu->Enable( UIPLUGINBASE_MODEL_INPUTS, true );
@@ -2400,9 +2422,9 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     //Icon Menu
     con_menu->Append( UIPLUGINBASE_SHOW_ICON_CHOOSER, _( "Icon" ) );
     con_menu->Enable( UIPLUGINBASE_SHOW_ICON_CHOOSER, true );
-    
+
     //Port Menu
-    wxMenu * port_menu = new wxMenu();
+    wxMenu* port_menu = new wxMenu();
     port_menu->Append( UIPLUGINBASE_ADD_INPUT_PORT, _( "Add Input Port" ) );
     port_menu->Enable( UIPLUGINBASE_ADD_INPUT_PORT, true );
     port_menu->Append( UIPLUGINBASE_ADD_OUTPUT_PORT, _( "Add Output Port" ) );
@@ -2410,15 +2432,15 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     port_menu->Append( UIPLUGINBASE_DELETE_PORT, _( "Delete Port" ) );
     port_menu->Enable( UIPLUGINBASE_DELETE_PORT, true );
     con_menu->Append( UIPLUGINBASE_PORT_MENU, _( "Ports" ), port_menu,
-                     _( "Used to manipulate ports" ) );
+                      _( "Used to manipulate ports" ) );
     con_menu->Enable( UIPLUGINBASE_PORT_MENU, true );
 
     //Xplorer Menu
-    wxMenu * xplorer_menu = new wxMenu();        
+    wxMenu* xplorer_menu = new wxMenu();
     mPopMenu->Append( UIPLUGINBASE_XPLORER_MENU,   _( "Xplorer" ), xplorer_menu,
-                     _( "Controls for Xplorer" ) );
-    mPopMenu->Enable( UIPLUGINBASE_XPLORER_MENU, true );    
-    
+                      _( "Controls for Xplorer" ) );
+    mPopMenu->Enable( UIPLUGINBASE_XPLORER_MENU, true );
+
     xplorer_menu->Append( UIPLUGINBASE_NAVTO_SELECT, _( "Navigate To - Select" ) );
     xplorer_menu->Enable( UIPLUGINBASE_NAVTO_SELECT, true );
 
@@ -2439,7 +2461,7 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     pluginMenu->Append( UIPLUGINBASE_TOGGLE_PLUGIN_ON, _( "Toggle Plugin On" ) );
     pluginMenu->Enable( UIPLUGINBASE_TOGGLE_PLUGIN_ON, true );
     xplorer_menu->Append( UIPLUGINBASE_TOGGLE_MENU, _( "Toggle Plugin" ), pluginMenu,
-                     _( "Used to toggle plugin" ) );
+                          _( "Used to toggle plugin" ) );
     xplorer_menu->Enable( UIPLUGINBASE_TOGGLE_MENU, true );
 
     //Sounds dialog
@@ -2447,7 +2469,7 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     xplorer_menu->Enable( UIPLUGINBASE_ACTIVE_MODEL_SOUNDS, true );
 
     mPopMenu->AppendSeparator();
-     // GUI to configure geometry for graphical env
+    // GUI to configure geometry for graphical env
     mPopMenu->Append( UIPLUGINBASE_GEOMETRY, _( "Geometry Config" ) );
     mPopMenu->Enable( UIPLUGINBASE_GEOMETRY, true );
     // GUI to configure dataset for graphical env
@@ -2469,15 +2491,15 @@ wxMenu* UIPluginBase::SetupPluginBasePopupMenu()
     mPopMenu->Enable( UIPLUGINBASE_DEL_MOD, true );
     mPopMenu->Append( UIPLUGINBASE_MAKE_HIER, _( "Make Into Hierarchy" ) );
     mPopMenu->Enable( UIPLUGINBASE_MAKE_HIER, true );
-    
+
     //mPopMenu->SetClientData( &id );
-    
+
     return mPopMenu;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::MessageLog( const char* msg )
 {
-    wxLogMessage(  wxString( msg, wxConvUTF8 ) );
+    wxLogMessage( wxString( msg, wxConvUTF8 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetPluginType( const std::string& pluginType )

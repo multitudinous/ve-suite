@@ -80,7 +80,7 @@ public:
 
     ///Set the picture frame bool
     void SetPictureFrame( bool pictureFrame = false );
-    
+
 protected:
     ///
     virtual void DefinePasses();
@@ -101,7 +101,7 @@ private:
     ///
     osg::ref_ptr< osg::Uniform > m_focalRangeUniform;
 
-    ///Control wether a red highlight is projected onto the geometry being 
+    ///Control wether a red highlight is projected onto the geometry being
     ///selected with the projection technique
     osg::ref_ptr< osg::Uniform > m_pictureFrameUniform;
 

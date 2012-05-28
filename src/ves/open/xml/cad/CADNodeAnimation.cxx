@@ -42,7 +42,7 @@ XERCES_CPP_NAMESPACE_USE
 //Constructor                     //
 ////////////////////////////////////
 CADNodeAnimation::CADNodeAnimation()
-        : XMLObject()
+    : XMLObject()
 {
     _fileSourceType = "OSG";
     _animationFileName = " ";
@@ -147,7 +147,7 @@ std::string CADNodeAnimation::GetAnimationFileName()
 }
 ///////////////////////////////////////////////////////////////
 CADNodeAnimation::CADNodeAnimation( const CADNodeAnimation& rhs )
-        : XMLObject( rhs )
+    : XMLObject( rhs )
 {
     _fileSourceType = rhs._fileSourceType;
     _animationFileName = rhs._animationFileName;

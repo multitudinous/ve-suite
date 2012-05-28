@@ -77,9 +77,9 @@ VjObsWrapper::VjObsWrapper( void )
     mTimeZero->msec( 10 );
     mTimeOutValue = new ACE_Time_Value();
     mTimeOutValue->msec( 1 );
-    
+
     mTimer = new ACE_Countdown_Time( mTimeZero );
-    
+
     _vjObs = new VjObs_i();
     m_xplorer = new Body_VEXplorer_i();
     isMaster = false;
@@ -112,19 +112,19 @@ VjObsWrapper::~VjObsWrapper( void )
         //if( !CORBA::is_nil( naming_context ) )
         naming_context->unbind( name );
     }
-    catch ( CosNaming::NamingContext::InvalidName& )
+    catch( CosNaming::NamingContext::InvalidName& )
     {
         std::cerr << "Invalid name for CORBA Object  " << std::endl;
     }
-    catch ( CosNaming::NamingContext::NotFound& ex )
+    catch( CosNaming::NamingContext::NotFound& ex )
     {
         std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cerr << "Unknown exception." << std::endl;
     }
-    
+
     //delete _vjObs;
     try
     {
@@ -172,12 +172,12 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
 
     bool isCluster = false;
     std::string masterhost;
-    for( int i = 1;i < argc;++i )
+    for( int i = 1; i < argc; ++i )
     {
         if( std::string( argv[i] ) == std::string( "-VESCluster" ) )
         {
             isCluster = true;
-            masterhost = std::string( argv[i+1] );
+            masterhost = std::string( argv[i + 1] );
             std::cout << "The cluster master is " << masterhost << std::endl;
             break;
         }
@@ -189,10 +189,10 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
     if( isCluster )
     {
         std::cout << "----------------CLUSTER INFO-------------------"
-            << std::endl
-            << "NOTE : Be sure to specify this GUID = " << std::endl
-            << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
-            << "       in the application data config file." << std::endl;
+                  << std::endl
+                  << "NOTE : Be sure to specify this GUID = " << std::endl
+                  << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
+                  << "       in the application data config file." << std::endl;
 
         _vjObs->SetClusterMode( true );
         std::string name;
@@ -202,7 +202,7 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
 
         ///Convert master hostname to lower case to do string compares
         boost::algorithm::to_lower( masterhost );
-        
+
         std::vector<std::string> toks;
         std::string tempHostname;
         for( size_t i = 0; i < tempAddrVec.size(); ++i )
@@ -214,8 +214,8 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
             catch( std::exception& e )
             {
                 std::cout << "Vapor could not resolve hostname( " << i << " )"
-                    << ": " << std::endl
-                    << e.what() << std::endl;
+                          << ": " << std::endl
+                          << e.what() << std::endl;
                 continue;
             }
 
@@ -233,15 +233,15 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
                 break;
             }
         }
-        
+
         if( !isMaster )
         {
-            std::cout << "*** This is a remote graphics node. *** " 
-                << std::endl;
+            std::cout << "*** This is a remote graphics node. *** "
+                      << std::endl;
         }
-        std::cout << "---------------END CLUSTER INFO----------------" 
-            << std::endl;
-        
+        std::cout << "---------------END CLUSTER INFO----------------"
+                  << std::endl;
+
     }
     else
     {
@@ -268,7 +268,7 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         {
             naming_context->bind( name, vjobs.in() );
         }
-        catch ( CosNaming::NamingContext::AlreadyBound& )
+        catch( CosNaming::NamingContext::AlreadyBound& )
         {
             naming_context->rebind( name, vjobs.in() );
         }
@@ -286,7 +286,7 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         {
             naming_context->bind( xplorerName, xplorerCom.in() );
         }
-        catch ( CosNaming::NamingContext::AlreadyBound& )
+        catch( CosNaming::NamingContext::AlreadyBound& )
         {
             naming_context->rebind( xplorerName, xplorerCom.in() );
         }
@@ -312,7 +312,7 @@ void VjObsWrapper::CheckORBWorkLoad( void )
     {
         return;
     }*/
-    
+
     mTimer->update();
     if( *mTimeZero !=  ACE_Time_Value::zero )
     {
@@ -340,7 +340,7 @@ long VjObsWrapper::GetSetFrameNumber( long x )
 }
 ////////////////////////////////////////////////////////////////////////////////
 int VjObsWrapper::getStringTokens( const char* buffer, std::string delim,
-                                   std::vector<std::string> &toks )
+                                   std::vector<std::string>& toks )
 {
     char* token;
     int i = 0;

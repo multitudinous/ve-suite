@@ -46,13 +46,13 @@ namespace event
 class CharacterEventHandler;
 
 typedef ves::util::ClassPtrDef< CharacterEventHandler >::type
-    CharacterEventHandlerPtr;
+CharacterEventHandlerPtr;
 typedef ves::util::SharedPtrDef< CharacterEventHandler >::type
-    CharacterEventHandlerSharedPtr;
+CharacterEventHandlerSharedPtr;
 typedef ves::util::WeakPtrDef< CharacterEventHandler >::type
-    CharacterEventHandlerWeakPtr;
+CharacterEventHandlerWeakPtr;
 typedef ves::util::ScopedPtrDef< CharacterEventHandler >::type
-    CharacterEventHandlerScopedPtr;
+CharacterEventHandlerScopedPtr;
 
 } //end event
 } //end xplorer

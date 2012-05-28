@@ -61,9 +61,9 @@ SeedPointActivateEventHandler::SeedPointActivateEventHandler()
 
     ///Connect up to the signal emitted from StreamlinePropertySet
     CONNECTSIGNALS_2( "%ActivateSeedPoints",
-        void ( const std::string& dataSetName, const bool seedPointDisplay ),
-        &SeedPointActivateEventHandler::ActivateSeedPoints,
-        m_connections, any_SignalType, normal_Priority );
+                      void ( const std::string & dataSetName, const bool seedPointDisplay ),
+                      &SeedPointActivateEventHandler::ActivateSeedPoints,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ///////////////////////////////////////////////////////////////////
 SeedPointActivateEventHandler
@@ -103,7 +103,7 @@ void SeedPointActivateEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         std::cout << "Invalid object passed to TextureBasedEventHandler!" << std::endl;
@@ -117,19 +117,19 @@ void SeedPointActivateEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
         if( _activeModel )
         {
             ///what happens if texture is somehow added first? Is that possible?
-            CommandPtr command = 
+            CommandPtr command =
                 boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
-            DataValuePairPtr seedPointsFlag = 
+            DataValuePairPtr seedPointsFlag =
                 command->GetDataValuePair( "OnOff" );
-            DataValuePairPtr activeDataset = 
+            DataValuePairPtr activeDataset =
                 command->GetDataValuePair( "Active Dataset" );
             std::string datasetname;
             activeDataset->GetData( datasetname );
 
-            ActivateSeedPoints( datasetname, (( seedPointsFlag->GetUIntData() == 1 ) ? true : false) );
+            ActivateSeedPoints( datasetname, ( ( seedPointsFlag->GetUIntData() == 1 ) ? true : false ) );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid Model!!" << std::endl;
         std::cout << "SeedPointActivateEventHandler::_operateOnNode()" << std::endl;
@@ -155,9 +155,9 @@ void SeedPointActivateEventHandler::ActivateSeedPoints( const std::string& dataS
     if( !ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->containsNode( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() ) )
     {
         ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->
-            addChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() );
+        addChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() );
     }
-    
+
     //this seems to be a bad sequence of calls but we need to set the
     //active dataset otherwise this set of calls goes in every seed pointEH
     //as well as all the commands have to lug this extra info.

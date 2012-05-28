@@ -74,7 +74,7 @@ bool VEGroup_readLocalData( osg::Object& obj, osgDB::Input& fr )
     }
 
     osg::Node* node = NULL;
-    while (( node = fr.readNode() ) != NULL )
+    while( ( node = fr.readNode() ) != NULL )
     {
         group.addChild( node );
         iteratorAdvanced = true;
@@ -90,7 +90,7 @@ bool VEGroup_writeLocalData( const osg::Object& obj, osgDB::Output& fw )
     const ves::xplorer::scenegraph::Group& group = static_cast<const ves::xplorer::scenegraph::Group&>( obj );
     //fw.writeObject(group);
     fw.indent() << "num_children " << group.getNumChildren() << std::endl;
-    for( unsigned int i = 0;i < group.getNumChildren();++i )
+    for( unsigned int i = 0; i < group.getNumChildren(); ++i )
     {
         fw.writeObject( *group.getChild( i ) );
     }

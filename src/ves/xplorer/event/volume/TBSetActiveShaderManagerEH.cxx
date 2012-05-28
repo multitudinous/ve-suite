@@ -76,7 +76,7 @@ void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode( XMLObjectPt
         activeSM->GetData( value );
         ves::xplorer::TextureBasedVizHandler::instance()->SetActiveShaderManager( value );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid Model!!" << std::endl;
         std::cout << "TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode()" << std::endl;

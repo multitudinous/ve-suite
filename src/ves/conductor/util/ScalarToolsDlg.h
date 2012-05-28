@@ -92,8 +92,8 @@ protected:
     /*!\class ScalarToolsMinSliderCallback
      *Class that allows the user to do operations based on the min slider events
      */
-class ScalarToolsSliderCallback:
-                public ves::conductor::util::DualSlider::SliderCallback
+    class ScalarToolsSliderCallback:
+        public ves::conductor::util::DualSlider::SliderCallback
     {
     public:
         ///Constructors
@@ -114,8 +114,8 @@ class ScalarToolsSliderCallback:
     /*!\class ScalarToolsStopSliderCallback
      *Class that allows the user to do operations based on the min slider events
      */
-class ScalarToolsStopSliderCallback:
-                public ves::conductor::util::DualSlider::SliderCallback
+    class ScalarToolsStopSliderCallback:
+        public ves::conductor::util::DualSlider::SliderCallback
     {
     public:
         ///Constructors

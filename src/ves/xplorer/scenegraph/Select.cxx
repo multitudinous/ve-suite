@@ -75,10 +75,10 @@ osgUtil::LineSegmentIntersector::Intersections& TestForIntersections(
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* FindVESObject( osg::NodePath& nodePath )
 {
-    for( osg::NodePath::reverse_iterator itr = nodePath.rbegin(); 
-        itr != nodePath.rend(); ++itr )
+    for( osg::NodePath::reverse_iterator itr = nodePath.rbegin();
+            itr != nodePath.rend(); ++itr )
     {
-        osg::Node::DescriptionList descList = (*itr)->getDescriptions();
+        osg::Node::DescriptionList descList = ( *itr )->getDescriptions();
         for( size_t i = 0; i < descList.size(); ++i )
         {
             if( descList.at( i ) == "VE_XML_ID" )
@@ -143,12 +143,12 @@ osg::Node* CreateCircleHighlight(
         bsCenter.set( position.ptr() );
         bsCenter = centerMat * bsCenter;
         position.set( bsCenter[0], bsCenter[2], bsCenter[2] );
-        
+
         gmtl::Matrix44d tempVRJMat;
         tempVRJMat.set( matrix.ptr() );
-        
+
         gmtl::Point3d tempOrigin;
-        tempOrigin = tempVRJMat*tempOrigin;
+        tempOrigin = tempVRJMat * tempOrigin;
         tempVRJMat = gmtl::makeTrans< gmtl::Matrix44d >( tempOrigin );
         //Reset the matrix with rotation and scale
         matrix.set( tempVRJMat.mData );
@@ -159,7 +159,7 @@ osg::Node* CreateCircleHighlight(
     textDirection.normalize();
     osg::Vec3 lineEnd( textDirection * radius );
     osg::Vec3 textPos( textDirection * radius * 1.4 );
-    
+
     circlegeode = new osg::Geode();
     osg::ref_ptr< osg::Array > circleColor;
     //Circle geometry
@@ -189,8 +189,8 @@ osg::Node* CreateCircleHighlight(
 
         osg::Vec3Array* verts( new osg::Vec3Array );
         verts->resize( 2 );
-        (*verts)[ 0 ] = lineEnd;
-        (*verts)[ 1 ] = textPos;
+        ( *verts )[ 0 ] = lineEnd;
+        ( *verts )[ 1 ] = textPos;
 
         lineGeom->setVertexArray( verts );
         lineGeom->setColorArray( circleColor.get() );
@@ -214,20 +214,20 @@ osg::Node* CreateCircleHighlight(
         //float size( 0.01f * distance );
         float size( 1.0 );
         osg::notify( osg::DEBUG_FP ) << "    Using char size "
-            << size << std::endl;
+                                     << size << std::endl;
         text->setCharacterSize( size );
 
         //Add shader to make text work in rtt and non-rtt mode
         osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
         std::string fragmentSource =
-        "uniform sampler2D baseMap; \n"
+            "uniform sampler2D baseMap; \n"
 
-        "void main() \n"
-        "{ \n"
+            "void main() \n"
+            "{ \n"
             "vec4 texture = texture2D( baseMap, gl_TexCoord[ 0 ].xy ); \n"
             "gl_FragData[ 0 ] = mix( texture, gl_Color, texture.a ); \n"
             "gl_FragData[ 1 ] = vec4( 0.0, 0.0, 0.0, 1.0 ); \n"
-        "} \n";
+            "} \n";
 
         fragmentShader->setType( osg::Shader::FRAGMENT );
         fragmentShader->setShaderSource( fragmentSource );
@@ -252,15 +252,15 @@ osg::Node* CreateCircleHighlight(
     //turn off depth testing on our subgraph
     osg::ref_ptr< osg::StateSet > stateset = amt->getOrCreateStateSet();
     stateset->setMode( GL_LIGHTING,
-        osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
+                       osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
     stateset->setMode( GL_DEPTH_TEST,
-        osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
+                       osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE );
     stateset->setRenderBinDetails( 1000, "RenderBin" );
     //Set circle attributes
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
     lineWidth->setWidth( 3 );
     stateset->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
-    
+
     return( amt.release() );
 }
 ////////////////////////////////////////////////////////////////////////////////

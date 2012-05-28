@@ -39,7 +39,7 @@ using namespace ves::xplorer::util;
 
 //////////////////////////////////////////////////////
 GetNumberOfPointsCallback::GetNumberOfPointsCallback()
-        : m_numberOfPoints( 0 )
+    : m_numberOfPoints( 0 )
 {}
 //////////////////////////////////////////////////////////////////////////////
 unsigned int GetNumberOfPointsCallback::GetNumberOfPoints()

@@ -46,7 +46,7 @@ using namespace ves::open::xml::model;
 //Constructor                             //
 ////////////////////////////////////////////////////////////////////////////////
 Port::Port( )
-        : XMLObject( )
+    : XMLObject( )
 {
     mPortNumber = 0;
 
@@ -61,7 +61,7 @@ Port::~Port()
 }
 ////////////////////////////////////////////////////////////////////////////////
 Port::Port( const Port& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mPortData.clear();
 
@@ -170,7 +170,7 @@ void Port::SetObjectFromXMLData( DOMNode* element )
     {
         return;
     }
-    
+
     //get variables by tags
     DOMElement* dataValueStringName = 0;
     // for port number
@@ -191,8 +191,8 @@ void Port::SetObjectFromXMLData( DOMNode* element )
     }
     // for port data
     {
-        unsigned int numberOfmPortData = currentElement->getElementsByTagName(               
-            Convert( "portData" ).toXMLString() )->getLength();
+        unsigned int numberOfmPortData = currentElement->getElementsByTagName(
+                                             Convert( "portData" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfmPortData; ++i )
         {

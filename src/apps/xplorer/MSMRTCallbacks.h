@@ -104,9 +104,9 @@ public:
             if( ctxInfo.__glGetFramebufferAttachmentParameteriv == NULL )
             {
                 osg::notify( osg::ALWAYS )
-                    << "Can't get function pointer "
-                    << "glGetFramebufferAttachmentParameteriv"
-                    << std::endl;
+                        << "Can't get function pointer "
+                        << "glGetFramebufferAttachmentParameteriv"
+                        << std::endl;
 
                 return;
             }
@@ -134,7 +134,7 @@ public:
 
         //Verification
         //osg::notify( osg::ALWAYS )
-            //<< "Dest " << std::hex << destColorTex0 << std::endl;
+        //<< "Dest " << std::hex << destColorTex0 << std::endl;
 
         //Set draw and read buffers to attachment1 to read from correct
         //buffer and avoid INVALID_FRAMEBUFFER_OPERATION error

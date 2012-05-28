@@ -234,9 +234,9 @@ private:
 
     osg::ref_ptr< TransferPhysicsDataCallback > m_udcb;///<The callback to update the sg node with physics data
 
-// -------------------------------------------------- //
-// --- This stuff is used for multipass rendering --- //
-// -------------------------------------------------- //
+    // -------------------------------------------------- //
+    // --- This stuff is used for multipass rendering --- //
+    // -------------------------------------------------- //
 public:
     virtual void traverse( osg::NodeVisitor& nv );
     virtual void InheritedTraverse( osg::NodeVisitor& nv );

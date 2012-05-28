@@ -80,9 +80,9 @@ public:
 
 protected:
 
-    void UpdateGeodeUniform( 
-        const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject, 
-        ves::open::xml::DataValuePairPtr dvp, 
+    void UpdateGeodeUniform(
+        const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject,
+        ves::open::xml::DataValuePairPtr dvp,
         const std::string& uniformName, double valueFactor );
 };
 }

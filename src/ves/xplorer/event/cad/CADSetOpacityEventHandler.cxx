@@ -51,11 +51,11 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADSetOpacityEventHandler::CADSetOpacityEventHandler()
-        : ves::xplorer::event::CADEventHandler()
+    : ves::xplorer::event::CADEventHandler()
 {}
 ////////////////////////////////////////////////////////////////////////////////
 CADSetOpacityEventHandler::CADSetOpacityEventHandler( const CADSetOpacityEventHandler& rhs )
-        : ves::xplorer::event::CADEventHandler( rhs )
+    : ves::xplorer::event::CADEventHandler( rhs )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
@@ -78,11 +78,11 @@ void CADSetOpacityEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     try
     {
         CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
-        DataValuePairPtr opacityValue = 
+        DataValuePairPtr opacityValue =
             command->GetDataValuePair( "Opacity Value" );
-        DataValuePairPtr transparentFlag = 
+        DataValuePairPtr transparentFlag =
             command->GetDataValuePair( "Transparent Value" );
-        DataValuePairPtr nodeID = 
+        DataValuePairPtr nodeID =
             command->GetDataValuePair( "Node ID" );
         std::string id;
         nodeID->GetData( id );
@@ -95,7 +95,7 @@ void CADSetOpacityEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         }
         else if( transparentFlag )
         {
-            ves::xplorer::scenegraph::CADEntity* temp = 
+            ves::xplorer::scenegraph::CADEntity* temp =
                 m_cadHandler->GetPart( id );
             if( temp )
             {
@@ -105,12 +105,12 @@ void CADSetOpacityEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             }
             else
             {
-                std::cout << "Cannot set transparency flag on a group." 
-                    << std::endl;
+                std::cout << "Cannot set transparency flag on a group."
+                          << std::endl;
             }
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
         std::cout << "---Invalid node specified to toggle!---" << std::endl;

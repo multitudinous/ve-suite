@@ -41,7 +41,7 @@ namespace Poco
 namespace Data
 {
 class Statement;
-}    
+}
 }
 
 // TODO: cull include deps

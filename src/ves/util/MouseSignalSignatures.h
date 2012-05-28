@@ -48,56 +48,56 @@ namespace ves
 {
 namespace util
 {
-    /// signal for generating the start and end point for selection and other
-    ///interaction tools.
-    /// Params are: start point and end point
-    typedef boost::signals2::signal< void ( osg::Vec3d const&, osg::Vec3d const& ) > StartEndPointSignal_type;
-    
-    /// MouseMove signal
-    /// Params are: x, y, z, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< bool ( int, int, int, int ),
-    ves::xplorer::eventmanager::BooleanPropagationCombiner > MouseMoveSignal_type;
-    
-    /// MouseDoubleClick signal
-    /// Params are: button, x, y, z, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, int, int, int ),
-    ves::xplorer::eventmanager::BooleanPropagationCombiner > MouseDoubleClickSignal_type;
+/// signal for generating the start and end point for selection and other
+///interaction tools.
+/// Params are: start point and end point
+typedef boost::signals2::signal< void ( osg::Vec3d const&, osg::Vec3d const& ) > StartEndPointSignal_type;
 
-    /// Scroll signal type
-    /// Params are: deltaX, deltaY, x, y, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< bool ( int, int, int, int, int ),
-    ves::xplorer::eventmanager::BooleanPropagationCombiner > ScrollSignal_type;
-    
-    /// ButtonPress signal type
-    /// Params are: button, x, y, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, int, int ),
-    ves::xplorer::eventmanager::BooleanPropagationCombiner > ButtonPressSignal_type;
-    
-    /// ButtonRelease signal type
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, int, int ),
-    ves::xplorer::eventmanager::BooleanPropagationCombiner > ButtonReleaseSignal_type;
-    
-    /// KeyPress signal type
-    /// First arg is the key that was pressed
-    /// Second arg is the gadget::ModiferMask (modifier mask)
-    /// Third arg is the unicode representation of the key
-    ///NOTE: As soon as VR Juggler supports wide body chars we can change the 
-    ///char argument back to a wchar_t
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, char ),
-    ves::xplorer::eventmanager::BooleanPropagationCombiner > KeyPressSignal_type;
-    
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, char ) > KeyPressSignal_rtype;
-    
-    /// KeyRelease signal type
-    /// First arg is the key that was pressed
-    /// Second arg is the gadget::ModiferMask (modifier mask)
-    /// Third arg is the unicode representation of the key
-    ///NOTE: As soon as VR Juggler supports wide body chars we can change the 
-    ///char argument back to a wchar_t
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, char ),
-    ves::xplorer::eventmanager::BooleanPropagationCombiner > KeyReleaseSignal_type;
-    
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, char ) > KeyReleaseSignal_rtype;
+/// MouseMove signal
+/// Params are: x, y, z, state (modifier mask OR'd with button mask)
+typedef boost::signals2::signal < bool ( int, int, int, int ),
+        ves::xplorer::eventmanager::BooleanPropagationCombiner > MouseMoveSignal_type;
+
+/// MouseDoubleClick signal
+/// Params are: button, x, y, z, state (modifier mask OR'd with button mask)
+typedef boost::signals2::signal < bool ( gadget::Keys, int, int, int, int ),
+        ves::xplorer::eventmanager::BooleanPropagationCombiner > MouseDoubleClickSignal_type;
+
+/// Scroll signal type
+/// Params are: deltaX, deltaY, x, y, state (modifier mask OR'd with button mask)
+typedef boost::signals2::signal < bool ( int, int, int, int, int ),
+        ves::xplorer::eventmanager::BooleanPropagationCombiner > ScrollSignal_type;
+
+/// ButtonPress signal type
+/// Params are: button, x, y, state (modifier mask OR'd with button mask)
+typedef boost::signals2::signal < bool ( gadget::Keys, int, int, int ),
+        ves::xplorer::eventmanager::BooleanPropagationCombiner > ButtonPressSignal_type;
+
+/// ButtonRelease signal type
+typedef boost::signals2::signal < bool ( gadget::Keys, int, int, int ),
+        ves::xplorer::eventmanager::BooleanPropagationCombiner > ButtonReleaseSignal_type;
+
+/// KeyPress signal type
+/// First arg is the key that was pressed
+/// Second arg is the gadget::ModiferMask (modifier mask)
+/// Third arg is the unicode representation of the key
+///NOTE: As soon as VR Juggler supports wide body chars we can change the
+///char argument back to a wchar_t
+typedef boost::signals2::signal < bool ( gadget::Keys, int, char ),
+        ves::xplorer::eventmanager::BooleanPropagationCombiner > KeyPressSignal_type;
+
+typedef boost::signals2::signal< bool ( gadget::Keys, int, char ) > KeyPressSignal_rtype;
+
+/// KeyRelease signal type
+/// First arg is the key that was pressed
+/// Second arg is the gadget::ModiferMask (modifier mask)
+/// Third arg is the unicode representation of the key
+///NOTE: As soon as VR Juggler supports wide body chars we can change the
+///char argument back to a wchar_t
+typedef boost::signals2::signal < bool ( gadget::Keys, int, char ),
+        ves::xplorer::eventmanager::BooleanPropagationCombiner > KeyReleaseSignal_type;
+
+typedef boost::signals2::signal< bool ( gadget::Keys, int, char ) > KeyReleaseSignal_rtype;
 }
 }
 #endif

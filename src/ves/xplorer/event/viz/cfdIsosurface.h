@@ -67,7 +67,7 @@ public:
 
     ///Copy Constructor
     cfdIsosurface( cfdIsosurface const& src );
-    
+
     ///Destructor.
     virtual ~cfdIsosurface();
 
@@ -84,7 +84,7 @@ public:
     virtual void UpdateCommand( void );
 
     void UpdatePropertySet();
-    
+
 private:
     double convertPercentage( const int percentage );
 
@@ -97,11 +97,11 @@ private:
     double maxValue;///<Maximum scalar value displayed.
 #ifdef USE_OMP
     float nData;///<Total number of data to be parallel processed.
-    vtkContourFilter *contour[MAX_ISOSURFACE];///<Contour filter for vtk.
-    vtkPolyDataNormals *normals[MAX_ISOSURFACE];///<Normal for polydata in vtk.
-    vtkAppendPolyData *append;///<Append to dataset.
+    vtkContourFilter* contour[MAX_ISOSURFACE];///<Contour filter for vtk.
+    vtkPolyDataNormals* normals[MAX_ISOSURFACE];///<Normal for polydata in vtk.
+    vtkAppendPolyData* append;///<Append to dataset.
 #else
-    vtkPolyDataNormals *normals;///<Normals for vtk.
+    vtkPolyDataNormals* normals;///<Normals for vtk.
 #endif
 
     vtkPolyDataMapper* mapper;///<Mapper for vtk.

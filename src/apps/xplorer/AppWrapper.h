@@ -40,7 +40,7 @@
 
 namespace Poco
 {
-    class SplitterChannel;
+class SplitterChannel;
 }
 
 namespace ves

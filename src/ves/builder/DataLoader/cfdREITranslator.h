@@ -51,7 +51,7 @@ public:
     ///Display help for the REI translator
     virtual void DisplayHelp( void );
 
-class VE_USER_BUILDER_EXPORTS REITranslatorCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    class VE_USER_BUILDER_EXPORTS REITranslatorCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
     {
     public:
         REITranslatorCbk()
@@ -63,13 +63,13 @@ class VE_USER_BUILDER_EXPORTS REITranslatorCbk: public ves::builder::cfdTranslat
         //appropriately by the translate callback.      //
         //////////////////////////////////////////////////
         virtual void Translate( vtkDataObject*& outputDataset,
-                               cfdTranslatorToVTK* toVTK,
-                               vtkAlgorithm*& dataReader );
+                                cfdTranslatorToVTK* toVTK,
+                                vtkAlgorithm*& dataReader );
 
         int debug;
     protected:
     };
-class VE_USER_BUILDER_EXPORTS REIPreTranslatorCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    class VE_USER_BUILDER_EXPORTS REIPreTranslatorCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
     {
     public:
         REIPreTranslatorCbk()

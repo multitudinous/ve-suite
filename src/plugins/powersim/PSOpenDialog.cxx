@@ -45,9 +45,9 @@
 #include <vector>
 
 BEGIN_EVENT_TABLE( PSOpenDialog, wxDialog )
-EVT_CLOSE( PSOpenDialog::OnClose )
-EVT_BUTTON( wxID_CANCEL, PSOpenDialog::OnCancel )
-EVT_BUTTON( wxID_OK, PSOpenDialog::OnOK )
+    EVT_CLOSE( PSOpenDialog::OnClose )
+    EVT_BUTTON( wxID_CANCEL, PSOpenDialog::OnCancel )
+    EVT_BUTTON( wxID_OK, PSOpenDialog::OnOK )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +88,7 @@ void PSOpenDialog::CreateGUIControls()
     label->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
     mainSizer->Add( label, 1, wxALIGN_CENTER | wxALL, 5 );
 
-    m_comboBox = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );//, wxDefaultValidator, wxT( "ComboBox" ) ); 
+    m_comboBox = new wxComboBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );//, wxDefaultValidator, wxT( "ComboBox" ) );
     mainSizer->Add( m_comboBox, 2, wxALIGN_CENTER | wxALL, 5 );
 
     dialogSizer->Add( mainSizer, 1, wxEXPAND, 5 );
@@ -151,10 +151,10 @@ void PSOpenDialog::SetPopulateFilenames()
     {
         //for( int j = 0; j < xmlList.size(); ++j )
         //{
-            //if( sipList[ i ].CmpNoCase( xmlList[ j ] ) == 0 )
-            //{
-                arrayString.Add( sipList[ i ] );
-            //}
+        //if( sipList[ i ].CmpNoCase( xmlList[ j ] ) == 0 )
+        //{
+        arrayString.Add( sipList[ i ] );
+        //}
         //}
     }
 

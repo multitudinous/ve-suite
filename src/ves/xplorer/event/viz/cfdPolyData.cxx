@@ -114,35 +114,35 @@ void cfdPolyData::Update()
     if( GetActiveDataSet() == NULL )
     {
         vprDEBUG( vesDBG, 0 )
-            << "cfdPolyData has no data so setting updateFlag to false"
-            << std::endl << vprDEBUG_FLUSH;
+                << "cfdPolyData has no data so setting updateFlag to false"
+                << std::endl << vprDEBUG_FLUSH;
         this->updateFlag = false;
         return;
     }
-    
+
     if( !GetActiveDataSet()->GetDataSet()->IsA( "vtkPolyData" ) )
     {
         std::cerr << "ERROR: Activate a polydata file to use this function"
-            << std::endl;
+                  << std::endl;
         this->updateFlag = false;
         return;
     }
 
     vprDEBUG( vesDBG, 1 )
-        << "cfdPolyData: this->GetActiveDataSet() = "
-        << GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
+            << "cfdPolyData: this->GetActiveDataSet() = "
+            << GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
 
     vtkActor* temp = vtkActor::New();
-    vtkPolyData * pd = this->GetActiveDataSet()->GetPolyData();
-    vtkCellTypes *types = vtkCellTypes::New();
+    vtkPolyData* pd = this->GetActiveDataSet()->GetPolyData();
+    vtkCellTypes* types = vtkCellTypes::New();
     pd->GetCellTypes( types );
 
     if( pd->GetCellType( 0 ) == VTK_POLY_LINE &&
             types->GetNumberOfTypes() == 1 )
     {
         vprDEBUG( vesDBG, 1 ) << " IS A STREAMLINE"
-        << std::endl << vprDEBUG_FLUSH;
-        vtkTubeFilter * polyTubes = vtkTubeFilter::New();
+                              << std::endl << vprDEBUG_FLUSH;
+        vtkTubeFilter* polyTubes = vtkTubeFilter::New();
         polyTubes->SetNumberOfSides( 3 );
         polyTubes->SetInput( pd );
         polyTubes->SetRadius( .05 );
@@ -152,25 +152,25 @@ void cfdPolyData::Update()
         temp->GetProperty()->SetRepresentationToSurface();
     }
     else if( pd->GetCellType( 0 ) == VTK_VERTEX &&
-              types->GetNumberOfTypes() == 1 &&
-              GetParticleOption() == 1 )
+             types->GetNumberOfTypes() == 1 &&
+             GetParticleOption() == 1 )
     {
         vprDEBUG( vesDBG, 1 ) << " IS VERTEX-BASED: variably sized spheres"
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
-        vtkSphereSource * sphereSrc   = vtkSphereSource::New();
+        vtkSphereSource* sphereSrc   = vtkSphereSource::New();
         sphereSrc->SetThetaResolution( 3 ); // default is 8
         sphereSrc->SetPhiResolution( 3 );   // default is 8
         //this->sphereSrc->SetRadius( 0.5f );
 
-        vtkGlyph3D * sphereGlyph = vtkGlyph3D::New();
+        vtkGlyph3D* sphereGlyph = vtkGlyph3D::New();
         sphereGlyph->SetInput( pd );
         sphereGlyph->SetSource( sphereSrc->GetOutput() );
         sphereGlyph->Update();
 
         vprDEBUG( vesDBG, 1 ) << " Using scalar data from "
-        << pd->GetPointData()->GetScalars()->GetName()
-        << std::endl << vprDEBUG_FLUSH;
+                              << pd->GetPointData()->GetScalars()->GetName()
+                              << std::endl << vprDEBUG_FLUSH;
         //sphereGlyph->SelectInputScalars( pd->GetPointData()->GetScalars()->GetName() );
         sphereGlyph->SetScaleModeToScaleByScalar();
         sphereGlyph->SetColorModeToColorByScalar();
@@ -181,15 +181,17 @@ void cfdPolyData::Update()
         float len = 1.0f; //this->GetActiveDataSet()->GetLength();
         // if there is only one point, then len equals zero...
         if( len == 0.0 )
+        {
             len = 1.0;
+        }
 
         vprDEBUG( vesDBG, 2 ) << " diagonalLength = " << len
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         ///this may need to be changed--biv
         unsigned int numPts = this->GetActiveDataSet()->GetNumberOfPoints();
         vprDEBUG( vesDBG, 2 ) << " numPts = " << numPts
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         float scaleFactor = 0.0;
         if( numPts != 0 )
         {
@@ -203,8 +205,8 @@ void cfdPolyData::Update()
         // move bottom of range back 10% so that low valued spheres do not completely disappear
         range[0] = range[0] - ( range[1] - range[0] ) * 0.1;
         vprDEBUG( vesDBG, 1 ) << " clamping range: "
-            << range[0] << " : " << range[1]
-            << std::endl << vprDEBUG_FLUSH;
+                              << range[0] << " : " << range[1]
+                              << std::endl << vprDEBUG_FLUSH;
         sphereGlyph->SetRange( range );
         //sphereGlyph->SetRange( this->GetActiveDataSet()->GetParent()->GetUserRange() );
 
@@ -214,21 +216,21 @@ void cfdPolyData::Update()
         temp->GetProperty()->SetRepresentationToSurface();
     }
     else if( pd->GetCellType( 0 ) == VTK_VERTEX &&
-              types->GetNumberOfTypes() == 1 &&
-              GetParticleOption() == 0 )
+             types->GetNumberOfTypes() == 1 &&
+             GetParticleOption() == 0 )
     {
         vprDEBUG( vesDBG, 1 ) << " IS VERTEX-BASED: point cloud"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         this->map->SetColorModeToMapScalars();
         this->map->SetInput( pd );
         temp->GetProperty()->SetRepresentationToPoints();
-        temp->GetProperty()->SetPointSize( 4*this->GetSphereScaleFactor() );
+        temp->GetProperty()->SetPointSize( 4 * this->GetSphereScaleFactor() );
     }
     else
     {
         vprDEBUG( vesDBG, 1 ) << " IS POLYDATA SURFACE"
-            << std::endl << vprDEBUG_FLUSH;
-        
+                              << std::endl << vprDEBUG_FLUSH;
+
         if( m_gpuTools )
         {
             ;
@@ -242,7 +244,7 @@ void cfdPolyData::Update()
             normalGen->ConsistencyOn();
             normalGen->SplittingOn();
 
-            this->warper->SetInput( normalGen->GetOutput()  );
+            this->warper->SetInput( normalGen->GetOutput() );
             this->warper->SetScaleFactor( warpedContourScale );
             this->warper->Update();//can this go???
             this->map->SetInputConnection( warper->GetOutputPort() );
@@ -268,37 +270,37 @@ void cfdPolyData::Update()
 
     if( pd->GetPointData() )
     {
-        if( pd->GetPointData()->GetScalars( 
-            GetActiveDataSet()->GetActiveScalarName().c_str() )->
-            GetLookupTable() != NULL )
+        if( pd->GetPointData()->GetScalars(
+                    GetActiveDataSet()->GetActiveScalarName().c_str() )->
+                GetLookupTable() != NULL )
         {
             vprDEBUG( vesDBG, 1 ) << " A lookup table ("
-                << pd->GetPointData()->GetScalars( 
-                    GetActiveDataSet()->GetActiveScalarName().c_str() )->
-                    GetLookupTable()
-                << ")is being read from the vtk file"
-                << std::endl << vprDEBUG_FLUSH;
+                                  << pd->GetPointData()->GetScalars(
+                                      GetActiveDataSet()->GetActiveScalarName().c_str() )->
+                                  GetLookupTable()
+                                  << ")is being read from the vtk file"
+                                  << std::endl << vprDEBUG_FLUSH;
             double range[ 2 ];
-            pd->GetPointData()->GetScalars( 
+            pd->GetPointData()->GetScalars(
                 GetActiveDataSet()->GetActiveScalarName().c_str() )->
-                GetRange( range );
+            GetRange( range );
             this->map->SetScalarRange( range );
-            this->map->SetLookupTable( pd->GetPointData()->GetScalars( 
-                GetActiveDataSet()->GetActiveScalarName().c_str() )->
-                GetLookupTable() );
+            this->map->SetLookupTable( pd->GetPointData()->GetScalars(
+                                           GetActiveDataSet()->GetActiveScalarName().c_str() )->
+                                       GetLookupTable() );
         }
         else
         {
-            double * range = GetActiveDataSet()->GetParent()->GetUserRange();
+            double* range = GetActiveDataSet()->GetParent()->GetUserRange();
             vprDEBUG( vesDBG, 1 ) << "setting mapper using parent "
-                << this->GetActiveDataSet()->GetParent()
-                << ", range = " << range[0] << " : " << range[1]
-                << std::endl << vprDEBUG_FLUSH;
-            
+                                  << this->GetActiveDataSet()->GetParent()
+                                  << ", range = " << range[0] << " : " << range[1]
+                                  << std::endl << vprDEBUG_FLUSH;
+
             this->map->SetScalarRange( this->GetActiveDataSet()
-                                      ->GetParent()->GetUserRange() );
+                                       ->GetParent()->GetUserRange() );
             this->map->SetLookupTable( this->GetActiveDataSet()
-                                      ->GetParent()->GetLookupTable() );
+                                       ->GetParent()->GetLookupTable() );
         }
     }
 
@@ -307,9 +309,9 @@ void cfdPolyData::Update()
         map->SetScalarModeToUsePointFieldData();
         map->UseLookupTableScalarRangeOn();
         map->SelectColorArray( GetActiveDataSet()->
-                              GetActiveScalarName().c_str() );
+                               GetActiveScalarName().c_str() );
         map->Update();
-        
+
         temp->SetMapper( this->map );
         temp->GetProperty()->SetSpecularPower( 20.0f );
         geodes.push_back( new ves::xplorer::scenegraph::Geode() );
@@ -321,9 +323,9 @@ void cfdPolyData::Update()
     {
         OSGWarpedSurfaceStage* surface = new OSGWarpedSurfaceStage();
         surface->SetSurfaceWarpScale( warpedContourScale );
-        geodes.push_back( surface->createMesh( pd, 
-            GetActiveDataSet()->GetActiveVectorName(), 
-            GetActiveDataSet()->GetActiveScalarName() ) );
+        geodes.push_back( surface->createMesh( pd,
+                                               GetActiveDataSet()->GetActiveVectorName(),
+                                               GetActiveDataSet()->GetActiveScalarName() ) );
         delete surface;
         updateFlag = true;
         temp->Delete();
@@ -361,9 +363,9 @@ void cfdPolyData::UpdateCommand()
     //Extract the specific commands from the overall command
     ves::open::xml::DataValuePairPtr activeModelDVP =
         veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = 
-        boost::dynamic_pointer_cast<ves::open::xml::Command>(  
-        activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::CommandPtr objectCommand =
+        boost::dynamic_pointer_cast<ves::open::xml::Command>(
+            activeModelDVP->GetDataXMLObject() );
 
     //Extract the isosurface value
     activeModelDVP = objectCommand->GetDataValuePair( "Polydata Value" );
@@ -398,7 +400,7 @@ float cfdPolyData::GetSphereScaleFactor()
     // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
     // convert range to -4 < x < 4, and compute the exponent...
     vprDEBUG( vesDBG, 1 ) << " sphereScale = " << this->GetParticleScale()
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     float scaleFactor = 0.0;
 
@@ -408,7 +410,7 @@ float cfdPolyData::GetSphereScaleFactor()
     }
 
     vprDEBUG( vesDBG, 1 ) << " scaleFactor = " << scaleFactor
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     return scaleFactor;
 }
@@ -419,7 +421,7 @@ void cfdPolyData::UpdatePropertySet()
     warpedContourScale = boost::any_cast<double>( m_propertySet->GetPropertyValue( "WarpedScaleFactor" ) );
 
     colorByScalar = boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "ColorByScalar", "enumCurrentString" ) );
-    
+
     warpSurface = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseWarpedSurface" ) );
 
     m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );

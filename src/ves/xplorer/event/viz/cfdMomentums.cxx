@@ -71,7 +71,7 @@ cfdMomentums::~cfdMomentums()
 cfdMomentums::cfdMomentums( cfdMomentums const& src )
     :
     cfdContourBase( src ),
-    warper( vtkWarpVector::New() ) 
+    warper( vtkWarpVector::New() )
 {
     ;
 }
@@ -86,8 +86,8 @@ void cfdMomentums::Update( void )
     if( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetNumberOfPlanes() == 0 )
     {
         vprDEBUG( vesDBG, 0 )
-        << "cfdMomentums: planesData == NULL so returning"
-        << std::endl << vprDEBUG_FLUSH;
+                << "cfdMomentums: planesData == NULL so returning"
+                << std::endl << vprDEBUG_FLUSH;
 
         return;
     }
@@ -103,8 +103,8 @@ void cfdMomentums::Update( void )
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
             ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );*/
 
-        this->warper->SetInputConnection(  GetActiveDataSet()
-                                         ->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutputPort() );
+        this->warper->SetInputConnection( GetActiveDataSet()
+                                          ->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutputPort() );
         this->warper->SetScaleFactor( this->warpedContourScale );
         this->warper->Update();//can this go???
 
@@ -124,13 +124,13 @@ void cfdMomentums::Update( void )
             geodes.push_back( tempGeode.get() );
             this->updateFlag = true;
         }
-        catch ( std::bad_alloc )
+        catch( std::bad_alloc )
         {
             mapper->Delete();
             mapper = vtkPolyDataMapper::New();
 
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdMomentums "
-            << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
         }
         GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
         temp->Delete();
@@ -138,8 +138,8 @@ void cfdMomentums::Update( void )
     else
     {
         vprDEBUG( vesDBG, 0 )
-            << "cfdMomentums::Update: !(mapper && cursorType == NONE)"
-            << std::endl << vprDEBUG_FLUSH;
+                << "cfdMomentums::Update: !(mapper && cursorType == NONE)"
+                << std::endl << vprDEBUG_FLUSH;
 
         this->updateFlag = false;
     }

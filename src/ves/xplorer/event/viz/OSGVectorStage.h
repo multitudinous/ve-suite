@@ -58,16 +58,16 @@ class Geode;
 class OSGVectorStage
 {
 public:
-    OSGVectorStage(void);
-    ~OSGVectorStage(void);
+    OSGVectorStage( void );
+    ~OSGVectorStage( void );
 
     //create a osgNode
-    ves::xplorer::scenegraph::Geode* createInstanced( vtkPolyData* glyph, std::string vectorName="GlyphVector", std::string scalarName="", float scale1=1.0 );
+    ves::xplorer::scenegraph::Geode* createInstanced( vtkPolyData* glyph, std::string vectorName = "GlyphVector", std::string scalarName = "", float scale1 = 1.0 );
 
 private:
 
     //an m x n texture is used to transfer data
-    //int tm; 
+    //int tm;
     //int tn;
 
     //two utility functions used to determine tm and tn, since texture dimension needs to be 2^n
@@ -75,11 +75,11 @@ private:
     //int mypow2(unsigned x);
 
     //create the glyph arrow in OSG
-    void createArrow( osg::Geometry& geom, int nInstances=1, float scale2=1.0 );
+    void createArrow( osg::Geometry& geom, int nInstances = 1, float scale2 = 1.0 );
 
     //create the position array based on the passed in VTK points
     //float* createPositionArray( int m, int n , vtkPoints* points);
-    
+
     //create the attitude (rotation) array based on the passed VTK dataArray (dataArray should have 3 components per tuple)
     //float* createAttitudeArray( int m, int n, vtkDataArray* dataArray);
 

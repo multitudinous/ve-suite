@@ -115,12 +115,12 @@
 using namespace ves::xplorer;
 using namespace ves::conductor;
 
-///The Q_DECLARE_METATYPE maco allows us to use non-Qt types in 
+///The Q_DECLARE_METATYPE maco allows us to use non-Qt types in
 ///queued connections in Qt-signals
-Q_DECLARE_METATYPE(std::string)
+Q_DECLARE_METATYPE( std::string )
 ////////////////////////////////////////////////////////////////////////////////
-MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
-    QMainWindow(parent),
+MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
+    QMainWindow( parent ),
     ui( new Ui::MainWindow ),
     mFileDialog( 0 ),
     mFileOpsStack( 0 ),
@@ -128,23 +128,23 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
     mScenegraphTreeTab( 0 ),
     mActiveTab( "" ),
     mVisualizationTab( 0 ),
-    mMinervaStackedWidget ( 0 ),
+    mMinervaStackedWidget( 0 ),
     m_preferencesTab( 0 ),
     m_pluginsTab( 0 ),
     m_constraintsTab( 0 ),
     m_recentTab( 0 ),
-    m_logger( Poco::Logger::get("conductor.MainWindow") ),
+    m_logger( Poco::Logger::get( "conductor.MainWindow" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     setMouseTracking( true );
-    ui->setupUi(this);
+    ui->setupUi( this );
     //m_messageBox = new QMessageBox(this);
     ui->menuBar->setContextMenuPolicy( Qt::PreventContextMenu );
 
-    QToolBar* toolbar = new ExtendedToolBar(this);
+    QToolBar* toolbar = new ExtendedToolBar( this );
     toolbar->setContextMenuPolicy( Qt::PreventContextMenu );
     toolbar->setMouseTracking( true );
-    toolbar->setIconSize(QSize(32,32));
+    toolbar->setIconSize( QSize( 32, 32 ) );
     toolbar->setMovable( false );
     this->addToolBar( toolbar );
 
@@ -155,19 +155,19 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
     {
         tempFeatures.clear();
         tempFeatures.append( "Physics,Manipulator,Navigation,Plugins," );
-        tempFeatures.append( "Constraints,Visualization,Tree,GIS");
+        tempFeatures.append( "Constraints,Visualization,Tree,GIS" );
     }
     m_displayFeatures = tempFeatures.split( "," );
-    
+
     ///The file menu stack
     {
         toolbar->addAction( ui->actionFile );
-        
+
         mFileOpsStack = new IconStack( toolbar->
-            widgetForAction( ui->actionFile ), this );
+                                       widgetForAction( ui->actionFile ), this );
         mFileOpsStack->SetExtendedToolBarParent( toolbar );
         mFileOpsStack->AddAction( ui->actionNew );
-        mFileOpsStack->AddAction( ui->actionOpen);
+        mFileOpsStack->AddAction( ui->actionOpen );
         mFileOpsStack->AddAction( ui->actionSave );
         mFileOpsStack->setObjectName( "mFileOpsStack" );
     }
@@ -176,12 +176,12 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
     if( m_displayFeatures.contains( "Physics" ) )
     {
         toolbar->addAction( ui->actionPhysicsStack );
-        
+
         m_physicsMenuStack = new IconStack( toolbar->
-            widgetForAction( ui->actionPhysicsStack ), this );
+                                            widgetForAction( ui->actionPhysicsStack ), this );
         m_physicsMenuStack->SetExtendedToolBarParent( toolbar );
-        m_physicsMenuStack->AddAction( ui->actionPlayPhysics);
-        m_physicsMenuStack->AddAction( ui->actionPausePhysics);
+        m_physicsMenuStack->AddAction( ui->actionPlayPhysics );
+        m_physicsMenuStack->AddAction( ui->actionPausePhysics );
         m_physicsMenuStack->AddAction( ui->actionResetPhysics );
         m_physicsMenuStack->AddAction( ui->actionStepPhysics );
         m_physicsMenuStack->setObjectName( "m_physicsMenuStack" );
@@ -191,9 +191,9 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
     if( m_displayFeatures.contains( "Manipulator" ) )
     {
         toolbar->addAction( ui->actionManipulatorStack );
-        
+
         m_manipulatorMenuStack = new IconStack( toolbar->
-            widgetForAction( ui->actionManipulatorStack ), this );
+                                                widgetForAction( ui->actionManipulatorStack ), this );
         m_manipulatorMenuStack->SetExtendedToolBarParent( toolbar );
         m_manipulatorMenuStack->AddAction( ui->actionEnableManipulator );
         m_manipulatorMenuStack->AddAction( ui->actionScaleManipulator );
@@ -202,20 +202,20 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
         m_manipulatorMenuStack->AddAction( ui->actionComboManipulator );
         m_manipulatorMenuStack->setObjectName( "m_manipulatorMenuStack" );
         //ui->actionManipulatorStack
-        
+
         ui->actionScaleManipulator->setEnabled( false );
         ui->actionTranslateManipulator->setEnabled( false );
         ui->actionRotateManipulator->setEnabled( false );
-        ui->actionComboManipulator->setEnabled( false );    
+        ui->actionComboManipulator->setEnabled( false );
     }
-    
+
     ///The nav menu stack
     if( m_displayFeatures.contains( "Navigation" ) )
     {
         toolbar->addAction( ui->actionNavigationStack );
 
         m_navMenuStack = new IconStack( toolbar->
-            widgetForAction( ui->actionNavigationStack ), this );
+                                        widgetForAction( ui->actionNavigationStack ), this );
         m_navMenuStack->SetExtendedToolBarParent( toolbar );
         m_navMenuStack->AddAction( ui->actionSmallJump );
         m_navMenuStack->AddAction( ui->actionMediumJump );
@@ -226,10 +226,10 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
         m_navMenuStack->AddAction( ui->actionCharacterNavigation );
         m_navMenuStack->AddAction( ui->actionCharacterFlyMode );
         m_navMenuStack->setObjectName( "m_navMenustack" );
-        
+
         eventmanager::EventManager::instance()->RegisterSignal(
-           new eventmanager::SignalWrapper< NavJumpSignal_type >( &m_jumpSignal ),
-           "MainWindow.JumpSignal" );
+            new eventmanager::SignalWrapper< NavJumpSignal_type >( &m_jumpSignal ),
+            "MainWindow.JumpSignal" );
 
         eventmanager::EventManager::instance()->RegisterSignal(
             new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_characterEnable ),
@@ -240,7 +240,7 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
     {
         toolbar->addAction( ui->actionViewStack );
         m_viewMenuStack = new IconStack( toolbar->
-            widgetForAction( ui->actionViewStack ), this );
+                                         widgetForAction( ui->actionViewStack ), this );
         m_viewMenuStack->SetExtendedToolBarParent( toolbar );
         m_viewMenuStack->AddAction( ui->actionShowPreferencesTab );
         if( m_displayFeatures.contains( "Plugins" ) )
@@ -255,10 +255,10 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
         m_viewMenuStack->AddAction( ui->actionShowTestPlot );
         m_viewMenuStack->setObjectName( "m_viewMenuStack" );
     }
-        
+
     // Make sure there is no statusbar on this widget.
     //setStatusBar(0);
-    
+
     // Create set of default dialogs that can be added as tabs
     if( m_displayFeatures.contains( "Visualization" ) )
     {
@@ -291,15 +291,15 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
                       this, SLOT( QueuedOnActiveModelChanged( std::string ) ),
                       Qt::QueuedConnection );
 
-    QObject::connect( this, SIGNAL(RemoveNotifierQSignal(std::string)),
-             this, SLOT(QueuedRemoveNotifier(std::string)),
+    QObject::connect( this, SIGNAL( RemoveNotifierQSignal( std::string ) ),
+                      this, SLOT( QueuedRemoveNotifier( std::string ) ),
+                      Qt::QueuedConnection );
+
+    connect( this, SIGNAL( UseAsSurfaceDataQSignal( std::string, bool ) ),
+             this, SLOT( UseAsSurfaceDataQueued( std::string, bool ) ),
              Qt::QueuedConnection );
 
-    connect( this, SIGNAL(UseAsSurfaceDataQSignal(std::string,bool)),
-             this, SLOT(UseAsSurfaceDataQueued(std::string,bool)),
-             Qt::QueuedConnection );
-
-    // Connect to the ActiveModelChangedSignal so we can show the correct 
+    // Connect to the ActiveModelChangedSignal so we can show the correct
     // tabs when the model changes
     CONNECTSIGNAL_1( "ModelHandler.ActiveModelChangedSignal",
                      void ( const std::string& ),
@@ -309,8 +309,8 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
     // scenegraph
     CONNECTSIGNALS_1( "%NodeAdded",
                       void( const std::string& ),
-                     &MainWindow::RemoveNotifier,
-                     mConnections, any_SignalType, normal_Priority );
+                      &MainWindow::RemoveNotifier,
+                      mConnections, any_SignalType, normal_Priority );
     // Connect to VesFileLoaded signal, which is sent out when loading of a .ves
     // finishes
     CONNECTSIGNAL_1( "VesFileLoaded",
@@ -325,36 +325,36 @@ MainWindow::MainWindow(QWidget* parent, const std::string& features ) :
                      mConnections, normal_Priority );
 
     CONNECTSIGNALS_2( "%UseAsSurfaceData%", void( const std::string&, bool ),
-                     &MainWindow::UseAsSurfaceData,
-                     mConnections, any_SignalType, normal_Priority );
+                      &MainWindow::UseAsSurfaceData,
+                      mConnections, any_SignalType, normal_Priority );
 
 
-    m_GeometryExtensions.push_back("osg");
-    m_GeometryExtensions.push_back("ive");
-    m_GeometryExtensions.push_back("stl");
-    m_GeometryExtensions.push_back("wrl");
-    m_GeometryExtensions.push_back("iv");
-    m_GeometryExtensions.push_back("obj");
-    m_GeometryExtensions.push_back("pfb");
-    m_GeometryExtensions.push_back("flt");
-    m_GeometryExtensions.push_back("dxf");
-    m_GeometryExtensions.push_back("3ds");
-    m_GeometryExtensions.push_back("png");
+    m_GeometryExtensions.push_back( "osg" );
+    m_GeometryExtensions.push_back( "ive" );
+    m_GeometryExtensions.push_back( "stl" );
+    m_GeometryExtensions.push_back( "wrl" );
+    m_GeometryExtensions.push_back( "iv" );
+    m_GeometryExtensions.push_back( "obj" );
+    m_GeometryExtensions.push_back( "pfb" );
+    m_GeometryExtensions.push_back( "flt" );
+    m_GeometryExtensions.push_back( "dxf" );
+    m_GeometryExtensions.push_back( "3ds" );
+    m_GeometryExtensions.push_back( "png" );
 
-    m_DataExtensions.push_back("vtk");
-    m_DataExtensions.push_back("vtu");
-    m_DataExtensions.push_back("vts");
-    m_DataExtensions.push_back("vti");
-    m_DataExtensions.push_back("vtm");
-    m_DataExtensions.push_back("vtp");
-    m_DataExtensions.push_back("vtr");
-    m_DataExtensions.push_back("param");
-    m_DataExtensions.push_back("ens");
-    m_DataExtensions.push_back("case");
-    m_DataExtensions.push_back("mfix");
-    m_DataExtensions.push_back("cas");
-    m_DataExtensions.push_back("avs");
-    m_DataExtensions.push_back("dcm");
+    m_DataExtensions.push_back( "vtk" );
+    m_DataExtensions.push_back( "vtu" );
+    m_DataExtensions.push_back( "vts" );
+    m_DataExtensions.push_back( "vti" );
+    m_DataExtensions.push_back( "vtm" );
+    m_DataExtensions.push_back( "vtp" );
+    m_DataExtensions.push_back( "vtr" );
+    m_DataExtensions.push_back( "param" );
+    m_DataExtensions.push_back( "ens" );
+    m_DataExtensions.push_back( "case" );
+    m_DataExtensions.push_back( "mfix" );
+    m_DataExtensions.push_back( "cas" );
+    m_DataExtensions.push_back( "avs" );
+    m_DataExtensions.push_back( "dcm" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 MainWindow::~MainWindow()
@@ -378,14 +378,14 @@ void MainWindow::mousePressEvent( QMouseEvent* )
     ;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::changeEvent(QEvent* e)
+void MainWindow::changeEvent( QEvent* e )
 {
-    QMainWindow::changeEvent(e);
-    switch (e->type()) 
+    QMainWindow::changeEvent( e );
+    switch( e->type() )
     {
     case QEvent::LanguageChange:
     {
-        ui->retranslateUi(this);
+        ui->retranslateUi( this );
         break;
     }
     default:
@@ -395,7 +395,7 @@ void MainWindow::changeEvent(QEvent* e)
 ////////////////////////////////////////////////////////////////////////////////
 int MainWindow::AddTab( QWidget* widget, const std::string& tabLabel, bool deleteOnClose )
 {
-    int index = ui->tabWidget->addTab( widget, 
+    int index = ui->tabWidget->addTab( widget,
                                        QString::fromStdString( tabLabel ) );
     mTabbedWidgets[ tabLabel ] = std::pair< QWidget*, bool>
                                  ( widget, deleteOnClose );
@@ -408,10 +408,10 @@ void MainWindow::RemoveTab( QWidget* widget )
     {
         return;
     }
-    
+
     // Remove the visual tab
     ui->tabWidget->removeTab( ui->tabWidget->indexOf( widget ) );
-    
+
     // Remove this tab from mTabbedWidgets map
     std::map< std::string, std::pair< QWidget*, bool > >::iterator iter;
     for( iter = mTabbedWidgets.begin(); iter != mTabbedWidgets.end(); iter++ )
@@ -484,7 +484,7 @@ void MainWindow::ActivateTab( int index )
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_tabWidget_currentChanged( int index )
 {
-    // Store off the name of this tab so this tab can be reactivated when 
+    // Store off the name of this tab so this tab can be reactivated when
     // tabs get added/moved/removed. We use the name rather than the index
     // because the index could change. We use the name rather than the widget
     // because in our scheme, the widget on a tab page might be replaced by
@@ -534,7 +534,7 @@ void MainWindow::on_actionOpen_triggered()
         mFileDialog = 0;
         //return;
     }
-    
+
     mFileDialog = new QFileDialog( 0 );
     // Ensure that we use Qt's internal file dialog class since native file
     // dialogs cannot be embedded in a QTabWidget
@@ -551,7 +551,7 @@ void MainWindow::on_actionOpen_triggered()
     {
         AllGeometryExtensions.append( "*." );
         AllGeometryExtensions.append( *iter );
-        AllGeometryExtensions.append(" ");
+        AllGeometryExtensions.append( " " );
         ++iter;
     }
 
@@ -561,7 +561,7 @@ void MainWindow::on_actionOpen_triggered()
     {
         AllDataExtensions.append( "*." );
         AllDataExtensions.append( *iter );
-        AllDataExtensions.append(" ");
+        AllDataExtensions.append( " " );
         ++iter;
     }
 
@@ -584,33 +584,33 @@ void MainWindow::on_actionOpen_triggered()
             << GeometryFilters.c_str()
             << DataFilters.c_str()
             << "All Files (*.*)";
-//    filters << "All Supported Files (*.ves *.osg *.ive *.stl *.wrl *.iv *.obj *.pfb *.flt *.dxf *.3ds *.vtk *.vtu *.vts *.vti *.vtm *.vtp *.vtr *.param *.ens *.case *.mfix *.cas *.avs *.dcm)"
-//            << "VES Files (*.ves)"
-//            << "Geometry files (*.osg *.ive *.stl *.wrl *.iv *.obj *.pfb *.flt *.dxf *.3ds)"
-//            << "Data files (*.vtk *.vtu *.vts *.vti *.vtm *.vtp *.vtr *.param *.ens *.case *.mfix *.cas *.avs *.dcm *.stl)"
-//            << "All Files (*.*)";
+    //    filters << "All Supported Files (*.ves *.osg *.ive *.stl *.wrl *.iv *.obj *.pfb *.flt *.dxf *.3ds *.vtk *.vtu *.vts *.vti *.vtm *.vtp *.vtr *.param *.ens *.case *.mfix *.cas *.avs *.dcm)"
+    //            << "VES Files (*.ves)"
+    //            << "Geometry files (*.osg *.ive *.stl *.wrl *.iv *.obj *.pfb *.flt *.dxf *.3ds)"
+    //            << "Data files (*.vtk *.vtu *.vts *.vti *.vtm *.vtp *.vtr *.param *.ens *.case *.mfix *.cas *.avs *.dcm *.stl)"
+    //            << "All Files (*.*)";
     mFileDialog->setNameFilters( filters );
-    
-    QObject::connect( mFileDialog, SIGNAL(filesSelected(const QStringList &)),
-                      this, SLOT(onFileOpenSelected(const QStringList&)) );
-    QObject::connect( mFileDialog, SIGNAL(rejected()), this,
+
+    QObject::connect( mFileDialog, SIGNAL( filesSelected( const QStringList& ) ),
+                      this, SLOT( onFileOpenSelected( const QStringList& ) ) );
+    QObject::connect( mFileDialog, SIGNAL( rejected() ), this,
                       SLOT( onFileCancelled() ) );
-    connect( mFileDialog, SIGNAL(filterSelected ( const QString& )),
-                      this, SLOT(OnOpenFileFilterSelected( const QString& )));
-    connect( mFileDialog, SIGNAL(currentChanged(const QString&)),
-                      this, SLOT(OnCurrentChanged(const QString&)));
-                      
+    connect( mFileDialog, SIGNAL( filterSelected( const QString& ) ),
+             this, SLOT( OnOpenFileFilterSelected( const QString& ) ) );
+    connect( mFileDialog, SIGNAL( currentChanged( const QString& ) ),
+             this, SLOT( OnCurrentChanged( const QString& ) ) );
+
     ActivateTab( AddTab( mFileDialog, "Open File" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::OnCurrentChanged ( const QString& path )
+void MainWindow::OnCurrentChanged( const QString& path )
 {
     // Determine the file extension. If it is ".ves", force single selection.
     // Otherwise, allow multiple selection.
     if( path.endsWith( ".ves", Qt::CaseInsensitive ) )
     {
         // Unselect any other files by selecting only the .ves file
-        mFileDialog->selectFile(path);
+        mFileDialog->selectFile( path );
         mFileDialog->setFileMode( QFileDialog::ExistingFile );
     }
     else
@@ -620,7 +620,7 @@ void MainWindow::OnCurrentChanged ( const QString& path )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::OnOpenFileFilterSelected ( const QString& filter )
+void MainWindow::OnOpenFileFilterSelected( const QString& filter )
 {
     if( filter == "VES Files (*.ves)" )
     {
@@ -639,7 +639,7 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
 {
     // Close out the fileDialog tab and kill the file dialog
     RemoveTab( mFileDialog );
-    if ( mFileDialog != 0 )
+    if( mFileDialog != 0 )
     {
         mFileDialog->close();
         mFileDialog = 0;
@@ -666,7 +666,7 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         ActivateTab( AddTab( m_loading, "Loading..." ) );
         */
 
-        QString fileName = fileNames.at(index);
+        QString fileName = fileNames.at( index );
         QDir dir = QDir::current();
         fileName = dir.relativeFilePath( fileName );
         boost::filesystem::path file( fileName.toStdString() );
@@ -689,11 +689,11 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
             // It's a ves file, likely with a network
 
             QSettings settings( QSettings::IniFormat, QSettings::UserScope,
-                                    "VE Suite", "VE Xplorer" );
+                                "VE Suite", "VE Xplorer" );
             settings.setFallbacksEnabled( false );
-            QStringList files = settings.value("recentProjectList").toStringList();
-            files.removeAll( fileNames.at(index) );
-            files.prepend( fileNames.at(index) );
+            QStringList files = settings.value( "recentProjectList" ).toStringList();
+            files.removeAll( fileNames.at( index ) );
+            files.prepend( fileNames.at( index ) );
             while( files.size() > 10 )
             {
                 files.removeLast();
@@ -701,27 +701,27 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
             settings.setValue( "recentProjectList", files );
 
             ves::conductor::NetworkLoader* loader =
-                    ves::conductor::NetworkLoader::createNetworkLoader();
+                ves::conductor::NetworkLoader::createNetworkLoader();
             loader->LoadVesFile( file.string() );
             // Destructor for loader is private; object autodeletes when done
             // processing.
 
             // Keep the absolute filepath since CWD may change out from under us
-            m_saveFileName = fileNames.at(index);
+            m_saveFileName = fileNames.at( index );
         }
         // Remove the dot from the head of extension so we can compare to our
         // vectors of other file extensions
         extension.erase( extension.begin() );
         std::vector< std::string >::const_iterator iter =
-                std::find( m_GeometryExtensions.begin(), m_GeometryExtensions.end(), extension );
+            std::find( m_GeometryExtensions.begin(), m_GeometryExtensions.end(), extension );
         if( iter != m_GeometryExtensions.end() )
         {
             QSettings settings( QSettings::IniFormat, QSettings::UserScope,
-                                    "VE Suite", "VE Xplorer" );
+                                "VE Suite", "VE Xplorer" );
             settings.setFallbacksEnabled( false );
-            QStringList files = settings.value("recentCADList").toStringList();
-            files.removeAll( fileNames.at(index) );
-            files.prepend( fileNames.at(index) );
+            QStringList files = settings.value( "recentCADList" ).toStringList();
+            files.removeAll( fileNames.at( index ) );
+            files.prepend( fileNames.at( index ) );
             while( files.size() > 10 )
             {
                 files.removeLast();
@@ -735,11 +735,11 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         if( iter != m_DataExtensions.end() )
         {
             QSettings settings( QSettings::IniFormat, QSettings::UserScope,
-                                    "VE Suite", "VE Xplorer" );
+                                "VE Suite", "VE Xplorer" );
             settings.setFallbacksEnabled( false );
-            QStringList files = settings.value("recentDataList").toStringList();
-            files.removeAll( fileNames.at(index) );
-            files.prepend( fileNames.at(index) );
+            QStringList files = settings.value( "recentDataList" ).toStringList();
+            files.removeAll( fileNames.at( index ) );
+            files.prepend( fileNames.at( index ) );
             while( files.size() > 10 )
             {
                 files.removeLast();
@@ -759,7 +759,7 @@ void MainWindow::LoadGeometryFile( std::string filename )
     ves::conductor::CADFileLoader loader;
     std::string parentID;
     ves::xplorer::Model* activeModel =
-            ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        ves::xplorer::ModelHandler::instance()->GetActiveModel();
 
     // If there's no active model, we need to set one up. This requires some
     // gymnastics to get the working directory set properly.
@@ -785,7 +785,7 @@ void MainWindow::LoadGeometryFile( std::string filename )
     ModelCADHandler* m_cadHandler = activeModel->GetModelCADHandler();
 
     parentID = mScenegraphTreeTab->GetSelectedNodeID();
-    if( (parentID.empty()) || (!m_cadHandler->AssemblyExists( parentID )) )
+    if( ( parentID.empty() ) || ( !m_cadHandler->AssemblyExists( parentID ) ) )
     {
         // If no valid node is selected, or if the selected node is
         // not an assembly, get or create the top-level assembly for
@@ -811,7 +811,7 @@ void MainWindow::LoadGeometryFile( std::string filename )
         descriptorsList.push_back( activeModel->GetID() );
 
         ves::xplorer::scenegraph::DCS* assemblyNode =
-                m_cadHandler->GetAssembly( parentID );
+            m_cadHandler->GetAssembly( parentID );
         assemblyNode->setDescriptions( descriptorsList );
 
         //Add the top level CAD to the VEBaseClass
@@ -838,10 +838,10 @@ void MainWindow::LoadDataFile( std::string filename )
         boost::filesystem::path tmp2( filename );
         filename = tmp2.filename().string();
     }
-    
+
     ves::open::xml::ParameterBlockPtr mParamBlock;
     ves::open::xml::model::ModelPtr m_veModel(
-            ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData() );
+        ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData() );
     //---------------From OnInformationPacketAdd
     mParamBlock = m_veModel->GetInformationPacket( -1 );
     mParamBlock->SetName( filename );
@@ -902,11 +902,11 @@ void MainWindow::LoadDataFile( std::string filename )
         // RPT: For now, we just load all scalars in the file. Need to think
         // about how to choose specific ones from the file.
         //open dialog to choose scalars to load
-//            DataSetDataArrayChoiceDialog choiceDialog( this );
-//            choiceDialog.SetDataArrays( dataArrayList );
-//            if( choiceDialog.ShowModal() == wxID_OK )
-//            {
-//                dataArrayList = choiceDialog.GetUserActiveArrays();
+        //            DataSetDataArrayChoiceDialog choiceDialog( this );
+        //            choiceDialog.SetDataArrays( dataArrayList );
+        //            if( choiceDialog.ShowModal() == wxID_OK )
+        //            {
+        //                dataArrayList = choiceDialog.GetUserActiveArrays();
         ves::open::xml::DataValuePairPtr arraysDVP =
             mParamBlock->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
         if( !arraysDVP )
@@ -914,16 +914,16 @@ void MainWindow::LoadDataFile( std::string filename )
             arraysDVP = mParamBlock->GetProperty( -1 );
         }
         ves::open::xml::OneDStringArrayPtr
-            stringArray( new ves::open::xml::OneDStringArray() );
+        stringArray( new ves::open::xml::OneDStringArray() );
         stringArray->SetArray( dataArrayList );
         arraysDVP->SetData( "VTK_ACTIVE_DATA_ARRAYS", stringArray );
     }
 
     ves::open::xml::DataValuePairSharedPtr
-        dataValuePair( new ves::open::xml::DataValuePair() );
+    dataValuePair( new ves::open::xml::DataValuePair() );
     dataValuePair->SetData( "CREATE_NEW_DATASETS",
-        ves::open::xml::model::ModelPtr(
-        new ves::open::xml::model::Model( *m_veModel ) ) );
+                            ves::open::xml::model::ModelPtr(
+                                new ves::open::xml::model::Model( *m_veModel ) ) );
 
     ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
     veCommand->SetCommandName( std::string( "UPDATE_MODEL_DATASETS" ) );
@@ -934,7 +934,7 @@ void MainWindow::LoadDataFile( std::string filename )
     if( mParamBlock->GetProperty( "VTK_DATA_FILE" ) )
     {
         dataSetName->SetData( "VTK_DATASET_NAME",
-            mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+                              mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
     }
     else
     {
@@ -956,8 +956,8 @@ void MainWindow::LoadDataFile( std::string filename )
 void MainWindow::onFileCancelled()
 {
     RemoveTab( mFileDialog );
-    
-    if (mFileDialog)
+
+    if( mFileDialog )
     {
         mFileDialog->close();
         mFileDialog = 0;
@@ -999,9 +999,9 @@ void MainWindow::on_actionSaveAs_triggered()
 
     mFileDialog->setAcceptMode( QFileDialog::AcceptSave );
 
-    QObject::connect( mFileDialog, SIGNAL(fileSelected(const QString &)),
-                      this, SLOT(onFileSaveSelected(const QString &)) );
-    QObject::connect( mFileDialog, SIGNAL(rejected()), this,
+    QObject::connect( mFileDialog, SIGNAL( fileSelected( const QString& ) ),
+                      this, SLOT( onFileSaveSelected( const QString& ) ) );
+    QObject::connect( mFileDialog, SIGNAL( rejected() ), this,
                       SLOT( onFileCancelled() ) );
 
     ActivateTab( AddTab( mFileDialog, "Save Session" ) );
@@ -1016,7 +1016,7 @@ void MainWindow::onFileSaveSelected( const QString& fileName )
     // Close out the fileDialog tab and kill the file dialog
     RemoveTab( mFileDialog );
 
-    if ( mFileDialog != 0 )
+    if( mFileDialog != 0 )
     {
         mFileDialog->close();
         mFileDialog = 0;
@@ -1026,7 +1026,7 @@ void MainWindow::onFileSaveSelected( const QString& fileName )
 
     QString tFileName( fileName );
     // If the filename ends in ".ves", break that off
-    if ( tFileName.endsWith( ".ves", Qt::CaseInsensitive ) )
+    if( tFileName.endsWith( ".ves", Qt::CaseInsensitive ) )
     {
         tFileName.chop( 4 );
     }
@@ -1057,11 +1057,11 @@ void MainWindow::onFileSaveSelected( const QString& fileName )
 
     // Put this file at the top of the RecentFiles projects list
     QSettings settings( QSettings::IniFormat, QSettings::UserScope,
-                            "VE Suite", "VE Xplorer" );
+                        "VE Suite", "VE Xplorer" );
     settings.setFallbacksEnabled( false );
-    QStringList files = settings.value("recentProjectList").toStringList();
-    files.removeAll( QString::fromStdString(vesFileName) );
-    files.prepend( QString::fromStdString(vesFileName) );
+    QStringList files = settings.value( "recentProjectList" ).toStringList();
+    files.removeAll( QString::fromStdString( vesFileName ) );
+    files.prepend( QString::fromStdString( vesFileName ) );
     settings.setValue( "recentProjectList", files );
 
     if( m_recentTab )
@@ -1084,7 +1084,7 @@ void MainWindow::SaveSytemToFile( ves::open::xml::model::SystemPtr system, std::
 
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::OnActiveModelChanged( const std::string& modelID )
-{   
+{
     // emit Qt-signal which is connected to QueuedOnActiveModelChanged.
     // A queued connection is necessary because widgets are altered during
     // this event.
@@ -1145,7 +1145,7 @@ void MainWindow::QueuedOnActiveModelChanged( const std::string& modelID )
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef MINERVA_GIS_SUPPORT
-void MainWindow::on_actionAdd_Planet_triggered ( bool )
+void MainWindow::on_actionAdd_Planet_triggered( bool )
 {
     ves::xplorer::minerva::MinervaManager::instance()->AddEarthToScene();
 
@@ -1158,14 +1158,14 @@ void MainWindow::on_actionAdd_Planet_triggered ( bool )
     {
         mMinervaStackedWidget = new ves::conductor::qt::minerva::StackedWidget();
         mMinervaStackedWidget->
-            setFeature( ves::xplorer::minerva::MinervaManager::instance()->
-            GetTileEngineBody()->container() );
+        setFeature( ves::xplorer::minerva::MinervaManager::instance()->
+                    GetTileEngineBody()->container() );
         ui->tabWidget->
-            setCurrentIndex( AddTab( mMinervaStackedWidget, "Minerva Layers" ) );
+        setCurrentIndex( AddTab( mMinervaStackedWidget, "Minerva Layers" ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::on_actionRemove_Planet_triggered ( bool )
+void MainWindow::on_actionRemove_Planet_triggered( bool )
 {
     ves::xplorer::minerva::MinervaManager::instance()->Clear();
 
@@ -1177,22 +1177,22 @@ void MainWindow::on_actionRemove_Planet_triggered ( bool )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::on_actionConfigure_Layers_triggered ( bool )
+void MainWindow::on_actionConfigure_Layers_triggered( bool )
 {
     ;
 }
 #else
-void MainWindow::on_actionAdd_Planet_triggered ( bool )
+void MainWindow::on_actionAdd_Planet_triggered( bool )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::on_actionRemove_Planet_triggered ( bool )
+void MainWindow::on_actionRemove_Planet_triggered( bool )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::on_actionConfigure_Layers_triggered ( bool )
+void MainWindow::on_actionConfigure_Layers_triggered( bool )
 {
     ;
 }
@@ -1255,9 +1255,9 @@ void MainWindow::on_actionManipulatorStack_triggered()
 void MainWindow::on_actionScaleManipulator_triggered()
 {
     scenegraph::manipulator::ManipulatorManager& manipulatorManager =
-    scenegraph::SceneManager::instance()->GetManipulatorManager();
+        scenegraph::SceneManager::instance()->GetManipulatorManager();
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
-    manipulatorManager.GetSceneManipulator();
+        manipulatorManager.GetSceneManipulator();
     sceneManipulator->SetEnabledModes(
         scenegraph::manipulator::TransformationType::SCALE_COMPOUND );
     sceneManipulator->DefaultForm();
@@ -1266,9 +1266,9 @@ void MainWindow::on_actionScaleManipulator_triggered()
 void MainWindow::on_actionTranslateManipulator_triggered()
 {
     scenegraph::manipulator::ManipulatorManager& manipulatorManager =
-    scenegraph::SceneManager::instance()->GetManipulatorManager();
+        scenegraph::SceneManager::instance()->GetManipulatorManager();
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
-    manipulatorManager.GetSceneManipulator();
+        manipulatorManager.GetSceneManipulator();
     sceneManipulator->SetEnabledModes(
         scenegraph::manipulator::TransformationType::TRANSLATE_COMPOUND );
     sceneManipulator->DefaultForm();
@@ -1277,9 +1277,9 @@ void MainWindow::on_actionTranslateManipulator_triggered()
 void MainWindow::on_actionRotateManipulator_triggered()
 {
     scenegraph::manipulator::ManipulatorManager& manipulatorManager =
-    scenegraph::SceneManager::instance()->GetManipulatorManager();
+        scenegraph::SceneManager::instance()->GetManipulatorManager();
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
-    manipulatorManager.GetSceneManipulator();
+        manipulatorManager.GetSceneManipulator();
     sceneManipulator->SetEnabledModes(
         scenegraph::manipulator::TransformationType::ROTATE_COMPOUND );
     sceneManipulator->DefaultForm();
@@ -1288,9 +1288,9 @@ void MainWindow::on_actionRotateManipulator_triggered()
 void MainWindow::on_actionComboManipulator_triggered()
 {
     scenegraph::manipulator::ManipulatorManager& manipulatorManager =
-    scenegraph::SceneManager::instance()->GetManipulatorManager();
+        scenegraph::SceneManager::instance()->GetManipulatorManager();
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
-    manipulatorManager.GetSceneManipulator();
+        manipulatorManager.GetSceneManipulator();
     sceneManipulator->SetEnabledModes(
         scenegraph::manipulator::TransformationType::ALL );
     sceneManipulator->ComboForm();
@@ -1299,9 +1299,9 @@ void MainWindow::on_actionComboManipulator_triggered()
 void MainWindow::on_actionEnableManipulator_triggered( bool triggered )
 {
     scenegraph::manipulator::ManipulatorManager& manipulatorManager =
-    scenegraph::SceneManager::instance()->GetManipulatorManager();
+        scenegraph::SceneManager::instance()->GetManipulatorManager();
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
-    manipulatorManager.GetSceneManipulator();
+        manipulatorManager.GetSceneManipulator();
 
     manipulatorManager.Enable( triggered );
     sceneManipulator->Enable( triggered );
@@ -1317,11 +1317,11 @@ void MainWindow::on_actionEnableManipulator_triggered( bool triggered )
     {
         sceneManipulator->Hide();
     }
-    
+
     ui->actionScaleManipulator->setEnabled( triggered );
     ui->actionTranslateManipulator->setEnabled( triggered );
     ui->actionRotateManipulator->setEnabled( triggered );
-    ui->actionComboManipulator->setEnabled( triggered );    
+    ui->actionComboManipulator->setEnabled( triggered );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionNavigationStack_triggered()
@@ -1338,22 +1338,22 @@ void MainWindow::on_actionNavigationStack_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionSmallJump_hovered()
 {
-    m_jumpSignal( "Small" );    
+    m_jumpSignal( "Small" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionMediumJump_triggered()
 {
-    m_jumpSignal( "Medium" );    
+    m_jumpSignal( "Medium" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionLargeJump_triggered()
 {
-    m_jumpSignal( "Large" );    
+    m_jumpSignal( "Large" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionBoundingBoxJump_triggered()
 {
-    m_jumpSignal( "Bounding Box" );    
+    m_jumpSignal( "Bounding Box" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionWorldNavigation_triggered()
@@ -1369,21 +1369,21 @@ void MainWindow::on_actionObjectNavigation_triggered()
 void MainWindow::on_actionCharacterNavigation_triggered( bool triggered )
 {
     scenegraph::CharacterController& characterController =
-    scenegraph::SceneManager::instance()->GetCharacterController();
+        scenegraph::SceneManager::instance()->GetCharacterController();
     characterController.Enable( triggered );
-    
+
     ui->actionCharacterFlyMode->setEnabled( !triggered );
-    
+
     m_characterEnable( triggered );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionCharacterFlyMode_triggered( bool triggered )
 {
     scenegraph::CharacterController& characterController =
-    scenegraph::SceneManager::instance()->GetCharacterController();
-    
+        scenegraph::SceneManager::instance()->GetCharacterController();
+
     characterController.EnableFlying( triggered );
-    
+
     ui->actionCharacterNavigation->setEnabled( !triggered );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1403,20 +1403,20 @@ void MainWindow::on_actionShowPluginsTab_triggered()
 {
     if( m_displayFeatures.contains( "Plugins" ) )
     {
-    int index = AddTab( m_pluginsTab, "Plugins" );
+        int index = AddTab( m_pluginsTab, "Plugins" );
 
-    // Coming soon...
-//    QToolButton* tb = new QToolButton;
-//    tb->setText( "x" );
-//    tb->setAutoRaise( true );
-//    ui->tabWidget->SetTabButton( index, tb );
+        // Coming soon...
+        //    QToolButton* tb = new QToolButton;
+        //    tb->setText( "x" );
+        //    tb->setAutoRaise( true );
+        //    ui->tabWidget->SetTabButton( index, tb );
         ActivateTab( index );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionShowPreferencesTab_triggered()
 {
-    ActivateTab( AddTab( m_preferencesTab,"Preferences" ) );
+    ActivateTab( AddTab( m_preferencesTab, "Preferences" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionNew_triggered( const QString& workingDir )
@@ -1439,11 +1439,11 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     }// crashSignal goes out of scope, so the signalpointer is no longer valid.
     // Attempt to connect to an invalid signal....
     //std::cout << "Connecting to invalid crash signal" << std::endl << std::flush;
-//    CONNECTSIGNAL_0( "CRASHME",
-//                     void ( ),
-//                     &MainWindow::on_actionShowPreferencesTab_triggered,
-//                     mConnections, normal_Priority );
-*/
+    //    CONNECTSIGNAL_0( "CRASHME",
+    //                     void ( ),
+    //                     &MainWindow::on_actionShowPreferencesTab_triggered,
+    //                     mConnections, normal_Priority );
+    */
 
     onRecentFileRejected();
     // If workingDir is empty, this method was called by clicking the "New File"
@@ -1468,9 +1468,9 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
 
         mFileDialog->setAcceptMode( QFileDialog::AcceptOpen );
 
-        QObject::connect( mFileDialog, SIGNAL(fileSelected(const QString &)),
-                          this, SLOT(on_actionNew_triggered(const QString &)) );
-        QObject::connect( mFileDialog, SIGNAL(rejected()), this,
+        QObject::connect( mFileDialog, SIGNAL( fileSelected( const QString& ) ),
+                          this, SLOT( on_actionNew_triggered( const QString& ) ) );
+        QObject::connect( mFileDialog, SIGNAL( rejected() ), this,
                           SLOT( onFileCancelled() ) );
 
         ActivateTab( AddTab( mFileDialog, "Select Working Directory" ) );
@@ -1480,8 +1480,8 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     m_saveFileName.clear();
 
     // Change to the new working directory
-    std::cout << "Setting working directory to " 
-        << workingDir.toStdString() << std::endl << std::flush;
+    std::cout << "Setting working directory to "
+              << workingDir.toStdString() << std::endl << std::flush;
     QDir::setCurrent( workingDir );
 
     reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
@@ -1491,7 +1491,7 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     // Close out the fileDialog tab and kill the file dialog
     RemoveTab( mFileDialog );
 
-    if ( mFileDialog != 0 )
+    if( mFileDialog != 0 )
     {
         mFileDialog->close();
         mFileDialog = 0;
@@ -1507,7 +1507,7 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
 
     mDataBufferEngine->NewVESData( true );
     ///Initialize top level network
-    ves::open::xml::model::NetworkPtr tempNetwork( 
+    ves::open::xml::model::NetworkPtr tempNetwork(
         new ves::open::xml::model::Network() );
 
     mDataBufferEngine->GetXMLSystemDataObject(
@@ -1516,7 +1516,7 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     using namespace ves::open::xml::model;
 
     SystemPtr system( mDataBufferEngine->GetXMLSystemDataObject(
-            mDataBufferEngine->GetTopSystemId() ) );
+                          mDataBufferEngine->GetTopSystemId() ) );
 
     ModelPtr mod( new Model );
     mod->SetPluginType( "DefaultPlugin" );
@@ -1527,10 +1527,10 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     system->AddModel( mod );
 
     const std::string network = XMLDataBufferEngine::instance()->
-                    SaveVESData( std::string( "returnString" ) );
+                                SaveVESData( std::string( "returnString" ) );
 
     ves::xplorer::network::GraphicalPluginManager::instance()->
-        SetCurrentNetwork( network );
+    SetCurrentNetwork( network );
 
     ves::xplorer::network::GraphicalPluginManager::instance()->LoadDataFromCE();
 
@@ -1541,8 +1541,8 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
 
     // Force CAD tree to re-read the now "empty" scenegraph
     mScenegraphTreeTab->PopulateWithRoot(
-        &(ves::xplorer::scenegraph::SceneManager::instance()->
-        GetGraphicalPluginManager()) );
+        &( ves::xplorer::scenegraph::SceneManager::instance()->
+           GetGraphicalPluginManager() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::RemoveNotifier( const std::string& filename )
@@ -1550,9 +1550,9 @@ void MainWindow::RemoveNotifier( const std::string& filename )
     RemoveNotifierQSignal( filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::QueuedRemoveNotifier(  std::string const& filename )
+void MainWindow::QueuedRemoveNotifier( std::string const& filename )
 {
-    std::map< std::string, QLabel* >::iterator iter = 
+    std::map< std::string, QLabel* >::iterator iter =
         m_loadNotifiers.find( filename );
     if( iter != m_loadNotifiers.end() )
     {
@@ -1573,7 +1573,7 @@ void MainWindow::UseAsSurfaceDataQueued( const std::string uuid, bool flag )
     cad.SetUUID( uuid );
     cad.LoadFromDatabase();
     std::string filename =
-            boost::any_cast<std::string>( cad.GetPropertyValue( "Filename" ) );
+        boost::any_cast<std::string>( cad.GetPropertyValue( "Filename" ) );
 
     if( flag )
     {
@@ -1582,7 +1582,7 @@ void MainWindow::UseAsSurfaceDataQueued( const std::string uuid, bool flag )
     else
     {
         ves::xplorer::ModelHandler::instance()->
-            GetActiveModel()->DeleteDataSet( filename );
+        GetActiveModel()->DeleteDataSet( filename );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1594,15 +1594,15 @@ void MainWindow::on_actionRecent_triggered()
     }
     else
     {
-        m_recentTab = new RecentFiles(0);
-        connect( m_recentTab, SIGNAL(fileSelected( QString )),
-                 this, SLOT(onRecentFileSelected(QString)) );
-        connect( m_recentTab, SIGNAL(newProject()),
-                 this, SLOT(on_actionNew_triggered()) );
-        connect( m_recentTab, SIGNAL(openProject()),
-                 this, SLOT(on_actionOpen_triggered()) );
-        connect( m_recentTab, SIGNAL(rejected()),
-                 this, SLOT(onRecentFileRejected()) );
+        m_recentTab = new RecentFiles( 0 );
+        connect( m_recentTab, SIGNAL( fileSelected( QString ) ),
+                 this, SLOT( onRecentFileSelected( QString ) ) );
+        connect( m_recentTab, SIGNAL( newProject() ),
+                 this, SLOT( on_actionNew_triggered() ) );
+        connect( m_recentTab, SIGNAL( openProject() ),
+                 this, SLOT( on_actionOpen_triggered() ) );
+        connect( m_recentTab, SIGNAL( rejected() ),
+                 this, SLOT( onRecentFileRejected() ) );
         ActivateTab( AddTab( m_recentTab, "Recent Files" ) );
     }
 }
@@ -1646,7 +1646,7 @@ void MainWindow::on_actionConstraints_triggered()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainWindow::on_tabWidget_tabCloseRequested ( int index )
+void MainWindow::on_tabWidget_tabCloseRequested( int index )
 {
     RemoveTab( ui->tabWidget->tabText( index ).toStdString() );
 }
@@ -1669,25 +1669,25 @@ void MainWindow::SetLogSplitter( Poco::SplitterChannel* splitter )
 #include <ves/conductor/qt/UIElementQt.h>
 void MainWindow::on_actionShowTestPlot_triggered()
 {
-    QwtPlot* plot = new QwtPlot(0);
-    plot->setTitle("Example Qwt Plot");
-    plot->setAxisTitle(QwtPlot::xBottom, "X Data");
-    plot->setAxisTitle(QwtPlot::yLeft, "Y Data");
+    QwtPlot* plot = new QwtPlot( 0 );
+    plot->setTitle( "Example Qwt Plot" );
+    plot->setAxisTitle( QwtPlot::xBottom, "X Data" );
+    plot->setAxisTitle( QwtPlot::yLeft, "Y Data" );
 
-    QwtPlotCurve* curve = new QwtPlotCurve("Curve");
-    curve->setPen(QPen(Qt::red));
+    QwtPlotCurve* curve = new QwtPlotCurve( "Curve" );
+    curve->setPen( QPen( Qt::red ) );
 
     double x_data[3] = {1, 2, 7};
     double y_data[3] = {1, 2, 3};
 
-    curve->setSamples(x_data, y_data, 3);
+    curve->setSamples( x_data, y_data, 3 );
 
     QwtPlotGrid* grid_y = new QwtPlotGrid();
-    grid_y->attach(plot);
+    grid_y->attach( plot );
 
-    curve->attach(plot);
+    curve->attach( plot );
 
-    plot->setAutoReplot(true);
+    plot->setAutoReplot( true );
 
     // In a normal program, we'd do this to display the plot in its own window:
     // plot->show();

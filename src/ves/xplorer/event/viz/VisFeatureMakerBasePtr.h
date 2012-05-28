@@ -41,7 +41,7 @@
  * Include this file to get a forward declaration of the pointer.
  * To get the full declaration of this pointer include the non-Ptr header file.
  */
- 
+
 /*!\class ves::conductor::VisFeatureMakerBasePtr
  *
  */

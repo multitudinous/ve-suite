@@ -41,7 +41,7 @@ using namespace ves::open::xml;
 //Constructor                                     //
 ////////////////////////////////////////////////////
 TwoDStringArray::TwoDStringArray( unsigned int nElements )
-        : XMLObject()
+    : XMLObject()
 {
     mNElements  = nElements;
     // These should match the schema for min and max occurances
@@ -58,13 +58,13 @@ TwoDStringArray::~TwoDStringArray()
 }
 ///////////////////////////////////////////////////////////////////////////////
 TwoDStringArray::TwoDStringArray( const TwoDStringArray& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mNElements  = input.mNElements;
     for( size_t i = 0; i < input.mOneDArray.size(); ++i )
     {
-        mOneDArray.push_back( OneDStringArrayPtr( new OneDStringArray( *( 
-            input.mOneDArray.at( i ) ) ) ) );
+        mOneDArray.push_back( OneDStringArrayPtr( new OneDStringArray( *(
+                                  input.mOneDArray.at( i ) ) ) ) );
     }
     mMinIndex = input.mMinIndex;
 }
@@ -82,8 +82,8 @@ TwoDStringArray& TwoDStringArray::operator=( const TwoDStringArray& input )
 
         for( size_t i = 0; i < input.mOneDArray.size(); ++i )
         {
-            mOneDArray.push_back( OneDStringArrayPtr( new OneDStringArray( *( 
-                input.mOneDArray.at( i ) ) ) ) );
+            mOneDArray.push_back( OneDStringArrayPtr( new OneDStringArray( *(
+                                      input.mOneDArray.at( i ) ) ) ) );
         }
     }
     return *this;
@@ -122,11 +122,11 @@ std::string TwoDStringArray::GetElement( unsigned int i, unsigned int j )
     {
         return mOneDArray.at( i )->GetArray().at( j );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << " ERROR!!! " << std::endl
-        << " Invalid index: " << i << "," << j 
-        << " in TwoDStringArray::GetElement!!!" << std::endl;
+                  << " Invalid index: " << i << "," << j
+                  << " in TwoDStringArray::GetElement!!!" << std::endl;
         return 0;
     }
 }
@@ -178,14 +178,14 @@ void TwoDStringArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
         // do we need to delete the old one or does xerces handle this???
         //mNElements = xmlInput->getChildNodes()->getLength();
-        DOMNodeList* nodeList = currentElement->getElementsByTagName( 
-            ves::open::xml::Convert( "index2" ).toXMLString() );
+        DOMNodeList* nodeList = currentElement->getElementsByTagName(
+                                    ves::open::xml::Convert( "index2" ).toXMLString() );
         XMLSize_t numNodes = nodeList->getLength();
         mNElements = numNodes;
         if( mMinIndex > numNodes )
         {
             std::cerr << " ERROR : TwoDStringArray::SetObjectFromXMLData :" <<
-            " This node has too few or too many children." << std::endl;
+                      " This node has too few or too many children." << std::endl;
         }
 
         // This for loop may be wrong since the the text node and
@@ -197,16 +197,16 @@ void TwoDStringArray::SetObjectFromXMLData( DOMNode* xmlInput )
         for( XMLSize_t i = 0; i < numNodes; ++i )
         {
             //We know this about the node so we can cast it...
-            mOneDArray.push_back( OneDStringArrayPtr( 
-                new OneDStringArray( ) ) );
+            mOneDArray.push_back( OneDStringArrayPtr(
+                                      new OneDStringArray( ) ) );
             mOneDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
         }
     }
     else
     {
         std::cerr << " ERROR : TwoDStringArray::SetObjectFromXMLData :" <<
-        " This node has no children which means there is probably a problem." 
-        << std::endl;
+                  " This node has no children which means there is probably a problem."
+                  << std::endl;
     }
 }
 

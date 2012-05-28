@@ -53,4 +53,5 @@ private:
     QTextEdit* m_logView;
 };
 
-}} // ves::conductor
+}
+} // ves::conductor

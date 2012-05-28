@@ -55,7 +55,7 @@
 
 namespace osg
 {
-    ;
+;
 }
 
 namespace osgUtil
@@ -116,17 +116,17 @@ public:
     ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
     void Initialize();
     ///Calculate the projection for the center view of the of the view matrix
-    ///This is needed because vr juggler is always calculating a 
+    ///This is needed because vr juggler is always calculating a
     ///Left/Right combo for the view
     void CalculateCenterViewMatrix( vrj::ProjectionPtr const projection );
-    
+
     ///Calculate the frustum value based on the ves matrix stack
     ///\param viewport The current viewport
     vrj::Frustum CalculateFrustum( vrj::ViewportPtr const viewport, gmtl::Point3f const& eyePoint );
 
 protected:
 
-private:    
+private:
     ///
     const gmtl::Matrix44d m_ortho2DMatrix;
 
@@ -146,8 +146,8 @@ private:
     const osg::Matrixd m_zUpMatrixOSG;
 
     ///
-    typedef std::map<
-        vrj::ViewportPtr, scenegraph::GLTransformInfoPtr > GLTransformInfoMap;
+    typedef std::map <
+    vrj::ViewportPtr, scenegraph::GLTransformInfoPtr > GLTransformInfoMap;
     ///
     vrj::opengl::ContextData< GLTransformInfoMap > m_glTransformInfoMap;
 

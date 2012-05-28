@@ -88,17 +88,17 @@ void cfdScalarShaderManager::Init()
         //_ss->setDataVariance( osg::Object::DYNAMIC );
         _ss->setMode( GL_BLEND, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
 
-        //osg::BlendColor* bc = 
+        //osg::BlendColor* bc =
         //    new osg::BlendColor( osg::Vec4( 0., 0., 0., 0.5 ) );
-        //_ss->setAttributeAndModes( bc, 
+        //_ss->setAttributeAndModes( bc,
         //    osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
 
         osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
         bf->setFunction( osg::BlendFunc::SRC_ALPHA,
                          osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
 
-        _ss->setAttributeAndModes( bf.get(), 
-            osg::StateAttribute::ON  | osg::StateAttribute::OVERRIDE );
+        _ss->setAttributeAndModes( bf.get(),
+                                   osg::StateAttribute::ON  | osg::StateAttribute::OVERRIDE );
         _ss->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
         ///and magic occurs...to make sure that the volume vis renders properly
         ///with other transparent objects in the scene we must put this volume
@@ -107,7 +107,7 @@ void cfdScalarShaderManager::Init()
         _ss->setNestRenderBins( false );
 
         _ss->setTextureAttributeAndModes( 0, _property.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+                                          osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
         _ss->setTextureMode( 0, GL_TEXTURE_GEN_S,
                              osg::StateAttribute::ON );
         _ss->setTextureMode( 0, GL_TEXTURE_GEN_T,
@@ -230,8 +230,8 @@ void cfdScalarShaderManager::_updateTransferFunction( bool fastUpdate )
     if( !_tf )
     {
         std::cout << "Transfer function not set!" << std::endl;
-        std::cout << "cfdScalarShaderManager::_updateTransferFunction " 
-            << fastUpdate << std::endl;
+        std::cout << "cfdScalarShaderManager::_updateTransferFunction "
+                  << fastUpdate << std::endl;
         return;
     }
     if( _ss.valid() )
@@ -306,7 +306,7 @@ void cfdScalarShaderManager::SetDelayTime( double delay )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::SetCurrentTransientTexture( unsigned int whichTimeStep,
-                                                         bool makeSlave )
+        bool makeSlave )
 {
     if( _utCbk.valid() )
     {

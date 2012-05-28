@@ -43,7 +43,7 @@ class VE_CONDUCTOR_QTUI_EXPORTS ExtendedToolBar : public QToolBar
 {
     Q_OBJECT
 public:
-    explicit ExtendedToolBar(QWidget *parent = 0);
+    explicit ExtendedToolBar( QWidget* parent = 0 );
 
 Q_SIGNALS:
     void leaveSignal();

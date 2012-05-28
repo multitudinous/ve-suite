@@ -89,8 +89,8 @@ void cfdVectors::Update( void )
     if( !precomputedPlanes )
     {
         vprDEBUG( vesDBG, 0 )
-        << "Dataset contains no precomputed vector planes."
-        << std::endl << vprDEBUG_FLUSH;
+                << "Dataset contains no precomputed vector planes."
+                << std::endl << vprDEBUG_FLUSH;
         ves::xplorer::communication::CommunicationHandler::instance()
         ->SendConductorMessage( "Dataset contains no precomputed vector planes.\n" );
         return;
@@ -106,8 +106,8 @@ void cfdVectors::Update( void )
         double bd[6];
         this->GetActiveDataSet()->GetBounds( bd );
         vprDEBUG( vesDBG, 0 ) << "d1:" << bd[0] << "d2:" << bd[1] << "d3:" << bd[2]
-        << "d4:" << bd[3] << "d5:" << bd[4] << "d6:" << bd[5]
-        << std::endl << vprDEBUG_FLUSH;
+                              << "d4:" << bd[3] << "d5:" << bd[4] << "d6:" << bd[5]
+                              << std::endl << vprDEBUG_FLUSH;
 
         if( this->origin[0] > ( float )bd[0] - ( this->box_size[1] - this->box_size[0] ) / 2
                 && this->origin[0] < ( float )bd[1] + ( this->box_size[1] - this->box_size[0] ) / 2
@@ -117,7 +117,7 @@ void cfdVectors::Update( void )
                 && this->origin[2] < ( float )bd[5] + ( this->box_size[5] - this->box_size[4] ) / 2 )
         {
             /* if(this->box_size[0] != this->box_size[1]
-               && this->box_size[2] != this->box_size[3] 
+               && this->box_size[2] != this->box_size[3]
                && this->box_size[4] != this->box_size[5] )
              {
                 vprDEBUG(vesDBG, 0)
@@ -145,7 +145,7 @@ void cfdVectors::Update( void )
         else
         {
             vprDEBUG( vesDBG, 0 ) << "cfdVectors Error: cursor not in cube\n"
-            << vprDEBUG_FLUSH;
+                                  << vprDEBUG_FLUSH;
             this->updateFlag = false;
             this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
             return;
@@ -159,7 +159,7 @@ void cfdVectors::Update( void )
 
         // get every nth point from the dataSet data
         this->ptmask->SetInputConnection( this->GetActiveDataSet()
-                                ->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutputPort() );
+                                          ->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutputPort() );
         this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
         this->ptmask->Update();
 
@@ -172,7 +172,7 @@ void cfdVectors::Update( void )
         mapper->SetScalarModeToUsePointFieldData();
         mapper->UseLookupTableScalarRangeOn();
         mapper->SelectColorArray( GetActiveDataSet()->
-            GetActiveScalarName().c_str() );
+                                  GetActiveScalarName().c_str() );
         mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
         mapper->Update();
     }
@@ -194,12 +194,12 @@ void cfdVectors::Update( void )
         geodes.push_back( tempGeode.get() );
         this->updateFlag = true;
     }
-    catch ( std::bad_alloc )
+    catch( std::bad_alloc )
     {
         mapper->Delete();
         mapper = vtkPolyDataMapper::New();
         vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdVectors "
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
     }
     this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
     temp->Delete();

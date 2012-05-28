@@ -74,27 +74,27 @@ ves::open::xml::XMLObjectPtr CADCreator::CreateNewXMLObjectCopy( const std::stri
     if( objectType == "CADAssembly" )
     {
         tmp = CADAssemblyPtr( new CADAssembly(
-            *( boost::dynamic_pointer_cast<CADAssembly>( objectToCopy ) ) ) );
+                                  *( boost::dynamic_pointer_cast<CADAssembly>( objectToCopy ) ) ) );
     }
     else if( objectType == "CADPart" )
     {
         tmp = CADPartPtr( new CADPart(
-            *( boost::dynamic_pointer_cast<CADPart>( objectToCopy ) ) ) );
+                              *( boost::dynamic_pointer_cast<CADPart>( objectToCopy ) ) ) );
     }
     else if( objectType == "CADAttribute" )
     {
         tmp = CADAttributePtr( new CADAttribute(
-            *( boost::dynamic_pointer_cast<CADAttribute>( objectToCopy ) ) ) );
+                                   *( boost::dynamic_pointer_cast<CADAttribute>( objectToCopy ) ) ) );
     }
     else if( objectType == "CADMaterial" )
     {
         tmp = CADMaterialPtr( new CADMaterial(
-            *( boost::dynamic_pointer_cast<CADMaterial>( objectToCopy ) ) ) );
+                                  *( boost::dynamic_pointer_cast<CADMaterial>( objectToCopy ) ) ) );
     }
     else if( objectType == "CADNodeAnimation" )
     {
         tmp = CADNodeAnimationPtr( new CADNodeAnimation(
-            *( boost::dynamic_pointer_cast<CADNodeAnimation>( objectToCopy ) ) ) );
+                                       *( boost::dynamic_pointer_cast<CADNodeAnimation>( objectToCopy ) ) ) );
     }
     return tmp;
 }

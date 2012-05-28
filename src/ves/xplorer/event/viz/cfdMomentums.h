@@ -64,7 +64,7 @@ public:
     ///from the vtkPolyData generated from cfdPlanes.
     ///\param xyz
     cfdMomentums( const int xyz );
-    
+
     ///Copy constructor
     cfdMomentums( cfdMomentums const& src );
 

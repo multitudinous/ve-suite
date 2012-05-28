@@ -76,8 +76,8 @@ namespace vxs = vx::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 NavigateToEventHandler::NavigateToEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -88,8 +88,8 @@ NavigateToEventHandler::~NavigateToEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////
 NavigateToEventHandler::NavigateToEventHandler( const NavigateToEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler( rhs )
+    :
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -111,7 +111,7 @@ void NavigateToEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigateToEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
-    CommandPtr command( 
+    CommandPtr command(
         boost::dynamic_pointer_cast< ves::open::xml::Command >( xmlObject ) );
     DataValuePairPtr activeModelDVP =
         command->GetDataValuePair( "NAVIGATE_TO" );
@@ -130,7 +130,7 @@ void NavigateToEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObj
     {
         selectMethod = "Glow";
     }
-    
+
     SkyCamTo( viewData, selectMethod );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -140,7 +140,7 @@ void NavigateToEventHandler::SkyCamTo( const std::string& viewData, const std::s
     {
         return;
     }
-    
+
     //To make this work we must:
     //1. get current state of world dcs
     //2. set dcs back to zero.
@@ -152,14 +152,14 @@ void NavigateToEventHandler::SkyCamTo( const std::string& viewData, const std::s
     //Unselect the previous selected DCS
     vx::DeviceHandler::instance()->UnselectObjects();
     vx::ModelCADHandler* mcadHandler = vx::ModelHandler::instance()->
-        GetActiveModel()->GetModelCADHandler();
+                                       GetActiveModel()->GetModelCADHandler();
     osg::ref_ptr< vxs::DCS > selectedDCS;
     if( viewData == vx::ModelHandler::instance()->GetActiveModel()->GetID() )
     {
         //get the selected plugins cad
         //highlight it.
         std::string rootID = mcadHandler->GetRootCADNodeID();
-            
+
         selectedDCS = mcadHandler->GetAssembly( rootID );
     }
     else if( mcadHandler->GetAssembly( viewData ) )
@@ -174,7 +174,7 @@ void NavigateToEventHandler::SkyCamTo( const std::string& viewData, const std::s
     {
         return;
     }
-    
+
     if( selectMethod == "Glow" )
     {
         if( vxs::SceneManager::instance()->IsRTTOn() )
@@ -183,16 +183,16 @@ void NavigateToEventHandler::SkyCamTo( const std::string& viewData, const std::s
         }
         else
         {
-            selectedDCS->SetTechnique("Select");
+            selectedDCS->SetTechnique( "Select" );
         }
     }
 
     vx::DeviceHandler::instance()->SetSelectedDCS( selectedDCS.get() );
     osg::BoundingSphere sbs = selectedDCS->getBound();
-    
+
     //Calculate the offset distance
     double distance = 2 * sbs.radius();
-    
+
     ///Get the location of the selected model in local coordinates
     ///This value is always the same no matter where we are
     gmtl::Point3d osgTransformedPosition;
@@ -203,18 +203,18 @@ void NavigateToEventHandler::SkyCamTo( const std::string& viewData, const std::s
     osgOrigPosition[ 0 ] = sbs.center( ).x( );
     osgOrigPosition[ 1 ] = sbs.center( ).y( );
     osgOrigPosition[ 2 ] = sbs.center( ).z( );
-    
+
     //Move the center point to the center of the selected object
     osg::ref_ptr< vxs::CoordinateSystemTransform > cst =
-    new vxs::CoordinateSystemTransform(
-       vxs::SceneManager::instance()->GetActiveSwitchNode(),
-       selectedDCS.get(), true );
+        new vxs::CoordinateSystemTransform(
+        vxs::SceneManager::instance()->GetActiveSwitchNode(),
+        selectedDCS.get(), true );
 
     gmtl::Matrix44d localToWorldMatrix = cst->GetTransformationMatrix( false );
-    
-    gmtl::Point3d tempTransPoint = 
-    gmtl::makeTrans< gmtl::Point3d >( localToWorldMatrix );
-    
+
+    gmtl::Point3d tempTransPoint =
+        gmtl::makeTrans< gmtl::Point3d >( localToWorldMatrix );
+
     ///Remove the rotation from the transform matrix
     gmtl::Matrix44d tempTrans;
     tempTrans = gmtl::makeTrans< gmtl::Matrix44d >( tempTransPoint );
@@ -225,23 +225,23 @@ void NavigateToEventHandler::SkyCamTo( const std::string& viewData, const std::s
     gmtl::setRot( tempRot, quatAxisAngle );
     gmtl::Matrix44d combineMat = tempTrans;// * tempRot;
     ///Add our end rotation back into the mix
-    
+
     osgTransformedPosition = combineMat * osgTransformedPosition;
     osgOrigPosition = combineMat * osgOrigPosition;
     ///Since the math implies we are doing a delta translation
     ///we need to go grab where we previously were
     double* temp = vxs::SceneManager::instance()->
-        GetNavDCS()->GetVETranslationArray();
+                   GetNavDCS()->GetVETranslationArray();
     ///Add our distance and previous position back in and get our new end point
     gmtl::Vec3d pos;
     pos[ 0 ] = - osgOrigPosition[ 0 ] + temp[ 0 ];
     pos[ 1 ] = - ( osgOrigPosition[ 1 ] - distance ) + temp[ 1 ];
     pos[ 2 ] = - ( osgOrigPosition[ 2 ] ) + temp[ 2 ];
-    
+
     ///Hand the node we are interested in off to the animation engine
     vx::NavigationAnimationEngine::instance()->SetDCS(
         vxs::SceneManager::instance()->GetNavDCS() );
-    
+
     ///Hand our created end points off to the animation engine
     vx::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
         pos, quatAxisAngle, true, selectedDCS.get() );

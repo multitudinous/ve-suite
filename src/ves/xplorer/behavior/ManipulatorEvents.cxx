@@ -96,50 +96,50 @@ ManipulatorEvents::ManipulatorEvents()
     m_manipulatorManager( m_sceneManager.GetManipulatorManager() ),
     m_cameraManager( m_sceneManager.GetCameraManager() ),
     m_lineSegmentIntersector( new osgUtil::LineSegmentIntersector(
-        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
+                                  osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
     m_currX( 0 ),
     m_currY( 0 ),
     m_pickedBody( 0 ),
     m_pickConstraint( 0 ),
-    m_logger( Poco::Logger::get("xplorer.behavior.ManipulatorEvents") ),
+    m_logger( Poco::Logger::get( "xplorer.behavior.ManipulatorEvents" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 
-{                     
+{
     //Setup connection to mouse events
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseMove,
-        m_connections, any_SignalType, high_Priority );
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
-        m_connections, any_SignalType, high_Priority );
-    
-    //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ), 
-    //    eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
-    //    m_connections, any_SignalType, high_Priority );
-    
-    //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ), 
-    //    eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
-    //    m_connections, any_SignalType, high_Priority );    
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseMove,
+                               m_connections, any_SignalType, high_Priority );
 
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseRelease,
-        m_connections, any_SignalType, high_Priority );
-    
-    //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease2%", bool( gadget::Keys, int, int, int ), 
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
+                               m_connections, any_SignalType, high_Priority );
+
+    //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ),
+    //    eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
+    //    m_connections, any_SignalType, high_Priority );
+
+    //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ),
+    //    eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
+    //    m_connections, any_SignalType, high_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseRelease,
+                               m_connections, any_SignalType, high_Priority );
+
+    //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease2%", bool( gadget::Keys, int, int, int ),
     //    eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseRelease,
     //    m_connections, any_SignalType, high_Priority );
-    
-    //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease3%", bool( gadget::Keys, int, int, int ), 
+
+    //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease3%", bool( gadget::Keys, int, int, int ),
     //    eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseRelease,
-    //    m_connections, any_SignalType, high_Priority );    
+    //    m_connections, any_SignalType, high_Priority );
 
 
     CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &ManipulatorEvents::SetStartEndPoint,
-                     m_connections, any_SignalType, normal_Priority );
+                      m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &ManipulatorEvents::SetStartEndPoint,
-                     m_connections, any_SignalType, normal_Priority );
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ManipulatorEvents::~ManipulatorEvents()
@@ -162,12 +162,12 @@ bool ManipulatorEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int
         {
             LOG_TRACE( "LeafDraggerIsActive, RELEASEing" );
             m_manipulatorManager.Handle(
-                                        scenegraph::manipulator::Event::RELEASE );
+                scenegraph::manipulator::Event::RELEASE );
         }
     }
 
-    if( (buttonState&gadget::BUTTON1_MASK) &&
-       !(buttonState&(gadget::SHIFT_MASK|gadget::CTRL_MASK|gadget::ALT_MASK)) )
+    if( ( buttonState & gadget::BUTTON1_MASK ) &&
+            !( buttonState & ( gadget::SHIFT_MASK | gadget::CTRL_MASK | gadget::ALT_MASK ) ) )
     {
         LOG_TRACE( "BUTTON1_MASK and not (SHIFT_MASK or CTRL_MASK or ALT_MASK )" );
         if( m_manipulatorManager.IsEnabled() )
@@ -175,8 +175,8 @@ bool ManipulatorEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int
             UpdateSelectionLine();
             LOG_DEBUG( "m_manipulatorManager.IsEnabled, PUSHing" );
             if( m_manipulatorManager.Handle(
-                scenegraph::manipulator::Event::PUSH,
-                m_lineSegmentIntersector.get() ) )
+                        scenegraph::manipulator::Event::PUSH,
+                        m_lineSegmentIntersector.get() ) )
             {
                 return true;
             }
@@ -196,12 +196,12 @@ bool ManipulatorEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, i
     {
         return false;
     }
-    
+
     if( (yPos > m_currY + 2) || (yPos < m_currY - 2) )
     {
         return false;
     }
-    
+
     m_currX = xPos;
     m_currY = yPos;*/
 
@@ -212,7 +212,7 @@ bool ManipulatorEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, i
         {
             LOG_TRACE( "RELEASEing manipulator" );
             if( m_manipulatorManager.Handle(
-                scenegraph::manipulator::Event::RELEASE ) )
+                        scenegraph::manipulator::Event::RELEASE ) )
             {
                 return true;
             }
@@ -229,15 +229,15 @@ bool ManipulatorEvents::ProcessMouseMove( int xPos, int yPos, int zPos, int butt
     boost::ignore_unused_variable_warning( zPos );
 
     if( buttonState == 0 )
-    {        
+    {
         if( m_manipulatorManager.IsEnabled() )
         {
             if( !m_manipulatorManager.LeafDraggerIsActive() )
             {
                 UpdateSelectionLine();
                 if( m_manipulatorManager.Handle(
-                                                scenegraph::manipulator::Event::FOCUS,
-                                                m_lineSegmentIntersector.get() ) )
+                            scenegraph::manipulator::Event::FOCUS,
+                            m_lineSegmentIntersector.get() ) )
                 {
                     return true;
                 }
@@ -246,13 +246,13 @@ bool ManipulatorEvents::ProcessMouseMove( int xPos, int yPos, int zPos, int butt
     }
     else
     {
-        if( buttonState&gadget::BUTTON1_MASK )
+        if( buttonState & gadget::BUTTON1_MASK )
         {
             if( m_manipulatorManager.IsEnabled() )
             {
                 UpdateSelectionLine();
                 if( m_manipulatorManager.Handle(
-                                                scenegraph::manipulator::Event::DRAG ) )
+                            scenegraph::manipulator::Event::DRAG ) )
                 {
                     return true;
                 }

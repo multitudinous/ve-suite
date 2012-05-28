@@ -45,7 +45,7 @@ IMPLEMENT_DYNAMIC_CLASS( DefaultPlugin, UIPluginBase )
 
 /////////////////////////////////////////////////////////////////////////////
 DefaultPlugin::DefaultPlugin()
-        : UIPluginBase()
+    : UIPluginBase()
 {
     height = 100;
     //RegistVar("height", &height );
@@ -56,10 +56,10 @@ DefaultPlugin::DefaultPlugin()
     wxImage my_img( square_xpm );
     SetImage( my_img );
 
-//#define TESTPORT
+    //#define TESTPORT
 #ifdef TESTPORT
     VE_Model::Port* Aport = new VE_Model::Port();
-    VE_Model::Point * Aportloc = new VE_Model::Point();
+    VE_Model::Point* Aportloc = new VE_Model::Point();
     Aportloc->SetPoint( std::pair<unsigned int, unsigned int> ( 0, icon_h / 3 ) );
     Aport->SetDataFlowDirection( "INPUT" );
     Aport->SetPluginName( "DefaultPlugin" );
@@ -69,8 +69,8 @@ DefaultPlugin::DefaultPlugin()
     inputPort.push_back( Aport );
 
     VE_Model::Port* Bport = new VE_Model::Port();
-    VE_Model::Point * Bportloc = new VE_Model::Point();
-    Bportloc->SetPoint( std::pair<unsigned int, unsigned int> ( 0, icon_h*2 / 3 ) );
+    VE_Model::Point* Bportloc = new VE_Model::Point();
+    Bportloc->SetPoint( std::pair<unsigned int, unsigned int> ( 0, icon_h * 2 / 3 ) );
     Bport->SetDataFlowDirection( "INPUT" );
     Bport->SetPluginName( "DefaultPlugin" );
     Bport->SetPortNumber( 1 );
@@ -79,7 +79,7 @@ DefaultPlugin::DefaultPlugin()
     inputPort.push_back( Bport );
 
     VE_Model::Port* Cport = new VE_Model::Port();
-    VE_Model::Point * Cportloc = new VE_Model::Point();
+    VE_Model::Point* Cportloc = new VE_Model::Point();
     Cportloc->SetPoint( std::pair<unsigned int, unsigned int> ( icon_w, icon_h / 3 ) );
     Cport->SetDataFlowDirection( "OUTPUT" );
     Cport->SetPluginName( "DefaultPlugin" );
@@ -89,8 +89,8 @@ DefaultPlugin::DefaultPlugin()
     outputPort.push_back( Cport );
 
     VE_Model::Port* Dport = new VE_Model::Port();
-    VE_Model::Point * Dportloc = new VE_Model::Point();
-    Dportloc->SetPoint( std::pair<unsigned int, unsigned int> ( icon_w, icon_h*2 / 3 ) );
+    VE_Model::Point* Dportloc = new VE_Model::Point();
+    Dportloc->SetPoint( std::pair<unsigned int, unsigned int> ( icon_w, icon_h * 2 / 3 ) );
     Dport->SetDataFlowDirection( "OUTUT" );
     Dport->SetPluginName( "DefaultPlugin" );
     Dport->SetPortNumber( 1 );

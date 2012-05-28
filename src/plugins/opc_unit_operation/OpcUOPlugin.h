@@ -58,17 +58,17 @@ class OpcUOPlugin : public UIPluginBase
 public:
     ///Constructor
     OpcUOPlugin();
-    
+
     ///Destructor
     virtual ~OpcUOPlugin();
-    
+
     ///???
     wxString GetConductorName();
-    
+
     ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
     virtual bool ShowAvailable();
-    
+
     ///???
     void DrawPlugin( wxDC* dc );
 
@@ -79,7 +79,7 @@ protected:
     ves::open::xml::DataValuePairPtr vendorData;
 
 private:
-    wxTimer * m_timer;
+    wxTimer* m_timer;
     std::string m_monValue;
     bool m_monValueExists;
     bool m_monitoring;
@@ -87,28 +87,28 @@ private:
 
     ///???
     void OnTimer( wxTimerEvent& event );
-    
+
     ///???
     void DrawValue( wxDC* dc );
-    
+
     ///???
     void ReadValue( );
-    
+
     ///???
-    void StartTimer( float msec  );
-    
+    void StartTimer( float msec );
+
     ///???
-    void StopTimer( wxCommandEvent& event  );
-    
+    void StopTimer( wxCommandEvent& event );
+
     ///???
     void OnShowValue( wxCommandEvent& event );
-    
+
     ///???
     void OnShowAllVar( wxCommandEvent& event );
-    
+
     ///???
     void QueryForAllVariables( wxCommandEvent& event );
-    
+
     ///???
     void OnMonitorVariable( wxCommandEvent& event );
 

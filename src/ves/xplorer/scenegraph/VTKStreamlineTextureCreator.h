@@ -57,13 +57,13 @@ class VE_SCENEGRAPH_EXPORTS VTKStreamlineTextureCreator : public VectorFieldData
 {
 public:
     VTKStreamlineTextureCreator();
-    
+
     virtual osg::BoundingBox getBoundingBox();
-    
+
     void SetPolyData( vtkPolyData* rawVTKData );
-        
-    void SetActiveVectorAndScalar( const std::string& vectorName, 
-        const std::string& scalarName );
+
+    void SetActiveVectorAndScalar( const std::string& vectorName,
+                                   const std::string& scalarName );
 
     osg::Image* CreateColorTextures( double* dataRange );
 
@@ -80,21 +80,21 @@ public:
     void SetPointMultiplier( unsigned int pointMultiplier );
 
 protected:
-    
+
     osg::Vec3 _sizes;
     vtkPolyData* m_rawVTKData;
     std::string m_vectorName;
     std::string m_scalarName;
     std::deque< Point > m_pointList;
-    
+
     size_t m_pointMultiplier;
-    
+
     virtual ~VTKStreamlineTextureCreator();
-    
+
     virtual void internalLoad();
-    
+
     void createDataArrays( float* pos, float* scalar );
-    
+
 };
 }
 }

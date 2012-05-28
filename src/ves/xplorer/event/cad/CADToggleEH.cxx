@@ -53,11 +53,11 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADToggleEventHandler::CADToggleEventHandler()
-        : ves::xplorer::event::CADEventHandler()
+    : ves::xplorer::event::CADEventHandler()
 {}
 ////////////////////////////////////////////////////////////////////////////////
 CADToggleEventHandler::CADToggleEventHandler( const CADToggleEventHandler& rhs )
-        : ves::xplorer::event::CADEventHandler( rhs )
+    : ves::xplorer::event::CADEventHandler( rhs )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
@@ -81,7 +81,7 @@ void CADToggleEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     DataValuePairPtr toggleValue = command->GetDataValuePair( "Toggle Value" );
     DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
     DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
-    
+
     bool toggleFlag = false;
     if( toggleValue->GetDataString() == "ON" )
     {
@@ -91,26 +91,26 @@ void CADToggleEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     {
         toggleFlag = false;
     }
-    
+
     if( nodeType->GetDataString() == std::string( "Assembly" ) )
     {
         if( m_cadHandler->AssemblyExists( nodeID->GetDataString() ) )
         {
             //m_cadHandler->GetAssembly( nodeID->GetDataString() )->
             //    ToggleDisplay( toggleValue->GetDataString() );
-            
-            ves::xplorer::scenegraph::DCS* tempDCS = 
+
+            ves::xplorer::scenegraph::DCS* tempDCS =
                 m_cadHandler->GetAssembly( nodeID->GetDataString() );
-            
+
             //Toggle all children off rather than the assembly
-            ves::xplorer::scenegraph::util::ToggleNodeVisitor 
-                tnv( tempDCS, toggleFlag, "" );
+            ves::xplorer::scenegraph::util::ToggleNodeVisitor
+            tnv( tempDCS, toggleFlag, "" );
         }
     }
     else if( nodeType->GetDataString() == std::string( "Part" ) )
     {
         m_cadHandler->GetPart( nodeID->GetDataString() )->GetDCS()->
-            ToggleDisplay( toggleValue->GetDataString() );
+        ToggleDisplay( toggleValue->GetDataString() );
         //Now check to make sure parent is toggled on if this was a toggle on
     }
     else

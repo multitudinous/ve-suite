@@ -464,13 +464,13 @@ void Dragger::CreateDefaultShader()
 {
     //Create the shader used to render the dragger
     std::string fragmentSource =
-    "uniform vec4 color; \n"
+        "uniform vec4 color; \n"
 
-    "void main() \n"
-    "{ \n"
+        "void main() \n"
+        "{ \n"
         "gl_FragData[ 0 ] = color; \n"
         "gl_FragData[ 1 ] = vec4( 0.0, 0.0, 0.0, 1.0 ); \n"
-    "} \n";
+        "} \n";
 
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     fragmentShader->setType( osg::Shader::FRAGMENT );
@@ -481,7 +481,7 @@ void Dragger::CreateDefaultShader()
 
     osg::ref_ptr< osg::StateSet > stateSet = getOrCreateStateSet();
     stateSet->setAttributeAndModes( program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+                                    osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     stateSet->addUniform( m_color.get() );
 }
@@ -490,8 +490,8 @@ void Dragger::UpdateAssociations()
 {
     if( m_associationMatricesMap.size() == 0 )
     {
-        std::cout << "Dragger::UpdateAssociations There is no data for " 
-            << "this dragger to map to." << std::endl;
+        std::cout << "Dragger::UpdateAssociations There is no data for "
+                  << "this dragger to map to." << std::endl;
         return;
     }
 
@@ -697,8 +697,8 @@ const osg::Plane Dragger::GetPlane( const bool& parallel ) const
 
         //If rotate to eye
         //plane.set(
-            //m_rootDragger->GetPreviousEyePoint() - m_rootDragger->GetPosition(),
-            //m_rootDragger->GetPosition() );
+        //m_rootDragger->GetPreviousEyePoint() - m_rootDragger->GetPosition(),
+        //m_rootDragger->GetPosition() );
     }
     else
     {
@@ -815,7 +815,7 @@ void Dragger::UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs )
         //std::cout << "Null System " << std::endl;
         return;
     }
-    
+
     ///Get command
     ves::open::xml::CommandPtr modelUpdateData( new ves::open::xml::Command() );
     modelUpdateData->SetCommandName( "MODEL_DATA_UPDATE" );
@@ -824,7 +824,7 @@ void Dragger::UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs )
     ves::open::xml::DataValuePairPtr parentSystemId( new ves::open::xml::DataValuePair() );
     parentSystemId->SetData( "PARENT_SYSTEM_ID", model->GetParentSystem()->GetID() );
     modelUpdateData->AddDataValuePair( parentSystemId );
-    
+
     //Create the uuid for the plugin of the transform
     ves::open::xml::DataValuePairPtr pluginId( new ves::open::xml::DataValuePair() );
     pluginId->SetData( "PLUGIN_ID", model->GetID() );
@@ -847,7 +847,7 @@ void Dragger::UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs )
     modelUpdateData->AddDataValuePair( pluginDataDVP );
 
     ves::xplorer::communication::CommunicationHandler::instance()->
-        SetXMLCommand( modelUpdateData );
+    SetXMLCommand( modelUpdateData );
 }
 ////////////////////////////////////////////////////////////////////////////////
 

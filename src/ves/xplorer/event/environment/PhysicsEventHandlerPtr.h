@@ -46,13 +46,13 @@ namespace event
 class PhysicsEventHandler;
 
 typedef ves::util::ClassPtrDef< PhysicsEventHandler >::type
-    PhysicsEventHandlerPtr;
+PhysicsEventHandlerPtr;
 typedef ves::util::SharedPtrDef< PhysicsEventHandler >::type
-    PhysicsEventHandlerSharedPtr;
+PhysicsEventHandlerSharedPtr;
 typedef ves::util::WeakPtrDef< PhysicsEventHandler >::type
-    PhysicsEventHandlerWeakPtr;
+PhysicsEventHandlerWeakPtr;
 typedef ves::util::ScopedPtrDef< PhysicsEventHandler >::type
-    PhysicsEventHandlerScopedPtr;
+PhysicsEventHandlerScopedPtr;
 
 } //end event
 } //end xplorer

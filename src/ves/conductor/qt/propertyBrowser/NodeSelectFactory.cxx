@@ -41,82 +41,96 @@ namespace conductor
 
 NodeSelectFactory::~NodeSelectFactory()
 {
-    QList<NodeSelect *> editors = theEditorToProperty.keys();
-    QListIterator<NodeSelect *> it(editors);
-    while (it.hasNext())
+    QList<NodeSelect*> editors = theEditorToProperty.keys();
+    QListIterator<NodeSelect*> it( editors );
+    while( it.hasNext() )
+    {
         delete it.next();
+    }
 }
 
-void NodeSelectFactory::connectPropertyManager(NodeSelectManager *manager)
+void NodeSelectFactory::connectPropertyManager( NodeSelectManager* manager )
 {
-    connect(manager, SIGNAL(valueChanged(QtProperty *, const QString &)),
-                this, SLOT(slotPropertyChanged(QtProperty *, const QString &)));
+    connect( manager, SIGNAL( valueChanged( QtProperty*, const QString& ) ),
+             this, SLOT( slotPropertyChanged( QtProperty*, const QString& ) ) );
 }
 
-QWidget *NodeSelectFactory::createEditor(NodeSelectManager *manager,
-        QtProperty *property, QWidget *parent)
+QWidget* NodeSelectFactory::createEditor( NodeSelectManager* manager,
+        QtProperty* property, QWidget* parent )
 {
-    NodeSelect *editor = new NodeSelect(parent);
-    editor->setFilePath(manager->value(property));
-    theCreatedEditors[property].append(editor);
+    NodeSelect* editor = new NodeSelect( parent );
+    editor->setFilePath( manager->value( property ) );
+    theCreatedEditors[property].append( editor );
     theEditorToProperty[editor] = property;
 
-    connect(editor, SIGNAL(filePathChanged(const QString &)),
-                this, SLOT(slotSetValue(const QString &)));
-    connect(editor, SIGNAL(destroyed(QObject *)),
-                this, SLOT(slotEditorDestroyed(QObject *)));
+    connect( editor, SIGNAL( filePathChanged( const QString& ) ),
+             this, SLOT( slotSetValue( const QString& ) ) );
+    connect( editor, SIGNAL( destroyed( QObject* ) ),
+             this, SLOT( slotEditorDestroyed( QObject* ) ) );
     return editor;
 }
 
-void NodeSelectFactory::disconnectPropertyManager(NodeSelectManager *manager)
+void NodeSelectFactory::disconnectPropertyManager( NodeSelectManager* manager )
 {
-    disconnect(manager, SIGNAL(valueChanged(QtProperty *, const QString &)),
-                this, SLOT(slotPropertyChanged(QtProperty *, const QString &)));
+    disconnect( manager, SIGNAL( valueChanged( QtProperty*, const QString& ) ),
+                this, SLOT( slotPropertyChanged( QtProperty*, const QString& ) ) );
 }
 
-void NodeSelectFactory::slotPropertyChanged(QtProperty *property,
-                const QString &value)
+void NodeSelectFactory::slotPropertyChanged( QtProperty* property,
+        const QString& value )
 {
-    if (!theCreatedEditors.contains(property))
+    if( !theCreatedEditors.contains( property ) )
+    {
         return;
+    }
 
-    QList<NodeSelect *> editors = theCreatedEditors[property];
-    QListIterator<NodeSelect *> itEditor(editors);
-    while (itEditor.hasNext())
-        itEditor.next()->setFilePath(value);
+    QList<NodeSelect*> editors = theCreatedEditors[property];
+    QListIterator<NodeSelect*> itEditor( editors );
+    while( itEditor.hasNext() )
+    {
+        itEditor.next()->setFilePath( value );
+    }
 }
 
 
-void NodeSelectFactory::slotSetValue(const QString &value)
+void NodeSelectFactory::slotSetValue( const QString& value )
 {
-    QObject *object = sender();
-    QMap<NodeSelect *, QtProperty *>::ConstIterator itEditor =
-                theEditorToProperty.constBegin();
-    while (itEditor != theEditorToProperty.constEnd()) {
-        if (itEditor.key() == object) {
-            QtProperty *property = itEditor.value();
-            NodeSelectManager *manager = propertyManager(property);
-            if (!manager)
+    QObject* object = sender();
+    QMap<NodeSelect*, QtProperty*>::ConstIterator itEditor =
+        theEditorToProperty.constBegin();
+    while( itEditor != theEditorToProperty.constEnd() )
+    {
+        if( itEditor.key() == object )
+        {
+            QtProperty* property = itEditor.value();
+            NodeSelectManager* manager = propertyManager( property );
+            if( !manager )
+            {
                 return;
-            manager->setValue(property, value);
+            }
+            manager->setValue( property, value );
             return;
         }
         itEditor++;
     }
 }
 
-void NodeSelectFactory::slotEditorDestroyed(QObject *object)
+void NodeSelectFactory::slotEditorDestroyed( QObject* object )
 {
-    QMap<NodeSelect *, QtProperty *>::ConstIterator itEditor =
-                theEditorToProperty.constBegin();
-    while (itEditor != theEditorToProperty.constEnd()) {
-        if (itEditor.key() == object) {
-            NodeSelect *editor = itEditor.key();
-            QtProperty *property = itEditor.value();
-            theEditorToProperty.remove(editor);
-            theCreatedEditors[property].removeAll(editor);
-            if (theCreatedEditors[property].isEmpty())
-                theCreatedEditors.remove(property);
+    QMap<NodeSelect*, QtProperty*>::ConstIterator itEditor =
+        theEditorToProperty.constBegin();
+    while( itEditor != theEditorToProperty.constEnd() )
+    {
+        if( itEditor.key() == object )
+        {
+            NodeSelect* editor = itEditor.key();
+            QtProperty* property = itEditor.value();
+            theEditorToProperty.remove( editor );
+            theCreatedEditors[property].removeAll( editor );
+            if( theCreatedEditors[property].isEmpty() )
+            {
+                theCreatedEditors.remove( property );
+            }
             return;
         }
         itEditor++;

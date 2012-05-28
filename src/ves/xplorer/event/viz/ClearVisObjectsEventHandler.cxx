@@ -59,13 +59,13 @@ using namespace ves::xplorer::volume;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 ClearVisObjectsEventHandler::ClearVisObjectsEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ClearVisObjectsEventHandler::ClearVisObjectsEventHandler( const ClearVisObjectsEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -98,17 +98,17 @@ void ClearVisObjectsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     //call back over to ssvishandler to clear the vis objects
     SteadyStateVizHandler::instance()->ClearVisObjects();
     TextureBasedVizHandler::instance()->ClearAll();
-    
+
     // I believe this guard is a hack and should be removed in the future
-    // I was unable to figure out what was going wrong with loading 
-    // and reloading ves files and default plugins. Something appears to 
+    // I was unable to figure out what was going wrong with loading
+    // and reloading ves files and default plugins. Something appears to
     // be incorrect in how we are setting activemodel in deleting plugins.
     std::string tempCommandName = boost::dynamic_pointer_cast< ves::open::xml::Command >( xmlObject )->GetCommandName();
     if( "DELETE_OBJECT_FROM_NETWORK" == tempCommandName )
     {
         return;
     }
-    
+
     // Only process dataset related events on the clear vis command
     if( !ModelHandler::instance()->GetActiveModel() )
     {
@@ -116,10 +116,10 @@ void ClearVisObjectsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     }
 
     ModelHandler::instance()->GetActiveModel()->
-        GetModelCADHandler()->MakeCADRootOpaque();
+    GetModelCADHandler()->MakeCADRootOpaque();
 
     unsigned int state = 0;
-    DataSet* dataSet = 
+    DataSet* dataSet =
         ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
     if( dataSet )
     {

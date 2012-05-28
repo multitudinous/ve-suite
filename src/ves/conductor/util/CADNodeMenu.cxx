@@ -40,7 +40,7 @@ XERCES_CPP_NAMESPACE_USE
 ///Constructor                         //
 /////////////////////////////////////////
 CADNodeMenu::CADNodeMenu()
-        : wxMenu()
+    : wxMenu()
 {
 
     /*Append(GEOM_NODE_CREATE,
@@ -103,11 +103,11 @@ CADNodeMenu::CADNodeMenu()
     Enable( GEOM_DISPLAY_TOGGLE, true );
 
     Append( GEOM_NAVTO,
-           _T( "Navigate To Node" ),
-           _T( "" ),
-           wxITEM_NORMAL );
+            _T( "Navigate To Node" ),
+            _T( "" ),
+            wxITEM_NORMAL );
     Enable( GEOM_NAVTO, false );
-    
+
     InsertSeparator( 5 );
 
     Append( GEOM_PROPERTIES,
@@ -115,7 +115,7 @@ CADNodeMenu::CADNodeMenu()
             _T( "" ),
             wxITEM_NORMAL );
     Enable( GEOM_PROPERTIES, false );
-    
+
     Append( GEOM_OPACITY,
             _T( "Transparency..." ),
             _T( "" ),

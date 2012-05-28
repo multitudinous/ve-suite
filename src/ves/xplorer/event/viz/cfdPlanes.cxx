@@ -61,34 +61,43 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
     isPlaneSelected( NULL ),
     collectivePolyData( NULL )
 {
-    if( this->type == 0 ) this->typeLabel = 'X';
-    else if( this->type == 1 ) this->typeLabel = 'Y';
-    else if( this->type == 2 ) this->typeLabel = 'Z';
+    if( this->type == 0 )
+    {
+        this->typeLabel = 'X';
+    }
+    else if( this->type == 1 )
+    {
+        this->typeLabel = 'Y';
+    }
+    else if( this->type == 2 )
+    {
+        this->typeLabel = 'Z';
+    }
     else
     {
         std::cerr << "ERROR: in cfdPlanes, xyz must be 0, 1, or 2" << std::endl;
         exit( 1 );
     }
     vprDEBUG( vesDBG, 1 ) << "|\tthis->typeLabel = " << this->typeLabel
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     vprDEBUG( vesDBG, 1 ) << "|\tdirectory: \"" << directory << "\""
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     // count the total number of cut planes
     for( int i = 0; 1; i++ )
     {
         std::ostringstream dirStringStream;
-        dirStringStream << directory << "/" 
-            << this->typeLabel << "_Cont" << i << ".vtk";
+        dirStringStream << directory << "/"
+                        << this->typeLabel << "_Cont" << i << ".vtk";
         std::string dirString = dirStringStream.str();
 
         if( !fileIO::isFileReadable( dirString ) )
         {
             this->numPlanes = i;
             vprDEBUG( vesDBG, 0 ) << "|\t\tFound " << this->numPlanes
-                << " " << this->typeLabel << "-planes"
-                << std::endl << vprDEBUG_FLUSH;
+                                  << " " << this->typeLabel << "-planes"
+                                  << std::endl << vprDEBUG_FLUSH;
             break;
         }
     }
@@ -101,8 +110,8 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
     for( int i = 0; i < this->numPlanes; i++ )
     {
         std::ostringstream dirStringStream;
-        dirStringStream << directory << "/" 
-            << this->typeLabel << "_Cont" << i << ".vtk";
+        dirStringStream << directory << "/"
+                        << this->typeLabel << "_Cont" << i << ".vtk";
         std::string dirString = dirStringStream.str();
 
         vtkDataObject* tempobject = readVtkThing( dirString );
@@ -114,10 +123,10 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
             tempPolyData->GetPoints()->GetPoint( 0, vertex );
             sliceLocation.push_back( vertex[this->type] );
             vprDEBUG( vesDBG, 1 ) << "|\t\tplane[" << i
-                << "] goes through coordinate "
-                << sliceLocation.back() 
-                << std::endl << vprDEBUG_FLUSH;
-            
+                                  << "] goes through coordinate "
+                                  << sliceLocation.back()
+                                  << std::endl << vprDEBUG_FLUSH;
+
             vtkPolyData* testPD = vtkPolyData::New();
             testPD->ShallowCopy( tempPolyData );
             m_pdSlices.push_back( testPD );
@@ -125,13 +134,13 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
         else
         {
             std::cerr << "|\tFile " << dirString << " was not loaded since "
-                <<"it does not contain any points." << std::endl;
-                
+                      << "it does not contain any points." << std::endl;
+
         }
         tempPolyData->Delete();
     }
     numPlanes = m_pdSlices.size();
-    
+
     // allocate space for the array that keeps track of which planes
     // are selected for display...
     this->isPlaneSelected = new int [ this->numPlanes ];
@@ -163,7 +172,7 @@ cfdPlanes::~cfdPlanes()
         }
     }
     m_pdSlices.clear();
-    
+
     if( this->collectivePolyData != NULL )
     {
         //this->collectivePolyData->Delete();
@@ -199,7 +208,7 @@ vtkPolyDataAlgorithm* cfdPlanes::GetPlanesData( void )
 }
 
 // 0 <= sliderBarPos <= 100
-vtkPolyData * cfdPlanes::GetClosestPlane( const double sliderBarPos )
+vtkPolyData* cfdPlanes::GetClosestPlane( const double sliderBarPos )
 {
     if( this->numPlanes == 0 )
     {
@@ -213,8 +222,8 @@ vtkPolyData * cfdPlanes::GetClosestPlane( const double sliderBarPos )
     double coordinate = origin[ this->type ];
 
     vprDEBUG( vesDBG, 1 )
-        << "|\tactivating precomputed plane corresponding to requested coordinate: "
-        << coordinate << " : Slider Bar Position : " << sliderBarPos << std::endl << vprDEBUG_FLUSH;
+            << "|\tactivating precomputed plane corresponding to requested coordinate: "
+            << coordinate << " : Slider Bar Position : " << sliderBarPos << std::endl << vprDEBUG_FLUSH;
 
     float leastSquaredDistance = 1e12;
     int index = 0;
@@ -224,8 +233,8 @@ vtkPolyData * cfdPlanes::GetClosestPlane( const double sliderBarPos )
         float sqDist = ( coordinate - sliceLocation[ i ] ) *
                        ( coordinate - sliceLocation[ i ] );
         vprDEBUG( vesDBG, 1 )
-            << "|\tplane " << i << ": sliceLocation = " << sliceLocation[ i ]
-            << ", sqDist = " << sqDist << std::endl << vprDEBUG_FLUSH;
+                << "|\tplane " << i << ": sliceLocation = " << sliceLocation[ i ]
+                << ", sqDist = " << sqDist << std::endl << vprDEBUG_FLUSH;
 
         if( leastSquaredDistance > sqDist )
         {
@@ -250,8 +259,8 @@ void cfdPlanes::ConcatenateSelectedPlanes( void )
     for( int i = 0; i < this->numPlanes; i++ )
     {
         vprDEBUG( vesDBG, 1 )
-            << "|\tisPlaneSelected[" << i << "] = " << isPlaneSelected[ i ]
-            << std::endl << vprDEBUG_FLUSH;
+                << "|\tisPlaneSelected[" << i << "] = " << isPlaneSelected[ i ]
+                << std::endl << vprDEBUG_FLUSH;
 
         if( !isPlaneSelected[ i ] )
         {
@@ -261,16 +270,16 @@ void cfdPlanes::ConcatenateSelectedPlanes( void )
     }
 
     collectivePolyData->Update();
-/*
-    if( this->collectivePolyData != NULL )
-    {
-        // user classes should delete
-        //this->collectivePolyData->Delete();
-    }
-    this->collectivePolyData = vtkPolyData::New();
-    this->collectivePolyData->ShallowCopy( appendPolyData->GetOutput() );
-    collectivePolyData->Update();
-    appendPolyData->Delete();*/
+    /*
+        if( this->collectivePolyData != NULL )
+        {
+            // user classes should delete
+            //this->collectivePolyData->Delete();
+        }
+        this->collectivePolyData = vtkPolyData::New();
+        this->collectivePolyData->ShallowCopy( appendPolyData->GetOutput() );
+        collectivePolyData->Update();
+        appendPolyData->Delete();*/
 }
 
 int cfdPlanes::GetNumberOfPlanes()

@@ -51,7 +51,8 @@ namespace volume
 class VE_TEXTURE_BASED_EXPORTS TransferFunction
 {
 public:
-    enum ComponentType{
+    enum ComponentType
+    {
         LINEAR,
         RAMP,
         STEP,

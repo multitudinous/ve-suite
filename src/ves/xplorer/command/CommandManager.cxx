@@ -64,21 +64,21 @@ void CommandManager::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 void CommandManager::LatePreFrameUpdate()
 {
-    vprDEBUG( vesDBG, 3 ) << "|\tCommandManager::LatePreFrameUpdate " 
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tCommandManager::LatePreFrameUpdate "
+                          << std::endl << vprDEBUG_FLUSH;
     vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
     if( m_commandVectorQueue.empty() )
     {
         m_activeCommand = m_nullCommand;
         return;
     }
-    
+
     std::vector< ves::open::xml::CommandPtr >::iterator iter;
     iter = m_commandVectorQueue.begin();
     m_activeCommand = ves::open::xml::CommandPtr( new ves::open::xml::Command( *( *iter ) ) );
     m_commandVectorQueue.erase( iter );
-    vprDEBUG( vesDBG, 3 ) << "|\tEnd CommandManager::LatePreFrameUpdate " 
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tEnd CommandManager::LatePreFrameUpdate "
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CommandManager::AddXMLCommand( const ves::open::xml::CommandPtr& commandIn )
@@ -88,20 +88,20 @@ void CommandManager::AddXMLCommand( const ves::open::xml::CommandPtr& commandIn 
 }
 ////////////////////////////////////////////////////////////////////////////////
 const ves::open::xml::CommandPtr& CommandManager::GetXMLCommand()
-{    
+{
     return m_activeCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< ves::open::xml::CommandPtr > 
-    CommandManager::GetXMLCommands( std::string const& commandName )
-{    
+std::vector< ves::open::xml::CommandPtr >
+CommandManager::GetXMLCommands( std::string const& commandName )
+{
     std::vector< ves::open::xml::CommandPtr > vectorQueue;
     vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
-    for( std::vector< ves::open::xml::CommandPtr >::iterator 
-        iter = m_commandVectorQueue.begin(); 
-        iter != m_commandVectorQueue.end(); )
+    for( std::vector< ves::open::xml::CommandPtr >::iterator
+            iter = m_commandVectorQueue.begin();
+            iter != m_commandVectorQueue.end(); )
     {
-        if( (*iter)->GetCommandName() == commandName )
+        if( ( *iter )->GetCommandName() == commandName )
         {
             vectorQueue.push_back( ves::open::xml::CommandPtr( new ves::open::xml::Command( *( *iter ) ) ) );
             iter = m_commandVectorQueue.erase( iter );

@@ -103,7 +103,7 @@ DeviceHandler::DeviceHandler()
     m_deviceGroup = new osg::Group();
     m_deviceGroup->setName( "DeviceHandler Group" );
     scenegraph::SceneManager::instance()->
-        GetRootNode()->addChild( m_deviceGroup.get() );
+    GetRootNode()->addChild( m_deviceGroup.get() );
 
     mEventHandlers[ "ENABLE_DEVICE" ] =
         new event::DeviceEventHandler();
@@ -117,20 +117,20 @@ DeviceHandler::DeviceHandler()
         new event::NavigationDataEventHandler();
     mEventHandlers[ "DRAGGER_SCALING_VALUE" ] =
         new event::DraggerScalingEventHandler();
-    
+
     mResetPosition.resize( 3 );
-    
-    CONNECTSIGNALS_STATIC( "%DeviceGloveDisplay", 
-                          void( /*unsigned int const&, */ bool const& enable ),
-                          &ves::xplorer::event::device::EnableDevice,
-                          m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%DeviceGloveDisplay",
+                           void( /*unsigned int const&, */ bool const & enable ),
+                           &ves::xplorer::event::device::EnableDevice,
+                           m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()
 {
     //Delete m_deviceMap in map
-    for( DeviceMap::iterator itr = m_deviceMap.begin(); 
-        itr != m_deviceMap.end(); ++itr )
+    for( DeviceMap::iterator itr = m_deviceMap.begin();
+            itr != m_deviceMap.end(); ++itr )
     {
         delete itr->second;
     }
@@ -155,37 +155,37 @@ void DeviceHandler::Initialize()
     device::Device* device( NULL );
     device = new device::Gloves();
     m_deviceMap[ device::Device::GLOVES ] = device;
-    
+
     //Initialize keyboard mouse device
     device = new device::KeyboardMouse();
     device->Enable();
     m_deviceMap[ device::Device::KEYBOARD_MOUSE ] = device;
-    
+
     //Initialize wand device
     device = new device::Wand();
     device->Enable();
     m_deviceMap[ device::Device::WAND ] = device;
-    
+
     //Initialize tablet device
     device = new device::Tablet();
     device->Enable();
     m_deviceMap[ device::Device::TABLET ] = device;
-    
+
     //Initialize tablet device
     device = new device::Pointer();
     //device->Enable();
     m_deviceMap[ device::Device::POINTER ] = device;
-    
+
     //Initialize tablet device
     device = new device::GameController();
     //device->Enable();
     m_deviceMap[ device::Device::GAME_CONTROLLER ] = device;
-    
+
     device = NULL;
-    
+
     //Set properties in Devices
-    for( DeviceMap::const_iterator itr = m_deviceMap.begin(); 
-        itr != m_deviceMap.end(); ++itr )
+    for( DeviceMap::const_iterator itr = m_deviceMap.begin();
+            itr != m_deviceMap.end(); ++itr )
     {
         device::Device* device = itr->second;
         device->SetCenterPoint( &mCenterPoint );
@@ -197,7 +197,7 @@ void DeviceHandler::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ExecuteCommands()
 {
-    const ves::open::xml::CommandPtr tempCommand = 
+    const ves::open::xml::CommandPtr tempCommand =
         CommandManager::instance()->GetXMLCommand();
     if( !tempCommand )
     {
@@ -212,18 +212,18 @@ void DeviceHandler::ExecuteCommands()
     }
 
     event::EventHandler* tempEvent = ehItr->second;
-    for( DeviceMap::const_iterator itr = m_deviceMap.begin(); 
-        itr != m_deviceMap.end(); ++itr )
+    for( DeviceMap::const_iterator itr = m_deviceMap.begin();
+            itr != m_deviceMap.end(); ++itr )
     {
         device::Device* device = itr->second;
         if( device->IsEnabled() )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tDeviceHandler::ExecuteCommands Executing: "
-                << tempCommand->GetCommandName()
-                << std::endl << vprDEBUG_FLUSH;
+                                  << tempCommand->GetCommandName()
+                                  << std::endl << vprDEBUG_FLUSH;
             tempEvent->SetGlobalBaseObject( device );
             tempEvent->Execute( tempCommand );
-        } 
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -268,13 +268,13 @@ void DeviceHandler::ProcessDeviceEvents()
     ExecuteCommands();
 
     //Process device events
-    for( DeviceMap::const_iterator itr = m_deviceMap.begin(); 
-        itr != m_deviceMap.end(); ++itr )
+    for( DeviceMap::const_iterator itr = m_deviceMap.begin();
+            itr != m_deviceMap.end(); ++itr )
     {
         m_deviceBeingProcessed = itr->second;
         if( m_deviceBeingProcessed->IsEnabled() )
         {
-            m_deviceBeingProcessed->ProcessEvents( 
+            m_deviceBeingProcessed->ProcessEvents(
                 CommandManager::instance()->GetXMLCommand() );
         }
     }
@@ -298,7 +298,7 @@ void DeviceHandler::SetDeviceMode( const std::string& deviceMode )
 
     if( mDeviceMode == "World Navigation" )
     {
-        mActiveDCS = 
+        mActiveDCS =
             scenegraph::SceneManager::instance()->GetActiveNavSwitchNode();
     }
     else if( mDeviceMode == "Object Navigation" )
@@ -344,7 +344,7 @@ void DeviceHandler::SetResetWorldPosition(
 {
     mResetAxis = quat;
     mResetPosition = pos;
-    
+
     /*
     DeviceMap::const_iterator itr;
     for( itr = m_deviceMap.begin(); itr != m_deviceMap.end(); ++itr )

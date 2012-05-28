@@ -70,7 +70,7 @@ public:
 
     void AddRow( const std::vector<wxString>& vals );
     void AddSeperator( char pad = '=' );
-    void DoChangeFont( const wxFont &font );
+    void DoChangeFont( const wxFont& font );
     bool ChooseFixedFont( int size );
     wxString padding( wxString str, int col_id );
 

@@ -50,12 +50,12 @@ namespace ves
 namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
-Visualization::Visualization( QWidget* parent ) 
+Visualization::Visualization( QWidget* parent )
     :
     QDialog( parent ),
     m_ui( new Ui::Visualization ),
-    mIgnoreIndexChange(false),
-    m_logger( Poco::Logger::get("conductor.Visualization") ),
+    mIgnoreIndexChange( false ),
+    m_logger( Poco::Logger::get( "conductor.Visualization" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     m_ui->setupUi( this );
@@ -95,7 +95,7 @@ void Visualization::on_WritePropertiesButton_clicked()
     {
         LOG_DEBUG( "on_WritePropertiesButton_clicked" );
         mTempSet->WriteToDatabase();
-        //const std::string featureName = 
+        //const std::string featureName =
         //    m_ui->FeaturesList->currentItem()->text().toStdString();
         //VisFeatureManager::instance()->
         //    UpdateFeature( featureName, mTempSet->GetUUIDAsString() );
@@ -129,7 +129,7 @@ void Visualization::on_NewFeatureButton_clicked()
 
     QString featureName = m_ui->FeaturesList->currentItem()->text();
     mTempSet = VisFeatureManager::instance()->
-            CreateNewFeature( featureName.toStdString() );
+               CreateNewFeature( featureName.toStdString() );
 
     // Re-read available feature IDs from database, and select the last one added,
     // which corresponds to the "new" one
@@ -172,8 +172,8 @@ void Visualization::UpdateFeatureIDSelectorChoices()
     // Get all available IDs for current feature type
     QString featureName = m_ui->FeaturesList->currentItem()->text();
     std::vector< std::pair< std::string, std::string > > nameIDPairs =
-            VisFeatureManager::instance()->GetNameIDPairsForFeature(
-                    featureName.toStdString() );
+        VisFeatureManager::instance()->GetNameIDPairsForFeature(
+            featureName.toStdString() );
 
     // Get Name Tag for each feature and add these as choices
     QStringList nameList;
@@ -189,7 +189,7 @@ void Visualization::UpdateFeatureIDSelectorChoices()
         // Check whether this entry refers to the set currently being edited
         if( mTempSet.get() )
         {
-            if( mTempSet->GetUUIDAsString() == tempID  )
+            if( mTempSet->GetUUIDAsString() == tempID )
             {
                 tempInList = true;
             }
@@ -217,7 +217,7 @@ void Visualization::UpdateFeatureIDSelectorChoices()
 void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
 {
     LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged " << index );
-    if(mIgnoreIndexChange)
+    if( mIgnoreIndexChange )
     {
         mIgnoreIndexChange = false;
         return;
@@ -227,7 +227,7 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
     // cleared. Index > size should only occur if code is faulty elsewhere
     // in this class. In either case we want to ensure nothing is visible in the
     // browser.
-    if( (index == -1) || (index > int(m_ids.size()) ) )
+    if( ( index == -1 ) || ( index > int( m_ids.size() ) ) )
     {
         LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Removing any visible PropertySet" );
         mFeatureBrowser->ParsePropertySet( ves::xplorer::data::PropertySetPtr() );
@@ -237,7 +237,7 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
     LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Loading PropertySet" );
     QString featureName = m_ui->FeaturesList->currentItem()->text();
     mTempSet = VisFeatureManager::instance()->
-            CreateNewFeature( featureName.toStdString() );
+               CreateNewFeature( featureName.toStdString() );
 
     if( mTempSet )
     {

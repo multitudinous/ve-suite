@@ -60,7 +60,7 @@ class VE_XPLORER_EXPORTS cfdContour : public cfdContourBase
 public:
     ///Initialize the VTK objects and pipeline.
     cfdContour();
-    
+
     ///Copy Constructor.
     cfdContour( cfdContour const& src );
 
@@ -76,13 +76,13 @@ public:
 private:
 
 #ifdef USE_OMP
-    vtkPlane *plane[MAX_CONTOUR];///<Contour cutting plane.
-    vtkCutter *cutter[MAX_CONTOUR];///<Used for the cutter code.
-    vtkAppendPolyData *append;///<Appends to the dataset for number of processors.
+    vtkPlane* plane[MAX_CONTOUR];///<Contour cutting plane.
+    vtkCutter* cutter[MAX_CONTOUR];///<Used for the cutter code.
+    vtkAppendPolyData* append;///<Appends to the dataset for number of processors.
     float nData;///<Total number of data to be parallel processed.
 #else
-    vtkPlane *plane;///<Plane for vtk.
-    vtkCutter *cutter;///<Cutter for vtk.
+    vtkPlane* plane;///<Plane for vtk.
+    vtkCutter* cutter;///<Cutter for vtk.
 #endif
 };
 }

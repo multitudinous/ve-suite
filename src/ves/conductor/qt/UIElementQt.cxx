@@ -84,7 +84,7 @@ bool qt_sendSpontaneousEvent( QObject* recv, QEvent* e )
     return QCoreApplication::sendSpontaneousEvent( recv, e );
 }
 
-Q_DECLARE_METATYPE(gadget::Keys)
+Q_DECLARE_METATYPE( gadget::Keys )
 //Q_DECLARE_METATYPE(wchar_t)
 
 namespace ves
@@ -92,7 +92,7 @@ namespace ves
 namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
-UIElementQt::UIElementQt( QWidget *parent )
+UIElementQt::UIElementQt( QWidget* parent )
     :
     NonScrollGraphicsView( parent ),
     UIElement(),
@@ -121,7 +121,7 @@ UIElementQt::UIElementQt( QWidget *parent )
     m_firstRender( true ),
     m_sizeHasChanged( true ),
     m_sizeDirty( true ),
-    m_logger( Poco::Logger::get("conductor.EventDebug") ),
+    m_logger( Poco::Logger::get( "conductor.EventDebug" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     _debug( "ctor" );
@@ -136,13 +136,13 @@ UIElementQt::UIElementQt( QWidget *parent )
     mImageMutex = new QMutex();
     m_captureListMutex = new QMutex();
     _setupKeyMap();
-    
+
     mQTitlebar = new Ui::titlebar();
     mTitlebar = new QWidget( 0 );
     mQTitlebar->setupUi( mTitlebar );
-    QList<QWidget *> widgets = mTitlebar->findChildren<QWidget *>();
-    Q_FOREACH(QWidget* widget, widgets)
-        widget->installEventFilter(this);
+    QList<QWidget*> widgets = mTitlebar->findChildren<QWidget*>();
+    Q_FOREACH( QWidget * widget, widgets )
+    widget->installEventFilter( this );
     // Hide the "hide" button for now. May bring this back later on once
     // we have a clear way to manage hiding an element vs. hiding all of UI
     mQTitlebar->HideButton->hide();
@@ -151,11 +151,11 @@ UIElementQt::UIElementQt( QWidget *parent )
     PostConstructor();
 
 #ifdef FULL_IMAGE_DEBUG
-    QWidget* imgDialog = new QWidget(0);
-    QBoxLayout* bl = new QBoxLayout(QBoxLayout::LeftToRight);
-    imgDialog->setLayout(bl);
-    m_imgCurrentLabel = new QLabel(0);
-    m_imgPreviousLabel = new QLabel(0);
+    QWidget* imgDialog = new QWidget( 0 );
+    QBoxLayout* bl = new QBoxLayout( QBoxLayout::LeftToRight );
+    imgDialog->setLayout( bl );
+    m_imgCurrentLabel = new QLabel( 0 );
+    m_imgPreviousLabel = new QLabel( 0 );
     bl->addWidget( m_imgCurrentLabel );
     bl->addWidget( m_imgPreviousLabel );
     imgDialog->resize( 450, 250 );
@@ -186,7 +186,7 @@ void UIElementQt::Initialize()
         //QObject::connect( this, SIGNAL( PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ),
         //                  this, SLOT( _sendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ), Qt::QueuedConnection );
 
-        QObject::connect( this, SIGNAL( PutResizeCanvas( int, int) ),
+        QObject::connect( this, SIGNAL( PutResizeCanvas( int, int ) ),
                           this, SLOT( _resizeCanvas( int, int ) ), Qt::QueuedConnection );
 
         qRegisterMetaType<gadget::Keys>();
@@ -226,9 +226,9 @@ void UIElementQt::Initialize()
         //QObject::connect( this, SIGNAL( PutKeyReleaseEvent( gadget::Keys, int, QString ) ),
         //                 this, SLOT( _keyReleaseEvent( gadget::Keys, int, QString ) ), Qt::QueuedConnection );
         QObject::connect( this,
-                          SIGNAL( PutScrollEvent( int, int, int, int, int) ),
+                          SIGNAL( PutScrollEvent( int, int, int, int, int ) ),
                           this,
-                          SLOT( _scrollEvent( int, int, int, int, int) ), Qt::QueuedConnection);
+                          SLOT( _scrollEvent( int, int, int, int, int ) ), Qt::QueuedConnection );
 
         QObject::connect( this,
                           SIGNAL( PutLower() ),
@@ -299,10 +299,10 @@ const osg::Vec4f UIElementQt::GetTextureCoordinates()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent& )
 {
-//    ves::xplorer::eventmanager::InteractionEvent* m_event =
-//            new ves::xplorer::eventmanager::InteractionEvent( event );
-//
-//    Q_EMIT PutSendEvent( m_event );
+    //    ves::xplorer::eventmanager::InteractionEvent* m_event =
+    //            new ves::xplorer::eventmanager::InteractionEvent( event );
+    //
+    //    Q_EMIT PutSendEvent( m_event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendButtonPressEvent( gadget::Keys button, int x, int y, int state )
@@ -327,7 +327,7 @@ void UIElementQt::SendMouseMoveEvent( int x, int y, int z, int state )
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendKeyPressEvent( gadget::Keys key, int modifierMask, char unicode )
 {
-    //Right now VR Juggler has the API to support wide body chars but it 
+    //Right now VR Juggler has the API to support wide body chars but it
     //is not wired up. When it is we can use this code to transfer wide body
     //chars to Qt.
     //wchar_t uniKey = unicode;
@@ -337,7 +337,7 @@ void UIElementQt::SendKeyPressEvent( gadget::Keys key, int modifierMask, char un
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode )
 {
-    //Right now VR Juggler has the API to support wide body chars but it 
+    //Right now VR Juggler has the API to support wide body chars but it
     //is not wired up. When it is we can use this code to transfer wide body
     //chars to Qt.
     //wchar_t uniKey = unicode;
@@ -371,21 +371,22 @@ osg::Image* UIElementQt::RenderElementToImage()
     if( mImageDirty )
     {
 #if defined( _DARWIN )
-        { // Enter critical section
+        {
+            // Enter critical section
             QMutexLocker locker( mImageMutex );
             //( *mImageFlipped ) = mImage->mirrored( false, true );
             //Double buffer the texture image
             ( *mImageFlipped ) = mImage->copy();
         } // Leave critical section
         m_osgImage->setImage( GetImageWidth(),
-                           GetImageHeight(), 1, 4,
-                           GL_BGRA, GL_UNSIGNED_BYTE,
-                           mImageFlipped->bits(), osg::Image::NO_DELETE );
+                              GetImageHeight(), 1, 4,
+                              GL_BGRA, GL_UNSIGNED_BYTE,
+                              mImageFlipped->bits(), osg::Image::NO_DELETE );
 #else
         m_osgImage->setImage( GetImageWidth(),
-                           GetImageHeight(), 1, 4,
-                           GL_BGRA, GL_UNSIGNED_BYTE,
-                           mImage->bits(), osg::Image::NO_DELETE );
+                              GetImageHeight(), 1, 4,
+                              GL_BGRA, GL_UNSIGNED_BYTE,
+                              mImage->bits(), osg::Image::NO_DELETE );
 #endif
         mImageDirty = false;
     }
@@ -394,7 +395,7 @@ osg::Image* UIElementQt::RenderElementToImage()
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > const&
-        UIElementQt::GetDamagedAreas()
+UIElementQt::GetDamagedAreas()
 {
     RefreshWidgetFilterList();
     m_damagedAreas.clear();
@@ -402,7 +403,7 @@ std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > cons
     //timespec ts, tt, ttt, te;
     //clock_gettime(CLOCK_MONOTONIC, &ts);
 
-    if(!mImage)
+    if( !mImage )
     {
         return m_damagedAreas;
     }
@@ -414,12 +415,12 @@ std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > cons
                        mImage->bits(), osg::Image::NO_DELETE );
 
         std::pair< int, int > offset( 0, 0 );
-        std::pair< osg::Image*, std::pair<int,int> > package( img, offset );
+        std::pair< osg::Image*, std::pair<int, int> > package( img, offset );
         m_damagedAreas.push_back( package );
         m_firstRender = false;
 
 #ifdef FULL_IMAGE_DEBUG
-        m_imgCurrentLabel->setPixmap( QPixmap::fromImage( *mImage ).scaledToWidth(200) );
+        m_imgCurrentLabel->setPixmap( QPixmap::fromImage( *mImage ).scaledToWidth( 200 ) );
 #endif
 
         return m_damagedAreas;
@@ -437,10 +438,10 @@ std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > cons
     const QMap<QString, QRect> rects = m_captureList;
     locker.unlock();
 
-    Q_FOREACH(const QString key, rects.keys())
+    Q_FOREACH( const QString key, rects.keys() )
     {
         QRect rect = rects[key];
-        QImage fragment = mImage->copy(rect);
+        QImage fragment = mImage->copy( rect );
 
         // We maintain an 'update_cache' that caches previously
         // processed fragments (keyed on rectangles).  If the
@@ -449,14 +450,14 @@ std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > cons
         // thing with it.
 
         bool is_update = false;
-        if(update_cache.contains(key))
+        if( update_cache.contains( key ) )
         {
             // (According to the Qt docs, this C++ operator can be a
             // slow operation (no surprise)).  Some kind of faster
             // comparison might be better.)
             //clock_gettime(CLOCK_MONOTONIC, &tt);
 
-            if(update_cache[key] != fragment)
+            if( update_cache[key] != fragment )
             {
                 is_update = true;
                 some_update = true;
@@ -479,41 +480,41 @@ std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > cons
         // areas of the texture that have changed -- i.e., are in the
         // cache already, but are getting new values.
 
-        if(is_update)
+        if( is_update )
         {
             QStringList bounds = key.split( "x" );
             bool ec;
-            int x = bounds.at(0).toInt( &ec );
-            int y = bounds.at(1).toInt( &ec );
-            int s = bounds.at(2).toInt( &ec );
-            int t = bounds.at(3).toInt( &ec );
+            int x = bounds.at( 0 ).toInt( &ec );
+            int y = bounds.at( 1 ).toInt( &ec );
+            int s = bounds.at( 2 ).toInt( &ec );
+            int t = bounds.at( 3 ).toInt( &ec );
 
             osg::ref_ptr<osg::Image> img = new osg::Image;
             img->setImage( s, t, 1, 4, GL_BGRA, GL_UNSIGNED_BYTE,
-                           update_cache[key].bits(), osg::Image::NO_DELETE  );
+                           update_cache[key].bits(), osg::Image::NO_DELETE );
 
             std::pair< int, int > offset( x, y );
-            std::pair< osg::ref_ptr<osg::Image>, std::pair<int,int> > package( img, offset );
+            std::pair< osg::ref_ptr<osg::Image>, std::pair<int, int> > package( img, offset );
             m_damagedAreas.push_back( package );
 
             ++index;
 
 #ifdef FULL_IMAGE_DEBUG
-            QPainter painter(&markupImage);
+            QPainter painter( &markupImage );
             //QPen pen(Qt::yellow);
             //pen.setWidth(5);
-            painter.setPen(Qt::yellow);
-            painter.drawRect(rect);
+            painter.setPen( Qt::yellow );
+            painter.drawRect( rect );
 #endif
         }
         else
         {
 #ifdef FULL_IMAGE_DEBUG
-            QPainter painter(&markupImage);
+            QPainter painter( &markupImage );
             //QPen pen(Qt::red);
             //pen.setWidth(4);
-            painter.setPen(Qt::red);
-            painter.drawRect(rect);
+            painter.setPen( Qt::red );
+            painter.drawRect( rect );
 #endif
         }
     }
@@ -522,11 +523,11 @@ std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > cons
     //std::cout << "UIElementQt::GetDamagedAreas " << te.tv_nsec - ts.tv_nsec << std::endl << std::flush;
 
 #ifdef FULL_IMAGE_DEBUG
-    if(some_update)
+    if( some_update )
     {
         // Copy last "frame's" image into the previous bucket
-        m_imgPreviousLabel->setPixmap( *(m_imgCurrentLabel->pixmap()) );
-        m_imgCurrentLabel->setPixmap( markupImage.scaledToWidth(200) );
+        m_imgPreviousLabel->setPixmap( *( m_imgCurrentLabel->pixmap() ) );
+        m_imgCurrentLabel->setPixmap( markupImage.scaledToWidth( 200 ) );
     }
 #endif
 
@@ -582,7 +583,7 @@ void UIElementQt::SetWidget( QWidget* widget )
 
     //Now resize the respective widget to account for the title bar
     mWidget->resize( mWidth, mHeight - mTitlebar->height() );
-    
+
     // Add the widget to the scene.
     // NB: We don't have to explicitly create mGraphicsProxyWidget since
     // it is created and returned by call to QGraphicsScene::addWidget
@@ -607,13 +608,13 @@ void UIElementQt::SetWidget( QWidget* widget )
 
     this->setViewportUpdateMode( QGraphicsView::NoViewportUpdate );
 
-//    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
+    //    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
 
-//    // Make the view and the scene coincident.
-//    this->setSceneRect( mGraphicsScene->sceneRect() );
+    //    // Make the view and the scene coincident.
+    //    this->setSceneRect( mGraphicsScene->sceneRect() );
 
-//    // Forcibly resize view to contain mWidget
-//    this->resize( mWidth, mHeight );
+    //    // Forcibly resize view to contain mWidget
+    //    this->resize( mWidth, mHeight );
 
     //Now before we render but after all the widgets are configured
     //lets initialize and update all of our textures
@@ -645,10 +646,10 @@ void UIElementQt::RefreshWidgetFilterList()
     //clock_gettime(CLOCK_MONOTONIC, &ts);
     // for each child widget on the dialog, install an event filter
     // for it that redirects to our eventFilter() method.
-    QList<QWidget *> widgets = mWidget->findChildren<QWidget *>();
-    Q_FOREACH(QWidget* widget, widgets)
+    QList<QWidget*> widgets = mWidget->findChildren<QWidget*>();
+    Q_FOREACH( QWidget * widget, widgets )
     {
-        widget->installEventFilter(this);
+        widget->installEventFilter( this );
     }
 
     //clock_gettime(CLOCK_MONOTONIC, &te);
@@ -657,12 +658,12 @@ void UIElementQt::RefreshWidgetFilterList()
     //QCoreApplication::instance()->installEventFilter( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool UIElementQt::eventFilter(QObject *object, QEvent *event)
+bool UIElementQt::eventFilter( QObject* object, QEvent* event )
 {
-    if(event->type() == QEvent::Paint)
+    if( event->type() == QEvent::Paint )
     {
         QPaintEvent* paint_event = dynamic_cast< QPaintEvent* >( event );
-        if(paint_event)
+        if( paint_event )
         {
             // we can either take the larger paint_event->rect(), which
             // encompasses the entire update region, or we can process all
@@ -671,7 +672,7 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
             // the large one.
 
             QWidget* widget = static_cast< QWidget* >( object );
-            Q_FOREACH(const QRect rect, paint_event->region().rects())
+            Q_FOREACH( const QRect rect, paint_event->region().rects() )
             {
 
                 QPoint p = widget->mapToGlobal( rect.topLeft() );
@@ -687,7 +688,7 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
                     << " G:(" << g.x() << "," << g.y() << ")  L:("
                     << rect.topLeft().x() << "," << rect.topLeft().y()
                     << ")"
-                    << std::endl << std::flush;  */                  
+                    << std::endl << std::flush;  */
                     p.setX( 0 );
                 }
                 if( p.y() < 0 )
@@ -700,13 +701,13 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
                     << std::endl << std::flush;*/
                     p.setY( 0 );
                 }
-                
-                QRect r = QRect(p, rect.size());
-                QString key = QString("%1x%2x%3x%4")
-                               .arg(r.x())
-                               .arg(r.y())
-                               .arg(r.width())
-                               .arg(r.height());
+
+                QRect r = QRect( p, rect.size() );
+                QString key = QString( "%1x%2x%3x%4" )
+                              .arg( r.x() )
+                              .arg( r.y() )
+                              .arg( r.width() )
+                              .arg( r.height() );
                 {
                     // Protect capture list against simultaneous read/write
                     QMutexLocker locker( m_captureListMutex );
@@ -715,9 +716,9 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
             }
         }
     }
-    else if( (event->type() == QEvent::Hide) || (event->type() == QEvent::Show) )
+    else if( ( event->type() == QEvent::Hide ) || ( event->type() == QEvent::Show ) )
     {
-        QWidget* widget = (QWidget*)object;
+        QWidget* widget = ( QWidget* )object;
         QRect r = widget->rect();
 
         QPoint p = widget->mapToGlobal( r.topLeft() );
@@ -733,12 +734,12 @@ bool UIElementQt::eventFilter(QObject *object, QEvent *event)
         {
             p.setY( 0 );
         }
-        r = QRect(p, r.size());
-        QString key = QString("%1x%2x%3x%4")
-                       .arg(r.x())
-                       .arg(r.y())
-                       .arg(r.width())
-                       .arg(r.height());
+        r = QRect( p, r.size() );
+        QString key = QString( "%1x%2x%3x%4" )
+                      .arg( r.x() )
+                      .arg( r.y() )
+                      .arg( r.width() )
+                      .arg( r.height() );
         {
             // Protect capture list against simultaneous read/write
             QMutexLocker locker( m_captureListMutex );
@@ -760,11 +761,11 @@ void UIElementQt::_resizeCanvas( int width, int height )
     boost::ignore_unused_variable_warning( width );
     boost::ignore_unused_variable_warning( height );
 
-//    mWidget->resize( width, height - mTitlebar->height()  );
-//    mTitlebar->resize( width, mTitlebar->height() );
-//    UpdateSize();
-//    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
-//    this->resize( mWidth, mHeight );
+    //    mWidget->resize( width, height - mTitlebar->height()  );
+    //    mTitlebar->resize( width, mTitlebar->height() );
+    //    UpdateSize();
+    //    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
+    //    this->resize( mWidth, mHeight );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::UpdateSize()
@@ -789,13 +790,13 @@ void UIElementQt::UpdateSize()
     this->resize( mWidth, mHeight );
 
     osg::Matrixf tempUI;
-    tempUI.makeScale( mWidth, mHeight, 1);
+    tempUI.makeScale( mWidth, mHeight, 1 );
     //We assume the the ui is positioned at 0,0
     //tempUI.setTrans( 0, 0, 0 );
     tempUI.setTrans( GetUIMatrix().getTrans() );
     PushUIMatrix( tempUI );
-    
-    /*osg::Matrixd const& windowMat = 
+
+    /*osg::Matrixd const& windowMat =
         ves::xplorer::scenegraph::SceneManager::instance()->
         GetCurrentGLTransformInfo()->GetInvertedWindowMatrixOSG();
     osg::Vec3 max = osg::Vec3( mWidth, mHeight, 1.0 ) * windowMat;
@@ -810,7 +811,8 @@ void UIElementQt::UpdateSize()
     if( ( mWidth != old_Width ) || ( mHeight != old_Height ) )
     {
         m_sizeHasChanged = true;
-        { // Enter critical section
+        {
+            // Enter critical section
             QMutexLocker locker( mImageMutex );
             if( mImage )
             {
@@ -837,7 +839,8 @@ void UIElementQt::UpdateSize()
     mImageHeight = mHeight;
 
     // If image doesn't exist, create one of the proper size.
-    { // Enter critical section
+    {
+        // Enter critical section
         QMutexLocker locker( mImageMutex );
         if( mImage == NULL )
         {
@@ -876,7 +879,8 @@ void UIElementQt::FreeOldWidgets()
         mGraphicsProxyWidget = 0;
     }
 
-    { // Enter critical section
+    {
+        // Enter critical section
         QMutexLocker locker( mImageMutex );
         if( mImage )
         {
@@ -909,7 +913,8 @@ void UIElementQt::_render()
         return;
     }
 
-    { // Enter critical section
+    {
+        // Enter critical section
         QMutexLocker locker( mImageMutex );
 
         if( mImage )
@@ -946,7 +951,7 @@ void UIElementQt::_buttonReleaseEvent( gadget::Keys button, int x, int y, int st
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_doubleClickEvent( gadget::Keys button, int x, int y, int state )
 {
-    QWidget *vw = this->childAt( x, y );
+    QWidget* vw = this->childAt( x, y );
 
     if( vw == NULL )
     {
@@ -966,7 +971,7 @@ void UIElementQt::_doubleClickEvent( gadget::Keys button, int x, int y, int stat
     // press events
     buttons = buttons | qbutton;
     QMouseEvent e( QEvent::MouseButtonDblClick, position, globalPos, qbutton,
-                buttons, modifiers );
+                   buttons, modifiers );
     qt_sendSpontaneousEvent( this->viewport(), &e );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -974,7 +979,10 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
 {
     QWidget* vw = this->childAt( x, y );
 
-    if( vw == NULL ) return;
+    if( vw == NULL )
+    {
+        return;
+    }
 
     //LOG_INFO( "UIElementQt::_buttonEvent " << x << " " << y );
 
@@ -995,7 +1003,7 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
         buttons = buttons | qbutton;
 
         QMouseEvent e( QEvent::MouseButtonPress, position, globalPos, qbutton,
-                    buttons, modifiers );
+                       buttons, modifiers );
         qt_sendSpontaneousEvent( this->viewport(), &e );
 
         // Send a context menu event when the right mouse button is pressed.
@@ -1003,23 +1011,23 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
         // sending the mousepress event above, and test again before sending
         // this event. If the same (or none ) popup is not open in both cases,
         // this contextMenuEvent shouldn't be sent.
-//        if( qbutton == Qt::RightButton )
-//        {
-//            QContextMenuEvent e( QContextMenuEvent::Mouse, position,
-//                               globalPos, modifiers );
-//            qt_sendSpontaneousEvent( this->viewport(), &e );
-//        }
+        //        if( qbutton == Qt::RightButton )
+        //        {
+        //            QContextMenuEvent e( QContextMenuEvent::Mouse, position,
+        //                               globalPos, modifiers );
+        //            qt_sendSpontaneousEvent( this->viewport(), &e );
+        //        }
     }
     else
     {
         QMouseEvent e( QEvent::MouseButtonRelease, position, globalPos, qbutton,
-                    buttons, modifiers );
+                       buttons, modifiers );
         qt_sendSpontaneousEvent( this->viewport(), &e );
 
         if( qbutton == Qt::RightButton )
         {
             QContextMenuEvent e( QContextMenuEvent::Mouse, position,
-                               globalPos, modifiers );
+                                 globalPos, modifiers );
             qt_sendSpontaneousEvent( this->viewport(), &e );
         }
     }
@@ -1037,7 +1045,7 @@ void UIElementQt::_mouseMoveEvent( int x, int y, int z, int state )
     QPoint globalPos = this->viewport()->mapToGlobal( position );
 
     QMouseEvent e( QEvent::MouseMove, position, globalPos, Qt::NoButton,
-                    buttons, modifiers );
+                   buttons, modifiers );
 
     qt_sendSpontaneousEvent( this->viewport(), &e );
 }
@@ -1069,9 +1077,9 @@ void UIElementQt::_scrollEvent( int deltaX, int deltaY, int x, int y, int state 
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_keyPressEvent( gadget::Keys key, int modifierMask, char unicode )
 {
-    //Right now VR Juggler has the API to support wide body chars but it 
+    //Right now VR Juggler has the API to support wide body chars but it
     //is not wired up. When it is we can use this code to transfer wide body
-    //chars to Qt.    
+    //chars to Qt.
     Qt::KeyboardModifiers modifiers = _extractModifiers( modifierMask );
     QKeyEvent e( QEvent::KeyPress, mKeyMap[key], modifiers, QChar( unicode ) );
     qt_sendSpontaneousEvent( this->viewport(), &e );
@@ -1137,22 +1145,22 @@ Qt::KeyboardModifiers UIElementQt::_extractModifiers( int state )
 
     if( state & gadget::SHIFT_MASK )
     {
-        modifiers = Qt::KeyboardModifier(modifiers | Qt::SHIFT);
+        modifiers = Qt::KeyboardModifier( modifiers | Qt::SHIFT );
     }
 
     if( state & gadget::ALT_MASK )
     {
-        modifiers = Qt::KeyboardModifier(modifiers | Qt::ALT);
+        modifiers = Qt::KeyboardModifier( modifiers | Qt::ALT );
     }
 
     if( state & gadget::CTRL_MASK )
     {
-        modifiers = Qt::KeyboardModifier(modifiers | Qt::CTRL);
+        modifiers = Qt::KeyboardModifier( modifiers | Qt::CTRL );
     }
 
     if( state & gadget::COMMAND_MASK )
     {
-        modifiers = Qt::KeyboardModifier(modifiers | Qt::META);
+        modifiers = Qt::KeyboardModifier( modifiers | Qt::META );
     }
 
     return modifiers;
@@ -1318,7 +1326,7 @@ void UIElementQt::_onTitlebarPressed()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_onOpacitySliderValueChanged( int opacity )
 {
-    ves::conductor::UIManager::instance()->SetOpacity( opacity/100.0f );
+    ves::conductor::UIManager::instance()->SetOpacity( opacity / 100.0f );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::Raise()
@@ -1328,7 +1336,7 @@ void UIElementQt::Raise()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_raise()
 {
-    mQTitlebar->TitleFrame->setStyleSheet("QFrame { background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(0, 0, 0, 255), stop: 0.5 rgba(75,75,75,255), stop:0.51 rgba(100,100,100,255), stop:1 rgba(200, 200, 200, 255));}");
+    mQTitlebar->TitleFrame->setStyleSheet( "QFrame { background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(0, 0, 0, 255), stop: 0.5 rgba(75,75,75,255), stop:0.51 rgba(100,100,100,255), stop:1 rgba(200, 200, 200, 255));}" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::Lower()
@@ -1338,7 +1346,7 @@ void UIElementQt::Lower()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_lower()
 {
-    mQTitlebar->TitleFrame->setStyleSheet("QFrame { background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(110, 110, 110, 255), stop: 0.5 rgba(155,155,155,255), stop:0.51 rgba(160,160,160,255), stop:1 rgba(180, 180, 180, 255));}");
+    mQTitlebar->TitleFrame->setStyleSheet( "QFrame { background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(110, 110, 110, 255), stop: 0.5 rgba(155,155,155,255), stop:0.51 rgba(160,160,160,255), stop:1 rgba(180, 180, 180, 255));}" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::ShowTitlebar( bool show )

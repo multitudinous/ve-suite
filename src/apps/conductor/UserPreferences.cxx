@@ -196,8 +196,8 @@ void UserPreferences::CreateControls()
     wxString nearFarData;
     nearFarData << m_nearFar;
     m_nearFarEntry = new wxTextCtrl( panel, USERPREFENCES_NEAR_FAR_RATIO,
-                                      nearFarData.c_str(), wxDefaultPosition,
-                                      wxDefaultSize, wxTE_PROCESS_ENTER );
+                                     nearFarData.c_str(), wxDefaultPosition,
+                                     wxDefaultSize, wxTE_PROCESS_ENTER );
     nearFarSizer->Add( nearFarChkBx, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
     nearFarSizer->Add( m_nearFarEntry, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
@@ -208,17 +208,17 @@ void UserPreferences::CreateControls()
     wxCheckBox* screenAlignedChkBx = new wxCheckBox( panel, USERPREFENCES_VIEW_ALIGNED_NORMALS_CHKBX, wxT( "Screen Aligned Normals" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
 
     wxBoxSizer* draggerScalingSizer = new wxBoxSizer( wxHORIZONTAL );
-    wxCheckBox* draggerScalingChkBx = 
-        new wxCheckBox( panel, USERPREFENCES_DRAGGER_SCALING_CHKBX, 
-                   wxT( "Dragger Scaling" ), wxDefaultPosition, 
-                   wxDefaultSize, wxCHK_2STATE );
+    wxCheckBox* draggerScalingChkBx =
+        new wxCheckBox( panel, USERPREFENCES_DRAGGER_SCALING_CHKBX,
+                        wxT( "Dragger Scaling" ), wxDefaultPosition,
+                        wxDefaultSize, wxCHK_2STATE );
     {
         //Need to set dragger scaling
         wxString draggerScalingData;
         draggerScalingData << m_draggerScalingValue;
         m_draggerScalingEntry = new wxTextCtrl( panel, USERPREFENCES_DRAGGER_SCALING_VALUE,
-                                               draggerScalingData.c_str(), wxDefaultPosition,
-                                               wxDefaultSize, wxTE_PROCESS_ENTER );
+                                                draggerScalingData.c_str(), wxDefaultPosition,
+                                                wxDefaultSize, wxTE_PROCESS_ENTER );
         draggerScalingSizer->Add( draggerScalingChkBx, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
         draggerScalingSizer->Add( m_draggerScalingEntry, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     }
@@ -243,10 +243,10 @@ void UserPreferences::CreateControls()
 
     cadSelectionChkBx->SetValue( preferenceMap[ "CAD Selection" ] );
     cadSelectionChkBx->IsChecked();
-    
+
     scriptLoggerChkBx->SetValue( preferenceMap[ "Script Logger" ] );
     scriptLoggerChkBx->IsChecked();
-    
+
     screenAlignedChkBx->SetValue( preferenceMap[ "Screen Aligned Normals" ] );
     screenAlignedChkBx->IsChecked();
 
@@ -256,10 +256,10 @@ void UserPreferences::CreateControls()
     {
         m_draggerScalingEntry->Disable();
     }
-    
+
     m_lodScaleSlider = new wxSlider( panel, USERPREFENCES_GEOMETRY_LOD_SCALE_SLIDER, m_lodScale, 0, 100,
-                                    wxDefaultPosition, wxDefaultSize,
-                                    wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
+                                     wxDefaultPosition, wxDefaultSize,
+                                     wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS );
 
     itemBoxSizer3->Add( colorSizer, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( navigationChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
@@ -291,7 +291,7 @@ void UserPreferences::OnNearFarCheck( wxCommandEvent& event )
 {
     wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
     preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
-    
+
     if( event.IsChecked() )
     {
         m_nearFarEntry->Enable();
@@ -302,14 +302,14 @@ void UserPreferences::OnNearFarCheck( wxCommandEvent& event )
         m_nearFar = 0.0005;
         m_nearFarEntry->Disable();
     }
-    
+
     // Create the command and data value pairs
     DataValuePairPtr dataValuePair( new DataValuePair() );
     dataValuePair->SetData( std::string( "Near Far Ratio" ), m_nearFar );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "CHANGE_NEAR_FAR_RATIO" ) );
     veCommand->AddDataValuePair( dataValuePair );
-    
+
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
 
     UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_NEAR_FAR_RATIO", veCommand );
@@ -323,8 +323,8 @@ void UserPreferences::OnPhysicsDebuggerCheck( wxCommandEvent& event )
 
     // Create the command and data value pairs
     DataValuePairPtr dataValuePair( new DataValuePair() );
-    dataValuePair->SetData( "Physics Debugger Toggle Value", 
-        static_cast< unsigned int >( event.IsChecked() ) );
+    dataValuePair->SetData( "Physics Debugger Toggle Value",
+                            static_cast< unsigned int >( event.IsChecked() ) );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "PHYSICS_COMMAND" ) );
     veCommand->AddDataValuePair( dataValuePair );
@@ -338,16 +338,16 @@ void UserPreferences::OnPhysicsDebuggerCheck( wxCommandEvent& event )
 void UserPreferences::OnNearFarRatio( wxCommandEvent& WXUNUSED( event ) )
 {
     m_nearFarEntry->GetValue().ToDouble( &m_nearFar );
-    
+
     // Create the command and data value pairs
     DataValuePairPtr dataValuePair( new DataValuePair() );
     dataValuePair->SetData( std::string( "Near Far Ratio" ), m_nearFar );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "CHANGE_NEAR_FAR_RATIO" ) );
     veCommand->AddDataValuePair( dataValuePair );
-    
+
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    
+
     UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_NEAR_FAR_RATIO", veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -422,7 +422,7 @@ void UserPreferences::OnShutdownXplorer( wxCommandEvent& event )
 void UserPreferences::OnLODScale( wxScrollEvent& WXUNUSED( event ) )
 {
     m_lodScale = m_lodScaleSlider->GetValue();
-    
+
     // Create the command and data value pairs
     DataValuePairPtr dataValuePair( new DataValuePair() );
     dataValuePair->SetData( std::string( "Geometry LOD Scale" ), m_lodScale );
@@ -460,73 +460,73 @@ void UserPreferences::ReadConfiguration( void )
     std::map< std::string, bool >::iterator iter;
     for( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
     {
-            bool exists = cfg->Read( key +
-                                     _T( "/" ) +
-                                     wxString( iter->first.c_str(), wxConvUTF8 ),
-                                     &iter->second, false );
-            
-            xplorerColor.clear();
-            if( iter->first == "Use Preferred Background Color" )
-            {
-                cfg->Read( key +
-                           _T( "/" ) +
-                           _T( "BackgroundColor" ) +
-                           _T( "/" ) +
-                           wxString( "Red", wxConvUTF8 ),
-                           &backgroundColor[ "Red" ] );
-                xplorerColor.push_back( backgroundColor[ "Red" ] );
+        bool exists = cfg->Read( key +
+                                 _T( "/" ) +
+                                 wxString( iter->first.c_str(), wxConvUTF8 ),
+                                 &iter->second, false );
 
-                cfg->Read( key +
-                           _T( "/" ) +
-                           _T( "BackgroundColor" ) +
-                           _T( "/" ) +
-                           wxString( "Green", wxConvUTF8 ),
-                           &backgroundColor[ "Green" ] );
-                xplorerColor.push_back( backgroundColor[ "Green" ] );
+        xplorerColor.clear();
+        if( iter->first == "Use Preferred Background Color" )
+        {
+            cfg->Read( key +
+                       _T( "/" ) +
+                       _T( "BackgroundColor" ) +
+                       _T( "/" ) +
+                       wxString( "Red", wxConvUTF8 ),
+                       &backgroundColor[ "Red" ] );
+            xplorerColor.push_back( backgroundColor[ "Red" ] );
 
-                cfg->Read( key +
-                           _T( "/" ) +
-                           _T( "BackgroundColor" ) +
-                           _T( "/" ) +
-                           wxString( "Blue", wxConvUTF8 ),
-                           &backgroundColor[ "Blue" ] );
-                xplorerColor.push_back( backgroundColor[ "Blue" ] );
+            cfg->Read( key +
+                       _T( "/" ) +
+                       _T( "BackgroundColor" ) +
+                       _T( "/" ) +
+                       wxString( "Green", wxConvUTF8 ),
+                       &backgroundColor[ "Green" ] );
+            xplorerColor.push_back( backgroundColor[ "Green" ] );
 
-                cfg->Read( key +
-                           _T( "/" ) +
-                           _T( "BackgroundColor" ) +
-                           _T( "/" ) +
-                           wxString( "Alpha", wxConvUTF8 ),
-                           &backgroundColor[ "Alpha" ] );
-                xplorerColor.push_back( backgroundColor[ "Alpha" ] );
-            }
-            else if( iter->first == "Geometry LOD Scale" )
-            {
-                cfg->Read( key +
-                          _T( "/" ) +
-                          _T( "GeometryLODScale" ) +
-                          _T( "/" ) +
-                          _T( "LOD" ),
-                          &m_lodScale );
-            }            
-            else if( iter->first == "Set Near-Far Ratio" )
-            {
-                cfg->Read( key +
-                          _T( "/" ) +
-                          _T( "NearFar" ) +
-                          _T( "/" ) +
-                          _T( "NearFarRatio" ),
-                          &m_nearFar );
-            }            
-            else if( iter->first == "Dragger Scaling" )
-            {
-                cfg->Read( key +
-                          _T( "/" ) +
-                          _T( "DraggerScaling" ) +
-                          _T( "/" ) +
-                          _T( "DraggerScalingValue" ),
-                          &m_draggerScalingValue );
-            }            
+            cfg->Read( key +
+                       _T( "/" ) +
+                       _T( "BackgroundColor" ) +
+                       _T( "/" ) +
+                       wxString( "Blue", wxConvUTF8 ),
+                       &backgroundColor[ "Blue" ] );
+            xplorerColor.push_back( backgroundColor[ "Blue" ] );
+
+            cfg->Read( key +
+                       _T( "/" ) +
+                       _T( "BackgroundColor" ) +
+                       _T( "/" ) +
+                       wxString( "Alpha", wxConvUTF8 ),
+                       &backgroundColor[ "Alpha" ] );
+            xplorerColor.push_back( backgroundColor[ "Alpha" ] );
+        }
+        else if( iter->first == "Geometry LOD Scale" )
+        {
+            cfg->Read( key +
+                       _T( "/" ) +
+                       _T( "GeometryLODScale" ) +
+                       _T( "/" ) +
+                       _T( "LOD" ),
+                       &m_lodScale );
+        }
+        else if( iter->first == "Set Near-Far Ratio" )
+        {
+            cfg->Read( key +
+                       _T( "/" ) +
+                       _T( "NearFar" ) +
+                       _T( "/" ) +
+                       _T( "NearFarRatio" ),
+                       &m_nearFar );
+        }
+        else if( iter->first == "Dragger Scaling" )
+        {
+            cfg->Read( key +
+                       _T( "/" ) +
+                       _T( "DraggerScaling" ) +
+                       _T( "/" ) +
+                       _T( "DraggerScalingValue" ),
+                       &m_draggerScalingValue );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -537,64 +537,64 @@ void UserPreferences::WriteConfiguration()
     std::map< std::string, bool >::iterator iter;
     for( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
     {
-            cfg->Write( key +
+        cfg->Write( key +
                     _T( "/" ) +
                     wxString( iter->first.c_str(), wxConvUTF8 ),
                     iter->second );
-            if( iter->first == "Use Preferred Background Color" )
-            {
-                cfg->Write( key +
-                            _T( "/" ) +
-                            _T( "BackgroundColor" ) +
-                            _T( "/" ) +
-                            wxString( "Red", wxConvUTF8 ),
-                            backgroundColor[ "Red" ] );
-                cfg->Write( key +
-                            _T( "/" ) +
-                            _T( "BackgroundColor" ) +
-                            _T( "/" ) +
-                            wxString( "Green", wxConvUTF8 ),
-                            backgroundColor[ "Green" ] );
-                cfg->Write( key +
-                            _T( "/" ) +
-                            _T( "BackgroundColor" ) +
-                            _T( "/" ) +
-                            wxString( "Blue", wxConvUTF8 ),
-                            backgroundColor[ "Blue" ] );
-                cfg->Write( key +
-                            _T( "/" ) +
-                            _T( "BackgroundColor" ) +
-                            _T( "/" ) +
-                            wxString( "Alpha", wxConvUTF8 ),
-                            backgroundColor[ "Alpha" ] );
-            }
-            else if( iter->first == "Geometry LOD Scale" )
-            {
-                cfg->Write( key +
-                           _T( "/" ) +
-                           _T( "GeometryLODScale" ) +
-                           _T( "/" ) +
-                           _T( "LOD" ),
-                           m_lodScale );
-            }
-            else if( iter->first == "Set Near-Far Ratio" )
-            {
-                cfg->Write( key +
-                          _T( "/" ) +
-                          _T( "NearFar" ) +
-                          _T( "/" ) +
-                          _T( "NearFarRatio" ),
-                          m_nearFar );
-            }            
-            else if( iter->first == "Dragger Scaling" )
-            {
-                cfg->Write( key +
-                           _T( "/" ) +
-                           _T( "DraggerScaling" ) +
-                           _T( "/" ) +
-                           _T( "DraggerScalingValue" ),
-                           m_draggerScalingValue );
-            }            
+        if( iter->first == "Use Preferred Background Color" )
+        {
+            cfg->Write( key +
+                        _T( "/" ) +
+                        _T( "BackgroundColor" ) +
+                        _T( "/" ) +
+                        wxString( "Red", wxConvUTF8 ),
+                        backgroundColor[ "Red" ] );
+            cfg->Write( key +
+                        _T( "/" ) +
+                        _T( "BackgroundColor" ) +
+                        _T( "/" ) +
+                        wxString( "Green", wxConvUTF8 ),
+                        backgroundColor[ "Green" ] );
+            cfg->Write( key +
+                        _T( "/" ) +
+                        _T( "BackgroundColor" ) +
+                        _T( "/" ) +
+                        wxString( "Blue", wxConvUTF8 ),
+                        backgroundColor[ "Blue" ] );
+            cfg->Write( key +
+                        _T( "/" ) +
+                        _T( "BackgroundColor" ) +
+                        _T( "/" ) +
+                        wxString( "Alpha", wxConvUTF8 ),
+                        backgroundColor[ "Alpha" ] );
+        }
+        else if( iter->first == "Geometry LOD Scale" )
+        {
+            cfg->Write( key +
+                        _T( "/" ) +
+                        _T( "GeometryLODScale" ) +
+                        _T( "/" ) +
+                        _T( "LOD" ),
+                        m_lodScale );
+        }
+        else if( iter->first == "Set Near-Far Ratio" )
+        {
+            cfg->Write( key +
+                        _T( "/" ) +
+                        _T( "NearFar" ) +
+                        _T( "/" ) +
+                        _T( "NearFarRatio" ),
+                        m_nearFar );
+        }
+        else if( iter->first == "Dragger Scaling" )
+        {
+            cfg->Write( key +
+                        _T( "/" ) +
+                        _T( "DraggerScaling" ) +
+                        _T( "/" ) +
+                        _T( "DraggerScalingValue" ),
+                        m_draggerScalingValue );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -607,17 +607,17 @@ void UserPreferences::OnViewAlignedCheck( wxCommandEvent& event )
 {
     wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
     preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
-    
+
     // Create the command and data value pairs
     DataValuePairPtr dataValuePair( new DataValuePair() );
-    dataValuePair->SetData( "Screen Aligned Toggle Value", 
-                           static_cast< unsigned int >( event.IsChecked() ) );
+    dataValuePair->SetData( "Screen Aligned Toggle Value",
+                            static_cast< unsigned int >( event.IsChecked() ) );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "SCENE_STATE_INFORMATION" ) );
     veCommand->AddDataValuePair( dataValuePair );
-    
+
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    
+
     UserPreferencesDataBuffer::instance()->SetCommand( "SCENE_STATE_INFORMATION", veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -625,7 +625,7 @@ void UserPreferences::OnDraggerScalingCheck( wxCommandEvent& event )
 {
     wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
     preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
-    
+
     if( event.IsChecked() )
     {
         m_draggerScalingEntry->Enable();
@@ -648,11 +648,11 @@ void UserPreferences::OnDraggerScalingValue( wxCommandEvent& WXUNUSED( event ) )
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "DRAGGER_SCALING_VALUE" ) );
     veCommand->AddDataValuePair( dataValuePair );
-    
+
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    
+
     UserPreferencesDataBuffer::instance()->
-        SetCommand( "DRAGGER_SCALING_VALUE", veCommand );    
+    SetCommand( "DRAGGER_SCALING_VALUE", veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnCADSelectionEvent( wxCommandEvent& event )
@@ -660,18 +660,18 @@ void UserPreferences::OnCADSelectionEvent( wxCommandEvent& event )
     wxString mode =
         dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
     preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
-    
+
     // Create the command and data value pairs
     DataValuePairPtr dataValuePair( new DataValuePair() );
-    dataValuePair->SetData( "CAD Selection Mode", 
-                           static_cast< unsigned int >( event.IsChecked() ) );
+    dataValuePair->SetData( "CAD Selection Mode",
+                            static_cast< unsigned int >( event.IsChecked() ) );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "ENABLE_DEVICE" ) );
     veCommand->AddDataValuePair( dataValuePair );
-    
+
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    
+
     UserPreferencesDataBuffer::instance()->
-        SetCommand( "ENABLE_DEVICE", veCommand );
+    SetCommand( "ENABLE_DEVICE", veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////

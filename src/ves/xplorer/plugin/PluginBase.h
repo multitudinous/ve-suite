@@ -100,7 +100,7 @@ class VE_GRAPHICALPLUGINS_EXPORTS PluginBase
 public:
     ///Default constructor
     PluginBase();
-    
+
     ///Destructor
     virtual ~PluginBase();
 
@@ -111,12 +111,12 @@ public:
     ///Viz feature for the devloper to define
     ///Can be anything that creates a geode
     virtual void CreateCustomVizFeature( int input );
-    
+
     ///Pass in the scene graph node that this plugin should be adding
     ///data to.
     ///\param veworldDCS The DCS that his plugin will add data to
     virtual void InitializeNode( osg::Group* veworldDCS );
-    
+
     ///This gets called every frame no matter what
     //Allows graphical plugins access to scenegraph
     virtual void PreFrameUpdate();
@@ -138,7 +138,7 @@ public:
     ///Return map that maps command names to this plugin
     ///\return The map used by cfdExecutive to process commands send by the gui
     std::map< std::string, PluginBase* > GetCommandNameMap();
-    
+
     ///Get the model for this plugin
     ///\return The model for this plugin
     ves::xplorer::Model* GetCFDModel();
@@ -156,7 +156,7 @@ public:
     ///This returns the name of the module
     ///\return The name of the module in string form
     const std::string& GetName();
-    
+
     ///Set current command whatever it is
     ///\param command Current command from conductor
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
@@ -164,7 +164,7 @@ public:
     ///Set current command whatever it is
     ///\param command Current command from conductor
     virtual void SetCurrentCommands( std::vector< ves::open::xml::CommandPtr > const& commands );
-    
+
     ///Set the pointer to the cursor class so that dynamic
     ///objects can do custom features with the wand input
     ///\param cursor The cursor from xplorer
@@ -183,15 +183,15 @@ public:
     ///Set the module name for this plugin
     ///\param input The module name
     void SetObjectName( const std::string& intput );
-    
+
     ///Provide access to the physics simulator in the plugins
     ///\param physicsSimulator The physics simulator
     void SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
-    
+
     ///Provide access to the scene manager in the plugins
     ///\param sceneManager The scene manager
     void SetSceneManager( ves::xplorer::scenegraph::SceneManager* sceneManager );
-    
+
     ///Provide access to the environment handler in the plugins
     ///\param environment The environment handler
     void SetEnvironmentHandler( ves::xplorer::EnvironmentHandler* environmentHandler );
@@ -206,8 +206,8 @@ public:
 
     ///Provide the conductor communication manager for plugins
     ///\param conductorComm The conductor CORBA pointer
-    void SetCommunicationHandler( ves::xplorer::communication::CommunicationHandler* commandHandler ); 
-    
+    void SetCommunicationHandler( ves::xplorer::communication::CommunicationHandler* commandHandler );
+
     ///Set the graphical plugin manager in the plugin so that plugins can
     ///have access to the VE-CE and other corba tools
     void SetGraphicalPluginManager( ves::xplorer::network::GraphicalPluginManager* pluginManager );
@@ -225,7 +225,7 @@ public:
     ///Get the DCS for this plugin
     ///\return The DCS that the CAD and viz are added to
     ves::xplorer::scenegraph::DCS* GetPluginDCS();
-    
+
 protected:
     ///Easy check to see if this plugin is on the scene graph
     bool mOnSceneGraph;
@@ -234,7 +234,7 @@ protected:
     ///in the ves::open::xml::Model model name. This name comes from the gui
     ///plugin.
     std::string mObjectName;
-    
+
     ves::xplorer::cfdCursor* mCursor;
     ves::xplorer::device::Device* mDevice;
     ///The model handler pointer
@@ -261,7 +261,7 @@ protected:
 #endif
 
     ///This is the base DCS pointer that all content for a plugin
-    ///should be added to. 
+    ///should be added to.
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
     ///This is the actuall parent DCS for this plugin. Typcially this is
     ///the Executive node that all plugins are added to.

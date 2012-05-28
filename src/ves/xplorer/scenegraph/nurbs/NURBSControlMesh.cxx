@@ -64,8 +64,8 @@ NURBSControlMesh::NURBSControlMesh( std::vector<ves::xplorer::scenegraph::nurbs:
 ///////////////////////////////////////////////////////////////////////
 NURBSControlMesh::NURBSControlMesh( const NURBSControlMesh& controlMesh,
                                     const osg::CopyOp& copyop )
-:osg::Geometry( controlMesh, copyop )
-{ 
+    : osg::Geometry( controlMesh, copyop )
+{
     m_controlPoints = controlMesh.m_controlPoints;
     m_numUControlPoints = controlMesh.m_numUControlPoints;
     m_numVControlPoints = controlMesh.m_numVControlPoints;
@@ -88,20 +88,20 @@ void NURBSControlMesh::_initializeStateSet()
     ss->setAttribute( pointProperties.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NURBSControlMesh::UpdateControlPointPosition( int index, osg::Vec3 position)
+void NURBSControlMesh::UpdateControlPointPosition( int index, osg::Vec3 position )
 {
-    //m_controlPoints.at(index).SetX(position.x());    
-    //m_controlPoints.at(index).SetY(position.y());    
+    //m_controlPoints.at(index).SetX(position.x());
+    //m_controlPoints.at(index).SetY(position.y());
     //m_controlPoints.at(index).SetZ(position.z());
-    m_controlPoints.at(index).set( position );
-    (*m_controlMeshVerts)[index].set(position);
+    m_controlPoints.at( index ).set( position );
+    ( *m_controlMeshVerts )[index].set( position );
     m_controlMeshVerts->dirty();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::SetControlPoints( std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> controlPoints,
-                                         unsigned int numU,
-                                         unsigned int numV,
-                                         bool isSurface )
+        unsigned int numU,
+        unsigned int numV,
+        bool isSurface )
 {
     m_controlPoints = controlPoints;
     m_numUControlPoints = numU;
@@ -117,17 +117,17 @@ void NURBSControlMesh::_updateControlMeshPrimitives()
     if( !m_controlMeshVerts.valid() )
     {
         m_controlMeshVerts = new osg::Vec3Array( );
-        setVertexArray(m_controlMeshVerts.get());
+        setVertexArray( m_controlMeshVerts.get() );
     }
     else
     {
-       m_controlMeshVerts->clear();
-       removePrimitiveSet(0,getNumPrimitiveSets());
-       m_controlMeshVerts->dirty();
+        m_controlMeshVerts->clear();
+        removePrimitiveSet( 0, getNumPrimitiveSets() );
+        m_controlMeshVerts->dirty();
     }
-    for(size_t i = 0; i < numControlPoints; ++i)
+    for( size_t i = 0; i < numControlPoints; ++i )
     {
-        m_controlMeshVerts->push_back( m_controlPoints.at(i) );
+        m_controlMeshVerts->push_back( m_controlPoints.at( i ) );
         //m_controlMeshVerts->push_back( static_cast<osg::Vec3d>(m_controlPoints.at(i) ));
     }
 
@@ -152,8 +152,8 @@ void NURBSControlMesh::_updateControlMeshPrimitives()
 //////////////////////////////////////////////////////
 void NURBSControlMesh::_updateControlPointsPrimitives()
 {
-    addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS,
-                                        0, m_controlMeshVerts->size() ) );
+    addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::POINTS,
+                                          0, m_controlMeshVerts->size() ) );
 }
 ///////////////////////////////////////////////////////
 void NURBSControlMesh::_updateControlUCurvePrimitives()
@@ -162,13 +162,13 @@ void NURBSControlMesh::_updateControlUCurvePrimitives()
     for( unsigned int v = 0; v < m_numVControlPoints; ++v )
     {
         osg::DrawElementsUShort& drawElements =
-              *(new osg::DrawElementsUShort( GL_LINE_STRIP,
-                                             m_numUControlPoints ) );
+            *( new osg::DrawElementsUShort( GL_LINE_STRIP,
+                                            m_numUControlPoints ) );
         unsigned int index = 0;
         addPrimitiveSet( &drawElements );
         for( unsigned int u = 0; u < m_numUControlPoints; ++u )
         {
-            drawElements[index++] = v*m_numUControlPoints + u;
+            drawElements[index++] = v * m_numUControlPoints + u;
         }
     }
 }
@@ -177,14 +177,14 @@ void NURBSControlMesh::_updateControlVCurvePrimitives()
 {
     for( unsigned int u = 0; u < m_numUControlPoints; u++ )
     {
-        osg::DrawElementsUShort& drawElements = 
-                     *( new osg::DrawElementsUShort( GL_LINE_STRIP,
-                                                     m_numVControlPoints ) );
+        osg::DrawElementsUShort& drawElements =
+            *( new osg::DrawElementsUShort( GL_LINE_STRIP,
+                                            m_numVControlPoints ) );
         unsigned int index = 0;
         addPrimitiveSet( &drawElements );
         for( unsigned int v = 0; v < m_numVControlPoints; v++ )
         {
-            drawElements[index++] = v*m_numUControlPoints + u;
+            drawElements[index++] = v * m_numUControlPoints + u;
         }
     }
 }

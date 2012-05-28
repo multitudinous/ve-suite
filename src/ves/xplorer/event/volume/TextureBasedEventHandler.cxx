@@ -50,14 +50,14 @@ using namespace ves::open::xml;
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 TextureBasedEventHandler::TextureBasedEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     _activeModel = 0;
     _activeTDSet = 0;
 }
 ////////////////////////////////////////////////////////////
 TextureBasedEventHandler::TextureBasedEventHandler( const TextureBasedEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     _activeModel = rhs._activeModel;
     _activeTDSet = rhs._activeTDSet;
@@ -81,7 +81,7 @@ void TextureBasedEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mo
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         _activeTDSet = 0;
@@ -100,7 +100,7 @@ void TextureBasedEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXM
         {
             _setActiveTextureDataset( /*name of the active texture dataset*/ );
         }
-        catch ( ... )
+        catch( ... )
         {
             std::cout << "Invalid texture dataset!!" << std::endl;
             std::cout << "TextureBasedEventHandler::Execute()" << std::endl;

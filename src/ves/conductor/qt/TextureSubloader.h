@@ -48,19 +48,19 @@ public:
     virtual ~TextureSubloader();
 
     ///create the OpenGL texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
-    virtual void load(const osg::Texture2D &texture, osg::State &state) const;
+    virtual void load( const osg::Texture2D& texture, osg::State& state ) const;
 
 
     ///overlay the image onto the texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
-    virtual void subload(const osg::Texture2D &texture, osg::State &state) const;
+    virtual void subload( const osg::Texture2D& texture, osg::State& state ) const;
 
     ///tell the next subload callback to copy the input image to the specified offsets
     ///in the texture for this.
-    void AddUpdate(osg::Image *img, int xOff, int yOff);
+    void AddUpdate( osg::Image* img, int xOff, int yOff );
 
     ///Clear the current vectors of data
     void ClearData();
-    
+
 protected:
     mutable std::vector< int > xOffsets;                              // the X offset for the next subload operation.
     mutable std::vector< int > yOffsets;                              // the Y offset for the next subload operation.

@@ -78,73 +78,73 @@ namespace manipulator
 ///Defines transformation type associations with the draggers
 namespace TransformationType
 {
-    enum Enum
-    {
-        NONE = 0x000,
+enum Enum
+{
+    NONE = 0x000,
 
-        TRANSLATE_AXIS = 0x001,
-        TRANSLATE_PLANE = 0x002,
-        TRANSLATE_PAN = 0x004,
-        TRANSLATE_COMPOUND = TRANSLATE_AXIS | TRANSLATE_PLANE | TRANSLATE_PAN,
-        ROTATE_AXIS = 0x010,
-        ROTATE_TWIST = 0x020,
-        HELP_CIRCLE = 0x040,
-        ROTATE_COMPOUND = ROTATE_AXIS | ROTATE_TWIST | HELP_CIRCLE,
-        SCALE_AXIS = 0x100,
-        SCALE_UNIFORM = 0x200,
-        SCALE_COMPOUND = SCALE_AXIS | SCALE_UNIFORM,
+    TRANSLATE_AXIS = 0x001,
+    TRANSLATE_PLANE = 0x002,
+    TRANSLATE_PAN = 0x004,
+    TRANSLATE_COMPOUND = TRANSLATE_AXIS | TRANSLATE_PLANE | TRANSLATE_PAN,
+    ROTATE_AXIS = 0x010,
+    ROTATE_TWIST = 0x020,
+    HELP_CIRCLE = 0x040,
+    ROTATE_COMPOUND = ROTATE_AXIS | ROTATE_TWIST | HELP_CIRCLE,
+    SCALE_AXIS = 0x100,
+    SCALE_UNIFORM = 0x200,
+    SCALE_COMPOUND = SCALE_AXIS | SCALE_UNIFORM,
 
-        ALL = TRANSLATE_COMPOUND | ROTATE_COMPOUND | SCALE_COMPOUND
-    };
+    ALL = TRANSLATE_COMPOUND | ROTATE_COMPOUND | SCALE_COMPOUND
+};
 }
 
 ///Defines what space the manipulators operate in
 namespace VectorSpace
 {
-    enum Enum
-    {
-        GLOBAL = 0x1,
-        LOCAL = 0x2,
-        VIEW = 0x4
-    };
+enum Enum
+{
+    GLOBAL = 0x1,
+    LOCAL = 0x2,
+    VIEW = 0x4
+};
 }
 
 ///
 namespace AxisDirection
 {
-    enum Enum
-    {
-        POSITIVE = 0x1,
-        NEGATIVE = 0x2,
+enum Enum
+{
+    POSITIVE = 0x1,
+    NEGATIVE = 0x2,
 
-        ALL = POSITIVE | NEGATIVE
-    };
+    ALL = POSITIVE | NEGATIVE
+};
 }
 
 ///
 namespace Color
 {
-    enum Enum
-    {
-        DEFAULT = 0x01,
-        FOCUS = 0x02,
-        ACTIVE = 0x04,
-        DISABLED = 0x08,
-        OTHER = 0x10
-    };
+enum Enum
+{
+    DEFAULT = 0x01,
+    FOCUS = 0x02,
+    ACTIVE = 0x04,
+    DISABLED = 0x08,
+    OTHER = 0x10
+};
 }
 
 ///
 namespace Event
 {
-    enum Enum
-    {
-        NONE = 0x0,
-        FOCUS = 0x1,
-        PUSH = 0x2,
-        DRAG = 0x4,
-        RELEASE = 0x8
-    };
+enum Enum
+{
+    NONE = 0x0,
+    FOCUS = 0x1,
+    PUSH = 0x2,
+    DRAG = 0x4,
+    RELEASE = 0x8
+};
 }
 
 ///

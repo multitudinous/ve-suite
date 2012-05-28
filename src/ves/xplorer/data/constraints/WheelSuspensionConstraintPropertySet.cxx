@@ -63,10 +63,10 @@ void WheelSuspensionConstraintPropertySet::CreateSkeleton()
     AddProperty( "RestLength", 100, "Suspension Rest Position" );
     SetPropertyAttribute( "RestLength", "minimumValue", 0 );
 
-    AddProperty( "Stiffness", 1, "Suspension Stiffness");
+    AddProperty( "Stiffness", 1, "Suspension Stiffness" );
     SetPropertyAttribute( "Stiffness", "minimumValue", 0 );
 
-    AddProperty( "Damping", 20, "Suspension Damping (%)");
+    AddProperty( "Damping", 20, "Suspension Damping (%)" );
     SetPropertyAttribute( "Damping", "minimumValue", 0 );
     SetPropertyAttribute( "Damping", "maximumValue", 100 );
 

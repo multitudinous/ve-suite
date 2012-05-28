@@ -48,8 +48,9 @@
 
 #include <boost/signals2/signal.hpp>
 
-namespace Ui {
-    class TreeTab;
+namespace Ui
+{
+class TreeTab;
 }
 
 class TreeModel;
@@ -75,10 +76,11 @@ namespace conductor
 {
 class PropertyBrowser;
 
-class TreeTab : public QWidget {
+class TreeTab : public QWidget
+{
     Q_OBJECT
 public:
-    TreeTab(QWidget *parent = 0);
+    TreeTab( QWidget* parent = 0 );
     ~TreeTab();
 
     /// Clear the tree and underlying model
@@ -94,7 +96,7 @@ public:
     std::string GetSelectedNodeID();
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent( QEvent* e );
 
     // Is connected to KeyboardMouse.ObjectPickedSignal so the
     // tree selection is synchronized with object selection.
@@ -145,7 +147,7 @@ protected Q_SLOTS:
 
     void on_m_expandAllButton_clicked();
 
-    Q_SIGNALS:
+Q_SIGNALS:
 
     /// Queued signal emitted when OnObjectPicked slot is called. This is
     /// required for thread safety
@@ -155,7 +157,7 @@ protected Q_SLOTS:
     void NodeAddedQSignal( std::string const& filename );
 
 private:
-    Ui::TreeTab *ui;
+    Ui::TreeTab* ui;
 
     TreeModel* mModel;
 

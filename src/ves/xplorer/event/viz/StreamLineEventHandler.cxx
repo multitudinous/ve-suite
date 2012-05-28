@@ -53,15 +53,15 @@ using namespace ves::xplorer::event;
 
 ////////////////////////////////////////////////////////////////////////////////
 StreamLineEventHandler::StreamLineEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 StreamLineEventHandler::StreamLineEventHandler( const StreamLineEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler( rhs )
+    :
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -81,25 +81,25 @@ void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLO
     std::vector< ves::xplorer::cfdGraphicsObject* > graphicsObject =
         ves::xplorer::SteadyStateVizHandler::instance()->
         GetGraphicsObjectsOfType( STREAMLINES );
-    
+
     if( graphicsObject.empty() )
     {
         return;
     }
 
-    ves::open::xml::CommandPtr command = 
+    ves::open::xml::CommandPtr command =
         boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
-    ves::open::xml::DataValuePairPtr sizeDVP = 
+    ves::open::xml::DataValuePairPtr sizeDVP =
         command->GetDataValuePair( "Size" );
-    ves::open::xml::DataValuePairPtr glowDVP = 
+    ves::open::xml::DataValuePairPtr glowDVP =
         command->GetDataValuePair( "Fade Time" );
-    ves::open::xml::DataValuePairPtr animationSpeedDVP = 
+    ves::open::xml::DataValuePairPtr animationSpeedDVP =
         command->GetDataValuePair( "Animation Speed" );
-    ves::open::xml::DataValuePairPtr minValueDVP = 
+    ves::open::xml::DataValuePairPtr minValueDVP =
         command->GetDataValuePair( "minValue" );
-    ves::open::xml::DataValuePairPtr maxValueDVP = 
+    ves::open::xml::DataValuePairPtr maxValueDVP =
         command->GetDataValuePair( "maxValue" );
-    
+
     if( sizeDVP )
     {
         double size;
@@ -130,20 +130,20 @@ void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLO
         uniformVal *= 0.1;
         UpdateGeodeUniform( graphicsObject, animationSpeedDVP, "repeatTime", uniformVal );
     }
-    
+
     //Setup scalar control
     if( minValueDVP || maxValueDVP )
     {
         double opacityVal = 0;
         for( size_t i = 0; i < graphicsObject.size(); ++i )
         {
-            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >
             geodes = graphicsObject.at( i )->GetGeodes();
             for( size_t j = 0; j < geodes.size(); ++j )
             {
                 osg::ref_ptr< osg::Uniform > warpScaleUniform =
-                geodes.at( j )->getDrawable( 0 )->
-                getStateSet()->getUniform( "scalarMinMax" );
+                    geodes.at( j )->getDrawable( 0 )->
+                    getStateSet()->getUniform( "scalarMinMax" );
                 if( warpScaleUniform.valid() )
                 {
                     osg::Vec2 opacityValVec;
@@ -162,7 +162,7 @@ void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLO
                 }
             }
         }
-    }    
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 StreamLineEventHandler& StreamLineEventHandler::operator=( const StreamLineEventHandler& rhs )
@@ -175,19 +175,19 @@ StreamLineEventHandler& StreamLineEventHandler::operator=( const StreamLineEvent
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamLineEventHandler::UpdateGeodeUniform( 
-    const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject, 
-    ves::open::xml::DataValuePairPtr, 
+void StreamLineEventHandler::UpdateGeodeUniform(
+    const std::vector< ves::xplorer::cfdGraphicsObject* >& graphicsObject,
+    ves::open::xml::DataValuePairPtr,
     const std::string& uniformName, double valueFactor )
 {
     unsigned int numdraw = 0;
     osg::ref_ptr< osg::Uniform > activeUniform;
     osg::ref_ptr< ves::xplorer::scenegraph::Geode > geode;
-    
+
     for( size_t i = 0; i < graphicsObject.size(); ++i )
     {
-        std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > 
-            geodes = graphicsObject.at( i )->GetGeodes();
+        std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >
+        geodes = graphicsObject.at( i )->GetGeodes();
         for( size_t j = 0; j < geodes.size(); ++j )
         {
             geode = geodes.at( j );
@@ -195,7 +195,7 @@ void StreamLineEventHandler::UpdateGeodeUniform(
             for( size_t k = 0; k < numdraw; ++k )
             {
                 activeUniform = geode->getDrawable( k )->
-                    getStateSet()->getUniform( uniformName );
+                                getStateSet()->getUniform( uniformName );
                 if( activeUniform.valid() )
                 {
                     activeUniform->set( static_cast< float >( valueFactor ) );

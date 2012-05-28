@@ -77,15 +77,15 @@ public:
 
 private:
 #ifdef USE_OMP
-    vtkPlane *plane[MAX_MOMENTUM];///<Momenutum plane
-    vtkCutter *cutter[MAX_MOMENTUM];///<Momenutum plane cutter
-    vtkAppendPolyData *append;///<append to polydata
+    vtkPlane* plane[MAX_MOMENTUM];///<Momenutum plane
+    vtkCutter* cutter[MAX_MOMENTUM];///<Momenutum plane cutter
+    vtkAppendPolyData* append;///<append to polydata
     float nData;///<number of datasets
 #else
-    vtkPlane *plane;///<plane for vtk
-    vtkCutter *cutter;///<cutter for vtk
+    vtkPlane* plane;///<plane for vtk
+    vtkCutter* cutter;///<cutter for vtk
 #endif
-    vtkWarpVector *warper;///<warper for vtk
+    vtkWarpVector* warper;///<warper for vtk
 };
 }
 }

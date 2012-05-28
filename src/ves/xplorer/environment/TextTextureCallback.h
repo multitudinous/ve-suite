@@ -42,11 +42,11 @@
 
 namespace ves
 {
-namespace xplorer 
+namespace xplorer
 {
-namespace scenegraph 
+namespace scenegraph
 {
-    class TextTexture;
+class TextTexture;
 }
 }
 }
@@ -67,15 +67,18 @@ namespace environment
 class VE_XPLORER_EXPORTS TextTextureCallback : public osg::NodeCallback
 {
 public:
-    TextTextureCallback(){;}
+    TextTextureCallback()
+    {
+        ;
+    }
     ///Constructor
-    TextTextureCallback( ves::xplorer::scenegraph::TextTexture* textTexture);
+    TextTextureCallback( ves::xplorer::scenegraph::TextTexture* textTexture );
 
     //META_Object(ves::xplorer::environment, TextTextureCallback);
-    
+
     ///Copy Constructor
-    TextTextureCallback( const TextTextureCallback& ctc, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
-    
+    TextTextureCallback( const TextTextureCallback& ctc, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
     ///Override operator
     virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 

@@ -77,7 +77,7 @@ private:
     int xyz;///<value of location
     int numSteps;///<number of steps
 
-    cfdCuttingPlane * cuttingPlane;///<cutting plane
+    cfdCuttingPlane* cuttingPlane; ///<cutting plane
 };
 }
 }

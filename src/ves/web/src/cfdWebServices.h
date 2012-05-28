@@ -133,7 +133,7 @@ public:
 private:
 
     void mysqlQuery( std::string qel );
-    void insertItemIntoSQL( Interface &interface ); //insert the data for a
+    void insertItemIntoSQL( Interface& interface ); //insert the data for a
     //particular interface into MYSQL
     cfdExecutiveConfiguration* param;
     std::string activeScalarName;

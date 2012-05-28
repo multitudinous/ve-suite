@@ -29,17 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-/*  -*-c++-*- 
+/*  -*-c++-*-
  *  Copyright (C) 2008 Cedric Pinson <mornifle@plopbyte.net>
  *
- * This library is open source and may be redistributed and/or modified under  
- * the terms of the OpenSceneGraph Public License (OSGPL) version 0.0 or 
+ * This library is open source and may be redistributed and/or modified under
+ * the terms of the OpenSceneGraph Public License (OSGPL) version 0.0 or
  * (at your option) any later version.  The full license is in LICENSE file
  * included with this distribution, and on the openscenegraph.org website.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * OpenSceneGraph Public License for more details.
  *
  * Authors:
@@ -56,38 +56,38 @@
 #include <osgAnimation/BasicAnimationManager>
 #include <ves/VEConfig.h>
 
-class VE_SCENEGRAPH_EXPORTS CharacterAnimation 
+class VE_SCENEGRAPH_EXPORTS CharacterAnimation
 {
 public:
     ///Constructor
     CharacterAnimation();
     ///Destructor
     ~CharacterAnimation();
-    
+
 public:
     ///???
-    /*static CharacterAnimation& instance() 
+    /*static CharacterAnimation& instance()
     {
         static CharacterAnimation avmc;
         return avmc;
     }*/
 
     ///???
-    bool setModel(osgAnimation::BasicAnimationManager* model) 
+    bool setModel( osgAnimation::BasicAnimationManager* model )
     {
         //CharacterAnimation& self = instance();
         _model = model;
-        for( osgAnimation::AnimationList::const_iterator it = 
-            _model->getAnimationList().begin(); 
-            it != _model->getAnimationList().end(); ++it )
+        for( osgAnimation::AnimationList::const_iterator it =
+                    _model->getAnimationList().begin();
+                it != _model->getAnimationList().end(); ++it )
         {
-            _map[(*it)->getName()] = *it;
+            _map[( *it )->getName()] = *it;
         }
 
-        for( osgAnimation::AnimationMap::iterator it = _map.begin(); 
-            it != _map.end(); ++it )
+        for( osgAnimation::AnimationMap::iterator it = _map.begin();
+                it != _map.end(); ++it )
         {
-            m_amv.push_back(it->first);
+            m_amv.push_back( it->first );
         }
 
         return true;
@@ -109,7 +109,7 @@ public:
     bool previous();
 
     ///???
-    bool playByName(const std::string& name);
+    bool playByName( const std::string& name );
 
     ///???
     const std::string& getCurrentAnimationName() const;

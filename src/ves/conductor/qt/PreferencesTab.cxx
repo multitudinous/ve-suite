@@ -47,29 +47,29 @@ namespace ves
 namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
-PreferencesTab::PreferencesTab(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::PreferencesTab)
-{    
-    ui->setupUi(this);
-    
+PreferencesTab::PreferencesTab( QWidget* parent ) :
+    QWidget( parent ),
+    ui( new Ui::PreferencesTab )
+{
+    ui->setupUi( this );
+
     m_featureBrowser = new PropertyBrowser( this );
 
     m_propertySet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::PreferencesPropertySet() );
 
     m_propertySet->WriteToDatabase();
-    
+
     // Let the PropertyBrowser container parse the initial property set
     m_featureBrowser->ParsePropertySet( m_propertySet );
-    
-    // ui.preferencesPropertyBrowser is an instance of GenericPropertyBrowser, 
+
+    // ui.preferencesPropertyBrowser is an instance of GenericPropertyBrowser,
     // which knows how
     // to take the Qt-ized data from a PropertyBrowser such as
     // m_featureBrowser and display it in the GUI.
     ui->preferencesPropertyBrowser->setPropertyBrowser( m_featureBrowser );
     ui->preferencesPropertyBrowser->RefreshContents();
     ui->preferencesPropertyBrowser->show();
-    
+
     // No need to load before parsing, since values in browser are not
     // set during parsing. They're only set by signals from the property
     // set when things changed, which loading will do. But this doesn't
@@ -84,12 +84,13 @@ PreferencesTab::~PreferencesTab()
     delete m_featureBrowser;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesTab::changeEvent(QEvent *e)
+void PreferencesTab::changeEvent( QEvent* e )
 {
-    QWidget::changeEvent(e);
-    switch (e->type()) {
+    QWidget::changeEvent( e );
+    switch( e->type() )
+    {
     case QEvent::LanguageChange:
-        ui->retranslateUi(this);
+        ui->retranslateUi( this );
         break;
     default:
         break;

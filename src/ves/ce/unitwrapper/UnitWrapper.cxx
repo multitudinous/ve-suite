@@ -57,20 +57,20 @@
 #include <sstream>
 ////////////////////////////////////////////////////////////////////////////////
 UnitWrapper::UnitWrapper( Body::Executive_ptr exec, std::string name )
-    : 
+    :
     executive_( Body::Executive::_duplicate( exec ) ),
     return_state( 0 ),
     UnitName_( name )
 {
     ///Initialize VE-Open
     ves::open::xml::XMLObjectFactory::Instance()->
-        RegisterObjectCreator( "XML", new ves::open::xml::XMLCreator() );
+    RegisterObjectCreator( "XML", new ves::open::xml::XMLCreator() );
     ves::open::xml::XMLObjectFactory::Instance()->
-        RegisterObjectCreator( "Shader", new ves::open::xml::shader::ShaderCreator() );
+    RegisterObjectCreator( "Shader", new ves::open::xml::shader::ShaderCreator() );
     ves::open::xml::XMLObjectFactory::Instance()->
-        RegisterObjectCreator( "Model", new ves::open::xml::model::ModelCreator() );
+    RegisterObjectCreator( "Model", new ves::open::xml::model::ModelCreator() );
     ves::open::xml::XMLObjectFactory::Instance()->
-        RegisterObjectCreator( "CAD", new ves::open::xml::cad::CADCreator() );
+    RegisterObjectCreator( "CAD", new ves::open::xml::cad::CADCreator() );
 
     eventHandlerMap[ "Set XML Model Inputs" ] = new VE_CE::SetInputsEventHandler();
     eventHandlerMap[ "Get XML Model Inputs" ] = new VE_CE::GetInputsEventHandler();
@@ -88,14 +88,14 @@ UnitWrapper::UnitWrapper()
 ////////////////////////////////////////////////////////////////////////////////
 UnitWrapper::~UnitWrapper( void )
 {
-    for( std::map< std::string, VE_CE::EventHandler* >::iterator 
-        currentEventHandler = eventHandlerMap.begin(); 
-        currentEventHandler != eventHandlerMap.end();
-        ++currentEventHandler )
+    for( std::map< std::string, VE_CE::EventHandler* >::iterator
+            currentEventHandler = eventHandlerMap.begin();
+            currentEventHandler != eventHandlerMap.end();
+            ++currentEventHandler )
     {
         delete currentEventHandler->second;
     }
-    
+
     eventHandlerMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ void UnitWrapper::Resume()
     executive_->SetModuleMessage( activeId, msg.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * UnitWrapper::GetStatusMessage()
+char* UnitWrapper::GetStatusMessage()
 {
     // Add your implementation here
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
@@ -150,14 +150,14 @@ char * UnitWrapper::GetStatusMessage()
     return CORBA::string_dup( status.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * UnitWrapper::GetUserData()
+char* UnitWrapper::GetUserData()
 {
     // Add your implementation here
-    char * result = 0;
+    char* result = 0;
     return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnitWrapper::SetParams( ::CORBA::Long id, const char * param )
+void UnitWrapper::SetParams( ::CORBA::Long id, const char* param )
 {
     //just send a list command to SetParams
     // the eventhandler will handle the rest
@@ -175,7 +175,7 @@ void UnitWrapper::SetParams( ::CORBA::Long id, const char * param )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnitWrapper::SetID(::CORBA::Long id)
+void UnitWrapper::SetID( ::CORBA::Long id )
 {
     std::ostringstream strm;
     strm << id;
@@ -208,20 +208,20 @@ void UnitWrapper::SetCurID( ::CORBA::Long id )
     return activeId;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnitWrapper::SetName( const char * name )
+void UnitWrapper::SetName( const char* name )
 {
     // Add your implementation here
     UnitName_ = std::string( name );
     std::cout << UnitName_ << " :SetName called" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * UnitWrapper::GetName()
+char* UnitWrapper::GetName()
 {
     std::cout << UnitName_ << " :GetName called" << std::endl;
     return CORBA::string_dup( UnitName_.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-char * UnitWrapper::Query( const char* command )
+char* UnitWrapper::Query( const char* command )
 {
     //use print statement below to check command coming in
     std::cout << "UnitWrapper::Query called = " << command << std::endl;

@@ -53,57 +53,57 @@
 
 #include <iostream>
 
-namespace 
+namespace
 {
 
-    /**
-     * Function invoked by the Parser thread.
-     *
-     * @param   arg         the network client to spin in this thread.
-     */
-    void* parserThreadFunction(void* arg)
+/**
+ * Function invoked by the Parser thread.
+ *
+ * @param   arg         the network client to spin in this thread.
+ */
+void* parserThreadFunction( void* arg )
+{
+    if( !arg )
     {
-        if (!arg)
-        {
-            // FIXME:  Indicate a problem in a different manner.
-            std::cout << "[DBG] The parser thread did not receive an "
-                      << "argument!" << std::endl;
-            return NULL;
-        }
-        JuliusNetworkClient* client = 
-            reinterpret_cast<JuliusNetworkClient*>(arg);
-        client->startDataLoop();
+        // FIXME:  Indicate a problem in a different manner.
+        std::cout << "[DBG] The parser thread did not receive an "
+                  << "argument!" << std::endl;
         return NULL;
     }
+    JuliusNetworkClient* client =
+        reinterpret_cast<JuliusNetworkClient*>( arg );
+    client->startDataLoop();
+    return NULL;
+}
 }
 
 SpeechNavigator::SpeechNavigator()
-   : mClient(new JuliusNetworkClient()), mParser(new JuliusXMLParser()),
-     mThreadGroupId(-1), mParserThread(0), mStop(false),
-     mArgc(0), mArgv(NULL)
+    : mClient( new JuliusNetworkClient() ), mParser( new JuliusXMLParser() ),
+      mThreadGroupId( -1 ), mParserThread( 0 ), mStop( false ),
+      mArgc( 0 ), mArgv( NULL )
 {
     mParserObserver = new SpeechRecognitionObserver(
-        SpeechRecognitionObserver::PhraseRecognitionHandler(this, 
-            &SpeechNavigator::onPhraseRecognition));
-    mClient->setParser(mParser);
+        SpeechRecognitionObserver::PhraseRecognitionHandler( this,
+                &SpeechNavigator::onPhraseRecognition ) );
+    mClient->setParser( mParser );
 }
 
 SpeechNavigator::~SpeechNavigator()
 {
-    if (mThreadGroupId != -1)
+    if( mThreadGroupId != -1 )
     {
         // Politely tell the parser loop to stop.
-        if (mParserThread)
+        if( mParserThread )
         {
             mClient->stopDataLoop();
         }
-        if (isParserThreadRunning())
+        if( isParserThreadRunning() )
         {
-            ACE_Thread_Manager::instance()->join(mParserThread);
+            ACE_Thread_Manager::instance()->join( mParserThread );
         }
     }
-    mParser->detach(mParserObserver);
-    for (int i = 0; i < mArgc; ++i)
+    mParser->detach( mParserObserver );
+    for( int i = 0; i < mArgc; ++i )
     {
         delete[] mArgv[i];
     }
@@ -111,23 +111,23 @@ SpeechNavigator::~SpeechNavigator()
 }
 
 bool
-SpeechNavigator::connectToJulius(const std::string& host, 
-                                const unsigned short port)
+SpeechNavigator::connectToJulius( const std::string& host,
+                                  const unsigned short port )
 {
-    return mClient->connect(host, port);
+    return mClient->connect( host, port );
 }
 
-bool 
+bool
 SpeechNavigator::isConnectedToNamingService()
 {
-    if ( CORBA::is_nil( mNamingContext.in() ) )
+    if( CORBA::is_nil( mNamingContext.in() ) )
     {
         return connectToNamingService();
     }
     return true;
 }
 
-bool 
+bool
 SpeechNavigator::connectToNamingService()
 {
     try
@@ -140,14 +140,14 @@ SpeechNavigator::connectToNamingService()
         // for the executive
         CORBA::Object_var naming_context_object =
             mOrb->resolve_initial_references( "NameService" );
-        mNamingContext = CosNaming::NamingContext::_narrow( 
-                naming_context_object.in() );
+        mNamingContext = CosNaming::NamingContext::_narrow(
+                             naming_context_object.in() );
     }
-    catch ( CORBA::Exception& ex )
+    catch( CORBA::Exception& ex )
     {
         mOrb->destroy();
         std::string tempMessage =
-    "Cannot init ORB or can't connect to the Naming Service: CORBA Exception " +
+            "Cannot init ORB or can't connect to the Naming Service: CORBA Exception " +
             std::string( ex._info().c_str() ) + "\n";
         std::cerr << "[ERR] Unable to connect to CORBA Naming Service: "
                   << tempMessage << std::endl;
@@ -161,7 +161,7 @@ SpeechNavigator::connectToXplorer()
 {
     // Copied from CORBAServiceList per instructions.
 
-    if ( !isConnectedToNamingService() )
+    if( !isConnectedToNamingService() )
     {
         return false;
     }
@@ -181,10 +181,10 @@ SpeechNavigator::connectToXplorer()
         CORBA::Object_var ve_object = naming_context1->resolve( name );
         vjobs = VjObs::_narrow( ve_object.in() );
     }
-    catch ( CORBA::Exception& ex )
+    catch( CORBA::Exception& ex )
     {
-        std::string tempMessage = 
-            "Cannot find VE-Xplorer: CORBA Exception " + 
+        std::string tempMessage =
+            "Cannot find VE-Xplorer: CORBA Exception " +
             std::string( ex._info().c_str() ) + "\n";
         std::cerr << "[ERR] Unable to connect to VE Xplorer: "
                   << tempMessage << std::endl;
@@ -193,13 +193,13 @@ SpeechNavigator::connectToXplorer()
     return true;
 }
 
-void 
+void
 SpeechNavigator::setArgcArgv( int argc, char** argv )
 {
     //Copy the command line args because tao deletes them after processing them
     mArgc = argc;
     mArgv = new char*[ argc ];
-    for (int i = 0; i < mArgc; ++i)
+    for( int i = 0; i < mArgc; ++i )
     {
         int stringLength = strlen( argv[ i ] );
         mArgv[ i ] = new char[ stringLength + 1 ];
@@ -210,13 +210,13 @@ SpeechNavigator::setArgcArgv( int argc, char** argv )
 bool
 SpeechNavigator::startParserThread()
 {
-    mParser->attach(mParserObserver);
+    mParser->attach( mParserObserver );
     mThreadGroupId = ACE_Thread_Manager::instance()->spawn(
-                                          reinterpret_cast<ACE_THR_FUNC>(&parserThreadFunction), 
-                                          reinterpret_cast<void*>(mClient),
-                                THR_NEW_LWP | THR_JOINABLE | THR_INHERIT_SCHED,
-                                          &mParserThread);
-    if (mThreadGroupId == -1)
+                         reinterpret_cast<ACE_THR_FUNC>( &parserThreadFunction ),
+                         reinterpret_cast<void*>( mClient ),
+                         THR_NEW_LWP | THR_JOINABLE | THR_INHERIT_SCHED,
+                         &mParserThread );
+    if( mThreadGroupId == -1 )
     {
         std::cerr << "[ERR] Unable to spawn parser thread!." << std::endl;
         return false;
@@ -227,10 +227,10 @@ SpeechNavigator::startParserThread()
 void
 SpeechNavigator::stopParserThread()
 {
-    if (isParserThreadRunning())
+    if( isParserThreadRunning() )
     {
-        mClient->stopDataLoop();         
-        ACE_Thread_Manager::instance()->join(mParserThread);
+        mClient->stopDataLoop();
+        ACE_Thread_Manager::instance()->join( mParserThread );
         mParserThread = 0;
         mThreadGroupId = -1;
     }
@@ -243,53 +243,53 @@ SpeechNavigator::runDataIteration()
 
     std::string data;
     int nav_value = 0;
-    if (mSpeechQueue.remove(data))
+    if( mSpeechQueue.remove( data ) )
     {
-        if ("MOVE UP" == data)
+        if( "MOVE UP" == data )
         {
             nav_value = NAV_UP;
         }
-        else if ("MOVE DOWN" == data)
+        else if( "MOVE DOWN" == data )
         {
             nav_value = NAV_DOWN;
         }
-        else if ("MOVE LEFT" == data)
+        else if( "MOVE LEFT" == data )
         {
             nav_value = NAV_LEFT;
         }
-        else if ("MOVE RIGHT" == data)
+        else if( "MOVE RIGHT" == data )
         {
             nav_value = NAV_RIGHT;
         }
-        else if ("MOVE FORWARD" == data)
+        else if( "MOVE FORWARD" == data )
         {
             nav_value = NAV_FWD;
         }
-        else if ("MOVE BACKWARD" == data)
+        else if( "MOVE BACKWARD" == data )
         {
             nav_value = NAV_BKWD;
         }
-        else if ("PITCH DOWN" == data)
+        else if( "PITCH DOWN" == data )
         {
             nav_value = PITCH_DOWN;
         }
-        else if ("PITCH UP" == data)
+        else if( "PITCH UP" == data )
         {
             nav_value = PITCH_UP;
         }
-        else if ("ROLL CLOCKWISE" == data)
+        else if( "ROLL CLOCKWISE" == data )
         {
             nav_value = ROLL_CW;
         }
-        else if ("ROLL COUNTERCLOCKWISE" == data)
+        else if( "ROLL COUNTERCLOCKWISE" == data )
         {
             nav_value = ROLL_CCW;
         }
-        else if ("YAW CLOCKWISE" == data)
+        else if( "YAW CLOCKWISE" == data )
         {
             nav_value = YAW_CW;
         }
-        else if ("YAW COUNTERCLOCKWISE" == data)
+        else if( "YAW COUNTERCLOCKWISE" == data )
         {
             nav_value = YAW_CCW;
         }
@@ -297,16 +297,16 @@ SpeechNavigator::runDataIteration()
         {
             // Return here since we don't know what type of data to send to
             // Xplorer.
-            std::cerr << "[ERR] Unrecognized speech data '" << data 
+            std::cerr << "[ERR] Unrecognized speech data '" << data
                       << "'" << std::endl;
             return false;
         }
-        DataValuePairPtr data_value_pair(new DataValuePair("FLOAT"));
-        data_value_pair->SetDataName(std::string("GUI_NAV"));
-        data_value_pair->SetDataValue( static_cast<double>(nav_value) );
+        DataValuePairPtr data_value_pair( new DataValuePair( "FLOAT" ) );
+        data_value_pair->SetDataName( std::string( "GUI_NAV" ) );
+        data_value_pair->SetDataValue( static_cast<double>( nav_value ) );
         CommandPtr ve_command( new Command() );
-        ve_command->SetCommandName( std::string("Navigation_Data") );
-        ve_command->AddDataValuePair(data_value_pair);
+        ve_command->SetCommandName( std::string( "Navigation_Data" ) );
+        ve_command->AddDataValuePair( data_value_pair );
         // Copied from CORBAServiceList::SendCommandStringToXplorer().
         //Now send the data to xplorer
         ves::open::xml::XMLReaderWriter netowrkWriter;
@@ -329,7 +329,7 @@ SpeechNavigator::runDataIteration()
             // CORBA releases the allocated memory so we do not have to
             vjobs->SetCommandString( xmlDocument.c_str() );
         }
-        catch ( ... )
+        catch( ... )
         {
             std::cerr << "[ERR] Exception thrown while sending command string."
                       << std::endl;
@@ -343,9 +343,9 @@ bool
 SpeechNavigator::startDataLoop()
 {
     mStop = false;
-    while (!mStop)
+    while( !mStop )
     {
-        if (!runDataIteration())
+        if( !runDataIteration() )
         {
             return false;
         }
@@ -354,18 +354,18 @@ SpeechNavigator::startDataLoop()
 }
 
 void
-SpeechNavigator::onPhraseRecognition(const std::string& phrase)
+SpeechNavigator::onPhraseRecognition( const std::string& phrase )
 {
-    mSpeechQueue.add(phrase);
+    mSpeechQueue.add( phrase );
 }
 
 bool
 SpeechNavigator::isParserThreadRunning() const
 {
     ACE_UINT32 state = 0;
-    ACE_Thread_Manager::instance()->thr_state(mParserThread, state);
-    return (ACE_Thread_Manager::ACE_THR_SPAWNED == state || 
-            ACE_Thread_Manager::ACE_THR_RUNNING == state);
+    ACE_Thread_Manager::instance()->thr_state( mParserThread, state );
+    return ( ACE_Thread_Manager::ACE_THR_SPAWNED == state ||
+             ACE_Thread_Manager::ACE_THR_RUNNING == state );
 }
 
 // vim:ts=4:sw=4:et:tw=0

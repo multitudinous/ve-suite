@@ -150,7 +150,7 @@ public:
     bool GetDBPresent();
     ///Get the db flag
     void SetDBPresent( bool const& dbPresent );
-    
+
 private:
     ///Create the arrow polydata
     vtkPolyData* _GetArrowPolyData();
@@ -171,7 +171,7 @@ private:
     ///This flag tells the cad handler to rescale the textures of the files
     ///that are loaded.
     bool m_rescaleCADEntityTextures;
-    
+
     ///The event handler for commands.
     std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;
     ///This map connects filenames to GUIDs so that we can

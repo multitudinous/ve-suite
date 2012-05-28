@@ -44,7 +44,7 @@ OpacityVisitor API
 #include <osg/NodeVisitor>
 namespace osg
 {
-    class StateSet;
+class StateSet;
 }
 namespace ves
 {
@@ -57,13 +57,13 @@ namespace util
 class VE_SCENEGRAPH_UTILS_EXPORTS OpacityVisitor : public osg::NodeVisitor
 {
 public:
-    OpacityVisitor( osg::Node* osg_node, bool storeState, 
-        bool state, float alpha=1.0, bool uniqueStateSet = false );
+    OpacityVisitor( osg::Node* osg_node, bool storeState,
+                    bool state, float alpha = 1.0, bool uniqueStateSet = false );
     virtual ~OpacityVisitor();
 
     virtual void apply( osg::Geode& node );
     virtual void apply( osg::Group& node );
-    
+
     ///setup the blending and renderbin details for a stateset
     ///based on transparency
     ///\param stateset The stateset to modify
@@ -78,7 +78,7 @@ private:
     ///so that state can be saved after a file is loaded in
     bool mStoreState;
     bool m_uniqueStateSet;
-    
+
     bool CheckStateSet( osg::StateSet* stateSet );
 };
 }

@@ -51,7 +51,7 @@ namespace eventmanager
  * scope, the monopoly stays in effect. When the ConnectionMonopoly goes out of scope,
  * the monopoly is automatically ended, and associated memory cleaned up.
  *
- * @warning It is essential that the ConnectionMonoply held by an object be 
+ * @warning It is essential that the ConnectionMonoply held by an object be
  * destroyed when the class is destroyed, otherwise the monopoly will never end.
  * The reccommended practice is to hold a boost::shared_ptr to a
  * ConnectionMonopoly as a class member, as this will ensure automatic destruction

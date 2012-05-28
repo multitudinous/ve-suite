@@ -47,13 +47,13 @@ using namespace ves::open::xml::cad;
 //Constructor                                         //
 ////////////////////////////////////////////////////////
 MaterialModeUpdateEventHandler::MaterialModeUpdateEventHandler()
-        : ves::xplorer::event::AttributeEventHandler()
+    : ves::xplorer::event::AttributeEventHandler()
 {}
 /////////////////////////////////////////////////////////////////////////////////////////////
 //Copy Constructor                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
 MaterialModeUpdateEventHandler::MaterialModeUpdateEventHandler( const MaterialModeUpdateEventHandler& ceh )
-        : ves::xplorer::event::AttributeEventHandler( ceh )
+    : ves::xplorer::event::AttributeEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////
 MaterialModeUpdateEventHandler::~MaterialModeUpdateEventHandler()
@@ -90,11 +90,11 @@ void MaterialModeUpdateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
             value = rawMaterial->GetColorMode();
         }
         _activeModel->GetModelCADHandler()->UpdateMaterialMode( nodeId->GetDataString(),
-                                                                rawMaterial->GetMaterialName(),
-                                                                newMode, value );
+                rawMaterial->GetMaterialName(),
+                newMode, value );
 
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Unable to update material!!" << std::endl;
         std::cout << "===MaterialUpdateEventHandler===" << std::endl;

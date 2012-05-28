@@ -40,7 +40,12 @@
 using tecplot::toolbox::Exception;
 
 
-namespace tecplot { namespace sdk { namespace integration { 
+namespace tecplot
+{
+namespace sdk
+{
+namespace integration
+{
 
 /************************************************************************/
 /* Manager takes ownership of appEventMonitor and will destoy it on Manager::stop()*/
@@ -55,7 +60,7 @@ Manager& Manager::instance()
 Manager::Manager() :
     ManagerAbstract()
 {
-    m_appEventMonitor.reset(NULL);
+    m_appEventMonitor.reset( NULL );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*Manager::Manager( Manager const& rhs )
@@ -63,7 +68,7 @@ Manager::Manager() :
 ManagerAbstract( rhs )
 {;}*/
 ////////////////////////////////////////////////////////////////////////////////
-Manager::~Manager(void)
+Manager::~Manager( void )
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,19 +92,19 @@ services::ServiceRepositoryInterface& Manager::getServiceRepository()
     return ManagerAbstract::getServiceRepository();
 }
 
-ManagerInterface::ManagerStartReturnCode_e Manager::init(std::string homeDir,
-                                                         std::string oemAuthorizationCode)
+ManagerInterface::ManagerStartReturnCode_e Manager::init( std::string homeDir,
+        std::string oemAuthorizationCode )
 {
     char* dummyArgV[] = {"dummy"};
-    return init(1,dummyArgV,homeDir,oemAuthorizationCode);
+    return init( 1, dummyArgV, homeDir, oemAuthorizationCode );
 }
 
-ManagerInterface::ManagerStartReturnCode_e Manager::init(int          argc,
-                                                         char* const* argv,
-                                                         std::string homeDir,
-                                                         std::string oemAuthorizationCode)
+ManagerInterface::ManagerStartReturnCode_e Manager::init( int          argc,
+        char* const* argv,
+        std::string homeDir,
+        std::string oemAuthorizationCode )
 {
-    return ManagerAbstract::init(argc, argv, homeDir, oemAuthorizationCode);
+    return ManagerAbstract::init( argc, argv, homeDir, oemAuthorizationCode );
 }
 
 ManagerInterface::ManagerStartReturnCode_e Manager::start()
@@ -112,30 +117,30 @@ void Manager::stop()
     ManagerAbstract::stop();
 }
 
-std::string Manager::getHelpAbout(void)
+std::string Manager::getHelpAbout( void )
 {
     return ManagerAbstract::getHelpAbout();
 }
 
-void Manager::addManagerListener(ManagerListenerInterface * const listener)
+void Manager::addManagerListener( ManagerListenerInterface* const listener )
 {
-    ManagerAbstract::addManagerListener(listener);
+    ManagerAbstract::addManagerListener( listener );
 }
 
-void Manager::removeManagerListener(ManagerListenerInterface * const listener)
+void Manager::removeManagerListener( ManagerListenerInterface* const listener )
 {
-    ManagerAbstract::removeManagerListener(listener);
+    ManagerAbstract::removeManagerListener( listener );
 }
 
-void Manager::setApplicationEventMonitor(ApplicationEventMonitorInterface* appEventMonitor)
+void Manager::setApplicationEventMonitor( ApplicationEventMonitorInterface* appEventMonitor )
 {
-    m_appEventMonitor.reset(appEventMonitor);
+    m_appEventMonitor.reset( appEventMonitor );
 }
 
 ApplicationEventMonitorInterface& Manager::getApplicationEventMonitor()
 {
-    REQUIRE(m_appEventMonitor.get());
-    return *(m_appEventMonitor.get());
+    REQUIRE( m_appEventMonitor.get() );
+    return *( m_appEventMonitor.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Manager::installTimerEventProvider()
@@ -145,10 +150,10 @@ void Manager::installTimerEventProvider()
 void Manager::OneTimeSetup()
 {
     Manager::ManagerStartReturnCode_e ret;
-    
+
     setApplicationEventMonitor( new ApplicationEventMonitor() );
-    
-    char* tecSDKHomeDir = getenv("TECSDKHOME");
+
+    char* tecSDKHomeDir = getenv( "TECSDKHOME" );
     /*if( tecSDKHomeDir )
     {
         //std::cout << "TECSDKHOME=" << tecSDKHomeDir << std::endl;
@@ -157,13 +162,13 @@ void Manager::OneTimeSetup()
     }
     else*/
     {
-        std::string tempHome("./");
+        std::string tempHome( "./" );
         //std::cout << "TECSDKHOME=" << tempHome << std::endl;
         ret = init( tempHome, "IowaStateBrydenResearchGroup 112 06/30/2012 0 4146873032" );
         //std::cerr << "The environment variable TECSDKHOME must be defined to run Tecplot SDK applications.\n" << std::endl;
         //ret = Manager::ManagerStartReturnCode_HomeDirectoryNotSpecified;
     }
-    
+
     if( ret == Manager::ManagerStartReturnCode_Ok )
     {
         // the following produces screen output showing location of tecplot executable and tecplot home dir
@@ -174,11 +179,11 @@ void Manager::OneTimeSetup()
         std::cerr << "Unable to initialize the this->manager\n" << std::endl;
         exit( 0 );
     }
-    
+
     if( ret == Manager::ManagerStartReturnCode_Ok )
     {
         TecUtilParentLockStart();
-        
+
         // Tecplot starts up "pageless/frameless".
         // Create a Page, and get a Frame, which is required to load data.
         TecUtilPageCreateNew();
@@ -187,7 +192,7 @@ void Manager::OneTimeSetup()
     {
         std::cerr << "Failed to initialize the Tecplot SDK: " << returnCodeString( ret ) << std::endl;
     }
-    
+
     //return ((ret == Manager::ManagerStartReturnCode_Ok) ? 0 : 1);
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,5 +202,7 @@ void Manager::OneTimeCleanup()
     stop();
 }
 ////////////////////////////////////////////////////////////////////////////////
-}}}
+}
+}
+}
 ////////////////////////////////////////////////////////////////////////////////

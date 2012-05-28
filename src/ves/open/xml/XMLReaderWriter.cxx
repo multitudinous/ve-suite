@@ -152,8 +152,8 @@ std::vector< XMLObjectPtr > XMLReaderWriter::GetLoadedXMLObjects()
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
-                                                      std::string objectNamespace,
-                                                      std::string tagName )
+        std::string objectNamespace,
+        std::string tagName )
 {
 
     //Get the first element and check it's type
@@ -163,7 +163,7 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
     }
 
     DOMNodeList* xmlObjects = rootDocument->getElementsByTagName(
-                              Convert( tagName ).toXMLString() );
+                                  Convert( tagName ).toXMLString() );
 
     unsigned int nXMLObjects = xmlObjects->getLength();
     //In case we use the same readerwriter more than once for a read
@@ -175,15 +175,15 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
         //    << "number of xml objects = " << nXMLObjects << std::endl;
         //std::cout << "XMLReaderWriter::_populateStructureFromDocument "
         //    << "for " << objectNamespace << " " << tagName << std::endl;
-        std::cout << "|\tNo XML objects in this element " << tagName 
-            << " in this document." << std::endl;
+        std::cout << "|\tNo XML objects in this element " << tagName
+                  << " in this document." << std::endl;
         return;
     }
 
     for( unsigned int i = 0; i < nXMLObjects; ++i )
     {
         XMLObjectPtr newXMLobj = XMLObjectFactory::Instance()->
-                               CreateXMLObject( tagName, objectNamespace );
+                                 CreateXMLObject( tagName, objectNamespace );
         if( newXMLobj != NULL )
         {
             mInternalXmlObjects.push_back( newXMLobj );
@@ -199,14 +199,14 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
         else
         {
             std::cerr << "VE-Open XMLReaderWriter Error : No creator "
-                << "method for tagname = " << tagName << std::endl;
+                      << "method for tagname = " << tagName << std::endl;
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::WriteMultipleXMLDocuments(
     std::vector< std::pair< XMLObjectPtr, std::string > > ,
-    std::string&  )
+    std::string& )
 {
     /*
     if(!mDomDocumentManager )
@@ -215,18 +215,18 @@ void XMLReaderWriter::WriteMultipleXMLDocuments(
     }
 
 
-    //loop over all nodes and figure out what types of documents to write   
+    //loop over all nodes and figure out what types of documents to write
        mDomDocumentManager->SetOuputXMLFile(xmlData);
        mDomDocumentManager->SetWriteXMLFileOn();
        mDomDocumentManager->CreateCommandDocument( documentType );
        DOMDocument* doc = mDomDocumentManager->GetCommandDocument();
        for(size_t i = 0; i < nodes.size(); ++i )
-       {   
+       {
           nodes.at( i ).first->SetOwnerDocument( doc );
           doc->getDocumentElement()->appendChild( nodes.at( i ).first->
-                                         GetXMLData( nodes.at( i ).second ) );  
+                                         GetXMLData( nodes.at( i ).second ) );
        }
-       
+
        if( !xmlData.compare("returnString") )
        {
           xmlData = mDomDocumentManager->WriteAndReleaseCommandDocument();
@@ -263,7 +263,7 @@ void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< XMLObjectPtr, st
     for( size_t i = 0; i < nodes.size(); ++i )
     {
         nodes.at( i ).first->SetOwnerDocument( doc );
-        doc->getDocumentElement()->appendChild( 
+        doc->getDocumentElement()->appendChild(
             nodes.at( i ).first->GetXMLData( nodes.at( i ).second ) );
     }
 

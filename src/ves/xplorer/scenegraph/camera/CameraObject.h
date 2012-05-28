@@ -165,8 +165,8 @@ public:
 
     ///
     //void CustomKeyboardMouseSelection(
-        //std::pair< unsigned int, unsigned int > mousePosition,
-        //gmtl::Matrix44d localToWorldMatrix );
+    //std::pair< unsigned int, unsigned int > mousePosition,
+    //gmtl::Matrix44d localToWorldMatrix );
 
     ///
     //void DisplayDepthOfFieldEffect( bool onOff );
@@ -245,13 +245,13 @@ public:
 
     ///Setup this camera to be tied to the head position
     void MakeHeadTrackedCamera();
-    
+
     ///Method to call the frame after taking a screen cap
     void PostWriteImageFile();
-    
+
     ///Update the texture resolution for this camera
     void SetTextureResolution( std::pair< unsigned int, unsigned int >& viewportDimensions );
-    
+
     ///
     void PostTextureResoution();
 protected:
@@ -305,7 +305,7 @@ private:
 
     ///Screen cap camera used for HUD quad
     osg::ref_ptr< osg::Camera > m_screenCapCamera;
-    
+
     ///
     osg::ref_ptr< DCS > m_dcs;
 

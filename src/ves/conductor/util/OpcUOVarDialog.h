@@ -59,52 +59,52 @@ namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS OpcUOVarDialog : public wxDialog
 {
-    private:
-        DECLARE_EVENT_TABLE();
-        
-    public:
-        OpcUOVarDialog(wxWindow *parent, wxWindowID id = 1,
-            const wxString &title = wxT( "OpcUOVarDialog" ),
-            const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxDefaultSize,
-            long style = OpcUOVarDialog_STYLE );
+private:
+    DECLARE_EVENT_TABLE();
 
-        virtual ~OpcUOVarDialog();
-        void CancelButtonClick( wxCommandEvent& event );
-        void SetButtonClick( wxCommandEvent& event );
-        //void SetData( wxString name = wxT(""), wxString description = wxT(""),
-        //    wxString value = wxT(""), wxString units = wxT("") );
-        void SetData( wxString name = wxT(""), wxString value = wxT("") );
-        void UpdateSizes();
-        void SetComponentName( wxString name );
-        void SetServiceList(
-            ves::conductor::util::CORBAServiceList * serviceList );
-        wxString mCompName;
-        ves::conductor::util::CORBAServiceList * mServiceList;
-    
-    private:
-        wxButton *CancelButton;
-        wxButton *SetButton;
-        wxButton *MonitorButton;
-        wxBoxSizer *WxBoxSizer1;
-        wxGrid *WxGrid;
-        wxFlexGridSizer *WxFlexGridSizer;
-        std::vector< int > rowsChanged;
-        int monitorRow;
-        
-        std::string ConvertUnicode( const wxChar* data )
-        {
-            std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-            return tempStr;
-        }
-        wxString prefix;
-    
-    private:
-        void OnClose( wxCloseEvent& event );
-        void CreateGUIControls( );
-        void OnCellChange( wxGridEvent& event );
-        void OnSelectCell( wxGridEvent& event );
-        void OnMonitorVariable( wxCommandEvent& event );
+public:
+    OpcUOVarDialog( wxWindow* parent, wxWindowID id = 1,
+                    const wxString& title = wxT( "OpcUOVarDialog" ),
+                    const wxPoint& pos = wxDefaultPosition,
+                    const wxSize& size = wxDefaultSize,
+                    long style = OpcUOVarDialog_STYLE );
+
+    virtual ~OpcUOVarDialog();
+    void CancelButtonClick( wxCommandEvent& event );
+    void SetButtonClick( wxCommandEvent& event );
+    //void SetData( wxString name = wxT(""), wxString description = wxT(""),
+    //    wxString value = wxT(""), wxString units = wxT("") );
+    void SetData( wxString name = wxT( "" ), wxString value = wxT( "" ) );
+    void UpdateSizes();
+    void SetComponentName( wxString name );
+    void SetServiceList(
+        ves::conductor::util::CORBAServiceList* serviceList );
+    wxString mCompName;
+    ves::conductor::util::CORBAServiceList* mServiceList;
+
+private:
+    wxButton* CancelButton;
+    wxButton* SetButton;
+    wxButton* MonitorButton;
+    wxBoxSizer* WxBoxSizer1;
+    wxGrid* WxGrid;
+    wxFlexGridSizer* WxFlexGridSizer;
+    std::vector< int > rowsChanged;
+    int monitorRow;
+
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
+    wxString prefix;
+
+private:
+    void OnClose( wxCloseEvent& event );
+    void CreateGUIControls( );
+    void OnCellChange( wxGridEvent& event );
+    void OnSelectCell( wxGridEvent& event );
+    void OnMonitorVariable( wxCommandEvent& event );
 };
 }
 }

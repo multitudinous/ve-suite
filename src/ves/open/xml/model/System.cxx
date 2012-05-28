@@ -69,9 +69,9 @@ System::~System()
 }
 ////////////////////////////////////////////////////////////////////////////////
 System::System( const System& input )
-        : XMLObject( input ), boost::enable_shared_from_this<System>( input )
+    : XMLObject( input ), boost::enable_shared_from_this<System>( input )
 {
-    mNetwork = NetworkPtr( new Network( *(  input.mNetwork ) ) );
+    mNetwork = NetworkPtr( new Network( *( input.mNetwork ) ) );
 
     for( size_t i = 0; i < input.mModels.size(); ++i )
     {
@@ -87,7 +87,7 @@ System& System::operator=( const System& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        mNetwork = NetworkPtr( new Network(  *input.mNetwork ) );
+        mNetwork = NetworkPtr( new Network( *input.mNetwork ) );
 
         mModels.clear();
         for( size_t i = 0; i < input.mModels.size(); ++i )
@@ -155,7 +155,7 @@ void System::SetObjectFromXMLData( DOMNode* element )
     // for models
     {
         DOMNodeList* subElements = currentElement->getElementsByTagName(
-                                   Convert( "model" ).toXMLString() );
+                                       Convert( "model" ).toXMLString() );
 
         unsigned int numberOfModels = subElements->getLength();
 
@@ -173,10 +173,10 @@ void System::SetObjectFromXMLData( DOMNode* element )
             }
         }
     }
-    
+
     //get db reference tags
     {
-        DOMElement* dataValueStringName = 
+        DOMElement* dataValueStringName =
             GetSubElement( currentElement, "dbReference", 0 );
         if( dataValueStringName )
         {
@@ -192,10 +192,10 @@ ModelPtr System::GetModel( size_t i )
     {
         return mModels.at( i );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cerr << "System::GetModel value greater than number of tags present"
-        << std::endl;
+                  << std::endl;
         return ModelPtr();
     }
 }
@@ -231,9 +231,9 @@ ModelSharedPtr System::GetParentModel( )
 ////////////////////////////////////////////////////////////////////////////////
 bool System::RemoveModel( ModelPtr model )
 {
-    std::vector< ModelPtr >::iterator foundModel 
+    std::vector< ModelPtr >::iterator foundModel
         = std::find( mModels.begin(), mModels.end(), model );
-    
+
     if( foundModel != mModels.end() )
     {
         mModels.erase( foundModel );
@@ -247,10 +247,10 @@ bool System::RemoveModel( ModelPtr model )
 ////////////////////////////////////////////////////////////////////////////////
 bool System::RemoveModel( std::string const& modelId )
 {
-    for( std::vector< ModelPtr >::iterator foundModel = mModels.begin(); 
-        foundModel != mModels.end(); ++foundModel )
+    for( std::vector< ModelPtr >::iterator foundModel = mModels.begin();
+            foundModel != mModels.end(); ++foundModel )
     {
-        if( (*foundModel)->GetID() == modelId )
+        if( ( *foundModel )->GetID() == modelId )
         {
             mModels.erase( foundModel );
             return true;

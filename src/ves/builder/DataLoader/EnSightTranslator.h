@@ -42,7 +42,7 @@ namespace builder
 namespace DataLoader
 {
 class VE_USER_BUILDER_EXPORTS EnSightTranslator:
-            public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
+    public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
     EnSightTranslator();
@@ -50,7 +50,7 @@ public:
     ///Display help for the EnSight translator
     virtual void DisplayHelp( void );
     //////////////////////////////////////////////////////
-class VE_USER_BUILDER_EXPORTS EnSightTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    class VE_USER_BUILDER_EXPORTS EnSightTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
     {
     public:
         EnSightTranslateCbk()
@@ -66,16 +66,16 @@ class VE_USER_BUILDER_EXPORTS EnSightTranslateCbk: public ves::builder::cfdTrans
         //appropriately by the translate callback.      //
         //////////////////////////////////////////////////
         virtual void Translate( vtkDataObject*& outputDataset,
-                               ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK,
-                               vtkAlgorithm*& dataReader );
+                                ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK,
+                                vtkAlgorithm*& dataReader );
 
         ///This creates additional scalars from vector components
         ///\param outputDataset Dataset to be used and modified
         void AddScalarsFromVectors( vtkDataObject*& outputDataset );
     };
     //////////////////////////////////////////////////////
-class VE_USER_BUILDER_EXPORTS EnSightPreTranslateCbk:
-                public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    class VE_USER_BUILDER_EXPORTS EnSightPreTranslateCbk:
+        public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
     {
     public:
         EnSightPreTranslateCbk()

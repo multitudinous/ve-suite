@@ -41,14 +41,14 @@ namespace ves
 namespace xplorer
 {
 ////////////////////////////////////////////////////////////////////////////////
-VESQtApplication::VESQtApplication(int & argc, char ** argv, ves::xplorer::App* app ):
-    QApplication(argc, argv),
+VESQtApplication::VESQtApplication( int& argc, char** argv, ves::xplorer::App* app ):
+    QApplication( argc, argv ),
     m_app( app )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool VESQtApplication::notify(QObject* obj, QEvent* event)
+bool VESQtApplication::notify( QObject* obj, QEvent* event )
 {
     //Look for the various event types in qcoreevent.h
     //in here: src/corelib/kernel/qcoreevent.h
@@ -57,23 +57,23 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
         bool temp = QApplication::notify( obj, event );
         return temp;
     }
-    
+
     if( event->type() == QEvent::Timer )
     {
         bool temp = QApplication::notify( obj, event );
         return temp;
     }
-    
+
     if( event->type() == QEvent::Hide )
     {
         return QApplication::notify( obj, event );
     }
-    
+
     if( event->type() == QEvent::Show )
     {
         return QApplication::notify( obj, event );
     }
-    
+
     //////////
 
     if( event->type() == QEvent::Enter )
@@ -85,68 +85,68 @@ bool VESQtApplication::notify(QObject* obj, QEvent* event)
     {
         return ProcessEvent( obj, event );
     }
-        
+
     if( event->type() == QEvent::KeyPress )
     {
         return ProcessEvent( obj, event );
     }
-    
+
     if( event->type() == QEvent::KeyRelease )
     {
         return ProcessEvent( obj, event );
     }
-    
+
     if( event->type() == QEvent::MouseButtonPress )
     {
         return ProcessEvent( obj, event );
     }
-    
+
     if( event->type() == QEvent::MouseButtonRelease )
     {
         return ProcessEvent( obj, event );
     }
-    
+
     if( event->type() == QEvent::MouseButtonDblClick )
     {
         return ProcessEvent( obj, event );
     }
-    
+
     /*if( event->type() == QEvent::GraphicsSceneMousePress )
     {
         return ProcessEvent( obj, event );
     }
-    
+
     if( event->type() == QEvent::GraphicsSceneMouseRelease )
     {
         return ProcessEvent( obj, event );
     }*/
-    
+
     /*if( event->type() == QEvent::MetaCall )
     {
         return ProcessEvent( obj, event );
     }*/
-    
+
     /*if( event->type() == QEvent::NonClientAreaMouseButtonDblClick )
     {
         return ProcessEvent( obj, event );
     }*/
-    
+
     /*if( event->type() == QEvent::DeferredDelete )
     {
         return ProcessEvent( obj, event );
     }*/
 
     //std::cout << event->type() << std::endl << std::flush;
-    
+
     //return ProcessEvent( obj, event );
-    
+
     return QApplication::notify( obj, event );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool VESQtApplication::ProcessEvent( QObject *obj, QEvent *event)
+bool VESQtApplication::ProcessEvent( QObject* obj, QEvent* event )
 {
-    std::pair<QObject*, QEvent*> rePair( obj, event);
-    m_queue.push(rePair);
+    std::pair<QObject*, QEvent*> rePair( obj, event );
+    m_queue.push( rePair );
 
     if( m_queue.size() == 1 )
     {
@@ -159,10 +159,10 @@ bool VESQtApplication::ProcessEvent( QObject *obj, QEvent *event)
     {
         m_app->ReleaseQtLock();
     }
-    
+
     m_queue.pop();
 
-    return temp;   
+    return temp;
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

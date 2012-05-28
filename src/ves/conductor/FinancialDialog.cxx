@@ -48,8 +48,8 @@ BEGIN_EVENT_TABLE( FinancialDialog, wxDialog )
     EVT_RADIOBUTTON( FINANCIALDIALOG_RADIO_FDB, FinancialDialog::OnChange )
 END_EVENT_TABLE()
 
-FinancialDialog::FinancialDialog( wxWindow *parent, wxWindowID id )
-        : wxDialog(( wxWindow * )parent, id, wxT( "Financial" ), wxDefaultPosition, wxDefaultSize )
+FinancialDialog::FinancialDialog( wxWindow* parent, wxWindowID id )
+    : wxDialog( ( wxWindow* )parent, id, wxT( "Financial" ), wxDefaultPosition, wxDefaultSize )
 {
     wxSize entry_size( 100, 17 );
     wxSize tag_size( 250, 15 );
@@ -82,15 +82,15 @@ FinancialDialog::FinancialDialog( wxWindow *parent, wxWindowID id )
     toptop->Add( top_sizer, 0,  wxALIGN_CENTER_HORIZONTAL );
     toptop->Add( right_margin, 0, wxALIGN_RIGHT );
 
-    wxStaticBox *cc_lbl = new wxStaticBox( this, -1, _( "Capital Costs" ) );
-    wxStaticBoxSizer *cc_sizer = new wxStaticBoxSizer( cc_lbl, wxVERTICAL );
+    wxStaticBox* cc_lbl = new wxStaticBox( this, -1, _( "Capital Costs" ) );
+    wxStaticBoxSizer* cc_sizer = new wxStaticBoxSizer( cc_lbl, wxVERTICAL );
 
-    wxStaticBox *om_lbl = new wxStaticBox( this, -1, _( "O and M Costs" ) );
-    wxStaticBoxSizer *om_sizer = new wxStaticBoxSizer( om_lbl, wxVERTICAL );
+    wxStaticBox* om_lbl = new wxStaticBox( this, -1, _( "O and M Costs" ) );
+    wxStaticBoxSizer* om_sizer = new wxStaticBoxSizer( om_lbl, wxVERTICAL );
 
-    wxBoxSizer *ok_row = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* ok_row = new wxBoxSizer( wxHORIZONTAL );
 
-    wxBoxSizer *tech_row = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* tech_row = new wxBoxSizer( wxHORIZONTAL );
 
     top_sizer->Add( 5, 10 );
     top_sizer->Add( tech_row, 0, wxALIGN_CENTER_HORIZONTAL );
@@ -104,9 +104,9 @@ FinancialDialog::FinancialDialog( wxWindow *parent, wxWindowID id )
 
     // Capital Costs
 
-    wxBoxSizer *cc_var_sizer[9];
-    wxStaticText *cc_var_lbl[9];
-    wxStaticText *cc_var_unt[9];
+    wxBoxSizer* cc_var_sizer[9];
+    wxStaticText* cc_var_lbl[9];
+    wxStaticText* cc_var_unt[9];
 
     cc_sizer->Add( 5, 10 );
     for( i = 0; i < 9; i++ )
@@ -119,9 +119,9 @@ FinancialDialog::FinancialDialog( wxWindow *parent, wxWindowID id )
 
     // O & M Costs
 
-    wxBoxSizer *om_var_sizer[4];
-    wxStaticText *om_var_lbl[4];
-    wxStaticText *om_var_unt[4];
+    wxBoxSizer* om_var_sizer[4];
+    wxStaticText* om_var_lbl[4];
+    wxStaticText* om_var_unt[4];
 
     om_sizer->Add( 5, 10 );
     for( i = 0; i < 4; i++ )
@@ -254,7 +254,7 @@ FinancialDialog::FinancialDialog( wxWindow *parent, wxWindowID id )
 FinancialDialog::~FinancialDialog()
 {};
 
-void FinancialDialog::OnChange( wxCommandEvent &event )
+void FinancialDialog::OnChange( wxCommandEvent& event )
 {
     event.GetInt();
     _use_data = specify_a->GetValue();
@@ -311,20 +311,26 @@ bool FinancialDialog::TransferDataFromWindow()
     entry2double( _om02, &_om02_d );
     entry2double( _om03, &_om03_d );
 
-    if( specify_a->GetValue() ) _use_data = 1;
-    else                       _use_data = 0;
+    if( specify_a->GetValue() )
+    {
+        _use_data = 1;
+    }
+    else
+    {
+        _use_data = 0;
+    }
 
     return true;
 }
 
-void FinancialDialog::double2entry( wxTextCtrl* entry, double * value )
+void FinancialDialog::double2entry( wxTextCtrl* entry, double* value )
 {
     wxString txt;
     txt << ( *value );
     entry->SetValue( txt );
 }
 
-void FinancialDialog::entry2double( wxTextCtrl* entry, double * value )
+void FinancialDialog::entry2double( wxTextCtrl* entry, double* value )
 {
     wxString txt;
     txt = entry->GetValue();

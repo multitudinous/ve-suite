@@ -38,7 +38,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char* argv[] )
 {
-    if (( argc < 2 ) || ( std::string( argv[ 1 ] ) == "--help" ) )
+    if( ( argc < 2 ) || ( std::string( argv[ 1 ] ) == "--help" ) )
     {
         std::cout << "Usage : " << argv[ 0 ] << " <filename> " << std::endl;
         return 0;
@@ -57,21 +57,27 @@ int main( int argc, char* argv[] )
     {
         index = shortName.find( '.', index );
         if( index != std::string::npos )
+        {
             shortName[ index ] = '_';
+        }
     }
 
     for( size_t index = 0; index < shortName.length(); )
     {
         index = shortName.find( '/', index );
         if( index != std::string::npos )
+        {
             shortName[ index ] = '_';
+        }
     }
 
     for( size_t index = 0; index < shortName.length(); )
     {
         index = shortName.find( '-', index );
         if( index != std::string::npos )
+        {
             shortName[ index ] = '_';
+        }
     }
 
     std::string commandString = std::string( "convert " ) + std::string( argv[ 1 ] ) + std::string( " " ) + shortName + std::string( ".xpm" );
@@ -86,13 +92,13 @@ int main( int argc, char* argv[] )
         fstream binary_file("c:\\test.dat",ios::binary|ios::in);
         binary_file.read(reinterpret_cast<char *>(&p_Data),sizeof(WebSites));
         binary_file.close();
-        
+
         cout<<p_Data.SiteName<<endl;
         cout<<"Rank :"<< p_Data.Rank<<endl;
-        
+
     }
 
-    fstream binary_file("c:\\test.dat",ios::out|ios::binary|ios::app); 
+    fstream binary_file("c:\\test.dat",ios::out|ios::binary|ios::app);
     binary_file.write(reinterpret_cast<char *>(&p_Data),sizeof(WebSites));
     binary_file.close();
     */
@@ -135,7 +141,7 @@ int main( int argc, char* argv[] )
     char* dataBuffer = new char[ binaryFileSize ];
     osgFile.read( dataBuffer, binaryFileSize );
     osgFile.close();
-        
+
     hFile << "[ " << binaryFileSize << " ] = ";
     hFile << "{ " << std::endl;
     unsigned char temp = dataBuffer[ 0 ];

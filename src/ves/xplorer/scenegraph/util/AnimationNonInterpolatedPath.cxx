@@ -46,7 +46,7 @@ AnimationNonInterpolatedPath::AnimationNonInterpolatedPath()
     :
     osg::AnimationPath()
 {
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 AnimationNonInterpolatedPath::~AnimationNonInterpolatedPath()
@@ -54,45 +54,51 @@ AnimationNonInterpolatedPath::~AnimationNonInterpolatedPath()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool AnimationNonInterpolatedPath::getInterpolatedControlPoint(double time,ControlPoint& controlPoint) const
+bool AnimationNonInterpolatedPath::getInterpolatedControlPoint( double time, ControlPoint& controlPoint ) const
 {
-    if (_timeControlPointMap.empty()) return false;
-    
-    switch(_loopMode)
+    if( _timeControlPointMap.empty() )
     {
-        case(SWING):
-        {
-            double modulated_time = (time - getFirstTime())/(getPeriod()*2.0);
-            double fraction_part = modulated_time - floor(modulated_time);
-            if (fraction_part>0.5) fraction_part = 1.0-fraction_part;
-            
-            time = getFirstTime()+(fraction_part*2.0) * getPeriod();
-            break;
-        }
-        case(LOOP):
-        {
-            double modulated_time = (time - getFirstTime())/getPeriod();
-            double fraction_part = modulated_time - floor(modulated_time);
-            time = getFirstTime()+fraction_part * getPeriod();
-            break;
-        }
-        case(NO_LOOPING):
-            // no need to modulate the time.
-            break;
+        return false;
     }
-    
-    
-    
-    TimeControlPointMap::const_iterator second = _timeControlPointMap.lower_bound(time);
-    if (second==_timeControlPointMap.begin())
+
+    switch( _loopMode )
+    {
+    case( SWING ):
+    {
+        double modulated_time = ( time - getFirstTime() ) / ( getPeriod() * 2.0 );
+        double fraction_part = modulated_time - floor( modulated_time );
+        if( fraction_part > 0.5 )
+        {
+            fraction_part = 1.0 - fraction_part;
+        }
+
+        time = getFirstTime() + ( fraction_part * 2.0 ) * getPeriod();
+        break;
+    }
+    case( LOOP ):
+    {
+        double modulated_time = ( time - getFirstTime() ) / getPeriod();
+        double fraction_part = modulated_time - floor( modulated_time );
+        time = getFirstTime() + fraction_part * getPeriod();
+        break;
+    }
+    case( NO_LOOPING ):
+        // no need to modulate the time.
+        break;
+    }
+
+
+
+    TimeControlPointMap::const_iterator second = _timeControlPointMap.lower_bound( time );
+    if( second == _timeControlPointMap.begin() )
     {
         controlPoint = second->second;
     }
-    else if (second!=_timeControlPointMap.end())
+    else if( second != _timeControlPointMap.end() )
     {
         TimeControlPointMap::const_iterator first = second;
-        --first;        
-        
+        --first;
+
         controlPoint = first->second;
     }
     else // (second==_timeControlPointMap.end())

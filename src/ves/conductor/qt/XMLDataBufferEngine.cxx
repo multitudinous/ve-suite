@@ -62,16 +62,16 @@ XMLDataBufferEngine::XMLDataBufferEngine( void )
 {
     //Setup default system
     ves::open::xml::model::SystemPtr tempSystem(
-        new ves::open::xml::model::System());
+        new ves::open::xml::model::System() );
     m_systemMap[tempSystem->GetID()] = tempSystem;
     //get the main systems id
     topId = tempSystem->GetID();
-    
-    m_userMap[ "Network" ] = 
+
+    m_userMap[ "Network" ] =
         ves::open::xml::UserPtr( new ves::open::xml::User() );
     m_userMap[ "Network" ]->SetUserId( "User" );
-    m_userMap[ "Network" ]->SetControlStatus( 
-        ves::open::xml::User::VEControlStatus( "MASTER" ) );    
+    m_userMap[ "Network" ]->SetControlStatus(
+        ves::open::xml::User::VEControlStatus( "MASTER" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::~XMLDataBufferEngine()
@@ -171,12 +171,12 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         //SameType<T, U>::value
         //Conversion<T, U>::exists
         //const XMLObjectPtr tempPtr = objectVector.at( 0 );
-        
+
         //bool tempBool = Loki::IsSameType<Loki::TypeTraits::PointerTraits( tempPtr ), Loki::TypeTraits<SystemPtr>::PointeeType>::value;
-        
+
         /*if( ::Loki::TypeTraits<SystemPtr>::ReferredType == ::Loki::TypeTraits<tempPtr>::ReferredType )
         {
-            
+
         }*/
         //std::vector< ves::open::xml::XMLObjectPtr >::const_iterator constObjIter;
         //constObjIter = objectVector.begin();
@@ -186,7 +186,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         //typeid
         //If the file is a new xml file with a system element
         if( objectVector.at( 0 )->GetObjectType() == "System" )
-        //if( tempSystem )
+            //if( tempSystem )
         {
             tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
             m_systemMap[tempSystem->GetID()] = tempSystem;
@@ -213,7 +213,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     else
     {
         std::cerr << "Improperly formated ves file."
-        << "VES File Read Error" << std::endl;
+                  << "VES File Read Error" << std::endl;
     }
 
     std::vector< std::string > networkModelVector;
@@ -250,7 +250,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         std::ostringstream modelID;
         for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
         {
-            if( (*objectIter)->GetObjectType() != "Model" )
+            if( ( *objectIter )->GetObjectType() != "Model" )
             {
                 //if this object is not a model continue
                 ++objectIter;
@@ -288,7 +288,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             modelID.str( "" );
         }
     }
-   //For the case where there are no links between models
+    //For the case where there are no links between models
     //Just grab all the models in the ves file
     //this is somewhat of a hack but the schema does not support anything else
     if( tempNetwork->GetNumberOfLinks() == 0 )
@@ -397,11 +397,11 @@ void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
     m_systemMap[ tempSystem->GetID()] = tempSystem;
     //get the main systems id
     topId = tempSystem->GetID();
-    
-    m_userMap[ "Network" ] = 
+
+    m_userMap[ "Network" ] =
         ves::open::xml::UserPtr( new ves::open::xml::User() );
     m_userMap[ "Network" ]->SetUserId( "User" );
-    m_userMap[ "Network" ]->SetControlStatus( 
+    m_userMap[ "Network" ]->SetControlStatus(
         ves::open::xml::User::VEControlStatus( "MASTER" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -439,8 +439,8 @@ ves::open::xml::model::SystemPtr XMLDataBufferEngine::GetXMLSystemDataObject(
     return m_systemMap[id];
 }
 ////////////////////////////////////////////////////////////////////////////////
-const std::map< std::string, ves::open::xml::model::SystemPtr > 
-    XMLDataBufferEngine::GetXMLSystemDataMap()
+const std::map< std::string, ves::open::xml::model::SystemPtr >
+XMLDataBufferEngine::GetXMLSystemDataMap()
 {
     return m_systemMap;
 }
@@ -463,15 +463,15 @@ void XMLDataBufferEngine::ParseSystem( ves::open::xml::model::SystemPtr system )
 ////////////////////////////////////////////////////////////////////////////////
 bool XMLDataBufferEngine::AddSubSystem( ves::open::xml::model::SystemPtr system )
 {
-    std::map< std::string, ves::open::xml::model::SystemPtr >::const_iterator 
-        iter = m_systemMap.find( system->GetID() );
+    std::map< std::string, ves::open::xml::model::SystemPtr >::const_iterator
+    iter = m_systemMap.find( system->GetID() );
     if( iter != m_systemMap.end() )
     {
         std::cerr << "XMLDataBufferEngine::AddSubSystem : "
-            << "System already on system map." << std::endl;
+                  << "System already on system map." << std::endl;
         return false;
     }
-    
+
     m_systemMap[ system->GetID() ] = system;
     return true;
 }
@@ -505,11 +505,11 @@ bool XMLDataBufferEngine::RemovemSystem( ves::open::xml::model::SystemPtr system
             std::vector< ModelPtr > tempModels = system->GetModels();
             for( size_t i = 0; i < tempModels.size(); ++i )
             {
-                ves::open::xml::model::SystemPtr tempSys = 
+                ves::open::xml::model::SystemPtr tempSys =
                     tempModels.at( i )->GetSubSystem();
                 if( tempSys )
                 {
-                    RemovemSystem( tempSys ); 
+                    RemovemSystem( tempSys );
                 }
             }
             return true;

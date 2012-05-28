@@ -54,11 +54,11 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADMoveNodeEventHandler::CADMoveNodeEventHandler()
-        : ves::xplorer::event::CADEventHandler()
+    : ves::xplorer::event::CADEventHandler()
 {}
 ///////////////////////////////////////////////////////////////////////////////////////
 CADMoveNodeEventHandler::CADMoveNodeEventHandler( const CADMoveNodeEventHandler& rhs )
-        : ves::xplorer::event::CADEventHandler( rhs )
+    : ves::xplorer::event::CADEventHandler( rhs )
 {}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
@@ -133,14 +133,14 @@ void CADMoveNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         }
 
     }
-    catch ( char* str )
+    catch( char* str )
     {
         std::cout << str << std::endl;
     }
-    catch ( ... )
+    catch( ... )
     {
-        std::cerr << "CADMoveNodeEventHandler::_operateOnNode : There was an " 
-            << "exception generated somewhere in the CAD event handlers." 
-            << std::endl;        
+        std::cerr << "CADMoveNodeEventHandler::_operateOnNode : There was an "
+                  << "exception generated somewhere in the CAD event handlers."
+                  << std::endl;
     }
 }

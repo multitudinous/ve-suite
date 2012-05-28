@@ -124,7 +124,7 @@ cfdVector::cfdVector()
 #endif
 
 #ifdef USE_OMP
-    this->filter->SetInput(( vtkDataSet * )this->append->GetOutput() );
+    this->filter->SetInput( ( vtkDataSet* )this->append->GetOutput() );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +136,7 @@ cfdVector::cfdVector( cfdVector const& src )
     this->plane = vtkPlane::New();
     this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
     this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
-    
+
     // set the cut function
     this->cutter = vtkCutter::New();
     this->cutter->SetCutFunction( this->plane );
@@ -175,7 +175,7 @@ void cfdVector::Update( void )
 #ifdef USE_OMP
         int i;
         int imax = this->nData;
-# pragma omp parallel for private(i)
+        # pragma omp parallel for private(i)
         for( i = 0; i < imax; i++ )
         {
             this->plane[i]->SetOrigin( this->origin );
@@ -186,17 +186,17 @@ void cfdVector::Update( void )
         }
 #else
         vprDEBUG( vesDBG, 1 ) << "Vector Cutting Plane Update"
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
         this->plane->SetOrigin( this->origin );
         vprDEBUG( vesDBG, 1 ) << "origin: " << this->origin[0] << " : "
-        << this->origin[1] << " : " << this->origin[2]
-        << std::endl << vprDEBUG_FLUSH;
+                              << this->origin[1] << " : " << this->origin[2]
+                              << std::endl << vprDEBUG_FLUSH;
         this->plane->SetNormal( this->normal );
         this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
         int numPointsInPlanes = 0;
         numPointsInPlanes = this->cutter->GetOutput()->GetPointData()->GetNumberOfTuples();
         vprDEBUG( vesDBG, 3 ) << "|   Number of points in cutting plane : " << numPointsInPlanes
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         // get every nth point from the dataSet data
         this->ptmask->SetInputConnection( this->cutter->GetOutputPort() );
@@ -223,7 +223,7 @@ void cfdVector::Update( void )
     else if( this->cursorType == CUBE )
     {
         vprDEBUG( vesDBG, 0 ) << "cfdVector not implemented for cube cursor"
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
     }
 
     vtkActor* temp = vtkActor::New();
@@ -237,12 +237,12 @@ void cfdVector::Update( void )
         geodes.push_back( tempGeode.get() );
         this->updateFlag = true;
     }
-    catch ( std::bad_alloc )
+    catch( std::bad_alloc )
     {
         mapper->Delete();
         mapper = vtkPolyDataMapper::New();
         vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdVector "
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
     }
     temp->Delete();
 }

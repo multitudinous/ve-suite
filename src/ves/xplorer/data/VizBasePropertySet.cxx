@@ -52,7 +52,7 @@ VizBasePropertySet::VizBasePropertySet()
     ves::xplorer::eventmanager::EventManager* evm =
         ves::xplorer::eventmanager::EventManager::instance();
     using ves::xplorer::eventmanager::SignalWrapper;
-    
+
     ///Setup the delete viz feature
     {
         std::string signalName = "VizBasePropertySet" +
@@ -97,13 +97,13 @@ VizBasePropertySet::~VizBasePropertySet()
 void VizBasePropertySet::RegisterPropertySet( std::string const& tableName )
 {
     std::string prependTag( tableName );
-    prependTag.append(" ");
-    std::string tag = boost::any_cast<std::string>(GetPropertyValue("NameTag"));
+    prependTag.append( " " );
+    std::string tag = boost::any_cast<std::string>( GetPropertyValue( "NameTag" ) );
     SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool VizBasePropertySet::DeleteFromDatabase( Poco::Data::Session* const session, 
-    std::string const& TableName )
+bool VizBasePropertySet::DeleteFromDatabase( Poco::Data::Session* const session,
+        std::string const& TableName )
 {
     //m_deleteVizSignal( GetUUIDAsString() );
     m_deleteVizSignal->operator()( GetUUIDAsString() );
@@ -111,12 +111,12 @@ bool VizBasePropertySet::DeleteFromDatabase( Poco::Data::Session* const session,
     return PropertySet::DeleteFromDatabase( session, TableName );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session, 
-    std::string const& TableName, Poco::Data::Statement& statement )
+bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session,
+        std::string const& TableName, Poco::Data::Statement& statement )
 {
     bool temp = PropertySet::WriteToDatabase( session, TableName, statement );
 
-//    m_addVizSignal( GetUUIDAsString(), TableName );
+    //    m_addVizSignal( GetUUIDAsString(), TableName );
     m_addVizSignal->operator()( GetUUIDAsString(), TableName );
 
     ///Send the signal to xplorer to tell it to add the viz feature
@@ -267,7 +267,7 @@ void VizBasePropertySet::UpdateScalarDataOptions( PropertyPtr property )
 void VizBasePropertySet::UpdateScalarDataRange( PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
-    
+
     mPropertyMap["DataSet_ScalarRange_Min"]->SetEnabled();
     mPropertyMap["DataSet_ScalarRange_Max"]->SetEnabled();
 
@@ -385,7 +385,7 @@ void VizBasePropertySet::UpdateDirectionSelection( PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
 
-    const std::string value = 
+    const std::string value =
         boost::any_cast<std::string >( GetPropertyAttribute( "Direction", "enumCurrentString" ) );
 
     if( value == "By Surface" )

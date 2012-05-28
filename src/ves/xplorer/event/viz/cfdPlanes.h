@@ -101,14 +101,14 @@ private:
     char typeLabel;///<'X', 'Y', or 'Z'.
 
 
-    cfdCuttingPlane *cuttingPlane;///<Cutting plane for data.
+    cfdCuttingPlane* cuttingPlane;///<Cutting plane for data.
 
     ///Individual polydata planes of data.
     std::vector< vtkPolyData* > m_pdSlices;
 
-    
-    int * isPlaneSelected;///<array that keeps track of which planes are selected for display.
-    
+
+    int* isPlaneSelected; ///<array that keeps track of which planes are selected for display.
+
     ///array that keeps track of the physical location of a particular plane.
     std::vector< float > sliceLocation;
 

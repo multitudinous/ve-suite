@@ -93,17 +93,17 @@ void ExportDOTFileEventHandler::Execute(
         command->GetDataValuePair( "Filename" )->GetData( filename );
         //Store the active geometry and viz objects as a pfb
         //(but not the sun, menu, laser, or text)
-        
+
         /*scenegraph::CreateGraphDOTVisitor dotCreator(
             scenegraph::SceneManager::instance()->
                 GetRootNode()->getParent( 0 ), //SceneView Cam
             filename );*/
-        bool status = 
-            osgDB::writeNodeFile( *(scenegraph::SceneManager::instance()->
-                GetRootNode()->getParent( 0 )), filename  );
+        bool status =
+            osgDB::writeNodeFile( *( scenegraph::SceneManager::instance()->
+                                     GetRootNode()->getParent( 0 ) ), filename );
         boost::ignore_unused_variable_warning( status );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
         std::cout << "StoredSceneEventHandler::_operateOnNode()" << std::endl;

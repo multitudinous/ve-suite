@@ -58,7 +58,7 @@ vprSingletonImp( ConstraintManager );
 ////////////////////////////////////////////////////////////////////////////////
 ConstraintManager::ConstraintManager()
     :
-    m_logger( Poco::Logger::get("conductor.ConstraintManager") ),
+    m_logger( Poco::Logger::get( "conductor.ConstraintManager" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     CONNECTSIGNALS_0( "%ResyncFromDatabase", void(),
@@ -98,7 +98,7 @@ ves::xplorer::data::PropertySetPtr ConstraintManager::CreateNewConstraint( const
     // If found, call the factory method of the associated ProertySet to get a
     // new set of that type.
     std::map< std::string, PropertySetPtr >::const_iterator iter =
-            m_constraintTypeToSetPtrMap.find( constraintType );
+        m_constraintTypeToSetPtrMap.find( constraintType );
     if( iter != m_constraintTypeToSetPtrMap.end() )
     {
         LOG_INFO( "Created new propertyset for constraint: " + constraintType );
@@ -117,7 +117,7 @@ void ConstraintManager::ResyncFromDatabase()
     PropertySetPtr propSet;
 
     std::map< std::string, PropertySetPtr >::const_iterator iter =
-            m_constraintTypeToSetPtrMap.begin();
+        m_constraintTypeToSetPtrMap.begin();
     while( iter != m_constraintTypeToSetPtrMap.end() )
     {
         propSet = iter->second->CreateNew();
@@ -145,7 +145,7 @@ ConstraintManager::GetNameIDPairsForConstraint( const std::string& constraintTyp
     using namespace ves::xplorer::data;
 
     std::map< std::string, PropertySetPtr >::const_iterator iter =
-            m_constraintTypeToSetPtrMap.find( constraintType );
+        m_constraintTypeToSetPtrMap.find( constraintType );
     if( iter != m_constraintTypeToSetPtrMap.end() )
     {
         ids = DatabaseManager::instance()->GetStringVector( iter->second->GetTableName(), "uuid" );
@@ -166,7 +166,7 @@ ConstraintManager::GetNameIDPairsForConstraint( const std::string& constraintTyp
     }
 
     LOG_WARNING( "GetNameIDPairsForConstraint: We do not have a " +
-                constraintType + " constraint registered yet." );
+                 constraintType + " constraint registered yet." );
 
     return nameIDPairs;
 }

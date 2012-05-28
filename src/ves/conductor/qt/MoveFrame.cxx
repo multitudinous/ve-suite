@@ -32,18 +32,18 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/qt/MoveFrame.h>
 
-MoveFrame::MoveFrame(QWidget *parent) :
-    QFrame(parent)
+MoveFrame::MoveFrame( QWidget* parent ) :
+    QFrame( parent )
 {
 }
 
-void MoveFrame::mousePressEvent ( QMouseEvent* event )
+void MoveFrame::mousePressEvent( QMouseEvent* event )
 {
     Q_EMIT pressed();
     QFrame::mousePressEvent( event );
 }
 
-void MoveFrame::mouseDoubleClickEvent ( QMouseEvent* )
+void MoveFrame::mouseDoubleClickEvent( QMouseEvent* )
 {
     Q_EMIT doubleClicked();
 }

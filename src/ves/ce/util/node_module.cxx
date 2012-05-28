@@ -49,14 +49,14 @@
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 
-node_module::node_module( Network *n, int m )
-        : node_base( n, 0 ), _module( m )
+node_module::node_module( Network* n, int m )
+    : node_base( n, 0 ), _module( m )
 {}
 
 /////////////
 
-node_module::node_module( const node_module &nm )
-        : node_base( nm._net, 0 ), _module( nm._module )
+node_module::node_module( const node_module& nm )
+    : node_base( nm._net, 0 ), _module( nm._module )
 {}
 
 /////////////
@@ -66,7 +66,7 @@ node_module::~node_module()
 
 /////////////
 
-void node_module::get_mods( std::set<int> &mods )
+void node_module::get_mods( std::set<int>& mods )
 {
     mods.clear();
     mods.insert( _module );
@@ -74,52 +74,52 @@ void node_module::get_mods( std::set<int> &mods )
 
 /////////////
 
-void node_module::get_ins( std::set<int> &ins, std::set<int> connid_ignore )
-    {
-        ins.clear();
-        Module *module = _net->GetModule( _module - 1 );
+void node_module::get_ins( std::set<int>& ins, std::set<int> connid_ignore )
+{
+    ins.clear();
+    Module* module = _net->GetModule( _module - 1 );
 
-        for( size_t i = 0; i < module->numIPorts(); i++ )
+    for( size_t i = 0; i < module->numIPorts(); i++ )
+    {
+        IPort* iport = module->getIPort( i );
+        int nc = iport->nconnections();
+        for( int c = 0; c < nc; c++ )
         {
-            IPort *iport = module->getIPort( i );
-            int nc = iport->nconnections();
-            for( int c = 0; c < nc; c++ )
+            Connection* conn = iport->connection( c );
+            if( connid_ignore.find( conn->get_id() ) == connid_ignore.end() )
             {
-                Connection *conn = iport->connection( c );
-                if( connid_ignore.find( conn->get_id() ) == connid_ignore.end() )
-                {
-                    OPort *oport = conn->get_oport();
-                    Module *nmodule = oport->get_module();
-                    ins.insert( _net->GetModuleIndex( nmodule ) + 1 );
-                }
+                OPort* oport = conn->get_oport();
+                Module* nmodule = oport->get_module();
+                ins.insert( _net->GetModuleIndex( nmodule ) + 1 );
             }
         }
     }
+}
 
 /////////////
 
-void node_module::get_outs( std::set<int> &outs, std::set<int> connid_ignore )
+void node_module::get_outs( std::set<int>& outs, std::set<int> connid_ignore )
+{
+    outs.clear();
+
+    Module* module = _net->GetModule( _module - 1 );
+
+    for( size_t i = 0; i < module->numOPorts(); i++ )
     {
-        outs.clear();
-
-        Module *module = _net->GetModule( _module - 1 );
-
-        for( size_t i = 0; i < module->numOPorts(); i++ )
+        OPort* oport = module->getOPort( i );
+        int nc = oport->nconnections();
+        for( int c = 0; c < nc; c++ )
         {
-            OPort *oport = module->getOPort( i );
-            int nc = oport->nconnections();
-            for( int c = 0; c < nc; c++ )
+            Connection* conn = oport->connection( c );
+            if( connid_ignore.find( conn->get_id() ) == connid_ignore.end() )
             {
-                Connection *conn = oport->connection( c );
-                if( connid_ignore.find( conn->get_id() ) == connid_ignore.end() )
-                {
-                    IPort *iport = conn->get_iport();
-                    Module *nmodule = iport->get_module();
-                    outs.insert( _net->GetModuleIndex( nmodule ) + 1 );
-                }
+                IPort* iport = conn->get_iport();
+                Module* nmodule = iport->get_module();
+                outs.insert( _net->GetModuleIndex( nmodule ) + 1 );
             }
         }
     }
+}
 
 /////////////
 
@@ -132,13 +132,13 @@ void node_module::print_mods()
 
 int node_module::execute_mods()
 {
-    Module *module = _net->GetModule( _module - 1 );
+    Module* module = _net->GetModule( _module - 1 );
     if( module->_need_execute )
     {
         // EXECUTING THIS MODULE
         module->_need_execute = false;
         ///This is the module that was just executed in the schedule
-        ///It is a 1 based number referring to the order that this module 
+        ///It is a 1 based number referring to the order that this module
         ///is executed in relation to the other modules
         return _module;
     }
@@ -150,7 +150,7 @@ int node_module::execute_mods()
 
 void node_module::need_execute()
 {
-    Module *module = _net->GetModule( _module - 1 );
+    Module* module = _net->GetModule( _module - 1 );
     module->_need_execute = true;
 }
 
@@ -158,15 +158,15 @@ void node_module::need_execute()
 
 void node_module::clear_out_to( std::set<int> mods )
 {
-    Module *module = _net->GetModule( _module - 1 );
+    Module* module = _net->GetModule( _module - 1 );
     for( size_t i = 0; i < module->numOPorts(); i++ )
     {
-        OPort *oport = module->getOPort( i );
+        OPort* oport = module->getOPort( i );
         for( int c = 0; c < oport->nconnections(); c++ )
         {
-            Connection *conn = oport->connection( c );
-            IPort *iport = conn->get_iport();
-            Module *nmodule = iport->get_module();
+            Connection* conn = oport->connection( c );
+            IPort* iport = conn->get_iport();
+            Module* nmodule = iport->get_module();
             int index = _net->GetModuleIndex( nmodule ) + 1;
             if( mods.find( index ) != mods.end() )
             {

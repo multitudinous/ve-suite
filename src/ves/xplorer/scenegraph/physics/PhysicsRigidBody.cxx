@@ -88,7 +88,7 @@ PhysicsRigidBody::PhysicsRigidBody(
     mOSGToBullet( node ),
     m_ghostController( new GhostController() ),
     m_physicsSimulator( *physicsSimulator ),
-    m_dynamicsWorld( *(m_physicsSimulator.GetDynamicsWorld()) )
+    m_dynamicsWorld( *( m_physicsSimulator.GetDynamicsWorld() ) )
 {
     std::cout << "|\tPhysicsRigidBody: Just initializing physics variables."
               << std::endl;
@@ -211,8 +211,8 @@ void PhysicsRigidBody::UserDefinedShape( btCollisionShape* collisionShape )
     }
 
     //Create a rigid body by default like we used to
-    mRB = new btRigidBody( 
-            btRigidBody::btRigidBodyConstructionInfo(
+    mRB = new btRigidBody(
+        btRigidBody::btRigidBodyConstructionInfo(
             btScalar( mMass ),                              //mass
             new osgbDynamics::MotionState(),                   //motionState
             collisionShape,                                 //collisionShape
@@ -227,7 +227,7 @@ void PhysicsRigidBody::RegisterRigidBody( btRigidBody* rigidBody )
 {
     rigidBody->setUserPointer( this );
     rigidBody->getCollisionShape()->setMargin( btScalar( 0.001 ) );
-    
+
     SetMassProps();
     ///Look at CCD demo in Demos/CcdPhysicsDemo/CcdPhysicsDemo.cpp
     ///http://www.bulletphysics.com/mediawiki-1.5.8/index.php?title=Anti_tunneling_by_Motion_Clamping
@@ -266,43 +266,43 @@ void PhysicsRigidBody::ConvexShape()
 void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const bool overall, const std::string& decimation )
 {
     CleanRigidBody();
-    
+
     //Should we be ensuring that the top level node is toggled no before
     //we try to create physics with it???
     osg::Node::NodeMask tempMask = mOSGToBullet->getNodeMask();
     mOSGToBullet->setNodeMask( 1 );
-    
-    LocalToWorldNodePath ltw( mOSGToBullet.get(), 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+
+    LocalToWorldNodePath ltw( mOSGToBullet.get(),
+                              ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
     LocalToWorldNodePath::NodeAndPathList npl = ltw.GetLocalToWorldNodePath();
-    
+
     //Now lets change the node back to how it was now that we are done
     //traversing it.
     mOSGToBullet->setNodeMask( tempMask );
-    
+
     if( npl.size() == 0 )
     {
-        std::cerr << "|\tPhysicsRigidBody : File " << mOSGToBullet->getName() 
-            << " not on the graph yet." << std::endl
-            << "|\tTo enable physics the osg::Node must be on the graph." 
-            << std::endl;
+        std::cerr << "|\tPhysicsRigidBody : File " << mOSGToBullet->getName()
+                  << " not on the graph yet." << std::endl
+                  << "|\tTo enable physics the osg::Node must be on the graph."
+                  << std::endl;
         return;
     }
-    
+
     osg::Group* stopNode;
     osg::NodePath np;
     stopNode = static_cast< osg::Group* >( npl[ 0 ].first );
     np = npl[ 0 ].second;
     osg::Group* parent = stopNode->getParent( 0 );
     osg::ref_ptr< osgwTools::AbsoluteModelTransform > amt =
-    dynamic_cast< osgwTools::AbsoluteModelTransform* >( parent );
+        dynamic_cast< osgwTools::AbsoluteModelTransform* >( parent );
     if( !amt.valid() )
     {
         amt = new osgwTools::AbsoluteModelTransform();
         amt->setName( "Physics AMT" );
         amt->setDataVariance( osg::Object::DYNAMIC );
         amt->addChild( mOSGToBullet.get() );
-        
+
         parent->addChild( amt.get() );
         parent->removeChild( mOSGToBullet.get() );
     }
@@ -311,14 +311,14 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
     {
         amt->setName( "AMT_" + dcsName );
     }
-    
-    //osg::BoundingSphere bs = mOSGToBullet->getBound();    
+
+    //osg::BoundingSphere bs = mOSGToBullet->getBound();
     osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
-    mOSGToBullet->accept(cbbv);
+    mOSGToBullet->accept( cbbv );
     osg::BoundingBox bb = cbbv.getBoundingBox();
-    
-    {        
-        osg::ref_ptr< osgbDynamics::CreationRecord > cr = 
+
+    {
+        osg::ref_ptr< osgbDynamics::CreationRecord > cr =
             new osgbDynamics::CreationRecord();
         cr->_sceneGraph = mOSGToBullet.get();
         cr->setCenterOfMass( bb.center() );
@@ -328,7 +328,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         cr->_mass = mMass;
         cr->_reductionLevel = osgbDynamics::CreationRecord::NONE;
         cr->_overall = overall;
-        
+
         //If decimation is exact we do nothing
         if( decimation == "High" )
         {
@@ -342,7 +342,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
         {
             cr->_reductionLevel = osgbDynamics::CreationRecord::MINIMAL;
         }
-        
+
         mRB = osgbDynamics::createRigidBody( cr.get() );
         if( !mRB )
         {
@@ -353,37 +353,37 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
             new osgbCollision::RefRigidBody( mRB );
         amt->setUserData( tempRB.get() );
     }
-    
-    //These are the default values for the sleeping parameters for island 
-    //creation by the solver. By making these larger an object will go to 
+
+    //These are the default values for the sleeping parameters for island
+    //creation by the solver. By making these larger an object will go to
     //sleep sooner. This can have a negative affect on the fidelity of the sim.
     //rbInfo.m_linearSleepingThreshold = btScalar(0.8);
     //rbInfo.m_angularSleepingThreshold = btScalar(1.f);
     mRB->setSleepingThresholds( 1.6, 2.0 );
-    
+
     osgbDynamics::MotionState* motion = new osgbDynamics::MotionState();
     motion->setTransform( amt.get() );
-    
+
     osg::Matrix m;
     if( np.size() > 0 )
-    { 
+    {
         m = osg::computeLocalToWorld( np );
     }
-    
+
     motion->setParentTransform( m );
     motion->setCenterOfMass( bb.center() );
-    
+
     osgbDynamics::MotionState* tempMS = dynamic_cast< osgbDynamics::MotionState* >( mRB->getMotionState() );
     if( tempMS )
     {
         std::cout << "|\tDeleting old motion state. " << std::endl;
         delete tempMS;
     }
-    
+
     mRB->setMotionState( motion );
-    
+
     RegisterRigidBody( mRB );
-    
+
     /*osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
      mOSGToBullet->accept(cbbv);
      osg::BoundingBox bb = cbbv.getBoundingBox();
@@ -402,14 +402,14 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
      motion->setDebugTransform( dmt );
      _debugBullet.addDynamic( dmt );
      }*/
-    
+
     /*
      if( mMass != 0 )
      {
      setActivationState( DISABLE_DEACTIVATION );
      }
      */
-    
+
     /*{
      std::string pname = mOSGToBullet->getName() + "_cr.osg";
      osg::ref_ptr< osgbBullet::PhysicsData > pd = new osgbBullet::PhysicsData();
@@ -421,7 +421,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
      //osg::ref_ptr< osgwTools::RefID > rid = new osgwTools::RefID( ostr.str() );
      osgDB::writeObjectFile( *pd.get(), pname );
      }*/
-    
+
     //Comment this code out because it crashes with very large triangle meshes
     /*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*
      //This should probably go in CollisionShapes.cpp
@@ -437,7 +437,7 @@ void PhysicsRigidBody::CustomShape( const BroadphaseNativeTypes shapeType, const
      btTriangleInfoMap* triangleInfoMap = new btTriangleInfoMap();
      btGenerateInternalEdgeInfo( bvhTriMeshShape, triangleInfoMap );
      }
-     
+
      //Enable custom material callback
      mRB->setCollisionFlags(
      mRB->getCollisionFlags() |
@@ -452,8 +452,8 @@ void PhysicsRigidBody::CreateRigidBody(
     const std::string& mesh,
     const std::string& decimation )
 {
-    std::cout << "|\tPhysics parameters : " 
-        << lod << " " << motion << " " << mesh << " " << decimation << std::endl;
+    std::cout << "|\tPhysics parameters : "
+              << lod << " " << motion << " " << mesh << " " << decimation << std::endl;
 
     bool overall = false;
     if( lod == "Overall" )
@@ -527,8 +527,8 @@ void PhysicsRigidBody::EnableGhostControl( bool const& enable )
     {
         //Add the ghost object and have static objects ignore it
         m_dynamicsWorld.addCollisionObject( &ghostObject );//,
-            //btBroadphaseProxy::DefaultFilter,
-            //btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter );
+        //btBroadphaseProxy::DefaultFilter,
+        //btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter );
         m_dynamicsWorld.addAction( m_ghostController );
 
         //Must move the ghost object to the current rigid body location

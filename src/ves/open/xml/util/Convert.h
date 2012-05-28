@@ -59,38 +59,38 @@ class VE_XML_EXPORTS Convert
 
 public:
 
-   ///Constructor
-   ///\param val The input to translate.
-   template<typename T>
-   Convert(const T& val)
-   {
-      std::stringstream ss;
-      ss << std::setprecision( 10 ) << val;
-      //std::cout << val << std::endl;
-      mXmlUnicodeString = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode(
-                              ss.str().c_str()
-                              );
-   }
+    ///Constructor
+    ///\param val The input to translate.
+    template<typename T>
+    Convert( const T& val )
+    {
+        std::stringstream ss;
+        ss << std::setprecision( 10 ) << val;
+        //std::cout << val << std::endl;
+        mXmlUnicodeString = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode(
+                                ss.str().c_str()
+                            );
+    }
 
-   // Destructor
-   ~Convert()
-   {
-      XERCES_CPP_NAMESPACE_QUALIFIER XMLString::release( &mXmlUnicodeString );
-   }
+    // Destructor
+    ~Convert()
+    {
+        XERCES_CPP_NAMESPACE_QUALIFIER XMLString::release( &mXmlUnicodeString );
+    }
 
-   ///Get the XMLCh for the string.
-   const XMLCh* toXMLString()
-   {
-      return mXmlUnicodeString;
-   }
+    ///Get the XMLCh for the string.
+    const XMLCh* toXMLString()
+    {
+        return mXmlUnicodeString;
+    }
 private:
-   // -----------------------------------------------------------------------
-   //  Private data members
-   //
-   //  mXmlUnicodeString
-   //      This is the Unicode XMLCh format of the string.
-   // -----------------------------------------------------------------------
-   XMLCh*   mXmlUnicodeString;///< The raw unicode string.
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  mXmlUnicodeString
+    //      This is the Unicode XMLCh format of the string.
+    // -----------------------------------------------------------------------
+    XMLCh*   mXmlUnicodeString;///< The raw unicode string.
 };
 
 }

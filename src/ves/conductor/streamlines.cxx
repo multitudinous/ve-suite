@@ -72,7 +72,7 @@ BEGIN_EVENT_TABLE( Streamlines, wxDialog )
     EVT_BUTTON( STREAMLINES_SET_SEED_POINTS_BUTTON, Streamlines::SetSeedPoints )
     EVT_BUTTON( wxID_OK, Streamlines::OnClose )
     EVT_CHECKBOX( STREAMLINES_GPU_TOOLS_CHK, Streamlines::OnGPUCheckTools )
-	EVT_CHECKBOX( STREAMLINES_SURF_TOOLS_CHK, Streamlines::OnSURFCheckTools )
+    EVT_CHECKBOX( STREAMLINES_SURF_TOOLS_CHK, Streamlines::OnSURFCheckTools )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ bool Streamlines::Create( wxWindow* parent,
     itemButton13 = 0;
     itemButton14 = 0;
     seedPointDialog = 0;
-    
+
     _lastIntegrationStepSize = 1000.0;
     _lastPropagationSize = 100.0;
     _lastLineDiameter = 0.0;
@@ -120,7 +120,7 @@ bool Streamlines::Create( wxWindow* parent,
     _lastStreamArrow = false;
     m_animatedParticles = false;
     m_streamRibbons = false;
-    
+
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
     wxDialog::Create( parent, id, caption, pos, size, style );
 
@@ -172,7 +172,8 @@ void Streamlines::CreateControls()
 
     wxString itemRadioBox7Strings[] = { _T( "backward" ),
                                         _T( "forward" ),
-                                        _T( "both directions" ) };
+                                        _T( "both directions" )
+                                      };
 
     _integrationRBox = new wxRadioBox( itemDialog1,
                                        STREAMLINES_INTEGRATION_DIR_RBOX, _T( "Integration Direction" ),
@@ -190,28 +191,28 @@ void Streamlines::CreateControls()
         wxStaticBox* gpuToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "GPU Tools" ) );
         wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( gpuToolsStaticSizer, wxVERTICAL );
         itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
-        
+
         m_gpuToolsChkBox = new wxCheckBox( itemDialog1, STREAMLINES_GPU_TOOLS_CHK, _T( "Use GPU Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
         m_gpuToolsChkBox->SetValue( false );
         itemStaticBoxSizer10->Add( m_gpuToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
     }
-    
+
     {
         wxStaticBox* surfToolsStaticSizer = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Surface Seed Point Tools" ) );
         wxStaticBoxSizer* itemStaticBoxSizer11 = new wxStaticBoxSizer( surfToolsStaticSizer, wxVERTICAL );
         itemStaticBoxSizer3->Add( itemStaticBoxSizer11, 0, wxGROW | wxALL, 5 );
-        
+
         m_surfToolsChkBox = new wxCheckBox( itemDialog1, STREAMLINES_SURF_TOOLS_CHK, _T( "Use Surface Seed Point Tools" ), wxDefaultPosition, wxDefaultSize, 0 );
         m_surfToolsChkBox->SetValue( false );
         itemStaticBoxSizer11->Add( m_surfToolsChkBox, 0, wxALIGN_LEFT | wxALL, 5 );
-        
-        m_datasetSelection = new wxComboBox( itemDialog1, wxID_ANY, _T( "" ), 
-            wxDefaultPosition, wxDefaultSize, m_availableDatasets, wxCB_DROPDOWN );
+
+        m_datasetSelection = new wxComboBox( itemDialog1, wxID_ANY, _T( "" ),
+                                             wxDefaultPosition, wxDefaultSize, m_availableDatasets, wxCB_DROPDOWN );
         m_datasetSelection->Disable();
         itemStaticBoxSizer11->Add( m_datasetSelection, 0, wxGROW | wxALL, 5 );
-        
+
     }
-    
+
     //wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Size(%)"), wxDefaultPosition, wxDefaultSize, 0 );
     //itemStaticBoxSizer3->Add(itemStaticText8, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
@@ -303,10 +304,10 @@ void Streamlines::_updateAdvancedSettings()
         {
             streamArrow->SetDataValue( static_cast<unsigned int>( 0 ) );
         }
-        
+
         _advancedSettings.push_back( streamArrow );
     }
-    
+
     {
         ves::open::xml::DataValuePairPtr streamRibbon( new ves::open::xml::DataValuePair() );
         if( m_streamRibbons )
@@ -319,7 +320,7 @@ void Streamlines::_updateAdvancedSettings()
         }
         _advancedSettings.push_back( streamRibbon );
     }
-    
+
     {
         unsigned int checkBox = m_gpuToolsChkBox->IsChecked();
         ves::open::xml::DataValuePairPtr gpuToolsDVP( new ves::open::xml::DataValuePair() );
@@ -329,11 +330,11 @@ void Streamlines::_updateAdvancedSettings()
 
     if( m_surfToolsChkBox->IsChecked() )
     {
-	    ves::open::xml::DataValuePairPtr 
-            surfToolsDVP( new ves::open::xml::DataValuePair() );
-	    surfToolsDVP->SetData( "SURF Tools", 
-            ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
-	    _advancedSettings.push_back( surfToolsDVP );
+        ves::open::xml::DataValuePairPtr
+        surfToolsDVP( new ves::open::xml::DataValuePair() );
+        surfToolsDVP->SetData( "SURF Tools",
+                               ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
+        _advancedSettings.push_back( surfToolsDVP );
     }
 
 }
@@ -391,7 +392,7 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
 
     int width,height = 0;
     GetSize(&width,&height);
-    adStreamline.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
+    adStreamline.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y,
     width, height));*/
 
     adStreamline.SetSize( GetRect() );
@@ -403,7 +404,7 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
     adStreamline.SetStreamArrow( _lastStreamArrow );
     adStreamline.SetAnimatedParticle( m_animatedParticles );
     adStreamline.SetStreamRibbon( m_streamRibbons );
-    
+
     int error = adStreamline.ShowModal();
     if( error == wxID_OK ||
             error == wxID_CLOSE ||
@@ -466,36 +467,36 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
     try
     {
         dynamic_cast<Vistab*>( GetParent() )->
-            SendUpdatedSettingsToXplorer( newCommand );
+        SendUpdatedSettingsToXplorer( newCommand );
     }
-    catch ( ... )
+    catch( ... )
     {
         wxMessageBox( _( "Invalid Parent" ), _( "Communication Failure" ),
                       wxOK | wxICON_INFORMATION );
     }
-    
-    ///Now send a command for the animated streamlines 
+
+    ///Now send a command for the animated streamlines
     //if the user has set them on
     if( !m_animatedParticles )
     {
         return;
     }
-    
-    ves::open::xml::DataValuePairPtr 
-        animatedSettings( new ves::open::xml::DataValuePair() );
+
+    ves::open::xml::DataValuePairPtr
+    animatedSettings( new ves::open::xml::DataValuePair() );
     animatedSettings->SetData( "Direction", "animated" );
     newCommand->AddDataValuePair( animatedSettings );
-    
+
     try
     {
         dynamic_cast<Vistab*>( GetParent() )->
-            SendUpdatedSettingsToXplorer( newCommand );
+        SendUpdatedSettingsToXplorer( newCommand );
     }
-    catch ( ... )
+    catch( ... )
     {
         wxMessageBox( _( "Invalid Parent" ), _( "Communication Failure" ),
-                     wxOK | wxICON_INFORMATION );
-    }    
+                      wxOK | wxICON_INFORMATION );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::_onCursorSelect( wxCommandEvent& WXUNUSED( event ) )
@@ -546,7 +547,7 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED( event ) )
         newCommand->AddDataValuePair( activeDataset );
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
     }
-    catch ( ... )
+    catch( ... )
     {
         wxMessageBox( _( "Invalid command!" ), wxString( newCommand->GetCommandName().c_str(), wxConvUTF8 ),
                       wxOK | wxICON_INFORMATION );
@@ -568,7 +569,7 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED( event ) )
         boundsCommand->AddDataValuePair( seedPointBoundsDVP );
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( boundsCommand );
     }
-    catch ( ... )
+    catch( ... )
     {
         wxMessageBox( _( "Invalid command!" ), wxString( boundsCommand->GetCommandName().c_str(), wxConvUTF8 ),
                       wxOK | wxICON_INFORMATION );
@@ -587,7 +588,7 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED( event ) )
 
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( dimensionsCommand );
     }
-    catch ( ... )
+    catch( ... )
     {
         wxMessageBox( _( "Invalid command!" ), wxString( dimensionsCommand->GetCommandName().c_str(), wxConvUTF8 ),
                       wxOK | wxICON_INFORMATION );
@@ -639,7 +640,7 @@ void Streamlines::OnSURFCheckTools( wxCommandEvent& WXUNUSED( event ) )
 void Streamlines::SetAvailableDatasets( wxArrayString tempNames )
 {
     m_availableDatasets = tempNames;
-    
+
     if( m_datasetSelection )
     {
         m_datasetSelection->Clear();

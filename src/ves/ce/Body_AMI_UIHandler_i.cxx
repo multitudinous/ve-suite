@@ -42,12 +42,12 @@ Body_AMI_UIHandler_i::Body_AMI_UIHandler_i( void )
 ////////////////////////////////////////////////////////////////////////////////
 Body_AMI_UIHandler_i::Body_AMI_UIHandler_i(
     PortableServer::POA_ptr p,
-    Body::AMH_ExecutiveResponseHandler_ptr rh)
+    Body::AMH_ExecutiveResponseHandler_ptr rh )
     :
     m_poa( PortableServer::POA::_duplicate( p ) ),
     m_responseHandler( Body::AMH_ExecutiveResponseHandler::_duplicate( rh ) )
 {
-    
+
 }
 // Implementation skeleton destructor
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ void Body_AMI_UIHandler_i::UpdateNetwork( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateNetwork_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder* excep_holder
 )
 {
     boost::ignore_unused_variable_warning( excep_holder );
@@ -76,7 +76,7 @@ void Body_AMI_UIHandler_i::UpdateModuleUI( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleUI_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder* excep_holder
 )
 {
     boost::ignore_unused_variable_warning( excep_holder );
@@ -91,7 +91,7 @@ void Body_AMI_UIHandler_i::UpdateModuleResult( )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleResult_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder* excep_holder
 )
 {
     boost::ignore_unused_variable_warning( excep_holder );
@@ -106,7 +106,7 @@ void Body_AMI_UIHandler_i::UpdateLinkContent()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateLinkContent_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder* excep_holder
 )
 {
     boost::ignore_unused_variable_warning( excep_holder );
@@ -117,14 +117,14 @@ void Body_AMI_UIHandler_i::UpdateLinkContent_excep(
 void Body_AMI_UIHandler_i::Raise()
 {
     m_responseHandler->SetModuleMessage();
-    
+
     //std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
     PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
     m_poa->deactivate_object( oid.in() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::Raise_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder* excep_holder
 )
 {
     // Here, we need to extract the exception from this holder, and package
@@ -133,23 +133,23 @@ void Body_AMI_UIHandler_i::Raise_excep(
     {
         excep_holder->raise_exception();
     }
-    catch(const CORBA::Exception& ex)
+    catch( const CORBA::Exception& ex )
     {
         CORBA::Exception* local_ex = ex._tao_duplicate();
         ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( local_ex );
         m_responseHandler->SetModuleMessage_excep( &amh_excep_holder );
     }
-    catch(...)
+    catch( ... )
     {
         std::cout
-            << "Raise_excep got an unknown exception"
-            << std::endl;
-        
+                << "Raise_excep got an unknown exception"
+                << std::endl;
+
         CORBA::Exception* unknown_ex = new CORBA::UNKNOWN;
         ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( unknown_ex );
         m_responseHandler->SetModuleMessage_excep( &amh_excep_holder );
     }
-    
+
     //std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
     PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
     m_poa->deactivate_object( oid.in() );
@@ -162,7 +162,7 @@ void Body_AMI_UIHandler_i::SetXplorerData()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetXplorerData_excep(
-    ::Messaging::ExceptionHolder * excep_holder
+    ::Messaging::ExceptionHolder* excep_holder
 )
 {
     boost::ignore_unused_variable_warning( excep_holder );
@@ -171,16 +171,16 @@ void Body_AMI_UIHandler_i::SetXplorerData_excep(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetCommand()
-{ 
+{
     m_responseHandler->SetParams();
-    
+
     //std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
     PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
     m_poa->deactivate_object( oid.in() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_AMI_UIHandler_i::SetCommand_excep( 
-    ::Messaging::ExceptionHolder * excep_holder)
+void Body_AMI_UIHandler_i::SetCommand_excep(
+    ::Messaging::ExceptionHolder* excep_holder )
 {
     // Here, we need to extract the exception from this holder, and package
     // it in another so the AMH response handler may forward it on.
@@ -188,25 +188,25 @@ void Body_AMI_UIHandler_i::SetCommand_excep(
     {
         excep_holder->raise_exception();
     }
-    catch(const CORBA::Exception& ex)
+    catch( const CORBA::Exception& ex )
     {
         CORBA::Exception* local_ex = ex._tao_duplicate();
         ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( local_ex );
         m_responseHandler->SetParams_excep( &amh_excep_holder );
     }
-    catch(...)
+    catch( ... )
     {
         std::cout
-            << "SetParams_excep got an unknown exception"
-            << std::endl;
-        
-        CORBA::Exception *unknown_ex = new CORBA::UNKNOWN;
+                << "SetParams_excep got an unknown exception"
+                << std::endl;
+
+        CORBA::Exception* unknown_ex = new CORBA::UNKNOWN;
         ::Body::AMH_ExecutiveExceptionHolder amh_excep_holder( unknown_ex );
         m_responseHandler->SetParams_excep( &amh_excep_holder );
     }
-    
+
     //std::cout << "Body_AMI_UIHandler_i deactivating self" << std::endl;
-    PortableServer::ObjectId_var oid = m_poa->servant_to_id(this);
-    m_poa->deactivate_object (oid.in());
+    PortableServer::ObjectId_var oid = m_poa->servant_to_id( this );
+    m_poa->deactivate_object( oid.in() );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -55,7 +55,7 @@ namespace scenegraph
 //   performance information.
 osg::Geode* vtkActorToOSG( vtkActor* actor, osg::Geode* geode = NULL, int verbose = 0 );
 
-osg::Geometry* processPrimitive( vtkActor *a, vtkCellArray *prims, int pType, int v );
+osg::Geometry* processPrimitive( vtkActor* a, vtkCellArray* prims, int pType, int v );
 }
 }
 }

@@ -76,7 +76,7 @@ SeedPoints::SeedPoints( unsigned int nX , unsigned int nY,
 //////////////////////////////////////////////////////////////////////////////////////////
 SeedPoints::SeedPoints( const SeedPoints& seedPoints,
                         const osg::CopyOp& copyop ):
-        osg::Geode( seedPoints, copyop )
+    osg::Geode( seedPoints, copyop )
 {
     _points = new PointsDrawable( *seedPoints._points );
     _pointSize = seedPoints._pointSize;
@@ -165,9 +165,9 @@ void SeedPoints::_initializePoints()
     /// Disable depth test to avoid sort problems and Lighting
     //_stateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF|osg::StateAttribute::PROTECTED);
     //_stateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF|osg::StateAttribute::PROTECTED);
-    _stateSet->setRenderBinDetails( 10,"DepthSortedBin");
+    _stateSet->setRenderBinDetails( 10, "DepthSortedBin" );
     osg::ref_ptr<osg::Uniform> pointColor = new osg::Uniform( "pointColor",
-                                                              osg::Vec4( 1.0, 1.0, 0.0, .7 ) );
+            osg::Vec4( 1.0, 1.0, 0.0, .7 ) );
     // frag shader for the points
     char fragShaderSource[] =
         "uniform vec4 pointColor;\n"
@@ -183,7 +183,7 @@ void SeedPoints::_initializePoints()
     _stateSet->setAttribute( program.get() );
 
     osg::ref_ptr<osg::Shader> fragShader = new osg::Shader( osg::Shader::FRAGMENT,
-                                                            fragShaderSource );
+            fragShaderSource );
     program->addShader( fragShader.get() );
     _points->setStateSet( _stateSet.get() );
     _stateSet->addUniform( pointColor.get() );
@@ -192,7 +192,7 @@ void SeedPoints::_initializePoints()
 //////////////////////////////////////////////
 void SeedPoints::Toggle( bool onOff )
 {
-    setNodeMask(( onOff ) ? 1 : 0 );
+    setNodeMask( ( onOff ) ? 1 : 0 );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void SeedPoints::UpdateBounds( double newBoundsValue,
@@ -231,8 +231,8 @@ SeedPoints::PointsDrawable::PointsDrawable( unsigned int* dimensions, float* bou
 ///Copy Constructor
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 SeedPoints::PointsDrawable::PointsDrawable( const SeedPoints::PointsDrawable& pointsDrawable,
-                                            const osg::CopyOp& copyop )
-        : osg::Geometry( pointsDrawable, copyop )
+        const osg::CopyOp& copyop )
+    : osg::Geometry( pointsDrawable, copyop )
 {
     _dimensions[0] = pointsDrawable. _dimensions[0];
     _dimensions[1] = pointsDrawable. _dimensions[1];
@@ -324,7 +324,7 @@ void SeedPoints::PointsDrawable::drawImplementation( osg::RenderInfo& ) const
     for( unsigned int i = 0; i < numSeedPoints; i++ )
     {
         x = _bounds[0] + dx * ( i % _dimensions[0] );
-        y = _bounds[2] + dy * (( i / _dimensions[0] ) % _dimensions[1] );
+        y = _bounds[2] + dy * ( ( i / _dimensions[0] ) % _dimensions[1] );
         z = _bounds[4] + dz * ( i / ( _dimensions[0] * _dimensions[1] ) );
         //glColor4fv(_color);
         glVertex3f( x, y, z );

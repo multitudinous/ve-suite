@@ -52,13 +52,13 @@ using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 TextureDataInfo::TextureDataInfo()
-        : 
-        _name( " " ),
-        _tm( 0 )
+    :
+    _name( " " ),
+    _tm( 0 )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 TextureDataInfo::TextureDataInfo( const TextureDataInfo& tdi )
-        : _name( tdi._name ), _tm( new cfdTextureManager( *tdi._tm ) )
+    : _name( tdi._name ), _tm( new cfdTextureManager( *tdi._tm ) )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 TextureDataInfo::~TextureDataInfo()
@@ -106,11 +106,11 @@ TextureDataInfo& TextureDataInfo::operator=( const TextureDataInfo& tdi )
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdTextureDataSet::cfdTextureDataSet()
-    : 
+    :
     _activeDataType( SCALAR ),
     _nScalars( 0 ),
     _nVectors( 0 ),
-    _volVisNode( new cfdVolumeVisualization ), 
+    _volVisNode( new cfdVolumeVisualization ),
     _activeTM( 0 )
 {
     ;
@@ -226,20 +226,20 @@ void cfdTextureDataSet::CreateTextureManager( std::string textureDescriptionFile
     {
         if( !boost::filesystem::is_directory( scalarPath ) )
         {
-            std::cout << "|\tNo directory " << textureDescriptionFile 
-            << " present." << std::endl;
+            std::cout << "|\tNo directory " << textureDescriptionFile
+                      << " present." << std::endl;
             return;
         }
     }
     catch( ... )
     {
-        std::cout << "|\tNo directory " << textureDescriptionFile 
-            << " present." << std::endl;
+        std::cout << "|\tNo directory " << textureDescriptionFile
+                  << " present." << std::endl;
         return;
     }
-    
+
     std::cout << "|\tReading texture description file: "
-        << textureDescriptionFile << std::endl;
+              << textureDescriptionFile << std::endl;
 
     std::vector< std::string > files = ves::xplorer::util::fileIO::GetFilesInDirectory( textureDescriptionFile, std::string( ".vti" ) );
     for( size_t i = 0; i < files.size(); ++i )

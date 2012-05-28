@@ -171,7 +171,7 @@ public:
 
     ///Get the group node that is holding the devices
     osg::Group* GetDeviceGroup();
-    
+
 protected:
 
 private:
@@ -211,7 +211,7 @@ private:
 
     ///
     device::Device* m_deviceBeingProcessed;
-    
+
     ///The group node that holds all device graphical representations
     osg::ref_ptr< osg::Group > m_deviceGroup;
 
@@ -222,7 +222,7 @@ private:
     ves::xplorer::behavior::ManipulatorEventsPtr m_manipulatorSlot;
     ves::xplorer::behavior::NavigationPtr m_navSlot;
     ves::xplorer::behavior::SelectionPtr m_selectionSlot;
-    
+
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 };
 } //end xplorer

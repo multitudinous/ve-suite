@@ -59,7 +59,7 @@ BEGIN_EVENT_TABLE( ScalarToolsDialog, wxDialog )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////
 ScalarToolsDialog::ScalarToolsDialog( wxWindow* parent, int id, std::string title )
-        : BaseDialog( parent, id, title )
+    : BaseDialog( parent, id, title )
 {
     _scalarRange = 0;
     _scalarSelection = 0;
@@ -94,7 +94,7 @@ void ScalarToolsDialog::_buildGUI()
     wxStaticBoxSizer* smSizer = new wxStaticBoxSizer(shaderManagerBox,wxVERTICAL);
 
     _shaderManagerSelection = new wxComboBox(this,AVAILABLE_SHADER_MANAGERS,
-                                      _(""), wxDefaultPosition, 
+                                      _(""), wxDefaultPosition,
                                       wxSize(150,wxDefaultCoord) );
     _shaderManagerSelection->Append(_T("BLUE_RED_LINEAR_SHADER"));
        _shaderManagerSelection->Append(_T("GREY_SCALE_SHADER"));
@@ -289,7 +289,7 @@ void ScalarToolsDialog::_onUpdateIsosurface( wxScrollEvent& command )
     _commandName = "TB_UPDATE_ISOSURFACE";
 
     ves::open::xml::DataValuePairPtr isosurfaceValue( new ves::open::xml::DataValuePair() );
-    isosurfaceValue->SetData( "Iso-Surface Value", static_cast<double>(( _isoSlider->GetValue() / 100.0 ) ) );
+    isosurfaceValue->SetData( "Iso-Surface Value", static_cast<double>( ( _isoSlider->GetValue() / 100.0 ) ) );
     _instructions.push_back( isosurfaceValue );
 
     ves::open::xml::DataValuePairPtr colorByScalar( new ves::open::xml::DataValuePair() );
@@ -306,7 +306,7 @@ void ScalarToolsDialog::_onUpdateNumberOfSlicePlanes( wxScrollEvent& command )
     _commandName = "TB_UPDATE_NUMBER_SLICE_PLANES";
 
     ves::open::xml::DataValuePairPtr nPlanesValue( new ves::open::xml::DataValuePair() );
-    nPlanesValue->SetData( "Number of Slice Planes", static_cast<unsigned int>(( _numSlicesSlider->GetValue() ) ) );
+    nPlanesValue->SetData( "Number of Slice Planes", static_cast<unsigned int>( ( _numSlicesSlider->GetValue() ) ) );
     _instructions.push_back( nPlanesValue );
 
     _sendCommandsToXplorer();

@@ -45,12 +45,12 @@
 
 namespace osg
 {
-   class Node;
-   class Image;
-   class Drawable;
-   class AnimationPath;
-   class Geode;
-   class Geometry;
+class Node;
+class Image;
+class Drawable;
+class AnimationPath;
+class Geode;
+class Geometry;
 }
 
 namespace ves
@@ -79,14 +79,14 @@ public:
 
     ///Equal operator
     CADAnimationEventHandler& operator=( const CADAnimationEventHandler& rhs );
-    
+
     ///Create animated CAD for the specified data
     ///\param nodeType Type of ves node
     ///\param filename Filename for the animation data
     ///\param nodeID UUID for the node that this data needs to be mapped
-    void CreateAnimatedCAD( std::string const& nodeType, 
-        std::string const& filename, std::string const& nodeID );
-    
+    void CreateAnimatedCAD( std::string const& nodeType,
+                            std::string const& filename, std::string const& nodeID );
+
 protected:
     osg::AnimationPath* createAnimationPath( std::string component );
     ///Control the direction of travel to zero out a component so that the

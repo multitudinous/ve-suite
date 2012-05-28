@@ -148,7 +148,7 @@ void cfdQuatCamHandler::WriteToFile( std::string fileName )
         if( !boost::filesystem::is_directory( dir_path ) )
         {
             boost::filesystem::create_directory( dir_path );
-            std::cout << "|\tCreated " << quatCamDirName 
+            std::cout << "|\tCreated " << quatCamDirName
                       << " directory." << std::endl;
         }
     }
@@ -156,7 +156,7 @@ void cfdQuatCamHandler::WriteToFile( std::string fileName )
     {
         std::cout << ex.what() << std::endl;
         boost::filesystem::create_directory( dir_path );
-        std::cout << "|\tCreated " << quatCamDirName 
+        std::cout << "|\tCreated " << quatCamDirName
                   << " directory." << std::endl;
     }
 
@@ -174,7 +174,7 @@ void cfdQuatCamHandler::WriteToFile( std::string fileName )
         inFile << QuatCams.size() << std::endl;
 
         //std::cout << QuatCams.size()
-                  //<< " view points are being written" << std::endl;
+        //<< " view points are being written" << std::endl;
 
         gmtl::Matrix44d temp;
         for( unsigned int i = 0; i < QuatCams.size(); ++i )
@@ -208,7 +208,7 @@ void cfdQuatCamHandler::WriteToFile( std::string fileName )
             {
                 inFile << flyThroughList.at( n ).size() << std::endl;
                 for( unsigned int l = 0;
-                     l < flyThroughList.at( n ).size(); ++l )
+                        l < flyThroughList.at( n ).size(); ++l )
                 {
                     inFile << flyThroughList.at( n ).at( l ) << " ";
                 }
@@ -306,7 +306,7 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName )
             inFile >> numFlyThroughs;
             inFile.getline( textLine, 256 );   //skip past remainder of line
             //std::cout << "Number of FlyThroughs: "
-                      //<< numFlyThroughs << std::endl;
+            //<< numFlyThroughs << std::endl;
 
             numPointsInFlyThrough = new unsigned int[ numFlyThroughs ];
             std::vector< int > tempPts;
@@ -368,7 +368,7 @@ void cfdQuatCamHandler::Relocate( ves::xplorer::scenegraph::DCS* worldDCS )
     }
     double temp = GetQuatCamIncrementor();
 
-    if (( t < 1.0f ) )
+    if( ( t < 1.0f ) )
     {
         QuatCams.at( cam_id )->MoveCam( temp );
         QuatCams.at( cam_id )->UpdateRotation( worldDCS );
@@ -562,7 +562,7 @@ void cfdQuatCamHandler::ProcessCommand()
         {
             movementSpeed = commandIds.at( 0 );
             ves::xplorer::NavigationAnimationEngine::instance()->
-                SetAnimationSpeed( movementSpeed );
+            SetAnimationSpeed( movementSpeed );
             flag = true;
         }
 
@@ -597,20 +597,20 @@ void cfdQuatCamHandler::UpdateViewGUIPointData()
 void cfdQuatCamHandler::PreFrameUpdate()
 {
     //If a quat is active this will move the cam to the next location
-    const ves::open::xml::CommandPtr tempCommand = 
+    const ves::open::xml::CommandPtr tempCommand =
         CommandManager::instance()->GetXMLCommand();
     if( tempCommand )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::const_iterator
-            currentEventHandler;
+        currentEventHandler;
         currentEventHandler = mEventHandlers.find(
-            tempCommand->GetCommandName() );
+                                  tempCommand->GetCommandName() );
         if( currentEventHandler != mEventHandlers.end() )
         {
             vprDEBUG( vesDBG, 1 )
-                << "|\t cfdQuatCamHandler::PreFrameUpdate Executing: "
-                << tempCommand->GetCommandName()
-                << std::endl << vprDEBUG_FLUSH;
+                    << "|\t cfdQuatCamHandler::PreFrameUpdate Executing: "
+                    << tempCommand->GetCommandName()
+                    << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tempCommand );
         }
@@ -627,7 +627,7 @@ void cfdQuatCamHandler::PreFrameUpdate()
         {
             activecam = true;
             if( pointCounter < static_cast< unsigned int >(
-                    flyThroughList.at( activeFlyThrough ).size() ) - 1 )
+                        flyThroughList.at( activeFlyThrough ).size() ) - 1 )
             {
                 pointCounter += 1;
             }
@@ -636,7 +636,7 @@ void cfdQuatCamHandler::PreFrameUpdate()
                 pointCounter = 0;
             }
             //pointCounter = ( pointCounter == ( ( int )flyThroughList.at(
-                //activeFlyThrough ).size() - 1 ) ) ? 0 : ++pointCounter;
+            //activeFlyThrough ).size() - 1 ) ) ? 0 : ++pointCounter;
             cam_id = flyThroughList.at( activeFlyThrough ).at( pointCounter );
         }
     }
@@ -669,9 +669,9 @@ void cfdQuatCamHandler::PreFrameUpdate()
         Relocate( _worldDCS.get() );*/
         cfdQuatCam* cam = QuatCams.at( cam_id );
         ves::xplorer::NavigationAnimationEngine::instance()->
-            SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
+        SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
         ves::xplorer::NavigationAnimationEngine::instance()->
-            SetAnimationEndPoints( cam->GetTrans(), cam->GetQuat() );
+        SetAnimationEndPoints( cam->GetTrans(), cam->GetQuat() );
         activecam = false;
     }
 

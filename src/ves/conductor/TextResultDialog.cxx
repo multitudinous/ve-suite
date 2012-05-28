@@ -46,8 +46,8 @@ using namespace ves::conductor;
 //EVT_BUTTON(wxID_OK, TextResultDialog::SetAffirmativeId(wxID_OK))
 //END_EVENT_TABLE()
 
-TextResultDialog::TextResultDialog( wxWindow * parent, const wxString& title, wxSize tabsize )
-        : UIDialog(( wxWindow * )parent, -1, title )
+TextResultDialog::TextResultDialog( wxWindow* parent, const wxString& title, wxSize tabsize )
+    : UIDialog( ( wxWindow* )parent, -1, title )
 {
     wxSize syn;
     wxBoxSizer* toptop = new wxBoxSizer( wxHORIZONTAL );

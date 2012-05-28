@@ -88,7 +88,7 @@ using namespace ves::xplorer::command;
 //////////////////////////////////////////////////////////
 TextureBasedVizHandler::TextureBasedVizHandler()
     :
-    m_logger( Poco::Logger::get("xplorer.TextureBasedVizHandler") ),
+    m_logger( Poco::Logger::get( "xplorer.TextureBasedVizHandler" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     _animationDelay = 0.0001f;
@@ -107,10 +107,10 @@ TextureBasedVizHandler::TextureBasedVizHandler()
     _vvvh = 0;
     m_isMaster = false;
 
-    m_slotInitializer = 
-        ves::xplorer::event::volume::VolumeVisSlotInitializerPtr( 
-        new ves::xplorer::event::volume::VolumeVisSlotInitializer() );
-    
+    m_slotInitializer =
+        ves::xplorer::event::volume::VolumeVisSlotInitializerPtr(
+            new ves::xplorer::event::volume::VolumeVisSlotInitializer() );
+
     _eventHandlers[std::string( "TB_SET_ACTIVE_SHADER_MANAGER" )] = new ves::xplorer::event::TextureBasedSetActiveShaderManagerEventHandler();
     _eventHandlers[std::string( "TB_ACTIVATE" )] = new ves::xplorer::event::TextureBasedActivateEventHandler();
     _eventHandlers[std::string( "TB_ACTIVE_SOLUTION" )] = new ves::xplorer::event::TextureBasedUpdateSolutionEventHandler();
@@ -254,8 +254,8 @@ void TextureBasedVizHandler::EnsurePhongShading( bool onOff )
 }
 ////////////////////////////////////////////////////////////////////////////
 void TextureBasedVizHandler::UpdateClipPlane( std::string planeCoordinate,
-                                              std::string planeDirection,
-                                              double alpha )
+        std::string planeDirection,
+        double alpha )
 {
     double plane[4] = {0, 0, 0, 0};
     if( planeCoordinate == "X" )
@@ -325,7 +325,10 @@ void TextureBasedVizHandler::UpdateClipPlane( std::vector< double > const& roi )
     double plane[4] = {0, 0, 0, 0};
     //if( planeCoordinate == "X" )
     {
-        plane[0] = 0.0; plane[1] = 0.0; plane[2] = 0.0; plane[3] = 0.0;
+        plane[0] = 0.0;
+        plane[1] = 0.0;
+        plane[2] = 0.0;
+        plane[3] = 0.0;
         plane[0] = 1.0;
         //get the xplane positions
         //if( planeDirection == "Positive" )
@@ -345,7 +348,10 @@ void TextureBasedVizHandler::UpdateClipPlane( std::vector< double > const& roi )
     }
     //else if( planeCoordinate == "Y" )
     {
-        plane[0] = 0.0; plane[1] = 0.0; plane[2] = 0.0; plane[3] = 0.0;
+        plane[0] = 0.0;
+        plane[1] = 0.0;
+        plane[2] = 0.0;
+        plane[3] = 0.0;
         plane[1] = 1.0;
         //get the yplane positions
         //if( planeDirection == "Positive" )
@@ -366,7 +372,10 @@ void TextureBasedVizHandler::UpdateClipPlane( std::vector< double > const& roi )
     //else if( planeCoordinate == "Z" )
     {
         //create an z plane
-        plane[0] = 0.0; plane[1] = 0.0; plane[2] = 0.0; plane[3] = 0.0;
+        plane[0] = 0.0;
+        plane[1] = 0.0;
+        plane[2] = 0.0;
+        plane[3] = 0.0;
         plane[2] = 1.0;
         //get the zplane positions
         //if( planeDirection == "Positive" )
@@ -398,7 +407,7 @@ void TextureBasedVizHandler::SetTransientDirection( std::string direction )
 {
     if( _activeTM )
     {
-        _activeTM->setDirection(( direction == "Forward" ) ? 1 : -1 );
+        _activeTM->setDirection( ( direction == "Forward" ) ? 1 : -1 );
     }
 }
 
@@ -427,7 +436,7 @@ void TextureBasedVizHandler::UpdateTransientDuration( double duration )
     {
         return;
     }
-    
+
     if( !_svvh )
     {
         return;
@@ -435,7 +444,7 @@ void TextureBasedVizHandler::UpdateTransientDuration( double duration )
 
     ///duration calculation
     unsigned int nTimesteps = _activeTM->numberOfFields();
-    _animationDelay = duration / (( double )nTimesteps );
+    _animationDelay = duration / ( ( double )nTimesteps );
     cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>( _svvh->GetActiveShader() );
     if( sShader )
     {
@@ -465,7 +474,7 @@ void TextureBasedVizHandler::StepTransientVisualization( std::string direction )
             }
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Texture Manager not set!!" << std::endl;
         std::cout << " TextureBasedVizHandler::StepTransientVisualization" << std::endl;
@@ -480,7 +489,7 @@ void TextureBasedVizHandler::SetCurrentFrame( unsigned int frame )
         _activeTM->setPlayMode( cfdTextureManager::STOP );
         _activeTM->SetCurrentFrame( frame );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Texture Manager not set!!" << std::endl;
         std::cout << " TextureBasedVizHandler::SetCurrentFrame" << std::endl;
@@ -569,8 +578,8 @@ void TextureBasedVizHandler::UpdateGraph()
     }
 
     SetParentNode( static_cast< ves::xplorer::scenegraph::Group* >(
-                    ModelHandler::instance()->GetActiveModel()->
-                    GetActiveDataSet()->GetSwitchNode()->GetChild( 1 ) ) );
+                       ModelHandler::instance()->GetActiveModel()->
+                       GetActiveDataSet()->GetSwitchNode()->GetChild( 1 ) ) );
     SetActiveTextureDataSet( ModelHandler::instance()->GetActiveTextureDataSet() );
 
     //place vv node on the graph
@@ -578,7 +587,7 @@ void TextureBasedVizHandler::UpdateGraph()
     {
         return;
     }
-    
+
     LOG_INFO( "Adding TBET node to the graph." );
 
     osg::ref_ptr<osg::Group> tParent = _parent.get();
@@ -586,7 +595,7 @@ void TextureBasedVizHandler::UpdateGraph()
     if( !tParent->containsNode( tVV.get() ) )
     {
         tParent->addChild( tVV.get() );
-    }    
+    }
 }
 /////////////////////////////////////////
 void TextureBasedVizHandler::ClearAll()
@@ -595,7 +604,7 @@ void TextureBasedVizHandler::ClearAll()
     {
         return;
     }
-    
+
     //need to remove the clip planes
     if( _activeVolumeVizNode )
     {
@@ -779,13 +788,17 @@ void TextureBasedVizHandler::PingPongTextures()
 void TextureBasedVizHandler::SetPBuffer( cfdPBufferManager* pbm )
 {
     if( _pbm != pbm )
+    {
         _pbm = pbm;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVizHandler::SetWorldDCS( ves::xplorer::scenegraph::DCS* dcs )
 {
     if( _worldDCS != dcs )
+    {
         _worldDCS = dcs;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVizHandler::SetParentNode( ves::xplorer::scenegraph::Group* parent )
@@ -861,7 +874,9 @@ void TextureBasedVizHandler::_updateVectorVisHandler()
         _vvvh->Init();
         _activeVisNodeHdlr = _vvvh;
         if( !_vvvh->IsThisActive() )
+        {
             _vvvh->EnableDecorator();
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

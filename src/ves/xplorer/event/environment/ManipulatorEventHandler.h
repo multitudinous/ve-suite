@@ -74,7 +74,7 @@ public:
     ManipulatorEventHandler& operator=( const ManipulatorEventHandler& meh );
 
 protected:
-    
+
 private:
 
 };

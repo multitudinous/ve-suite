@@ -35,14 +35,30 @@
 
 #include <QtGui/QWidget>
 
-namespace Ui { class AddFileSystemWidget; }
+namespace Ui
+{
+class AddFileSystemWidget;
+}
 
-namespace Minerva { namespace Core { namespace Data { class Container; } } }
+namespace Minerva
+{
+namespace Core
+{
+namespace Data
+{
+class Container;
+}
+}
+}
 
-namespace ves {
-namespace conductor {
-namespace qt {
-namespace minerva {
+namespace ves
+{
+namespace conductor
+{
+namespace qt
+{
+namespace minerva
+{
 
 class AddFileSystemWidget : public QWidget
 {
@@ -52,9 +68,9 @@ public:
 
     typedef QWidget BaseClass;
 
-    AddFileSystemWidget ( QWidget *parent = 0x0 );
+    AddFileSystemWidget( QWidget* parent = 0x0 );
 
-    void AddLayersToFeature ( Minerva::Core::Data::Container* );
+    void AddLayersToFeature( Minerva::Core::Data::Container* );
 
 Q_SIGNALS:
 
@@ -71,7 +87,7 @@ private Q_SLOTS:
 
 private:
 
-    Ui::AddFileSystemWidget *_ui;
+    Ui::AddFileSystemWidget* _ui;
 };
 
 }

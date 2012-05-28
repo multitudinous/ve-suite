@@ -51,15 +51,15 @@ using namespace ves::open::xml::cad;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 CADPhysicsPropertiesEventHandler::CADPhysicsPropertiesEventHandler()
-        :
-        ves::xplorer::event::CADEventHandler()
+    :
+    ves::xplorer::event::CADEventHandler()
 {
     ;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADPhysicsPropertiesEventHandler::CADPhysicsPropertiesEventHandler( const CADPhysicsPropertiesEventHandler& rhs )
-        :
-        ves::xplorer::event::CADEventHandler( rhs )
+    :
+    ves::xplorer::event::CADEventHandler( rhs )
 {
     ;
 }

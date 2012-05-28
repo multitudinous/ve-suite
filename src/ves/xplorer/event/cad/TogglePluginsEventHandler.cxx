@@ -57,8 +57,8 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 TogglePluginsEventHandler::TogglePluginsEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -69,8 +69,8 @@ TogglePluginsEventHandler::~TogglePluginsEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////
 TogglePluginsEventHandler::TogglePluginsEventHandler( const TogglePluginsEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler( rhs )
+    :
+    ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -92,7 +92,7 @@ void TogglePluginsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* )
 ////////////////////////////////////////////////////////////////////////////////
 void TogglePluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
-    CommandPtr command( 
+    CommandPtr command(
         boost::dynamic_pointer_cast< ves::open::xml::Command >( xmlObject ) );
     DataValuePairPtr activeModelDVP =
         command->GetDataValuePair( "VE_XPLORER_PLUGIN_ID" );
@@ -103,7 +103,7 @@ void TogglePluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     }
     std::string viewData;
     activeModelDVP->GetData( viewData );
-    ves::xplorer::scenegraph::util::TogglePluginVisitor( 
+    ves::xplorer::scenegraph::util::TogglePluginVisitor(
         SceneManager::instance()->GetModelRoot(), true, viewData );
 }
 ////////////////////////////////////////////////////////////////////////////////

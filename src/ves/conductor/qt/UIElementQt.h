@@ -54,8 +54,9 @@
 #include <QtGui/QLabel>
 #include <QtCore/QTime>
 
-namespace Ui {
-    class titlebar;
+namespace Ui
+{
+class titlebar;
 }
 
 namespace ves
@@ -66,7 +67,7 @@ namespace conductor
 
 /// @class ves::conductor::UIElementQt
 /// Wraps Qt widgets for use as UIElements in UIManager. Takes in a normal
-/// Qt widget and converts it to use off-screen rendering to render to a 
+/// Qt widget and converts it to use off-screen rendering to render to a
 /// texture. This class also propagates mouse and keyboard events down into the
 /// widget so that it behaves as though it is being displayed on-screen.
 
@@ -84,7 +85,7 @@ public:
     virtual int GetElementWidth();
     virtual int GetElementHeight();
     const virtual osg::Vec4f GetTextureCoordinates();
-    virtual void SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent &event );
+    virtual void SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent& event );
 
     virtual void SendButtonPressEvent( gadget::Keys button, int x, int y, int state );
     virtual void SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
@@ -135,7 +136,7 @@ public:
     virtual bool SizeDirty();
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter( QObject* object, QEvent* event );
 
 private:
     void FreeOldWidgets();
@@ -159,7 +160,7 @@ private:
     QMutex* mImageMutex; ///< Mutex that is used to avoid access collisions on rendered image
     bool mDirty; ///< Flag telling outside world whether image has changed; holds
     ///< slightly different state from mImageDirty
-    std::map<int,int> mKeyMap; ///< Map to convert juggler keycodes to Qt keycodes
+    std::map<int, int> mKeyMap; ///< Map to convert juggler keycodes to Qt keycodes
 
     void _buttonEvent( int type, gadget::Keys button, int x, int y, int state );
     Qt::MouseButton _extractButton( gadget::Keys button );
@@ -204,7 +205,7 @@ protected Q_SLOTS:
     void _raise();
     void _lower();
 
-    Q_SIGNALS:
+Q_SIGNALS:
     void RequestRender();
     void PutResizeCanvas( int width, int height );
     //void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );

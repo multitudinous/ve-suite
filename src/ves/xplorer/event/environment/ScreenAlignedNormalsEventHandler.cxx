@@ -53,9 +53,9 @@ ScreenAlignedNormalsEventHandler::ScreenAlignedNormalsEventHandler()
     m_activeModel = 0;
 
     CONNECTSIGNALS_1( "%ScreenAlignedNormals",
-                     void ( const bool enable ),
-                     &ScreenAlignedNormalsEventHandler::UpdateScreenAlignedNormals,
-                     m_connections, any_SignalType, normal_Priority );    
+                      void ( const bool enable ),
+                      &ScreenAlignedNormalsEventHandler::UpdateScreenAlignedNormals,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ScreenAlignedNormalsEventHandler::ScreenAlignedNormalsEventHandler( const ScreenAlignedNormalsEventHandler& ceh )
@@ -82,9 +82,9 @@ void ScreenAlignedNormalsEventHandler::Execute( const ves::open::xml::XMLObjectP
 {
     try
     {
-        ves::open::xml::CommandPtr geometryLODScaleCmd = 
+        ves::open::xml::CommandPtr geometryLODScaleCmd =
             boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
-        if(  geometryLODScaleCmd )
+        if( geometryLODScaleCmd )
         {
             ves::open::xml::DataValuePairPtr scaleValue =
                 geometryLODScaleCmd->
@@ -94,7 +94,7 @@ void ScreenAlignedNormalsEventHandler::Execute( const ves::open::xml::XMLObjectP
             UpdateScreenAlignedNormals( alpha );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
         std::cout << "Invalid command passed to ScreenAlignedNormalsEventHandler!!" << std::endl;
@@ -115,7 +115,7 @@ void ScreenAlignedNormalsEventHandler::SetGlobalBaseObject( ves::xplorer::Global
                 ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         m_activeModel = 0;
     }
@@ -124,6 +124,6 @@ void ScreenAlignedNormalsEventHandler::SetGlobalBaseObject( ves::xplorer::Global
 void ScreenAlignedNormalsEventHandler::UpdateScreenAlignedNormals( const bool enable )
 {
     ves::xplorer::scenegraph::SceneManager::instance()->
-        SetScreenAlignedNormals( enable );
+    SetScreenAlignedNormals( enable );
 }
 ////////////////////////////////////////////////////////////////////////////////

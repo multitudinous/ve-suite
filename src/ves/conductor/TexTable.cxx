@@ -38,8 +38,8 @@ using namespace ves::conductor;
 
 
 TexTable::TexTable( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size )
-        : wxGrid( parent, id, pos, size )
-//wxTextCtrl(parent, id, "x", pos, size, wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL|wxTE_DONTWRAP)
+    : wxGrid( parent, id, pos, size )
+    //wxTextCtrl(parent, id, "x", pos, size, wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL|wxTE_DONTWRAP)
 {
     CreateGrid( 0, 2 );
     SetColLabelValue( 0, _( "Description" ) );
@@ -62,13 +62,19 @@ TexTable::TexTable( wxWindow* parent, wxWindowID id, const wxPoint& pos, const w
 void TexTable::SetNumofCols( int num )
 {
     if( GetNumberRows() )
+    {
         DeleteRows( 0, GetNumberRows() );
+    }
 
     if( GetNumberCols() )
+    {
         DeleteCols( 0, GetNumberCols() );
+    }
 
     if( num > 0 )
+    {
         AppendCols( num );
+    }
 
     SetRowMinimalAcceptableHeight( 9 );
     SetColMinimalAcceptableWidth( 27 );
@@ -113,7 +119,7 @@ void TexTable::SetColWidth( int Col_id, int width )
     /*if (Col_id<0 || Col_id>num_cols-1)
       return;
     cols_width[Col_id] = width;*/
-    if (( width < 0 ) ||
+    if( ( width < 0 ) ||
             ( Col_id < 0 ) ||
             ( Col_id >= GetNumberCols() ) )
     {
@@ -127,14 +133,20 @@ wxString TexTable::padding( wxString str, int col_id )
     int len;
 
     if( col_id < 0 || col_id > num_cols - 1 )
+    {
         return str;
+    }
 
     len = str.Len();
     if( len > cols_width[col_id] )
+    {
         return str.Mid( 0, cols_width[col_id] );
+    }
 
     if( len < cols_width[col_id] )
-        return str.Pad(( cols_width[col_id] - len ), ' ' );
+    {
+        return str.Pad( ( cols_width[col_id] - len ), ' ' );
+    }
 
     return str;
 
@@ -170,7 +182,7 @@ bool TexTable::ChooseFixedFont( int size )
     return FALSE;
 }
 
-void TexTable::DoChangeFont( const wxFont &font )
+void TexTable::DoChangeFont( const wxFont& font )
 {
     SetDefaultCellFont( font );
     //SetFont(font);
@@ -207,7 +219,9 @@ void TexTable::AddRow( const std::vector<wxString>& vals )
 
         SetCellValue( GetNumberRows() - 1, i, temp );
         if( i >= ( int )m_align.size() )
+        {
             continue;
+        }
         SetCellAlignment( GetNumberRows() - 1, i, m_align[i], wxALIGN_CENTER );
     }
     SetRowMinimalHeight( GetNumberRows() - 1, 9 );

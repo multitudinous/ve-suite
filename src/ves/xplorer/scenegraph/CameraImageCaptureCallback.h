@@ -57,7 +57,7 @@ public:
     CameraImageCaptureCallback( const std::string& filename );
 
     virtual void operator()( osg::RenderInfo& ri ) const;
-    
+
 protected:
     std::string m_filename;
 };

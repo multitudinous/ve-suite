@@ -44,16 +44,16 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SetStateOnNURBSNodeVisitor::SetStateOnNURBSNodeVisitor( osg::Node* node,
-                                                        bool selectedState, bool dragState,
-                                                        std::pair< double, double > mousePoint,
-                                                        std::pair< double, double > mouseDelta )
- 
-        :
-        NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-        m_selectedState( selectedState ),
-        m_dragState( dragState ),
-        m_mousePoint( mousePoint ),
-        m_mouseDelta( mouseDelta )
+        bool selectedState, bool dragState,
+        std::pair< double, double > mousePoint,
+        std::pair< double, double > mouseDelta )
+
+    :
+    NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+    m_selectedState( selectedState ),
+    m_dragState( dragState ),
+    m_mousePoint( mousePoint ),
+    m_mouseDelta( mouseDelta )
 {
     node->accept( *this );
 }
@@ -71,7 +71,7 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
     {
         if( !m_selectedState )
         {
-    //        std::cout<<"Released"<<std::endl;
+            //        std::cout<<"Released"<<std::endl;
             tempNode->ReleaseControlPointSelection();
             return;
         }
@@ -80,10 +80,10 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
         //process patches
         if( m_dragState && tempNode->HasSelectedControlPoint() )
         {
-     //       std::cout<<"Draggin"<<std::endl;
-            tempNode->MoveSelectedControlPoint( localToWorld, 
-                                                osg::Vec3( 10*m_mouseDelta.first,
-                                                           0,-m_mouseDelta.second*10 ) );
+            //       std::cout<<"Draggin"<<std::endl;
+            tempNode->MoveSelectedControlPoint( localToWorld,
+                                                osg::Vec3( 10 * m_mouseDelta.first,
+                                                        0, -m_mouseDelta.second * 10 ) );
         }
     }
     osg::NodeVisitor::traverse( node );

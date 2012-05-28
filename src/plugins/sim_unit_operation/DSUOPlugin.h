@@ -58,13 +58,13 @@ class DSUOPlugin : public UIPluginBase
 public:
     ///Constructor
     DSUOPlugin();
-    
+
     ///Destructor
     virtual ~DSUOPlugin();
 
     ///???
     wxString GetConductorName();
-    
+
     ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
     virtual bool ShowAvailable();

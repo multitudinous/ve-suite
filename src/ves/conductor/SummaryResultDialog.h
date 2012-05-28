@@ -60,12 +60,12 @@ class VE_GUIPLUGINS_EXPORTS SummaryResultDialog : public UIDialog
 {
 public:
     SummaryResultDialog( wxWindow* parent,
-        const wxString& title,
-        wxSize tabsize,
-        const std::vector< ves::open::xml::CommandPtr > command);
+                         const wxString& title,
+                         wxSize tabsize,
+                         const std::vector< ves::open::xml::CommandPtr > command );
 
     virtual ~SummaryResultDialog();
- 
+
     void TabTitle( const wxString& title );
     void NewTab( const wxString& title = wxT( "Results" ) );
     void Set2Cols( const std::vector<wxString>& col1, const std::vector<wxString>& col2 );

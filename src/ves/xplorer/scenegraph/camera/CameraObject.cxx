@@ -210,17 +210,17 @@ void CameraObject::InitializeCamera( osg::Camera& camera )
     //If we do post processing on this camera we can get rid of that requirement
     camera.setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     camera.setViewport( 0, 0, m_texWidth, m_texHeight );
-    
-    std::pair< int, int > textureRes = 
+
+    std::pair< int, int > textureRes =
         std::make_pair< int, int >( m_texWidth, m_texHeight );
     if( !m_colorMap.valid() )
     {
         m_colorMap = CreateViewportTexture(
-           GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
-           osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
-           textureRes );
+                         GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
+                         osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
+                         textureRes );
     }
-    
+
     //Attach a texture and use it as the render target
     int maxSamples( 0 );
 #ifdef VES_USE_MULTISAMPLING
@@ -230,18 +230,18 @@ void CameraObject::InitializeCamera( osg::Camera& camera )
         maxSamples = 4;
     }
 #endif
-    
+
     camera.attach( osg::Camera::COLOR_BUFFER0, m_colorMap.get(),
-        0, 0, false, maxSamples, maxSamples );
-    
+                   0, 0, false, maxSamples, maxSamples );
+
     m_initialViewMatrix.makeLookAt(
-                                   osg::Vec3d( 0.0, 0.0, 0.0 ),
-                                   osg::Vec3d( 0.0, 1.0, 0.0 ),
-                                   osg::Vec3d( 0.0, 0.0, 1.0 ) );
+        osg::Vec3d( 0.0, 0.0, 0.0 ),
+        osg::Vec3d( 0.0, 1.0, 0.0 ),
+        osg::Vec3d( 0.0, 0.0, 1.0 ) );
     camera.setViewMatrix( m_initialViewMatrix );
-    double aspectRatio = double(m_texWidth)/double(m_texHeight);
+    double aspectRatio = double( m_texWidth ) / double( m_texHeight );
     camera.setProjectionMatrixAsPerspective( 40.0, aspectRatio, 0.1, 5.0 );
-    
+
     //Add the subgraph to render
     camera.addChild( &SceneManager::instance()->GetGraphicalPluginManager() );
     camera.addChild( &SceneManager::instance()->GetHighlightManager() );
@@ -255,20 +255,20 @@ void CameraObject::Initialize()
 
     //Create osg camera for rendering
     m_camera = new osg::Camera();
-    InitializeCamera( *(m_camera.get()) );
+    InitializeCamera( *( m_camera.get() ) );
     //Add the subgraph to render
     addChild( m_camera.get() );
 
     //Do this for easy image capture capability
     m_screenCapCamera = new osg::Camera();
-    InitializeCamera( *(m_screenCapCamera.get()) );
+    InitializeCamera( *( m_screenCapCamera.get() ) );
 
     m_colorImage = new osg::Image();
     m_colorImage->
-        allocateImage( m_texWidth, m_texHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
+    allocateImage( m_texWidth, m_texHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
     //m_colorMap->setImage( m_colorImage.get() );
     m_screenCapCamera->
-        attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );
+    attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );
 
     /*m_light = new osg::Light();
     m_light->setLightNum( 0 );
@@ -291,14 +291,14 @@ void CameraObject::Initialize()
     //Setup the light
     //osg::ref_ptr< osg::StateSet > stateset = m_camera->getOrCreateStateSet();
     //stateset->setAssociatedModes(
-        //m_light.get(),
-        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    //m_light.get(),
+    //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     //stateset->setMode(
-        //GL_LIGHTING,
-        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    //GL_LIGHTING,
+    //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     //stateset->setAttributeAndModes(
-        //lightModel.get(),
-        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    //lightModel.get(),
+    //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     //m_camera->addChild( lightSource.get() );
 
     //Create DCS
@@ -332,9 +332,9 @@ void CameraObject::Initialize()
     //Initialize mDepthOfFieldTechnique
     //mDepthOfFieldTechnique = new cpt::DepthOfFieldTechnique();
     //mDepthOfFieldTechnique->GetTextureDimensionsUniform()->set(
-        //static_cast< int >( 1024 ), static_cast< int >( 1024 ) );
+    //static_cast< int >( 1024 ), static_cast< int >( 1024 ) );
     //mDepthOfFieldTechnique->GetMaxCircleOfConfusionUniform()->set(
-        //static_cast< float >( 6.0 ) );
+    //static_cast< float >( 6.0 ) );
     //mCameraViewQuadDCS->AddTechnique( "DepthOfField", mDepthOfFieldTechnique );
     //mCameraViewQuadDCS->SetTechnique( "DepthOfField" );
 
@@ -345,15 +345,15 @@ void CameraObject::Initialize()
     //Initialize mProjectionTechnique
     //mProjectionTechnique = new cpt::ProjectionTechnique();
     //mProjectionTechnique->GetAlpha()->set(
-        //static_cast< float >( 0.3 ) );
+    //static_cast< float >( 0.3 ) );
     //mProjectionTechnique->GetNearPlaneUniform()->set(
-        //static_cast< float >( 0.1 ) );
+    //static_cast< float >( 0.1 ) );
     //mProjectionTechnique->GetFarPlaneUniform()->set(
-        //static_cast< float >( 2.0 ) );
+    //static_cast< float >( 2.0 ) );
     //mProjectionTechnique->GetFocalDistanceUniform()->set(
-        //static_cast< float >( 1.5 ) );
+    //static_cast< float >( 1.5 ) );
     //mProjectionTechnique->GetFocalRangeUniform()->set(
-        //static_cast< float >( 5.0 ) );
+    //static_cast< float >( 5.0 ) );
     //mPluginDCS->AddTechnique( "Projection", mProjectionTechnique );
     //mPluginDCS->SetTechnique( "Projection" );
 
@@ -372,8 +372,8 @@ void CameraObject::CalculateMatrixMVPT()
              osg::Matrixd::scale( 0.5, 0.5, 0.5 );
 
     m_texGenNode->getTexGen()->setPlanesFromMatrix( m_mvpt );
-    
-    //Now update the screen capture camera since this happens after the 
+
+    //Now update the screen capture camera since this happens after the
     //update callback
     m_screenCapCamera->setViewMatrix( m_camera->getViewMatrix() );
     m_screenCapCamera->setProjectionMatrix( m_camera->getProjectionMatrix() );
@@ -500,31 +500,31 @@ void CameraObject::CreateGeometry()
     m_cameraNode = osgDB::readNodeFile( "osg-data/camera.ive" );
     {
         std::string vertexSource =
-        "varying vec4 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
+            "varying vec4 eyePos; \n"
+            "varying vec3 lightPos; \n"
+            "varying vec3 normal; \n"
 
-        "void main() \n"
-        "{ \n"
+            "void main() \n"
+            "{ \n"
             "gl_Position = ftransform(); \n"
 
             "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
             "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
             "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
-        "} \n";
+            "} \n";
 
         std::string fragmentSource =
-        "varying vec4 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
-        "uniform vec3 glowColor; \n"
+            "varying vec4 eyePos; \n"
+            "varying vec3 lightPos; \n"
+            "varying vec3 normal; \n"
+            "uniform vec3 glowColor; \n"
 
-        "const vec3 ambMat  = vec3( 0.368627, 0.368421, 0.368421 ); \n"
-        "const vec3 diffMat = vec3( 0.886275, 0.885003, 0.885003 ); \n"
-        "const vec3 specMat = vec3( 0.490196, 0.488722, 0.488722 ); \n"
+            "const vec3 ambMat  = vec3( 0.368627, 0.368421, 0.368421 ); \n"
+            "const vec3 diffMat = vec3( 0.886275, 0.885003, 0.885003 ); \n"
+            "const vec3 specMat = vec3( 0.490196, 0.488722, 0.488722 ); \n"
 
-        "void main() \n"
-        "{ \n"
+            "void main() \n"
+            "{ \n"
             "vec3 N = normalize( normal ); \n"
             "vec3 L = normalize( lightPos ); \n"
             "float NDotL = max( dot( N, L ), 0.0 ); \n"
@@ -536,11 +536,11 @@ void CameraObject::CreateGeometry()
             "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * ambMat; \n"
             "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * diffMat * NDotL; \n"
             "vec3 totalSpecular = \n"
-                "gl_LightSource[ 0 ].specular.rgb * specMat * pow( RDotL, 15.0 ); \n"
+            "gl_LightSource[ 0 ].specular.rgb * specMat * pow( RDotL, 15.0 ); \n"
 
             "gl_FragData[ 0 ] = vec4( totalAmbient + totalDiffuse + totalSpecular, 1.0 ); \n"
             "gl_FragData[ 1 ] = vec4( glowColor, gl_FragData[ 0 ].a ); \n"
-        "} \n";
+            "} \n";
 
         osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
         vertexShader->setType( osg::Shader::VERTEX );
@@ -584,11 +584,11 @@ void CameraObject::CreateGeometry()
     GLushort idxLoops0[ 4 ] = { 1, 2, 3, 4 };
     GLushort idxLoops1[ 4 ] = { 5, 6, 7, 8 };
     m_frustumGeometry->addPrimitiveSet( new osg::DrawElementsUShort(
-        osg::PrimitiveSet::LINES, 8, idxLines ) );
+                                            osg::PrimitiveSet::LINES, 8, idxLines ) );
     m_frustumGeometry->addPrimitiveSet( new osg::DrawElementsUShort(
-        osg::PrimitiveSet::LINE_LOOP, 4, idxLoops0 ) );
+                                            osg::PrimitiveSet::LINE_LOOP, 4, idxLoops0 ) );
     m_frustumGeometry->addPrimitiveSet( new osg::DrawElementsUShort(
-        osg::PrimitiveSet::LINE_LOOP, 4, idxLoops1 ) );
+                                            osg::PrimitiveSet::LINE_LOOP, 4, idxLoops1 ) );
     m_frustumGeode->addDrawable( m_frustumGeometry.get() );
 
     {
@@ -599,9 +599,9 @@ void CameraObject::CreateGeometry()
             GL_LIGHTING,
             osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
         //stateset->setAttribute(
-            //( mResourceManager->get
-            //< osg::Program, osg::ref_ptr >( "FrustumProgram" ) ).get(),
-            //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        //( mResourceManager->get
+        //< osg::Program, osg::ref_ptr >( "FrustumProgram" ) ).get(),
+        //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     }
     m_dcs->addChild( m_frustumGeode.get() );
 }
@@ -911,37 +911,37 @@ void CameraObject::Update()
     osg::Matrixd projectionMatrix = m_camera->getProjectionMatrix();
 
     const double nearPlane = projectionMatrix( 3, 2 ) /
-                           ( projectionMatrix( 2, 2 ) - 1.0 );
+                             ( projectionMatrix( 2, 2 ) - 1.0 );
     const double farPlane = projectionMatrix( 3, 2 ) /
-                          ( projectionMatrix( 2, 2 ) + 1.0 );
+                            ( projectionMatrix( 2, 2 ) + 1.0 );
 
     const double nLeft =   nearPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
-                                         projectionMatrix( 0, 0 );
+                           projectionMatrix( 0, 0 );
     const double nRight =  nearPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
-                                         projectionMatrix( 0, 0 );
+                           projectionMatrix( 0, 0 );
     const double nTop =    nearPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
-                                         projectionMatrix( 1, 1 );
+                           projectionMatrix( 1, 1 );
     const double nBottom = nearPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
-                                         projectionMatrix( 1, 1 );
+                           projectionMatrix( 1, 1 );
 
     const double fLeft =   farPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
-                                        projectionMatrix( 0, 0 );
+                           projectionMatrix( 0, 0 );
     const double fRight =  farPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
-                                        projectionMatrix( 0, 0 );
+                           projectionMatrix( 0, 0 );
     const double fTop =    farPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
-                                        projectionMatrix( 1, 1 );
+                           projectionMatrix( 1, 1 );
     const double fBottom = farPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
-                                        projectionMatrix( 1, 1 );
+                           projectionMatrix( 1, 1 );
 
-    (*m_frustumVertices)[ 0 ].set( 0.0, 0.0, 0.0 );
-    (*m_frustumVertices)[ 1 ].set( nLeft, nearPlane, nBottom );
-    (*m_frustumVertices)[ 2 ].set( nRight, nearPlane, nBottom );
-    (*m_frustumVertices)[ 3 ].set( nRight, nearPlane, nTop );
-    (*m_frustumVertices)[ 4 ].set( nLeft, nearPlane, nTop );
-    (*m_frustumVertices)[ 5 ].set( fLeft, farPlane, fBottom );
-    (*m_frustumVertices)[ 6 ].set( fRight, farPlane, fBottom );
-    (*m_frustumVertices)[ 7 ].set( fRight, farPlane, fTop );
-    (*m_frustumVertices)[ 8 ].set( fLeft, farPlane, fTop );
+    ( *m_frustumVertices )[ 0 ].set( 0.0, 0.0, 0.0 );
+    ( *m_frustumVertices )[ 1 ].set( nLeft, nearPlane, nBottom );
+    ( *m_frustumVertices )[ 2 ].set( nRight, nearPlane, nBottom );
+    ( *m_frustumVertices )[ 3 ].set( nRight, nearPlane, nTop );
+    ( *m_frustumVertices )[ 4 ].set( nLeft, nearPlane, nTop );
+    ( *m_frustumVertices )[ 5 ].set( fLeft, farPlane, fBottom );
+    ( *m_frustumVertices )[ 6 ].set( fRight, farPlane, fBottom );
+    ( *m_frustumVertices )[ 7 ].set( fRight, farPlane, fTop );
+    ( *m_frustumVertices )[ 8 ].set( fLeft, farPlane, fTop );
     m_frustumGeometry->dirtyDisplayList();
     m_frustumGeometry->dirtyBound();
 
@@ -999,7 +999,7 @@ osg::Texture2D* CameraObject::CreateViewportTexture(
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::WriteImageFile( std::string const& saveImageDir )
 {
-    std::string imageNumber = 
+    std::string imageNumber =
         boost::lexical_cast< std::string >( m_imageCounter );
     const std::string baseFilename = saveImageDir + "/" + getName() + "_";
     const std::string extension = ".png";
@@ -1011,13 +1011,13 @@ void CameraObject::WriteImageFile( std::string const& saveImageDir )
 
         m_filename = baseFilename + imageNumber + extension;
     }
-    
+
     removeChild( m_camera.get() );
     addChild( m_screenCapCamera.get() );
-    /*osg::ref_ptr< ves::xplorer::scenegraph::RTTCameraImageCaptureCallback > 
-        tempCB = 
+    /*osg::ref_ptr< ves::xplorer::scenegraph::RTTCameraImageCaptureCallback >
+        tempCB =
         new ves::xplorer::scenegraph::RTTCameraImageCaptureCallback( m_filename, m_colorMap.get() );
-    
+
     osg::Camera::DrawCallback* pdCB = m_camera->getPostDrawCallback();
     if( pdCB )
     {
@@ -1044,13 +1044,13 @@ void CameraObject::MakeHeadTrackedCamera()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraObject::PostWriteImageFile()
 {
-    osgDB::writeImageFile( *(m_colorImage.get()), m_filename );
+    osgDB::writeImageFile( *( m_colorImage.get() ), m_filename );
     m_captureImage = false;
     removeChild( m_screenCapCamera.get() );
     addChild( m_camera.get() );
     /*osg::Camera::DrawCallback* pdCB = m_camera->getPostDrawCallback();
     osgwTools::CompositeDrawCallback* cdc = dynamic_cast< osgwTools::CompositeDrawCallback* >( pdCB );
-    
+
     if( cdc )
     {
         pdCB = cdc->getDrawCallbackList().at( 0 );
@@ -1066,29 +1066,29 @@ void CameraObject::SetTextureResolution( std::pair< unsigned int, unsigned int >
 {
     m_texWidth = viewportDimensions.first;
     m_texHeight = viewportDimensions.second;
-    
+
     m_screenCapCamera->detach( osg::Camera::COLOR_BUFFER0 );
     m_camera->detach( osg::Camera::COLOR_BUFFER0 );
 
     m_colorMap = 0;
-    std::pair< int, int > textureRes = 
+    std::pair< int, int > textureRes =
         std::make_pair< int, int >( m_texWidth, m_texHeight );
     m_colorMap = CreateViewportTexture(
-           GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
-           osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
-           textureRes );
+                     GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
+                     osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
+                     textureRes );
     //m_colorMap->setTextureSize( m_texWidth, m_texHeight );
 
     //Do this for easy image capture capability
     m_screenCapCamera = new osg::Camera();
-    InitializeCamera( *(m_screenCapCamera.get()) );
+    InitializeCamera( *( m_screenCapCamera.get() ) );
 
     osg::Matrixd tempView = m_camera->getViewMatrix();
     osg::Matrixd tempProj = m_camera->getProjectionMatrix();
 
     removeChild( m_camera.get() );
     m_camera = new osg::Camera();
-    InitializeCamera( *(m_camera.get()) );
+    InitializeCamera( *( m_camera.get() ) );
     addChild( m_camera.get() );
     m_camera->setViewMatrix( tempView );
     m_camera->setProjectionMatrix( tempProj );
@@ -1098,11 +1098,11 @@ void CameraObject::SetTextureResolution( std::pair< unsigned int, unsigned int >
     ///Allocate an image rather than scale it because scaleImage
     ///makes gl calls which may cause problems on linux
     m_colorImage->
-        allocateImage( m_texWidth, m_texHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
+    allocateImage( m_texWidth, m_texHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
 
     ///Now attach everything back up
     m_screenCapCamera->
-        attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );
+    attach( osg::Camera::COLOR_BUFFER0, m_colorImage.get(), 0, 0 );
 
     m_renderQuad->getStateSet()->setTextureAttributeAndModes(
         0, m_colorMap.get(), osg::StateAttribute::ON );

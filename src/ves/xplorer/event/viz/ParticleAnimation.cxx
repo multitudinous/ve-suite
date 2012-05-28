@@ -82,26 +82,26 @@ void ParticleAnimation::Update()
     if( GetActiveDataSet() == NULL )
     {
         vprDEBUG( vesDBG, 0 )
-            << "|\tParticleAnimation has no data so setting updateFlag to false"
-            << std::endl << vprDEBUG_FLUSH;
+                << "|\tParticleAnimation has no data so setting updateFlag to false"
+                << std::endl << vprDEBUG_FLUSH;
         this->updateFlag = false;
         return;
     }
     else
     {
         vprDEBUG( vesDBG, 1 )
-            << "|\tParticleAnimation: this->GetActiveDataSet() = "
-            << GetActiveDataSet()->GetFileName() << std::endl 
-            << vprDEBUG_FLUSH;
+                << "|\tParticleAnimation: this->GetActiveDataSet() = "
+                << GetActiveDataSet()->GetFileName() << std::endl
+                << vprDEBUG_FLUSH;
     }
 
     if( m_gpuTools )
     {
         OSGParticleStage* particles = new OSGParticleStage();
-        geodes.push_back( particles->createInstanced( 
-            GetActiveDataSet()->GetTransientDataSets(),
-            GetActiveDataSet()->GetActiveScalarName(), 
-            GetActiveDataSet()->GetActiveVectorName() ) );
+        geodes.push_back( particles->createInstanced(
+                              GetActiveDataSet()->GetTransientDataSets(),
+                              GetActiveDataSet()->GetActiveScalarName(),
+                              GetActiveDataSet()->GetActiveVectorName() ) );
         delete particles;
         updateFlag = true;
     }
@@ -139,9 +139,9 @@ void ParticleAnimation::UpdateCommand()
     //Extract the specific commands from the overall command
     ves::open::xml::DataValuePairPtr activeModelDVP =
         veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = 
-        boost::dynamic_pointer_cast<ves::open::xml::Command>(  
-        activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::CommandPtr objectCommand =
+        boost::dynamic_pointer_cast<ves::open::xml::Command>(
+            activeModelDVP->GetDataXMLObject() );
 
     //Extract the isosurface value
     activeModelDVP = objectCommand->GetDataValuePair( "Polydata Value" );
@@ -175,10 +175,10 @@ float ParticleAnimation::GetSphereScaleFactor()
     // this->GetParticleScale() is obtained from gui, -100 < sphereScale < 100
     // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
     // convert range to -4 < x < 4, and compute the exponent...
-    vprDEBUG( vesDBG, 1 ) 
-        << "|\t\tParticleAnimation::GetSphereScaleFactor sphereScale = " 
-        << GetParticleScale()
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 )
+            << "|\t\tParticleAnimation::GetSphereScaleFactor sphereScale = "
+            << GetParticleScale()
+            << std::endl << vprDEBUG_FLUSH;
 
     float scaleFactor = 0.0;
 
@@ -187,27 +187,27 @@ float ParticleAnimation::GetSphereScaleFactor()
         scaleFactor = exp( this->GetParticleScale() / 25.0 );
     }
 
-    vprDEBUG( vesDBG, 1 ) 
-        << "\t\tParticleAnimation::GetSphereScaleFactor scaleFactor = " 
-        << scaleFactor
-        << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 )
+            << "\t\tParticleAnimation::GetSphereScaleFactor scaleFactor = "
+            << scaleFactor
+            << std::endl << vprDEBUG_FLUSH;
 
     return scaleFactor;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ParticleAnimation::UpdatePropertySet()
-{   
+{
     //Extract the isosurface value
-    warpedContourScale = 
+    warpedContourScale =
         boost::any_cast<double>( m_propertySet->GetPropertyValue( "WarpedScaleFactor" ) );
-    
-    colorByScalar = 
+
+    colorByScalar =
         boost::any_cast< std::string >( m_propertySet->GetPropertyAttribute( "ColorByScalar", "enumCurrentString" ) );
-    
-    warpSurface = 
+
+    warpSurface =
         boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseWarpedSurface" ) );
-    
-    m_gpuTools = 
+
+    m_gpuTools =
         boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

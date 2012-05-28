@@ -80,15 +80,15 @@ cfdObjects* cfdContours::CreateCopy()
 void cfdContours::Update()
 {
     vprDEBUG( vesDBG, 1 ) << "cfdContours::Update"
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     cfdPlanes* precomputedPlanes =
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
     if( !precomputedPlanes )
     {
         vprDEBUG( vesDBG, 0 )
-        << "Dataset contains no precomputed contour planes."
-        << std::endl << vprDEBUG_FLUSH;
+                << "Dataset contains no precomputed contour planes."
+                << std::endl << vprDEBUG_FLUSH;
         ves::xplorer::communication::CommunicationHandler::instance()
         ->SendConductorMessage( "Dataset contains no precomputed contour planes.\n" );
         return;
@@ -99,16 +99,16 @@ void cfdContours::Update()
     {
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
-        //Just need a filter to be able to pass the data into the SetMapper 
+        //Just need a filter to be able to pass the data into the SetMapper
         //function. May need to create another function so that this filter
         //is not necessary.
         /*vtkCellDataToPointData* tempPipe = vtkCellDataToPointData::New();
         tempPipe->SetInput( GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutput() );
         tempPipe->Update();
         SetMapperInput( tempPipe->GetOutputPort() );
-        
+
         tempPipe->Delete();*/
-        
+
         mapper->SetInputConnection( GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutputPort() );
         //mapper->SetScalarModeToDefault();
         //mapper->SetColorModeToDefault();
@@ -117,10 +117,10 @@ void cfdContours::Update()
         mapper->SetScalarModeToUsePointFieldData();
         mapper->UseLookupTableScalarRangeOn();
         mapper->SelectColorArray( GetActiveDataSet()->
-            GetActiveScalarName().c_str() );
+                                  GetActiveScalarName().c_str() );
         mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
         mapper->Update();
-        
+
         this->mapper->Update();
         vtkActor* temp = vtkActor::New();
         temp->SetMapper( this->mapper );
@@ -134,13 +134,13 @@ void cfdContours::Update()
             geodes.push_back( tempGeode.get() );
             this->updateFlag = true;
         }
-        catch ( std::bad_alloc )
+        catch( std::bad_alloc )
         {
             mapper->Delete();
             mapper = vtkPolyDataMapper::New();
 
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdContours"
-            << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
         }
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
         temp->Delete();
@@ -148,8 +148,8 @@ void cfdContours::Update()
     else
     {
         vprDEBUG( vesDBG, 0 )
-        << "cfdContours: !(mapper && cursorType == NONE)"
-        << std::endl << vprDEBUG_FLUSH;
+                << "cfdContours: !(mapper && cursorType == NONE)"
+                << std::endl << vprDEBUG_FLUSH;
 
         this->updateFlag = false;
     }

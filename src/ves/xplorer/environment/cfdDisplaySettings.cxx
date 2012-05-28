@@ -160,19 +160,19 @@ void cfdDisplaySettings::ProcessCommand()
 #endif
             elements.at( i )->setProperty( "size", 0, xSize );
             // 50 for the menu bar height
-/*#ifdef WIN32
-            ySize = static_cast< int >( configYValue - 195 );
-#else
-            ySize = static_cast< int >( configYValue - 155 );
-#endif*/
+            /*#ifdef WIN32
+                        ySize = static_cast< int >( configYValue - 195 );
+            #else
+                        ySize = static_cast< int >( configYValue - 155 );
+            #endif*/
 
 #if 0
             ySize = static_cast< int >( configYValue - 85 );
 #else
             ySize = static_cast< int >( configYValue );
 #endif
-            std::cout << "|\tWindow resize value: " << xSize << " " 
-                << ySize << std::endl;
+            std::cout << "|\tWindow resize value: " << xSize << " "
+                      << ySize << std::endl;
             elements.at( i )->setProperty( "size", 1, ySize );
             elements.at( i )->setProperty( "origin", 0, 0 );
             elements.at( i )->setProperty( "origin", 1, 0 );
@@ -185,10 +185,10 @@ void cfdDisplaySettings::ProcessCommand()
                 double xmin = svPtr->getProperty< double >( "lower_left_corner", 0 );
                 double xmax = svPtr->getProperty< double >( "lower_right_corner", 0 );
                 double xScreenDim = xmax - xmin;
-                
+
                 // Use width & height to compute scale
-                double metersPerPixelX = gmtl::Math::abs(xmax-xmin) / vpWidth;
-                
+                double metersPerPixelX = gmtl::Math::abs( xmax - xmin ) / vpWidth;
+
                 //this constant number is meters / pixel
                 double newXScreenDim = metersPerPixelX * xSize;
                 double xScreenDif = newXScreenDim - xScreenDim;
@@ -206,7 +206,7 @@ void cfdDisplaySettings::ProcessCommand()
                 double ymax = svPtr->getProperty< double >( "upper_left_corner", 1 );
                 double yScreenDim = ymax - ymin;
                 //this constant number is meters / pixel
-                double metersPerPixelY = gmtl::Math::abs(ymax-ymin) / vpHeight;
+                double metersPerPixelY = gmtl::Math::abs( ymax - ymin ) / vpHeight;
 
                 double newYScreenDim = metersPerPixelY * ySize;
                 double yScreenDif = newYScreenDim - yScreenDim;
@@ -232,7 +232,7 @@ std::pair< int, int > cfdDisplaySettings::GetScreenResolution( void )
 {
     //Set the default value based on config screen size if no desktop size
     // is specified
-    if (( xSize == 0 ) && ( ySize == 0 ) )
+    if( ( xSize == 0 ) && ( ySize == 0 ) )
     {
         jccl::ConfigManager::instance()->lockActive();
         // Get current list of display elements
@@ -261,7 +261,7 @@ std::map< std::string, double > cfdDisplaySettings::GetScreenCornerValues( void 
 {
     //Set the default value based on config screen size if no desktop size
     // is specified
-    if (( newXmin == 0 ) && ( newXmax == 0 ) )
+    if( ( newXmin == 0 ) && ( newXmax == 0 ) )
     {
         jccl::ConfigManager::instance()->lockActive();
         // Get current list of display elements
@@ -303,7 +303,7 @@ std::map< std::string, double > cfdDisplaySettings::GetScreenCornerValues( void 
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDisplaySettings::ChangeDisplayElements( bool remove,
-                                                    jccl::ConfigElementPtr element )
+        jccl::ConfigElementPtr element )
 {
     if( configuration )
     {
@@ -317,8 +317,8 @@ void cfdDisplaySettings::ChangeDisplayElements( bool remove,
     nodePtr->getChild( "elements" )->addChild( displayNode );
     cppdom::NodePtr elementsNode = nodePtr->getChild( "elements" );
     std::cout << "|\t Load reconfig elements, result = "
-        << configuration->loadFromElementNode( elementsNode )
-        << std::endl;
+              << configuration->loadFromElementNode( elementsNode )
+              << std::endl;
 
     if( remove )
     {

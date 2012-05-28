@@ -70,7 +70,7 @@ UI_TransientDialog::UI_TransientDialog( int numTimeSteps,
                                         wxWindow* parent,
                                         wxWindowID id,
                                         std::string title )
-        : BaseDialog( parent, id, title )
+    : BaseDialog( parent, id, title )
 {
     //_tab = 0;
     //_nTimeSteps = numTimeSteps;
@@ -131,11 +131,11 @@ void UI_TransientDialog::_buildGUI()
     wxBoxSizer* controlSizer = new wxBoxSizer( wxHORIZONTAL );
 
     wxStaticBox* timeStep = new wxStaticBox( this, -1,
-                                             _( "Current Timestep" ) );
+            _( "Current Timestep" ) );
     wxStaticBoxSizer* tStepSizer = new wxStaticBoxSizer( timeStep, wxHORIZONTAL );
 
     wxStaticBox* duration = new wxStaticBox( this, -1,
-                                             _( "Duration (s)" ) );
+            _( "Duration (s)" ) );
     wxStaticBoxSizer* dSizer = new wxStaticBoxSizer( duration, wxHORIZONTAL );
     //wxBoxSizer* dSizer = new wxBoxSizer(wxHORIZONTAL);
 

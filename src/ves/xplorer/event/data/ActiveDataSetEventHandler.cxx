@@ -52,17 +52,17 @@ using namespace ves::xplorer::event::data;
 ///Constructor                                          //
 ////////////////////////////////////////////////////////////////////////////////
 ActiveDataSetEventHandler::ActiveDataSetEventHandler()
-    : 
+    :
     ves::xplorer::event::EventHandler()
 {
     CONNECTSIGNALS_1( "%ActiveDataSet",
-                     void ( const std::string& activModelID ),
-                     &ActiveDataSetEventHandler::SetActiveDataSet,
-                     m_connections, any_SignalType, normal_Priority );    
+                      void ( const std::string & activModelID ),
+                      &ActiveDataSetEventHandler::SetActiveDataSet,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ActiveDataSetEventHandler::ActiveDataSetEventHandler( const ActiveDataSetEventHandler& rhs )
-    : 
+    :
     ves::xplorer::event::EventHandler( rhs )
 {
     ;

@@ -49,7 +49,7 @@ namespace device
  */
 /// Turns greyscaling for contour planes on or off.
 void EnableDevice( /*unsigned int const& deviceType,*/ bool const& enable );
-    
+
 } //end device
 } //end event
 } //end xplorer

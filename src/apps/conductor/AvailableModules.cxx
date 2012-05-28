@@ -66,9 +66,9 @@ BEGIN_EVENT_TABLE( AvailableModules, wxTreeCtrl )
     EVT_TREE_ITEM_ACTIVATED( AVAILABLEMODULES_TREE_CTRL, AvailableModules::Instantiate )
 END_EVENT_TABLE()
 
-AvailableModules::AvailableModules( wxWindow *parent, const wxWindowID id, 
-                             const wxPoint& pos, const wxSize& size,
-                             long style )
+AvailableModules::AvailableModules( wxWindow* parent, const wxWindowID id,
+                                    const wxPoint& pos, const wxSize& size,
+                                    long style )
     :
     wxTreeCtrl( parent, id, pos, size, style ),
     canvas( 0 )
@@ -77,13 +77,13 @@ AvailableModules::AvailableModules( wxWindow *parent, const wxWindowID id,
     //int image2 = AVAILABLEMODULES_FOLDERSELECTED;
 
     CreateImageList();
-    
+
     rootId = AddRoot( wxT( "Available Plugins" ), image1, -1, NULL );
     SetItemImage( rootId, AVAILABLEMODULES_FOLDEROPENED, wxTreeItemIcon_Expanded );
     SetItemFont( rootId, *wxNORMAL_FONT );
-    
+
     pl_loader = new PluginLoader();
-    
+
     LoadModules();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -124,13 +124,15 @@ void AvailableModules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
             {
                 id = AppendItem( lastid, lnames[i], image1, image2, NULL );
                 SetItemImage( id, AVAILABLEMODULES_FOLDEROPENED,
-                    wxTreeItemIcon_Expanded );
+                              wxTreeItemIcon_Expanded );
                 SetItemFont( id, *wxNORMAL_FONT );
                 break;
             }
 
             if( GetItemText( id ) == lnames[i] )
+            {
                 break;
+            }
 
             id = GetNextChild( lastid, cookie );
         }
@@ -138,9 +140,9 @@ void AvailableModules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
 
     //add item to tree
     images->Add( wxBitmap( plugin->GetIconImage()->ConvertToImage().
-        Rescale( m_imageSize, m_imageSize ) ) );
+                           Rescale( m_imageSize, m_imageSize ) ) );
     id = AppendItem( id, lnames[i], images->GetImageCount() - 1, -1,
-        new ReiTreeItemData( plugin, clsi ) );
+                     new ReiTreeItemData( plugin, clsi ) );
     SetItemFont( id, *wxNORMAL_FONT );
     //SetItemBold( id );
 }
@@ -187,7 +189,7 @@ void AvailableModules::Instantiate( wxTreeEvent& WXUNUSED( event ) ) //Double cl
     {
         UIPluginBase* object =
 #if wxCHECK_VERSION( 2, 9, 0 )
-            dynamic_cast< UIPluginBase* >( (info->GetConstructor())() );
+            dynamic_cast< UIPluginBase* >( ( info->GetConstructor() )() );
 #else
             dynamic_cast< UIPluginBase* >( info->m_objectConstructor() );
 #endif
@@ -195,7 +197,7 @@ void AvailableModules::Instantiate( wxTreeEvent& WXUNUSED( event ) ) //Double cl
         object->SetNetwork( canvas->GetActiveNetwork() );
         object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );
         canvas->GetActiveNetwork()->AddtoNetwork( object,
-            std::string( wxString( info->GetClassName() ).mb_str() ) );
+                std::string( wxString( info->GetClassName() ).mb_str() ) );
         frame->GetHierarchyTree()->AddtoTree( object );
     }
     else
@@ -205,7 +207,7 @@ void AvailableModules::Instantiate( wxTreeEvent& WXUNUSED( event ) ) //Double cl
         object->SetNetwork( canvas->GetActiveNetwork() );
         object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );
         canvas->GetActiveNetwork()->AddtoNetwork( object,
-            std::string( "DefaultPlugin" ) );
+                std::string( "DefaultPlugin" ) );
         frame->GetHierarchyTree()->AddtoTree( object );
     }
 }
@@ -230,9 +232,9 @@ void AvailableModules::ShowMenu( wxTreeItemId id, const wxPoint& pt )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AvailableModules::getLeveledName( wxString name,
-    std::vector<wxString>& lnames )
+                                       std::vector<wxString>& lnames )
 {
-    wxStringTokenizer tkz( name, wxT("_"));
+    wxStringTokenizer tkz( name, wxT( "_" ) );
     while( tkz.HasMoreTokens() )
     {
         wxString token = tkz.GetNextToken();
@@ -248,9 +250,13 @@ void AvailableModules::CreateImageList( int size )
         return;
     }
     if( size == 0 )
+    {
         size = m_imageSize;
+    }
     else
+    {
         m_imageSize = size;
+    }
 
     // Make an image list containing small icons
     images = new wxImageList( size, size, TRUE );
@@ -275,7 +281,7 @@ void AvailableModules::CreateImageList( int size )
         else
         {
             images->Add( wxBitmap( wxBitmap( icons[i] ).ConvertToImage().
-                Rescale( size, size ) ) );
+                                   Rescale( size, size ) ) );
         }
     }
 
@@ -294,7 +300,7 @@ bool AvailableModules::LoadModules()
     {
         UIPluginBase* plugin = pl_loader->GetPluginDataPair( i ).first;
         wxClassInfo* clsi = pl_loader->GetPluginDataPair( i ).second;
-        
+
         if( plugin->ShowAvailable() )
         {
             AddModule( plugin, clsi );
@@ -332,7 +338,7 @@ void AvailableModules::ShowDesc( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AvailableModules::ShowHelp( wxCommandEvent& WXUNUSED( event ) )
 {
-    ReiTreeItemData* item_data = 
+    ReiTreeItemData* item_data =
         dynamic_cast< ReiTreeItemData* >( GetItemData( selection ) );
     if( !item_data )
     {
@@ -355,7 +361,7 @@ void AvailableModules::ResetPluginTree()
     //Remove all the old plugins and create the new one
     delete pl_loader;
     pl_loader = new PluginLoader();
-    
+
     //Load the plugins now
     LoadModules();
 

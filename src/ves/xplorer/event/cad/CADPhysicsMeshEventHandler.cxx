@@ -52,15 +52,15 @@ using namespace ves::open::xml;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 CADPhysicsMeshEventHandler::CADPhysicsMeshEventHandler()
-        :
-        ves::xplorer::event::CADEventHandler()
+    :
+    ves::xplorer::event::CADEventHandler()
 {
     ;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADPhysicsMeshEventHandler::CADPhysicsMeshEventHandler( const CADPhysicsMeshEventHandler& rhs )
-        :
-        ves::xplorer::event::CADEventHandler( rhs )
+    :
+    ves::xplorer::event::CADEventHandler( rhs )
 {
     ;
 }
@@ -94,14 +94,14 @@ void CADPhysicsMeshEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         const std::string lod = lodType->GetDataString();
         const std::string motion = motionType->GetDataString();
         const std::string decimation = command->GetDataValuePair( "Decimation Value" )->GetDataString();
-        
-        m_cadHandler->GetPart( nodeID->GetDataString() )->
-            GetPhysicsRigidBody()->
-            CreateRigidBody( lod, motion, mesh, decimation );
 
-        vprDEBUG( vesDBG, 1 ) << "|\tChanged Physics Mesh: " 
-            << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() 
-            << std::endl << vprDEBUG_FLUSH;
+        m_cadHandler->GetPart( nodeID->GetDataString() )->
+        GetPhysicsRigidBody()->
+        CreateRigidBody( lod, motion, mesh, decimation );
+
+        vprDEBUG( vesDBG, 1 ) << "|\tChanged Physics Mesh: "
+                              << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename()
+                              << std::endl << vprDEBUG_FLUSH;
     }
     catch( ... )
     {

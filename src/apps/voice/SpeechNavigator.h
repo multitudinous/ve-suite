@@ -78,8 +78,8 @@ public:
      *
      * @post    the Julius Network Client is connected to the remote host.
      */
-    bool connectToJulius(const std::string& host, 
-                        const unsigned short port=10500);
+    bool connectToJulius( const std::string& host,
+                          const unsigned short port = 10500 );
 
     /**
      * Connects the speech navigator to VE-Xplorer.
@@ -159,13 +159,13 @@ public:
     /**
      * Sets the local copies of argc and argv
      */
-    void setArgcArgv(int argc, char** argv);
+    void setArgcArgv( int argc, char** argv );
 
     /**
      * Responds to changes in the Phrase Parsing subject; the changes will
      * be notification of recognized parsing events.
      */
-    void onPhraseRecognition(const std::string& phrase);
+    void onPhraseRecognition( const std::string& phrase );
 
 private:
 
@@ -198,7 +198,7 @@ private:
 
     /// The ORB?
     CORBA::ORB_var                                        mOrb;
-    
+
     /// A copy of the original argc passed to the main function.
     int                                                   mArgc;
 

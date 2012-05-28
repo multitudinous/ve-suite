@@ -90,7 +90,7 @@ CameraPlacementEventHandler::CameraPlacementEventHandler()
         SAVE_ALL_CAMERA_IMAGES;
     mCommandNameToInt[ "CHANGE_IMAGE_DIRECTORY" ] =
         CHANGE_IMAGE_DIRECTORY;
-        
+
     mCommandNameToInt[ "TOGGLE_HIGHLIGHT_TOOL" ] =
         TOGGLE_HIGHLIGHT_TOOL;
     mCommandNameToInt[ "SELECT_MARKER_OBJECT" ] =
@@ -162,7 +162,7 @@ CameraPlacementEventHandler& CameraPlacementEventHandler::operator=(
     {
         ves::xplorer::event::EventHandler::operator=( rhs );
     }
-    
+
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -177,10 +177,10 @@ void CameraPlacementEventHandler::Execute(
     }
 
     //Set the active cameraObject once the command->GetCommandName()manager is created
-     int commandName =
-         mCommandNameToInt.find( command->GetCommandName() )->second;
+    int commandName =
+        mCommandNameToInt.find( command->GetCommandName() )->second;
 
-    DeviceHandler& deviceHandler = *(DeviceHandler::instance());
+    DeviceHandler& deviceHandler = *( DeviceHandler::instance() );
     scenegraph::SceneManager& sceneManager =
         *scenegraph::SceneManager::instance();
     scenegraph::highlight::HighlightManager& highlightManager =
@@ -198,7 +198,7 @@ void CameraPlacementEventHandler::Execute(
         command->GetDataValuePair( "addCameraObject" )->GetData( name );
 
         cameraManager.addChild( name );
-        
+
         //break;
     }
     case SELECT_CAMERA_OBJECT:
@@ -244,11 +244,11 @@ void CameraPlacementEventHandler::Execute(
         {
             //We need to transform center point into camera space
             //In the future the center point will be in world coordinates
-            center = 
+            center =
                 center * osg::Matrixd( sceneManager.GetNavDCS()->GetMat().mData );
             gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
             deviceHandler.SetCenterPoint( &tempCenter );
-        }            
+        }
 
         //Set the selected DCS
         deviceHandler.SetSelectedDCS( &selectedDCS );
@@ -267,7 +267,7 @@ void CameraPlacementEventHandler::Execute(
         {
             //Hand the node we are interested in off to the animation engine
             NavigationAnimationEngine& nae =
-                *(NavigationAnimationEngine::instance());
+                *( NavigationAnimationEngine::instance() );
             nae.SetDCS( sceneManager.GetNavDCS() );
 
             //Hand our created end points off to the animation engine
@@ -358,8 +358,8 @@ void CameraPlacementEventHandler::Execute(
         std::string saveImageDir;
         command->GetDataValuePair(
             "saveImageDirectory" )->GetData( saveImageDir );
-        
-        
+
+
         cameraManager.WriteAllImageFiles( saveImageDir );
 
         break;
@@ -370,13 +370,13 @@ void CameraPlacementEventHandler::Execute(
         {
             return;
         }
-        
+
         std::string saveImageDir;
         command->GetDataValuePair(
             "saveImageDirectory" )->GetData( saveImageDir );
-        
+
         cameraManager.SetImageStoreDirectory( saveImageDir );
-        
+
         break;
     }
     case TOGGLE_HIGHLIGHT_TOOL:
@@ -522,7 +522,7 @@ void CameraPlacementEventHandler::Execute(
         if( sceneManager.IsDesktopMode() )
         {
             viewCameraGroup = ves::xplorer::EnvironmentHandler::instance()->
-                GetHeadsUpDisplay()->GetCamera();
+                              GetHeadsUpDisplay()->GetCamera();
         }
         else
         {
@@ -618,7 +618,7 @@ void CameraPlacementEventHandler::Execute(
         {
             return;
         }
-        
+
         //Set the Project matrix
         double projectionData[ 4 ] = { 0, 0, 0, 0 };
         command->GetDataValuePair(
@@ -650,7 +650,7 @@ void CameraPlacementEventHandler::Execute(
             "projectionXImageResolution" )->GetData( tempX );
         command->GetDataValuePair(
             "projectionYImageResolution" )->GetData( tempY );
-        std::pair< unsigned int, unsigned int > resolution = 
+        std::pair< unsigned int, unsigned int > resolution =
             std::make_pair< unsigned int, unsigned int >( tempX, tempY );
         activeCameraObject->SetTextureResolution( resolution );
 

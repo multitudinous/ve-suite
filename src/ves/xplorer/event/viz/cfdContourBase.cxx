@@ -81,7 +81,7 @@ using namespace ves::xplorer::scenegraph;
 
 // this class requires that the dataset has a scalar field.
 cfdContourBase::cfdContourBase()
-    : 
+    :
     cfdObjects(),
     mapper( vtkPolyDataMapper::New() ),
     cfilter( vtkContourFilter::New() ),
@@ -133,7 +133,7 @@ cfdContourBase::~cfdContourBase()
 
     deci->Delete();
     deci = 0;
-    
+
     if( cfilter )
     {
         this->cfilter->Delete();
@@ -180,7 +180,7 @@ void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
 {
     //mC2p->SetInputConnection( polydata );
     //mC2p->Update();
-    
+
     tris->SetInputConnection( polydata );//mC2p->GetOutputPort() );
     //tris->Update();
     //tris->GetOutput()->ReleaseDataFlagOn();
@@ -217,9 +217,9 @@ void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
         this->bfilter->SetScalarModeToValue();
         this->bfilter->GenerateContourEdgesOn();
         bfilter->SetInputArrayToProcess( 0, 0, 0,
-              vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-              GetActiveDataSet()->GetActiveScalarName().c_str() );
-        
+                                         vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                         GetActiveDataSet()->GetActiveScalarName().c_str() );
+
         //bfilter->GetOutput()->ReleaseDataFlagOn();
         normals->SetInputConnection( bfilter->GetOutputPort() );
         normals->SetFeatureAngle( 130.0f );
@@ -236,8 +236,8 @@ void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
         this->cfilter->GenerateValues( 10, range[0], range[1] );
         //this->cfilter->UseScalarTreeOn();
         cfilter->SetInputArrayToProcess( 0, 0, 0,
-            vtkDataObject::FIELD_ASSOCIATION_POINTS, 
-            GetActiveDataSet()->GetActiveScalarName().c_str() );
+                                         vtkDataObject::FIELD_ASSOCIATION_POINTS,
+                                         GetActiveDataSet()->GetActiveScalarName().c_str() );
         //cfilter->GetOutput()->ReleaseDataFlagOn();
         normals->SetInputConnection( cfilter->GetOutputPort() );
         normals->SetFeatureAngle( 130.0f );
@@ -257,10 +257,10 @@ void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
     mapper->SetScalarModeToUsePointFieldData();
     mapper->UseLookupTableScalarRangeOn();
     mapper->SelectColorArray( GetActiveDataSet()->
-        GetActiveScalarName().c_str() );
+                              GetActiveScalarName().c_str() );
     mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
     //mapper->Update();
-}	
+}
 ////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::UpdateCommand()
 {
@@ -272,28 +272,28 @@ void cfdContourBase::UpdateCommand()
 
     //Extract the specific commands from the overall command
     ves::open::xml::DataValuePairPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>( activeModelDVP->GetDataXMLObject() );
 
     //Extract the integration direction
     activeModelDVP = objectCommand->GetDataValuePair( "Select Data Mapping" );
     std::string dataMapping;
     activeModelDVP->GetData( dataMapping );
-    
-    vprDEBUG( vesDBG, 0 ) 
-        << "|\tSelect scalar or volume flux for contour display"
-        << std::endl << vprDEBUG_FLUSH;
+
+    vprDEBUG( vesDBG, 0 )
+            << "|\tSelect scalar or volume flux for contour display"
+            << std::endl << vprDEBUG_FLUSH;
 
     if( !dataMapping.compare( "Map Scalar Data" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE SCALARS"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         SelectDataMapping( 0 );
     }
     else if( !dataMapping.compare( "Map Volume Flux Data" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tVISUALIZE VOLUME FLUX"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         SelectDataMapping( 1 );
     }
@@ -321,11 +321,11 @@ void cfdContourBase::UpdateCommand()
     }
 
     //Extract the advanced settings from the commands
-    activeModelDVP = 
+    activeModelDVP =
         objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
-    objectCommand = 
-        boost::dynamic_pointer_cast<ves::open::xml::Command>( 
-        activeModelDVP->GetDataXMLObject() );
+    objectCommand =
+        boost::dynamic_pointer_cast<ves::open::xml::Command>(
+            activeModelDVP->GetDataXMLObject() );
 
     // set the opacity
     activeModelDVP = objectCommand->GetDataValuePair( "Contour Opacity" );
@@ -342,9 +342,9 @@ void cfdContourBase::UpdateCommand()
     //double scale = contourScale;
     this->warpedContourScale = ( contourScale / 5.0 ) * 2.0f / ( float )( v[1] - v[0] );
     vprDEBUG( vesDBG, 0 ) << "|\tWarped Contour Scale "
-        << warpedContourScale << " : " << v[1] << " - " << v[0]
-        << std::endl << vprDEBUG_FLUSH;
-    
+                          << warpedContourScale << " : " << v[1] << " - " << v[0]
+                          << std::endl << vprDEBUG_FLUSH;
+
     // Set the lod values
     activeModelDVP = objectCommand->GetDataValuePair( "Contour LOD" );
     double contourLOD;
@@ -352,8 +352,8 @@ void cfdContourBase::UpdateCommand()
     double lod = contourLOD;
     double realLOD = lod * 0.01f;
     vprDEBUG( vesDBG, 0 ) << "|\tCHANGE_CONTOUR_SETTINGS LOD Settings"
-        << contourLOD << " : " << lod << " : " << realLOD
-        << std::endl << vprDEBUG_FLUSH;
+                          << contourLOD << " : " << lod << " : " << realLOD
+                          << std::endl << vprDEBUG_FLUSH;
     this->deci->SetTargetReduction( realLOD );
 
     activeModelDVP = objectCommand->GetDataValuePair( "Type" );
@@ -373,12 +373,12 @@ void cfdContourBase::UpdateCommand()
         SetFillType( 2 );
     }
 
-	//Extract the surface flag
+    //Extract the surface flag
     activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
     if( activeModelDVP )
-	{
-    	activeModelDVP->GetData( m_surfDataset );
-	}
+    {
+        activeModelDVP->GetData( m_surfDataset );
+    }
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -390,13 +390,15 @@ void cfdContourBase::SelectDataMapping( int value )
 void cfdContourBase::SetFillType( const int type )
 {
     if( -1 < type && type < 3 )
+    {
         fillType = type;
+    }
     else
     {
         vprDEBUG( vesDBG, 0 )
-            << "|\tcfdContourBase: requested fillType (" << type
-            << ") is not available, using 0 instead"
-            << std::endl << vprDEBUG_FLUSH;
+                << "|\tcfdContourBase: requested fillType (" << type
+                << ") is not available, using 0 instead"
+                << std::endl << vprDEBUG_FLUSH;
         fillType = 0;
     }
 }
@@ -406,146 +408,146 @@ void cfdContourBase::CreatePlane()
     if( !cuttingPlane )
     {
         cuttingPlane = new cfdCuttingPlane(
-                           GetActiveDataSet()->GetBounds(),
-                           xyz, numSteps );
+            GetActiveDataSet()->GetBounds(),
+            xyz, numSteps );
     }
 
     // insure that we are using correct bounds for the given data set...
     cuttingPlane->SetBounds( GetActiveDataSet()->GetBounds() );
     cuttingPlane->Advance( requestedValue );
-    
+
     vtkCutter* tempCutter = vtkCutter::New();
     tempCutter->SetCutFunction( cuttingPlane->GetPlane() );
     tempCutter->SetInput( GetActiveDataSet()->GetDataSet() );
     //tempCutter->Update();
 
-    SetMapperInput( tempCutter->GetOutputPort(0) );	
+    SetMapperInput( tempCutter->GetOutputPort( 0 ) );
 
-	// The code below computes volume flux on the specified contour plane
-	// and allows for display of vector direction (in or out) by using only
-	// two colors for mapping
+    // The code below computes volume flux on the specified contour plane
+    // and allows for display of vector direction (in or out) by using only
+    // two colors for mapping
 
-	if( m_selectDataMapping == 1 )
+    if( m_selectDataMapping == 1 )
     {
-		vtkPolyData* pd = dynamic_cast< vtkPolyData* >( mapper->GetInput() );
+        vtkPolyData* pd = dynamic_cast< vtkPolyData* >( mapper->GetInput() );
 
-	    vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
-    	normalGen->SetInput( pd );
-    	normalGen->Update();
+        vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
+        normalGen->SetInput( pd );
+        normalGen->Update();
 
-		vtkPolyData* normalsOutputPD = ComputeVolumeFlux( normalGen->GetOutput() );
-			
-    	mapper->SetInput( normalsOutputPD );
-	
-    	double range[ 2 ];
-    	normalsOutputPD->GetPointData()->GetScalars( "VolumeFlux" )->GetRange( range );
-	
-    	vtkLookupTable* lut2;
-    	lut2 = vtkLookupTable::New();
-    	lut2->SetNumberOfColors( 2 );            //default is 256
-    	lut2->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
-    	lut2->SetTableRange( range );
-    	lut2->Build();
-	
-    	mapper->SetColorModeToMapScalars();
-    	mapper->SetScalarRange( range );
-    	mapper->SetLookupTable( lut2 );
-    	mapper->SetScalarModeToUsePointFieldData();
-    	mapper->UseLookupTableScalarRangeOn();
-    	mapper->SelectColorArray( "VolumeFlux" );
-		mapper->Update();
+        vtkPolyData* normalsOutputPD = ComputeVolumeFlux( normalGen->GetOutput() );
 
-    	normalGen->Delete();
-    	lut2->Delete();
+        mapper->SetInput( normalsOutputPD );
+
+        double range[ 2 ];
+        normalsOutputPD->GetPointData()->GetScalars( "VolumeFlux" )->GetRange( range );
+
+        vtkLookupTable* lut2;
+        lut2 = vtkLookupTable::New();
+        lut2->SetNumberOfColors( 2 );            //default is 256
+        lut2->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
+        lut2->SetTableRange( range );
+        lut2->Build();
+
+        mapper->SetColorModeToMapScalars();
+        mapper->SetScalarRange( range );
+        mapper->SetLookupTable( lut2 );
+        mapper->SetScalarModeToUsePointFieldData();
+        mapper->UseLookupTableScalarRangeOn();
+        mapper->SelectColorArray( "VolumeFlux" );
+        mapper->Update();
+
+        normalGen->Delete();
+        lut2->Delete();
     }
 
-	delete cuttingPlane;
-	cuttingPlane = NULL;
-	
-	tempCutter->Delete();	
+    delete cuttingPlane;
+    cuttingPlane = NULL;
+
+    tempCutter->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::CreateArbSurface()
-{   
+{
     //Need to set the active datasetname and get the position of the dataset
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
     // set the dataset as the appropriate dastaset type
     // (and the active dataset as well)
-    DataSet* surfDataset = 
-        activeModel->GetCfdDataSet( 
-        activeModel->GetIndexOfDataSet( m_surfDataset ) );
+    DataSet* surfDataset =
+        activeModel->GetCfdDataSet(
+            activeModel->GetIndexOfDataSet( m_surfDataset ) );
     vtkPolyData* pd = surfDataset->GetPolyData();
 
     if( !pd )
     {
         std::cerr << "ERROR: Activate a polydata file to use this function "
-            << m_surfDataset << std::endl;
+                  << m_surfDataset << std::endl;
         return;
     }
 
-    ves::xplorer::util::ExtractGeometryCallback* extractGeomCbk = 
+    ves::xplorer::util::ExtractGeometryCallback* extractGeomCbk =
         new ves::xplorer::util::ExtractGeometryCallback();
     ves::xplorer::util::DataObjectHandler handler;
     handler.SetDatasetOperatorCallback( extractGeomCbk );
     extractGeomCbk->SetPolyDataSurface( pd );
     handler.OperateOnAllDatasetsInObject( GetActiveDataSet()->GetDataSet() );
 
-	vtkCompositeDataProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
+    vtkCompositeDataProbeFilter* surfProbe = vtkCompositeDataProbeFilter::New();
     surfProbe->SetInput( pd );
     //surfProbe->SetSourceConnection( extractGeomCbk->GetDataset() );
     surfProbe->SetSource( extractGeomCbk->GetDataset() );
 
     if( m_selectDataMapping != 1 )
     {
-    	normals->SetInputConnection( surfProbe->GetOutputPort() );
-    	normals->NonManifoldTraversalOn();
-    	normals->AutoOrientNormalsOn();
-    	normals->ConsistencyOn();
-    	normals->SplittingOn();
-	
-    	mapper->SetColorModeToMapScalars();
-    	mapper->SetInputConnection( normals->GetOutputPort() );
-	
-   		mapper->SetScalarModeToUsePointFieldData();
-    	mapper->UseLookupTableScalarRangeOn();
-    	mapper->SelectColorArray( GetActiveDataSet()->
-    	    	GetActiveScalarName().c_str() );
-    	mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
-		mapper->Update();
-	}
+        normals->SetInputConnection( surfProbe->GetOutputPort() );
+        normals->NonManifoldTraversalOn();
+        normals->AutoOrientNormalsOn();
+        normals->ConsistencyOn();
+        normals->SplittingOn();
+
+        mapper->SetColorModeToMapScalars();
+        mapper->SetInputConnection( normals->GetOutputPort() );
+
+        mapper->SetScalarModeToUsePointFieldData();
+        mapper->UseLookupTableScalarRangeOn();
+        mapper->SelectColorArray( GetActiveDataSet()->
+                                  GetActiveScalarName().c_str() );
+        mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
+        mapper->Update();
+    }
     else
     {
         // The code below computes volume flux on the specified contour plane
-	    normals->SetInputConnection( surfProbe->GetOutputPort() );
-	    normals->Update();
-	
-        vtkPolyData* normalsOutputPD = 
-            ComputeVolumeFlux( normals->GetOutput() );
-		if( normalsOutputPD )
-        {
-    	    mapper->SetInput( normalsOutputPD );
-    	
-    	    double range[ 2 ];
-    	    normalsOutputPD->GetPointData()->
-                GetScalars( "VolumeFlux" )->GetRange( range );
-    	
-    	    vtkLookupTable* lut1 = vtkLookupTable::New();
-    	    lut1->SetNumberOfColors( 2 );            //default is 256
-    	    lut1->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
-    	    lut1->SetTableRange( range );
-    	    lut1->Build();
-    	
-    	    mapper->SetColorModeToMapScalars();
-    	    mapper->SetScalarRange( range );
-    	    mapper->SetLookupTable( lut1 );
-    	    mapper->SetScalarModeToUsePointFieldData();
-    	    mapper->UseLookupTableScalarRangeOn();
-    	    mapper->SelectColorArray( "VolumeFlux" );
-		    mapper->Update();
+        normals->SetInputConnection( surfProbe->GetOutputPort() );
+        normals->Update();
 
-    	    lut1->Delete();
+        vtkPolyData* normalsOutputPD =
+            ComputeVolumeFlux( normals->GetOutput() );
+        if( normalsOutputPD )
+        {
+            mapper->SetInput( normalsOutputPD );
+
+            double range[ 2 ];
+            normalsOutputPD->GetPointData()->
+            GetScalars( "VolumeFlux" )->GetRange( range );
+
+            vtkLookupTable* lut1 = vtkLookupTable::New();
+            lut1->SetNumberOfColors( 2 );            //default is 256
+            lut1->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
+            lut1->SetTableRange( range );
+            lut1->Build();
+
+            mapper->SetColorModeToMapScalars();
+            mapper->SetScalarRange( range );
+            mapper->SetLookupTable( lut1 );
+            mapper->SetScalarModeToUsePointFieldData();
+            mapper->UseLookupTableScalarRangeOn();
+            mapper->SelectColorArray( "VolumeFlux" );
+            mapper->Update();
+
+            lut1->Delete();
         }
-	}
+    }
     surfProbe->Delete();
     delete extractGeomCbk;
     extractGeomCbk = 0;
@@ -554,30 +556,30 @@ void cfdContourBase::CreateArbSurface()
 void cfdContourBase::UpdatePropertySet()
 {
     std::string dataMapping = boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "DataMapping", "enumCurrentString" ) );
-    
-    vprDEBUG( vesDBG, 0 ) 
-    << "|\tSelect scalar or volume flux for contour display: "
-    << dataMapping << std::endl << vprDEBUG_FLUSH;
-    
+
+    vprDEBUG( vesDBG, 0 )
+            << "|\tSelect scalar or volume flux for contour display: "
+            << dataMapping << std::endl << vprDEBUG_FLUSH;
+
     if( !dataMapping.compare( "Map Scalar Data" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tVisualize Scalars"
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << std::endl << vprDEBUG_FLUSH;
+
         SelectDataMapping( 0 );
     }
     else if( !dataMapping.compare( "Map Volume Flux Data" ) )
     {
         vprDEBUG( vesDBG, 0 ) << "|\t\tVisualize Volume Flux"
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << std::endl << vprDEBUG_FLUSH;
+
         SelectDataMapping( 1 );
     }
-    
+
     //Extract the plane position
     double planePosition = boost::any_cast<double>( m_propertySet->GetPropertyValue( "PlaneLocation" ) );
     SetRequestedValue( planePosition );
-    
+
     // Use Nearest or Cycle Precomputed
     std::string planeOption;
     if( boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Mode_UseNearestPrecomputedPlane" ) ) )
@@ -588,7 +590,7 @@ void cfdContourBase::UpdatePropertySet()
     {
         planeOption = "Cycle Precomputed Surfaces";
     }
-    
+
     if( planeOption == "Use Nearest Precomputed Plane" )
     {
         SetPreCalcFlag( true );
@@ -597,11 +599,11 @@ void cfdContourBase::UpdatePropertySet()
     {
         SetPreCalcFlag( false );
     }
-    
+
     // set the opacity
     double opacity = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_Opacity" ) );
     contourOpacity = opacity * 0.01f;
-    
+
     // set the warped contour scale
     double contourScale = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_WarpedContourScale" ) );
     double v[2];
@@ -609,19 +611,19 @@ void cfdContourBase::UpdatePropertySet()
     //double scale = contourScale;
     warpedContourScale = ( contourScale / 5.0 ) * 2.0f / ( float )( v[1] - v[0] );
     vprDEBUG( vesDBG, 0 ) << "|\tWarped Contour Scale "
-    << warpedContourScale << " : " << v[1] << " - " << v[0]
-    << std::endl << vprDEBUG_FLUSH;
-    
+                          << warpedContourScale << " : " << v[1] << " - " << v[0]
+                          << std::endl << vprDEBUG_FLUSH;
+
     // Set the lod values
     double lod = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_ContourLOD" ) );
     double realLOD = lod * 0.01f;
-    vprDEBUG( vesDBG, 0 ) << "|\tCHANGE_CONTOUR_SETTINGS LOD Settings: " 
-    << lod << " : " << realLOD
-    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\tCHANGE_CONTOUR_SETTINGS LOD Settings: "
+                          << lod << " : " << realLOD
+                          << std::endl << vprDEBUG_FLUSH;
     this->deci->SetTargetReduction( realLOD );
-    
-    std::string contourType = 
-    boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "Advanced_ContourType", "enumCurrentString" ) );
+
+    std::string contourType =
+        boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "Advanced_ContourType", "enumCurrentString" ) );
     if( contourType == "Graduated" )
     {
         SetFillType( 0 );
@@ -638,19 +640,19 @@ void cfdContourBase::UpdatePropertySet()
     bool contourGreyscale = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Advanced_Greyscale" ) );
     GetActiveDataSet()->SetGreyscaleFlag( contourGreyscale );
     vprDEBUG( vesDBG, 0 ) << "|\tContour Greyscale set to : "
-    << contourGreyscale
-    << std::endl << vprDEBUG_FLUSH;
-    
-	//Extract the surface flag
+                          << contourGreyscale
+                          << std::endl << vprDEBUG_FLUSH;
+
+    //Extract the surface flag
     /*activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
      if( activeModelDVP )
      {
      activeModelDVP->GetData( m_surfDataset );
      }*/
-    
+
     if( m_propertySet->PropertyExists( "UseGPUTools" ) )
     {
         ;//unsigned int checkBox = boost::any_cast<bool>( set.GetPropertyValue( "UseGPUTools" ) );
-    }    
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -83,9 +83,9 @@ BEGIN_EVENT_TABLE( HierarchyTree, wxTreeCtrl )
     EVT_MENU_RANGE( PLUGIN_BEGIN_INDEX, PLUGIN_END_INDEX, HierarchyTree::ProcessRightClickMenuEvents )
 END_EVENT_TABLE()
 
-HierarchyTree::HierarchyTree( wxWindow *parent, const wxWindowID id,
-                             const wxPoint& pos, const wxSize& size,
-                             long style )
+HierarchyTree::HierarchyTree( wxWindow* parent, const wxWindowID id,
+                              const wxPoint& pos, const wxSize& size,
+                              long style )
     :
     wxTreeCtrl( parent, id, pos, size, style ),
     m_canvas( 0 )
@@ -103,15 +103,15 @@ HierarchyTree::HierarchyTree( wxWindow *parent, const wxWindowID id,
     icons[3] = wxIcon( icon4_xpm );
     icons[4] = wxIcon( icon5_xpm );
     AddtoImageList( wxBitmap( wxBitmap( icons[0] ).ConvertToImage().
-        Rescale( iconsize, iconsize ) ) );
+                              Rescale( iconsize, iconsize ) ) );
     AddtoImageList( wxBitmap( wxBitmap( icons[1] ).ConvertToImage().
-        Rescale( iconsize, iconsize ) ) );
+                              Rescale( iconsize, iconsize ) ) );
     AddtoImageList( wxBitmap( wxBitmap( icons[2] ).ConvertToImage().
-        Rescale( iconsize, iconsize ) ) );
+                              Rescale( iconsize, iconsize ) ) );
     AddtoImageList( wxBitmap( wxBitmap( icons[3] ).ConvertToImage().
-        Rescale( iconsize, iconsize ) ) );
+                              Rescale( iconsize, iconsize ) ) );
     AddtoImageList( wxBitmap( wxBitmap( icons[4] ).ConvertToImage().
-        Rescale( iconsize, iconsize ) ) );
+                              Rescale( iconsize, iconsize ) ) );
 
     //setup root item
     m_rootId = AddRoot( wxT( "Top Sheet" ), 2, -1, NULL );
@@ -148,11 +148,11 @@ void HierarchyTree::PopulateTree()
 
     //get the list of models
     std::string id = XMLDataBufferEngine::instance()->GetTopSystemId();
-    ves::open::xml::model::SystemPtr tempSys = 
+    ves::open::xml::model::SystemPtr tempSys =
         XMLDataBufferEngine::instance()->GetXMLSystemDataObject( id );
-    std::vector< ves::open::xml::model::ModelPtr > topLevelModels = 
+    std::vector< ves::open::xml::model::ModelPtr > topLevelModels =
         tempSys->GetModels();
-    
+
     std::map< std::string, char** > preCompiledIconMap = GetPreCompiledIconMap();
     std::map< std::string, char** >::iterator iconIter;
     std::string fullPath;
@@ -160,18 +160,18 @@ void HierarchyTree::PopulateTree()
 
     //alphabetize tree
     for( std::vector< ves::open::xml::model::ModelPtr >::iterator
-        iter = topLevelModels.begin(); iter != topLevelModels.end(); ++iter )
+            iter = topLevelModels.begin(); iter != topLevelModels.end(); ++iter )
     {
-        ves::open::xml::model::ModelPtr tempModel = (*iter);
+        ves::open::xml::model::ModelPtr tempModel = ( *iter );
         //alphaTree[ tempModel->GetPluginName() ] = tempModel;
         alphaTree.insert(
             std::pair< std::string, ves::open::xml::model::ModelPtr >
-            ( tempModel->GetPluginName(), tempModel ));
+            ( tempModel->GetPluginName(), tempModel ) );
     }
 
     //loop over models and add them to the tree
     for( std::multimap< std::string, ves::open::xml::model::ModelPtr >::iterator
-        iter = alphaTree.begin(); iter != alphaTree.end(); ++iter )
+            iter = alphaTree.begin(); iter != alphaTree.end(); ++iter )
     {
         if( iter->second->GetIconHiddenFlag() == 0 )
         {
@@ -197,21 +197,21 @@ void HierarchyTree::PopulateTree()
             if( iconIter != preCompiledIconMap.end() )
             {
                 AddtoImageList( wxBitmap( wxBitmap( iconIter->second ).
-                    ConvertToImage().Rescale( iconsize, iconsize ) ) );
+                                          ConvertToImage().Rescale( iconsize, iconsize ) ) );
             }
             else
             {
                 AddtoImageList( wxBitmap( wxBitmap( tempIconName, wxBITMAP_TYPE_GIF ).
-                    ConvertToImage().Rescale( iconsize, iconsize ) ) );
+                                          ConvertToImage().Rescale( iconsize, iconsize ) ) );
                 //wxIcon square ( square_xpm );
                 //AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
                 //    Rescale( iconsize, iconsize ) ) );
             }
 
             //Add the new model to the tree
-            wxTreeItemId leaf = AppendItem( m_rootId, 
-                wxString( iter->second->GetPluginName().c_str(), wxConvUTF8 ),
-                images->GetImageCount() - 1 , -1, modData );
+            wxTreeItemId leaf = AppendItem( m_rootId,
+                                            wxString( iter->second->GetPluginName().c_str(), wxConvUTF8 ),
+                                            images->GetImageCount() - 1 , -1, modData );
             SetItemFont( leaf, *wxNORMAL_FONT );
             //SetItemBold( leaf );
 
@@ -219,7 +219,7 @@ void HierarchyTree::PopulateTree()
             if( iter->second->GetSubSystem() )
             {
                 PopulateLevel( leaf, iter->second->GetSubSystem()->GetModels(),
-                    iter->second->GetSubSystem()->GetID() );
+                               iter->second->GetSubSystem()->GetID() );
             }
         }
     }
@@ -227,13 +227,13 @@ void HierarchyTree::PopulateTree()
     //set the current selection to the root item
     m_currentLevelId = m_rootId;
     m_selection = m_rootId;
-    
+
     Expand( m_rootId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
-    std::vector< ves::open::xml::model::ModelPtr > models, std::string id )
+                                   std::vector< ves::open::xml::model::ModelPtr > models, std::string id )
 {
     std::map< std::string, char** > preCompiledIconMap = GetPreCompiledIconMap();
     std::map< std::string, char** >::iterator iconIter;
@@ -267,12 +267,12 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
             if( iconIter != preCompiledIconMap.end() )
             {
                 AddtoImageList( wxBitmap( wxBitmap( iconIter->second ).
-                    ConvertToImage().Rescale( iconsize, iconsize ) ) );
+                                          ConvertToImage().Rescale( iconsize, iconsize ) ) );
             }
             else
             {
                 AddtoImageList( wxBitmap( wxBitmap( tempIconName, wxBITMAP_TYPE_GIF ).
-                    ConvertToImage().Rescale( iconsize, iconsize ) ) );
+                                          ConvertToImage().Rescale( iconsize, iconsize ) ) );
                 //wxIcon square ( square_xpm );
                 //AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
                 //    Rescale( iconsize, iconsize ) ) );
@@ -280,8 +280,8 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
 
             //add the new item to the list
             wxTreeItemId leaf = AppendItem( parentLeaf,
-                wxString( models[i]->GetPluginName().c_str(), wxConvUTF8 ),
-                images->GetImageCount() - 1 , -1, modData );
+                                            wxString( models[i]->GetPluginName().c_str(), wxConvUTF8 ),
+                                            images->GetImageCount() - 1 , -1, modData );
             //SetItemBold( leaf );
 
             if( models[i]->GetSubSystem() )
@@ -297,7 +297,7 @@ void HierarchyTree::Clear()
 {
     DeleteAllItems();
     images->RemoveAll();
-    
+
     wxIcon icons[5];
     icons[0] = wxIcon( icon1_xpm );
     icons[1] = wxIcon( icon2_xpm );
@@ -305,22 +305,22 @@ void HierarchyTree::Clear()
     icons[3] = wxIcon( icon4_xpm );
     icons[4] = wxIcon( icon5_xpm );
     AddtoImageList( wxBitmap( wxBitmap( icons[0] ).ConvertToImage().
-        Rescale( iconsize, iconsize ) ) );
+                              Rescale( iconsize, iconsize ) ) );
     AddtoImageList( wxBitmap( wxBitmap( icons[1] ).ConvertToImage().
-        Rescale( iconsize, iconsize ) ) );
+                              Rescale( iconsize, iconsize ) ) );
     AddtoImageList( wxBitmap( wxBitmap( icons[2] ).ConvertToImage().
-        Rescale( iconsize, iconsize ) ) );
+                              Rescale( iconsize, iconsize ) ) );
     AddtoImageList( wxBitmap( wxBitmap( icons[3] ).ConvertToImage().
-        Rescale( iconsize, iconsize ) ) );
+                              Rescale( iconsize, iconsize ) ) );
     AddtoImageList( wxBitmap( wxBitmap( icons[4] ).ConvertToImage().
-        Rescale( iconsize, iconsize ) ) );
-    
+                              Rescale( iconsize, iconsize ) ) );
+
     m_rootId = AddRoot( wxT( "Top Sheet" ), 2, -1, NULL );
     SetItemImage( m_rootId, 4, wxTreeItemIcon_Expanded );
 
     m_currentLevelId = m_rootId;
     m_selection = m_rootId;
-    
+
     SetItemFont( m_rootId, *wxNORMAL_FONT );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -340,7 +340,7 @@ void HierarchyTree::SelectNetworkPlugin( wxTreeItemId selectedId )
 
     //find and highlight selected module
     ModuleData* tempModData =
-        static_cast< ModuleData* >(this->GetItemData( selectedId ) );
+        static_cast< ModuleData* >( this->GetItemData( selectedId ) );
     m_canvas->SetActiveNetwork( tempModData->systemId );
     m_canvas->GetActiveNetwork()->HighlightCenter( tempModData->modId );
 
@@ -351,14 +351,14 @@ void HierarchyTree::SelectNetworkPlugin( wxTreeItemId selectedId )
         //tell xplorer to draw subnet
         CommandPtr veCommand( new ves::open::xml::Command() );
         veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
-        DataValuePairPtr dataValuePair2( 
+        DataValuePairPtr dataValuePair2(
             new DataValuePair( std::string( "UNSIGNED INT" ) ) );
         dataValuePair2->SetData( "SUBNET_ID", tempModData->systemId );
         veCommand->AddDataValuePair( dataValuePair2 );
-        DataValuePairPtr dataValuePair( 
+        DataValuePairPtr dataValuePair(
             new DataValuePair( std::string( "STRING" ) ) );
         dataValuePair->SetData( "UPDATE_XPLORER_VIEW",
-            "CHANGE_XPLORER_VIEW_NETWORK" );
+                                "CHANGE_XPLORER_VIEW_NETWORK" );
         veCommand->AddDataValuePair( dataValuePair );
         CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
     }
@@ -378,7 +378,7 @@ void HierarchyTree::OnRightClick( wxTreeEvent& event )
     wxTreeItemId selected = event.GetItem();
     SelectItem( selected );
     ModuleData* tempModData = dynamic_cast< ModuleData* >( this->
-        GetItemData( selected ));
+                              GetItemData( selected ) );
 
     if( !tempModData )
     {
@@ -389,10 +389,10 @@ void HierarchyTree::OnRightClick( wxTreeEvent& event )
 
     //create popup menu
     wxMenu* popupMenu = m_canvas->GetActiveNetwork()->
-        modules[tempModData->modId].GetPlugin()->GetPopupMenu();
+                        modules[tempModData->modId].GetPlugin()->GetPopupMenu();
     popupMenu->SetTitle( this->GetItemText( selected ) );
     m_canvas->GetActiveNetwork()->modules[tempModData->modId].
-        GetPlugin()->SendActiveId();
+    GetPlugin()->SendActiveId();
 
     m_selection = selected;
     m_currentLevelId = GetItemParent( selected );
@@ -404,14 +404,14 @@ void HierarchyTree::OnDoubleClick( wxTreeEvent& event )
     //find selected item
     wxTreeItemId selected = event.GetItem();
     SelectItem( selected );
-    
+
     if( selected != m_rootId )
     {
         ModuleData* tempModData = static_cast< ModuleData* >( this->
-            GetItemData( selected ));
+                                  GetItemData( selected ) );
         m_canvas->SetActiveNetwork( tempModData->systemId );
         m_canvas->GetActiveNetwork()->modules[tempModData->modId].
-            GetPlugin()->CreateUserDialog( wxPoint(0,0) );
+        GetPlugin()->CreateUserDialog( wxPoint( 0, 0 ) );
         m_currentLevelId = GetItemParent( selected );
     }
 
@@ -421,10 +421,10 @@ void HierarchyTree::OnDoubleClick( wxTreeEvent& event )
 void HierarchyTree::ProcessRightClickMenuEvents( wxCommandEvent& event )
 {
     ModuleData* tempModData = static_cast< ModuleData* >( this->
-        GetItemData( m_selection ));
+                              GetItemData( m_selection ) );
 
     ::wxPostEvent( m_canvas->GetActiveNetwork()->modules[tempModData->modId].
-        GetPlugin(), event );
+                   GetPlugin(), event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::AddtoTree( UIPluginBase* cur_module )
@@ -435,15 +435,15 @@ void HierarchyTree::AddtoTree( UIPluginBase* cur_module )
     modData->systemId = m_canvas->GetActiveNetworkID( );
 
     AddtoImageList( wxBitmap( cur_module->GetIconImage()->ConvertToImage().
-        Rescale( iconsize, iconsize ) ) );
+                              Rescale( iconsize, iconsize ) ) );
 
     wxTreeItemId leaf = AppendItem( m_currentLevelId,
 #if wxCHECK_VERSION( 2, 9, 0 )
-        cur_module->GetName(),
+                                    cur_module->GetName(),
 #else
-        wxString( cur_module->GetName().c_str(), wxConvUTF8 ),
+                                    wxString( cur_module->GetName().c_str(), wxConvUTF8 ),
 #endif
-                images->GetImageCount() - 1, -1, modData );
+                                    images->GetImageCount() - 1, -1, modData );
 
     //SetItemBold( leaf );
     Expand( m_rootId );
@@ -472,12 +472,12 @@ void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int itemId )
         modData->modId = itemId;
         modData->modName = "DefaultPlugin";
         modData->systemId = m_canvas->GetActiveNetworkID( );
-        
-        wxIcon square ( square_xpm );
+
+        wxIcon square( square_xpm );
         AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
-            Rescale( iconsize, iconsize ) ) );
+                                  Rescale( iconsize, iconsize ) ) );
         wxTreeItemId leaf = AppendItem( selected, _( "DefaultPlugin" ),
-            images->GetImageCount() - 1 , -1, modData );
+                                        images->GetImageCount() - 1 , -1, modData );
 
         SelectItem( leaf );
         //SetItemBold( leaf );
@@ -501,8 +501,8 @@ void HierarchyTree::SetTreeItemName( unsigned int itemId, wxString name )
 void HierarchyTree::ChangeLeafIcon( unsigned int itemId, std::string path )
 {
     wxTreeItemId root = GetRootItem();
-    wxTreeItemId selected = SearchTree(root, itemId );
-  
+    wxTreeItemId selected = SearchTree( root, itemId );
+
     if( selected.IsOk() )
     {
         //Try and find default icons if needed
@@ -511,8 +511,8 @@ void HierarchyTree::ChangeLeafIcon( unsigned int itemId, std::string path )
         if( iter != defaultIconMap.end() )
         {
             AddtoImageList( wxBitmap( wxBitmap( iter->second ).
-                ConvertToImage().Rescale(iconsize, iconsize)));
-            SetItemImage(selected, images->GetImageCount()-1);
+                                      ConvertToImage().Rescale( iconsize, iconsize ) ) );
+            SetItemImage( selected, images->GetImageCount() - 1 );
             return;
         }
 
@@ -525,8 +525,8 @@ void HierarchyTree::ChangeLeafIcon( unsigned int itemId, std::string path )
         if( iconIter != preCompiledIconMap.end() )
         {
             AddtoImageList( wxBitmap( wxBitmap( iconIter->second ).
-                ConvertToImage().Rescale(iconsize, iconsize)));
-            SetItemImage(selected, images->GetImageCount()-1);
+                                      ConvertToImage().Rescale( iconsize, iconsize ) ) );
+            SetItemImage( selected, images->GetImageCount() - 1 );
         }
 
         //Now see if the user has any jpgs in
@@ -536,18 +536,18 @@ void HierarchyTree::ChangeLeafIcon( unsigned int itemId, std::string path )
             std::ifstream exists( fullPath.c_str() );
             if( exists.fail() )
             {
-              return;
+                return;
             }
             wxImage image;
             image.LoadFile( wxString( fullPath.c_str(), wxConvUTF8 ),
-             wxBITMAP_TYPE_JPEG );
+                            wxBITMAP_TYPE_JPEG );
             AddtoImageList( wxBitmap( wxBitmap( image ).ConvertToImage().
-                Rescale(iconsize, iconsize)));
-            SetItemImage(selected, images->GetImageCount()-1);
+                                      Rescale( iconsize, iconsize ) ) );
+            SetItemImage( selected, images->GetImageCount() - 1 );
         }
 
         return;
-   }
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 wxTreeItemId HierarchyTree::SearchTree( wxTreeItemId root, unsigned int itemId )

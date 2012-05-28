@@ -96,110 +96,110 @@ CharacterNavigation::CharacterNavigation()
     m_manipulatorManager( m_sceneManager.GetManipulatorManager() ),
     m_cameraManager( m_sceneManager.GetCameraManager() ),
     m_lineSegmentIntersector( new osgUtil::LineSegmentIntersector(
-        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
+                                  osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) ),
     m_currX( 0 ),
     m_currY( 0 ),
     m_pickedBody( 0 ),
     m_pickConstraint( 0 )
-{    
+{
     //Setup connection to key press events
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_A", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
-        m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_A", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
+                               m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_S", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_W", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
-        m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_S", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
+                               m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_D", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
-        m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_W", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
+                               m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_X", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
-        m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_D", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
+                               m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_SPACE", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
-        m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_X", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_SPACE", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyPressEvent,
+                               m_connections, any_SignalType, normal_Priority );
 
     //Setup connection to key release events
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_A", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_S", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_W", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_D", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_X", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_SPACE", bool(gadget::Keys, int, char), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
-        m_connections, any_SignalType, normal_Priority );
-                     
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_A", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_S", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_W", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_D", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_X", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyRelease_KEY_SPACE", bool( gadget::Keys, int, char ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessKeyReleaseEvent,
+                               m_connections, any_SignalType, normal_Priority );
+
     //Setup connection to mouse events
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseMove,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_5_COMBINER( "KeyboardMouse.Scroll", bool( int, int, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseScroll,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
-        m_connections, any_SignalType, normal_Priority );    
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseMove,
+                               m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress4%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
-        m_connections, any_SignalType, normal_Priority );    
+    CONNECTSIGNALS_5_COMBINER( "KeyboardMouse.Scroll", bool( int, int, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseScroll,
+                               m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress5%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
-        m_connections, any_SignalType, normal_Priority );    
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease2%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
-        m_connections, any_SignalType, normal_Priority );
-    
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease3%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
-        m_connections, any_SignalType, normal_Priority );    
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
+                               m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease4%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
-        m_connections, any_SignalType, normal_Priority );    
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
+                               m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease5%", bool( gadget::Keys, int, int, int ), 
-        eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
-        m_connections, any_SignalType, normal_Priority );    
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress4%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress5%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMousePress,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease2%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease3%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease4%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
+                               m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease5%", bool( gadget::Keys, int, int, int ),
+                               eventmanager::BooleanPropagationCombiner, &CharacterNavigation::ProcessMouseRelease,
+                               m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CharacterNavigation::~CharacterNavigation()
@@ -208,7 +208,7 @@ CharacterNavigation::~CharacterNavigation()
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modifierState, char keyChar )
-{ 
+{
     if( modifierState != gadget::KEY_NONE )
     {
         return false;
@@ -224,7 +224,7 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
             m_characterController.StrafeLeft( true );
             return true;
         }
-        
+
         break;
     }
     case gadget::KEY_S:
@@ -234,7 +234,7 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
             m_characterController.StepBackward( true );
             return true;
         }
-        
+
         break;
     }
     case gadget::KEY_W:
@@ -244,7 +244,7 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
             m_characterController.StepForward( true );
             return true;
         }
-        
+
         break;
     }
     case gadget::KEY_D:
@@ -254,7 +254,7 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
             m_characterController.StrafeRight( true );
             return true;
         }
-        
+
         break;
     }
     case gadget::KEY_X:
@@ -266,7 +266,7 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
                 m_characterController.StepDown( true );
             }
         }
-        
+
         break;
     }
     case gadget::KEY_SPACE:
@@ -282,7 +282,7 @@ bool CharacterNavigation::ProcessKeyPressEvent( gadget::Keys buttonKey, int modi
                 //m_characterController.Jump();
             }
         }
-        
+
         break;
     }
     default:
@@ -310,7 +310,7 @@ bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int mo
             m_characterController.StrafeLeft( false );
             return true;
         }
-        
+
         break;
     }
     case gadget::KEY_S:
@@ -320,7 +320,7 @@ bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int mo
             m_characterController.StepBackward( false );
             return true;
         }
-        
+
         break;
     }
     case gadget::KEY_D:
@@ -330,7 +330,7 @@ bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int mo
             m_characterController.StrafeRight( false );
             return true;
         }
-        
+
         break;
     }
     case gadget::KEY_W:
@@ -340,7 +340,7 @@ bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int mo
             m_characterController.StepForward( false );
             return true;
         }
-        
+
         break;
     }
     case gadget::KEY_X:
@@ -356,7 +356,7 @@ bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int mo
                 ;
             }
         }
-        
+
         break;
     }
     case gadget::KEY_SPACE:
@@ -372,7 +372,7 @@ bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int mo
                 ;
             }
         }
-        
+
         break;
     }
     default:
@@ -384,7 +384,7 @@ bool CharacterNavigation::ProcessKeyReleaseEvent( gadget::Keys buttonKey, int mo
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CharacterNavigation::ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
-{        
+{
     m_currX = xPos;
     m_currY = yPos;
     m_prevX = m_currX;
@@ -392,7 +392,7 @@ bool CharacterNavigation::ProcessMousePress( gadget::Keys buttonKey, int xPos, i
 
     switch( buttonKey )
     {
-    //Left mouse button
+        //Left mouse button
     case gadget::MBUTTON1:
     {
         //Rotate just the camera "3rd person view:
@@ -400,21 +400,21 @@ bool CharacterNavigation::ProcessMousePress( gadget::Keys buttonKey, int xPos, i
         {
             m_characterController.FirstPersonMode( false );
         }
-        
+
         //No modifier key
-        if( !(buttonState&(gadget::SHIFT_MASK|gadget::CTRL_MASK|gadget::ALT_MASK)) )
+        if( !( buttonState & ( gadget::SHIFT_MASK | gadget::CTRL_MASK | gadget::ALT_MASK ) ) )
         {
             if( m_characterController.IsEnabled() )
             {
                 m_characterController.SetCameraRotationSLERP( false );
             }
         }
-        
+
         break;
     }
     //Middle mouse button
     case gadget::MBUTTON2:
-    {                
+    {
         break;
     }
     //Right mouse button
@@ -445,7 +445,7 @@ bool CharacterNavigation::ProcessMouseRelease( gadget::Keys buttonKey, int xPos,
 
     switch( buttonKey )
     {
-    //Left mouse button
+        //Left mouse button
     case gadget::MBUTTON1:
     {
         if( m_characterController.IsEnabled() )
@@ -475,7 +475,7 @@ bool CharacterNavigation::ProcessMouseRelease( gadget::Keys buttonKey, int xPos,
 bool CharacterNavigation::ProcessMouseMove( int xPos, int yPos, int zPos, int buttonState )
 {
     boost::ignore_unused_variable_warning( zPos );
-    
+
     if( buttonState == 0 )
     {
         return false;
@@ -490,15 +490,15 @@ bool CharacterNavigation::ProcessMouseMove( int xPos, int yPos, int zPos, int bu
 
     const int& windowWidth = m_sceneManager.GetCurrentGLTransformInfo()->GetWindowWidth();
     const int& windowHeight = m_sceneManager.GetCurrentGLTransformInfo()->GetWindowHeight();
-    
+
     dx /= windowWidth;
     dy /= windowHeight;
     //Left mouse button
-    if( buttonState&(gadget::BUTTON1_MASK) )
+    if( buttonState & ( gadget::BUTTON1_MASK ) )
     {
         //I do not know how to test for no modifier keys here...
         //No modifier key
-        if( !(buttonState&(gadget::SHIFT_MASK|gadget::CTRL_MASK|gadget::ALT_MASK)) )
+        if( !( buttonState & ( gadget::SHIFT_MASK | gadget::CTRL_MASK | gadget::ALT_MASK ) ) )
         {
             //Rotate just the camera "3rd person view:
             if( m_characterController.IsEnabled() )
@@ -510,12 +510,12 @@ bool CharacterNavigation::ProcessMouseMove( int xPos, int yPos, int zPos, int bu
         return false;
     }
     //Middle mouse button
-    if( buttonState&gadget::BUTTON2_MASK )
+    if( buttonState & gadget::BUTTON2_MASK )
     {
         return false;
     }
     //Right mouse button
-    if( buttonState&gadget::BUTTON3_MASK )
+    if( buttonState & gadget::BUTTON3_MASK )
     {
         //Rotate the character and camera at the same time
         if( m_characterController.IsEnabled() )

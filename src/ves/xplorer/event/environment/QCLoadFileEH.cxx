@@ -48,7 +48,7 @@ QuatCamLoadFileEventHandler::QuatCamLoadFileEventHandler()
 ///////////////////////////////////////////////////////////////////
 QuatCamLoadFileEventHandler
 ::QuatCamLoadFileEventHandler( const QuatCamLoadFileEventHandler& ceh )
-    : 
+    :
     ves::xplorer::event::EventHandler( ceh )
 {
 }
@@ -79,7 +79,7 @@ void QuatCamLoadFileEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
         velFile->GetData( fileName );
         ves::xplorer::cfdQuatCamHandler::instance()->LoadFromFile( fileName );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
         std::cout << "QuatCamLoadFileEventHandler" << std::endl;

@@ -84,7 +84,7 @@ public:
     ///\param nodeToRemove Remove a specified node from the tree
     void RemoveNodeFromGraph( wxTreeItemId nodeToRemove );
 
-class VE_GUIPLUGINS_EXPORTS TreeGraphPreCallback: public CADNodeTraverser::CADNodeTraverseCallback
+    class VE_GUIPLUGINS_EXPORTS TreeGraphPreCallback: public CADNodeTraverser::CADNodeTraverseCallback
     {
     public:
         ///Constructor
@@ -108,7 +108,7 @@ class VE_GUIPLUGINS_EXPORTS TreeGraphPreCallback: public CADNodeTraverser::CADNo
     protected:
     };
 
-class VE_GUIPLUGINS_EXPORTS TreeGraphPostCallback: public CADNodeTraverser::CADNodeTraverseCallback
+    class VE_GUIPLUGINS_EXPORTS TreeGraphPostCallback: public CADNodeTraverser::CADNodeTraverseCallback
     {
     public:
         ///Constructor
@@ -135,7 +135,7 @@ class VE_GUIPLUGINS_EXPORTS TreeGraphPostCallback: public CADNodeTraverser::CADN
     /*!\class ves::open::xml::cad::CADTreeBuilder::TreeNodeData
      * Class to pair the CADNode with and item in the tree.
      */
-class VE_GUIPLUGINS_EXPORTS TreeNodeData : public wxTreeItemData
+    class VE_GUIPLUGINS_EXPORTS TreeNodeData : public wxTreeItemData
     {
     public:
         ///Constructor

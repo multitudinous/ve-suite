@@ -40,10 +40,10 @@
 using namespace ves::ce;
 
 Execute_Thread::Execute_Thread( Body::Unit_var m, Body_AMH_Executive_i* ex ) :
-        _mod( m ),
-        _is_exec( false ),
-        _executive( ex ),
-        m_isRunning( false )
+    _mod( m ),
+    _is_exec( false ),
+    _executive( ex ),
+    m_isRunning( false )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 Execute_Thread::~Execute_Thread()
@@ -53,12 +53,12 @@ Execute_Thread::~Execute_Thread()
     m_isRunning = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Execute_Thread::close(u_long flags)
+int Execute_Thread::close( u_long flags )
 {
     m_isRunning = false;
     ACE_OS::sleep( 2 );
     return 0;
-    return ACE_Task_Base::close(flags);
+    return ACE_Task_Base::close( flags );
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Execute_Thread::svc( void )
@@ -70,7 +70,9 @@ int Execute_Thread::svc( void )
         {
             _mutex.acquire();
             if( _is_exec )
+            {
                 break;
+            }
 
             _mutex.release();
 
@@ -87,7 +89,7 @@ int Execute_Thread::svc( void )
         {
             _mod->StartCalc();
         }
-        catch ( CORBA::Exception & )
+        catch( CORBA::Exception& )
         {
             std::cout << "Module Execution Messed up." << std::endl;
         }
@@ -102,7 +104,7 @@ int Execute_Thread::svc( void )
             long id = static_cast< long >( _mod->GetCurID() );
             _executive->execute_next_mod( id );
         }
-        catch ( CORBA::Exception & )
+        catch( CORBA::Exception& )
         {
             std::cout << "Module GetID Messed up." << std::endl;
         }
@@ -110,7 +112,7 @@ int Execute_Thread::svc( void )
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Execute_Thread::lock ()
+int Execute_Thread::lock()
 {
     _mutex.acquire();
     return 0;

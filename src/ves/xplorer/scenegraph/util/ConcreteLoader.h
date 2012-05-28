@@ -57,7 +57,7 @@ namespace util
 {
 class PerlinNoiseTexture;
 class VE_SCENEGRAPH_UTILS_EXPORTS ConcreteLoader :
-            public ves::xplorer::scenegraph::util::ShaderHelper
+    public ves::xplorer::scenegraph::util::ShaderHelper
 {
 public:
     ///Constructor

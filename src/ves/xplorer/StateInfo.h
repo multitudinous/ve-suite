@@ -94,7 +94,7 @@ inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::wr
     writer->writeUint32( clusterFrameNumber );
     writer->writeFloat( clusterQuatCamIncrement );
 
-    for( int i = 0;i < 16;i++ )
+    for( int i = 0; i < 16; i++ )
     {
         writer->writeFloat( clusterMatrix[i] );
     }
@@ -107,7 +107,7 @@ inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::wr
         static_cast< vpr::BufferObjectWriter* >( writer );
     for( unsigned i = 0; i < clusterXMLCommands.length(); ++i )
     {
-        bufwriter->writeRaw(( vpr::Uint8* ) &( clusterXMLCommands[i] ), 1 );
+        bufwriter->writeRaw( ( vpr::Uint8* ) & ( clusterXMLCommands[i] ), 1 );
     }
 }
 
@@ -130,7 +130,7 @@ inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::re
     clusterFrameNumber      = reader->readUint32();
     clusterQuatCamIncrement = reader->readFloat();
 
-    for( int i = 0;i < 16;i++ )
+    for( int i = 0; i < 16; i++ )
     {
         clusterMatrix[i] = reader->readFloat();
     }

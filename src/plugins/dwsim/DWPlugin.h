@@ -110,26 +110,26 @@ private:
 
     ///???
     void GetInputs( wxCommandEvent& event );
-    
+
     ///???
     void SetInputs( wxCommandEvent& event );
-    
+
     ///???
     void GetOutputs( wxCommandEvent& event );
-    
+
     ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
 
     ///???
     void SetUnitName( std::string name );
 
-    typedef struct                                                     
+    typedef struct
     {
-      std::string id;
-      std::string name;
-      double value;
-      std::string unit;
-    }prop;
+        std::string id;
+        std::string name;
+        double value;
+        std::string unit;
+    } prop;
 
     DECLARE_EVENT_TABLE()
 };

@@ -54,8 +54,8 @@ ConstraintBasePropertySet::~ConstraintBasePropertySet()
 void ConstraintBasePropertySet::RegisterPropertySet( std::string const& tableName )
 {
     std::string prependTag( tableName );
-    prependTag.append(" ");
-    std::string tag = boost::any_cast<std::string>(GetPropertyValue("NameTag"));
+    prependTag.append( " " );
+    std::string tag = boost::any_cast<std::string>( GetPropertyValue( "NameTag" ) );
     SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

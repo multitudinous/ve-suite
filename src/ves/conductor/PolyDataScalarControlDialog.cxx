@@ -48,8 +48,8 @@ using namespace ves::conductor;
 
 ////////////////////////////////////////////////////////////////////////////////
 PolyDataScalarControlDialog::PolyDataScalarControlDialog( wxWindow* parent )
-:
-ScalarControlDialog( parent )
+    :
+    ScalarControlDialog( parent )
 {
     m_scalarRange = dynamic_cast<Vistab*>( parent->GetParent() )->GetActiveScalarRange();
     std::ostringstream maxInput;
@@ -70,27 +70,27 @@ void PolyDataScalarControlDialog::OnMinTextInput( wxCommandEvent& event )
         return;
     }
 
-    minValue = (( minTexVal - m_scalarRange.first )
-                / ( m_scalarRange.second - m_scalarRange.first ) * 100 );
-    
+    minValue = ( ( minTexVal - m_scalarRange.first )
+                 / ( m_scalarRange.second - m_scalarRange.first ) * 100 );
+
     if( minValue == 100 )
     {
-        m_minSlider->SetValue(( int )minValue );
-        m_maxSlider->SetValue(( int )minValue + 1 );
+        m_minSlider->SetValue( ( int )minValue );
+        m_maxSlider->SetValue( ( int )minValue + 1 );
     }
     else if( m_maxSlider->GetValue() <= ( int )minValue )
     {
-        m_minSlider->SetValue(( int )minValue );
-        m_maxSlider->SetValue(( int )minValue + 1 );
+        m_minSlider->SetValue( ( int )minValue );
+        m_maxSlider->SetValue( ( int )minValue + 1 );
 
         std::ostringstream tempInput;
-        tempInput << m_scalarRange.second - (( m_scalarRange.second - m_scalarRange.first )
-                                             *( 100 - ( double )m_maxSlider->GetValue() ) / 100 );
+        tempInput << m_scalarRange.second - ( ( m_scalarRange.second - m_scalarRange.first )
+                                              * ( 100 - ( double )m_maxSlider->GetValue() ) / 100 );
         m_maxTextControl->SetValue( wxString( tempInput.str().c_str(), wxConvUTF8 ) );
     }
     else
     {
-        m_minSlider->SetValue(( int )minValue );
+        m_minSlider->SetValue( ( int )minValue );
     }
 
     SendData( VISTAB_MIN_SLIDER );
@@ -99,20 +99,20 @@ void PolyDataScalarControlDialog::OnMinTextInput( wxCommandEvent& event )
 void PolyDataScalarControlDialog::OnMinSlider( wxScrollEvent& event )
 {
     double range = m_scalarRange.second - m_scalarRange.first;
-    
+
     if( m_minSlider->GetValue() >= m_maxSlider->GetValue() ) // && m_minSlider->GetValue() < 100 )
     {
         EnsureSliders( VISTAB_MIN_SLIDER );
     }
-    
+
     std::ostringstream tempInput;
-    tempInput << ( range *( double )m_minSlider->GetValue() ) / 100 + m_scalarRange.first;
+    tempInput << ( range * ( double )m_minSlider->GetValue() ) / 100 + m_scalarRange.first;
     m_minTextCtrl->SetValue( wxString( tempInput.str().c_str(), wxConvUTF8 ) );
-    
+
     std::ostringstream tempInputMax;
-    tempInputMax << m_scalarRange.second - ( range *( 100 - ( double )m_maxSlider->GetValue() ) / 100 );
+    tempInputMax << m_scalarRange.second - ( range * ( 100 - ( double )m_maxSlider->GetValue() ) / 100 );
     m_maxTextControl->SetValue( wxString( tempInputMax.str().c_str(), wxConvUTF8 ) );
-    
+
     SendData( VISTAB_MIN_SLIDER );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -124,50 +124,50 @@ void PolyDataScalarControlDialog::OnMaxTextInput( wxCommandEvent& event )
     {
         return;
     }
-    
-    maxValue = (( m_scalarRange.second - m_scalarRange.first
-                 - ( m_scalarRange.second - maxTexVal ) )
-                / ( m_scalarRange.second - m_scalarRange.first ) * 100 );
-    
+
+    maxValue = ( ( m_scalarRange.second - m_scalarRange.first
+                   - ( m_scalarRange.second - maxTexVal ) )
+                 / ( m_scalarRange.second - m_scalarRange.first ) * 100 );
+
     if( maxValue == 0 )
     {
-        m_minSlider->SetValue(( int )maxValue + 1 );
-        m_maxSlider->SetValue(( int )maxValue );
+        m_minSlider->SetValue( ( int )maxValue + 1 );
+        m_maxSlider->SetValue( ( int )maxValue );
     }
     else if( m_minSlider->GetValue() >= ( int )maxValue )
     {
-        m_minSlider->SetValue(( int )maxValue - 1 );
-        m_maxSlider->SetValue(( int )maxValue );
+        m_minSlider->SetValue( ( int )maxValue - 1 );
+        m_maxSlider->SetValue( ( int )maxValue );
         std::ostringstream tempInput;
         tempInput << ( m_scalarRange.second - m_scalarRange.first )
-            *( double )m_minSlider->GetValue() / 100 + m_scalarRange.first;
+                  *( double )m_minSlider->GetValue() / 100 + m_scalarRange.first;
         m_minTextCtrl->SetValue( wxString( tempInput.str().c_str(), wxConvUTF8 ) );
     }
     else
     {
-        m_maxSlider->SetValue(( int )maxValue );
+        m_maxSlider->SetValue( ( int )maxValue );
     }
-    
+
     SendData( VISTAB_MAX_SLIDER );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PolyDataScalarControlDialog::OnMaxSlider( wxScrollEvent& event )
 {
     double range = m_scalarRange.second - m_scalarRange.first;
-    
+
     if( m_maxSlider->GetValue() <= m_minSlider->GetValue() ) //&& m_maxSlider->GetValue() > 0 )
     {
         EnsureSliders( VISTAB_MAX_SLIDER );
     }
-    
+
     std::ostringstream tempInput;
-    tempInput << ( range *( double )m_minSlider->GetValue() ) / 100 + m_scalarRange.first;
+    tempInput << ( range * ( double )m_minSlider->GetValue() ) / 100 + m_scalarRange.first;
     m_minTextCtrl->SetValue( wxString( tempInput.str().c_str(), wxConvUTF8 ) );
-    
+
     std::ostringstream tempInputMax;
-    tempInputMax << m_scalarRange.second - ( range *( 100 - ( double )m_maxSlider->GetValue() ) / 100 );
+    tempInputMax << m_scalarRange.second - ( range * ( 100 - ( double )m_maxSlider->GetValue() ) / 100 );
     m_maxTextControl->SetValue( wxString( tempInputMax.str().c_str(), wxConvUTF8 ) );
-    
+
     SendData( VISTAB_MAX_SLIDER );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -175,7 +175,7 @@ bool PolyDataScalarControlDialog::EnsureSliders( int activeSliderID )
 {
     int minValue = m_minSlider->GetValue();
     int maxValue = m_maxSlider->GetValue();
-    
+
     //maintain the value on the min/max sliders.
     if( minValue > maxValue - static_cast<int>( 1 ) )
     {
@@ -187,7 +187,7 @@ bool PolyDataScalarControlDialog::EnsureSliders( int activeSliderID )
         {
             m_maxSlider->SetValue( 0 + 1 );
         }
-        
+
         if( activeSliderID == VISTAB_MIN_SLIDER )
         {
             m_maxSlider->SetValue( m_minSlider->GetValue() + 1 );
@@ -206,7 +206,7 @@ void PolyDataScalarControlDialog::SendData( int activeSliderID )
 {
     double minMaxVal;
     std::string minMaxTag;
-    
+
     if( activeSliderID == VISTAB_MIN_SLIDER )
     {
         m_minTextCtrl->GetValue().ToDouble( &minMaxVal );
@@ -220,14 +220,14 @@ void PolyDataScalarControlDialog::SendData( int activeSliderID )
 
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
     newCommand->SetCommandName( m_commandName );
-    
-    ves::open::xml::DataValuePairPtr 
-        warpSurface( new ves::open::xml::DataValuePair() );
+
+    ves::open::xml::DataValuePairPtr
+    warpSurface( new ves::open::xml::DataValuePair() );
     warpSurface->SetData( minMaxTag, minMaxVal );
     newCommand->AddDataValuePair( warpSurface );
 
     ves::conductor::util::CORBAServiceList::instance()->
-        SendCommandStringToXplorer( newCommand );
+    SendCommandStringToXplorer( newCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PolyDataScalarControlDialog::SetCommandName( const std::string commandName )

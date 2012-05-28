@@ -40,7 +40,7 @@ using namespace ves::open::xml;
 //Constructor                                     //
 ////////////////////////////////////////////////////
 FloatArray::FloatArray( unsigned int nElements )
-        : XMLObject()
+    : XMLObject()
 {
     mNElements  = nElements;
     // These should match the schema for min and max occurances
@@ -55,11 +55,13 @@ FloatArray::FloatArray( unsigned int nElements )
 FloatArray::~FloatArray()
 {
     if( mArray.size() )
+    {
         mArray.clear();
+    }
 }
 ///////////////////////////////////////////
 FloatArray::FloatArray( const FloatArray& input )
-        : XMLObject( input )
+    : XMLObject( input )
 {
     mNElements = input.mNElements;
     mArray = input.mArray;
@@ -83,7 +85,9 @@ FloatArray& FloatArray::operator=( const FloatArray& input )
 void FloatArray::Clear()
 {
     if( mArray.size() )
+    {
         mArray.clear();
+    }
 }
 /////////////////////////////////////////////////
 void FloatArray::AddElementToArray( double value )
@@ -109,7 +113,7 @@ double FloatArray::GetElement( unsigned int index )
     {
         return mArray.at( index );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "ERROR!!!" << std::endl;
         std::cout << "Invalid index: " << index << " in FloatArray::GetElement!!!" << std::endl;
@@ -134,11 +138,11 @@ void FloatArray::_updateVEElement( const std::string& )
     {
         // name comes from verg.xsd
         DOMElement* valueTag  = mRootDocument->createElement(
-                                Convert( "value" ).toXMLString() );
+                                    Convert( "value" ).toXMLString() );
 
         mVeElement->appendChild( valueTag );
         DOMText* valueNum = mRootDocument->createTextNode(
-                            Convert( mArray.at( i ) ).toXMLString() );
+                                Convert( mArray.at( i ) ).toXMLString() );
 
         valueTag->appendChild( valueNum );
     }
@@ -164,14 +168,14 @@ void FloatArray::SetObjectFromXMLData( DOMNode* xmlInput )
         // do we need to delete the old one or does xerces handle this???
         //mNElements = xmlInput->getChildNodes()->getLength();
         DOMNodeList* nodeList = currentElement->getElementsByTagName(
-                                Convert( "value" ).toXMLString() );
+                                    Convert( "value" ).toXMLString() );
 
         XMLSize_t numNodes = nodeList->getLength();
         mNElements = numNodes;
-        if (( mMinIndex > numNodes ) && ( mMaxIndex < numNodes ) )
+        if( ( mMinIndex > numNodes ) && ( mMaxIndex < numNodes ) )
         {
             std::cerr << " ERROR : FloatArray::SetObjectFromXMLData :" <<
-            " This node has too few or too many children." << std::endl;
+                      " This node has too few or too many children." << std::endl;
         }
 
         // This for loop may be wrong since the the text node and
@@ -191,7 +195,7 @@ void FloatArray::SetObjectFromXMLData( DOMNode* xmlInput )
     else
     {
         std::cerr << " ERROR : FloatArray::SetObjectFromXMLData :" <<
-        " This node has no children which means there is probably a problem." << std::endl;
+                  " This node has no children which means there is probably a problem." << std::endl;
     }
 }
 

@@ -61,7 +61,7 @@ public:
     CameraCullVisitorCallback();
 
     virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
-    
+
 protected:
 };
 }

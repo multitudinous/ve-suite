@@ -59,13 +59,13 @@ using namespace ves::xplorer::network;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 DeleteNetworkViewEventHandler::DeleteNetworkViewEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeleteNetworkViewEventHandler::DeleteNetworkViewEventHandler( const DeleteNetworkViewEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }

@@ -41,7 +41,7 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 CADAssembly::CADAssembly( const std::string& name )
-        : ves::open::xml::cad::CADNode( name )
+    : ves::open::xml::cad::CADNode( name )
 {
 
     mAssociatedDataset = "NONE";
@@ -131,8 +131,8 @@ ves::open::xml::cad::CADNodePtr CADAssembly::SearchAllChildren( const std::strin
         {
             return tempNode;
         }
-        
-        ves::open::xml::cad::CADAssemblyPtr tempAssem = 
+
+        ves::open::xml::cad::CADAssemblyPtr tempAssem =
             boost::dynamic_pointer_cast< ves::open::xml::cad::CADAssembly >( tempNode );
         if( tempAssem )
         {
@@ -149,7 +149,7 @@ ves::open::xml::cad::CADNodePtr CADAssembly::SearchAllChildren( const std::strin
 void CADAssembly::_updateChildren()
 {
     DOMElement* childList = mRootDocument->createElement(
-                            Convert( "children" ).toXMLString() );
+                                Convert( "children" ).toXMLString() );
 
     //the number of children
     /*DOMElement* nchildrenElement = mRootDocument->createElement(
@@ -202,11 +202,11 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
     mChildren.clear();
 
     if( currentElement->getAttributeNode(
-        Convert( "associatedDataset" ).toXMLString() ) )
+                Convert( "associatedDataset" ).toXMLString() ) )
     {
         XMLObject::GetAttribute( currentElement,
-                "associatedDataset",
-                mAssociatedDataset );
+                                 "associatedDataset",
+                                 mAssociatedDataset );
     }
     else
     {
@@ -215,11 +215,11 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
     //populate the childList
     {
         DOMNodeList* childList = currentElement->getElementsByTagName(
-                                 Convert( "children" ).toXMLString() );
+                                     Convert( "children" ).toXMLString() );
 
         DOMElement* childListElement = dynamic_cast<DOMElement*>( childList->item( 0 ) );
         DOMNodeList* childrenNodes = childListElement->getElementsByTagName(
-                                     Convert( "child" ).toXMLString() );
+                                         Convert( "child" ).toXMLString() );
 
         size_t nChilderenReally = childrenNodes->getLength();
         for( size_t i = 0; i < nChilderenReally; i++ )
@@ -231,7 +231,9 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
                 i++;
                 cadNode = dynamic_cast<DOMElement*>( childrenNodes->item( i ) );
                 if( i == nChilderenReally )
+                {
                     return;
+                }
             }
             ///Get the node type element must loop over all of the subelements
             ///to make sure we have the type element
@@ -268,7 +270,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
                 {
                     std::cout << "ERROR!" << std::endl;
                     std::cout << "Unknown node type:"
-                    << tmpNodeType << std::endl;
+                              << tmpNodeType << std::endl;
                 }
             }
         }
@@ -276,15 +278,15 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
 }
 ///////////////////////////////////////////////////////////
 CADAssembly::CADAssembly( CADAssembly& rhs, bool clone )
-        : ves::open::xml::cad::CADNode( rhs, clone )
+    : ves::open::xml::cad::CADNode( rhs, clone )
 {
 
     mAssociatedDataset = rhs.mAssociatedDataset;
     for( size_t i = 0; i < rhs.mChildren.size(); i++ )
     {
         mChildren.push_back( boost::dynamic_pointer_cast<CADNode>(
-            XMLObjectFactory::Instance()->CreateXMLObjectCopy(
-               rhs.mChildren.at( i ) ) ) );
+                                 XMLObjectFactory::Instance()->CreateXMLObjectCopy(
+                                     rhs.mChildren.at( i ) ) ) );
     }
 }
 ///////////////////////////////////////////////////////////

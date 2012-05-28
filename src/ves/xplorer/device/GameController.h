@@ -117,19 +117,19 @@ private:
     void UpdateForwardAndUp();// const osg::Vec3d&, const osg::Vec3d& );
 
     ///Track the position of the game controller so that we can tell what the
-    ///current orientation of the controller is for updating the 
+    ///current orientation of the controller is for updating the
     ///up and forward vectors of the controller.
     gadget::PositionInterface m_gamecontroller;
 
-    typedef gadget::AnalogEventInterface<gadget::event::all_events_tag,
-        gadget::event::synchronized_tag> AnalogAxisInterface;
+    typedef gadget::AnalogEventInterface < gadget::event::all_events_tag,
+            gadget::event::synchronized_tag > AnalogAxisInterface;
     AnalogAxisInterface m_analogAxis0EventInterface;
     AnalogAxisInterface m_analogAxis1EventInterface;
     AnalogAxisInterface m_analogAxis2EventInterface;
     AnalogAxisInterface m_analogAxis3EventInterface;
 
-    typedef gadget::DigitalEventInterface<gadget::event::all_events_tag,
-        gadget::event::synchronized_tag> GamePadClickInterface;
+    typedef gadget::DigitalEventInterface < gadget::event::all_events_tag,
+            gadget::event::synchronized_tag > GamePadClickInterface;
     GamePadClickInterface m_button0EventInterface;
     GamePadClickInterface m_button1EventInterface;
     GamePadClickInterface m_button2EventInterface;
@@ -174,27 +174,27 @@ private:
     void OnButton10Event( gadget::DigitalState::State event );
     /// All GameController events get delivered here
     void OnButton11Event( gadget::DigitalState::State event );
-    
-    ///Setup the start and end point for a mouse pick 
+
+    ///Setup the start and end point for a mouse pick
     void SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint );
 
     ///Set the character state to enable controlling the nav step size
     void SetCharacterState( bool const& enable );
-    
+
     ///The current X mouse position
     int m_currX;
-    
+
     ///The current Y mouse position
     int m_currY;
 
     ///Determine if the mouse is inside the UI
     bool m_exit;
-    
+
     ///Selection ray start point
     osg::Vec3d m_startPoint;
     ///Selection ray end point
     osg::Vec3d m_endPoint;
-    
+
     //The signal handler to hand off to VR Juggler
     //vrj::Kernel::signal_callback_t m_signalHandler;
 
@@ -203,10 +203,10 @@ private:
     /// Params are: start point and end point
     typedef boost::signals2::signal< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
     StartEndPointSignal_type m_startEndPointSignal;
-    
+
     /// MouseMove signal
     /// Params are: x, y, z, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< bool ( int, int, int, int ),
+    typedef boost::signals2::signal < bool ( int, int, int, int ),
             eventmanager::BooleanPropagationCombiner > MouseMoveSignal_type;
     MouseMoveSignal_type m_mouseMove;
 
@@ -218,18 +218,18 @@ private:
 
     /// Scroll signal type
     /// Params are: deltaX, deltaY, x, y, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< bool ( int, int, int, int, int ),
-        eventmanager::BooleanPropagationCombiner > ScrollSignal_type;
+    typedef boost::signals2::signal < bool ( int, int, int, int, int ),
+            eventmanager::BooleanPropagationCombiner > ScrollSignal_type;
     ScrollSignal_type m_scroll;
-    
+
     //osg::ref_ptr< osgwMx::MxInputAdapterGadgeteerGamePad > m_gadgetInputAdapter;
     osg::ref_ptr< osgwMx::MxGamePad > m_mxGamePadStyle;
-    
+
     float m_leftStickX;
     float m_leftStickY;
     float m_rightStickX;
     float m_rightStickY;
-    
+
     ///Button enum container
     unsigned int m_buttons;
     ///Hold the mapping from buttons to functions

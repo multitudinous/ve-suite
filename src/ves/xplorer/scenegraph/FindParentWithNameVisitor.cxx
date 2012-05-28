@@ -36,8 +36,8 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-FindParentWithNameVisitor::FindParentWithNameVisitor( osg::Node* node, 
-    const std::string& nodeName, bool exactNameMatch )
+FindParentWithNameVisitor::FindParentWithNameVisitor( osg::Node* node,
+        const std::string& nodeName, bool exactNameMatch )
     :
     NodeVisitor( TRAVERSE_PARENTS ),
     mParentName( nodeName ),
@@ -79,7 +79,7 @@ void FindParentWithNameVisitor::apply( osg::Node& node )
             return;
         }
     }
-    
+
     //If we did not find an id and therefore a parent then keep going up
     if( !parentNode )
     {

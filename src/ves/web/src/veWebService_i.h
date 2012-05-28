@@ -67,52 +67,52 @@ public:
     bool GetCalcFlag( void );
 
     virtual void UpdateNetwork(
-        const char * network
+        const char* network
         ACE_ENV_ARG_DECL
     )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    ACE_THROW_SPEC( (
+                        CORBA::SystemException
+                        , Error::EUnknown
+                    ) );
 
     virtual void UpdateModuleUI(
         CORBA::Long module_id,
-        const char * msg
+        const char* msg
         ACE_ENV_ARG_DECL
     )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    ACE_THROW_SPEC( (
+                        CORBA::SystemException
+                        , Error::EUnknown
+                    ) );
 
     virtual void UpdateModuleResult(
         CORBA::Long module_id,
-        const char * msg
+        const char* msg
         ACE_ENV_ARG_DECL
     )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    ACE_THROW_SPEC( (
+                        CORBA::SystemException
+                        , Error::EUnknown
+                    ) );
 
     virtual void UpdateLinkContent(
         CORBA::Long id,
-        const char * msg
+        const char* msg
         ACE_ENV_ARG_DECL
     )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    ACE_THROW_SPEC( (
+                        CORBA::SystemException
+                        , Error::EUnknown
+                    ) );
 
     virtual void Raise(
-        const char * notification
+        const char* notification
         ACE_ENV_ARG_DECL
     )
-    ACE_THROW_SPEC((
-                       CORBA::SystemException
-                       , Error::EUnknown
-                   ) );
+    ACE_THROW_SPEC( (
+                        CORBA::SystemException
+                        , Error::EUnknown
+                    ) );
 };
 
 

@@ -51,7 +51,7 @@ namespace scenegraph
 {
 osg::Geode* vtkActorToStreamLine( vtkActor* actor, osg::Geode* geode = NULL, int verbose = 0 );
 
-osg::Geometry* ProcessPrimitive( vtkActor *a, vtkCellArray *prims, int pType, int v );
+osg::Geometry* ProcessPrimitive( vtkActor* a, vtkCellArray* prims, int pType, int v );
 
 osg::Program* GetShader();
 }

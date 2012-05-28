@@ -87,7 +87,7 @@ public:
     ///\param spacing
     cfdAnimatedImage( std::string basename, int frames,
                       int ex_x, int ex_y, int dim,
-                      double *origin, double *spacing );
+                      double* origin, double* spacing );
     ///Reads in parameters for animated image
     ///\param param
     cfdAnimatedImage( std::string param );

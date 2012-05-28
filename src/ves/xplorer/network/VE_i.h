@@ -81,34 +81,34 @@ protected:
     vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
     vpr::Mutex statusBufferLock;  /**< A mutex to protect variables accesses */
     // Following moved up into public for xplorer-driven network loading. -RPT
-    //void SetNetworkString( std::string tempString ); 
+    //void SetNetworkString( std::string tempString );
 
     virtual void UpdateNetwork(
-        const char * network
+        const char* network
     );
 
     virtual void UpdateModuleUI(
         CORBA::Long module_id,
-        const char * msg
+        const char* msg
     );
 
     virtual void UpdateModuleResult(
         CORBA::Long module_id,
-        const char * msg
+        const char* msg
     );
 
     virtual void UpdateLinkContent(
         CORBA::Long id,
-        const char * msg
+        const char* msg
     );
 
     virtual void Raise(
-        const char * notification
+        const char* notification
     );
 
     virtual
     void SetXplorerData(
-        const char * xplorerData
+        const char* xplorerData
     )
     {
         boost::ignore_unused_variable_warning( xplorerData );
@@ -116,7 +116,7 @@ protected:
 
     virtual
     void SetCommand(
-                    const char * openXMLCommand);
+        const char* openXMLCommand );
 };
 }
 }

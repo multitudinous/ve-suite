@@ -42,25 +42,31 @@
 #include <vtkPointData.h>
 using namespace ves::builder::DataLoader;
 
-vtkUnstructuredGrid* ves::builder::DataLoader::convertToUnstructuredGrid( vtkDataSet * rgrid )
+vtkUnstructuredGrid* ves::builder::DataLoader::convertToUnstructuredGrid( vtkDataSet* rgrid )
 {
     int debug = 0;
 
     int numCells = rgrid->GetNumberOfCells();
     if( debug )
+    {
         std::cout << "\tThe number of cells in the input grid is " << numCells << std::endl;
+    }
 
     int numPts = rgrid->GetNumberOfPoints();
     if( debug )
+    {
         std::cout << "\tThe number of points in the input grid is " << numPts << std::endl;
+    }
 
-    vtkUnstructuredGrid *ugrid = vtkUnstructuredGrid::New();
+    vtkUnstructuredGrid* ugrid = vtkUnstructuredGrid::New();
     if( numCells == 0 )
+    {
         return ugrid;
+    }
 
     vtkIdType pt, npts;
-    vtkIdList *pts = vtkIdList::New();
-    vtkGenericCell *cell = vtkGenericCell::New();
+    vtkIdList* pts = vtkIdList::New();
+    vtkGenericCell* cell = vtkGenericCell::New();
 
     // attach the cell information to the unstructured grid
     for( int cellId = 0; cellId < numCells; cellId++ )
@@ -77,7 +83,7 @@ vtkUnstructuredGrid* ves::builder::DataLoader::convertToUnstructuredGrid( vtkDat
         ugrid->InsertNextCell( cell->GetCellType(), pts );
     }//for all cells
 
-    vtkPoints *vertices = vtkPoints::New();
+    vtkPoints* vertices = vtkPoints::New();
     double x[3];
     for( int ptId = 0; ptId < numPts; ptId++ )
     {
@@ -94,13 +100,18 @@ vtkUnstructuredGrid* ves::builder::DataLoader::convertToUnstructuredGrid( vtkDat
 
     // if the data set has FIELD data connected to the point data, attach these to unstructured grid...
     int numPDArrays = rgrid->GetPointData()->GetNumberOfArrays();
-    if( debug ) std::cout << "number of point data arrays = " << numPDArrays << std::endl;
+    if( debug )
+    {
+        std::cout << "number of point data arrays = " << numPDArrays << std::endl;
+    }
     if( numPDArrays )
     {
         ugrid->GetPointData()->AllocateArrays( numPDArrays );
 
         for( int i = 0; i < numPDArrays; i++ )
+        {
             ugrid->GetPointData()->AddArray( rgrid->GetPointData()->GetArray( i ) );
+        }
     }
 
     // cleanup
@@ -111,22 +122,28 @@ vtkUnstructuredGrid* ves::builder::DataLoader::convertToUnstructuredGrid( vtkDat
     return ugrid;
 }
 
-vtkStructuredGrid* ves::builder::DataLoader::convertToStructuredGrid( vtkRectilinearGrid * rGrid )
+vtkStructuredGrid* ves::builder::DataLoader::convertToStructuredGrid( vtkRectilinearGrid* rGrid )
 {
     int debug = 0;
 
     int numCells = rGrid->GetNumberOfCells();
     if( debug )
+    {
         std::cout << "\tThe number of cells in the input grid is " << numCells << std::endl;
+    }
 
     int numPts = rGrid->GetNumberOfPoints();
     if( debug )
+    {
         std::cout << "\tThe number of points in the input grid is " << numPts << std::endl;
+    }
 
     if( numCells == 0 )
+    {
         return NULL;
+    }
 
-    vtkStructuredGrid *sGrid = vtkStructuredGrid::New();
+    vtkStructuredGrid* sGrid = vtkStructuredGrid::New();
 
     /*
        int pt, npts;
@@ -155,7 +172,7 @@ vtkStructuredGrid* ves::builder::DataLoader::convertToStructuredGrid( vtkRectili
 
     sGrid->SetDimensions( rGrid->GetDimensions() );
 
-    vtkPoints *vertices = vtkPoints::New();
+    vtkPoints* vertices = vtkPoints::New();
     double x[3];
     for( int ptId = 0; ptId < numPts; ptId++ )
     {
@@ -164,7 +181,7 @@ vtkStructuredGrid* ves::builder::DataLoader::convertToStructuredGrid( vtkRectili
         {
             if( ptId < 20 || ptId > numPts - 20 )
                 std::cout << "ptId = " << ptId << " of " << numPts
-                << "\tx:\t" << x[0] << "\t" << x[1] << "\t" << x[2] << std::endl;
+                          << "\tx:\t" << x[0] << "\t" << x[1] << "\t" << x[2] << std::endl;
         }
         vertices->InsertPoint( ptId, x );
     }//for all points
@@ -177,14 +194,18 @@ vtkStructuredGrid* ves::builder::DataLoader::convertToStructuredGrid( vtkRectili
     // attach these to the structured grid...
     int numPDArrays = rGrid->GetPointData()->GetNumberOfArrays();
     if( debug )
+    {
         std::cout << "number of point data arrays = " << numPDArrays << std::endl;
+    }
 
     if( numPDArrays )
     {
         sGrid->GetPointData()->AllocateArrays( numPDArrays );
 
         for( int i = 0; i < numPDArrays; i++ )
+        {
             sGrid->GetPointData()->AddArray( rGrid->GetPointData()->GetArray( i ) );
+        }
     }
 
     return sGrid;

@@ -50,26 +50,26 @@ SAPIVoiceInterpreter::SAPIVoiceInterpreter( int argc, char** argv ) : VEVoiceInt
     cmdsFile += "\\VE_Xplorer\\VoiceCommand\\";
 
     // Look for relevant arguments, hope for no pathological naming
-    for( int i = 0;i < argc - 1;i++ )
+    for( int i = 0; i < argc - 1; i++ )
     {
         if( !strcmp( argv[i], "-SAPIGrammar" ) )
         {
             if( !foundGrammar )
             {
-                cmdsFile += argv[i+1];
+                cmdsFile += argv[i + 1];
                 foundGrammar = true;
             }
             else
             {
                 vprDEBUG( vesDBG, 0 ) << " Warning: found multiple SAPI grammar file declarations, "
-                << "using just the first one.\n" << vprDEBUG_FLUSH;
+                                      << "using just the first one.\n" << vprDEBUG_FLUSH;
             }
         }
     }
     if( !foundGrammar )
     {
         vprDEBUG( vesDBG, 2 ) << " Using default SAPI grammar, " << defaultGrammarFile
-        << "\n" << vprDEBUG_FLUSH;
+                              << "\n" << vprDEBUG_FLUSH;
         cmdsFile += defaultGrammarFile;
     }
 };
@@ -179,7 +179,7 @@ int SAPIVoiceInterpreter::ConfigureSAPI( std::string grammar_file )
     else
     {
         vprDEBUG( vesDBG, 0 ) << " SAPI failed to load grammar file: " << grammar_file << "\n"
-        << vprDEBUG_FLUSH;
+                              << vprDEBUG_FLUSH;
         return SUCCEEDED( ok ) ? 0 : 1;
     }
     if( SUCCEEDED( ok ) )

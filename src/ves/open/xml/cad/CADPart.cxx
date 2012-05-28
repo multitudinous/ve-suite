@@ -40,7 +40,7 @@ using namespace ves::open::xml;
 //Constructor                                             //
 ////////////////////////////////////////////////////////////
 CADPart::CADPart( const std::string& name )
-    : 
+    :
     ves::open::xml::cad::CADNode( name ),
     m_cadFileName( "CADFile" )
 {
@@ -76,7 +76,7 @@ void CADPart::_updateCADFileName()
                         Convert( m_cadFileName ).toXMLString() );
 
     nameElement->appendChild( fileName );*/
-    
+
     SetSubElement( "fileName", m_cadFileName );
 }
 /////////////////////////////////////////////////
@@ -107,13 +107,13 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode )
 
     if( currentElement->hasChildNodes() )
     {
-        DOMElement* fileNameElement = 
+        DOMElement* fileNameElement =
             GetSubElement( currentElement, std::string( "fileName" ), 0 );
         GetDataFromElement( fileNameElement, m_cadFileName );
     }
-    
+
     if( currentElement->getAttributeNode(
-        Convert( "occlusionCulling" ).toXMLString() ) )
+                Convert( "occlusionCulling" ).toXMLString() ) )
     {
         XMLObject::GetAttribute( currentElement, "occlusionCulling", m_occlusionCulling );
     }
@@ -121,11 +121,11 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode )
     {
         m_occlusionCulling = "Off";
     }
-    
+
 }
 ////////////////////////////////////////////////
 CADPart::CADPart( CADPart& rhs, bool clone )
-        : ves::open::xml::cad::CADNode( rhs, clone )
+    : ves::open::xml::cad::CADNode( rhs, clone )
 {
     m_cadFileName = rhs.m_cadFileName;
 }

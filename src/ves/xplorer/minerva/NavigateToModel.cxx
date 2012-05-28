@@ -85,55 +85,63 @@ NavigateToModel::~NavigateToModel()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-void NavigateToModel::Execute ( CommandPtr command, MinervaManager& manager )
+void NavigateToModel::Execute( CommandPtr command, MinervaManager& manager )
 {
-  ves::open::xml::DataValuePairPtr activeModelDVP ( command->GetDataValuePair( "NAVIGATE_TO" ) );
+    ves::open::xml::DataValuePairPtr activeModelDVP( command->GetDataValuePair( "NAVIGATE_TO" ) );
 
-  if( !activeModelDVP )
-  {
-    return;
-  }
+    if( !activeModelDVP )
+    {
+        return;
+    }
 
-  std::string nodeId;
-  activeModelDVP->GetData ( nodeId );
+    std::string nodeId;
+    activeModelDVP->GetData( nodeId );
 
-  ModelWrapper::RefPtr modelWrapper ( 0x0 );
-  if ( manager.HasModel ( nodeId ) )
-  {
-    modelWrapper = manager.GetModel ( nodeId );
-  }
+    ModelWrapper::RefPtr modelWrapper( 0x0 );
+    if( manager.HasModel( nodeId ) )
+    {
+        modelWrapper = manager.GetModel( nodeId );
+    }
 
-  if ( !modelWrapper.valid() )
-    return;
+    if( !modelWrapper.valid() )
+    {
+        return;
+    }
 
-  ves::xplorer::scenegraph::CADEntity *cadEntity ( modelWrapper->GetCADEntity() );
-  if ( 0x0 == cadEntity )
-    return;
+    ves::xplorer::scenegraph::CADEntity* cadEntity( modelWrapper->GetCADEntity() );
+    if( 0x0 == cadEntity )
+    {
+        return;
+    }
 
-  ves::xplorer::scenegraph::DCS *dcs ( cadEntity->GetDCS() );
-  if ( 0x0 == dcs )
-    return;
+    ves::xplorer::scenegraph::DCS* dcs( cadEntity->GetDCS() );
+    if( 0x0 == dcs )
+    {
+        return;
+    }
 
-  osg::BoundingSphere boundingSphere ( dcs->getBound() );
-  osg::Vec3d location ( modelWrapper->location() );
-  const double altitudeOffset ( gmtl::Math::Max( double( boundingSphere.radius() * 2 ), 1000.0 ) );
+    osg::BoundingSphere boundingSphere( dcs->getBound() );
+    osg::Vec3d location( modelWrapper->location() );
+    const double altitudeOffset( gmtl::Math::Max( double( boundingSphere.radius() * 2 ), 1000.0 ) );
 
-  Minerva::Core::Data::Camera::RefPtr camera ( new Minerva::Core::Data::Camera );
-  camera->longitude ( location[0] );
-  camera->latitude ( location[1] );
-  camera->altitude ( location[2] + altitudeOffset );
+    Minerva::Core::Data::Camera::RefPtr camera( new Minerva::Core::Data::Camera );
+    camera->longitude( location[0] );
+    camera->latitude( location[1] );
+    camera->altitude( location[2] + altitudeOffset );
 
-  gmtl::Matrix44d viewMatrix;
-  manager.GetViewMatrix ( camera.get(), viewMatrix );
+    gmtl::Matrix44d viewMatrix;
+    manager.GetViewMatrix( camera.get(), viewMatrix );
 
-  gmtl::Quat<double> rotation; gmtl::setRot ( rotation, viewMatrix );
-  gmtl::Vec3d translate; gmtl::setTrans ( translate, viewMatrix );
+    gmtl::Quat<double> rotation;
+    gmtl::setRot( rotation, viewMatrix );
+    gmtl::Vec3d translate;
+    gmtl::setTrans( translate, viewMatrix );
 
-  /// Tell the animation engine to set the world dcs.
-  ves::xplorer::NavigationAnimationEngine::instance()->SetDCS(
-    ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
-    
-  /// Tell the animation engine where to go.
-  ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
-    translate, rotation, true, dcs );
+    /// Tell the animation engine to set the world dcs.
+    ves::xplorer::NavigationAnimationEngine::instance()->SetDCS(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
+
+    /// Tell the animation engine where to go.
+    ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
+        translate, rotation, true, dcs );
 }

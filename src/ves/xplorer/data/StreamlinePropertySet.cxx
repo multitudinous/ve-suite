@@ -52,7 +52,7 @@ StreamlinePropertySet::StreamlinePropertySet()
 
     ///Signal for turning on seed points
     {
-        std::string name("StreamlinePropertySet");
+        std::string name( "StreamlinePropertySet" );
         name += boost::lexical_cast<std::string>( this );
         name += ".ActivateSeedPoints";
 
@@ -62,25 +62,25 @@ StreamlinePropertySet::StreamlinePropertySet()
     }
     ///Signal to change the bounds of seed points
     {
-        std::string name("StreamlinePropertySet");
+        std::string name( "StreamlinePropertySet" );
         name += boost::lexical_cast<std::string>( this );
         name += ".UpdateSeedPointBounds";
-        
+
         eventmanager::EventManager::instance()->RegisterSignal(
-           new SignalWrapper< UpdateSeedPointBoundsSignal_type >( &m_updateSeedPointBounds ),
-           name, eventmanager::EventManager::unspecified_SignalType );
+            new SignalWrapper< UpdateSeedPointBoundsSignal_type >( &m_updateSeedPointBounds ),
+            name, eventmanager::EventManager::unspecified_SignalType );
     }
     ///Signal to change the active dataset
     {
-        std::string name("StreamlinePropertySet");
+        std::string name( "StreamlinePropertySet" );
         name += boost::lexical_cast<std::string>( this );
         name += ".ActiveDataSet";
-        
+
         eventmanager::EventManager::instance()->RegisterSignal(
-           new SignalWrapper< UpdateActiveDataSetSignal_type >( &m_activeDataSet ),
-           name, eventmanager::EventManager::unspecified_SignalType );
+            new SignalWrapper< UpdateActiveDataSetSignal_type >( &m_activeDataSet ),
+            name, eventmanager::EventManager::unspecified_SignalType );
     }
-    
+
     mTableName = "Streamline";
 
     RegisterPropertySet( mTableName );
@@ -108,16 +108,16 @@ void StreamlinePropertySet::CreateSkeleton()
 {
     {
         AddProperty( "Hide", false, "Toggle Viz Off" );
-        const std::string slotName = 
-        boost::lexical_cast<std::string>( this ) +".HideVizFeature";
+        const std::string slotName =
+            boost::lexical_cast<std::string>( this ) + ".HideVizFeature";
         std::vector< PropertyPtr > dataLink;
         dataLink.push_back( GetProperty( "Hide" ) );
-        MakeLiveBasePtr p( 
-                          new MakeLiveLinked< bool >( mUUIDString, dataLink,
-                                                                  slotName ) );
+        MakeLiveBasePtr p(
+            new MakeLiveLinked< bool >( mUUIDString, dataLink,
+                                        slotName ) );
         mLiveObjects.push_back( p );
     }
-    
+
     AddProperty( "DataSet", 0, "Data Set" );
     PSVectorOfStrings enumValues;
 
@@ -146,7 +146,7 @@ void StreamlinePropertySet::CreateSkeleton()
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
     mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
-    
+
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
     // connections between DataSet and its subproperties would have been in
@@ -174,7 +174,7 @@ void StreamlinePropertySet::CreateSkeleton()
     SetPropertyAttribute( "IntegrationDirection", "enumValues", enumValues );
 
     ///Seed point controls
-    AddProperty( "SeedPoints", boost::any(), "Seed Points");
+    AddProperty( "SeedPoints", boost::any(), "Seed Points" );
     SetPropertyAttribute( "SeedPoints", "isUIGroupOnly", true );
     SetPropertyAttribute( "SeedPoints", "setExpanded", true );
     AddProperty( "SeedPoints_DisplaySeedPoints", false, "Display Seed Points" );
@@ -194,12 +194,12 @@ void StreamlinePropertySet::CreateSkeleton()
     numberOfPointsLink.push_back( GetProperty( "SeedPoints_NumberOfPointsInY" ) );
     numberOfPointsLink.push_back( GetProperty( "SeedPoints_NumberOfPointsInZ" ) );
     MakeLiveBasePtr p( new MakeLiveLinked< int >(
-            mUUIDString,
-            numberOfPointsLink,
-            "UpdateSeedPointDimensions" ) );
+                           mUUIDString,
+                           numberOfPointsLink,
+                           "UpdateSeedPointDimensions" ) );
     mLiveObjects.push_back( p );
 
-    AddProperty( "SeedPoints_Bounds", boost::any(), "Bounds");
+    AddProperty( "SeedPoints_Bounds", boost::any(), "Bounds" );
     SetPropertyAttribute( "SeedPoints_Bounds", "isUIGroupOnly", true );
     SetPropertyAttribute( "SeedPoints_Bounds", "setExpanded", true );
     AddProperty( "SeedPoints_Bounds_XMin",   0.0, "X Minimum" );
@@ -232,12 +232,12 @@ void StreamlinePropertySet::CreateSkeleton()
     enumValues.clear();
     enumValues.push_back( "x" );
     SetPropertyAttribute( "CursorDirection", "enumValues", enumValues );
-    
+
     AddProperty( "CursortType", 0, "Cursor Type" );
     enumValues.clear();
     enumValues.push_back( "none" );
     SetPropertyAttribute( "CursortType", "enumValues", enumValues );
-    
+
     //AddProperty( "StreamlineSize", 0.5, "Streamline Size" );
     //AddProperty( "NumberOfPointsPerPlane", 2.0, "Number of Points Per Plane" );
 
@@ -256,7 +256,7 @@ void StreamlinePropertySet::CreateSkeleton()
     AddProperty( "Advanced_SphereArrowParticleSize", 5.0f, "Sphere/Arrow/Particle Size" );
     SetPropertyAttribute( "Advanced_VectorThreshold", "minimumValue", 1.0 );
     SetPropertyAttribute( "Advanced_VectorThreshold", "maximumValue", 50.0 );
-    
+
     /*
     AddProperty( "Advanced_VectorScale", 200.0, "Vector Scale" );
     SetPropertyAttribute( "Advanced_VectorScale", "minimumValue",   1.0 );
@@ -267,7 +267,7 @@ void StreamlinePropertySet::CreateSkeleton()
     SetPropertyAttribute( "Advanced_VectorRatio", "maximumValue", 200.0 );
 
     AddProperty( "Advanced_ScaleByVectorMagnitude", false, "Scale By Vector Magnitude" );
-    
+
     ///Mode controls
     AddProperty( "Mode", 0, "Mode" );
     enumValues.clear();
@@ -286,7 +286,7 @@ void StreamlinePropertySet::CreateSkeleton()
 ////////////////////////////////////////////////////////////////////////////////
 void StreamlinePropertySet::UpdateSeedPointDisplay( PropertyPtr property )
 {
-    const std::string dataSetName = 
+    const std::string dataSetName =
         boost::any_cast< std::string >( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
     m_activeDataSet( dataSetName );
 
@@ -302,7 +302,7 @@ void StreamlinePropertySet::UpdateSeedPointDisplay( PropertyPtr property )
         seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_YMax" ) ) );
         seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_ZMin" ) ) );
         seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_ZMax" ) ) );
-        m_updateSeedPointBounds( seedPointBounds );    
+        m_updateSeedPointBounds( seedPointBounds );
     }
 
     m_activateSeedPoints( dataSetName, showDataSet );

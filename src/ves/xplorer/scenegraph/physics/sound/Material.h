@@ -37,7 +37,8 @@
 
 struct Material
 {
-    typedef enum {
+    typedef enum
+    {
         DEFAULT,
         CEMENT,
         JELLO,
@@ -46,14 +47,14 @@ struct Material
         WOOD_DOOR
     } MaterialType;
 
-    Material( MaterialType mat=DEFAULT )
-      : _mat( mat )
+    Material( MaterialType mat = DEFAULT )
+        : _mat( mat )
     {}
     ~Material() {};
 
     bool operator<( const Material& mat ) const
     {
-        return( ((int)_mat) < ((int)mat._mat) );
+        return( ( ( int )_mat ) < ( ( int )mat._mat ) );
     }
 
     MaterialType _mat;

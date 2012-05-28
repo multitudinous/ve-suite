@@ -112,7 +112,7 @@ public:
 
     ///Returns next tranlation vector.
     gmtl::Quatd& GetQuat();
-    
+
     ///Returns last tranlation vector.
     gmtl::Vec3d GetLastTrans( void );
 
@@ -125,11 +125,11 @@ private:
     gmtl::Matrix44d nextMatrix;///<gmtl next matrix.
 
     gmtl::Vec3d  vjVecCurrTrans;///VRJuggler current translation vector.
-    
+
     double rotPoints[4];///<rotation points.
-    
+
     double angle;///<angle (nay not be in use).
-        
+
     double rotvec[3];///<rotation vector (may not be in use).
 };
 }

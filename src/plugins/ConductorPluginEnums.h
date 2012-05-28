@@ -84,7 +84,7 @@ enum
     APOPENDIALOG_CANCELBUTTON,
     APOPENDIALOG_OKBUTTON,
 
-    
+
     //
     //DSPlugin.h
     //
@@ -128,7 +128,7 @@ enum
     DWOPENDIALOG_CANCELBUTTON,
     DWOPENDIALOG_OKBUTTON,
 
-    
+
     //
     //DW Var Dialog
     //
@@ -145,7 +145,7 @@ enum
     ADUOPLUGIN_ASPEN_MENU,
     ADUOPLUGIN_TIMER_ID,
     ADUOPLUGIN_STOP_TIMER,
-    
+
     //
     //AD Var Dialog
     //

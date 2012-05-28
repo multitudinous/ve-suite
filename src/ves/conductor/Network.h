@@ -72,7 +72,7 @@ namespace util
 class CORBAServiceList;
 }
 }
-}            
+}
 
 namespace ves
 {
@@ -84,12 +84,12 @@ class VE_GUIPLUGINS_EXPORTS Network : public wxEvtHandler
 {
 public:
     ///Constructor
-    Network( 
-            wxWindow* parent, 
-            ves::conductor::util::CORBAServiceList* serviceList,
-            ves::conductor::XMLDataBufferEngine* dataBufferEngine,
-            ves::conductor::UserPreferencesDataBuffer* userPrefBuffer
-            );
+    Network(
+        wxWindow* parent,
+        ves::conductor::util::CORBAServiceList* serviceList,
+        ves::conductor::XMLDataBufferEngine* dataBufferEngine,
+        ves::conductor::UserPreferencesDataBuffer* userPrefBuffer
+    );
 
     virtual ~Network();
 
@@ -113,7 +113,7 @@ public:
     void OnDelLink( wxCommandEvent& event );
 
     ///Add to network fuctions
-    void AddtoNetwork( ves::conductor::UIPluginBase *new_mod, std::string cls_name );
+    void AddtoNetwork( ves::conductor::UIPluginBase* new_mod, std::string cls_name );
     void AddTag( int x, int y, wxString text );
     ///Load calls new when loading the network
     ///this also calls delete objects on xplorer but the user may not
@@ -141,7 +141,7 @@ public:
     //The list of links between the nodes of moduls.
     std::vector< ves::conductor::util::Link > links;
     //void ReDraw(wxDC &dc);
-    void DrawNetwork( wxDC &dc );
+    void DrawNetwork( wxDC& dc );
     ///Push all the event handlers from the tags, plugins, and links onto canvas
     void PushAllEvents();
     ///Remove all of the event handlers from the tags,
@@ -151,7 +151,7 @@ public:
     void ClearXplorer();
     ///Update all the ve models
     void Update();
-    ///Remove plugin dialogs from the canvas 
+    ///Remove plugin dialogs from the canvas
     void RemovePluginDialogs();
     ///Delete plugins from plugins
     void OnDeletePlugins( wxUpdateUIEvent& event );
@@ -161,7 +161,7 @@ public:
     std::pair< int, int > GetNetworkSize( );
     std::pair< int, int > GetScrollPosition();
     void SetScrollPosition( int x, int y );
-    
+
 protected:
     //Selection functions
     int SelectMod( int x, int y, wxDC& dc );
@@ -176,12 +176,12 @@ protected:
     void DropModule( int x, int y, int mod );
     void MoveLinkCon( int x, int y, int ln, int ln_con, wxDC& dc );
     void DropLinkCon( int x, int y, int ln, int ln_con, wxDC& dc );
-    void MoveTagCon( int x, int y, int t, int t_con, wxDC &dc );
-    void DropTagCon( int x, int y, int t, int t_con, wxDC &dc );
-    void MoveTag( int x, int y, int t, wxDC &dc );
-    void DropTag( int x, int y, int t, wxDC &dc );
-    void TryLink( int x, int y, int mod, int pt, wxDC &dc, bool flag );
-    void DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag );
+    void MoveTagCon( int x, int y, int t, int t_con, wxDC& dc );
+    void DropTagCon( int x, int y, int t, int t_con, wxDC& dc );
+    void MoveTag( int x, int y, int t, wxDC& dc );
+    void DropTag( int x, int y, int t, wxDC& dc );
+    void TryLink( int x, int y, int mod, int pt, wxDC& dc, bool flag );
+    void DropLink( int x, int y, int mod, int pt, wxDC& dc, bool flag );
 
     //Math functions for the relationship of points and polygons
     double computenorm( wxPoint pt1, wxPoint pt2 );
@@ -197,13 +197,13 @@ protected:
     bool IsPortCompatible( int frmod, int frport, int tomod, int toport );
 
     //Used to keep track of the network size
-    void SetNetworkSize(int x, int y);
+    void SetNetworkSize( int x, int y );
 
     ///Internal update to process commands coming from xplorer
     void UpdateInternalPluginData();
     ///Handle regularly occuring events
     void OnTimer( wxTimerEvent& event );
-    
+
     int m_selMod; // selected module
     int m_selFrPort; // selected From port
     int m_selToPort; // selected To port;
@@ -214,7 +214,7 @@ protected:
     //Three main list of network objs
     //The list of text tags
     std::vector< ves::conductor::util::Tag > tags;
-    
+
     // the relative point of the polygon, used by the move module function
     wxPoint relative_pt;
 
@@ -225,7 +225,7 @@ private:
     bool isDataSet;
     bool tryingLink;
     bool dragging;
-    wxBitmap * bitmapBuffer;
+    wxBitmap* bitmapBuffer;
     wxPoint point1;
     wxPoint point2;
     int mMouseOverPlugin;
@@ -234,12 +234,12 @@ private:
     std::string networkID;
     ///Event to delete networks
     wxUpdateUIEvent networkDeleteEvent;
-    
+
     unsigned int pluginID;
     ves::conductor::util::CORBAServiceList* mServiceList;
     ves::conductor::XMLDataBufferEngine* mDataBufferEngine;
     ves::conductor::UserPreferencesDataBuffer* mUserPrefBuffer;
-    
+
     std::string tempXMLNetworkData;
     //start up bounding box; used by GetFreePos to calc start module location
     std::vector< wxRect > sbboxes;

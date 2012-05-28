@@ -51,7 +51,7 @@ BEGIN_EVENT_TABLE( TransferFunctionDialog, wxDialog )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////
 TransferFunctionDialog::TransferFunctionDialog( wxWindow* parent, int id, std::string title )
-        : BaseDialog( parent, id, title )
+    : BaseDialog( parent, id, title )
 {
     _buildGUI();
     //SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
@@ -70,8 +70,8 @@ void TransferFunctionDialog::_buildGUI()
     wxStaticBoxSizer* smSizer = new wxStaticBoxSizer( shaderManagerBox, wxVERTICAL );
 
     _shaderManagerSelection = new wxComboBox( this, AVAILABLE_SHADER_MANAGERS,
-                                              _( "" ), wxDefaultPosition,
-                                              wxSize( 150, wxDefaultCoord ) );
+            _( "" ), wxDefaultPosition,
+            wxSize( 150, wxDefaultCoord ) );
     _shaderManagerSelection->Append( _T( "BLUE_RED_LINEAR_SHADER" ) );
     _shaderManagerSelection->Append( _T( "GREY_SCALE_SHADER" ) );
     _shaderManagerSelection->Append( _T( "CUSTOM" ) );

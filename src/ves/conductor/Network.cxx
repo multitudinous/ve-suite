@@ -110,10 +110,10 @@ BEGIN_EVENT_TABLE( Network, wxEvtHandler )
     EVT_TIMER( NETWORK_UPDATE_TIMER_ID, Network::OnTimer )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
-Network::Network( wxWindow* parent, 
-                 ves::conductor::util::CORBAServiceList* serviceList,
-                 ves::conductor::XMLDataBufferEngine* dataBufferEngine,
-                 ves::conductor::UserPreferencesDataBuffer* userPrefBuffer ):
+Network::Network( wxWindow* parent,
+                  ves::conductor::util::CORBAServiceList* serviceList,
+                  ves::conductor::XMLDataBufferEngine* dataBufferEngine,
+                  ves::conductor::UserPreferencesDataBuffer* userPrefBuffer ):
     wxEvtHandler(),
     tryingLink( false ),
     isLoading( false ),
@@ -155,7 +155,7 @@ Network::Network( wxWindow* parent,
     systemPtr = mDataBufferEngine->GetXMLSystemDataObject(
                     mDataBufferEngine->GetTopSystemId() );
     networkDeleteEvent.SetId( NETWORK_DELETE_NETWORK );
-    
+
     m_timer.Start( 250 );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -201,7 +201,9 @@ void Network::OnMLeftDown( wxMouseEvent& event )
     //if (m_selLink >= 0)
     UnSelectLink( );
     if( m_selTag >= 0 )
+    {
         UnSelectTag( dc );
+    }
 
     //Select Mod/Link/Tag
     SelectMod( x, y, dc );
@@ -259,7 +261,9 @@ void Network::OnMLeftDown( wxMouseEvent& event )
                 }
         }
         else
+        {
             SelectTag( x, y );
+        }
     }
     parent->Refresh( true );
     //necessary for setting the canvas active to handle keyboard input
@@ -380,7 +384,7 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     wxPoint evtpos = event.GetLogicalPosition( dc );
     long x = evtpos.x;
     long y = evtpos.y;
-    
+
     //grab the size of the selected object
     //-need to account for its size when updating network size
     int height = 0;
@@ -394,7 +398,7 @@ void Network::OnMLeftUp( wxMouseEvent& event )
         m_selLinkCon = -1;
 
         //m_selLink=-1;
-        //links[m_selLink].DrawLinkCon( true, userScale );        
+        //links[m_selLink].DrawLinkCon( true, userScale );
 
         //accounts for the size of the link connector
         //-will need to be updated if link connector size changes
@@ -467,7 +471,7 @@ void Network::OnMLeftUp( wxMouseEvent& event )
         width = modules[m_selMod].GetPlugin()->GetBBox().width;
         height = modules[m_selMod].GetPlugin()->GetBBox().height;
     }
-    
+
     //resize the network size when modules or links are drug beyond
     //current size
     if( x + width > networkSize.first )
@@ -552,7 +556,9 @@ void Network::OnAddTag( wxCommandEvent& WXUNUSED( event ) )
     wxTextEntryDialog dialog( parent, _( "Tag Editor" ), _( "Please enter the text for the tag : " ), _( "this is a tag" ), wxOK );
 
     if( dialog.ShowModal() == wxID_OK )
+    {
         AddTag( action_point.x, action_point.y, dialog.GetValue() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnEditTag( wxCommandEvent& WXUNUSED( event ) )
@@ -690,9 +696,9 @@ void Network::OnDelMod( wxCommandEvent& event )
     std::vector< Link >::iterator iter3;
     for( iter3 = links.begin(); iter3 != links.end(); )
     {
-        if (( iter3->GetFromModule() == *selMod ) ||
+        if( ( iter3->GetFromModule() == *selMod ) ||
                 ( iter3->GetToModule() == *selMod )
-           )
+          )
         {
             iter3 = links.erase( iter3 );
         }
@@ -748,12 +754,12 @@ void Network::OnDelPort( wxCommandEvent& event )
     for( std::vector< Link >::iterator iter3 = links.begin();
             iter3 != links.end(); )
     {
-        if (( iter3->GetFromModule() == m_selMod ) &&
+        if( ( iter3->GetFromModule() == m_selMod ) &&
                 ( iter3->GetFromPort() == selPort->GetPortNumber() ) )
         {
             iter3 = links.erase( iter3 );
         }
-        else if (( iter3->GetToModule() == m_selMod ) &&
+        else if( ( iter3->GetToModule() == m_selMod ) &&
                  ( iter3->GetToPort() ==  selPort->GetPortNumber() ) )
         {
             iter3 = links.erase( iter3 );
@@ -776,7 +782,7 @@ void Network::OnDelPort( wxCommandEvent& event )
 /////////////////////////////////////
 ///// Selection Functions ///////////
 /////////////////////////////////////
-int Network::SelectMod( int x, int y, wxDC &dc )
+int Network::SelectMod( int x, int y, wxDC& dc )
 {
     // This function checks to see which module your mouse is over based
     // on the x and y location of your mouse on the design canvas
@@ -830,7 +836,9 @@ int Network::SelectLink( int x, int y )
 void Network::UnSelectLink( )
 {
     for( size_t i = 0; i < links.size(); ++i )
+    {
         links[i].SetHighlightFlag( false );
+    }
     m_selLink = -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -844,7 +852,9 @@ int Network::SelectTag( int x, int y )
         if( tags[i].GetPolygon()->inside( temp ) )
         {
             if( m_selTag == ( int )i )
+            {
                 return i;
+            }
             tags[i].DrawTagCon( true, userScale );
             m_selTag = i;
             return i;
@@ -853,7 +863,7 @@ int Network::SelectTag( int x, int y )
     return -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Network::UnSelectTag( wxDC &dc )
+void Network::UnSelectTag( wxDC& dc )
 {
     tags[m_selTag].DrawTagCon( false, userScale );
     m_selTag = -1;
@@ -880,14 +890,14 @@ wxPoint Network::GetFreePos( wxRect bbox )
 
         if( testbox.Intersects( sbboxes[i] ) )
         {
-            if (( try_y < limity ) && ( try_y < ( int )sbboxes.size() ) )
+            if( ( try_y < limity ) && ( try_y < ( int )sbboxes.size() ) )
             {
                 result.y = sbboxes[try_y].GetBottom() + disty;
                 try_y++;
                 i = -1;
                 continue;
             }
-            else if (( try_x < limitx ) && ( try_x < ( int )sbboxes.size() ) )
+            else if( ( try_x < limitx ) && ( try_x < ( int )sbboxes.size() ) )
             {
                 result.x = sbboxes[try_x].GetRight() + distx;
                 result.y = disty;
@@ -918,9 +928,11 @@ wxPoint Network::GetFreePos( wxRect bbox )
 void Network::MoveModule( int x, int y, int mod )
 {
     if( mod < 0 ) // no module is selected
+    {
         return;
+    }
 
-    UIPluginBase *cur_module;
+    UIPluginBase* cur_module;
     wxRect bbox;
     int xunit, yunit;
     int xpos, ypos, oldxpos, oldypos;
@@ -950,14 +962,22 @@ void Network::MoveModule( int x, int y, int mod )
     //bbox = cur_module->GetBBox(); //Get the Boundoing box of the module
 
     if( x > ex - bbox.width )
-        xpos += 1;//userScale.first;
+    {
+        xpos += 1;    //userScale.first;
+    }
     else if( x < ( ex - w ) + relative_pt.x )
-        xpos -= 1;//userScale.first;
+    {
+        xpos -= 1;    //userScale.first;
+    }
 
     if( y > ey - bbox.height )
-        ypos += 1;//userScale.second;
+    {
+        ypos += 1;    //userScale.second;
+    }
     if( y < ( ey - h + relative_pt.y ) )
-        ypos -= 1;//userScale.second;
+    {
+        ypos -= 1;    //userScale.second;
+    }
 
     if( x - relative_pt.x + bbox.width > sx )
     {
@@ -978,7 +998,7 @@ void Network::MoveModule( int x, int y, int mod )
     //Draw the links for a particular module
     for( size_t i = 0; i < links.size(); ++i )
     {
-        if (( links.at( i ).GetFromModule() == mod ) )
+        if( ( links.at( i ).GetFromModule() == mod ) )
         {
             //links.at( i ).DrawLink( false, userScale );
             //std::cout << " move module output " << std::endl;
@@ -986,7 +1006,7 @@ void Network::MoveModule( int x, int y, int mod )
             *( links.at( i ).GetPoint( 0 ) ) = pos;
         }
         //if the modules are the same
-        if (( links.at( i ).GetToModule() == mod ) )
+        if( ( links.at( i ).GetToModule() == mod ) )
         {
             //links.at( i ).DrawLink( false, userScale );
             //std::cout << " move module input " << std::endl;
@@ -1012,25 +1032,35 @@ void Network::DropModule( int ix, int iy, int mod )
     double r;
     int vx, vy;
     int x, y;
-    UIPluginBase * cur_module;
+    UIPluginBase* cur_module;
     bool scroll = false;
 
     //In drag mode
     if( mod < 0 ) // no module is selected
+    {
         return;
+    }
 
     parent->GetVirtualSize( &sx, &sy );
     sx = ( int )( 1.0 * sx / userScale.first );
     sy = ( int )( 1.0 * sy / userScale.second );
 
     if( ix < relative_pt.x )
+    {
         x = relative_pt.x;
+    }
     else
+    {
         x = ix;
+    }
     if( iy < relative_pt.y )
+    {
         y = relative_pt.y;
+    }
     else
+    {
         y = iy;
+    }
 
     cur_module = modules[mod].GetPlugin();
 
@@ -1075,8 +1105,10 @@ void Network::DropModule( int ix, int iy, int mod )
     //Recalc links poly as well for a particular module
     for( size_t i = 0; i < links.size(); ++i )
     {
-        if (( links.at( i ).GetFromModule() == mod ) || ( links.at( i ).GetToModule() == mod ) )
+        if( ( links.at( i ).GetFromModule() == mod ) || ( links.at( i ).GetToModule() == mod ) )
+        {
             links.at( i ).CalcLinkPoly();
+        }
     }
 }
 /////////////////////////////////////////////////////////////////////////
@@ -1084,7 +1116,7 @@ void Network::TryLink( int x, int y, int mod, int pt, wxDC& dc, bool flag )
 {
     wxRect bbox;
     //int dest_mod = -1;
-    //Reset back to -1 so that we can loop over and 
+    //Reset back to -1 so that we can loop over and
     //find if we are over a new plugin
     mMouseOverPlugin = -1;
     //This loop causes a tremendous perfomance decrease
@@ -1094,8 +1126,8 @@ void Network::TryLink( int x, int y, int mod, int pt, wxDC& dc, bool flag )
     y = static_cast< int >( y / userScale.second );
     temp.x = x;//dc.LogicalToDeviceX( x );
     temp.y = y;//dc.LogicalToDeviceY( y );
-    for( std::map< unsigned int, Module >::iterator iter = 
-        modules.begin(); iter != modules.end(); iter++ )
+    for( std::map< unsigned int, Module >::iterator iter =
+                modules.begin(); iter != modules.end(); iter++ )
     {
         //if( iter->second.GetPlugin()->GetPolygon()->inside( temp ) ) //&& mMouseOverPlugin != mod )
         if( iter->second.GetPlugin()->SelectMod( x, y ) )
@@ -1156,7 +1188,7 @@ void Network::TryLink( int x, int y, int mod, int pt, wxDC& dc, bool flag )
 }
 
 ////////////////////////////////////////////////////////////////////////
-void Network::DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag )
+void Network::DropLink( int x, int y, int mod, int pt, wxDC& dc, bool flag )
 {
     //first check if there is an apropriate port on the destination position
     //in the mean time, also find out the wipe off line's start position
@@ -1256,7 +1288,7 @@ void Network::DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag )
     // if it is a good link
     // and a user can not link to itself
     //std::cout << dest_mod << " " << acutallDestPortNumber << " " << mod << " " << acutallPortNumber << std::endl;
-    if( dest_mod >= 0 && acutallDestPortNumber >= 0 && (( dest_mod != mod ) || ( acutallDestPortNumber != acutallPortNumber ) ) )
+    if( dest_mod >= 0 && acutallDestPortNumber >= 0 && ( ( dest_mod != mod ) || ( acutallDestPortNumber != acutallPortNumber ) ) )
     {
         Link ln( parent, this );
         if( flag ) // if input port
@@ -1336,14 +1368,22 @@ void Network::MoveLinkCon( int x, int y, int ln, int ln_con, wxDC& dc )
     ey = ypos * yunit + h;
 
     if( x > ex )
+    {
         xpos += 1;
+    }
     if( x < ( ex - w ) )
+    {
         xpos -= 1;
+    }
 
     if( y > ey )
+    {
         ypos += 1;
+    }
     if( y < ( ey - h ) )
+    {
         ypos -= 1;
+    }
 
     if( x > sx )
     {
@@ -1372,7 +1412,7 @@ void Network::MoveLinkCon( int x, int y, int ln, int ln_con, wxDC& dc )
 }
 
 //////////////////////////////////////////////////////////////////////
-void Network::DropLinkCon( int x, int y, int ln, int ln_con, wxDC &dc )
+void Network::DropLinkCon( int x, int y, int ln, int ln_con, wxDC& dc )
 {
     int sx, sy;
     double r;
@@ -1421,19 +1461,27 @@ bool Network::IsPortCompatible( int frmod, int frport, int tomod, int toport )
     ports = modules[ frmod ].GetPlugin()->GetOPorts();
     std::string type1 = "";
     if( frport >= 0 && frport < int( ports.size() ) )
+    {
         type1 = ports[frport]->GetPortType();
+    }
 
     //num = modules[ tomod ].GetPlugin()->GetNumIports();
     //ports.resize( num );
     ports = modules[ tomod ].GetPlugin()->GetIPorts();
     std::string type2 = "";
     if( toport >= 0 && toport < ports.size() )
+    {
         type2 = ports[toport]->GetPortType();
+    }
 
     if( type1 == type2 )
+    {
         return true;
+    }
     else
+    {
         return false;
+    }
 }
 //////////////////////////////////////////////////////////////////
 void Network::MoveTagCon( int x, int y, int t, int t_con, wxDC& dc )
@@ -1460,14 +1508,22 @@ void Network::MoveTagCon( int x, int y, int t, int t_con, wxDC& dc )
     ey = ypos * yunit + h;
 
     if( x > ex )
+    {
         xpos += 1;
+    }
     if( x < ( ex - w ) )
+    {
         xpos -= 1;
+    }
 
     if( y > ey )
+    {
         ypos += 1;
+    }
     if( y < ( ey - h ) )
+    {
         ypos -= 1;
+    }
 
     if( x > sx )
     {
@@ -1499,7 +1555,7 @@ void Network::MoveTagCon( int x, int y, int t, int t_con, wxDC& dc )
 }
 
 //////////////////////////////////////////////////////////////////
-void Network::DropTagCon( int x, int y, int t, int t_con, wxDC &dc )
+void Network::DropTagCon( int x, int y, int t, int t_con, wxDC& dc )
 {
     int sx, sy;
     double r;
@@ -1540,7 +1596,7 @@ void Network::DropTagCon( int x, int y, int t, int t_con, wxDC &dc )
 }
 
 ///////////////////////////////////////////////////////
-void Network::MoveTag( int x, int y, int t, wxDC &dc )
+void Network::MoveTag( int x, int y, int t, wxDC& dc )
 {
     int xunit, yunit;
     int xpos, ypos, oldxpos, oldypos;
@@ -1563,14 +1619,22 @@ void Network::MoveTag( int x, int y, int t, wxDC &dc )
     ey = ypos * yunit + h;
 
     if( x > ex )
+    {
         xpos += 1;
+    }
     if( x < ( ex - w ) )
+    {
         xpos -= 1;
+    }
 
     if( y > ey )
+    {
         ypos += 1;
+    }
     if( y < ( ey - h ) )
+    {
         ypos -= 1;
+    }
 
     if( x > sx )
     {
@@ -1605,7 +1669,7 @@ void Network::MoveTag( int x, int y, int t, wxDC &dc )
 }
 
 /////////////////////////////////////////////////////
-void Network::DropTag( int x, int y, int t, wxDC &dc )
+void Network::DropTag( int x, int y, int t, wxDC& dc )
 {
     int sx, sy;
     double r;
@@ -1668,9 +1732,13 @@ void Network::AddTag( int x, int y, wxString text )
 
     t.GetConnectorsPoint( 1 )->x = x + 60;
     if( y > 40 )
+    {
         t.GetConnectorsPoint( 1 )->y = y - 20;
+    }
     else
+    {
         t.GetConnectorsPoint( 1 )->y = y + 20;
+    }
 
     dc.GetTextExtent( text, &w, &h );
 
@@ -1696,7 +1764,7 @@ void Network::AddTag( int x, int y, wxString text )
 }
 
 //////////////////////////////////////////////////////////////
-void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
+void Network::AddtoNetwork( UIPluginBase* cur_module, std::string cls_name )
 {
     POLY tmpPoly;
     int num;
@@ -1711,7 +1779,9 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
 
         mit = modules.find( id );
         if( mit == modules.end() )
+        {
             break;
+        }
     };
     //do it this way because we don't have equal operators setup for plugins
     Module mod;
@@ -1731,14 +1801,14 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     modules[id].GetPlugin()->SetXMLDataBufferEngine( mDataBufferEngine );
     modules[id].GetPlugin()->SetUserPreferencesDataBuffer( mUserPrefBuffer );
     modules[id].GetPlugin()->
-        SetDialogSize( parent->GetAppropriateSubDialogSize() );
+    SetDialogSize( parent->GetAppropriateSubDialogSize() );
     //Initialize ports
     PORT ports;
     //ports.resize( modules[id].GetPlugin()->GetNumIports() );
     ports = modules[id].GetPlugin()->GetIPorts();
     //ports.resize( modules[id].GetPlugin()->GetNumOports() );
     ports = modules[id].GetPlugin()->GetOPorts();
-    
+
     ///Add the plugin model pointer to the respective system
     systemPtr->AddModel( modules[id].GetPlugin()->GetVEModel() );
 
@@ -1799,7 +1869,7 @@ void Network::DrawNetwork( wxDC& dc )
 ////////////////////////////////////////////////////////////////////////////////
 double Network::computenorm( wxPoint pt1, wxPoint pt2 )
 {
-    return sqrt( double(( pt1.x - pt2.x )*( pt1.x - pt2.x ) + ( pt1.y - pt2.y )*( pt1.y - pt2.y ) ) );
+    return sqrt( double( ( pt1.x - pt2.x ) * ( pt1.x - pt2.x ) + ( pt1.y - pt2.y ) * ( pt1.y - pt2.y ) ) );
 }
 
 //////////////////////////////////////////////
@@ -1825,9 +1895,9 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
     // do this for network
     model::NetworkPtr veNetwork = system->GetNetwork();
 
-//This is needed because on windows the scale must be 1 for the
-//wxAutoBufferedPaintDC to work properly
-//#ifndef WIN32
+    //This is needed because on windows the scale must be 1 for the
+    //wxAutoBufferedPaintDC to work properly
+    //#ifndef WIN32
     if( veNetwork->GetNumberOfNetworkStates() > 0 )
     {
         long int tempScaleInfo;
@@ -1842,8 +1912,8 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         veNetwork->GetDataValuePair( 5 )->GetData( tempScaleInfo );
         numUnit.second = tempScaleInfo;
     }
-//#endif
-    //initialize to 1 for canvas size 
+    //#endif
+    //initialize to 1 for canvas size
     networkSize.first = 1;
     networkSize.second = 1;
 
@@ -1901,18 +1971,18 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         tempPlugin->SetXMLDataBufferEngine( mDataBufferEngine );
         tempPlugin->SetUserPreferencesDataBuffer( mUserPrefBuffer );
         tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
-        ///We re going to favor a plugin that sets the icon in code over 
+        ///We re going to favor a plugin that sets the icon in code over
         ///what be be by default in the ves model element
         if( !tempPlugin->GetIconImage() )
         {
             tempPlugin->SetImageIcon( model->GetIconFilename(),
-                        model->GetIconRotation(),
-                        model->GetIconMirror(),
-                        model->GetIconScale() );  
+                                      model->GetIconRotation(),
+                                      model->GetIconMirror(),
+                                      model->GetIconScale() );
         }
 
         ///If we should not draw this plugin name
-        if(  model->GetPluginName() != "DefaultPlugin" )
+        if( model->GetPluginName() != "DefaultPlugin" )
         {
             //flag it if the name shouldnt be drawn
             if( model->GetIconHiddenFlag() == 1 )
@@ -1933,7 +2003,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         }
         //Second, calculate the polyes
         wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
-        
+
         if( bbox.x + bbox.width > networkSize.first )
         {
             networkSize.first = bbox.x + bbox.width;
@@ -1983,7 +2053,7 @@ void Network::CreateSystem( Canvas* parent, unsigned int id )
     tempPlugin->SetXMLDataBufferEngine( mDataBufferEngine );
     tempPlugin->SetUserPreferencesDataBuffer( mUserPrefBuffer );
     tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
-    
+
     Module mod;
     modules[ id ] = mod;
     modules[ id ].SetPlugin( tempPlugin );
@@ -1996,9 +2066,9 @@ void Network::CreateSystem( Canvas* parent, unsigned int id )
     ves::conductor::util::Polygon newPolygon;
     *( newPolygon.GetPolygon() ) = tmpPoly;*/
     //Get the Boundoing box of the modul
-    wxRect bbox = tempPlugin->GetBBox(); 
+    wxRect bbox = tempPlugin->GetBBox();
     //Make the network recognize its polygon
-    //newPolygon.TransPoly( bbox.x, bbox.y, *( modules[id].GetPlugin()->GetPolygon() ) ); 
+    //newPolygon.TransPoly( bbox.x, bbox.y, *( modules[id].GetPlugin()->GetPolygon() ) );
 
     //modules[ 0 ].GetPlugin()->SetVEModel( model );
     systemPtr->AddModel( modules[id].GetPlugin()->GetVEModel() );
@@ -2049,8 +2119,8 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
         for( size_t i = 0; i < ports.size(); ++i )
         {
             /*std::cout << "this module id " << moduleID << " " << portNumber << " "
-                     << i << " " << ports.at( i ).GetPortNumber() << " " 
-                     << ports[ i ].GetPortLocation()->GetPoint().first << " " 
+                     << i << " " << ports.at( i ).GetPortNumber() << " "
+                     << ports[ i ].GetPortLocation()->GetPoint().first << " "
                      << ports[ i ].GetPortLocation()->GetPoint().second << std::endl;*/
             if( ports.at( i )->GetPortNumber() == portNumber )
             {
@@ -2069,7 +2139,7 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
         }
 
         /*std::cout << portNumber << " "
-          << ports[ index ].GetPortLocation()->GetPoint().first << " " 
+          << ports[ index ].GetPortLocation()->GetPoint().first << " "
           << ports[ index ].GetPortLocation()->GetPoint().second << std::endl;*/
         wxPoint portPoint( ports[ index ]->GetPortLocation()->GetPoint().first, ports[ index ]->GetPortLocation()->GetPoint().second );
         tempPoint.x = bbox.x + portPoint.x;
@@ -2139,9 +2209,9 @@ void Network::HighlightCenter( int modId )
 void Network::HighlightCenterLink( int linkId )
 {
     UnSelectLink();
-    SetScrollPosition( 
-        static_cast< int >( links[linkId].GetPoints()->at(0).x*userScale.first ),
-        static_cast< int >( links[linkId].GetPoints()->at(0).y*userScale.second ) );
+    SetScrollPosition(
+        static_cast< int >( links[linkId].GetPoints()->at( 0 ).x * userScale.first ),
+        static_cast< int >( links[linkId].GetPoints()->at( 0 ).y * userScale.second ) );
     parent->Scroll( GetScrollPosition().first, GetScrollPosition().second );
 
     //highlight the selected icon
@@ -2191,7 +2261,7 @@ void Network::RemovePluginDialogs()
     //If there are no dialogs present then go ahead and send the kill
     // command to this class
     for( std::map< unsigned int, Module >::iterator iter
-        = modules.begin(); iter != modules.end(); ++iter )
+            = modules.begin(); iter != modules.end(); ++iter )
     {
         iter->second.GetPlugin()->CheckPluginMapOnExit();
     }
@@ -2233,10 +2303,10 @@ void Network::Update()
     {
         iter->second.GetPlugin()->GetVEModel();
     }
-    
+
     //For links
     for( std::vector< Link >::iterator iter = links.begin();
-        iter != links.end(); ++iter )
+            iter != links.end(); ++iter )
     {
         iter->GetLink();
     }
@@ -2247,7 +2317,7 @@ void Network::OnDeletePlugins( wxUpdateUIEvent& event )
     //This function may not be necessary
     //The destructor may be able to be used in this case and not this
     // update ui event
-    std::pair< unsigned int, size_t >* pluginData = 
+    std::pair< unsigned int, size_t >* pluginData =
         static_cast< std::pair< unsigned int, size_t >* >( event.GetClientData() );
     size_t numDialogs = 1;
     unsigned int idBeingDeleted = 1;
@@ -2261,13 +2331,13 @@ void Network::OnDeletePlugins( wxUpdateUIEvent& event )
     iter = modules.find( idBeingDeleted );
     modules.erase( iter );
     //std::cout << " erasing the module" << std::endl;
-    
+
     //Send event to canvas
     if( !modules.empty() )
     {
         return;
     }
-    
+
     networkDeleteEvent.SetClientData( &networkID );
 #if wxCHECK_VERSION( 2, 9, 0 )
     parent->GetEventHandler()->AddPendingEvent( networkDeleteEvent );
@@ -2286,7 +2356,7 @@ std::string Network::GetNetworkID( )
     return networkID;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Network::SetNetworkSize(int x, int y)
+void Network::SetNetworkSize( int x, int y )
 {
     networkSize.first = x;
     networkSize.second = y;
@@ -2312,7 +2382,7 @@ void Network::UpdateInternalPluginData()
 {
     ///Get command
     const CommandPtr viewPointData = CORBAServiceList::instance()->
-        GetGUIUpdateCommands( "MODEL_DATA_UPDATE" );
+                                     GetGUIUpdateCommands( "MODEL_DATA_UPDATE" );
     if( viewPointData->GetCommandName() == "NULL" )
     {
         return;
@@ -2321,7 +2391,7 @@ void Network::UpdateInternalPluginData()
     // See if this is the system
     std::string uuidSystem;
     viewPointData->
-        GetDataValuePair( "PARENT_SYSTEM_ID" )->GetData( uuidSystem );
+    GetDataValuePair( "PARENT_SYSTEM_ID" )->GetData( uuidSystem );
     if( networkID != uuidSystem )
     {
         return;
@@ -2330,28 +2400,28 @@ void Network::UpdateInternalPluginData()
     // If it is the system then find the plugin
     std::string uuidPlugin;
     viewPointData->GetDataValuePair( "PLUGIN_ID" )->GetData( uuidPlugin );
-    const ves::open::xml::CommandPtr pluginCommand = 
+    const ves::open::xml::CommandPtr pluginCommand =
         boost::dynamic_pointer_cast< ves::open::xml::Command >(
-        viewPointData->GetDataValuePair( "PLUGIN_DATA" )->GetDataXMLObject() );
-    for( std::map< unsigned int, Module >::iterator iter = 
-        modules.begin(); iter != modules.end(); ++iter )
+            viewPointData->GetDataValuePair( "PLUGIN_DATA" )->GetDataXMLObject() );
+    for( std::map< unsigned int, Module >::iterator iter =
+                modules.begin(); iter != modules.end(); ++iter )
     {
         // once the plugin is found get the ve model
-        const ves::open::xml::model::ModelPtr model = 
+        const ves::open::xml::model::ModelPtr model =
             iter->second.GetPlugin()->GetVEModel();
 
         if( model->GetID() == uuidPlugin )
         {
             std::string uuidPart;
-            pluginCommand->GetDataValuePair( "CAD_ID" )->GetData( uuidPart ); 
+            pluginCommand->GetDataValuePair( "CAD_ID" )->GetData( uuidPart );
             // update the ve model with whatever data xplorer is sending
-            const ves::open::xml::cad::CADNodePtr tempPart = 
-                boost::dynamic_pointer_cast< ves::open::xml::cad::CADAssembly >( 
-                model->GetGeometry() )->SearchAllChildren( uuidPart );
-            ves::open::xml::TransformPtr transform = 
-                boost::dynamic_pointer_cast< ves::open::xml::Transform >( 
-                pluginCommand->GetDataValuePair( "CAD_TRANSFORM" )->
-                GetDataXMLObject() );
+            const ves::open::xml::cad::CADNodePtr tempPart =
+                boost::dynamic_pointer_cast< ves::open::xml::cad::CADAssembly >(
+                    model->GetGeometry() )->SearchAllChildren( uuidPart );
+            ves::open::xml::TransformPtr transform =
+                boost::dynamic_pointer_cast< ves::open::xml::Transform >(
+                    pluginCommand->GetDataValuePair( "CAD_TRANSFORM" )->
+                    GetDataXMLObject() );
             tempPart->SetTransform( transform );
             break;
         }

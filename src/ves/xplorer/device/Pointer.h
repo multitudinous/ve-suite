@@ -173,7 +173,7 @@ protected:
 
     ///Update the hand model with data from VR Juggler
     void UpdateHandModel();
-    
+
     void UpdatePointer();
 
 private:

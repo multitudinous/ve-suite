@@ -54,20 +54,20 @@ MFIXTranslator::~MFIXTranslator()
 {}
 //////////////////////////////////////////////////////////////////////////
 void MFIXTranslator::MFIXPreTranslateCbk::Preprocess( int argc, char** argv,
-                                                      cfdTranslatorToVTK* toVTK )
+        cfdTranslatorToVTK* toVTK )
 {
     PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                 cfdTranslatorToVTK* toVTK,
-                                                 vtkAlgorithm*& )
+        cfdTranslatorToVTK* toVTK,
+        vtkAlgorithm*& )
 {
     MFIXTranslator* MFIXToVTK =
         dynamic_cast< MFIXTranslator* >( toVTK );
     if( MFIXToVTK )
     {
-        vtkMFIXReader *reader = vtkMFIXReader::New();
+        vtkMFIXReader* reader = vtkMFIXReader::New();
         reader->SetFileName( MFIXToVTK->GetFile( 0 ).c_str() );
         reader->Update();
         int TimeStepRange[2];
@@ -104,6 +104,6 @@ void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataObject*& outputDataset,
 void MFIXTranslator::DisplayHelp( void )
 {
     std::cout << "|MFIX Translator Usage:" << std::endl
-    << "\t -singleFile <filename_to_load> -o <output_dir> "
-    << "-outFileName <output_filename> -loader mfix -w file" << std::endl;
+              << "\t -singleFile <filename_to_load> -o <output_dir> "
+              << "-outFileName <output_filename> -loader mfix -w file" << std::endl;
 }

@@ -56,7 +56,7 @@ double cfdAccessoryFunctions::ComputeVectorMagnitude( double vectorComponents [ 
     return magnitude;
 }
 
-double * cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray * dataArray )
+double* cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray* dataArray )
 {
     // magnitudeRange is used by vector-based visualizations when
     // "scale by vector magnitude" is selected. magnitudeRange[ 0 ] determines
@@ -69,11 +69,11 @@ double * cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray * data
     if( dataArray->GetNumberOfComponents() != 3 )
     {
         std::cerr << "ERROR: ComputeVectorMagnitudeRange requires 3-component "
-        << "vector data" << std::endl;
+                  << "vector data" << std::endl;
         return NULL;
     }
 
-    double * magnitudeRange = new double [ 2 ];
+    double* magnitudeRange = new double [ 2 ];
 
     int numTuples = dataArray->GetNumberOfTuples();
 
@@ -105,10 +105,14 @@ double * cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray * data
                                      << std::endl << vprDEBUG_FLUSH;
         */
         if( magnitudeRange[ 0 ] > magnitude )
+        {
             magnitudeRange[ 0 ] = magnitude;
+        }
 
         if( magnitudeRange[ 1 ] < magnitude )
+        {
             magnitudeRange[ 1 ] = magnitude;
+        }
     }
 
     // override the minimum so that a zero-length vector corresponds
@@ -123,7 +127,7 @@ double * cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray * data
     return magnitudeRange;
 }
 
-double cfdAccessoryFunctions::ComputeMeanCellBBLength( vtkDataSet * dataSet )
+double cfdAccessoryFunctions::ComputeMeanCellBBLength( vtkDataSet* dataSet )
 {
     std::cout << "\tcomputing meanCellBBLength..." << std::endl;
 
@@ -137,11 +141,11 @@ double cfdAccessoryFunctions::ComputeMeanCellBBLength( vtkDataSet * dataSet )
     {
         meanCellBBLength = 1.0;
         std::cout << "\tnumCells = 0, so setting meanCellBBLength to "
-        << meanCellBBLength << std::endl;
+                  << meanCellBBLength << std::endl;
         return meanCellBBLength;
     }
 
-    vtkGenericCell *cell = vtkGenericCell::New();
+    vtkGenericCell* cell = vtkGenericCell::New();
     for( int cellId = 0; cellId < numCells; cellId++ )
     {
         dataSet->GetCell( cellId, cell );

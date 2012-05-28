@@ -86,8 +86,8 @@ using namespace ves::conductor::util;
 //Constructor                                                      //
 /////////////////////////////////////////////////////////////////////
 CADNodeManagerDlg::CADNodeManagerDlg( CADNodePtr node, wxWindow* parent, wxWindowID id )
-        : wxDialog( parent, id, _( "CADTree Manager" ), wxDefaultPosition, wxDefaultSize,
-                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) )
+    : wxDialog( parent, id, _( "CADTree Manager" ), wxDefaultPosition, wxDefaultSize,
+                ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) )
 {
     _propsDlg = 0;
     _cadTreeBuilder = 0;
@@ -172,7 +172,9 @@ void CADNodeManagerDlg::_ensureTree()
 void CADNodeManagerDlg::_expandNode( wxTreeItemId node )
 {
     if( node != _geometryTree->GetRootItem() )
+    {
         _geometryTree->Expand( node );
+    }
 
     _geometryTree->SetItemImage( node, 2, wxTreeItemIcon_Expanded );
     _geometryTree->SetItemImage( node, 2, wxTreeItemIcon_SelectedExpanded );
@@ -447,7 +449,7 @@ void CADNodeManagerDlg::_initializePhysics( wxCommandEvent& event )
 
         _sendCommandsToXplorer();
         ClearInstructions();
-        
+
         //Launch the physics attributes panel
         _showPropertiesDialog( event );
     }
@@ -607,7 +609,7 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
         {
             _loadedCAD[fileName] = newAssembly;
             try
-            {   
+            {
                 CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( _rootNode );
                 tempAssembly->GetNumberOfChildren();
                 SetRootCADNode( newAssembly );
@@ -631,9 +633,13 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
         cadNode->SetDataType( std::string( "XMLOBJECT" ) );
 
         if( newAssembly )
+        {
             cadNode->SetData( "New Node", newAssembly );
+        }
         else if( newPart )
+        {
             cadNode->SetData( "New Node", newPart );
+        }
         _dataValuePairList.push_back( cadNode );
 
         _sendCommandsToXplorer();
@@ -789,9 +795,9 @@ void CADNodeManagerDlg::_showOpacityDialog( wxCommandEvent& WXUNUSED( event ) )
     {
         return;
     }
-    
-    CADOpacitySliderDlg opacityDlg( this, -1, _activeCADNode->GetID(), 
-        _activeCADNode->GetOpacity(), _activeCADNode->GetTransparentFlag() );
+
+    CADOpacitySliderDlg opacityDlg( this, -1, _activeCADNode->GetID(),
+                                    _activeCADNode->GetOpacity(), _activeCADNode->GetTransparentFlag() );
     if( opacityDlg.ShowModal() == ( wxID_OK | wxID_CANCEL ) )
     {
         _activeCADNode->SetOpacity( opacityDlg.GetOpacity() );
@@ -911,8 +917,8 @@ void CADNodeManagerDlg::_onEndNodeMove( wxTreeEvent& event )
 }
 /////////////////////////////////////////////////////////////////////////// `
 void CADNodeManagerDlg::_moveNodeToNewParent( ves::open::xml::cad::CADNodePtr movingChild,
-                                              wxTreeItemId oldParentTreeID,
-                                              wxTreeItemId newParentTreeID )
+        wxTreeItemId oldParentTreeID,
+        wxTreeItemId newParentTreeID )
 {
     //The CADAssembly representing the new parent
     CADTreeBuilder::TreeNodeData* newParentCADNode =
@@ -958,7 +964,7 @@ void CADNodeManagerDlg::_moveNodeToNewParent( ves::open::xml::cad::CADNodePtr mo
 
     _geometryTree->AppendItem( newParentTreeID,
                                wxString( movingChild->GetNodeName().c_str(), wxConvUTF8 ),
-                               0, (( movingChild->GetNodeType() == "Assembly" ) ? 2 : 1 ),
+                               0, ( ( movingChild->GetNodeType() == "Assembly" ) ? 2 : 1 ),
                                new CADTreeBuilder::TreeNodeData( movingChild ) );
     //Remove the old reference in the tree
     //Not sure if this should this be passed in
@@ -967,14 +973,14 @@ void CADNodeManagerDlg::_moveNodeToNewParent( ves::open::xml::cad::CADNodePtr mo
 }
 ///////////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_addNodeToParent( ves::open::xml::cad::CADAssemblyPtr parent,
-                                          ves::open::xml::cad::CADNodePtr childToAdd,
-                                          wxTreeItemId parentTreeID )
+        ves::open::xml::cad::CADNodePtr childToAdd,
+        wxTreeItemId parentTreeID )
 {
     parent->AddChild( childToAdd );
 
     _geometryTree->AppendItem( parentTreeID,
                                wxString( childToAdd->GetNodeName().c_str(), wxConvUTF8 ),
-                               0, (( childToAdd->GetNodeType() == "Assembly" ) ? 2 : 1 ),
+                               0, ( ( childToAdd->GetNodeType() == "Assembly" ) ? 2 : 1 ),
                                new CADTreeBuilder::TreeNodeData( childToAdd ) );
 
     _commandName = std::string( "CAD_ADD_NODE" );
@@ -1004,7 +1010,7 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
     {
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( cadCommand );
     }
-    catch ( ... )
+    catch( ... )
     {
         wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
                       _( "Communication Failure" ), wxOK | wxICON_INFORMATION );
@@ -1022,13 +1028,13 @@ CADAssemblyPtr CADNodeManagerDlg::GetRootCADNode()
 void CADNodeManagerDlg::NavigateToFile( wxCommandEvent& event )
 {
     _commandName = "Move to cad";
-    
-    ves::open::xml::DataValuePairPtr dataValuePair( 
+
+    ves::open::xml::DataValuePairPtr dataValuePair(
         new ves::open::xml::DataValuePair() );
     dataValuePair->SetData( "NAVIGATE_TO", _activeCADNode->GetID() );
 
     _dataValuePairList.push_back( dataValuePair );
-    
+
     _sendCommandsToXplorer();
     ClearInstructions();
 }

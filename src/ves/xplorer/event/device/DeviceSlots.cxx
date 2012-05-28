@@ -49,7 +49,7 @@ namespace device
 ////////////////////////////////////////////////////////////////////////////////
 void EnableDevice( /*unsigned int const& deviceType,*/ bool const& enable )
 {
-    //device::Device::Type type = 
+    //device::Device::Type type =
     //    static_cast< device::Device::Type >( deviceType );
     DeviceHandler::instance()->EnableDevice( ves::xplorer::device::Device::GLOVES, enable );
 }

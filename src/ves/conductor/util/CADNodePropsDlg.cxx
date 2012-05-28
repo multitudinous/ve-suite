@@ -116,28 +116,28 @@ END_EVENT_TABLE()
 //Here is the constructor with passed in pointers //
 ////////////////////////////////////////////////////
 CADNodePropertiesDlg::CADNodePropertiesDlg( wxWindow* parent,
-                                            int id, CADNodePtr activeNode )
-: 
-wxDialog( parent, id, _( "CAD Properties" ), wxDefaultPosition, wxDefaultSize,
-    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ), _( "CADTree Properties" ) ),
-_propertyTabs( 0 ),
-_transformPanel( 0 ),
-_attributePanel( 0 ),
-_physicsPanel( 0 ),
-_animationPanel( 0 ),
-_geographicPanel ( 0x0 ),
-_attributeType( 0 ),
-_attributeSelection( 0 ),
-_addAttributeButton( 0 ),
-_editAttributeButton( 0 ),
-_addAnimationButton( 0 ),
-_restoreDefaultAttributeButton( 0 ),
-_nShaders( 0 ),
-_nMaterials( 0 ),
-m_occlusionPanel( 0 ),
-_cadNode( activeNode ),
-m_cullingRB( 0 ),
-m_decimationRB( 0 )
+        int id, CADNodePtr activeNode )
+    :
+    wxDialog( parent, id, _( "CAD Properties" ), wxDefaultPosition, wxDefaultSize,
+              ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ), _( "CADTree Properties" ) ),
+    _propertyTabs( 0 ),
+    _transformPanel( 0 ),
+    _attributePanel( 0 ),
+    _physicsPanel( 0 ),
+    _animationPanel( 0 ),
+    _geographicPanel( 0x0 ),
+    _attributeType( 0 ),
+    _attributeSelection( 0 ),
+    _addAttributeButton( 0 ),
+    _editAttributeButton( 0 ),
+    _addAnimationButton( 0 ),
+    _restoreDefaultAttributeButton( 0 ),
+    _nShaders( 0 ),
+    _nMaterials( 0 ),
+    m_occlusionPanel( 0 ),
+    _cadNode( activeNode ),
+    m_cullingRB( 0 ),
+    m_decimationRB( 0 )
 {
     tempX = 1.0;
     tempY = 1.0;
@@ -163,8 +163,8 @@ void CADNodePropertiesDlg::_buildGUI()
 
     mainSizer->Add( notebookSizer, 3, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
 
-    bottomRow->Add( new wxButton( this, wxID_OK, _( "OK" ) ), 0, 
-                   wxALIGN_CENTER | wxALL, 5 );
+    bottomRow->Add( new wxButton( this, wxID_OK, _( "OK" ) ), 0,
+                    wxALIGN_CENTER | wxALL, 5 );
 
     mainSizer->Add( bottomRow, 0, wxALIGN_CENTER );
     //set this flag and let wx handle alignment
@@ -183,14 +183,14 @@ void CADNodePropertiesDlg::_buildTabs()
     }
 
     _propertyTabs->AddPage( GetTransformPanel(), _T( "Transform" ), true );
-    _propertyTabs->AddPage(GetAnimationPanel(),_T("Animation"), false);
+    _propertyTabs->AddPage( GetAnimationPanel(), _T( "Animation" ), false );
     _propertyTabs->AddPage( GetAttributePanel(), _T( "Attributes" ), false );
     if( _cadNode->GetNodeType() == "Part" )
     {
         _propertyTabs->AddPage( GetOcculsionPanel(), _T( "Culling" ), false );
     }
-    
-    if (( _cadNode->GetNodeType() == "Part" ) && ( _cadNode->HasPhysics() ) )
+
+    if( ( _cadNode->GetNodeType() == "Part" ) && ( _cadNode->HasPhysics() ) )
     {
         _propertyTabs->AddPage( GetPhysicsPanel(), _T( "Physics" ), false );
     }
@@ -240,16 +240,16 @@ wxPanel* CADNodePropertiesDlg::GetAnimationPanel()
 ////////////////////////////////////////////////////////////////////////////////
 wxPanel* CADNodePropertiesDlg::GetGeographicPanel()
 {
-  if ( !_geographicPanel )
-  {
-    this->_buildGeographicPanel();
-  }
-  return _geographicPanel;
+    if( !_geographicPanel )
+    {
+        this->_buildGeographicPanel();
+    }
+    return _geographicPanel;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxPanel* CADNodePropertiesDlg::GetOcculsionPanel()
 {
-    if ( !m_occlusionPanel )
+    if( !m_occlusionPanel )
     {
         this->_buildOcclusionSettings();
     }
@@ -414,7 +414,7 @@ void CADNodePropertiesDlg::_buildAttributePanel()
 
     _addAttributeButton = new wxButton( _attributePanel, ADD_ATTRIBUTE, _( "Add..." ) );
     /*_associateWithDataCheck = new wxCheckBox(_attributePanel, ASSOCIATE_CHECKBOX,
-                                          _T("Use Last Seed Point"), 
+                                          _T("Use Last Seed Point"),
             wxDefaultPosition, wxDefaultSize, 0 );
     _associateWithDataCheck->SetValue(false);*/
     attributeTypeSizer->Add( _addAttributeButton, 0, wxALIGN_CENTER );
@@ -496,33 +496,33 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
     physicsPropSizer->Add( frictionSizer, 1, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
     physicsPropSizer->Add( restitutionSizer, 1, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
 
-    
+
     wxBoxSizer* physicsMeshSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    wxString motionStrings[] = { _T( "None" ),_T( "Static" ), _T( "Dynamic" ) };
+    wxString motionStrings[] = { _T( "None" ), _T( "Static" ), _T( "Dynamic" ) };
     mMotionProperties = new wxRadioBox( _physicsPanel, PHYSICS_MESH_ID, wxT( "Motion Type" ),
-                                       wxDefaultPosition, wxDefaultSize, 3,
-                                       motionStrings, 0, wxRA_SPECIFY_ROWS );
+                                        wxDefaultPosition, wxDefaultSize, 3,
+                                        motionStrings, 0, wxRA_SPECIFY_ROWS );
     physicsMeshSizer->Add( mMotionProperties, 1, wxALIGN_CENTER | wxALL, 5 );
-    
-    wxString lodStrings[] = { _T( "None" ),_T( "Overall" ), _T( "Compound" ) };
+
+    wxString lodStrings[] = { _T( "None" ), _T( "Overall" ), _T( "Compound" ) };
     mLODProperties = new wxRadioBox( _physicsPanel, PHYSICS_MESH_ID, wxT( "LOD Type" ),
-                                    wxDefaultPosition, wxDefaultSize, 3,
-                                    lodStrings, 0, wxRA_SPECIFY_ROWS );
+                                     wxDefaultPosition, wxDefaultSize, 3,
+                                     lodStrings, 0, wxRA_SPECIFY_ROWS );
     physicsMeshSizer->Add( mLODProperties, 1, wxALIGN_CENTER | wxALL, 5 );
-    
-    wxString meshStrings[] = { _T( "None" ),_T( "Box" ), _T( "Sphere" ), _T( "Cylinder" ), _T( "Mesh" ) };
+
+    wxString meshStrings[] = { _T( "None" ), _T( "Box" ), _T( "Sphere" ), _T( "Cylinder" ), _T( "Mesh" ) };
     mMeshProperties = new wxRadioBox( _physicsPanel, PHYSICS_MESH_ID, wxT( "Mesh Type" ),
-                                     wxDefaultPosition, wxDefaultSize, 5,
-                                     meshStrings, 0, wxRA_SPECIFY_ROWS );
+                                      wxDefaultPosition, wxDefaultSize, 5,
+                                      meshStrings, 0, wxRA_SPECIFY_ROWS );
     physicsMeshSizer->Add( mMeshProperties, 1, wxALIGN_CENTER | wxALL, 5 );
 
-    wxString deciStrings[] = { _T( "Exact" ),_T( "Low" ), _T( "Medium" ), _( "High" ) };
+    wxString deciStrings[] = { _T( "Exact" ), _T( "Low" ), _T( "Medium" ), _( "High" ) };
     m_decimationRB = new wxRadioBox( _physicsPanel, PHYSICS_MESH_ID, wxT( "Mesh Decimation" ),
                                      wxDefaultPosition, wxDefaultSize, 4,
                                      deciStrings, 0, wxRA_SPECIFY_ROWS );
     physicsMeshSizer->Add( m_decimationRB, 1, wxALIGN_CENTER | wxALL, 5 );
-    
+
     if( _cadNode )
     {
         _physicsMassCtrl->SetValue( _cadNode->GetMass() );
@@ -590,7 +590,7 @@ void CADNodePropertiesDlg::_addAnimation( wxCommandEvent& event )
                                  ::wxGetCwd(),
                                  _T( "" ),
                                  _T( "Animation Files(*.txt)|*.txt;" ),
-                                wxFD_OPEN | wxFD_FILE_MUST_EXIST );
+                                 wxFD_OPEN | wxFD_FILE_MUST_EXIST );
             try
             {
                 if( dialog.ShowModal() == wxID_OK )
@@ -606,24 +606,33 @@ void CADNodePropertiesDlg::_addAnimation( wxCommandEvent& event )
 
                     animationNameDlg.CentreOnParent();
                     animationNameDlg.ShowModal();
-                    
+
                     wxArrayString choices;
-                    choices.Add(wxT("X"));
-                    choices.Add(wxT("Y"));
-                    choices.Add(wxT("Z"));
+                    choices.Add( wxT( "X" ) );
+                    choices.Add( wxT( "Y" ) );
+                    choices.Add( wxT( "Z" ) );
                     wxSingleChoiceDialog turnOffDirnDlg( this, wxT( "choose the direction coordinate" ),
                                                          wxT( "Turn off translation" ),
-                                                         choices);
-                    turnOffDirnDlg.SetSelection(1);
+                                                         choices );
+                    turnOffDirnDlg.SetSelection( 1 );
                     turnOffDirnDlg.ShowModal();
                     int intsel = turnOffDirnDlg.GetSelection();
-                    std::vector< double > activeSel(3);
+                    std::vector< double > activeSel( 3 );
                     activeSel[0] = 1.0;
                     activeSel[1] = 1.0;
                     activeSel[2] = 1.0;
-                    if(intsel == 0) activeSel[0] = 0.0;
-                    if(intsel == 1) activeSel[1] = 0.0;
-                    if(intsel == 2) activeSel[2] = 0.0;
+                    if( intsel == 0 )
+                    {
+                        activeSel[0] = 0.0;
+                    }
+                    if( intsel == 1 )
+                    {
+                        activeSel[1] = 0.0;
+                    }
+                    if( intsel == 2 )
+                    {
+                        activeSel[2] = 0.0;
+                    }
 
                     while( AnimationExists( animationNameDlg.GetValue().GetData() ) )
                     {
@@ -662,7 +671,7 @@ void CADNodePropertiesDlg::_addAnimation( wxCommandEvent& event )
                 }
             }
 
-            catch ( ... )
+            catch( ... )
             {
                 wxMessageBox( _( "Couldn't load animation file." ),
                               dialog.GetPath(), wxOK | wxICON_INFORMATION );
@@ -934,8 +943,8 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
     {
         wxString conductorBaseDir;
         ::wxGetEnv( wxString( "CONDUCTOR_BASE_DIR", wxConvUTF8 ), &conductorBaseDir );
-        wxString shaderDir = conductorBaseDir + 
-            wxString( "/share/vesuite/shaders", wxConvUTF8 );
+        wxString shaderDir = conductorBaseDir +
+                             wxString( "/share/vesuite/shaders", wxConvUTF8 );
         wxFileDialog dialog( this,
                              _T( "Add New Attribute" ),
                              shaderDir,
@@ -943,12 +952,12 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
                              _T( "VE-Attribute files (*.vea)|*.vea;" ),
                              wxFD_OPEN | wxFD_FILE_MUST_EXIST );
 
-                     
+
         if( dialog.ShowModal() != wxID_OK )
         {
             return;
         }
-        
+
         ves::open::xml::cad::CADAttributePtr newAttribute( new CADAttribute() );
         newAttribute->SetAttributeType( "Program" );
 
@@ -993,7 +1002,7 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
 
                 _sendCommandsToXplorer();
             }
-            catch ( ... )
+            catch( ... )
             {
                 wxMessageBox( _( "Couldn't load shader file." ),
                               dialog.GetPath(), wxOK | wxICON_INFORMATION );
@@ -1003,7 +1012,7 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
         else
         {
             wxMessageBox( _( "Couldn't load shader file." ),
-                         dialog.GetPath(), wxOK | wxICON_INFORMATION );
+                          dialog.GetPath(), wxOK | wxICON_INFORMATION );
             return;
         }
     }
@@ -1026,13 +1035,17 @@ bool CADNodePropertiesDlg::AttributeExists( std::string name )
     for( unsigned int i = 0; i < _nShaders; i++ )
     {
         if( name.c_str() == ConvertUnicode( _availableShaders[i] ) )
+        {
             return true;
+        }
     }
 
     for( unsigned int i = 0; i < _nMaterials; i++ )
     {
         if( name.c_str() == ConvertUnicode( _availableMaterials[i] ) )
+        {
             return true;
+        }
     }
     return false;
 }
@@ -1136,38 +1149,38 @@ void CADNodePropertiesDlg::_updatePhysicsProperties( wxSpinEvent& event )
     {
         _commandName = std::string( "PHYSICS_PROPERTIES" );
 
-        ves::open::xml::DataValuePairPtr 
-            nodeID( new ves::open::xml::DataValuePair() );
+        ves::open::xml::DataValuePairPtr
+        nodeID( new ves::open::xml::DataValuePair() );
         nodeID->SetDataType( "STRING" );
         nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
         _instructions.push_back( nodeID );
 
-        ves::open::xml::DataValuePairPtr 
-            nodeType( new ves::open::xml::DataValuePair() );
+        ves::open::xml::DataValuePairPtr
+        nodeType( new ves::open::xml::DataValuePair() );
         nodeType->SetDataType( "STRING" );
         nodeType->SetDataName( std::string( "Node Type" ) );
         nodeType->SetDataString( _cadNode->GetNodeType() );
         _instructions.push_back( nodeType );
 
-        ves::open::xml::DataValuePairPtr 
-            physicsPropertyValue( new ves::open::xml::DataValuePair() );
+        ves::open::xml::DataValuePairPtr
+        physicsPropertyValue( new ves::open::xml::DataValuePair() );
 
         if( event.GetId() == PHYSICS_MASS_ID )
         {
             physicsPropertyValue->SetData( "Mass",
-                static_cast< double >( _physicsMassCtrl->GetValue() ) );
+                                           static_cast< double >( _physicsMassCtrl->GetValue() ) );
             _cadNode->SetMass( _physicsMassCtrl->GetValue() );
         }
         else if( event.GetId() == PHYSICS_FRICTION_ID )
         {
-            physicsPropertyValue->SetData( "Friction", 
-                static_cast< double >( _physicsFrictionCtrl->GetValue() ) );
+            physicsPropertyValue->SetData( "Friction",
+                                           static_cast< double >( _physicsFrictionCtrl->GetValue() ) );
             _cadNode->SetFriction( _physicsFrictionCtrl->GetValue() );
         }
         else if( event.GetId() == PHYSICS_RESTITUTION_ID )
         {
-            physicsPropertyValue->SetData( "Restitution", 
-                static_cast< double >( _physicsRestitutionCtrl->GetValue() ) );
+            physicsPropertyValue->SetData( "Restitution",
+                                           static_cast< double >( _physicsRestitutionCtrl->GetValue() ) );
             _cadNode->SetRestitution( _physicsRestitutionCtrl->GetValue() );
         }
         _instructions.push_back( physicsPropertyValue );
@@ -1183,22 +1196,22 @@ void CADNodePropertiesDlg::_updatePhysicsMesh( wxCommandEvent& event )
     {
         return;
     }
-    
+
     if( mMeshProperties->GetSelection() == 0 )
     {
         return;
     }
-    
+
     if( mMotionProperties->GetSelection() == 0 )
     {
         return;
     }
-    
+
     if( mLODProperties->GetSelection() == 0 )
     {
         return;
     }
-    
+
     _commandName = std::string( "PHYSICS_MESH" );
 
     ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair() );
@@ -1239,7 +1252,7 @@ void CADNodePropertiesDlg::_updatePhysicsMesh( wxCommandEvent& event )
     decimationDVP->SetDataString( ConvertUnicode( m_decimationRB->GetStringSelection() ) );
     _cadNode->SetPhysicsDecimationValue( ConvertUnicode( m_decimationRB->GetStringSelection() ) );
     _instructions.push_back( decimationDVP );
-    
+
     _sendCommandsToXplorer();
     ClearInstructions();
 }
@@ -1249,12 +1262,12 @@ void CADNodePropertiesDlg::UpdateUniformScale( wxCommandEvent& WXUNUSED( event )
 ///////////////////////////////////////////////////////////////////////////////
 unsigned char CADNodePropertiesDlg::_convertToUnsignedCharColor( double value )
 {
-    return ( unsigned char )( 255.0 - 255.0*( 1.0 - value ) );
+    return ( unsigned char )( 255.0 - 255.0 * ( 1.0 - value ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
 double CADNodePropertiesDlg::_convertToDoubleColor( unsigned char value )
 {
-    return (( double )( value ) ) / 255.0;
+    return ( ( double )( value ) ) / 255.0;
 }
 /////////////////////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_showFaceSelectDialog( wxCommandEvent& WXUNUSED( event ) )
@@ -1454,79 +1467,79 @@ void CADNodePropertiesDlg::_showColorDialog( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_buildGeographicPanel()
 {
-  _geographicPanel = new wxPanel ( _propertyTabs, GEOGRAPHIC_PANEL_ID );
-  wxStaticBox* outerStaticBox = new wxStaticBox ( _geographicPanel, -1, wxT ( "Geographic Properties" ) );
+    _geographicPanel = new wxPanel( _propertyTabs, GEOGRAPHIC_PANEL_ID );
+    wxStaticBox* outerStaticBox = new wxStaticBox( _geographicPanel, -1, wxT( "Geographic Properties" ) );
 
-  _geocodeTextControl = new wxTextCtrl ( _geographicPanel, -1 );
-  wxButton* button ( new wxButton ( _geographicPanel, GEOCODE_ID, _("Geocode") ) );
+    _geocodeTextControl = new wxTextCtrl( _geographicPanel, -1 );
+    wxButton* button( new wxButton( _geographicPanel, GEOCODE_ID, _( "Geocode" ) ) );
 
-  _longitudeControl = new wxSpinCtrlDbl ( _geographicPanel, GEOGRAPHIC_PANEL_ID );
-  _longitudeControl->SetValue( 0 );
-  _longitudeControl->SetRange( -180.0, 180.0 );
-  _longitudeControl->SetIncrement( 0.01 );
-  _longitudeControl->Raise();
+    _longitudeControl = new wxSpinCtrlDbl( _geographicPanel, GEOGRAPHIC_PANEL_ID );
+    _longitudeControl->SetValue( 0 );
+    _longitudeControl->SetRange( -180.0, 180.0 );
+    _longitudeControl->SetIncrement( 0.01 );
+    _longitudeControl->Raise();
 
-  _latitudeControl = new wxSpinCtrlDbl ( _geographicPanel, GEOGRAPHIC_PANEL_ID );
-  _latitudeControl->SetValue( 0 );
-  _latitudeControl->SetRange( -90.0, 90.0 );
-  _latitudeControl->SetIncrement( 0.01 );
-  _latitudeControl->Raise();
+    _latitudeControl = new wxSpinCtrlDbl( _geographicPanel, GEOGRAPHIC_PANEL_ID );
+    _latitudeControl->SetValue( 0 );
+    _latitudeControl->SetRange( -90.0, 90.0 );
+    _latitudeControl->SetIncrement( 0.01 );
+    _latitudeControl->Raise();
 
-  if ( _cadNode )
-  {
-    _longitudeControl->SetValue ( _cadNode->GetLongitude() );
-    _latitudeControl->SetValue ( _cadNode->GetLatitude() );
-  }
+    if( _cadNode )
+    {
+        _longitudeControl->SetValue( _cadNode->GetLongitude() );
+        _latitudeControl->SetValue( _cadNode->GetLatitude() );
+    }
 
-  wxStaticBoxSizer* sizer ( new wxStaticBoxSizer ( outerStaticBox, wxVERTICAL ) );
-  wxGridSizer *grid ( new wxGridSizer ( 2, 2, 5, 5 ) );
+    wxStaticBoxSizer* sizer( new wxStaticBoxSizer( outerStaticBox, wxVERTICAL ) );
+    wxGridSizer* grid( new wxGridSizer( 2, 2, 5, 5 ) );
 
-  grid->Add ( _geocodeTextControl, 0, 0, 0 );
-  grid->Add ( button, 0, 0, 0 );
-  grid->Add ( new wxStaticText ( _geographicPanel, wxID_ANY, wxT ( "Longitude" ) ), 0 );
-  grid->Add ( _longitudeControl, 0, 0, 0 );
-  grid->Add ( new wxStaticText ( _geographicPanel, wxID_ANY, wxT ( "Latitude" ) ), 0 );
-  grid->Add ( _latitudeControl, 0, 0, 0 );
+    grid->Add( _geocodeTextControl, 0, 0, 0 );
+    grid->Add( button, 0, 0, 0 );
+    grid->Add( new wxStaticText( _geographicPanel, wxID_ANY, wxT( "Longitude" ) ), 0 );
+    grid->Add( _longitudeControl, 0, 0, 0 );
+    grid->Add( new wxStaticText( _geographicPanel, wxID_ANY, wxT( "Latitude" ) ), 0 );
+    grid->Add( _latitudeControl, 0, 0, 0 );
 
-  sizer->Add ( grid );
+    sizer->Add( grid );
 
-  _geographicPanel->SetSizer ( sizer );
+    _geographicPanel->SetSizer( sizer );
 }
 /////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::_updateGeographic( wxSpinEvent& event )
 {
-  if( _cadNode )
-  {
-    this->ClearInstructions();
-    _commandName = ves::util::commands::SET_GEOGRAPHIC_PROPERTIERS;
+    if( _cadNode )
+    {
+        this->ClearInstructions();
+        _commandName = ves::util::commands::SET_GEOGRAPHIC_PROPERTIERS;
 
-    ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair );
-    nodeID->SetDataType( "STRING" );
-    nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
-    _instructions.push_back( nodeID );
+        ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair );
+        nodeID->SetDataType( "STRING" );
+        nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
+        _instructions.push_back( nodeID );
 
-    ves::open::xml::DataValuePairPtr nodeType( new ves::open::xml::DataValuePair );
-    nodeType->SetDataType( "STRING" );
-    nodeType->SetDataName( std::string( "Node Type" ) );
-    nodeType->SetDataString( _cadNode->GetNodeType() );
-    _instructions.push_back( nodeType );
+        ves::open::xml::DataValuePairPtr nodeType( new ves::open::xml::DataValuePair );
+        nodeType->SetDataType( "STRING" );
+        nodeType->SetDataName( std::string( "Node Type" ) );
+        nodeType->SetDataString( _cadNode->GetNodeType() );
+        _instructions.push_back( nodeType );
 
-    ves::open::xml::DataValuePairPtr longitudeValue ( new ves::open::xml::DataValuePair );
-    longitudeValue->SetDataType( "DOUBLE" );
-    longitudeValue->SetData( ves::util::names::LONGITUDE_VALUE, _longitudeControl->GetValue() );
-    _instructions.push_back ( longitudeValue );
+        ves::open::xml::DataValuePairPtr longitudeValue( new ves::open::xml::DataValuePair );
+        longitudeValue->SetDataType( "DOUBLE" );
+        longitudeValue->SetData( ves::util::names::LONGITUDE_VALUE, _longitudeControl->GetValue() );
+        _instructions.push_back( longitudeValue );
 
-    ves::open::xml::DataValuePairPtr latitudeValue ( new ves::open::xml::DataValuePair );
-    latitudeValue->SetDataType( "DOUBLE" );
-    latitudeValue->SetData( ves::util::names::LATITUDE_VALUE, _latitudeControl->GetValue() );
-    _instructions.push_back( latitudeValue );
+        ves::open::xml::DataValuePairPtr latitudeValue( new ves::open::xml::DataValuePair );
+        latitudeValue->SetDataType( "DOUBLE" );
+        latitudeValue->SetData( ves::util::names::LATITUDE_VALUE, _latitudeControl->GetValue() );
+        _instructions.push_back( latitudeValue );
 
-    this->_sendCommandsToXplorer();
-    this->ClearInstructions();
+        this->_sendCommandsToXplorer();
+        this->ClearInstructions();
 
-    _cadNode->SetLongitude( _longitudeControl->GetValue() );
-    _cadNode->SetLatitude( _latitudeControl->GetValue() );
-  }
+        _cadNode->SetLongitude( _longitudeControl->GetValue() );
+        _cadNode->SetLatitude( _latitudeControl->GetValue() );
+    }
 }
 #ifndef STAND_ALONE
 ///////////////////////////////////////////////////
@@ -1544,7 +1557,7 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
     {
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( cadCommand );
     }
-    catch ( ... )
+    catch( ... )
     {
         wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
                       _( "Communication Failure" ), wxOK | wxICON_INFORMATION );
@@ -1555,23 +1568,23 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
 void CADNodePropertiesDlg::_buildOcclusionSettings()
 {
     m_occlusionPanel = new wxPanel( _propertyTabs, CULLING_PANEL_ID );
-    
+
     wxBoxSizer* transformPanelSizer = new wxBoxSizer( wxVERTICAL );
     wxStaticBox* transformProperties = new wxStaticBox( m_occlusionPanel, -1, wxT( "Occlusion Culling Settings" ) );
     wxStaticBoxSizer* transformPropSizer = new wxStaticBoxSizer( transformProperties, wxVERTICAL );
-    
+
     transformPanelSizer->Add( transformPropSizer, 1, wxEXPAND | wxALIGN_CENTER | wxALL, 5 );
-    
-    wxString motionStrings[] = { _T( "Off" ),_T( "Low" ), _T( "Medium" ), _T( "High" ) };
+
+    wxString motionStrings[] = { _T( "Off" ), _T( "Low" ), _T( "Medium" ), _T( "High" ) };
     m_cullingRB = new wxRadioBox( m_occlusionPanel, CULLING_SETTINGS, wxT( "Culling Settings" ),
-                                       wxDefaultPosition, wxDefaultSize, 4,
-                                       motionStrings, 0, wxRA_SPECIFY_ROWS );
-    
+                                  wxDefaultPosition, wxDefaultSize, 4,
+                                  motionStrings, 0, wxRA_SPECIFY_ROWS );
+
     transformPropSizer->Add( m_cullingRB, 1, wxALIGN_CENTER | wxALL, 5 );
 
     m_occlusionPanel->SetAutoLayout( true );
     m_occlusionPanel->SetSizer( transformPanelSizer );
-    
+
     if( _cadNode )
     {
         m_cullingRB->SetStringSelection( wxString( _cadNode->GetOcclusionSettings().c_str(), wxConvUTF8 ) );
@@ -1584,13 +1597,13 @@ void CADNodePropertiesDlg::UpdateCullingSettings( wxCommandEvent& event )
     {
         return;
     }
-    
+
     wxString tempString = m_cullingRB->GetStringSelection();
     std::string ctempString = ConvertUnicode( tempString.c_str() );
     _cadNode->SetOcclusionSettings( ctempString );
-    
+
     _commandName = std::string( "Culling Settings" );
-    
+
     ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair() );
     nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
     _instructions.push_back( nodeID );
@@ -1611,12 +1624,12 @@ void CADNodePropertiesDlg::_onGeocodeEvent( wxCommandEvent& event )
     {
 #ifdef MINERVA_GIS_SUPPORT
         Minerva::Network::GeoCode geocode;
-        Minerva::Network::GeoCode::Result result( geocode ( location ) );
-        
+        Minerva::Network::GeoCode::Result result( geocode( location ) );
+
         if( result.success )
         {
-            _longitudeControl->SetValue ( result.location[0] );
-            _latitudeControl->SetValue  ( result.location[1] );
+            _longitudeControl->SetValue( result.location[0] );
+            _latitudeControl->SetValue( result.location[1] );
 
             wxSpinEvent spinEvent;
             _updateGeographic( spinEvent );

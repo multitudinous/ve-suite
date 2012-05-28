@@ -50,12 +50,12 @@
 #include <ves/xplorer/scenegraph/Geode.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-OSGVectorStage::OSGVectorStage(void)
+OSGVectorStage::OSGVectorStage( void )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-OSGVectorStage::~OSGVectorStage(void)
+OSGVectorStage::~OSGVectorStage( void )
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,112 +81,112 @@ void OSGVectorStage::createArrow( osg::Geometry& geom, int nInstances, float sca
     geom.setNormalBinding( osg::Geometry::BIND_PER_VERTEX );
 
     // Shaft
-    (*v)[ 0 ] = osg::Vec3( sD, 0., 0. );
-    (*v)[ 1 ] = osg::Vec3( sD, 0., sh );
-    (*v)[ 2 ] = osg::Vec3( 0., -sD, 0. );
-    (*v)[ 3 ] = osg::Vec3( 0., -sD, sh );
-    (*v)[ 4 ] = osg::Vec3( -sD, 0., 0. );
-    (*v)[ 5 ] = osg::Vec3( -sD, 0., sh );
-    (*v)[ 6 ] = osg::Vec3( 0., sD, 0. );
-    (*v)[ 7 ] = osg::Vec3( 0., sD, sh );
-    (*v)[ 8 ] = osg::Vec3( sD, 0., 0. );
-    (*v)[ 9 ] = osg::Vec3( sD, 0., sh );
+    ( *v )[ 0 ] = osg::Vec3( sD, 0., 0. );
+    ( *v )[ 1 ] = osg::Vec3( sD, 0., sh );
+    ( *v )[ 2 ] = osg::Vec3( 0., -sD, 0. );
+    ( *v )[ 3 ] = osg::Vec3( 0., -sD, sh );
+    ( *v )[ 4 ] = osg::Vec3( -sD, 0., 0. );
+    ( *v )[ 5 ] = osg::Vec3( -sD, 0., sh );
+    ( *v )[ 6 ] = osg::Vec3( 0., sD, 0. );
+    ( *v )[ 7 ] = osg::Vec3( 0., sD, sh );
+    ( *v )[ 8 ] = osg::Vec3( sD, 0., 0. );
+    ( *v )[ 9 ] = osg::Vec3( sD, 0., sh );
 
-    (*n)[ 0 ] = osg::Vec3( 1., 0., 0. );
-    (*n)[ 1 ] = osg::Vec3( 1., 0., 0. );
-    (*n)[ 2 ] = osg::Vec3( 0., -1., 0. );
-    (*n)[ 3 ] = osg::Vec3( 0., -1., 0. );
-    (*n)[ 4 ] = osg::Vec3( -1., 0., 0. );
-    (*n)[ 5 ] = osg::Vec3( -1., 0., 0. );
-    (*n)[ 6 ] = osg::Vec3( 0., 1., 0. );
-    (*n)[ 7 ] = osg::Vec3( 0., 1., 0. );
-    (*n)[ 8 ] = osg::Vec3( 1., 0., 0. );
-    (*n)[ 9 ] = osg::Vec3( 1., 0., 0. );
+    ( *n )[ 0 ] = osg::Vec3( 1., 0., 0. );
+    ( *n )[ 1 ] = osg::Vec3( 1., 0., 0. );
+    ( *n )[ 2 ] = osg::Vec3( 0., -1., 0. );
+    ( *n )[ 3 ] = osg::Vec3( 0., -1., 0. );
+    ( *n )[ 4 ] = osg::Vec3( -1., 0., 0. );
+    ( *n )[ 5 ] = osg::Vec3( -1., 0., 0. );
+    ( *n )[ 6 ] = osg::Vec3( 0., 1., 0. );
+    ( *n )[ 7 ] = osg::Vec3( 0., 1., 0. );
+    ( *n )[ 8 ] = osg::Vec3( 1., 0., 0. );
+    ( *n )[ 9 ] = osg::Vec3( 1., 0., 0. );
 
     //if( nInstances > 1 )
-        geom.addPrimitiveSet( new osg::DrawArrays( GL_QUAD_STRIP, 0, 10, nInstances ) );
+    geom.addPrimitiveSet( new osg::DrawArrays( GL_QUAD_STRIP, 0, 10, nInstances ) );
     //else
     //    geom.addPrimitiveSet( new osg::DrawArrays( GL_QUAD_STRIP, 0, 10 ) );
 
     // Head
-    (*v)[ 10 ] = osg::Vec3( hD, -hD, sh );
-    (*v)[ 11 ] = osg::Vec3( hD, hD, sh );
-    (*v)[ 12 ] = osg::Vec3( 0., 0., len );
-    osg::Vec3 norm = ((*v)[ 11 ] - (*v)[ 10 ]) ^ ((*v)[ 12 ] - (*v)[ 10 ]);
+    ( *v )[ 10 ] = osg::Vec3( hD, -hD, sh );
+    ( *v )[ 11 ] = osg::Vec3( hD, hD, sh );
+    ( *v )[ 12 ] = osg::Vec3( 0., 0., len );
+    osg::Vec3 norm = ( ( *v )[ 11 ] - ( *v )[ 10 ] ) ^ ( ( *v )[ 12 ] - ( *v )[ 10 ] );
     norm.normalize();
-    (*n)[ 10 ] = norm;
-    (*n)[ 11 ] = norm;
-    (*n)[ 12 ] = norm;
+    ( *n )[ 10 ] = norm;
+    ( *n )[ 11 ] = norm;
+    ( *n )[ 12 ] = norm;
 
-    (*v)[ 13 ] = osg::Vec3( hD, hD, sh );
-    (*v)[ 14 ] = osg::Vec3( -hD, hD, sh );
-    (*v)[ 15 ] = osg::Vec3( 0., 0., len );
-    norm = ((*v)[ 14 ] - (*v)[ 13 ]) ^ ((*v)[ 15 ] - (*v)[ 13 ]);
+    ( *v )[ 13 ] = osg::Vec3( hD, hD, sh );
+    ( *v )[ 14 ] = osg::Vec3( -hD, hD, sh );
+    ( *v )[ 15 ] = osg::Vec3( 0., 0., len );
+    norm = ( ( *v )[ 14 ] - ( *v )[ 13 ] ) ^ ( ( *v )[ 15 ] - ( *v )[ 13 ] );
     norm.normalize();
-    (*n)[ 13 ] = norm;
-    (*n)[ 14 ] = norm;
-    (*n)[ 15 ] = norm;
+    ( *n )[ 13 ] = norm;
+    ( *n )[ 14 ] = norm;
+    ( *n )[ 15 ] = norm;
 
-    (*v)[ 16 ] = osg::Vec3( -hD, hD, sh );
-    (*v)[ 17 ] = osg::Vec3( -hD, -hD, sh );
-    (*v)[ 18 ] = osg::Vec3( 0., 0., len );
-    norm = ((*v)[ 17 ] - (*v)[ 16 ]) ^ ((*v)[ 18 ] - (*v)[ 16 ]);
+    ( *v )[ 16 ] = osg::Vec3( -hD, hD, sh );
+    ( *v )[ 17 ] = osg::Vec3( -hD, -hD, sh );
+    ( *v )[ 18 ] = osg::Vec3( 0., 0., len );
+    norm = ( ( *v )[ 17 ] - ( *v )[ 16 ] ) ^ ( ( *v )[ 18 ] - ( *v )[ 16 ] );
     norm.normalize();
-    (*n)[ 16 ] = norm;
-    (*n)[ 17 ] = norm;
-    (*n)[ 18 ] = norm;
+    ( *n )[ 16 ] = norm;
+    ( *n )[ 17 ] = norm;
+    ( *n )[ 18 ] = norm;
 
-    (*v)[ 19 ] = osg::Vec3( -hD, -hD, sh );
-    (*v)[ 20 ] = osg::Vec3( hD, -hD, sh );
-    (*v)[ 21 ] = osg::Vec3( 0., 0., len );
-    norm = ((*v)[ 20 ] - (*v)[ 19 ]) ^ ((*v)[ 21 ] - (*v)[ 19 ]);
+    ( *v )[ 19 ] = osg::Vec3( -hD, -hD, sh );
+    ( *v )[ 20 ] = osg::Vec3( hD, -hD, sh );
+    ( *v )[ 21 ] = osg::Vec3( 0., 0., len );
+    norm = ( ( *v )[ 20 ] - ( *v )[ 19 ] ) ^ ( ( *v )[ 21 ] - ( *v )[ 19 ] );
     norm.normalize();
-    (*n)[ 19 ] = norm;
-    (*n)[ 20 ] = norm;
-    (*n)[ 21 ] = norm;
+    ( *n )[ 19 ] = norm;
+    ( *n )[ 20 ] = norm;
+    ( *n )[ 21 ] = norm;
 
     //if( nInstances > 1 )
-        geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12, nInstances ) );
+    geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12, nInstances ) );
     //else
     //    geom.addPrimitiveSet( new osg::DrawArrays( GL_TRIANGLES, 10, 12 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* glyph, std::string vectorName, std::string scalarName, float scaleFactor )
+ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced( vtkPolyData* glyph, std::string vectorName, std::string scalarName, float scaleFactor )
 {
     //Now pull in the vtk data
-    vtkPolyData *polyData = glyph;
-    if (polyData==NULL)
+    vtkPolyData* polyData = glyph;
+    if( polyData == NULL )
     {
         std::cout << "pd is null " << std::endl;
         return NULL;
     }
     polyData->Update();
 
-    vtkPointData *pointData = polyData->GetPointData();
-    if (pointData==NULL)
+    vtkPointData* pointData = polyData->GetPointData();
+    if( pointData == NULL )
     {
         std::cout << " pd point data is null " << std::endl;
         return NULL;
     }
     //pointData->Update();
 
-    vtkPoints *points = polyData->GetPoints();    
-    if (points==NULL)
+    vtkPoints* points = polyData->GetPoints();
+    if( points == NULL )
     {
         std::cout << " points are null " << std::endl;
         return NULL;
     }
-    
-    vtkDataArray* vectorArray = pointData->GetVectors(vectorName.c_str());
-    vtkDataArray* scalarArray = pointData->GetScalars(scalarName.c_str());
 
-    if (vectorArray==NULL)
+    vtkDataArray* vectorArray = pointData->GetVectors( vectorName.c_str() );
+    vtkDataArray* scalarArray = pointData->GetScalars( scalarName.c_str() );
+
+    if( vectorArray == NULL )
     {
         std::cout << " vectors are null " << std::endl;
         return NULL;
     }
 
-    if (scalarArray==NULL)
+    if( scalarArray == NULL )
     {
         std::cout << " scalars are null " << std::endl;
         return NULL;
@@ -288,7 +288,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "   } \n"
         //normalize( c.xyz );
         "   float l = length( c );\n"
-        "   c /= l;\n"    
+        "   c /= l;\n"
         " \n"
         "   vec3 up = normalize( cross( dir, c ) ); \n"
         " \n"
@@ -331,13 +331,13 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "   vec3 norm = normalize( gl_NormalMatrix * orientMat * gl_Normal ); \n"
         // Diffuse lighting with light at the eyepoint.
         ////"   vec4 color = texture3D( scalar, tC ); \n"
-        
+
         //New way of mapping colors
         "   // Scalar texture containg key to color table. \n"
         "   vec4 activeScalar = texture3D( scalar, tC );\n"
         "   float normScalarVal = 0.;\n"
         "   normScalarVal = (activeScalar.a - scalarMinMax.x) / (scalarMinMax.y - scalarMinMax.x);\n"
-        
+
         "   if( normScalarVal < 0. )\n"
         "   {\n"
         "       normScalarVal = 0.;\n"
@@ -350,7 +350,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         "   colorResult[3]=1.0; \n"
         //"   gl_FrontColor = colorResult; \n"
         //"   vec4 color = colorResult.rgb; \n"
-    
+
         //Get the color into GLSL
         "   gl_FrontColor = simpleLighting( colorResult, norm, 0.7, 0.3 ); \n"
         "} \n";
@@ -362,30 +362,30 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
         vertexShader->setType( osg::Shader::VERTEX );
         vertexShader->setShaderSource( vertexSource );
-        
+
         program->addShader( vertexShader.get() );
     }
 
     {
         std::string shaderName = osgDB::findDataFile( "null_glow.fs" );
-        osg::ref_ptr< osg::Shader > fragShader = 
+        osg::ref_ptr< osg::Shader > fragShader =
             osg::Shader::readShaderFile( osg::Shader::FRAGMENT, shaderName );
-        
+
         program->addShader( fragShader.get() );
     }
     ss->setAttributeAndModes( program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    
+                              osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
     // Posidion array.
     ss->setTextureAttribute( 0, rawVTKData->getPositionTexture() );
     osg::ref_ptr< osg::Uniform > texPosUniform =
-    new osg::Uniform( "texPos", 0 );
+        new osg::Uniform( "texPos", 0 );
     ss->addUniform( texPosUniform.get() );
 
     // Direction array.
     ss->setTextureAttribute( 1, rawVTKData->getDirectionTexture() );
     osg::ref_ptr< osg::Uniform > texDirUniform =
-    new osg::Uniform( "texDir", 1 );
+        new osg::Uniform( "texDir", 1 );
     ss->addUniform( texDirUniform.get() );
 
     // Scalar array.
@@ -398,7 +398,7 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
         // Pass the 3D texture dimensions to the shader as a "sizes" uniform.
         osg::Vec3s ts( rawVTKData->getTextureSizes() );
         osg::ref_ptr< osg::Uniform > sizesUniform =
-            new osg::Uniform( "sizes", osg::Vec3( (float)ts.x(), (float)ts.y(), (float)ts.z() ) );
+            new osg::Uniform( "sizes", osg::Vec3( ( float )ts.x(), ( float )ts.y(), ( float )ts.z() ) );
         ss->addUniform( sizesUniform.get() );
     }
 
@@ -408,36 +408,36 @@ ves::xplorer::scenegraph::Geode* OSGVectorStage::createInstanced(vtkPolyData* gl
             new osg::Uniform( "userScale", scaleFactor );
         ss->addUniform( scaleUniform.get() );
     }
-    
+
     {
-        osg::ref_ptr< osg::Uniform > uModulo = 
+        osg::ref_ptr< osg::Uniform > uModulo =
             new osg::Uniform( "modulo", 1.0f );
         uModulo->setDataVariance( osg::Object::DYNAMIC );
         ss->addUniform( uModulo.get() );
     }
-    
+
     {
-        double dataRange[2]; 
-        scalarArray->GetRange(dataRange);
-        
+        double dataRange[2];
+        scalarArray->GetRange( dataRange );
+
         // Pass the min/max for the scalar range into the shader as a uniform.
         osg::Vec2 ts( dataRange[ 0 ], dataRange[ 1 ] );
         osg::ref_ptr< osg::Uniform > scalarMinMaxUniform =
             new osg::Uniform( "scalarMinMax",
-            osg::Vec2( (float)ts.x(), (float)ts.y() ) );
+                              osg::Vec2( ( float )ts.x(), ( float )ts.y() ) );
         ss->addUniform( scalarMinMaxUniform.get() );
-        
+
         // Set up the color spectrum.
-        osg::Texture1D* texCS = 
+        osg::Texture1D* texCS =
             new osg::Texture1D( rawVTKData->CreateColorTextures( dataRange ) );
-        texCS->setFilter( osg::Texture::MIN_FILTER, osg::Texture2D::LINEAR);
+        texCS->setFilter( osg::Texture::MIN_FILTER, osg::Texture2D::LINEAR );
         texCS->setFilter( osg::Texture::MAG_FILTER, osg::Texture2D::LINEAR );
         texCS->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
-        
+
         ss->setTextureAttribute( 3, texCS );
-        osg::ref_ptr< osg::Uniform > texCSUniform = 
+        osg::ref_ptr< osg::Uniform > texCSUniform =
             new osg::Uniform( "texCS", 3 );
-        ss->addUniform( texCSUniform.get() );        
+        ss->addUniform( texCSUniform.get() );
     }
 
     return geode;

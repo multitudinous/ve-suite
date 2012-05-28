@@ -47,13 +47,13 @@ class TextTexture;
 
 //Typedef for a SmartPtr type for TextTexture
 typedef ves::util::ClassPtrDef< TextTexture >::type
-    TextTexturePtr;
+TextTexturePtr;
 typedef ves::util::SharedPtrDef< TextTexture >::type
-    TextTextureSharedPtr;
+TextTextureSharedPtr;
 typedef ves::util::WeakPtrDef< TextTexture >::type
-    TextTextureWeakPtr;
+TextTextureWeakPtr;
 typedef ves::util::ScopedPtrDef< TextTexture >::type
-    TextTextureScopedPtr;
+TextTextureScopedPtr;
 
 } //end scenegraph
 } //end xplorer

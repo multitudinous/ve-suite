@@ -63,7 +63,7 @@ namespace conductor
 ////////////////////////////////////////////////////////////////////////////////
 VisFeatureMakerBase::VisFeatureMakerBase()
     :
-    m_logger( Poco::Logger::get("xplorer.VisFeatureMakerBase") ),
+    m_logger( Poco::Logger::get( "xplorer.VisFeatureMakerBase" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     ;
@@ -71,7 +71,7 @@ VisFeatureMakerBase::VisFeatureMakerBase()
 ////////////////////////////////////////////////////////////////////////////////
 VisFeatureMakerBase::VisFeatureMakerBase( const VisFeatureMakerBase& orig )
     :
-    m_logger( Poco::Logger::get("xplorer.VisFeatureMakerBase") ),
+    m_logger( Poco::Logger::get( "xplorer.VisFeatureMakerBase" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     boost::ignore_unused_variable_warning( orig );
@@ -107,23 +107,23 @@ void VisFeatureMakerBase::UpdateBaseInformation( xplorer::data::PropertySet& set
     activeScalar->SetDataType( "STRING" );
     activeScalar->SetDataName( std::string( "Active Scalar" ) );
     activeScalar->SetDataString( boost::any_cast<std::string >
-    ( set.GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) ) );
+                                 ( set.GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) ) );
     m_vistabBaseInformation.push_back( activeScalar );
 
     ves::open::xml::DataValuePairPtr activeVector( new ves::open::xml::DataValuePair() );
     activeVector->SetDataType( "STRING" );
     activeVector->SetDataName( std::string( "Active Vector" ) );
     activeVector->SetDataString( boost::any_cast<std::string >
-    ( set.GetPropertyAttribute( "DataSet_VectorData", "enumCurrentString" ) ) );
+                                 ( set.GetPropertyAttribute( "DataSet_VectorData", "enumCurrentString" ) ) );
     m_vistabBaseInformation.push_back( activeVector );
 
     ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair() );
     activeDataset->SetDataType( "STRING" );
     activeDataset->SetDataName( std::string( "Active Dataset" ) );
     activeDataset->SetDataString( boost::any_cast<std::string >
-    ( set.GetPropertyAttribute( "DataSet", "enumCurrentString" ) ) );
+                                  ( set.GetPropertyAttribute( "DataSet", "enumCurrentString" ) ) );
     m_vistabBaseInformation.push_back( activeDataset );
-    
+
     ves::open::xml::DataValuePairPtr scalarMin( new ves::open::xml::DataValuePair() );
     double minimumValue = boost::any_cast<double>( set.GetPropertyValue( "DataSet_ScalarRange_Min" ) );
     scalarMin->SetData( "Scalar Min", minimumValue );
@@ -139,36 +139,36 @@ void VisFeatureMakerBase::UpdateBaseInformation( xplorer::data::PropertySet& set
     xplorer::data::DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", boost::any_cast<std::string >
                        ( set.GetPropertyAttribute
-                       ( "DataSet", "enumCurrentString" )
+                         ( "DataSet", "enumCurrentString" )
                        ) );
 
     //Bounding box display value
     ves::open::xml::DataValuePairPtr bbox( new ves::open::xml::DataValuePair() );
-    bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int > (
-                   boost::any_cast<bool>( dataset.GetPropertyValue( "BoundingBox" ) )
+    bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int >(
+                       boost::any_cast<bool>( dataset.GetPropertyValue( "BoundingBox" ) )
                    ) );
     //bbox->SetData( std::string( "Show Bounding Box" ), static_cast < unsigned int > ( 0 ) );
     m_vistabBaseInformation.push_back( bbox );
 
     //Surface wrap display value
     ves::open::xml::DataValuePairPtr wireMesh( new ves::open::xml::DataValuePair() );
-    wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int > (
-                       boost::any_cast<bool>( dataset.GetPropertyValue( "SurfaceWrap" ) )
+    wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int >(
+                           boost::any_cast<bool>( dataset.GetPropertyValue( "SurfaceWrap" ) )
                        ) );
     //wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast < unsigned int > ( 0 ) );
     m_vistabBaseInformation.push_back( wireMesh );
 
     //set scalar bar state
     ves::open::xml::DataValuePairPtr scalarBarDVP( new ves::open::xml::DataValuePair() );
-    scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int > (
-                           boost::any_cast<bool>( dataset.GetPropertyValue( "ScalarBar" ) )
+    scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int >(
+                               boost::any_cast<bool>( dataset.GetPropertyValue( "ScalarBar" ) )
                            ) );
     //scalarBarDVP->SetData( "Scalar Bar State", static_cast < unsigned int > ( 0 ) );
     m_vistabBaseInformation.push_back( scalarBarDVP );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VisFeatureMakerBase::SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand,
-                                                        xplorer::data::PropertySet& set )
+        xplorer::data::PropertySet& set )
 {
     UpdateBaseInformation( set );
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
@@ -196,7 +196,7 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     //{
     //    vpr::System::msleep( 500 );  // half-second delay
     //}
-    
+
     // Set the active datasetm_propertySet->
     if( !SetActiveDataSet( set ) )
     {
@@ -207,14 +207,14 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     // set the active vector
     SetActiveVector( set );
     // Get the active object
-    
+
     std::string direction;
     if( set->PropertyExists( "Direction" ) )
     {
-        direction = 
+        direction =
             boost::any_cast< std::string >( set->GetPropertyAttribute( "Direction", "enumCurrentString" ) );
     }
-        
+
     std::string planes;
     if( set->PropertyExists( "Mode" ) )
     {
@@ -228,7 +228,7 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
             planes = "Multiple";
         }
     }
-    
+
     std::string advanced;
     if( set->PropertyExists( "Advanced_WarpOption" ) )
     {
@@ -237,18 +237,18 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
             advanced = "-warp";
         }
     }
-    
+
     if( set->PropertyExists( "Advanced_Greyscale" ) )
     {
         ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->
-            SetGreyscaleFlag( boost::any_cast<bool>( 
-            set->GetPropertyValue( "Advanced_Greyscale" ) ) );
+        SetGreyscaleFlag( boost::any_cast<bool>(
+                              set->GetPropertyValue( "Advanced_Greyscale" ) ) );
     }
 
     //Create the key for a specific object
     std::pair< std::string, std::pair< std::string, std::string > > commandType;
     commandType = std::make_pair( std::string( m_commandName ),
-                                 std::make_pair( direction, planes + advanced ) );
+                                  std::make_pair( direction, planes + advanced ) );
     ves::xplorer::cfdObjects* activeObject = SteadyStateVizHandler::instance()->GetVizObject( commandType );
     if( activeObject == 0 )
     {
@@ -259,11 +259,11 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     ///Setup the surface name if needed
     if( direction == "By Surface" )
     {
-        const std::string dataSetName = 
+        const std::string dataSetName =
             boost::any_cast< std::string >( set->GetPropertyAttribute( "Direction_Surface", "enumCurrentString" ) );
         activeObject->SetDataMapSurfaceName( dataSetName );
     }
-    
+
     //Need to wire this up to the UI
     //ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->
     //    SetDataSetScalarState( boost::any_cast<bool>( set->GetPropertyValue( "ScalarBar" ) ) );
@@ -272,16 +272,16 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     xplorer::data::DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", boost::any_cast<std::string >
                        ( set->GetPropertyAttribute
-                       ( "DataSet", "enumCurrentString" )
+                         ( "DataSet", "enumCurrentString" )
                        ) );
     ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->
-        SetDataSetScalarState( boost::any_cast<bool>( dataset.GetPropertyValue( "ScalarBar" ) ) );
-    
+    SetDataSetScalarState( boost::any_cast<bool>( dataset.GetPropertyValue( "ScalarBar" ) ) );
+
     // Check to see if any of the objectss need updated before we
     // create actors
     {
         activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-        
+
         //activeObject->SetVECommand( CommandManager::instance()->GetXMLCommand() );
         //activeObject->UpdateCommand();
         //xplorer::data::PropertySetWeakPtr tempPtr = xplorer::data::PropertySetWeakPtr( &set );
@@ -289,24 +289,24 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
         activeObject->UpdateCommand();
 
         activeObject->SetUUID( set->GetUUIDAsString() );
-        
+
         ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootTransparent();
     }
 
     // get the active vis object
-    LOG_INFO( "Setting viz object " 
-                << activeObject->GetObjectType()
-                << " to _activeObject." );
-    
+    LOG_INFO( "Setting viz object "
+              << activeObject->GetObjectType()
+              << " to _activeObject." );
+
     //SceneManager::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
-    
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS = 
+
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS =
         ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
-    
+
     // add active dataset DCS to scene graph if not already there...
     LOG_INFO( "Setting DCS to activeDCS = "
-             << activeDataSetDCS.get() );
-    
+              << activeDataSetDCS.get() );
+
     //this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
     //this->activeObject->SetNormal( EnvironmentHandler::instance()->GetNavigate()->GetDirection() );
     //this->activeObject->SetOrigin( EnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
@@ -320,20 +320,20 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
 //////////////////////////////////////////////////////////////////
 void VisFeatureMakerBase::SetActiveVector( xplorer::data::PropertySetPtr set )
 {
-    const std::string activeVector = 
+    const std::string activeVector =
         boost::any_cast<std::string >( set->
-        GetPropertyAttribute( "DataSet_VectorData", "enumCurrentString" ) );
-    
+                                       GetPropertyAttribute( "DataSet_VectorData", "enumCurrentString" ) );
+
     if( !activeVector.empty() )
     {
         LOG_INFO( "VisFeatureMakerBase::SetActiveVector Setting Active Vector = " << activeVector );
-        
+
         Model* activeModel = ModelHandler::instance()->GetActiveModel();
         DataSet* activeDataset = activeModel->GetActiveDataSet();
         // need to set the vector by name
         activeDataset->SetActiveVector( activeVector );
         //activeDataset->GetParent()->SetActiveVector( vectorIndex );
-        
+
         /*cfdTextureDataSet* activeTDSet = activeModel->GetActiveTextureDataSet();
          if(activeTDSet )
          {
@@ -343,40 +343,40 @@ void VisFeatureMakerBase::SetActiveVector( xplorer::data::PropertySetPtr set )
 }
 //////////////////////////////////////////////////////////////////////////////////////
 void VisFeatureMakerBase::SetActiveScalarAndRange( xplorer::data::PropertySetPtr set )
-{    
+{
     std::string activeScalarName = boost::any_cast<std::string >( set->GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) );
-        
+
     double scalarMin = boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Min" ) );
     double scalarMax = boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Max" ) );
-    
+
     vprDEBUG( vesDBG, 1 ) << "|\tVisFeatureMakerBase::SetActiveScalarAndRange Set the scalar and range "
-    << ", scalar = " << activeScalarName
-    << ", min = " << scalarMin
-    << ", max = " << scalarMax
-    << std::endl << vprDEBUG_FLUSH;
+                          << ", scalar = " << activeScalarName
+                          << ", min = " << scalarMin
+                          << ", max = " << scalarMax
+                          << std::endl << vprDEBUG_FLUSH;
     DataSet* activeDataset = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
     //update active scalar texture if it exists
-    
+
     activeDataset->SetActiveScalar( activeScalarName );
     activeDataset->GetParent()->SetActiveScalar( activeScalarName );
-    
+
     activeDataset->ResetScalarBarRange( scalarMin, scalarMax );
     activeDataset->GetParent()->ResetScalarBarRange( scalarMin, scalarMax );
 }
 //////////////////////////////////////////////////////////////////
 bool VisFeatureMakerBase::SetActiveDataSet( xplorer::data::PropertySetPtr set )
-{    
+{
     std::string dataSetName = boost::any_cast<std::string >( set->GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
     xplorer::data::DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", dataSetName );
     //const std::string& longFilename = boost::any_cast< std::string >( dataset.GetPropertyValue( "LongFilename" ) );
-    
+
     //Need to set the active datasetname and get the position of the dataset
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
     unsigned int i = activeModel->GetIndexOfDataSet( dataSetName );
     vprDEBUG( vesDBG, 1 )
-    << "|\tVisFeatureMakerBase CHANGE_STEADYSTATE_DATASET " << i
-    << std::endl << vprDEBUG_FLUSH;
+            << "|\tVisFeatureMakerBase CHANGE_STEADYSTATE_DATASET " << i
+            << std::endl << vprDEBUG_FLUSH;
     //update active texture dataset if it exists
     unsigned int nTextureDataSets = activeModel->GetNumberOfTextureDataSets();
     if( ( nTextureDataSets ) && ( i < nTextureDataSets ) )
@@ -387,42 +387,42 @@ bool VisFeatureMakerBase::SetActiveDataSet( xplorer::data::PropertySetPtr set )
     if( i < activeModel->GetNumberOfCfdDataSets() )
     {
         vprDEBUG( vesDBG, 0 ) << "|\tVisFeatureMakerBase::SetActiveDataSet dataset = "
-        << activeModel->GetCfdDataSet( i )->GetFileName()
-        << ", dcs = " << activeModel->GetCfdDataSet( i )->GetDCS()
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << activeModel->GetCfdDataSet( i )->GetFileName()
+                              << ", dcs = " << activeModel->GetCfdDataSet( i )->GetDCS()
+                              << std::endl << vprDEBUG_FLUSH;
+
         int cfdType = activeModel->GetCfdDataSet( i )->GetType();
         vprDEBUG( vesDBG, 1 ) << "|\tVisFeatureMakerBase::SetActiveDataSet cfdType: " << cfdType
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << std::endl << vprDEBUG_FLUSH;
+
         // set the dataset as the appropriate dastaset type
         // (and the active dataset as well)
         DataSet* activeDataset = activeModel->GetCfdDataSet( i );
-        
+
         // Get the previous active dataset
         std::string oldDatasetName;
         if( activeModel->GetActiveDataSet() )
         {
             oldDatasetName = activeModel->GetActiveDataSet()->GetFileName();
-            vprDEBUG( vesDBG, 1 ) 
-            << "|\tVisFeatureMakerBase::SetActiveDataSet last active dataset name = "
-            << oldDatasetName
-            << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 )
+                    << "|\tVisFeatureMakerBase::SetActiveDataSet last active dataset name = "
+                    << oldDatasetName
+                    << std::endl << vprDEBUG_FLUSH;
         }
-        
+
         activeModel->SetActiveDataSet( activeDataset );
         vprDEBUG( vesDBG, 1 ) << "|\tVisFeatureMakerBase::SetActiveDataSet Activating steady state file "
-        << activeDataset->GetFileName() << " == "
-        << activeModel->GetActiveDataSet()->GetFileName()
-        << std::endl << vprDEBUG_FLUSH;
-        
+                              << activeDataset->GetFileName() << " == "
+                              << activeModel->GetActiveDataSet()->GetFileName()
+                              << std::endl << vprDEBUG_FLUSH;
+
         // make sure that the user did not just hit same dataset button
         // (or change scalar since that is routed through here too)
         if( oldDatasetName != activeDataset->GetFileName() )
         {
-            vprDEBUG( vesDBG, 1 ) 
-            << "|\tVisFeatureMakerBase::SetActiveDataSet  setting dataset as newly activated"
-            << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 )
+                    << "|\tVisFeatureMakerBase::SetActiveDataSet  setting dataset as newly activated"
+                    << std::endl << vprDEBUG_FLUSH;
             activeDataset->SetNewlyActivated();
         }
         return true;
@@ -430,8 +430,8 @@ bool VisFeatureMakerBase::SetActiveDataSet( xplorer::data::PropertySetPtr set )
     else
     {
         std::cerr << "ERROR: VisFeatureMakerBase::SetActiveDataSet  requested steady state dataset "
-        << activeModel->GetNumberOfCfdDataSets()
-        << std::endl;
+                  << activeModel->GetNumberOfCfdDataSets()
+                  << std::endl;
         return false;
     }
 }

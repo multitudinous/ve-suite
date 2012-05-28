@@ -44,7 +44,7 @@
 
 namespace osg
 {
-    class Camera;
+class Camera;
 }
 
 namespace osgText

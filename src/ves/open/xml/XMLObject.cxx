@@ -57,12 +57,12 @@ XMLObject::XMLObject()
 
     boost::uuids::random_generator generator;
     boost::uuids::uuid u( generator() );
-    
+
     std::stringstream ss;
     ss << u;
-    
+
     mUuid.assign( ss.str() );
-    
+
     //This may need to be somewhere else
     /*if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("XML"))
     {
@@ -172,7 +172,9 @@ DOMElement* XMLObject::GetSubElement( DOMElement* baseElement,
             {
                 foundElement = dynamic_cast<DOMElement*>( baseElement->getElementsByTagName( Convert( subElementTagName ).toXMLString() )->item( i ) );
                 if( foundElement->getParentNode() == baseElement )
+                {
                     return foundElement;
+                }
             }
         }
         else if( foundElement->getParentNode() == baseElement )

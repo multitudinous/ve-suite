@@ -99,7 +99,7 @@ void SeedPointDimensionsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalB
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         std::cout << "Invalid object passed to SeedPointDimensionsEventHandler!" << std::endl;
@@ -119,12 +119,12 @@ void SeedPointDimensionsEventHandler::Execute( const ves::open::xml::XMLObjectPt
         dimensions->GetData( allDimensions );
 
         std::vector<int> allDimensionsAsInt;
-        allDimensionsAsInt.push_back( allDimensions.at(0) );
-        allDimensionsAsInt.push_back( allDimensions.at(1) );
-        allDimensionsAsInt.push_back( allDimensions.at(2) );
+        allDimensionsAsInt.push_back( allDimensions.at( 0 ) );
+        allDimensionsAsInt.push_back( allDimensions.at( 1 ) );
+        allDimensionsAsInt.push_back( allDimensions.at( 2 ) );
         UpdateDimensions( "", allDimensionsAsInt );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid Bounds!!" << std::endl;
         std::cout << "SeedPointDimensionsEventHandler::Execute()" << std::endl;
@@ -135,8 +135,8 @@ void SeedPointDimensionsEventHandler::UpdateDimensions( const std::string& uuid,
 {
     boost::ignore_unused_variable_warning( uuid );
     ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
-        SetDimensions( allDimensions[0],
-            allDimensions[1],
-            allDimensions[2] );
+    SetDimensions( allDimensions[0],
+                   allDimensions[1],
+                   allDimensions[2] );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -37,13 +37,13 @@ namespace ves
 namespace conductor
 {
 
-NonScrollGraphicsView::NonScrollGraphicsView(QWidget *parent) :
-    QGraphicsView(parent)
+NonScrollGraphicsView::NonScrollGraphicsView( QWidget* parent ) :
+    QGraphicsView( parent )
 {
 }
 
-NonScrollGraphicsView::NonScrollGraphicsView(QGraphicsScene* scene,
-                                             QWidget *parent) :
+NonScrollGraphicsView::NonScrollGraphicsView( QGraphicsScene* scene,
+        QWidget* parent ) :
     QGraphicsView( scene, parent )
 {
 }

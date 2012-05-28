@@ -55,13 +55,13 @@ using namespace ves::xplorer::network;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 ReloadPluginsEventHandler::ReloadPluginsEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ReloadPluginsEventHandler::ReloadPluginsEventHandler( const ReloadPluginsEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -94,8 +94,8 @@ void ReloadPluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& )
     std::map< std::string, ves::xplorer::plugin::PluginBase* >* plugins;
     plugins = GraphicalPluginManager::instance()->GetTheCurrentPlugins();
 
-    for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter = 
-        plugins->begin(); iter != plugins->end(); )
+    for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter =
+                plugins->begin(); iter != plugins->end(); )
     {
         // if a module is on the plugins map then remove it
         iter->second->RemoveSelfFromSG();
@@ -111,5 +111,5 @@ void ReloadPluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& )
     //Set active model to null so that if the previous active model is deleted
     //that we don't get errors in our code other places.
     std::string nullString;
-    ModelHandler::instance()->SetActiveModel( nullString );    
+    ModelHandler::instance()->SetActiveModel( nullString );
 }

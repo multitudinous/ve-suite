@@ -96,7 +96,7 @@ using namespace ves::xplorer::command;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CreateVisObjectEventHandler::CreateVisObjectEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     this->surface = 0;
     this->isosurface = 0;
@@ -132,12 +132,12 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     // Initialize all the vis objects from ssvishandler
     //
     std::cout << "| Initializing Viz Methods......................................... |" << std::endl;
-    
+
     // Initiate the isosurface.
     //
     std::pair< std::string, std::pair< std::string, std::string > > objectType;
-    objectType = std::make_pair( 
-        std::string( "UPDATE_ISOSURFACE_SETTINGS" ), std::make_pair( "", "" ) );
+    objectType = std::make_pair(
+                     std::string( "UPDATE_ISOSURFACE_SETTINGS" ), std::make_pair( "", "" ) );
     this->isosurface = new cfdIsosurface( 10 );
     this->isosurface->SetObjectType( ISOSURFACE );
     visObjectMap[ objectType ] = this->isosurface;
@@ -208,11 +208,11 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "By Surface" );
     objectType.second.second = std::string( "Single" );
-    ves::xplorer::cfdPresetContour* surface_contour = 
+    ves::xplorer::cfdPresetContour* surface_contour =
         new cfdPresetContour( 2, 10 );
     surface_contour->SetObjectType( BY_SURFACE );
     visObjectMap[ objectType ] = surface_contour;
-    
+
     //
     // Initiate the preset x momentum.
     //
@@ -292,11 +292,11 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
     objectType.second.first = std::string( "By Surface" );
     objectType.second.second = std::string( "Single" );
-    ves::xplorer::cfdPresetVector* surface_vector = 
+    ves::xplorer::cfdPresetVector* surface_vector =
         new cfdPresetVector( 2, 10 );
     surface_vector->SetObjectType( BY_SURFACE );
     visObjectMap[ objectType ] = surface_vector;
-    
+
     //
     // Initiate the preset x contour lines.
     //
@@ -440,7 +440,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     ParticleAnimation* particleAnim = new ParticleAnimation();
     particleAnim->SetObjectType( PARTICLE_TRANSIENT );
     visObjectMap[ objectType ] = particleAnim;
-    
+
     //
     // Initiate PIV data from INEL
     //
@@ -448,22 +448,22 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     /*this->image = new cfdImage( _param );
     this->image->SetObjectType( IMAGE_EX );
     this->dataList.push_back( this->image ); */
-    
+
     std::cout << "| Finished Initializing Viz Methods................................ |" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CreateVisObjectEventHandler::CreateVisObjectEventHandler( const CreateVisObjectEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {}
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
 ////////////////////////////////////////////////////////////////////////////////
 CreateVisObjectEventHandler::~CreateVisObjectEventHandler()
 {
-    for( std::map< std::pair< std::string, 
-        std::pair< std::string, std::string > >, 
-        ves::xplorer::cfdObjects* >::iterator iter = visObjectMap.begin(); 
-        iter != visObjectMap.end(); ++iter  )
+    for( std::map < std::pair < std::string,
+            std::pair< std::string, std::string > > ,
+            ves::xplorer::cfdObjects* >::iterator iter = visObjectMap.begin();
+            iter != visObjectMap.end(); ++iter )
     {
         delete iter->second;
     }
@@ -490,7 +490,7 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
 {
     //Sleep here while we wait for the ss viz handler to finish computing the
     //last request from the user
-    while(  SteadyStateVizHandler::instance()->TransientGeodesIsBusy() )
+    while( SteadyStateVizHandler::instance()->TransientGeodesIsBusy() )
     {
         vpr::System::msleep( 500 );  // half-second delay
     }
@@ -508,7 +508,7 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     ves::open::xml::CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
     ves::open::xml::DataValuePairPtr scalarDVP = command->GetDataValuePair( "Scalar Bar State" );
     ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>( activeModelDVP->GetDataXMLObject() );
 
     std::string direction;
     ves::open::xml::DataValuePairPtr directionDVP = objectCommand->GetDataValuePair( "Direction" );
@@ -528,11 +528,13 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     ves::open::xml::DataValuePairPtr advancedDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
     if( advancedDVP )
     {
-        ves::open::xml::CommandPtr advancedCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  advancedDVP->GetDataXMLObject() );
+        ves::open::xml::CommandPtr advancedCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>( advancedDVP->GetDataXMLObject() );
         unsigned int warpOption = 0;
         advancedCommand->GetDataValuePair( "Warp Option" )->GetData( warpOption );
         if( warpOption )
+        {
             advanced = "-warp";
+        }
     }
 
     //Create the key for a specific object
@@ -576,18 +578,18 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
 
     // get the active vis object
     vprDEBUG( vesDBG, 1 ) << "|\tSetting viz object " << activeObject->GetObjectType()
-        << " to _activeObject"
-        << std::endl << vprDEBUG_FLUSH;
+                          << " to _activeObject"
+                          << std::endl << vprDEBUG_FLUSH;
 
     //SceneManager::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS = 
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS =
         ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
 
     // add active dataset DCS to scene graph if not already there...
     vprDEBUG( vesDBG, 2 ) << "|\tSetting DCS to activeDCS = "
-        << activeDataSetDCS.get()
-        << std::endl << vprDEBUG_FLUSH;
+                          << activeDataSetDCS.get()
+                          << std::endl << vprDEBUG_FLUSH;
     //this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
     //this->activeObject->SetNormal( EnvironmentHandler::instance()->GetNavigate()->GetDirection() );
     //this->activeObject->SetOrigin( EnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
@@ -609,7 +611,7 @@ void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObjectPtr 
         activeModelDVP->GetData( activeVector );
 
         vprDEBUG( vesDBG, 1 ) << "|\tCreateVisObjectEventHandler::SetActiveVector Setting Active Vector = " << activeVector
-        << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         Model* activeModel = ModelHandler::instance()->GetActiveModel();
         DataSet* activeDataset = activeModel->GetActiveDataSet();
@@ -640,10 +642,10 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLOb
     activeModelDVP->GetData( scalarMax );
 
     vprDEBUG( vesDBG, 1 ) << "|\tCreateVisObjectEventHandler::SetActiveScalarAndRange Set the scalar and range "
-    << ", scalar = " << activeScalarName
-    << ", min = " << scalarMin
-    << ", max = " << scalarMax
-    << std::endl << vprDEBUG_FLUSH;
+                          << ", scalar = " << activeScalarName
+                          << ", min = " << scalarMin
+                          << ", max = " << scalarMax
+                          << std::endl << vprDEBUG_FLUSH;
     DataSet* activeDataset = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
     //update active scalar texture if it exists
 
@@ -665,8 +667,8 @@ bool CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObjectPtr
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
     unsigned int i = activeModel->GetIndexOfDataSet( dataSetName );
     vprDEBUG( vesDBG, 1 )
-        << "|\tCreateVisObjectEventHandler CHANGE_STEADYSTATE_DATASET " << i
-        << std::endl << vprDEBUG_FLUSH;
+            << "|\tCreateVisObjectEventHandler CHANGE_STEADYSTATE_DATASET " << i
+            << std::endl << vprDEBUG_FLUSH;
     //update active texture dataset if it exists
     unsigned int nTextureDataSets = activeModel->GetNumberOfTextureDataSets();
     if( ( nTextureDataSets ) && ( i < nTextureDataSets ) )
@@ -677,42 +679,42 @@ bool CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObjectPtr
     if( i < activeModel->GetNumberOfCfdDataSets() )
     {
         vprDEBUG( vesDBG, 0 ) << "|\tCreateVisObjectEventHandler::SetActiveDataSet dataset = "
-            << activeModel->GetCfdDataSet( i )->GetFileName()
-            << ", dcs = " << activeModel->GetCfdDataSet( i )->GetDCS()
-            << std::endl << vprDEBUG_FLUSH;
+                              << activeModel->GetCfdDataSet( i )->GetFileName()
+                              << ", dcs = " << activeModel->GetCfdDataSet( i )->GetDCS()
+                              << std::endl << vprDEBUG_FLUSH;
 
         int cfdType = activeModel->GetCfdDataSet( i )->GetType();
         vprDEBUG( vesDBG, 1 ) << "|\tCreateVisObjectEventHandler::SetActiveDataSet cfdType: " << cfdType
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         // set the dataset as the appropriate dastaset type
         // (and the active dataset as well)
         DataSet* activeDataset = activeModel->GetCfdDataSet( i );
-        
+
         // Get the previous active dataset
         std::string oldDatasetName;
         if( activeModel->GetActiveDataSet() )
         {
             oldDatasetName = activeModel->GetActiveDataSet()->GetFileName();
-            vprDEBUG( vesDBG, 1 ) 
-                << "|\tCreateVisObjectEventHandler::SetActiveDataSet last active dataset name = "
-                << oldDatasetName
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 )
+                    << "|\tCreateVisObjectEventHandler::SetActiveDataSet last active dataset name = "
+                    << oldDatasetName
+                    << std::endl << vprDEBUG_FLUSH;
         }
 
         activeModel->SetActiveDataSet( activeDataset );
         vprDEBUG( vesDBG, 1 ) << "|\tCreateVisObjectEventHandler::SetActiveDataSet Activating steady state file "
-            << activeDataset->GetFileName() << " == "
-            << activeModel->GetActiveDataSet()->GetFileName()
-            << std::endl << vprDEBUG_FLUSH;
+                              << activeDataset->GetFileName() << " == "
+                              << activeModel->GetActiveDataSet()->GetFileName()
+                              << std::endl << vprDEBUG_FLUSH;
 
         // make sure that the user did not just hit same dataset button
         // (or change scalar since that is routed through here too)
         if( oldDatasetName != activeDataset->GetFileName() )
         {
-            vprDEBUG( vesDBG, 1 ) 
-                << "|\tCreateVisObjectEventHandler::SetActiveDataSet  setting dataset as newly activated"
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 )
+                    << "|\tCreateVisObjectEventHandler::SetActiveDataSet  setting dataset as newly activated"
+                    << std::endl << vprDEBUG_FLUSH;
             activeDataset->SetNewlyActivated();
         }
         return true;
@@ -720,8 +722,8 @@ bool CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObjectPtr
     else
     {
         std::cerr << "ERROR: CreateVisObjectEventHandler::SetActiveDataSet  requested steady state dataset "
-            << activeModel->GetNumberOfCfdDataSets()
-            << std::endl;
+                  << activeModel->GetNumberOfCfdDataSets()
+                  << std::endl;
         return false;
     }
 }

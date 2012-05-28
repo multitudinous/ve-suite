@@ -148,7 +148,7 @@ protected:
     wxArrayString   m_availableDatasets;
     ///The box listing the available datasets.
     wxComboBox*     m_datasetSelection;
-    
+
     std::vector< ves::open::xml::DataValuePairPtr > _advancedSettings;///<The advanced settings.
     std::vector< ves::open::xml::DataValuePairPtr > _streamlineInformation;///<The streamline setting data
     std::vector< ves::open::xml::DataValuePairPtr > seedPointInformation;///<The streamline setting data
@@ -169,7 +169,7 @@ protected:
     bool _lastStreamArrow;///<Stream arrow from advanced settings.
     bool m_animatedParticles;
     bool m_streamRibbons;
-    
+
     int cId, cIso_value, cMin, cMax, cSc;
     std::vector< long > commandInputs;
 

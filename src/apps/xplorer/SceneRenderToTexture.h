@@ -193,8 +193,8 @@ private:
     std::vector< osg::Camera* > m_updateList;
 
     ///
-    std::map< osg::Camera*,
-              osg::ref_ptr< osgwTools::ScreenCapture > > m_captureTools;
+    std::map < osg::Camera*,
+        osg::ref_ptr< osgwTools::ScreenCapture > > m_captureTools;
 
     ///The root group that everything gets added to
     ///Is the same for all contexts
@@ -221,7 +221,7 @@ private:
 
     ///Light model for the scene
     osg::ref_ptr< osg::LightModel > m_lightModel0;
-    
+
     ///Add the ui group to the cameras
     bool m_isUIAdded;
 

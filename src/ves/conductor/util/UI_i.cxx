@@ -46,7 +46,7 @@
 using namespace ves::conductor::util;
 // Implementation skeleton constructor
 Body_UI_i::Body_UI_i( Body::Executive_ptr exec, std::string name )
-        : UIName_( name ), executive_( Body::Executive::_duplicate( exec ) )
+    : UIName_( name ), executive_( Body::Executive::_duplicate( exec ) )
 {
     UIName_ = name;
     m_commandNameMap[ "NULL" ] = ves::open::xml::CommandPtr( new ves::open::xml::Command() );
@@ -58,13 +58,15 @@ Body_UI_i::~Body_UI_i( void )
 {}
 
 void Body_UI_i::UpdateNetwork(
-    const char * network
-    
+    const char* network
+
 )
 {
     // Add your implementation here
     if( network != NULL )
+    {
         std::cout << network << std::endl;
+    }
     std::cout << UIName_ << " :UpdateNetwork called" << std::endl;
 
     //ui_network_->Load(network);
@@ -73,13 +75,15 @@ void Body_UI_i::UpdateNetwork(
 
 void Body_UI_i::UpdateModuleUI(
     CORBA::Long module_id,
-    const char * msg
-    
+    const char* msg
+
 )
 {
     // Add your implementation here
     if( msg != NULL )
+    {
         std::cout << module_id << " : " << msg << std::endl;
+    }
     std::cout << UIName_ << " :UpdateModuleUI called" << std::endl;
 
     //Real code the update UI
@@ -95,31 +99,35 @@ void Body_UI_i::UpdateModuleUI(
 
 void Body_UI_i::UpdateModuleResult(
     CORBA::Long module_id,
-    const char * msg
-    
+    const char* msg
+
 )
 {
     // Add your implementation here
     if( msg != NULL )
+    {
         std::cout << module_id << " : " << msg << std::endl;
+    }
     std::cout << UIName_ << " :UpdateModuleResult called" << std::endl;
 }
 
 void Body_UI_i::UpdateLinkContent(
     CORBA::Long id,
-    const char * msg
-    
+    const char* msg
+
 )
 {
     // Add your implementation here
     if( msg != NULL )
+    {
         std::cout << id << " : " << msg << std::endl;
+    }
     std::cout << UIName_ << " :UpdateLinkContent called" << std::endl;
 }
 
 void Body_UI_i::Raise(
-    const char * notification
-    
+    const char* notification
+
 )
 {
     // Add your implementation here
@@ -136,7 +144,7 @@ void Body_UI_i::Raise(
 }
 
 void Body_UI_i::SetXplorerData(
-    const char * xplorerData
+    const char* xplorerData
 )
 {
     //std::cout << xplorerData << std::endl;
@@ -189,27 +197,27 @@ const ves::open::xml::CommandPtr Body_UI_i::GetXplorerData( const std::string& c
     return temp;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_UI_i::SetCommand( const char * openXMLCommand )
+void Body_UI_i::SetCommand( const char* openXMLCommand )
 {
-    //boost::ignore_unused_variable_warning( openXMLCommand ); 
+    //boost::ignore_unused_variable_warning( openXMLCommand );
     std::string tempString( const_cast<char*>( openXMLCommand ) );
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
     networkReader.ReadFromString();
     networkReader.ReadXMLData( tempString, "Command", "vecommand" );
-    
+
     std::vector<ves::open::xml::XMLObjectPtr> xmlObjects;
     xmlObjects = networkReader.GetLoadedXMLObjects();
 
-    ves::open::xml::CommandPtr temp = 
-        boost::dynamic_pointer_cast< ves::open::xml::Command >( 
-        xmlObjects.at( 0 ) );
+    ves::open::xml::CommandPtr temp =
+        boost::dynamic_pointer_cast< ves::open::xml::Command >(
+            xmlObjects.at( 0 ) );
     if( !temp )
     {
         wxLogMessage( wxString( "NULL Command", wxConvUTF8 ) );
         return;
     }
-    
+
     ///Pass data off to dynamic data buffer engine if the command is one from
     ///ce about data
     //m_commandNameMap[ temp->GetCommandName()] = temp;

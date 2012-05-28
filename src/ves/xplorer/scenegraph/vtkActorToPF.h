@@ -77,12 +77,12 @@ namespace scenegraph
 // vtkActorToPF - translates vtkActor to pfGeode. If geode is NULL, new one
 //   will be created. Optional verbose parameter prints debugging and
 //   performance information.
-VE_SCENEGRAPH_EXPORTS pfGeode* vtkActorToPF( vtkActor *actor, pfGeode *geode = NULL, int verbose = 0 );
+VE_SCENEGRAPH_EXPORTS pfGeode* vtkActorToPF( vtkActor* actor, pfGeode* geode = NULL, int verbose = 0 );
 
 // helper functions
-VE_SCENEGRAPH_EXPORTS void vtkActorToGeoSets( vtkActor *actor, pfGeoSet *gsets[], int verbose );
-VE_SCENEGRAPH_EXPORTS pfGeoSet *processPrimitive( vtkActor *a, vtkCellArray *prims, int pType, int v );
-VE_SCENEGRAPH_EXPORTS void updateTexture( vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int v );
+VE_SCENEGRAPH_EXPORTS void vtkActorToGeoSets( vtkActor* actor, pfGeoSet* gsets[], int verbose );
+VE_SCENEGRAPH_EXPORTS pfGeoSet* processPrimitive( vtkActor* a, vtkCellArray* prims, int pType, int v );
+VE_SCENEGRAPH_EXPORTS void updateTexture( vtkActor* actor, pfGeoSet* gset, pfGeoState* gstate, int v );
 }
 }
 }

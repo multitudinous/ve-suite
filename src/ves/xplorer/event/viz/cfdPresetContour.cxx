@@ -85,7 +85,7 @@ cfdObjects* cfdPresetContour::CreateCopy()
 void cfdPresetContour::Update( void )
 {
     vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetContour::Update, usePreCalcData = "
-        << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
+                          << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
 
     if( this->usePreCalcData )
     {
@@ -94,33 +94,33 @@ void cfdPresetContour::Update( void )
         if( !precomputedPlanes )
         {
             vprDEBUG( vesDBG, 0 )
-                << "|\tDataset contains no precomputed contour planes."
-                << std::endl << vprDEBUG_FLUSH;
+                    << "|\tDataset contains no precomputed contour planes."
+                    << std::endl << vprDEBUG_FLUSH;
             ves::xplorer::communication::CommunicationHandler::instance()
             ->SendConductorMessage( "Dataset contains no precomputed contour planes.\n" );
             return;
         }
 
         vtkPolyData* preCalcData = precomputedPlanes
-                                    ->GetClosestPlane( requestedValue );
+                                   ->GetClosestPlane( requestedValue );
 
         if( preCalcData == NULL )
         {
-            vprDEBUG( vesDBG, 0 ) 
-                << "|\tcfdPresetContour: no precalculated data"
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 0 )
+                    << "|\tcfdPresetContour: no precalculated data"
+                    << std::endl << vprDEBUG_FLUSH;
 
             this->updateFlag = false;
             return;
         }
 
-        //Just need a filter to be able to pass the data into the SetMapper 
+        //Just need a filter to be able to pass the data into the SetMapper
         //function. May need to create another function so that this filter
         //is not necessary.
         vtkCellDataToPointData* tempPipe = vtkCellDataToPointData::New();
         tempPipe->SetInput( preCalcData );
         this->SetMapperInput( tempPipe->GetOutputPort() );
-        
+
         tempPipe->Delete();
     }
     else
@@ -131,19 +131,19 @@ void cfdPresetContour::Update( void )
             this->cuttingPlane = NULL;
         }
 
-    	if( GetObjectType() != BY_SURFACE )
-    	{
-    	    CreatePlane();
-    	}
-    	else
-    	{ 
-    	    CreateArbSurface();
+        if( GetObjectType() != BY_SURFACE )
+        {
+            CreatePlane();
+        }
+        else
+        {
+            CreateArbSurface();
             if( !mapper->GetInput() )
             {
                 this->updateFlag = false;
                 return;
             }
-    	}
+        }
     }
 
     vtkActor* temp = vtkActor::New();
@@ -151,20 +151,20 @@ void cfdPresetContour::Update( void )
     temp->GetProperty()->SetSpecularPower( 20.0f );
     try
     {
-        osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = 
+        osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode =
             new ves::xplorer::scenegraph::Geode();
         tempGeode->TranslateToGeode( temp );
         geodes.push_back( tempGeode.get() );
         this->updateFlag = true;
     }
-    catch ( std::bad_alloc )
+    catch( std::bad_alloc )
     {
         mapper->Delete();
         mapper = vtkPolyDataMapper::New();
 
-        vprDEBUG( vesDBG, 0 ) 
-            << "|\tMemory allocation failure : cfdPresetContour"
-            << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 )
+                << "|\tMemory allocation failure : cfdPresetContour"
+                << std::endl << vprDEBUG_FLUSH;
     }
     temp->Delete();
 }

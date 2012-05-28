@@ -41,13 +41,13 @@
 
 class MoveFrame : public QFrame
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit MoveFrame(QWidget *parent = 0);
+    explicit MoveFrame( QWidget* parent = 0 );
 
 protected:
-    virtual void mousePressEvent ( QMouseEvent* event );
-    virtual void mouseDoubleClickEvent ( QMouseEvent* event );
+    virtual void mousePressEvent( QMouseEvent* event );
+    virtual void mouseDoubleClickEvent( QMouseEvent* event );
 
 Q_SIGNALS:
     void pressed();

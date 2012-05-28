@@ -256,7 +256,10 @@ protected:
     virtual ~Dragger();
 
     ///
-    virtual void ComputeDeltaTransform(){;}
+    virtual void ComputeDeltaTransform()
+    {
+        ;
+    }
 
     ///Will be pure virtual eventually
     ///
@@ -273,16 +276,28 @@ protected:
     }
 
     ///
-    virtual void CustomFocusAction(){;}
+    virtual void CustomFocusAction()
+    {
+        ;
+    }
 
     ///
-    virtual void CustomPushAction(){;}
+    virtual void CustomPushAction()
+    {
+        ;
+    }
 
     ///
-    virtual void CustomDragAction(){;}
+    virtual void CustomDragAction()
+    {
+        ;
+    }
 
     ///
-    virtual void CustomReleaseAction(){;}
+    virtual void CustomReleaseAction()
+    {
+        ;
+    }
 
     ///
     ///\param colorTag
@@ -363,7 +378,7 @@ private:
     AssociationSet m_associationSet;
 
     ///
-    typedef std::map< osg::Transform*,
+    typedef std::map < osg::Transform*,
             std::pair< osg::Matrixd, osg::Matrixd > > AssociationMatricesMap;
     AssociationMatricesMap m_associationMatricesMap;
 

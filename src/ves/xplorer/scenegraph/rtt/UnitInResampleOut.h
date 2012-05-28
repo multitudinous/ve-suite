@@ -50,9 +50,9 @@ namespace rtt
 
 //! Same as UnitInOut but do resampling inbetween
 /*
- * Resample the input. This PPU will 
- * render the input data resampled to the output. Next PPU will work 
- * on the resampled one. NOTE: You loose information in your data after 
+ * Resample the input. This PPU will
+ * render the input data resampled to the output. Next PPU will work
+ * on the resampled one. NOTE: You loose information in your data after
  * appling this PPU.
  */
 
@@ -85,7 +85,7 @@ public:
 
     ///Set y resampling factor
     void SetFactorY( float yFactor );
-    
+
     ///Override because this unit does not have uniforms set on it
     virtual void SetInputTexturesFromParents();
 

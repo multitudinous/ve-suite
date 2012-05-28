@@ -101,27 +101,27 @@ public:
             min = minIn;
             max = maxIn;
 
-            mid = min + (( max - min ) * 0.5f );
+            mid = min + ( ( max - min ) * 0.5f );
         }
 
         std::string printScalar( float scalar )
         {
             //std::cout<<"In MyScalarPrinter::printScalar "<< scalar <<std::endl;
             std::ostringstream numStream;
-            if ((( scalar > ( min - ( min * 0.001f ) ) ) &&
+            if( ( ( scalar > ( min - ( min * 0.001f ) ) ) &&
                     ( scalar < ( min + ( min * 0.001f ) ) ) ) ||
                     ( scalar == min ) )
             {
                 numStream << min;
                 return numStream.str();
             }
-            else if (( scalar > ( mid - ( mid * 0.001f ) ) ) &&
+            else if( ( scalar > ( mid - ( mid * 0.001f ) ) ) &&
                      ( scalar < ( mid + ( mid * 0.001f ) ) ) )
             {
                 numStream << mid;
                 return numStream.str();
             }
-            else if (( scalar > ( max - ( max * 0.001f ) ) ) &&
+            else if( ( scalar > ( max - ( max * 0.001f ) ) ) &&
                      ( scalar < ( max + ( max * 0.001f ) ) ) )
             {
                 numStream << max;

@@ -48,13 +48,13 @@ using namespace ves::open::xml::cad;
 //Constructor                                         //
 ////////////////////////////////////////////////////////
 MaterialUpdateEventHandler::MaterialUpdateEventHandler()
-        : ves::xplorer::event::AttributeEventHandler()
+    : ves::xplorer::event::AttributeEventHandler()
 {}
 /////////////////////////////////////////////////////////////////////////////////////////////
 //Copy Constructor                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
 MaterialUpdateEventHandler::MaterialUpdateEventHandler( const MaterialUpdateEventHandler& ceh )
-        : ves::xplorer::event::AttributeEventHandler( ceh )
+    : ves::xplorer::event::AttributeEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////
 MaterialUpdateEventHandler::~MaterialUpdateEventHandler()
@@ -112,7 +112,7 @@ void MaterialUpdateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
                                  rawMaterial->GetFace(),
                                  values );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Unable to update material!!" << std::endl;
         std::cout << "===MaterialUpdateEventHandler===" << std::endl;

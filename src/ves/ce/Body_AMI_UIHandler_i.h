@@ -53,8 +53,8 @@ public:
     ///Constructor
     Body_AMI_UIHandler_i( void );
 
-    Body_AMI_UIHandler_i(PortableServer::POA_ptr p,
-                      Body::AMH_ExecutiveResponseHandler_ptr rh);
+    Body_AMI_UIHandler_i( PortableServer::POA_ptr p,
+                          Body::AMH_ExecutiveResponseHandler_ptr rh );
 
     ///Destructor
     virtual ~Body_AMI_UIHandler_i( void );
@@ -66,7 +66,7 @@ public:
     ///Update the Network from Xplorer
     virtual
     void UpdateNetwork_excep(
-        ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder* excep_holder
     );
 
     ///???
@@ -76,7 +76,7 @@ public:
     ///???
     virtual
     void UpdateModuleUI_excep(
-        ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder* excep_holder
     );
 
     ///???
@@ -86,7 +86,7 @@ public:
     ///???
     virtual
     void UpdateModuleResult_excep(
-        ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder* excep_holder
     );
 
     ///???
@@ -96,7 +96,7 @@ public:
     ///???
     virtual
     void UpdateLinkContent_excep(
-        ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder* excep_holder
     );
 
     ///???
@@ -106,7 +106,7 @@ public:
     ///???
     virtual
     void Raise_excep(
-        ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder* excep_holder
     );
 
     ///Set the Xplorer data for Conductor to retrieve
@@ -116,21 +116,21 @@ public:
     ///Set the Xplorer data for Conductor to retrieve
     virtual
     void SetXplorerData_excep(
-        ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder* excep_holder
     );
-                   
+
     virtual
-    void SetCommand (
-                     void);
-    
+    void SetCommand(
+        void );
+
     virtual
-    void SetCommand_excep (
-                           ::Messaging::ExceptionHolder * excep_holder);
+    void SetCommand_excep(
+        ::Messaging::ExceptionHolder* excep_holder );
 
 private:
     PortableServer::POA_var m_poa;
     Body::AMH_ExecutiveResponseHandler_var m_responseHandler;
-};    
+};
 }
 }
 #endif// VES_CE_BODY_AMI_UI_HANDLER_I_H

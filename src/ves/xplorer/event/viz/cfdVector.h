@@ -64,7 +64,7 @@ public:
     // Initialize the VTK objects and pipeline.
     ///Constructor
     cfdVector();
-    
+
     ///Copy constructor
     cfdVector( cfdVector const& src );
 
@@ -81,15 +81,15 @@ public:
 private:
 
 #ifdef USE_OMP
-    vtkPlane *plane[MAX_VECTOR];
-    vtkCutter *cutter[MAX_VECTOR];
-    vtkGlyph3D *glyph[MAX_VECTOR];
-    vtkMaskPoints   *ptmask[MAX_VECTOR];
-    vtkAppendFilter *append;
+    vtkPlane* plane[MAX_VECTOR];
+    vtkCutter* cutter[MAX_VECTOR];
+    vtkGlyph3D* glyph[MAX_VECTOR];
+    vtkMaskPoints*   ptmask[MAX_VECTOR];
+    vtkAppendFilter* append;
     float nData;
 #else
-    vtkPlane           *plane;
-    vtkCutter          *cutter;
+    vtkPlane*           plane;
+    vtkCutter*          cutter;
 #endif
 };
 }

@@ -45,7 +45,7 @@ class ExtendedTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit ExtendedTabWidget(QWidget *parent = 0);
+    explicit ExtendedTabWidget( QWidget* parent = 0 );
 
     void SetTabButton( int tabIndex, QWidget* widget );
 

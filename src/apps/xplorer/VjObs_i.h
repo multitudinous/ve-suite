@@ -83,7 +83,7 @@ namespace ves
 namespace xplorer
 {
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
-            public PortableServer::RefCountServantBase
+    public PortableServer::RefCountServantBase
 {
 public:
     ///Constructor
@@ -132,7 +132,7 @@ public:
     void SetClientInfoFlag( short );
     ///Set the client info data
     ///\param value the client info data
-    void SetClientInfoData( const VjObs::obj_pd &value );
+    void SetClientInfoData( const VjObs::obj_pd& value );
     ///Get the client info data
     VjObs::obj_pd* GetClientInfoData();
     ///Called in latepreframe to sync state variables
@@ -180,20 +180,20 @@ protected:
     short mGetClientInfo;///< client info number
 
     ///< dom manger should be removed
-    ves::open::xml::DOMDocumentManager* domManager; 
+    ves::open::xml::DOMDocumentManager* domManager;
     ///< command vector may be a duplicate
     std::vector< ves::open::xml::CommandPtr > commandVectorQueue;
     ///< command vector may be a duplicate
     std::vector< ves::open::xml::CommandPtr > dataLoggerCommandVectorQueue;
     std::vector< std::string > commandStringQueue;///< command queue with raw string data
-    ///Data container for command strings so that we can start recording 
+    ///Data container for command strings so that we can start recording
     ///user commands during running ves
     std::vector< std::string > m_commandStringRecorder;
     ///Determine if we can store commands
     bool m_storeCommands;
     ///Timer to record when commands are stored
     vpr::Timer* m_commandTimer;
-    
+
     // Cluster Stuff for the above state variables
     cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;
     bool isCluster;///<cluster mode

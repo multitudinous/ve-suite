@@ -129,7 +129,7 @@ public:
     ///Get the active display mode of conductor
     ///\return Returns either:\n "Desktop" or "Tablet"
     const std::string& GetDisplayMode();
- 
+
     void Log( const char* msg );
 
     ///Function to process command line args to conductor and specifically
@@ -137,24 +137,24 @@ public:
     ///particular application
     void ProcessCommandLineArgs();
     ///Clear the canvas to be ready for a new project
-    void NewCanvas( wxCommandEvent &event );
+    void NewCanvas( wxCommandEvent& event );
     ///Open a VES file with the dialog
-    void Open( wxCommandEvent &event );
+    void Open( wxCommandEvent& event );
     ///Open a exe file with the dialog
-    void Run( wxCommandEvent &event );
+    void Run( wxCommandEvent& event );
     ///Save the VES file
-    void Save( wxCommandEvent &event );
+    void Save( wxCommandEvent& event );
     ///Submit the current canvas to the CE
-    void SubmitToServer( wxCommandEvent &event );
+    void SubmitToServer( wxCommandEvent& event );
     ///Allow Xplorer shutdown option with user preferences
     void ShutdownXplorerOptionOn( void );
     ///Removes Xplorer shutdown option using user preferences
     void ShutdownXplorerOptionOff( void );
-    HierarchyTree * GetHierarchyTree();
+    HierarchyTree* GetHierarchyTree();
     ///Change data logging settings
-    void OnDataLogging( wxCommandEvent &event );
+    void OnDataLogging( wxCommandEvent& event );
     ///Internal function to make the orb run
-    void OnTimer(wxTimerEvent& event);
+    void OnTimer( wxTimerEvent& event );
 
 protected:
     void _createTreeAndLogWindow( wxWindow* parent );
@@ -176,42 +176,42 @@ protected:
     void GetConfig();
 
     void CreateMenu();
-    void ZoomIn( wxCommandEvent &event );
-    void ZoomOut( wxCommandEvent &event );
-    void ZoomAll( wxCommandEvent &event );
-    void SaveAs( wxCommandEvent &event );
-    void OnPreferences( wxCommandEvent &event );
+    void ZoomIn( wxCommandEvent& event );
+    void ZoomOut( wxCommandEvent& event );
+    void ZoomAll( wxCommandEvent& event );
+    void SaveAs( wxCommandEvent& event );
+    void OnPreferences( wxCommandEvent& event );
 
     void SetRecentFile( wxFileName vesFileName );
     void OpenRecentFile( wxCommandEvent& event );
     ///Clear the recent file history menu
     void OnClearRecentFiles( wxCommandEvent& event );
-    void OnKeyPress( wxKeyEvent &event );
-    
-    void LoadFromServer( wxCommandEvent &event );
+    void OnKeyPress( wxKeyEvent& event );
+
+    void LoadFromServer( wxCommandEvent& event );
     void QueryFromServer( wxCommandEvent& event );
     void OpenSimulation( wxString simName );
 
     void FindBlocks( wxCommandEvent& WXUNUSED( event ) );
 
-    void StartCalc( wxCommandEvent &event );
-    void StopCalc( wxCommandEvent &event );
-    void PauseCalc( wxCommandEvent &event );
-    void ResumeCalc( wxCommandEvent &event );
+    void StartCalc( wxCommandEvent& event );
+    void StopCalc( wxCommandEvent& event );
+    void PauseCalc( wxCommandEvent& event );
+    void ResumeCalc( wxCommandEvent& event );
 
-    void ViewResult( wxCommandEvent &event );
+    void ViewResult( wxCommandEvent& event );
 
-    void ViewHelp( wxCommandEvent &event );
-    void ViewAbout( wxCommandEvent &event );
-    void ViewContacts( wxCommandEvent &event );
-    void ViewPlatformInfo( wxCommandEvent &event );
+    void ViewHelp( wxCommandEvent& event );
+    void ViewAbout( wxCommandEvent& event );
+    void ViewContacts( wxCommandEvent& event );
+    void ViewPlatformInfo( wxCommandEvent& event );
 
-    void DisConExeServer( wxCommandEvent &event );
-    void DisConVEServer( wxCommandEvent &event );
-    void LoadBase( wxCommandEvent &event );
-    void LoadSour( wxCommandEvent &event );
-    void LoadREIBase( wxCommandEvent &event );
-    void LoadREISour( wxCommandEvent &event );
+    void DisConExeServer( wxCommandEvent& event );
+    void DisConVEServer( wxCommandEvent& event );
+    void LoadBase( wxCommandEvent& event );
+    void LoadSour( wxCommandEvent& event );
+    void LoadREIBase( wxCommandEvent& event );
+    void LoadREISour( wxCommandEvent& event );
 
     //Controls for VE-Xplorer
     //These are the callbacks for the pull down menu
@@ -270,13 +270,13 @@ protected:
     void OnDelMod( wxCommandEvent& event );
     void SetTreeItemName( wxCommandEvent& event );
     void OnMakeIntoHierarchy( wxCommandEvent& event );
-    void OnChangeIcon(wxCommandEvent& event );
-    void OnShowIconChooser(wxCommandEvent& event );
+    void OnChangeIcon( wxCommandEvent& event );
+    void OnShowIconChooser( wxCommandEvent& event );
     void UpdateHierarchyTree( wxCommandEvent& event );
 
-    void OnAddPlanet ( wxCommandEvent& event );
-    void OnRemovePlanet ( wxCommandEvent& event );
-    void ShowMinervaDialog ( wxCommandEvent& event );
+    void OnAddPlanet( wxCommandEvent& event );
+    void OnRemovePlanet( wxCommandEvent& event );
+    void ShowMinervaDialog( wxCommandEvent& event );
     MinervaDialog* GetMinervaDialog();
 
 private:
@@ -292,7 +292,7 @@ private:
     UITeacherTab* recordScenes;
     ///Pane to control camera panes
     ves::conductor::CameraPlacementToolUIDialog* m_cptDialog;
-    
+
     wxDialog* _treeView;
 
     ///Desktop or Tablet
@@ -309,8 +309,8 @@ private:
     bool mDestoryFrame;
     wxTimer mTimer;
     std::vector< long > pids;
-    MinervaDialog *_minervaDialog;
-    
+    MinervaDialog* _minervaDialog;
+
     wxMenu* file_menu;
     wxMenu* con_menu;
     wxMenu* run_menu;
@@ -321,7 +321,7 @@ private:
     wxMenu* xplorerJugglerMenu;
     wxMenu* xplorerViewMenu;
     wxMenu* xplorerDisplayMenu;
-    
+
     HierarchyTree* hierarchyTree;
     wxNotebook* side_pane;
     ves::conductor::Canvas* canvas;
@@ -329,7 +329,7 @@ private:
     AvailableModules* av_modules;
     wxString mVESFileName;
     wxString directory;
-    
+
     Splitter* wx_log_splitter;
     wxSplitterWindow* wx_ve_splitter;
     Splitter* wx_nw_splitter;
@@ -337,7 +337,7 @@ private:
     AppToolBar* appToolBar;///<The app toolbar
     ///Shutting down conductor
     bool m_shuttingDown;
-    
+
     DECLARE_EVENT_TABLE()
 };
 

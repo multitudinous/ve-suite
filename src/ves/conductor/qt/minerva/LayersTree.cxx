@@ -47,18 +47,18 @@
 
 using namespace ves::conductor::qt::minerva;
 
-LayersTree::LayersTree ( QWidget *parent ) : BaseClass ( parent ),
-  m_treeControl ( 0x0 )
+LayersTree::LayersTree( QWidget* parent ) : BaseClass( parent ),
+    m_treeControl( 0x0 )
 {
-    m_treeControl = new Minerva::QtWidgets::TreeControl ( this );
+    m_treeControl = new Minerva::QtWidgets::TreeControl( this );
 
-    QVBoxLayout *layout ( new QVBoxLayout );
-    layout->addWidget ( m_treeControl );
+    QVBoxLayout* layout( new QVBoxLayout );
+    layout->addWidget( m_treeControl );
 
-    this->setContextMenuPolicy ( Qt::CustomContextMenu );
-    QObject::connect ( this, SIGNAL ( customContextMenuRequested ( const QPoint& ) ), this,  SLOT   ( _onContextMenuShow ( const QPoint& ) ) );
+    this->setContextMenuPolicy( Qt::CustomContextMenu );
+    QObject::connect( this, SIGNAL( customContextMenuRequested( const QPoint& ) ), this,  SLOT( _onContextMenuShow( const QPoint& ) ) );
 
-    this->setLayout ( layout );
+    this->setLayout( layout );
 }
 
 LayersTree::~LayersTree()
@@ -67,17 +67,17 @@ LayersTree::~LayersTree()
     m_treeControl = 0x0;
 }
 
-void LayersTree::BuildTree ( Minerva::Core::Data::Feature * feature )
+void LayersTree::BuildTree( Minerva::Core::Data::Feature* feature )
 {
-    m_treeControl->buildTree ( feature );
+    m_treeControl->buildTree( feature );
 }
 
 Minerva::Core::Data::Feature* LayersTree::GetCurrentFeature() const
 {
-    if ( 0x0 != m_treeControl )
+    if( 0x0 != m_treeControl )
     {
-        Minerva::QtWidgets::TreeNode *currentItem ( m_treeControl->currentNode() );
-        if ( 0x0 != currentItem )
+        Minerva::QtWidgets::TreeNode* currentItem( m_treeControl->currentNode() );
+        if( 0x0 != currentItem )
         {
             return currentItem->node().get();
         }
@@ -86,28 +86,32 @@ Minerva::Core::Data::Feature* LayersTree::GetCurrentFeature() const
     return 0x0;
 }
 
-void LayersTree::_onContextMenuShow ( const QPoint& pos )
+void LayersTree::_onContextMenuShow( const QPoint& pos )
 {
-    if ( 0x0 == m_treeControl )
+    if( 0x0 == m_treeControl )
+    {
         return;
-  
-    Minerva::QtWidgets::TreeNode *currentItem ( m_treeControl->currentNode() );
-  
-    if ( 0x0 == currentItem )
+    }
+
+    Minerva::QtWidgets::TreeNode* currentItem( m_treeControl->currentNode() );
+
+    if( 0x0 == currentItem )
+    {
         return;
-  
-    Minerva::Core::Data::Feature::RefPtr feature ( currentItem->node() );
+    }
+
+    Minerva::Core::Data::Feature::RefPtr feature( currentItem->node() );
 
     // Only add add button if a container was selected.
-    if ( feature && feature->asContainer() )
+    if( feature && feature->asContainer() )
     {
-        QMenu* menu ( new QMenu ( this ) );
-      
-        QAction* addLayerAction ( new QAction ( QString ( "Add..." ), 0x0 ) );
-        QObject::connect ( addLayerAction, SIGNAL ( triggered (bool) ), this, SLOT ( _addLayer() ) );
-        menu->addAction ( addLayerAction );
-      
-        menu->popup ( m_treeControl->mapToGlobal ( pos ) );
+        QMenu* menu( new QMenu( this ) );
+
+        QAction* addLayerAction( new QAction( QString( "Add..." ), 0x0 ) );
+        QObject::connect( addLayerAction, SIGNAL( triggered( bool ) ), this, SLOT( _addLayer() ) );
+        menu->addAction( addLayerAction );
+
+        menu->popup( m_treeControl->mapToGlobal( pos ) );
     }
 }
 

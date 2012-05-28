@@ -83,7 +83,7 @@ const ves::open::xml::CommandPtr& UserPreferencesDataBuffer::GetCommand(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferencesDataBuffer::SetCommand( const std::string& commandKey,
-                                            const ves::open::xml::CommandPtr& command )
+        const ves::open::xml::CommandPtr& command )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
     commandMap[ commandKey ] = command;
@@ -141,7 +141,7 @@ void UserPreferencesDataBuffer::Print( void )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
     for( std::map< std::string, ves::open::xml::CommandPtr >::iterator
-        iter = commandMap.begin(); iter != commandMap.end(); ++iter )
+            iter = commandMap.begin(); iter != commandMap.end(); ++iter )
     {
         std::cout << iter->first << " " << iter->second->GetCommandName() << std::endl;
     }

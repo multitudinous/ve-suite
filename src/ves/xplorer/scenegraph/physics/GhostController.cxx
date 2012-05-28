@@ -104,13 +104,13 @@ public:
         //Don't report time of impact for motion away from the contact normal
         //(or causes minor penetration)
         if( convexResult.m_hitNormalLocal.dot( relativeVelocity ) >=
-            -m_allowedPenetration )
+                -m_allowedPenetration )
         {
             return 1.0;
         }
 
         return ClosestConvexResultCallback::addSingleResult(
-            convexResult, normalInWorldSpace );
+                   convexResult, normalInWorldSpace );
     }
 
     virtual bool needsCollision( btBroadphaseProxy* proxy0 ) const
@@ -128,7 +128,7 @@ public:
         }
 
         btCollisionObject* otherObj =
-            (btCollisionObject*)proxy0->m_clientObject;
+            ( btCollisionObject* )proxy0->m_clientObject;
 
         //Call needsResponse, see http://code.google.com/p/bullet/issues/detail?id=179
         if( m_dispatcher->needsResponse( m_me, otherObj ) )
@@ -189,8 +189,8 @@ GhostController::GhostController()
     m_ghostObject( new btPairCachingGhostObject() ),
     m_collisionShape( NULL ),
     m_motionState( NULL ),
-    m_physicsSimulator( *(PhysicsSimulator::instance()) ),
-    m_dynamicsWorld( *(m_physicsSimulator.GetDynamicsWorld()) ),
+    m_physicsSimulator( *( PhysicsSimulator::instance() ) ),
+    m_dynamicsWorld( *( m_physicsSimulator.GetDynamicsWorld() ) ),
     m_hitObject( false ),
     m_maxNumPenLoops( 4 ),
     m_maxPenetrationCorrection( 0.02 ),
@@ -362,7 +362,7 @@ bool GhostController::RecoverFromPenetration()
                 btManifoldPoint const& pt = manifold->getContactPoint( k );
                 btScalar distance = pt.getDistance();
                 if( ( distance >= -m_maxPenetrationCorrection ) ||
-                    ( distance >= maxPenetration ) )
+                        ( distance >= maxPenetration ) )
                 {
                     continue;
                 }
@@ -371,7 +371,7 @@ bool GhostController::RecoverFromPenetration()
                 contactNormal = pt.m_normalWorldOnB;
                 if( manifold->getBody0() == m_ghostObject )
                 {
-                     contactNormal *= btScalar( -1.0 );
+                    contactNormal *= btScalar( -1.0 );
                 }
             }
         }

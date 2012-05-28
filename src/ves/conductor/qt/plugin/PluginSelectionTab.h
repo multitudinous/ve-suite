@@ -40,8 +40,9 @@
 #include <QtGui/QWidget>
 #include <map>
 
-namespace Ui {
-    class PluginSelectionTab;
+namespace Ui
+{
+class PluginSelectionTab;
 }
 
 class QListWidgetItem;
@@ -66,7 +67,7 @@ class PluginSelectionTab : public QWidget
     Q_OBJECT
 
 public:
-    explicit PluginSelectionTab( MainWindow* mainWindow, QWidget *parent = 0 );
+    explicit PluginSelectionTab( MainWindow* mainWindow, QWidget* parent = 0 );
     ///Destructor
     virtual ~PluginSelectionTab();
     ///Clear the plugins
@@ -77,12 +78,12 @@ public:
     void ReDiscoverPlugins( std::string const& dir );
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent( QEvent* e );
     /// EventFilter that we use to intercept keypresses on list widgets
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter( QObject* obj, QEvent* event );
 
 private:
-    Ui::PluginSelectionTab *ui;
+    Ui::PluginSelectionTab* ui;
     MainWindow* m_mainWindow;
 
     std::map< QListWidgetItem*, UIPluginInterface* > m_itemInterfaceMap;
@@ -113,9 +114,9 @@ protected Q_SLOTS:
     void on_m_availablePlugins_itemActivated( QListWidgetItem* item );
 
     /// Called when data of item changes
-    void on_m_instantiatedPlugins_itemChanged ( QListWidgetItem * item );
+    void on_m_instantiatedPlugins_itemChanged( QListWidgetItem* item );
     /// Called when current item selection is changed via keyboard or mouse
-    void on_m_instantiatedPlugins_currentItemChanged ( QListWidgetItem * current, QListWidgetItem * previous );
+    void on_m_instantiatedPlugins_currentItemChanged( QListWidgetItem* current, QListWidgetItem* previous );
 
     void qCreateUIPlugin( const std::string& pluginFactoryName,
                           ves::xplorer::plugin::PluginBase* xplorerPlugin );
@@ -123,7 +124,7 @@ protected Q_SLOTS:
 
 Q_SIGNALS:
     void CreateUIPluginQSignal( const std::string& pluginFactoryName,
-                              ves::xplorer::plugin::PluginBase* xplorerPlugin );
+                                ves::xplorer::plugin::PluginBase* xplorerPlugin );
     void FileLoadedQSignal( const std::string& fileName );
 
 };

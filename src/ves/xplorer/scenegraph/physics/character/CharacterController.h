@@ -230,7 +230,7 @@ private:
 
     ///Set the game controller input flag
     void SetGameControllerAxisUpdate( bool const& data );
-    
+
     ///Update the character shape
     void UpdateCapsuleShape();
 
@@ -360,7 +360,7 @@ private:
     ///
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
-    ///Type defs to help create samples for the head position when using 
+    ///Type defs to help create samples for the head position when using
     ///tracking data
     typedef gadget::Position::SampleBuffer_t::buffer_t buffer_type;
     typedef buffer_type::const_reverse_iterator iter_type;
@@ -381,20 +381,20 @@ private:
 
     ///The vector to hold all of the animations for the character
     std::vector< CharacterAnimation* > m_fbxCharacters;
-    
+
     ///Head point from the last frame
     gmtl::Point3d m_lastHeadPoint;
-    
+
     ///The game pad axis input flag
     bool m_axisInputUpdate;
 
     /// Required to be able to connect up to signals.
     /// Required for connecting to signals via EventManager
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
-    
+
     ///
     osg::ref_ptr< osg::PositionAttitudeTransform > m_scaleDown;
-    
+
     class CharacterTransformCallback : public osg::NodeCallback
     {
     public:

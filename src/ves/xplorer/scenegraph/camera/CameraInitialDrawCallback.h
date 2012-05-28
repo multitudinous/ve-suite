@@ -60,7 +60,7 @@ public:
     CameraInitialDrawCallback();
 
     virtual void operator()( osg::RenderInfo& ri ) const;
-    
+
 protected:
 };
 } //end scenegraph

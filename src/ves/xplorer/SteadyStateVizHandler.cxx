@@ -125,13 +125,13 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     cursor( 0 ),
     useLastSource( false ),
     transientActors( true ),
-    m_logger( Poco::Logger::get("xplorer.SteadyStateVizHandler") ),
+    m_logger( Poco::Logger::get( "xplorer.SteadyStateVizHandler" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
     vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
     prototype->Delete();
-    
+
     _eventHandlers[ std::string( "VISUALIZATION_SETTINGS" )] =
         new ves::xplorer::event::CreateVisObjectEventHandler();
     _eventHandlers[ std::string( "CLEAR_VIS_OBJECTS" )] =
@@ -144,31 +144,31 @@ SteadyStateVizHandler::SteadyStateVizHandler()
         new ves::xplorer::event::PolydataSurfaceEventHandler();
     _eventHandlers[ std::string( "LIVE_VECTOR_UPDATE" )] =
         new ves::xplorer::event::VectorEventHandler();
-    
+
     ///Create ciz object factory
     CreateVizObjectMap();
-    
+
     ///Setup slots
     CONNECTSIGNALS_1( "%DeleteVizFeature",
-                     void( std::string const& activModelID ),
-                     &SteadyStateVizHandler::DeleteVizFeature,
-                     m_connections, any_SignalType, normal_Priority );    
+                      void( std::string const & activModelID ),
+                      &SteadyStateVizHandler::DeleteVizFeature,
+                      m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_2( "%AddVizFeature",
-                     void( std::string const& activModelID, std::string const& tableName ),
-                     &SteadyStateVizHandler::AddVizFeature,
-                     m_connections, any_SignalType, normal_Priority );    
-                     
+                      void( std::string const & activModelID, std::string const & tableName ),
+                      &SteadyStateVizHandler::AddVizFeature,
+                      m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_2( "%HideVizFeature",
-                     void( std::string const&, std::vector< bool > const& ),
-                     &SteadyStateVizHandler::HideVizFeature,
-                     m_connections, any_SignalType, normal_Priority );    
+                      void( std::string const&, std::vector< bool > const& ),
+                      &SteadyStateVizHandler::HideVizFeature,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SteadyStateVizHandler::~SteadyStateVizHandler()
 {
-    for( VisObjectConstIter iter = m_visObjectMap.begin(); 
-        iter != m_visObjectMap.end(); ++iter  )
+    for( VisObjectConstIter iter = m_visObjectMap.begin();
+            iter != m_visObjectMap.end(); ++iter )
     {
         delete iter->second;
     }
@@ -187,12 +187,12 @@ SteadyStateVizHandler::~SteadyStateVizHandler()
     {
         m_vizThread->join();
     }
-    catch ( ... )
+    catch( ... )
     {
         ;//do nothing
     }
     delete m_vizThread;
-    
+
     vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -202,7 +202,7 @@ void SteadyStateVizHandler::HideVizFeature( const std::string& uuid, const std::
     graphics_objects_map::iterator hashIter = m_graphicsObjectMap.find( vpr::GUID( uuid ) );
     if( hashIter != m_graphicsObjectMap.end() )
     {
-        std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >& geode = 
+        std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >& geode =
             hashIter->second->GetGeodes();
         geode.back().get()->setNodeMask( !onOff.at( 0 ) );
     }
@@ -224,10 +224,10 @@ void SteadyStateVizHandler::DeleteVizFeature( std::string const& featureUUID )
     {
         LOG_WARNING( "DeleteVizFeature: Unable to find relevant viz feature." );
     }
-    
-    for( std::multimap< int, cfdGraphicsObject* >::iterator 
-        itr = graphicsObjects.begin();
-        itr != graphicsObjects.end(); ++itr )
+
+    for( std::multimap< int, cfdGraphicsObject* >::iterator
+            itr = graphicsObjects.begin();
+            itr != graphicsObjects.end(); ++itr )
     {
         if( itr->second->GetUUID() == featureUUID )
         {
@@ -279,7 +279,7 @@ void SteadyStateVizHandler::AddVizFeature( std::string const& featureUUID, std::
         LOG_INFO( "UpdateFeature: Updating VolumeVisFeatureMaker" );
         feature = VisFeatureMakerBasePtr( new VolumeVisFeatureMaker() );
     }
-    
+
     feature->Update( featureUUID );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -325,10 +325,10 @@ void SteadyStateVizHandler::SetActorsAreReady( bool actorsReady )
 void SteadyStateVizHandler::ClearVisObjects()
 {
     vprDEBUG( vesDBG, 2 ) << "|\tClear All Graphics Objects From Scene Graph"
-        << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
-    for( std::multimap< int, cfdGraphicsObject* >::iterator 
-        pos = graphicsObjects.begin(); pos != graphicsObjects.end(); ++pos )
+    for( std::multimap< int, cfdGraphicsObject* >::iterator
+            pos = graphicsObjects.begin(); pos != graphicsObjects.end(); ++pos )
     {
         pos->second->RemoveGeodeFromDCS();
         delete pos->second;
@@ -342,7 +342,7 @@ void SteadyStateVizHandler::InitScene()
     std::cout << "| Initializing............................................. Threads |" << std::endl;
     runIntraParallelThread = true;
     //static_cast<void (App::*)( MyEvent& )>(&App::OnEvent)
-    m_vizThread = new vpr::Thread( boost::bind( static_cast< void (SteadyStateVizHandler::*)() >( &SteadyStateVizHandler::CreateActorThread ), boost::ref( *this ) ) );
+    m_vizThread = new vpr::Thread( boost::bind( static_cast< void ( SteadyStateVizHandler::* )() >( &SteadyStateVizHandler::CreateActorThread ), boost::ref( *this ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::PreFrameUpdate()
@@ -351,14 +351,14 @@ void SteadyStateVizHandler::PreFrameUpdate()
     if( CommandManager::instance()->GetXMLCommand() )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::iterator currentEventHandler;
-        const ves::open::xml::CommandPtr tempCommand = 
+        const ves::open::xml::CommandPtr tempCommand =
             CommandManager::instance()->GetXMLCommand();
         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {
-            vprDEBUG( vesDBG, 1 ) << "|\tExecuting: " 
-                << tempCommand->GetCommandName()
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\tExecuting: "
+                                  << tempCommand->GetCommandName()
+                                  << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tempCommand );
         }
@@ -368,7 +368,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
     if( actorsAreReady && transientActors )
     {
         vprDEBUG( vesDBG, 3 ) << "|\tUpdating Viz Feature"
-            << std::endl << vprDEBUG_FLUSH;
+                              << std::endl << vprDEBUG_FLUSH;
 
         cfdObjects* tempVisObject = m_visObjectSGQueue.front();
         m_visObjectSGQueue.pop();
@@ -378,7 +378,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
             //now update the vis object
             ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->SetVal( 0 );
             vprDEBUG( vesDBG, 2 ) << "|\tCreating Viz Feature"
-                << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* const temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
@@ -390,7 +390,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
             temp->AddGraphicsObjectToSceneGraph();
 
             //Search map for other object types with the same type as this one
-            /*for( std::multimap< int, cfdGraphicsObject* >::iterator 
+            /*for( std::multimap< int, cfdGraphicsObject* >::iterator
                 pos = graphicsObjects.lower_bound( tempVisObject->GetObjectType() );
                     pos != graphicsObjects.upper_bound( tempVisObject->GetObjectType() ); )
             {
@@ -408,11 +408,11 @@ void SteadyStateVizHandler::PreFrameUpdate()
                     ++pos;
                 }
             }*/
-            
+
             //First check to see if we are updating a feature or if this is
             //a brand new feature
             DeleteVizFeature( temp->GetUUID() );
-            
+
             graphicsObjects.insert( std::make_pair( tempVisObject->GetObjectType(), temp ) );
             graphics_objects_map::value_type p = std::make_pair( vpr::GUID( temp->GetUUID() ), temp );
             m_graphicsObjectMap.insert( p );
@@ -423,12 +423,12 @@ void SteadyStateVizHandler::PreFrameUpdate()
             {
                 std::cout << "We have a UUID mismatch " << std::endl;
             }*/
-    
+
             // Resetting these variables is very important
             tempVisObject->SetUpdateFlag( false );
             tempVisObject->ClearGeodes();
             vprDEBUG( vesDBG, 2 ) << "|\tDone Creating Objects"
-                << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH;
 
         }
         delete tempVisObject;
@@ -446,7 +446,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
         {
             actorsAreReady = false;
         }
-        
+
         /*else if( !computeActorsAndGeodes )
         {
             m_visObjectQueue.pop();
@@ -454,7 +454,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
             if( m_visObjectQueue.empty() )
             {
                 actorsAreReady = false;
-            }            
+            }
         }*/
     }
 }
@@ -486,15 +486,15 @@ void SteadyStateVizHandler::CreateActorThread()
             //if( !tempVisObject->GetUpdateFlag() )
             {
                 vprDEBUG( vesDBG, 0 ) << "|\tUpdating Graphics Data..."
-                    << std::endl << vprDEBUG_FLUSH;
+                                      << std::endl << vprDEBUG_FLUSH;
                 tempVisObject->Update();
                 m_visObjectSGQueue.push( tempVisObject );
                 SetActorsAreReady( true );
                 vprDEBUG( vesDBG, 0 ) << "|\tDone updating Graphics Data"
-                    << std::endl << std::endl << vprDEBUG_FLUSH;
+                                      << std::endl << std::endl << vprDEBUG_FLUSH;
             }
         }
-        
+
         if( m_visObjectQueue.empty() )
         {
             computeActorsAndGeodes = false;
@@ -507,16 +507,16 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     // Initialize all the vis objects from ssvishandler
     //
     std::cout << "| Initializing Viz Methods......................................... |" << std::endl;
-    
+
     // Initiate the isosurface.
     //
     std::pair< std::string, std::pair< std::string, std::string > > objectType;
-    objectType = std::make_pair( 
-                                std::string( "UPDATE_ISOSURFACE_SETTINGS" ), std::make_pair( "", "" ) );
+    objectType = std::make_pair(
+                     std::string( "UPDATE_ISOSURFACE_SETTINGS" ), std::make_pair( "", "" ) );
     cfdIsosurface* isosurface = new cfdIsosurface( 10 );
     isosurface->SetObjectType( ISOSURFACE );
     m_visObjectMap[ objectType ] = isosurface;
-    
+
     //
     // Initiate the interactive contour.
     //
@@ -526,7 +526,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdContour* contour = new cfdContour();
     contour->SetObjectType( CONTOUR );
     m_visObjectMap[ objectType ] = contour;
-    
+
     //
     // Initiate the interactive momentum.
     //
@@ -536,7 +536,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdMomentum* momentum = new cfdMomentum();
     momentum->SetObjectType( MOMENTUM );
     m_visObjectMap[ objectType ] = momentum;
-    
+
     //
     // Initiate the interactive vector.
     //
@@ -546,7 +546,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdVector* vector = new cfdVector();
     vector->SetObjectType( VECTOR );
     m_visObjectMap[ objectType ] = vector;
-    
+
     //
     // Initiate the preset x contour.
     //
@@ -556,7 +556,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdPresetContour* x_contour = new cfdPresetContour( 0, 10 );
     x_contour->SetObjectType( X_CONTOUR );
     m_visObjectMap[ objectType ] = x_contour;
-    
+
     //
     // Initiate the preset y contour.
     //
@@ -566,7 +566,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdPresetContour* y_contour = new cfdPresetContour( 1, 10 );
     y_contour->SetObjectType( Y_CONTOUR );
     m_visObjectMap[ objectType ] = y_contour;
-    
+
     //
     // Initiate the preset z contour.
     //
@@ -576,18 +576,18 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdPresetContour* z_contour = new cfdPresetContour( 2, 10 );
     z_contour->SetObjectType( Z_CONTOUR );
     m_visObjectMap[ objectType ] = z_contour;
-    
+
     //
     // Initiate the surface contour.
     //
     objectType.first = std::string( "UPDATE_SCALAR_SETTINGS" );
     objectType.second.first = std::string( "By Surface" );
     objectType.second.second = std::string( "Single" );
-    ves::xplorer::cfdPresetContour* surface_contour = 
-    new cfdPresetContour( 2, 10 );
+    ves::xplorer::cfdPresetContour* surface_contour =
+        new cfdPresetContour( 2, 10 );
     surface_contour->SetObjectType( BY_SURFACE );
     m_visObjectMap[ objectType ] = surface_contour;
-    
+
     //
     // Initiate the preset x momentum.
     //
@@ -598,7 +598,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdPresetMomentum* x_momentum = new cfdPresetMomentum( 0, 10 );
     x_momentum->SetObjectType( X_MOMENTUM );
     m_visObjectMap[ objectType ] = x_momentum;
-    
+
     //
     // Initiate the preset y momentum.
     //
@@ -609,7 +609,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdPresetMomentum* y_momentum = new cfdPresetMomentum( 1, 10 );
     y_momentum->SetObjectType( Y_MOMENTUM );
     m_visObjectMap[ objectType ] = y_momentum;
-    
+
     //
     // Initiate the preset z momentum.
     //
@@ -620,7 +620,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdPresetMomentum* z_momentum = new cfdPresetMomentum( 2, 10 );
     z_momentum->SetObjectType( Z_MOMENTUM );
     m_visObjectMap[ objectType ] = z_momentum;
-    
+
     //
     // Initiate the preset x vector.
     //
@@ -630,7 +630,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdPresetVector* x_vector = new cfdPresetVector( 0, 10 );
     x_vector->SetObjectType( X_VECTOR );
     m_visObjectMap[ objectType ] = x_vector;
-    
+
     //
     // Initiate the preset y vector.
     //
@@ -640,7 +640,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdPresetVector* y_vector = new cfdPresetVector( 1, 10 );
     y_vector->SetObjectType( Y_VECTOR );
     m_visObjectMap[ objectType ] = y_vector;
-    
+
     //
     // Initiate the preset z vector.
     //
@@ -650,7 +650,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdPresetVector* tempVector = new cfdPresetVector( 2, 10 );
     tempVector->SetObjectType( Z_VECTOR );
     m_visObjectMap[ objectType ] = tempVector;
-    
+
     //
     // Initiate the preset z vector.
     //
@@ -660,18 +660,18 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdPresetVector* z_vector = new cfdPresetVector( 3, 10 );
     z_vector->SetObjectType( Z_VECTOR );
     m_visObjectMap[ objectType ] = z_vector;
-    
+
     //
     // Initiate the surface vector.
     //
     objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
     objectType.second.first = std::string( "By Surface" );
     objectType.second.second = std::string( "Single" );
-    ves::xplorer::cfdPresetVector* surface_vector = 
-    new cfdPresetVector( 2, 10 );
+    ves::xplorer::cfdPresetVector* surface_vector =
+        new cfdPresetVector( 2, 10 );
     surface_vector->SetObjectType( BY_SURFACE );
     m_visObjectMap[ objectType ] = surface_vector;
-    
+
     //
     // Initiate the preset x contour lines.
     //
@@ -681,7 +681,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdContours* x_contours = new cfdContours( 0 );
     x_contours->SetObjectType( X_CONTOURS );
     m_visObjectMap[ objectType ] = x_contours;
-    
+
     //
     // Initiate the preset y contour lines.
     //
@@ -691,7 +691,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdContours* y_contours = new cfdContours( 1 );
     y_contours->SetObjectType( Y_CONTOURS );
     m_visObjectMap[ objectType ] = y_contours;
-    
+
     //
     // Initiate the preset z contour lines.
     //
@@ -701,7 +701,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdContours* z_contours = new cfdContours( 2 );
     z_contours->SetObjectType( Z_CONTOURS );
     m_visObjectMap[ objectType ] = z_contours;
-    
+
     //
     // Initiate the preset x momentums.
     //
@@ -711,7 +711,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdMomentums* x_momentums = new cfdMomentums( 0 );
     x_momentums->SetObjectType( X_MOMENTUMS );
     m_visObjectMap[ objectType ] = x_momentums;
-    
+
     //
     // Initiate the preset y momentums.
     //
@@ -721,7 +721,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdMomentums* y_momentums = new cfdMomentums( 1 );
     y_momentums->SetObjectType( Y_MOMENTUMS );
     m_visObjectMap[ objectType ] = y_momentums;
-    
+
     //
     // Initiate the preset z momentums.
     //
@@ -731,7 +731,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdMomentums* z_momentums = new cfdMomentums( 2 );
     z_momentums->SetObjectType( Z_MOMENTUMS );
     m_visObjectMap[ objectType ] = z_momentums;
-    
+
     //
     // Initiate the preset x vectors.
     //
@@ -741,7 +741,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdVectors* x_vectors = new cfdVectors( 0 );
     x_vectors->SetObjectType( X_VECTORS );
     m_visObjectMap[ objectType ] = x_vectors;
-    
+
     //
     // Initiate the preset y vectors.
     //
@@ -751,7 +751,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdVectors* y_vectors = new cfdVectors( 1 );
     y_vectors->SetObjectType( Y_VECTORS );
     m_visObjectMap[ objectType ] = y_vectors;
-    
+
     //
     // Initiate the preset z vectors.
     //
@@ -761,7 +761,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdVectors* z_vectors = new cfdVectors( 2 );
     z_vectors->SetObjectType( Z_VECTORS );
     m_visObjectMap[ objectType ] = z_vectors;
-    
+
     //
     // Initiate the streamlines.
     //
@@ -771,7 +771,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     cfdStreamers* streamlines = new cfdStreamers();
     streamlines->SetObjectType( STREAMLINES );
     m_visObjectMap[ objectType ] = streamlines;
-    
+
     //
     // Initiate the animated streamers.
     //
@@ -782,7 +782,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     animStreamer->SetObjectType( ANIMATED_STREAMLINES );
     animStreamer->SetStreamlineSource( streamlines );
     m_visObjectMap[ objectType ] = animStreamer;
-    
+
     //
     // Initiate the animated Images.
     //
@@ -790,7 +790,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     //animImg = new cfdAnimatedImage( _param.c_str() );
     //animImg->SetObjectType( ANIMATED_IMAGES );
     //dataList.push_back( animImg);
-    
+
     //
     // Initiate the PolyData File
     //
@@ -800,22 +800,22 @@ void SteadyStateVizHandler::CreateVizObjectMap()
      cfdPolyData* particles = new cfdPolyData();
      particles->SetObjectType( PARTICLES );
      m_visObjectMap[ objectType ] = particles;*/
-    
+
     objectType.first = std::string( "UPDATE_POLYDATA_SETTINGS" );
     objectType.second.first = std::string( "" );
     objectType.second.second = std::string( "" );
     cfdPolyData* surface = new cfdPolyData();
     surface->SetObjectType( POLYDATA );
     m_visObjectMap[ objectType ] = surface;
-    
-    
+
+
     objectType.first = std::string( "UPDATE_POLYDATA_SETTINGS" );
     objectType.second.first = std::string( "PARTICLE_VIZ" );
     objectType.second.second = std::string( "" );
     ParticleAnimation* particleAnim = new ParticleAnimation();
     particleAnim->SetObjectType( PARTICLE_TRANSIENT );
     m_visObjectMap[ objectType ] = particleAnim;
-    
+
     //
     // Initiate PIV data from INEL
     //
@@ -823,7 +823,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     /*cfdImage* image = new cfdImage( _param );
      image->SetObjectType( IMAGE_EX );
      dataList.push_back( image ); */
-    
+
     std::cout << "| Finished Initializing Viz Methods................................ |" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////

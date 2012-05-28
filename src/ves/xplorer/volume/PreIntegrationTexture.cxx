@@ -68,21 +68,21 @@ PreIntegrationTexture2D::PreIntegrationTexture2D()
 PreIntegrationTexture2D::PreIntegrationTexture2D( const PreIntegrationTexture2D& rhs )
 {
     _tf = rhs._tf;
-    _sliceIntegrationValues = new float[_tf->GetResolution( 0 )*4];
+    _sliceIntegrationValues = new float[_tf->GetResolution( 0 ) * 4];
     for( unsigned int i = 0; i < _tf->GetResolution( 0 ); ++i )
     {
-        _sliceIntegrationValues[i*4] = rhs._sliceIntegrationValues[i*4];
-        _sliceIntegrationValues[i*4+ 1] = rhs._sliceIntegrationValues[i*4 + 1];
-        _sliceIntegrationValues[i*4+ 2] = rhs._sliceIntegrationValues[i*4 + 2];
-        _sliceIntegrationValues[i*4+ 3] = rhs._sliceIntegrationValues[i*4 + 3];
+        _sliceIntegrationValues[i * 4] = rhs._sliceIntegrationValues[i * 4];
+        _sliceIntegrationValues[i * 4 + 1] = rhs._sliceIntegrationValues[i * 4 + 1];
+        _sliceIntegrationValues[i * 4 + 2] = rhs._sliceIntegrationValues[i * 4 + 2];
+        _sliceIntegrationValues[i * 4 + 3] = rhs._sliceIntegrationValues[i * 4 + 3];
     }
-    _rawData = new unsigned char[_tf->GetResolution( 0 )*_tf->GetResolution( 0 )*4];
+    _rawData = new unsigned char[_tf->GetResolution( 0 )*_tf->GetResolution( 0 ) * 4];
     for( unsigned int i = 0; i < _tf->GetResolution( 0 )*_tf->GetResolution( 0 ); ++i )
     {
-        _rawData[i*4] = rhs._rawData[i*4];
-        _rawData[i*4+ 1] = rhs._rawData[i*4 + 1];
-        _rawData[i*4+ 2] = rhs._rawData[i*4 + 2];
-        _rawData[i*4+ 3] = rhs._rawData[i*4 + 3];
+        _rawData[i * 4] = rhs._rawData[i * 4];
+        _rawData[i * 4 + 1] = rhs._rawData[i * 4 + 1];
+        _rawData[i * 4 + 2] = rhs._rawData[i * 4 + 2];
+        _rawData[i * 4 + 3] = rhs._rawData[i * 4 + 3];
     }
     _preIntegratedTexture = new osg::Texture2D( *rhs._preIntegratedTexture.get() );
     _imageData = new osg::Image( *rhs._imageData.get() );
@@ -98,26 +98,26 @@ PreIntegrationTexture2D& PreIntegrationTexture2D::operator=( const PreIntegratio
             delete [] _sliceIntegrationValues;
             _sliceIntegrationValues = 0;
         }
-        _sliceIntegrationValues = new float[_tf->GetResolution( 0 )*4];
+        _sliceIntegrationValues = new float[_tf->GetResolution( 0 ) * 4];
         for( unsigned int i = 0; i < _tf->GetResolution( 0 ); ++i )
         {
-            _sliceIntegrationValues[i*4] = rhs._sliceIntegrationValues[i*4];
-            _sliceIntegrationValues[i*4+ 1] = rhs._sliceIntegrationValues[i*4 + 1];
-            _sliceIntegrationValues[i*4+ 2] = rhs._sliceIntegrationValues[i*4 + 2];
-            _sliceIntegrationValues[i*4+ 3] = rhs._sliceIntegrationValues[i*4 + 3];
+            _sliceIntegrationValues[i * 4] = rhs._sliceIntegrationValues[i * 4];
+            _sliceIntegrationValues[i * 4 + 1] = rhs._sliceIntegrationValues[i * 4 + 1];
+            _sliceIntegrationValues[i * 4 + 2] = rhs._sliceIntegrationValues[i * 4 + 2];
+            _sliceIntegrationValues[i * 4 + 3] = rhs._sliceIntegrationValues[i * 4 + 3];
         }
         if( _rawData )
         {
             delete []_rawData;
             _rawData = 0;
         }
-        _rawData = new unsigned char[_tf->GetResolution( 0 )*_tf->GetResolution( 0 )*4];
+        _rawData = new unsigned char[_tf->GetResolution( 0 )*_tf->GetResolution( 0 ) * 4];
         for( unsigned int i = 0; i < _tf->GetResolution( 0 )*_tf->GetResolution( 0 ); ++i )
         {
-            _rawData[i*4] = rhs._rawData[i*4];
-            _rawData[i*4+ 1] = rhs._rawData[i*4 + 1];
-            _rawData[i*4+ 2] = rhs._rawData[i*4 + 2];
-            _rawData[i*4+ 3] = rhs._rawData[i*4 + 3];
+            _rawData[i * 4] = rhs._rawData[i * 4];
+            _rawData[i * 4 + 1] = rhs._rawData[i * 4 + 1];
+            _rawData[i * 4 + 2] = rhs._rawData[i * 4 + 2];
+            _rawData[i * 4 + 3] = rhs._rawData[i * 4 + 3];
         }
         _preIntegratedTexture = const_cast< osg::Texture2D* >( rhs._preIntegratedTexture.get() );
         _imageData = const_cast< osg::Image* >( rhs._imageData.get() );
@@ -151,8 +151,8 @@ void PreIntegrationTexture2D::SetTransferFunction( TransferFunction* tf )
         _sliceIntegrationValues = 0;
     }
 
-    _sliceIntegrationValues = new float[_tf->GetResolution( 0 )*4];
-    _rawData = new unsigned char[_tf->GetResolution( 0 )*_tf->GetResolution( 0 )*4];
+    _sliceIntegrationValues = new float[_tf->GetResolution( 0 ) * 4];
+    _rawData = new unsigned char[_tf->GetResolution( 0 )*_tf->GetResolution( 0 ) * 4];
 
     _imageData->setImage( _tf->GetResolution( 0 ), _tf->GetResolution( 0 ),
                           1,
@@ -198,7 +198,7 @@ void PreIntegrationTexture2D::FullUpdate()
     int sliceMax = 0;
     //unsigned char* rawData = _preIntegratedTexture->getImage()->data();
     float deltaSlice = 0;
-    for( unsigned int i = 0; i < dataDims*dataDims; i++ )
+    for( unsigned int i = 0; i < dataDims * dataDims; i++ )
     {
         col = i % dataDims;
         row = ( i % dataDims == 0 ) ? row + 1 : row;
@@ -261,16 +261,16 @@ void PreIntegrationTexture2D::_initializeSliceIntegrationValues()
     for( unsigned int i = 1; i < _tf->GetResolution( 0 ); ++i )
     {
         curRGBA = _tf->EvaluateAt( i * 4 );
-        prevRGBA = _tf->EvaluateAt(( i - 1 ) * 4 );
+        prevRGBA = _tf->EvaluateAt( ( i - 1 ) * 4 );
 
         totalRGBA[0] = totalRGBA[0] + .5 * ( curRGBA[0] + prevRGBA[0] );
         totalRGBA[1] = totalRGBA[1] + .5 * ( curRGBA[1] + prevRGBA[1] );
         totalRGBA[2] = totalRGBA[2] + .5 * ( curRGBA[2] + prevRGBA[2] );
         totalRGBA[3] = totalRGBA[3] + .5 * ( curRGBA[3] + prevRGBA[3] );
-        _sliceIntegrationValues[i*4] = totalRGBA[0];
-        _sliceIntegrationValues[i*4 + 1] = totalRGBA[1];
-        _sliceIntegrationValues[i*4 + 2] = totalRGBA[2];
-        _sliceIntegrationValues[i*4 + 3] = totalRGBA[3];
+        _sliceIntegrationValues[i * 4] = totalRGBA[0];
+        _sliceIntegrationValues[i * 4 + 1] = totalRGBA[1];
+        _sliceIntegrationValues[i * 4 + 2] = totalRGBA[2];
+        _sliceIntegrationValues[i * 4 + 3] = totalRGBA[3];
         /*fout<<"("<<sliceIntegrationValues[i*4]<<","
                    <<sliceIntegrationValues[i*4 + 1]<<","
                    <<sliceIntegrationValues[i*4 + 2]<<","
@@ -280,20 +280,22 @@ void PreIntegrationTexture2D::_initializeSliceIntegrationValues()
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char PreIntegrationTexture2D::_calculateComponent( float ds, unsigned int component,
-                                                            unsigned int sliceMin, unsigned int sliceMax )
+        unsigned int sliceMin, unsigned int sliceMax )
 {
     float frontData = 0;
     float backData = 0;
     //front slice
-    frontData = _sliceIntegrationValues[sliceMin*4 + component];
+    frontData = _sliceIntegrationValues[sliceMin * 4 + component];
     //back slice
-    backData = _sliceIntegrationValues[sliceMax*4 + component];
+    backData = _sliceIntegrationValues[sliceMax * 4 + component];
 
     ///Klaus. eq. 8
     //alpha
     if( component == 3 )
-        return static_cast<unsigned char>( 255.0 *( 1.0 - exp( -ds*( backData - frontData ) / 255. ) ) );
-    return static_cast<unsigned char>( ds*( backData - frontData ) );
+    {
+        return static_cast<unsigned char>( 255.0 * ( 1.0 - exp( -ds * ( backData - frontData ) / 255. ) ) );
+    }
+    return static_cast<unsigned char>( ds * ( backData - frontData ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreIntegrationTexture2D::FastUpdate()

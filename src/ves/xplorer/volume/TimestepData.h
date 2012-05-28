@@ -62,7 +62,7 @@ struct VE_TEXTURE_BASED_EXPORTS TimestepData
      * @param   sdm      the scalar data map.
      */
     TimestepData( const VectorMap& vdm, const ScalarDataMap& sdm )
-            : mVectorMap( vdm ), mScalarData( sdm )
+        : mVectorMap( vdm ), mScalarData( sdm )
     {}
 
     /// The vector data.

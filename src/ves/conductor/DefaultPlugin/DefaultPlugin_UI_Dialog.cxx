@@ -56,7 +56,7 @@ END_EVENT_TABLE()
 DefaultPlugin_UI_Dialog
 ::DefaultPlugin_UI_Dialog
 ( wxWindow* parent, int id, long int* height )
-        : UIDialog(( wxWindow * ) parent, id, _( "DefaultPlugin" ) )
+    : UIDialog( ( wxWindow* ) parent, id, _( "DefaultPlugin" ) )
 {
 
     this->height = height;
@@ -84,7 +84,7 @@ void DefaultPlugin_UI_Dialog::_buildPage()
     //////////////////////////////////
 
     //The names of the radio box choices
-//   wxString direction[] = {wxT("No Wind"), wxT("Cross Wind"), wxT("Tail Wind"), wxT("Other")};
+    //   wxString direction[] = {wxT("No Wind"), wxT("Cross Wind"), wxT("Tail Wind"), wxT("Other")};
     wxString direction[] = {wxT( "No Wind" ), wxT( "Cross Wind From Left" ), wxT( "Tail Wind" )};
 
     //Create a vertical radio box
@@ -136,8 +136,8 @@ void DefaultPlugin_UI_Dialog::_buildPage()
 
     //A button to update info after UI input changes have been made   //More options at the bottom of the UI
     _sliderUpdate = new wxButton( this, wxID_OK, wxT( "Update" ) );
-//   _clearButton = new wxButton(this, CLEAR_BUTTON, wxT("Clear all"));
-//  _exitButton = new wxButton(this, EXIT_BUTTON, wxT("Exit"));
+    //   _clearButton = new wxButton(this, CLEAR_BUTTON, wxT("Clear all"));
+    //  _exitButton = new wxButton(this, EXIT_BUTTON, wxT("Exit"));
 
     //Now layout the UI.
     //There are basically 6 rows of controls, 5 rows of slider bars and one row of buttons.
@@ -156,15 +156,15 @@ void DefaultPlugin_UI_Dialog::_buildPage()
     widthSliderGroup->Add( _widthSlider, 5, wxALIGN_LEFT );
     //starting x
     wxStaticBoxSizer* xLocGroup = new wxStaticBoxSizer( xGroup, wxVERTICAL );
-//   xLocGroup->Add(_xLocSlider,5, wxALIGN_LEFT);
+    //   xLocGroup->Add(_xLocSlider,5, wxALIGN_LEFT);
     xLocGroup->Add( _xLoc, 5, wxALIGN_LEFT );
     //starting y
     wxStaticBoxSizer* yLocGroup = new wxStaticBoxSizer( yGroup, wxVERTICAL );
-//   yLocGroup->Add(_yLocSlider,5, wxALIGN_LEFT);
+    //   yLocGroup->Add(_yLocSlider,5, wxALIGN_LEFT);
     yLocGroup->Add( _yLoc, 5, wxALIGN_LEFT );
     //starting z
     wxStaticBoxSizer* zLocGroup = new wxStaticBoxSizer( zGroup, wxVERTICAL );
-//   zLocGroup->Add(_zLocSlider,5, wxALIGN_LEFT);
+    //   zLocGroup->Add(_zLocSlider,5, wxALIGN_LEFT);
     zLocGroup->Add( _zLoc, 5, wxALIGN_LEFT );
 
     wxBoxSizer* RowOne = new wxBoxSizer( wxHORIZONTAL );
@@ -183,10 +183,10 @@ void DefaultPlugin_UI_Dialog::_buildPage()
     thirdRow->Add( _errorRBox, 1, wxALIGN_LEFT );
 
     RowOne->Add( heightSliderGroup, 1, wxALIGN_LEFT );
-//   RowOne->Add(_heightSlider,5, wxALIGN_LEFT);
+    //   RowOne->Add(_heightSlider,5, wxALIGN_LEFT);
 
     RowTwo->Add( widthSliderGroup, 1, wxALIGN_LEFT );
-//   RowTwo->Add(_widthSlider,5, wxALIGN_LEFT);
+    //   RowTwo->Add(_widthSlider,5, wxALIGN_LEFT);
 
     RowThree->Add( xLocGroup, 1, wxALIGN_LEFT );
     RowThree->Add( yLocGroup, 1, wxALIGN_LEFT );
@@ -226,7 +226,7 @@ bool DefaultPlugin_UI_Dialog::TransferDataFromWindow()
 ////////////////////////////////////////////////////
 bool DefaultPlugin_UI_Dialog::TransferDataToWindow()
 {
-//std::cout << *height << std::endl;
+    //std::cout << *height << std::endl;
     _heightSlider->SetValue( *height );
     return true;
 }

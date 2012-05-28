@@ -66,12 +66,12 @@ public:
      * see EventManager::ConnectSignal, and pay attention to the template
      * parameter when instantiating the wrapper.
      * @param slot A reference to the slot.
-     * 
+     *
      * @see EventManager::ConnectSignal
      **/
     //SlotWrapper( const typename T::slot_type& slot ) :
     SlotWrapper( const typename T::slot_type* slot ) :
-    mSlot( slot )
+        mSlot( slot )
     {
         ;
     }
@@ -81,7 +81,7 @@ public:
         mSlot = orig.mSlot;
     }
 
-    SlotWrapper& operator= (const SlotWrapper& orig)
+    SlotWrapper& operator= ( const SlotWrapper& orig )
     {
         mSlot = orig.mSlot;
         return *this;
@@ -95,7 +95,7 @@ public:
     //const typename T::slot_type& GetSlot( )
     const typename T::slot_type& GetSlot( )
     {
-        return (*mSlot);
+        return ( *mSlot );
     }
 private:
     //const typename T::slot_type& mSlot;

@@ -45,7 +45,7 @@ class Network;
 class VE_CE_UTILS_EXPORTS node_module : public node_base
 {
 public:
-    node_module( Network *, int );
+    node_module( Network*, int );
     node_module( const node_module& );
     virtual ~node_module();
 
@@ -53,9 +53,9 @@ public:
     {
         return 1;
     };
-    virtual void get_mods( std::set<int> & );
-    virtual void get_ins( std::set<int> &, std::set<int> connid_ignore );
-    virtual void get_outs( std::set<int> &, std::set<int> connid_ignore );
+    virtual void get_mods( std::set<int>& );
+    virtual void get_ins( std::set<int>&, std::set<int> connid_ignore );
+    virtual void get_outs( std::set<int>&, std::set<int> connid_ignore );
     virtual void print_mods();
     virtual int  execute_mods();
     virtual void need_execute();

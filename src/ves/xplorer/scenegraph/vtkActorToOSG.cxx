@@ -57,7 +57,7 @@
 
 using namespace ves::xplorer::scenegraph;
 
-osg::Geode* ves::xplorer::scenegraph::vtkActorToOSG( vtkActor *actor, osg::Geode* geode, int verbose )
+osg::Geode* ves::xplorer::scenegraph::vtkActorToOSG( vtkActor* actor, osg::Geode* geode, int verbose )
 {
     // make actor current
     actor->GetMapper()->Update();
@@ -82,7 +82,7 @@ osg::Geode* ves::xplorer::scenegraph::vtkActorToOSG( vtkActor *actor, osg::Geode
         // get poly data
         polyData = dynamic_cast< vtkPolyData* >( actor->GetMapper()->GetInput() );
     }
-    catch(...)
+    catch( ... )
     {
         std::cerr << "ERROR! Actor must use a vtkPolyDataMapper." << std::endl;
         std::cerr << "If you are using a vtkDataSetMapper, use vtkGeometryFilter instead." << std::endl;
@@ -107,17 +107,32 @@ osg::Geode* ves::xplorer::scenegraph::vtkActorToOSG( vtkActor *actor, osg::Geode
     strips = ves::xplorer::scenegraph::processPrimitive( actor, polyData->GetStrips(), osg::PrimitiveSet::TRIANGLE_STRIP, verbose );
 
     // remove old gsets and delete them
-    while( geode->getNumDrawables() ) geode->removeDrawable(( unsigned int )0 );//removeDrawable(0);
+    while( geode->getNumDrawables() )
+    {
+        geode->removeDrawable( ( unsigned int )0 );    //removeDrawable(0);
+    }
 
-    if( points.valid() ) geode->addDrawable( points.get() );
-    if( lines.valid() ) geode->addDrawable( lines.get() );
-    if( polys.valid() ) geode->addDrawable( polys.get() );
-    if( strips.valid() ) geode->addDrawable( strips.get() );
+    if( points.valid() )
+    {
+        geode->addDrawable( points.get() );
+    }
+    if( lines.valid() )
+    {
+        geode->addDrawable( lines.get() );
+    }
+    if( polys.valid() )
+    {
+        geode->addDrawable( polys.get() );
+    }
+    if( strips.valid() )
+    {
+        geode->addDrawable( strips.get() );
+    }
 
     return geode;
 }
 
-osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellArray *primArray, int primType, int verbose )
+osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor* actor, vtkCellArray* primArray, int primType, int verbose )
 {
 
     if( verbose )
@@ -129,7 +144,7 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     }
 
     // get polyData from vtkActor
-    vtkPolyData *polyData = ( vtkPolyData * ) actor->GetMapper()->GetInput();
+    vtkPolyData* polyData = ( vtkPolyData* ) actor->GetMapper()->GetInput();
 
     int numPrimitives = primArray->GetNumberOfCells();
     if( numPrimitives == 0 )
@@ -156,14 +171,20 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     int normalPerCell = 0;
     vtkDataArray* normals = polyData->GetPointData()->GetNormals();
     if( actor->GetProperty()->GetInterpolation() == VTK_FLAT )
+    {
         normals = NULL;
+    }
     if( normals != NULL )
+    {
         normalPerVertex = 1;
+    }
     else
     {
         normals = polyData->GetCellData()->GetNormals();
         if( normals != NULL )
+        {
             normalPerCell = 1;
+        }
     }
 
     osg::ref_ptr< osg::Vec3Array > norms = new osg::Vec3Array;
@@ -172,7 +193,7 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     int colorPerVertex = 0;
     int colorPerCell = 0;
     double opacity = actor->GetProperty()->GetOpacity();
-    vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars( opacity );
+    vtkUnsignedCharArray* colorArray = actor->GetMapper()->MapScalars( opacity );
     if( actor->GetMapper()->GetScalarVisibility() && colorArray != NULL )
     {
         //int scalarMode = actor->GetMapper()->GetScalarMode();
@@ -180,7 +201,7 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
                 !polyData->GetPointData()->GetScalars() ) // there is no point data
             colorPerCell = 1;
         else*/
-            colorPerVertex = 1;
+        colorPerVertex = 1;
     }
 
     osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
@@ -200,11 +221,13 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
         totpts += npts;
         if( colorPerCell )
         {
-            unsigned char *aColor = colorArray->GetPointer( 4 * prim );
+            unsigned char* aColor = colorArray->GetPointer( 4 * prim );
             colors->push_back( osg::Vec4( aColor[0] / 255.0f, aColor[1] / 255.0f,
                                           aColor[2] / 255.0f, aColor[3] / 255.0f ) );
             if( aColor[3] / 255.0f < 1 )
+            {
                 transparentFlag = 1;
+            }
         }
 
         if( normalPerCell )
@@ -225,11 +248,13 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
             }
             if( colorPerVertex )
             {
-                unsigned char *aColor = colorArray->GetPointer( 4 * pts[i] );
+                unsigned char* aColor = colorArray->GetPointer( 4 * pts[i] );
                 colors->push_back( osg::Vec4( aColor[0] / 255.0f, aColor[1] / 255.0f,
                                               aColor[2] / 255.0f, aColor[3] / 255.0f ) );
                 if( aColor[3] / 255.0f < 1 )
+                {
                     transparentFlag = 1;
+                }
             }
             if( texCoords != NULL )
             {
@@ -243,17 +268,28 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     // add attribute arrays to gset
     geom->setVertexArray( vertices.get() );
     geom->setColorArray( colors.get() );
-    if( normals ) geom->setNormalArray( norms.get() );
+    if( normals )
+    {
+        geom->setNormalArray( norms.get() );
+    }
 
     if( normalPerVertex )
+    {
         geom->setNormalBinding( osg::Geometry::BIND_PER_VERTEX );
+    }
     if( normalPerCell )
+    {
         geom->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
+    }
 
     if( colorPerVertex )
+    {
         geom->setColorBinding( osg::Geometry::BIND_PER_VERTEX );
+    }
     else if( colorPerCell )
+    {
         geom->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
+    }
     else
     {
         // use overall color (get from Actor)
@@ -265,7 +301,9 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     }
 
     if( texCoords != NULL )
+    {
         geom->setTexCoordArray( 0, tcoords.get() );
+    }
 
     // create a geostate for this geoset
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
@@ -273,13 +311,13 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     // if not opaque
     if( actor->GetProperty()->GetOpacity() < 1.0 || transparentFlag )
     {
-        stateset->setRenderBinDetails( 10, "DepthSortedBin"); 
+        stateset->setRenderBinDetails( 10, "DepthSortedBin" );
         stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
         stateset->setMode( GL_CULL_FACE, osg::StateAttribute::OFF );
     }
 
     // wireframe and line strips
-    if (( actor->GetProperty()->GetRepresentation() == VTK_WIREFRAME ) ||
+    if( ( actor->GetProperty()->GetRepresentation() == VTK_WIREFRAME ) ||
             ( osg::PrimitiveSet::LINE_STRIP == primType ) )
     {
         osg::ref_ptr<osg::LineWidth> lineWidth = new osg::LineWidth;
@@ -289,17 +327,25 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
 
     // backface culling
     if( !actor->GetProperty()->GetBackfaceCulling() )
+    {
         stateset->setMode( GL_CULL_FACE, osg::StateAttribute::OFF );
+    }
 
     // lighting
     if( normals != NULL )
+    {
         stateset->setMode( GL_LIGHTING, osg::StateAttribute::ON );
+    }
     else
+    {
         stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    }
 
     // if it is lines, turn off lighting.
     if( primType == osg::PrimitiveSet::LINE_STRIP )
+    {
         stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    }
 
     geom->setStateSet( stateset.get() );
     return geom;

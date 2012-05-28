@@ -37,7 +37,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char* argv[] )
 {
-    if (( argc < 2 ) || ( std::string( argv[ 1 ] ) == "--help" ) )
+    if( ( argc < 2 ) || ( std::string( argv[ 1 ] ) == "--help" ) )
     {
         std::cout << "Usage : " << argv[ 0 ] << " <filename> " << std::endl;
         return 0;
@@ -56,21 +56,27 @@ int main( int argc, char* argv[] )
     {
         index = shortName.find( '.', index );
         if( index != std::string::npos )
+        {
             shortName[ index ] = '_';
+        }
     }
 
     for( size_t index = 0; index < shortName.length(); )
     {
         index = shortName.find( '/', index );
         if( index != std::string::npos )
+        {
             shortName[ index ] = '_';
+        }
     }
 
     for( size_t index = 0; index < shortName.length(); )
     {
         index = shortName.find( '-', index );
         if( index != std::string::npos )
+        {
             shortName[ index ] = '_';
+        }
     }
     /*
     // Sample for C++ File I/O binary file read
@@ -81,13 +87,13 @@ int main( int argc, char* argv[] )
         fstream binary_file("c:\\test.dat",ios::binary|ios::in);
         binary_file.read(reinterpret_cast<char *>(&p_Data),sizeof(WebSites));
         binary_file.close();
-        
+
         cout<<p_Data.SiteName<<endl;
         cout<<"Rank :"<< p_Data.Rank<<endl;
-        
+
     }
 
-    fstream binary_file("c:\\test.dat",ios::out|ios::binary|ios::app); 
+    fstream binary_file("c:\\test.dat",ios::out|ios::binary|ios::app);
     binary_file.write(reinterpret_cast<char *>(&p_Data),sizeof(WebSites));
     binary_file.close();
     */
@@ -106,19 +112,19 @@ int main( int argc, char* argv[] )
     std::ofstream hFile( outputFilename.c_str(), std::ios::binary );
 
     hFile << "#ifndef GETVESUITE_" << shortName << "_H" << std::endl
-    << "#define GETVESUITE_" << shortName << "_H" << std::endl
-    << "//Usage of this file" << std::endl
-    << "//std::istringstream tempStreamI( GetVESuite_whatever() );" << std::endl
-    << "//osg::ref_ptr< osg::Node > tempNode = osgDB::Registry::instance()->" << std::endl
-    << "//    getReaderWriterForExtension( \"ive\" )->readNode( tempStreamI ).getNode();" << std::endl
-    << "//osg::ref_ptr< osg::Image > tempImage = osgDB::Registry::instance()->" << std::endl
-    << "//    getReaderWriterForExtension( \"png\" )->readNode( tempStreamI ).getImage();" << std::endl
-    << std::endl
-    << "#include <string>" << std::endl
-    << std::endl
-    << "std::string GetVESuite_" << shortName << "( void )" << std::endl
-    << "{" << std::endl
-    << "    unsigned char osgData";
+          << "#define GETVESUITE_" << shortName << "_H" << std::endl
+          << "//Usage of this file" << std::endl
+          << "//std::istringstream tempStreamI( GetVESuite_whatever() );" << std::endl
+          << "//osg::ref_ptr< osg::Node > tempNode = osgDB::Registry::instance()->" << std::endl
+          << "//    getReaderWriterForExtension( \"ive\" )->readNode( tempStreamI ).getNode();" << std::endl
+          << "//osg::ref_ptr< osg::Image > tempImage = osgDB::Registry::instance()->" << std::endl
+          << "//    getReaderWriterForExtension( \"png\" )->readNode( tempStreamI ).getImage();" << std::endl
+          << std::endl
+          << "#include <string>" << std::endl
+          << std::endl
+          << "std::string GetVESuite_" << shortName << "( void )" << std::endl
+          << "{" << std::endl
+          << "    unsigned char osgData";
 
 
     //get size of binary file
@@ -155,9 +161,9 @@ int main( int argc, char* argv[] )
     hFile << "    }" << std::endl;
 
     hFile << "    return strOsgData;" << std::endl
-    << "}" << std::endl
-    << "#endif" << std::endl
-    << std::endl;
+          << "}" << std::endl
+          << "#endif" << std::endl
+          << std::endl;
     hFile.close();
 
     return 0;

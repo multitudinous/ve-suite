@@ -43,7 +43,8 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 
-namespace osgOQ {
+namespace osgOQ
+{
 
 
 // Use this visitor to insert OcclusionQueryNodes (OQNs) in the
@@ -70,7 +71,10 @@ protected:
     //   these methods are used to uniquely name all OQNs. Handy
     //   for debugging.
     std::string getNextOQNName();
-    int getNameIdx() const { return _nameIdx; }
+    int getNameIdx() const
+    {
+        return _nameIdx;
+    }
 
     osg::ref_ptr<osg::StateSet> _state;
     osg::ref_ptr<osg::StateSet> _debugState;
@@ -107,7 +111,10 @@ protected:
     //   these methods are used to uniquely name all OQNs. Handy
     //   for debugging.
     std::string getNextOQNName();
-    int getNameIdx() const { return _nameIdx; }
+    int getNameIdx() const
+    {
+        return _nameIdx;
+    }
 
     osg::ref_ptr<osg::StateSet> _state;
     osg::ref_ptr<osg::StateSet> _debugState;
@@ -164,9 +171,9 @@ protected:
 class VE_SCENEGRAPH_UTILS_EXPORTS VisibilityThresholdVisitor : public osg::NodeVisitor
 {
 public:
-    VisibilityThresholdVisitor( unsigned int threshold=500 )
-      : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
-        _visThreshold( threshold ) {}
+    VisibilityThresholdVisitor( unsigned int threshold = 500 )
+        : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
+          _visThreshold( threshold ) {}
     virtual ~VisibilityThresholdVisitor() {}
 
     virtual void apply( osg::Node& node );
@@ -180,9 +187,9 @@ protected:
 class VE_SCENEGRAPH_UTILS_EXPORTS QueryFrameCountVisitor : public osg::NodeVisitor
 {
 public:
-    QueryFrameCountVisitor( int count=5 )
-      : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
-        _count( count ) {}
+    QueryFrameCountVisitor( int count = 5 )
+        : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
+          _count( count ) {}
     virtual ~QueryFrameCountVisitor() {}
 
     virtual void apply( osg::Node& node );
@@ -195,9 +202,9 @@ protected:
 class VE_SCENEGRAPH_UTILS_EXPORTS EnableQueryVisitor : public osg::NodeVisitor
 {
 public:
-    EnableQueryVisitor( bool enable=true )
-      : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
-        _enabled( enable ) {}
+    EnableQueryVisitor( bool enable = true )
+        : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
+          _enabled( enable ) {}
     virtual ~EnableQueryVisitor() {}
 
     virtual void apply( osg::Node& node );
@@ -211,9 +218,9 @@ protected:
 class VE_SCENEGRAPH_UTILS_EXPORTS DebugDisplayVisitor : public osg::NodeVisitor
 {
 public:
-    DebugDisplayVisitor( bool debug=true )
-      : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
-        _debug( debug ) {}
+    DebugDisplayVisitor( bool debug = true )
+        : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
+          _debug( debug ) {}
     virtual ~DebugDisplayVisitor() {}
 
     virtual void apply( osg::Node& node );
@@ -239,7 +246,7 @@ protected:
 class VE_SCENEGRAPH_UTILS_EXPORTS StatisticsVisitor : public osg::NodeVisitor
 {
 public:
-    StatisticsVisitor( osg::NodeVisitor::TraversalMode mode=osg::NodeVisitor::TRAVERSE_ACTIVE_CHILDREN );
+    StatisticsVisitor( osg::NodeVisitor::TraversalMode mode = osg::NodeVisitor::TRAVERSE_ACTIVE_CHILDREN );
     virtual ~StatisticsVisitor();
 
     virtual void apply( osg::Node& node );

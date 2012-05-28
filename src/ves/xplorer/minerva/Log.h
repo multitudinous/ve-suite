@@ -43,32 +43,35 @@
 #include "Usul/Base/Object.h"
 #include "Usul/Interfaces/ILog.h"
 
-namespace ves {
-namespace xplorer {
-namespace minerva {
-
-
-class Log : 
-  public Usul::Base::Object,
-  public Usul::Interfaces::ILog
+namespace ves
 {
-  typedef Usul::Base::Object BaseClass;
+namespace xplorer
+{
+namespace minerva
+{
+
+
+class Log :
+    public Usul::Base::Object,
+    public Usul::Interfaces::ILog
+{
+    typedef Usul::Base::Object BaseClass;
 
 public:
 
-  USUL_DECLARE_QUERY_POINTERS ( Log );
-  USUL_DECLARE_IUNKNOWN_MEMBERS;
+    USUL_DECLARE_QUERY_POINTERS( Log );
+    USUL_DECLARE_IUNKNOWN_MEMBERS;
 
-  Log();
+    Log();
 
-  // Write the string.
-  virtual void write ( const std::string &s, bool appendNewLine = true, bool prependEventCount = true );
+    // Write the string.
+    virtual void write( const std::string& s, bool appendNewLine = true, bool prependEventCount = true );
 
 protected:
 
-  virtual ~Log();
+    virtual ~Log();
 
-  
+
 };
 
 

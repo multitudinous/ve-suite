@@ -61,17 +61,17 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 ScalarBarEventHandler::ScalarBarEventHandler()
-        : ves::xplorer::event::EventHandler(),
-        _activeModel( 0 )
+    : ves::xplorer::event::EventHandler(),
+      _activeModel( 0 )
 {
     CONNECTSIGNALS_2( "%ShowDatasetScalarBar",
-                     void ( const std::string&, const bool& ),
-                     &ScalarBarEventHandler::ShowScalarBar,
-                     m_connections, any_SignalType, normal_Priority );
+                      void ( const std::string&, const bool& ),
+                      &ScalarBarEventHandler::ShowScalarBar,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ScalarBarEventHandler::ScalarBarEventHandler( const ScalarBarEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -107,7 +107,7 @@ void ScalarBarEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         std::cout << "Invalid object passed to BBoxEventHandler::SetGlobalBaseObject!" << std::endl;
@@ -117,12 +117,12 @@ void ScalarBarEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
 void ScalarBarEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
-    DataValuePairPtr activeModelDVP = 
+    DataValuePairPtr activeModelDVP =
         command->GetDataValuePair( "Scalar Bar State" );
-    std::string datasetName = 
+    std::string datasetName =
         command->GetDataValuePair( "Active Dataset" )->GetDataString();
-    
-    DataValuePairPtr activeScalar = 
+
+    DataValuePairPtr activeScalar =
         command->GetDataValuePair( "Active Scalar" );
     std::string scalarName;
     activeScalar->GetData( scalarName );
@@ -131,8 +131,8 @@ void ScalarBarEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObje
     activeModelDVP->GetData( state );
     if( _activeModel )
     {
-        DataSet* dataSet = _activeModel->GetCfdDataSet( 
-            _activeModel->GetIndexOfDataSet( datasetName ) );
+        DataSet* dataSet = _activeModel->GetCfdDataSet(
+                               _activeModel->GetIndexOfDataSet( datasetName ) );
         _activeModel->SetActiveDataSet( dataSet );
         dataSet->SetActiveScalar( scalarName );
         dataSet->SetDataSetScalarState( state );
@@ -145,10 +145,10 @@ void ScalarBarEventHandler::ShowScalarBar( const std::string& uuid, const bool& 
     ves::xplorer::data::DatasetPropertySet set;
     set.SetUUID( uuid );
     set.LoadFromDatabase();
-    std::string datasetName = boost::any_cast<std::string>(set.GetPropertyValue( "Filename" ));
+    std::string datasetName = boost::any_cast<std::string>( set.GetPropertyValue( "Filename" ) );
 
     DataSet* dataSet = _activeModel->GetCfdDataSet(
-     _activeModel->GetIndexOfDataSet( datasetName ) );
+                           _activeModel->GetIndexOfDataSet( datasetName ) );
     if( dataSet )
     {
         dataSet->SetDataSetScalarState( show );

@@ -81,9 +81,9 @@ HighlightManager::HighlightManager()
     setCullingActive( false );
 
     stateSet->setMode(
-                      GL_DEPTH_TEST,
-                      osg::StateAttribute::OFF |
-                      osg::StateAttribute::PROTECTED );
+        GL_DEPTH_TEST,
+        osg::StateAttribute::OFF |
+        osg::StateAttribute::PROTECTED );
     Enable();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -224,11 +224,11 @@ void HighlightManager::UpdateConductorData()
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& HighlightManager::GetNextTagName()
 {
-    std::string tempName("Label ");
+    std::string tempName( "Label " );
     size_t numNames = m_tagNames.size();
     tempName.append( boost::lexical_cast<std::string>( numNames ) );
     m_tagNames.push_back( tempName );
-    return *(m_tagNames.end()-1);
+    return *( m_tagNames.end() - 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool HighlightManager::IsNodeCircled( osg::Node* inNode )
@@ -260,14 +260,14 @@ void HighlightManager::CreateHighlightCircle( osg::Node* inNode, osg::NodePath& 
     const std::string& tempTagName = GetNextTagName();
     osg::Vec3 eyePoint;
     osg::ref_ptr< scenegraph::highlight::CircleHighlight >
-        circleHighlight = new scenegraph::highlight::CircleHighlight();
-    osg::ref_ptr< osg::Node > tempCircle = 
+    circleHighlight = new scenegraph::highlight::CircleHighlight();
+    osg::ref_ptr< osg::Node > tempCircle =
         scenegraph::CreateCircleHighlight(
-        eyePoint, nodePath, *inNode, tempTagName );
+            eyePoint, nodePath, *inNode, tempTagName );
     circleHighlight->addChild( tempCircle );
-    
+
     RegisterNodeAndHighlight( inNode, circleHighlight.get() );
-    
+
     addChild( circleHighlight.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

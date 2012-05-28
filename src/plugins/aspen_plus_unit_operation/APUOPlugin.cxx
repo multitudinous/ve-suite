@@ -128,7 +128,7 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
     if( parentTraverser != NULL )
     {
         while( parentTraverser->GetParentModel() != NULL &&
-            parentTraverser->GetParentModel()->GetPluginType().compare( "APPlugin" ) != 0 )
+                parentTraverser->GetParentModel()->GetPluginType().compare( "APPlugin" ) != 0 )
         {
             //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
             parentTraverser = parentTraverser->GetParentModel();
@@ -156,7 +156,7 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
     if( nw_str.empty() )
     {
         wxMessageDialog( m_canvas, wxT( "Aspen Unit Unavailable." ),
-            wxT( "Error" ), wxOK | wxICON_ERROR ).ShowModal();
+                         wxT( "Error" ), wxOK | wxICON_ERROR ).ShowModal();
         return;
     }
 
@@ -183,7 +183,9 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
     params->SetServiceList( serviceList );
     params->SetDialogType( "input" );
     for( size_t i = 0; i < temp_vector.size(); i++ )
+    {
         params->AppendList( temp_vector[i].c_str() );
+    }
     params->ShowModal();
     params->Destroy();
     //serviceList->GetMessageLog()->SetMessage("gather");
@@ -210,7 +212,7 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
     if( parentTraverser != NULL )
     {
         while( parentTraverser->GetParentModel() != NULL &&
-            parentTraverser->GetParentModel()->GetPluginType().compare( "APPlugin" ) != 0 )
+                parentTraverser->GetParentModel()->GetPluginType().compare( "APPlugin" ) != 0 )
         {
             //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
             parentTraverser = parentTraverser->GetParentModel();
@@ -239,13 +241,13 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
     if( nw_str.empty() )
     {
         wxMessageDialog( m_canvas, wxT( "Aspen Unit Unavailable." ),
-            wxT( "Error" ), wxOK | wxICON_ERROR ).ShowModal();
+                         wxT( "Error" ), wxOK | wxICON_ERROR ).ShowModal();
         return;
     }
 
     wxString title( compName.c_str(), wxConvUTF8 );
     //QueryInputsDlg * results = new QueryInputsDlg(this);
-    APUOVarDialog * params = new APUOVarDialog( GetPluginParent() );
+    APUOVarDialog* params = new APUOVarDialog( GetPluginParent() );
     //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
@@ -261,7 +263,9 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
     params->SetServiceList( serviceList );
     params->SetDialogType( "output" );
     for( size_t i = 0; i < temp_vector.size(); i++ )
+    {
         params->AppendList( temp_vector[i].c_str() );
+    }
     params->ShowModal();
     params->Destroy();
     //std::vector< std::string > temp_vector2;
@@ -311,7 +315,7 @@ wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     {
         return baseMenu;
     }
-    
+
     //set the vendor name of the current plugin to the parents
     if( GetVEModel()->GetParentModel() == NULL )
     {
@@ -331,9 +335,9 @@ wxMenu* APUOPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mAspenMenu->Enable( APUOPLUGIN_QUERY_OUTPUTS, true );
     mAspenMenu->Append( APUOPLUGIN_REINIT_BLOCK, _( "Reinitialize" ) );
     mAspenMenu->Enable( APUOPLUGIN_REINIT_BLOCK, true );
-    
+
     baseMenu->Insert( 0, APUOPLUGIN_ASPEN_MENU,   _( "Aspen" ), mAspenMenu,
-                    _( "Used in conjunction with Aspen" ) );
+                      _( "Used in conjunction with Aspen" ) );
     baseMenu->Enable( APUOPLUGIN_ASPEN_MENU, true );
     return baseMenu;
 }

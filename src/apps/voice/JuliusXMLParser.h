@@ -63,11 +63,11 @@ public:
     /**
      * Attaches the given observer to this Subject.
      *
-     * @param   observer    the observer to attach. 
+     * @param   observer    the observer to attach.
      */
-    void attach(const SpeechRecognitionObserverPtr& observer)
+    void attach( const SpeechRecognitionObserverPtr& observer )
     {
-      mObservers.push_back(observer);
+        mObservers.push_back( observer );
     }
 
     /**
@@ -76,7 +76,7 @@ public:
      *
      * @param   observer    the observer to detach.
      */
-    void detach(const SpeechRecognitionObserverPtr& observer);
+    void detach( const SpeechRecognitionObserverPtr& observer );
 
     /**
      * Parses the given XML text and notifies observers of the results.
@@ -85,7 +85,7 @@ public:
      *
      * @return     true if successful, false otherwise.
      */
-    bool parse(const std::string& text);
+    bool parse( const std::string& text );
 
 private:
 
@@ -94,15 +94,15 @@ private:
 
     /// The SAX parser used to parse the XML.
     XERCES_CPP_NAMESPACE_QUALIFIER SAX2XMLReader*      mParser;
-    
+
     /* Private Functions */
 
     /**
      * This function handles a start element event from SAX.
      */
-    void startElement(const XMLCh* const uri, const XMLCh* const localname,
-                      const XMLCh* const qname, 
-                      const XERCES_CPP_NAMESPACE_QUALIFIER Attributes& attrs);
+    void startElement( const XMLCh* const uri, const XMLCh* const localname,
+                       const XMLCh* const qname,
+                       const XERCES_CPP_NAMESPACE_QUALIFIER Attributes& attrs );
 };
 
 typedef Loki::SmartPtrDef<JuliusXMLParser>::type JuliusXMLParserPtr;

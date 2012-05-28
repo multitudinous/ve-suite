@@ -72,8 +72,8 @@ BEGIN_EVENT_TABLE( IconChooser, wxFrame )
     EVT_MENU( ICONCHOOSER_CLICK, IconChooser::IconDirectoryClick )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
-IconChooser::IconChooser( wxWindow *parent, /*std::string path,*/ wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style )
-        : wxFrame( parent, id, title, position, size, style )
+IconChooser::IconChooser( wxWindow* parent, /*std::string path,*/ wxWindowID id, const wxString& title, const wxPoint& position, const wxSize& size, long style )
+    : wxFrame( parent, id, title, position, size, style )
 {
     //directory = wxString(path.c_str(), wxConvUTF8);
     CreateGUIControls();
@@ -107,7 +107,7 @@ void IconChooser::CreateGUIControls()
 
     {
         WxMenuBar1 = new wxMenuBar();
-        wxMenu * AddMenu = new wxMenu( 0 );
+        wxMenu* AddMenu = new wxMenu( 0 );
         AddMenu->Append( ICONCHOOSER_CLICK, wxT( "Icon Directory" ), wxT( "" ), wxITEM_NORMAL );
         WxMenuBar1->Append( AddMenu, wxT( "Add" ) );
         SetMenuBar( WxMenuBar1 );
@@ -123,17 +123,17 @@ void IconChooser::CreateGUIControls()
         //defaultIcons.push_back( wxImage( cspline_xpm ) );
         //iconPaths[buttonCount] = ConvertUnicode( iconPath.c_str() );
         defaultIcons.push_back( wxImage( isosurface_xpm ) );
-        iconPaths[buttonCount+1] = "isosurface.xpm";
+        iconPaths[buttonCount + 1] = "isosurface.xpm";
         defaultIcons.push_back( wxImage( ROItb_xpm ) );
-        iconPaths[buttonCount+2] = "isosurface.xpm";
+        iconPaths[buttonCount + 2] = "isosurface.xpm";
         //defaultIcons.push_back( wxImage( square_xpm ) );
         //iconPaths[buttonCount] = ConvertUnicode( iconPath.c_str() );
         defaultIcons.push_back( wxImage( streamlines_xpm ) );
-        iconPaths[buttonCount+3] = "streamlines.xpm";
+        iconPaths[buttonCount + 3] = "streamlines.xpm";
         defaultIcons.push_back( wxImage( vector_xpm ) );
-        iconPaths[buttonCount+4] = "vector.xpm";
+        iconPaths[buttonCount + 4] = "vector.xpm";
         defaultIcons.push_back( wxImage( vectortb_xpm ) );
-        iconPaths[buttonCount+5] = "vectortb.xpm";
+        iconPaths[buttonCount + 5] = "vectortb.xpm";
 
         wxPanel* WxNoteBookPage = new wxPanel( WxNotebook );
         WxNotebook->AddPage( WxNoteBookPage, wxString( _( "Default Icons" ) ) );
@@ -149,7 +149,7 @@ void IconChooser::CreateGUIControls()
             xLoc = 60 * hCount;
             yLoc = 80 * vCount;
             //yLoc = 95 * vCount;
-            wxBitmapButton * tempButton = new wxBitmapButton( WxNoteBookPage, buttonCount, defaultIcons.at( i ), wxPoint( xLoc, yLoc ) );
+            wxBitmapButton* tempButton = new wxBitmapButton( WxNoteBookPage, buttonCount, defaultIcons.at( i ), wxPoint( xLoc, yLoc ) );
             tempButton->SetToolTip( _( "Default Icon" ) );
             Connect( buttonCount, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( IconChooser::WxButtonClick ) );
             //wxStaticText * iconLabel = new wxStaticText(WxNoteBookPage, 9999, filename, wxPoint(xLoc, yLoc + 80), wxDefaultSize, 0, filename);
@@ -192,7 +192,7 @@ void IconChooser::WxButtonClick( wxCommandEvent& event )
 // WxChoice->Append(wxString(input,wxConvUTF8));
 //}
 ////////////////////////////////////////////////////////////////////////////////
-void IconChooser::SetPlugin( UIPluginBase * plugin )
+void IconChooser::SetPlugin( UIPluginBase* plugin )
 {
     thePlugin = plugin;
 }
@@ -200,7 +200,7 @@ void IconChooser::SetPlugin( UIPluginBase * plugin )
 void IconChooser::okButtonClick( wxCommandEvent& event )
 {
     if( choices[WxChoice->GetCurrentSelection()] == _( "None" ) )
-    {    
+    {
         thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ) );
     }
     else if( choices[WxChoice->GetCurrentSelection()] == _( "Rotate Left" ) )
@@ -212,20 +212,20 @@ void IconChooser::okButtonClick( wxCommandEvent& event )
         thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 270.0 );
     }
     else if( choices[WxChoice->GetCurrentSelection()] == _( "Flip Left/Right" ) )
-    {    
+    {
         thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 0.0, 1 );
     }
     else if( choices[WxChoice->GetCurrentSelection()] == _( "Flip Up/Down" ) )
-    {    
+    {
         thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 0.0, 2 );
     }
-    
+
     iconInfo.first = thePlugin->GetID();
     iconInfo.second  = ConvertUnicode( WxEdit->GetValue().c_str() );
     event.SetClientData( &iconInfo );
-    ::wxPostEvent( canvas->GetParent(), event);
+    ::wxPostEvent( canvas->GetParent(), event );
     this->canvas->Refresh();
-    Show(false);
+    Show( false );
     //Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -252,7 +252,7 @@ void IconChooser::AddIconsDir( wxString directory )
         //do not include the .svn folders
         if( dirname.compare( wxT( ".svn" ) ) != 0 )
         {
-            wxPanel * WxNoteBookPage = new wxPanel( WxNotebook );
+            wxPanel* WxNoteBookPage = new wxPanel( WxNotebook );
             WxNotebook->AddPage( WxNoteBookPage, dirname );
 
             wxString filename;
@@ -279,7 +279,7 @@ void IconChooser::AddIconsDir( wxString directory )
                     xLoc = 60 * hCount;
                     yLoc = 80 * vCount;
                     //yLoc = 95 * vCount;
-                    wxBitmapButton * tempButton = new wxBitmapButton( WxNoteBookPage, buttonCount, jpeg, wxPoint( xLoc, yLoc ) );
+                    wxBitmapButton* tempButton = new wxBitmapButton( WxNoteBookPage, buttonCount, jpeg, wxPoint( xLoc, yLoc ) );
                     tempButton->SetToolTip( filename );
                     Connect( buttonCount, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( IconChooser::WxButtonClick ) );
                     //wxStaticText * iconLabel = new wxStaticText(WxNoteBookPage, 9999, filename, wxPoint(xLoc, yLoc + 80), wxDefaultSize, 0, filename);
@@ -298,17 +298,19 @@ void IconChooser::AddIconsDir( wxString directory )
                 isChildTrue = childDir.GetNext( &filename );
             }
             if( vCount > maxRows )
+            {
                 maxRows = vCount + 1;
+            }
         }
         isParentTrue = parentDir.GetNext( &dirname );
         //button size and # of columns is fixed
-        SetSize( 640, maxRows*80 + 125 );
+        SetSize( 640, maxRows * 80 + 125 );
         //WxPanel->SetSize(640, maxRows*80+50);
-        WxNotebook->SetSize( 635, maxRows*80 + 25 );
-        WxEdit->SetPosition( wxPoint( 10, maxRows*80 + 30 ) );
-        WxChoice->SetPosition( wxPoint( 325, maxRows*80 + 30 ) );
-        okButton->SetPosition( wxPoint( 450, maxRows*80 + 30 ) );
-        cancelButton->SetPosition( wxPoint( 535, maxRows*80 + 30 ) );
+        WxNotebook->SetSize( 635, maxRows * 80 + 25 );
+        WxEdit->SetPosition( wxPoint( 10, maxRows * 80 + 30 ) );
+        WxChoice->SetPosition( wxPoint( 325, maxRows * 80 + 30 ) );
+        okButton->SetPosition( wxPoint( 450, maxRows * 80 + 30 ) );
+        cancelButton->SetPosition( wxPoint( 535, maxRows * 80 + 30 ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -337,13 +339,13 @@ void IconChooser::InitializeIcons()
     maxRows = 5;
     wxPanel* WxNoteBookPage = 0;
     //button size and # of columns is fixed
-    SetSize( 640, maxRows*80 + 125 );
+    SetSize( 640, maxRows * 80 + 125 );
     //WxPanel->SetSize(640, maxRows*80+50);
-    WxNotebook->SetSize( 635, maxRows*80 + 25 );
-    WxEdit->SetPosition( wxPoint( 10, maxRows*80 + 30 ) );
-    WxChoice->SetPosition( wxPoint( 325, maxRows*80 + 30 ) );
-    okButton->SetPosition( wxPoint( 450, maxRows*80 + 30 ) );
-    cancelButton->SetPosition( wxPoint( 535, maxRows*80 + 30 ) );
+    WxNotebook->SetSize( 635, maxRows * 80 + 25 );
+    WxEdit->SetPosition( wxPoint( 10, maxRows * 80 + 30 ) );
+    WxChoice->SetPosition( wxPoint( 325, maxRows * 80 + 30 ) );
+    okButton->SetPosition( wxPoint( 450, maxRows * 80 + 30 ) );
+    cancelButton->SetPosition( wxPoint( 535, maxRows * 80 + 30 ) );
 
     std::map< std::string, char** > tempIconMap = GetPreCompiledIconMap();
 
@@ -382,8 +384,8 @@ void IconChooser::InitializeIcons()
         xLoc = 60 * hCount;
         yLoc = 80 * vCount;
         //yLoc = 95 * vCount;
-        wxBitmapButton * tempButton = new wxBitmapButton( WxNoteBookPage,
-                                                          buttonCount, jpeg, wxPoint( xLoc, yLoc ) );
+        wxBitmapButton* tempButton = new wxBitmapButton( WxNoteBookPage,
+                buttonCount, jpeg, wxPoint( xLoc, yLoc ) );
         //tempButton->SetToolTip( filename );
         Connect( buttonCount, wxEVT_COMMAND_BUTTON_CLICKED,
                  wxCommandEventHandler( IconChooser::WxButtonClick ) );
@@ -412,13 +414,13 @@ void IconChooser::InitializeIcons()
             cancelButton->SetPosition( wxPoint( 535, maxRows*80 + 30 ) );*/
         }
     }
-        //button size and # of columns is fixed
-        SetSize( 640, maxRows*80 + 125 );
-        //WxPanel->SetSize(640, maxRows*80+50);
-        WxNotebook->SetSize( 635, maxRows*80 + 25 );
-        WxEdit->SetPosition( wxPoint( 10, maxRows*80 + 30 ) );
-        WxChoice->SetPosition( wxPoint( 325, maxRows*80 + 30 ) );
-        okButton->SetPosition( wxPoint( 450, maxRows*80 + 30 ) );
-        cancelButton->SetPosition( wxPoint( 535, maxRows*80 + 30 ) );
+    //button size and # of columns is fixed
+    SetSize( 640, maxRows * 80 + 125 );
+    //WxPanel->SetSize(640, maxRows*80+50);
+    WxNotebook->SetSize( 635, maxRows * 80 + 25 );
+    WxEdit->SetPosition( wxPoint( 10, maxRows * 80 + 30 ) );
+    WxChoice->SetPosition( wxPoint( 325, maxRows * 80 + 30 ) );
+    okButton->SetPosition( wxPoint( 450, maxRows * 80 + 30 ) );
+    cancelButton->SetPosition( wxPoint( 535, maxRows * 80 + 30 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

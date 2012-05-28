@@ -75,7 +75,7 @@ public:
 protected:
     ///The active model
     ves::xplorer::Model* _activeModel;
-    
+
     ///Update the bounds of the SeedPoint bounding box
     ///\param bounds The bounds of the bounding box
     void UpdateAllBounds( const std::vector< double >& bounds );

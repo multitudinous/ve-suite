@@ -54,7 +54,7 @@ UnRefImageDataVisitor::~UnRefImageDataVisitor()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnRefImageDataVisitor::apply( osg::Geode& node )
-{    
+{
     CheckStateSet( node.getStateSet() );
 
     for( size_t i = 0; i < node.getNumDrawables(); ++i )
@@ -67,7 +67,7 @@ void UnRefImageDataVisitor::apply( osg::Geode& node )
 void UnRefImageDataVisitor::apply( osg::Group& node )
 {
     CheckStateSet( node.getStateSet() );
-    
+
     osg::NodeVisitor::traverse( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ void UnRefImageDataVisitor::CheckStateSet( osg::StateSet* stateSet )
     for( size_t k = 0; k < 32; ++k )
     {
         texture = dynamic_cast< osg::Texture* >( stateSet->
-            getTextureAttribute( k, osg::StateAttribute::TEXTURE ) );
+                  getTextureAttribute( k, osg::StateAttribute::TEXTURE ) );
         if( texture.valid() )
         {
             texture->setUnRefImageDataAfterApply( true );

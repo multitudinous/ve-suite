@@ -52,59 +52,59 @@ class ADRunDialog : public wxDialog
 {
 public:
     ///Constructor
-    ADRunDialog(wxWindow *parent, wxWindowID id = 1,
-        const wxString &title = wxT("rundialog"),
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxDefaultSize,
-        long style = wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP |
-        wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX);
+    ADRunDialog( wxWindow* parent, wxWindowID id = 1,
+                 const wxString& title = wxT( "rundialog" ),
+                 const wxPoint& pos = wxDefaultPosition,
+                 const wxSize& size = wxDefaultSize,
+                 long style = wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP |
+                              wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX );
 
     ///Destructor
     virtual ~ADRunDialog();
 
     ///???
-    void mModeSelected(wxCommandEvent& event );
+    void mModeSelected( wxCommandEvent& event );
 
     ///???
     void SetMode();
 
 private:
 
-    wxComboBox *mMode;
-    wxCheckBox *mPauseAt;
-    wxCheckBox *mHistory;
-    wxCheckBox *mRTS;
-    wxCheckBox *mPauseAfter;
-    wxComboBox *mSynchro;
-    wxStaticText *WxStaticText15;
-    wxStaticText *WxStaticText14;
-    wxStaticText *WxStaticText13;
-    wxStaticText *WxStaticText12;
-    wxStaticText *WxStaticText11;
-    wxTextCtrl *mRTSFactor;
-    wxTextCtrl *mPauseAfterTime;
-    wxTextCtrl *mPauseAtTime;
-    wxStaticText *WxStaticText10;
-    wxComboBox *mDisplayTime;
-    wxComboBox *mModelUnits;
-    wxStaticText *WxStaticText9;
-    wxStaticText *WxStaticText8;
-    wxStaticText *WxStaticText7;
-    wxStaticText *WxStaticText6;
-    wxStaticText *WxStaticText5;
-    wxTextCtrl *mTimeNow;
-    wxTextCtrl *mDis;
-    wxTextCtrl *mCom;
-    wxStaticText *WxStaticText4;
-    wxStaticText *WxStaticText3;
-    wxStaticText *WxStaticText2;
-    wxStaticText *WxStaticText1;
-    wxButton *cancelButton;
-    wxButton *okButton;
-    wxStaticBox *WxStaticBox4;
-    wxStaticBox *WxStaticBox3;
-    wxStaticBox *Time_Control;
-    wxStaticBox *mRunMode;
+    wxComboBox* mMode;
+    wxCheckBox* mPauseAt;
+    wxCheckBox* mHistory;
+    wxCheckBox* mRTS;
+    wxCheckBox* mPauseAfter;
+    wxComboBox* mSynchro;
+    wxStaticText* WxStaticText15;
+    wxStaticText* WxStaticText14;
+    wxStaticText* WxStaticText13;
+    wxStaticText* WxStaticText12;
+    wxStaticText* WxStaticText11;
+    wxTextCtrl* mRTSFactor;
+    wxTextCtrl* mPauseAfterTime;
+    wxTextCtrl* mPauseAtTime;
+    wxStaticText* WxStaticText10;
+    wxComboBox* mDisplayTime;
+    wxComboBox* mModelUnits;
+    wxStaticText* WxStaticText9;
+    wxStaticText* WxStaticText8;
+    wxStaticText* WxStaticText7;
+    wxStaticText* WxStaticText6;
+    wxStaticText* WxStaticText5;
+    wxTextCtrl* mTimeNow;
+    wxTextCtrl* mDis;
+    wxTextCtrl* mCom;
+    wxStaticText* WxStaticText4;
+    wxStaticText* WxStaticText3;
+    wxStaticText* WxStaticText2;
+    wxStaticText* WxStaticText1;
+    wxButton* cancelButton;
+    wxButton* okButton;
+    wxStaticBox* WxStaticBox4;
+    wxStaticBox* WxStaticBox3;
+    wxStaticBox* Time_Control;
+    wxStaticBox* mRunMode;
 
     enum
     {
@@ -146,19 +146,19 @@ private:
     };
 
     ///???
-    void OnClose(wxCloseEvent& event);
+    void OnClose( wxCloseEvent& event );
 
     ///???
     void CreateGUIControls();
-    
+
     ///???
-    void okButtonClick(wxCommandEvent& event);
-    
+    void okButtonClick( wxCommandEvent& event );
+
     ///???
-    void cancelButtonClick(wxCommandEvent& event);
-    
+    void cancelButtonClick( wxCommandEvent& event );
+
     ///???
-    void mPauseAfterClick(wxCommandEvent& event);
+    void mPauseAfterClick( wxCommandEvent& event );
 
     DECLARE_EVENT_TABLE();
 };

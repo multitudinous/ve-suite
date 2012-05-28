@@ -44,7 +44,7 @@ using namespace ves;
 PropertyBrowser::PropertyBrowser( QObject* parent ) :
     QObject( parent ),
     m_ignoreValueChanges( false ),
-    m_logger( Poco::Logger::get("conductor.PropertyBrowser") ),
+    m_logger( Poco::Logger::get( "conductor.PropertyBrowser" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     // Create a standard set of property managers
@@ -68,10 +68,10 @@ PropertyBrowser::PropertyBrowser( QObject* parent ) :
              this, SLOT( IntValueChanged( QtProperty*, int ) ) );
     connect( mStringManager, SIGNAL( valueChanged( QtProperty*, QString ) ),
              this, SLOT( StringValueChanged( QtProperty*, QString ) ) );
-    connect( mFilePathManager, SIGNAL(valueChanged(QtProperty*,QString)),
-             this, SLOT(FilePathValueChanged(QtProperty*,QString)));
-    connect( mNodeSelectManager, SIGNAL(valueChanged(QtProperty*,QString)),
-             this, SLOT(NodePathValueChanged(QtProperty*,QString)));
+    connect( mFilePathManager, SIGNAL( valueChanged( QtProperty*, QString ) ),
+             this, SLOT( FilePathValueChanged( QtProperty*, QString ) ) );
+    connect( mNodeSelectManager, SIGNAL( valueChanged( QtProperty*, QString ) ),
+             this, SLOT( NodePathValueChanged( QtProperty*, QString ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 PropertyBrowser::~PropertyBrowser()
@@ -176,7 +176,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
 
     mSet = set;
 
-    // If we were passed a null set our slate has been cleaned above and we 
+    // If we were passed a null set our slate has been cleaned above and we
     // stop here.
     if( !mSet )
     {
@@ -186,16 +186,17 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
     mPropertyNames = set->GetPropertyList();
 
     // Walk through properties list and store a pointer to each underlying property
-    { // Bracket used to scope iterator and end
+    {
+        // Bracket used to scope iterator and end
         PropertySet::PSVectorOfStrings::iterator iterator;
         //PropertySet::PSVectorOfStrings::iterator end = mPropertyNames.end();
-        for( iterator = mPropertyNames.begin(); iterator != mPropertyNames.end();  )
+        for( iterator = mPropertyNames.begin(); iterator != mPropertyNames.end(); )
         {
             // If the userVisible attribute is false, do not add this property
             // to any of our lists.
             bool show = true;
-            boost::any visible = set->GetPropertyAttribute( (*iterator),
-                                                            "userVisible" );
+            boost::any visible = set->GetPropertyAttribute( ( *iterator ),
+                                 "userVisible" );
             if( !visible.empty() )
             {
                 show = boost::any_cast<bool>( visible );
@@ -203,12 +204,12 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
             if( show )
             {
                 mProperties.push_back( set->GetProperty( ( *iterator ) ) );
-                LOG_TRACE( "Adding property named " << (*iterator) );
+                LOG_TRACE( "Adding property named " << ( *iterator ) );
                 ++iterator;
             }
             else
             {
-                LOG_TRACE( "Not adding property named " << (*iterator) );
+                LOG_TRACE( "Not adding property named " << ( *iterator ) );
                 mPropertyNames.erase( iterator );
                 // No need to increment iterator here since everything past the
                 // deleted iterator will fall back in the vector
@@ -227,7 +228,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
         QtProperty* item = NULL;
 
         std::string propertyLabel =
-                boost::any_cast<std::string > (
+            boost::any_cast<std::string > (
                 property->GetAttribute( "uiLabel" ) );
 
         // Convert label to type needed by Qt functions
@@ -257,8 +258,8 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
             {
                 item = mBooleanManager->addProperty( label );
             }
-                // We must be careful to ask about Enum status *BEFORE* Int status,
-                // since enums *ARE* Ints. But not all Ints are Enums....
+            // We must be careful to ask about Enum status *BEFORE* Int status,
+            // since enums *ARE* Ints. But not all Ints are Enums....
             else if( property->IsEnum() )
             {
                 item = mEnumManager->addProperty( label );
@@ -282,14 +283,14 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
             else if( property->IsString() )
             {
                 LOG_DEBUG( "Checking for FilePath" );
-                if( (property->AttributeExists( "isFilePath" )) &&
-                    boost::any_cast<bool>( property->GetAttribute("isFilePath") ))
+                if( ( property->AttributeExists( "isFilePath" ) ) &&
+                        boost::any_cast<bool>( property->GetAttribute( "isFilePath" ) ) )
                 {
                     LOG_DEBUG( "Adding a FilePath item" );
                     item = mFilePathManager->addProperty( label );
                 }
-                else if( (property->AttributeExists( "isNodePath" )) &&
-                         boost::any_cast<bool>( property->GetAttribute("isNodePath") ))
+                else if( ( property->AttributeExists( "isNodePath" ) ) &&
+                         boost::any_cast<bool>( property->GetAttribute( "isNodePath" ) ) )
                 {
                     LOG_DEBUG( "Adding a NodePath item" );
                     item = mNodeSelectManager->addProperty( label );
@@ -316,7 +317,7 @@ void PropertyBrowser::ParsePropertySet( xplorer::data::PropertySetPtr set )
 void PropertyBrowser::RefreshAll()
 {
     LOG_TRACE( "RefreshAll" );
-    int max = static_cast < int > ( mProperties.size() );
+    int max = static_cast < int >( mProperties.size() );
     for( int index = 0; index < max; index++ )
     {
         _refreshItem( index );
@@ -327,7 +328,7 @@ void PropertyBrowser::_refreshItem( int index )
 {
     // This log message is usually too verbose to be useful
     //LOG_TRACE( "_refreshItem " << index );
-    if( index >= static_cast < int > ( mItems.size() ) )
+    if( index >= static_cast < int >( mItems.size() ) )
     {
         // We haven't set this item up yet!
         return;
@@ -345,7 +346,7 @@ void PropertyBrowser::_refreshItem( int index )
     double max = 0.0;
     _extractMinMaxValues( property, &min, &max, &hasMin, &hasMax );
 
-    LOG_TRACE( "Refreshing " << boost::any_cast<std::string>(property->GetAttribute("nameInSet")) );
+    LOG_TRACE( "Refreshing " << boost::any_cast<std::string>( property->GetAttribute( "nameInSet" ) ) );
 
     // Block signals from all Qt...Manager instances so that altering range
     // or other non-value settings of an item does not trigger a value change.
@@ -358,7 +359,7 @@ void PropertyBrowser::_refreshItem( int index )
         // Update the list of valid choices
         QStringList qEnumNames;
         Property::PSVectorOfStrings enumNames =
-                boost::any_cast< Property::PSVectorOfStrings > (
+            boost::any_cast< Property::PSVectorOfStrings > (
                 property->GetAttribute( std::string( "enumValues" ) ) );
         Property::PSVectorOfStrings::iterator iterator;
         Property::PSVectorOfStrings::iterator end = enumNames.end();
@@ -372,17 +373,17 @@ void PropertyBrowser::_refreshItem( int index )
     {
         if( hasMin )
         {
-            mIntManager->setMinimum( item, static_cast < int > ( min ) );
+            mIntManager->setMinimum( item, static_cast < int >( min ) );
         }
         if( hasMax )
         {
-            mIntManager->setMaximum( item, static_cast < int > ( max ) );
+            mIntManager->setMaximum( item, static_cast < int >( max ) );
         }
         //int currentMin = mIntManager->minimum( item );
         //int currentMax = mIntManager->maximum( item );
         //int step = static_cast < int > ( ( currentMax - currentMin ) / 100.0 );
         int step = 1;
-        if( property->AttributeExists("StepSize") )
+        if( property->AttributeExists( "StepSize" ) )
         {
             int tStep = boost::any_cast<int>( property->GetAttribute( "StepSize" ) );
             // Require positive, non-zero step size
@@ -405,7 +406,7 @@ void PropertyBrowser::_refreshItem( int index )
         }
 
         int precision = 2;
-        if( property->AttributeExists("DisplayPrecision") )
+        if( property->AttributeExists( "DisplayPrecision" ) )
         {
             precision = boost::any_cast<int>( property->GetAttribute( "DisplayPrecision" ) );
         }
@@ -413,7 +414,7 @@ void PropertyBrowser::_refreshItem( int index )
 
         // Pressing arrow keys or spinner arrows should change the values in
         // the least significant figure.
-        double step = gmtl::Math::pow( double(10), double(-1 * precision) );
+        double step = gmtl::Math::pow( double( 10 ), double( -1 * precision ) );
         mDoubleManager->setSingleStep( item, step );
     }
     else if( property->IsDouble() )
@@ -428,7 +429,7 @@ void PropertyBrowser::_refreshItem( int index )
         }
 
         int precision = 2;
-        if( property->AttributeExists("DisplayPrecision") )
+        if( property->AttributeExists( "DisplayPrecision" ) )
         {
             precision = boost::any_cast<int>( property->GetAttribute( "DisplayPrecision" ) );
         }
@@ -436,7 +437,7 @@ void PropertyBrowser::_refreshItem( int index )
 
         // Pressing arrow keys or spinner arrows should change the values in
         // the least significant figure.
-        double step = gmtl::Math::pow( double(10), double(-1 * precision) );
+        double step = gmtl::Math::pow( double( 10 ), double( -1 * precision ) );
         mDoubleManager->setSingleStep( item, step );
     }
 
@@ -453,8 +454,8 @@ void PropertyBrowser::_refreshItem( int index )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PropertyBrowser::_extractMinMaxValues( xplorer::data::PropertyPtr property,
-                                            double* min, double* max,
-                                            bool* hasMin, bool* hasMax )
+        double* min, double* max,
+        bool* hasMin, bool* hasMax )
 {
     if( property->AttributeExists( "minimumValue" ) )
     {
@@ -462,11 +463,11 @@ void PropertyBrowser::_extractMinMaxValues( xplorer::data::PropertyPtr property,
         boost::any minVal = property->GetAttribute( "minimumValue" );
         if( property->IsInt( minVal ) )
         {
-            ( *min ) = static_cast < double > ( boost::any_cast<int>( minVal ) );
+            ( *min ) = static_cast < double >( boost::any_cast<int>( minVal ) );
         }
         else if( property->IsFloat( minVal ) )
         {
-            ( *min ) = static_cast < double > ( boost::any_cast<float>( minVal ) );
+            ( *min ) = static_cast < double >( boost::any_cast<float>( minVal ) );
         }
         else if( property->IsDouble( minVal ) )
         {
@@ -479,11 +480,11 @@ void PropertyBrowser::_extractMinMaxValues( xplorer::data::PropertyPtr property,
         boost::any maxVal = property->GetAttribute( "maximumValue" );
         if( property->IsInt( maxVal ) )
         {
-            ( *max ) = static_cast < double > ( boost::any_cast<int>( maxVal ) );
+            ( *max ) = static_cast < double >( boost::any_cast<int>( maxVal ) );
         }
         else if( property->IsFloat( maxVal ) )
         {
-            ( *max ) = static_cast < double > ( boost::any_cast<float>( maxVal ) );
+            ( *max ) = static_cast < double >( boost::any_cast<float>( maxVal ) );
         }
         else if( property->IsDouble( maxVal ) )
         {
@@ -497,7 +498,7 @@ void PropertyBrowser::_createHierarchy()
     LOG_TRACE( "_createHierarchy" );
     xplorer::data::PropertyPtr property;
     int index;
-    int max = static_cast < int > ( mProperties.size() );
+    int max = static_cast < int >( mProperties.size() );
     for( index = 0; index < max; index++ )
     {
         QtProperty* item = mItems[index];
@@ -506,7 +507,7 @@ void PropertyBrowser::_createHierarchy()
 
         // Get the property's name
         std::string propertyName =
-                boost::any_cast<std::string > (
+            boost::any_cast<std::string > (
                 property->GetAttribute( "nameInSet" ) );
         QString name = QString::fromStdString( propertyName );
 
@@ -536,9 +537,9 @@ void PropertyBrowser::_createHierarchy()
             }
             else
             {
-                LOG_ERROR ( "Error finding parent property named "
-                              << parentName.toStdString() << " for property "
-                              << propertyName );
+                LOG_ERROR( "Error finding parent property named "
+                           << parentName.toStdString() << " for property "
+                           << propertyName );
             }
 
         }
@@ -575,7 +576,7 @@ void PropertyBrowser::IntValueChanged( QtProperty* item, int value )
     _setPropertyValue( item, value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PropertyBrowser::StringValueChanged( QtProperty* item, const QString & value )
+void PropertyBrowser::StringValueChanged( QtProperty* item, const QString& value )
 {
     if( m_ignoreValueChanges )
     {
@@ -626,7 +627,7 @@ void PropertyBrowser::DoubleValueChanged( QtProperty* item, double value )
         // Must cast to float if the underlying type is really a float
         if( property->IsFloat() )
         {
-            _setPropertyValue( item, static_cast < float > ( value ) );
+            _setPropertyValue( item, static_cast < float >( value ) );
         }
         else
         {
@@ -660,7 +661,7 @@ int PropertyBrowser::_getPropertyIndex( xplorer::data::PropertyPtr property )
     // have the same index in mItems.
     bool found = false;
     int index = -1;
-    int max = static_cast < int > ( mProperties.size() );
+    int max = static_cast < int >( mProperties.size() );
     max--;
     while( ( !found ) && ( index < max ) )
     {
@@ -687,7 +688,7 @@ int PropertyBrowser::_getPropertyIndexByName( std::string name )
     // have the same index in mProperties.
     bool found = false;
     int index = -1;
-    int max = static_cast < int > ( mPropertyNames.size() );
+    int max = static_cast < int >( mPropertyNames.size() );
     max--;
     while( ( !found ) && ( index < max ) )
     {
@@ -713,7 +714,7 @@ int PropertyBrowser::_getItemIndex( QtProperty* item )
     // have the same index in mProperties.
     bool found = false;
     int index = -1;
-    int max = static_cast < int > ( mItems.size() );
+    int max = static_cast < int >( mItems.size() );
     max--;
     while( ( !found ) && ( index < max ) )
     {
@@ -758,7 +759,7 @@ void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::PropertyPt
     }
     else if( property->IsFloat() )
     {
-        double castValue = static_cast < double > ( boost::any_cast<float>( value ) );
+        double castValue = static_cast < double >( boost::any_cast<float>( value ) );
         LOG_TRACE( "_setItemValue: " << castValue );
         mDoubleManager->setValue( item, castValue );
     }
@@ -772,14 +773,14 @@ void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::PropertyPt
     {
         std::string castValue = boost::any_cast<std::string > ( value );
         QString qCastValue = QString::fromStdString( castValue );
-        if( (property->AttributeExists( "isFilePath" )) &&
-            boost::any_cast<bool>( property->GetAttribute("isFilePath") ) )
+        if( ( property->AttributeExists( "isFilePath" ) ) &&
+                boost::any_cast<bool>( property->GetAttribute( "isFilePath" ) ) )
         {
             LOG_TRACE( "_setItemValue: (filePath) " << castValue );
             mFilePathManager->setValue( item, qCastValue );
         }
-        else if( (property->AttributeExists( "isNodePath" )) &&
-                 boost::any_cast<bool>( property->GetAttribute("isNodePath") ) )
+        else if( ( property->AttributeExists( "isNodePath" ) ) &&
+                 boost::any_cast<bool>( property->GetAttribute( "isNodePath" ) ) )
         {
             LOG_TRACE( "_setItemValue: (nodePath) " << castValue );
             mNodeSelectManager->setValue( item, qCastValue );
@@ -795,7 +796,7 @@ void PropertyBrowser::_setItemValue( QtProperty* item, xplorer::data::PropertyPt
 void PropertyBrowser::_setPropertyValue( QtProperty* item, boost::any value )
 {
     int index = _getItemIndex( item );
-    LOG_TRACE( "_setPropertyValue: index " << index << "(" << item->propertyName().toStdString() << ")"  );
+    LOG_TRACE( "_setPropertyValue: index " << index << "(" << item->propertyName().toStdString() << ")" );
 
     if( index > -1 )
     {

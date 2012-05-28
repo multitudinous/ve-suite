@@ -58,7 +58,7 @@
 #include <wx/defs.h>
 
 #include <boost/version.hpp>
-#if BOOST_VERSION >= 103600 
+#if BOOST_VERSION >= 103600
 #include <boost/math/special_functions/round.hpp>
 #endif
 
@@ -112,13 +112,13 @@ END_EVENT_TABLE()
 
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::Canvas( wxWindow* parent, int id )
-        : wxScrolledWindow( parent, id, wxDefaultPosition, wxDefaultSize,
-                            wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE ),
-        previousId( "-1" ),
-        m_treeView( 0 ),
-        mDataBufferEngine( XMLDataBufferEngine::instance() ),
-        mUserPrefBuffer( UserPreferencesDataBuffer::instance() ),
-        mServiceList( CORBAServiceList::instance() )
+    : wxScrolledWindow( parent, id, wxDefaultPosition, wxDefaultSize,
+                        wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE ),
+    previousId( "-1" ),
+    m_treeView( 0 ),
+    mDataBufferEngine( XMLDataBufferEngine::instance() ),
+    mUserPrefBuffer( UserPreferencesDataBuffer::instance() ),
+    mServiceList( CORBAServiceList::instance() )
 {
     std::pair< long int, long int > numPix;
     numPix.first = 1;
@@ -132,11 +132,11 @@ Canvas::Canvas( wxWindow* parent, int id )
     //initalize canvas size to 1x1
     SetVirtualSize( numPix.first, numPix.second );
     //SetCanvasSize( numPix.first, numPix.second );
-    
+
     SetScrollRate( numUnit.first, numUnit.second );
-    
+
     SetBackgroundColour( *wxWHITE );
-    
+
     //This is for the paint buffer
     SetBackgroundStyle( wxBG_STYLE_CUSTOM );
 
@@ -144,13 +144,13 @@ Canvas::Canvas( wxWindow* parent, int id )
     CreateDefaultNetwork();
 
     this->parent = parent;
-    
+
     //This event is the key that causes appframe to load a new ves file
     //This event is sent in OnDelNetwork if everything is empty on the canvas
     //Essentially before any new ves file or data is loaded the canvas is
     //cleared therefore we know that afterwards we are loading a new ves file
     cleanEvent.SetId( CANVAS_UPDATE_NETWORK_DATA );
-    
+
     Refresh( true );
 
     //vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
@@ -169,14 +169,14 @@ Canvas::~Canvas()
     // Various shutdown processes were tried but the only way
     // to get a clean shutdown on windows is to remove the eventhandlers
     // first then manually clean up the memory.
-    
-    // We do not need to remove any of the children dialogs on destruction 
+
+    // We do not need to remove any of the children dialogs on destruction
     // because all the children are destroyed in AppFrame. Please see
     // the AppFrame destructor
     //CleanUpNetworks();
 
-    for( std::map< std::string, Network* >::iterator iter = 
-        networks.begin(); iter != networks.end(); ++iter )
+    for( std::map< std::string, Network* >::iterator iter =
+                networks.begin(); iter != networks.end(); ++iter )
     {
         //iter->second->RemoveAllEvents();
         RemoveEventHandler( iter->second );
@@ -191,7 +191,7 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
     if( xmlNetwork.empty() || ( xmlNetwork == "NULL" ) )
     {
         std::cout <<
-            " Canvas::PopulateNetworks network string is empty" << std::endl;
+                  " Canvas::PopulateNetworks network string is empty" << std::endl;
         return;
     }
 
@@ -211,7 +211,7 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
         networks[iter->first] = tempNetwork;
         tempNetwork->SetNetworkID( iter->first );
     }
-    
+
     SetActiveNetwork( mDataBufferEngine->GetTopSystemId() );
 
     //Finally tell the canvas to redraw
@@ -269,7 +269,7 @@ void Canvas::OnPaint( wxPaintEvent& paintEvent )
 ////////////////////////////////////////////////////////////////////////////////
 Network* Canvas::GetActiveNetwork()
 {
-    std::map < std::string, Network * >::iterator iter;
+    std::map < std::string, Network* >::iterator iter;
     iter = networks.find( activeId );
 
     if( iter != networks.end() )
@@ -305,7 +305,7 @@ void Canvas::SetActiveNetwork( std::string id )
 
     //update the current id
     this->previousId = this->activeId;
-    
+
     double tempScaleX = networks[this->activeId]->GetUserScale()->first;
     double tempScaleY = networks[this->activeId]->GetUserScale()->second;
 
@@ -331,7 +331,7 @@ std::string Canvas::GetActiveNetworkID( )
     return this->activeId;
 }
 //////////////////////////////////////////////////////////////////////////////
-void Canvas::DrawNetwork( wxDC &dc, std::string id )
+void Canvas::DrawNetwork( wxDC& dc, std::string id )
 {
     networks[id]->DrawNetwork( dc );
 }
@@ -372,7 +372,7 @@ void Canvas::New( bool promptClearXplorer )
         veCommand->AddDataValuePair( dataValuePair );
         bool connected = mServiceList->SendCommandStringToXplorer( veCommand );
     }
-    
+
     CleanUpNetworks();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -387,7 +387,7 @@ wxRect Canvas::GetAppropriateSubDialogSize()
     //if( GetDisplayMode() == std::string( "Desktop" ) )
     {
         wxRect bbox = GetRect();
-#if BOOST_VERSION >= 103600 
+#if BOOST_VERSION >= 103600
         int xStart = boost::math::iround( 2.0f * displayWidth / 3.0f );
         int width = boost::math::iround( displayWidth / 3.0f );
         int height = boost::math::iround( 3.0f * ( displayHeight - tempRect.GetTopLeft().y ) / 4.0f );
@@ -417,10 +417,10 @@ void Canvas::CleanUpNetworks()
 {
     //std::cout << this->GetChildren().size() << std::endl;
     RemoveEventHandler( networks[this->activeId] );
-    networks[this->activeId]->RemoveAllEvents();        
+    networks[this->activeId]->RemoveAllEvents();
 
     size_t numChild = this->GetChildren().size();
-    for( size_t i = 0; i < numChild;)
+    for( size_t i = 0; i < numChild; )
     {
         //std::cout << ConvertUnicode( GetChildren().Item( i )->GetData()->GetName().c_str() ) << std::endl;
         //std::cout << ConvertUnicode( GetChildren().Item( i )->GetData()->GetLabel().c_str() ) << std::endl;
@@ -435,7 +435,7 @@ void Canvas::CleanUpNetworks()
             ++i;
         }
     }
-    
+
     for( std::map < std::string, Network* >::iterator iter = networks.begin();
             iter != networks.end(); ++iter )
     {
@@ -451,7 +451,7 @@ void Canvas::CreateDefaultNetwork()
     ///Initialize tope level network
     model::NetworkPtr tempNetwork( new model::Network() );
 
-    mDataBufferEngine->GetXMLSystemDataObject( 
+    mDataBufferEngine->GetXMLSystemDataObject(
         mDataBufferEngine->GetTopSystemId() )->AddNetwork( tempNetwork );
 
     ///Set the default network
@@ -506,9 +506,9 @@ void Canvas::OnDelMod( wxCommandEvent& event )
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Canvas::CreateNewSystem( wxCommandEvent& event )
-{   
+{
     unsigned int id = wxNewId();
-    
+
     std::stringstream ssId;
     ssId << id;
     std::string sId = ssId.str();
@@ -541,16 +541,16 @@ void Canvas::SetTreeItemName( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::OnDelNetwork( wxUpdateUIEvent& event )
 {
-    std::string* networkID = 
+    std::string* networkID =
         static_cast< std::string* >( event.GetClientData() );
 
-    std::map< std::string, Network* >::iterator iter = 
+    std::map< std::string, Network* >::iterator iter =
         networks.find( *networkID );
 
     networks.erase( iter );
     activeId = "NULL";
     previousId = "-1";
-    
+
     if( networks.empty() )
     {
 #if wxCHECK_VERSION( 2, 9, 0 )
@@ -561,21 +561,21 @@ void Canvas::OnDelNetwork( wxUpdateUIEvent& event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Canvas::SetUserScale(double x, double y)
+void Canvas::SetUserScale( double x, double y )
 {
     userScale.first = x;
     userScale.second = y;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Canvas::OnZoom( wxKeyEvent &event )
+void Canvas::OnZoom( wxKeyEvent& event )
 {
     //pass zooming key presses to appframe
-    if( event.GetModifiers() == wxMOD_CONTROL)
+    if( event.GetModifiers() == wxMOD_CONTROL )
     {
         if( event.GetKeyCode() == WXK_UP ||
-            event.GetKeyCode() == WXK_DOWN )
+                event.GetKeyCode() == WXK_DOWN )
         {
-             ::wxPostEvent( mainFrame, event );
+            ::wxPostEvent( mainFrame, event );
         }
     }
     else
@@ -584,7 +584,7 @@ void Canvas::OnZoom( wxKeyEvent &event )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Canvas::SetMainFrame(wxWindow *window)
+void Canvas::SetMainFrame( wxWindow* window )
 {
     this->mainFrame = window;
 }

@@ -55,7 +55,7 @@ public:
 
     ///Copy Constructor.
     cfdPolyData( cfdPolyData const& src );
-        
+
     ///Destructor.
     virtual ~cfdPolyData();
 
@@ -90,7 +90,7 @@ private:
     ///String to hold color by scalar.
     std::string colorByScalar;
     ///Map for vtk.
-    vtkPolyDataMapper *map;
+    vtkPolyDataMapper* map;
     ///Warper for vtk.
     vtkWarpVector* warper;
     bool warpSurface;///Test for warped surface.

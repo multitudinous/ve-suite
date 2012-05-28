@@ -70,10 +70,10 @@ public:
 
         //Create the texture in usual OpenGL way
         glTexImage2D( GL_TEXTURE_2D, 0, texture.getInternalFormat(),
-            texture.getTextureWidth(), texture.getTextureHeight(), texture.getBorderWidth(),
-            texture.getSourceFormat() ? texture.getSourceFormat() : texture.getInternalFormat(),
-            texture.getSourceType() ? texture.getSourceType() : GL_UNSIGNED_BYTE,
-            image->data() );
+                      texture.getTextureWidth(), texture.getTextureHeight(), texture.getBorderWidth(),
+                      texture.getSourceFormat() ? texture.getSourceFormat() : texture.getInternalFormat(),
+                      texture.getSourceType() ? texture.getSourceType() : GL_UNSIGNED_BYTE,
+                      image->data() );
     }
 
     //No subload because while we want to subload the texture should be already valid
@@ -155,8 +155,8 @@ void UnitInOut::SetOutputInternalFormat( GLenum format )
     mOutputInternalFormat = format;
 
     //Now generate output texture's and assign them to fbo
-    for( TextureMap::iterator itr = mOutputTextures.begin(); 
-        itr != mOutputTextures.end(); ++itr )
+    for( TextureMap::iterator itr = mOutputTextures.begin();
+            itr != mOutputTextures.end(); ++itr )
     {
         /*if( itr->second.valid() )
         {
@@ -218,9 +218,9 @@ osg::Texture* UnitInOut::CreateOutputTexture( size_t mrt )
     else
     {
         osg::notify( osg::FATAL )
-            << "rtt::UnitInOut::getOrCreateOutputTexture() - "
-            << getName() << " non-supported texture type specified!"
-            << std::endl;
+                << "rtt::UnitInOut::getOrCreateOutputTexture() - "
+                << getName() << " non-supported texture type specified!"
+                << std::endl;
 
         return NULL;
     }
@@ -241,7 +241,7 @@ osg::Texture* UnitInOut::CreateOutputTexture( size_t mrt )
 
     //Check if the input texture was in nearest mode
     if( GetInputTexture( 0 ) && GetInputTexture( 0 )->getFilter(
-            osg::Texture2D::MIN_FILTER ) == osg::Texture2D::NEAREST )
+                osg::Texture2D::MIN_FILTER ) == osg::Texture2D::NEAREST )
     {
         newTexture->setFilter(
             osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
@@ -253,7 +253,7 @@ osg::Texture* UnitInOut::CreateOutputTexture( size_t mrt )
     }
 
     if( GetInputTexture( 0 ) && GetInputTexture( 0 )->getFilter(
-            osg::Texture2D::MAG_FILTER ) == osg::Texture2D::NEAREST )
+                osg::Texture2D::MAG_FILTER ) == osg::Texture2D::NEAREST )
     {
         newTexture->setFilter(
             osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
@@ -289,10 +289,10 @@ void UnitInOut::AssignOutputTexture()
         if( !mViewport.valid() )
         {
             osg::notify( osg::FATAL )
-                << "rtt::UnitInOut::AssignOutputTexture(): "
-                << getName()
-                << "cannot set output texture size - invalid viewport!"
-                << std::endl;
+                    << "rtt::UnitInOut::AssignOutputTexture(): "
+                    << getName()
+                    << "cannot set output texture size - invalid viewport!"
+                    << std::endl;
         }
 
         //Check whenever the output texture is a 2D texture
@@ -301,8 +301,8 @@ void UnitInOut::AssignOutputTexture()
         {
 #if !VES_USE_FBO_CAMERA
             mFBO->setAttachment( osg::Camera::BufferComponent(
-                osg::Camera::COLOR_BUFFER0 ),
-                osg::FrameBufferAttachment( texture2D ) );
+                                     osg::Camera::COLOR_BUFFER0 ),
+                                 osg::FrameBufferAttachment( texture2D ) );
 #else
             m_fboCamera->setRenderOrder( osg::Camera::POST_RENDER );
             m_fboCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
@@ -323,10 +323,10 @@ void UnitInOut::AssignOutputTexture()
 
         //Output texture type is not supported
         osg::notify( osg::FATAL )
-            << "rtt::UnitInOut::assignOutputTexture(): "
-            << getName()
-            << " cannot attach output texture to FBO!"
-            << std::endl;
+                << "rtt::UnitInOut::assignOutputTexture(): "
+                << getName()
+                << " cannot attach output texture to FBO!"
+                << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

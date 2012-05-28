@@ -57,13 +57,13 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 DataTransformEventHandler::DataTransformEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
     _activeModel = 0;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 DataTransformEventHandler::DataTransformEventHandler( const DataTransformEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
@@ -96,11 +96,11 @@ void DataTransformEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
         datasetName->GetData( filename );
         if( filename != "NULL" )
         {
-            _activeModel->SetActiveDataSet( 
-                _activeModel->GetCfdDataSet( 
-                    _activeModel->GetIndexOfDataSet(  filename ) ) );
+            _activeModel->SetActiveDataSet(
+                _activeModel->GetCfdDataSet(
+                    _activeModel->GetIndexOfDataSet( filename ) ) );
         }
-        
+
         if( !_activeModel->GetActiveDataSet() )
         {
             std::cout << "|\tNo active dataset assigned." << std::endl;
@@ -113,7 +113,7 @@ void DataTransformEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
 
         if( transform )
         {
-            TransformPtr dataTransform = boost::dynamic_pointer_cast<Transform>(  newTransform->GetDataXMLObject() );
+            TransformPtr dataTransform = boost::dynamic_pointer_cast<Transform>( newTransform->GetDataXMLObject() );
             transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
             transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
             transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
@@ -124,7 +124,7 @@ void DataTransformEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
         //Reset back to null after working with the dataset we are after.
         _activeModel->SetActiveDataSet( 0 );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!!Invalid command passed to DataTransformEH!!" << std::endl;
     }
@@ -143,7 +143,7 @@ void DataTransformEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* m
             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         _activeModel = 0;
         std::cout << "Invalid object passed to DataTransformEventHandler::SetGlobalBaseObject!" << std::endl;

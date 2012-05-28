@@ -46,7 +46,7 @@ UIPlugin API
 
 namespace osg
 {
-    class Geode;
+class Geode;
 }
 
 namespace ves
@@ -61,7 +61,7 @@ class UIPluginInterface
 {
 public:
     ///Default destructor for plugins
-    virtual ~UIPluginInterface(){};
+    virtual ~UIPluginInterface() {};
 
     ///Sets the name of the module
     virtual void SetName( const std::string& pluginName ) = 0;

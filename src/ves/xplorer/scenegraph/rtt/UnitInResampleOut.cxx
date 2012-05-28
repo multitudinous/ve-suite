@@ -102,33 +102,33 @@ void UnitInResampleOut::SetFactorY( float yFactor )
 ////////////////////////////////////////////////////////////////////////////////
 void UnitInResampleOut::SetInputTexturesFromParents()
 {
-     //Scan all parents and look for units
-     for( unsigned int i = 0; i < getNumParents(); ++i )
-     {
-         rtt::Unit* unit = dynamic_cast< rtt::Unit* >( getParent( i ) );
-         if( unit )
-         {
-             //Add each found texture as input
-             const Unit::TextureMap& textureMap =
+    //Scan all parents and look for units
+    for( unsigned int i = 0; i < getNumParents(); ++i )
+    {
+        rtt::Unit* unit = dynamic_cast< rtt::Unit* >( getParent( i ) );
+        if( unit )
+        {
+            //Add each found texture as input
+            const Unit::TextureMap& textureMap =
                 unit->GetOutputTextureMap();
-             for( Unit::TextureMap::const_iterator itr = textureMap.begin(); 
-                 itr != textureMap.end(); ++itr )
-             {
-                 osg::Texture* texture = itr->get();
-                 if( texture )
-                 {
-                     mInputTextures.push_back( texture );
-                 }
-                 else
-                 {
-                     osg::notify( osg::WARN )
-                        << "rtt::UnitInResampleOut::SetInputTexturesFromParents(): "
-                        << unit->getName()
-                        << " has invalid output texture!"
-                        << std::endl;
-                 }
-             }
-         }
-     }
+            for( Unit::TextureMap::const_iterator itr = textureMap.begin();
+                    itr != textureMap.end(); ++itr )
+            {
+                osg::Texture* texture = itr->get();
+                if( texture )
+                {
+                    mInputTextures.push_back( texture );
+                }
+                else
+                {
+                    osg::notify( osg::WARN )
+                            << "rtt::UnitInResampleOut::SetInputTexturesFromParents(): "
+                            << unit->getName()
+                            << " has invalid output texture!"
+                            << std::endl;
+                }
+            }
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

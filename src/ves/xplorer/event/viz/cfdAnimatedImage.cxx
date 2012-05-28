@@ -50,7 +50,7 @@ using namespace ves::xplorer::scenegraph;
 // tak code out of cfdReadPAram to this function
 cfdAnimatedImage::cfdAnimatedImage( std::string basename, int frames,
                                     int ex_x, int ex_y, int dim,
-                                    double *origin, double *spacing )
+                                    double* origin, double* spacing )
 {
     //_readParam = new cfdReadParam();
     //CreateObjects();
@@ -69,7 +69,7 @@ cfdAnimatedImage::cfdAnimatedImage( std::string basename, int frames,
         std::string dirString = dirStringStream.str();
         //filename = (char*)dirString.c_str();
 
-        cfdImage* im = new cfdImage(( char* )dirString.c_str(), ex_x, ex_y, dim, origin, spacing );
+        cfdImage* im = new cfdImage( ( char* )dirString.c_str(), ex_x, ex_y, dim, origin, spacing );
 
         _images.push_back( im );
     }
@@ -90,7 +90,9 @@ cfdAnimatedImage::cfdAnimatedImage( std::string param )
     CreateObjects();
 
     if( frames == 0 )
+    {
         return;
+    }
 
     _images.clear();
 
@@ -104,7 +106,7 @@ cfdAnimatedImage::cfdAnimatedImage( std::string param )
         std::string dirString = dirStringStream.str();
         //filename = (char*)dirString.c_str();
 
-        cfdImage* im = new cfdImage(( char* )dirString.c_str(), ex_x, ex_y, dim, origin, spacing );
+        cfdImage* im = new cfdImage( ( char* )dirString.c_str(), ex_x, ex_y, dim, origin, spacing );
 
         _images.push_back( im );
     }
@@ -125,7 +127,9 @@ cfdAnimatedImage::~cfdAnimatedImage()
     unsigned int i;
 
     for( i = 0; i < _images.size(); i++ )
+    {
         delete _images[i];
+    }
 
     _images.clear();
 

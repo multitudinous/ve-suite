@@ -65,7 +65,7 @@
 /// Special Types of main value
 ///
 /// Strings: The main value can easily hold std::string values, but these must be
-/// passed in one of the following ways. 
+/// passed in one of the following ways.
 /// 1) As a pointer to an existing string (not recommended )
 /// 2) As a copyable reference to an existing string (recommended)
 /// 3) Via in-place construction of a new string object (recommended), eg.
@@ -234,11 +234,11 @@ public:
     bool IsStringVector( const boost::any& value ) const;
     bool IsVectorized( const boost::any& value ) const;
 
-    ///Set the display percision for a double value so that by default 
+    ///Set the display percision for a double value so that by default
     ///the percision is 2 decimal places.
     ///\param precision The number of decimal places to be shown
     //void SetDisplayPrecision( size_t const& precision );
-    
+
     ///Get the display precision for this property if it is a double
     ///\return The display precision for this property
     //size_t const& GetDisplayPrecision() const;
@@ -269,16 +269,16 @@ private:
     /// _valuesEqual( boost::any(2), boost::any(2.) )
     /// would return false because the types do not match: the first argument is
     /// an integer and the second is a floating point value.
-    bool _valuesEqual(boost::any & one, boost::any & two);
+    bool _valuesEqual( boost::any& one, boost::any& two );
 
     ///
     /// Stores the main value associated with this property
-    boost::any mValue; 
+    boost::any mValue;
 
     ///
     /// Is the property currently enabled? Default true. If false,
     /// no changes to mValue are allowed.
-    bool mEnabled; 
+    bool mEnabled;
 
     ///
     /// Min, Max, UI_Label, etc. are just attributes put into the attribute map.
@@ -306,7 +306,7 @@ private:
     ///
     /// Cached value of maximumValue attribute.
     /// Note it will always be cast to type double!
-    double mMaximum; 
+    double mMaximum;
 
     ///
     /// Set true whenever mValue.type == int AND there exists an
@@ -315,7 +315,7 @@ private:
     /// This member variable is set so that we don't have to look through
     /// the attribute map every time we want to check whether this property is
     /// an enum.
-    bool mIsEnum; 
+    bool mIsEnum;
 
     /// Is used to return a reference to a list of all available attributes
     /// for this property. Mutable so the method GetAttributeList() can be

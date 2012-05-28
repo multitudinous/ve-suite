@@ -58,7 +58,7 @@ TextureDataManager_t::getTextureData( const std::string& name ) const
 
 bool
 TextureDataManager_t::createTextureFromDatabase( const std::string& db,
-                                                 const std::string& simulation )
+        const std::string& simulation )
 {
     // Open the database.
     if( !Database::Instance().isOpen() &&
@@ -105,7 +105,7 @@ TextureDataManager_t::createTextureFromDatabase( const std::string& db,
         VectorDataSet vds;
         std::ostringstream os;
         os << "SELECT Name, X, Y, Z, Timestep FROM Vectors WHERE "
-        << "Simulation_ID = " << ( *sim_id ) << ";";
+           << "Simulation_ID = " << ( *sim_id ) << ";";
         if( !Database::Instance().execute( os.str() ) )
         {
             return false;
@@ -134,7 +134,7 @@ TextureDataManager_t::createTextureFromDatabase( const std::string& db,
         ScalarDataSet sds;
         os.clear();
         os << "SELECT Name, Value, Timestep FROM Scalars WHERE Simulation_ID"
-        << " = " << ( *sim_id ) << ";";
+           << " = " << ( *sim_id ) << ";";
         if( !Database::Instance().execute( os.str() ) )
         {
             return false;
@@ -160,7 +160,7 @@ TextureDataManager_t::createTextureFromDatabase( const std::string& db,
         // Find the spacing vector.
         os.clear();
         os << "SELECT X, Y, Z FROM Vectors WHERE ID = "
-        << ( *spacing_id ) << ";";
+           << ( *spacing_id ) << ";";
         if( !Database::Instance().execute( os.str() ) )
         {
             return false;
@@ -185,7 +185,7 @@ TextureDataManager_t::createTextureFromDatabase( const std::string& db,
         {
             os.clear();
             os << "SELECT X, Y, Z FROM Vectors WHERE ID = " << ( *origin_id )
-            << ";";
+               << ";";
             if( !Database::Instance().execute( os.str() ) )
             {
                 return false;
@@ -196,9 +196,9 @@ TextureDataManager_t::createTextureFromDatabase( const std::string& db,
             {
                 return false;
             }
-            double *ox = orrs[0][0].GetPtr<double>();
-            double *oy = orrs[0][1].GetPtr<double>();
-            double *oz = orrs[0][2].GetPtr<double>();
+            double* ox = orrs[0][0].GetPtr<double>();
+            double* oy = orrs[0][1].GetPtr<double>();
+            double* oz = orrs[0][2].GetPtr<double>();
         }
         // Create the texture and add it to this manager.
         TextureDataPtr tdp = new TextureData( *name, vds, sds, spacing, origin );

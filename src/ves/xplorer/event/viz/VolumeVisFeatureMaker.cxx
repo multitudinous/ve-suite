@@ -79,17 +79,17 @@ void VolumeVisFeatureMaker::AddPlane( xplorer::data::PropertySetPtr& set )
 {
 
     std::string const currentScalar = boost::any_cast<std::string >
-        ( set->GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) );
-                                
+                                      ( set->GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) );
+
     std::string const currentDataset = boost::any_cast<std::string >
-        ( set->GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
-    
-    double minimumValue = 
+                                       ( set->GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+
+    double minimumValue =
         boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Min" ) );
-    
-    double maximumValue = 
+
+    double maximumValue =
         boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Max" ) );
-    
+
     using namespace ves::xplorer::event::volume;
     //1. ActivateTextureVisualization - TB_ACTIVATE
     ActivateTBDataset( currentDataset );

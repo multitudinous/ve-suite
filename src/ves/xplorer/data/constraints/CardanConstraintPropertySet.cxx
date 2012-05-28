@@ -68,9 +68,9 @@ void CardanConstraintPropertySet::CreateSkeleton()
 
     AddProperty( "ObjectA_ReferenceAxisA", 0, "Reference Axis A" );
     std::vector<std::string> enumValues;
-    enumValues.push_back("X of Object");
-    enumValues.push_back("Y of Object");
-    enumValues.push_back("Z of Object");
+    enumValues.push_back( "X of Object" );
+    enumValues.push_back( "Y of Object" );
+    enumValues.push_back( "Z of Object" );
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "enumValues", enumValues );
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "userVisible", false );
 

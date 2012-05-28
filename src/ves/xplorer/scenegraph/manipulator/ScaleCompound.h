@@ -108,10 +108,10 @@ private:
 
     ///
     osg::ref_ptr< ScaleAxis > m_xScaleAxis;
-    
+
     ///
     osg::ref_ptr< ScaleAxis > m_yScaleAxis;
-    
+
     ///
     osg::ref_ptr< ScaleAxis > m_zScaleAxis;
 

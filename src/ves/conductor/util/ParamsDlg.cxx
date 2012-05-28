@@ -44,9 +44,9 @@ BEGIN_EVENT_TABLE( ParamsDlg, wxDialog )
 END_EVENT_TABLE()
 
 ParamsDlg::ParamsDlg(
-    wxWindow *parent, wxWindowID id, const wxString &title,
-    const wxPoint &position, const wxSize& size, long style )
-        : wxDialog( parent, id, title, position, size, style )
+    wxWindow* parent, wxWindowID id, const wxString& title,
+    const wxPoint& position, const wxSize& size, long style )
+    : wxDialog( parent, id, title, position, size, style )
 {
     CreateGUIControls();
 }
@@ -92,7 +92,7 @@ void ParamsDlg::CreateGUIControls()
     ListLabel = new wxStaticText(
         this, ID_LISTLABEL, wxT( "List" ), wxPoint( 216, 203 ),
         wxDefaultSize, 0, wxT( "ListLabel" ) );
-    MeasureLabel = new wxStaticText( 
+    MeasureLabel = new wxStaticText(
         this, ID_MEASURELABEL, wxT( "Measure" ), wxPoint( 216, 148 ),
         wxDefaultSize, 0, wxT( "MeasureLabel" ) );
     QuantityLabel = new wxStaticText(
@@ -125,7 +125,7 @@ void ParamsDlg::CreateGUIControls()
     OptionLabel = new wxStaticText(
         this, ID_OPTIONLABEL, wxT( "Option" ), wxPoint( 216, 191 ),
         wxDefaultSize, 0, wxT( "OptionLabel" ) );
-    BasisLabel = new wxStaticText( 
+    BasisLabel = new wxStaticText(
         this, ID_BASISLABEL, wxT( "Basis" ), wxPoint( 216, 166 ),
         wxDefaultSize, 0, wxT( "BasisLabel" ) );
     UnitLabel = new wxStaticText(
@@ -144,8 +144,8 @@ void ParamsDlg::CreateGUIControls()
         this, ID_NODEPATHLABEL, wxT( "Path to Node" ), wxPoint( 214, 12 ),
         wxDefaultSize, 0, wxT( "NodePathLabel" ) );
     //ParameterLabel = new wxStaticText(
-        //this, ID_PARAMETERLABEL, wxT( "Parameter" ), wxPoint( 305, 10 ),
-        //wxDefaultSize, 0, wxT( "ParameterLabel" ) );
+    //this, ID_PARAMETERLABEL, wxT( "Parameter" ), wxPoint( 305, 10 ),
+    //wxDefaultSize, 0, wxT( "ParameterLabel" ) );
     //ParameterLabel->SetFont( wxFont( 8, wxSWISS, wxNORMAL, wxBOLD, FALSE ) );
 
     WxMemo3 = new wxTextCtrl(
@@ -274,10 +274,10 @@ void ParamsDlg::CreateGUIControls()
     wxArrayString arrayStringFor_ParamChoice;
     ParamChoice =
         new wxTreeCtrl( this, ID_PARAMCHOICE,
-        wxPoint( 5, 5 ), wxSize( 200, 345 ),
-        wxTR_HAS_BUTTONS | wxTR_HIDE_ROOT | wxTR_LINES_AT_ROOT,
-        wxDefaultValidator, wxT( "ParamChoice" ) );
-    
+                        wxPoint( 5, 5 ), wxSize( 200, 345 ),
+                        wxTR_HAS_BUTTONS | wxTR_HIDE_ROOT | wxTR_LINES_AT_ROOT,
+                        wxDefaultValidator, wxT( "ParamChoice" ) );
+
     m_rootId = ParamChoice->AddRoot( wxT( "Inputs" ), 0, -1, NULL );
     m_prevSelection = m_rootId;
     //ParamChoice->SetSelection( -1 );
@@ -296,12 +296,12 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
 {
     //get selection
     wxTreeItemId selection = ParamChoice->GetSelection();
-    if( m_prevSelection != selection | selection != m_rootId  )
+    if( m_prevSelection != selection | selection != m_rootId )
     {
         //get components name
         std::string compName = ConvertUnicode( CompName.c_str() );
         ves::open::xml::CommandPtr
-            returnState( new ves::open::xml::Command() );
+        returnState( new ves::open::xml::Command() );
 
         //Block - input or output
         if( !DialogType.compare( wxT( "input" ) ) )
@@ -313,7 +313,7 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
             else
             {
                 returnState->
-                    SetCommandName("getStreamInputModuleProperties" );
+                SetCommandName( "getStreamInputModuleProperties" );
             }
             ValueEdit->SetEditable( true );
             SetButton->Enable( true );
@@ -327,7 +327,7 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
             else
             {
                 returnState->
-                    SetCommandName( "getStreamOutputModuleProperties" );
+                SetCommandName( "getStreamOutputModuleProperties" );
             }
             ValueEdit->SetEditable( false );
             SetButton->Enable( false );
@@ -335,28 +335,28 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
 
         //create the dvp
         ves::open::xml::DataValuePairPtr
-            data( new ves::open::xml::DataValuePair() );
+        data( new ves::open::xml::DataValuePair() );
         data->SetData( std::string( "ModuleName" ), compName );
         returnState->AddDataValuePair( data );
         data = ves::open::xml::DataValuePairPtr(
-            new ves::open::xml::DataValuePair() );
-        
+                   new ves::open::xml::DataValuePair() );
+
         //get the variable path
         std::string paramName = ConvertUnicode( ParamChoice->GetItemText( selection ).c_str() );
         wxTreeItemId parentId = ParamChoice->GetItemParent( selection );
         while( parentId != m_rootId )
         {
             paramName.insert( 0,
-                ( ConvertUnicode( ParamChoice->GetItemText( parentId ).c_str() ) + "." ) );
+                              ( ConvertUnicode( ParamChoice->GetItemText( parentId ).c_str() ) + "." ) );
             parentId = ParamChoice->GetItemParent( parentId );
         }
         data->SetData( std::string( "ParamName" ), paramName );
 
         returnState->AddDataValuePair( data );
         std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
-            nodes;
+        nodes;
         nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
-            ( returnState, "vecommand" ) );
+                         ( returnState, "vecommand" ) );
 
         //create xml
         ves::open::xml::XMLReaderWriter commandWriter;
@@ -389,43 +389,43 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
             if( pair->GetDataName() == "NodePath" )
             {
                 NodePath->SetValue( wxString( pair->GetDataString().c_str(),
-                    wxConvUTF8 ) );
+                                              wxConvUTF8 ) );
             }
             //else if(pair->GetDataName()() == "AliasName")
             else if( pair->GetDataName() == "Basis" )
             {
                 BasisEdit->SetValue( wxString( pair->GetDataString().c_str(),
-                    wxConvUTF8 ) );
+                                               wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "CompletionStatus" )
             {
                 WxEdit16->SetValue( wxString( pair->GetDataString().c_str(),
-                    wxConvUTF8 ) );
+                                              wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "DefaultValue" )
             {
                 DefaultValueEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(),wxConvUTF8 ) );
+                                                pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "Dimension" )
             {
                 DimensionEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                             pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "Gender" )
             {
                 GenderEdit->SetValue( wxString( pair->GetDataString().c_str(),
-                    wxConvUTF8 ) );
+                                                wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "InorOut" )
             {
                 InOrOutEdit->SetValue( wxString( pair->GetDataString().c_str(),
-                    wxConvUTF8 ) );
+                                                 wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "Multiport" )
             {
                 MultiportEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                             pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             //else if( pair->GetDataName() == "NumChild" )
             //{
@@ -439,72 +439,72 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
             else if( pair->GetDataName() == "OptionList" )
             {
                 OptionListEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                              pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "Options" )
             {
                 OptionsMemo->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                           pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "PhysicalQuantity" )
             {
                 QuantityEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                            pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "PortType" )
             {
                 PortTypeEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                            pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "Prompt" )
-            {    
+            {
                 PromptMemo->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                          pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "RecordType" )
             {
                 RecordTypeEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                              pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "UnitOfMeasure" )
             {
                 UnitEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                        pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "Value" )
             {
                 ValueEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                         pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "hasChild" )
             {
                 HasChildrenEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                               pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "isEnterable" )
             {
                 EnterableEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                             pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "isOutput" )
             {
                 OutputEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                          pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "upLimit" )
             {
                 UpperLimitEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                              pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "lowerLimit" )
-            {    
+            {
                 LowerLimitEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                              pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( pair->GetDataName() == "Multiport" )
             {
                 MultiportEdit->SetValue( wxString(
-                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+                                             pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
         }
     }
@@ -518,37 +518,37 @@ void ParamsDlg::SetButtonClick( wxCommandEvent& event )
     returnState->SetCommandName( "setParam" );
 
     ves::open::xml::DataValuePairPtr
-        moduleName( new ves::open::xml::DataValuePair() );
+    moduleName( new ves::open::xml::DataValuePair() );
     moduleName->SetData( "ModuleName", compName );
     returnState->AddDataValuePair( moduleName );
 
-    ves::open::xml::DataValuePairPtr 
-        paramName( new ves::open::xml::DataValuePair() );
+    ves::open::xml::DataValuePairPtr
+    paramName( new ves::open::xml::DataValuePair() );
     if( mParentId == m_rootId )
     {
-        paramName->SetData( std::string( "ParamName" ), ConvertUnicode( 
-            ParamChoice->GetItemText( 
-            ParamChoice->GetSelection() ) ) );
+        paramName->SetData( std::string( "ParamName" ), ConvertUnicode(
+                                ParamChoice->GetItemText(
+                                    ParamChoice->GetSelection() ) ) );
     }
     else
     {
-        paramName->SetData( std::string( "ParamName" ), 
-            ConvertUnicode( ParamChoice->GetItemText( mParentId ) ) + 
-            std::string( "." ) +
-            ConvertUnicode( ParamChoice->GetItemText( ParamChoice->GetSelection() ) ) );
+        paramName->SetData( std::string( "ParamName" ),
+                            ConvertUnicode( ParamChoice->GetItemText( mParentId ) ) +
+                            std::string( "." ) +
+                            ConvertUnicode( ParamChoice->GetItemText( ParamChoice->GetSelection() ) ) );
     }
     returnState->AddDataValuePair( paramName );
 
     ves::open::xml::DataValuePairPtr
-        paramValue( new ves::open::xml::DataValuePair() );
+    paramValue( new ves::open::xml::DataValuePair() );
     paramValue->SetData( "ParamValue", ConvertUnicode(
-        ValueEdit->GetValue().c_str() ) );
+                             ValueEdit->GetValue().c_str() ) );
     returnState->AddDataValuePair( paramValue );
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
-        nodes;
+    nodes;
     nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
-        ( returnState, "vecommand" ) );
+                     ( returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -556,10 +556,10 @@ void ParamsDlg::SetButtonClick( wxCommandEvent& event )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     serviceList->Query( status );
 }
-void ParamsDlg::AppendList( const char * input )
+void ParamsDlg::AppendList( const char* input )
 {
     std::string inputName( input );
-    if( inputName.find(".") == std::string::npos )
+    if( inputName.find( "." ) == std::string::npos )
     {
         m_prevIds[ inputName ] =
             ParamChoice->
@@ -568,28 +568,28 @@ void ParamsDlg::AppendList( const char * input )
     else
     {
         std::string parentName =
-            inputName.substr( 0, inputName.find_last_of(".") );
+            inputName.substr( 0, inputName.find_last_of( "." ) );
 
         std::string subName =
-            inputName.substr( inputName.find_last_of(".") + 1 );
+            inputName.substr( inputName.find_last_of( "." ) + 1 );
 
         m_prevIds[ inputName ] =
             ParamChoice->AppendItem( m_prevIds[ parentName ],
-            wxString( subName.c_str(), wxConvUTF8 ) );
+                                     wxString( subName.c_str(), wxConvUTF8 ) );
     }
 }
-void ParamsDlg::SetCompName( const char * name )
+void ParamsDlg::SetCompName( const char* name )
 {
     this->CompName = wxString( name, wxConvUTF8 );
 }
 
 void ParamsDlg::SetServiceList(
-    ves::conductor::util::CORBAServiceList * serviceList )
+    ves::conductor::util::CORBAServiceList* serviceList )
 {
     this->serviceList = serviceList;
 }
 
-void ParamsDlg::SetDialogType( const char * type )
+void ParamsDlg::SetDialogType( const char* type )
 {
     this->DialogType = wxString( type, wxConvUTF8 );
 }

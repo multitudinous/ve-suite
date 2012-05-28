@@ -43,7 +43,7 @@
 using namespace ves::xplorer::scenegraph::nurbs;
 //////////////////////////////////////////////////////////////////////////
 NURBSDrawable::NURBSDrawable( ves::xplorer::scenegraph::nurbs::NURBSObject*
-                                 nurbsObject )
+                              nurbsObject )
 {
     m_nurbsObject = nurbsObject;
     setUseVertexBufferObjects( true );
@@ -53,7 +53,7 @@ NURBSDrawable::NURBSDrawable( ves::xplorer::scenegraph::nurbs::NURBSObject*
 ///////////////////////////////////////////////////////////
 NURBSDrawable::NURBSDrawable( const NURBSDrawable& tessSurf,
                               const osg::CopyOp& copyop )
-:osg::Geometry( tessSurf, copyop )
+    : osg::Geometry( tessSurf, copyop )
 {
     m_nurbsObject = tessSurf.m_nurbsObject;
     _updateTessellatedSurface();
@@ -80,10 +80,10 @@ void NURBSDrawable::UpdateMesh( NURBSObject* nurbs )
     std::vector<unsigned int> changedVerts = nurbs->GetChangedTessellatedVertexIndecies();
     for( size_t i = 0; i < nChangedVerts; ++i )
     {
-        (*m_tessellatedPoints)[changedVerts.at(i)].set(osg::Vec3d( nurbs->InterpolatedPoints().at(changedVerts.at(i)).x(),
-                                                                   nurbs->InterpolatedPoints().at(changedVerts.at(i)).y(),
-                                                                   nurbs->InterpolatedPoints().at(changedVerts.at(i)).z() ) );
-        (*m_normals)[changedVerts.at(i)].set( _calculateSurfaceNormalAtPoint( changedVerts.at( i ) ) );
+        ( *m_tessellatedPoints )[changedVerts.at( i )].set( osg::Vec3d( nurbs->InterpolatedPoints().at( changedVerts.at( i ) ).x(),
+                nurbs->InterpolatedPoints().at( changedVerts.at( i ) ).y(),
+                nurbs->InterpolatedPoints().at( changedVerts.at( i ) ).z() ) );
+        ( *m_normals )[changedVerts.at( i )].set( _calculateSurfaceNormalAtPoint( changedVerts.at( i ) ) );
     }
     m_tessellatedPoints->dirty();
     m_normals->dirty();
@@ -101,29 +101,29 @@ void NURBSDrawable::_updateTessellatedSurface()
         m_texCoords = new osg::Vec2Array( );
         setVertexArray( m_tessellatedPoints.get() );
         setNormalArray( m_normals.get() );
-        setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
-        setTexCoordArray(0, m_texCoords.get() );
+        setNormalBinding( osg::Geometry::BIND_PER_VERTEX );
+        setTexCoordArray( 0, m_texCoords.get() );
     }
     else
     {
-       m_tessellatedPoints->clear();
-       m_normals->clear();
-       m_texCoords->clear();
-       removePrimitiveSet(0,getNumPrimitiveSets());
-       m_tessellatedPoints->dirty();
-       m_texCoords->dirty();
-       m_normals->dirty();
+        m_tessellatedPoints->clear();
+        m_normals->clear();
+        m_texCoords->clear();
+        removePrimitiveSet( 0, getNumPrimitiveSets() );
+        m_tessellatedPoints->dirty();
+        m_texCoords->dirty();
+        m_normals->dirty();
     }
-    for(size_t i = 0; i < numTessellatedPoints; ++i)
+    for( size_t i = 0; i < numTessellatedPoints; ++i )
     {
-        m_tessellatedPoints->push_back( osg::Vec3d( m_nurbsObject->InterpolatedPoints().at(i).x(),
-                                                    m_nurbsObject->InterpolatedPoints().at(i).y(),
-                                                    m_nurbsObject->InterpolatedPoints().at(i).z() ) );
-        m_texCoords->push_back( osg::Vec2d( m_nurbsObject->GetUVParameters().at(i).x(),
-                                            m_nurbsObject->GetUVParameters().at(i).y() ) );
-        m_normals->push_back( _calculateSurfaceNormalAtPoint(i) );
-        
-    } 
+        m_tessellatedPoints->push_back( osg::Vec3d( m_nurbsObject->InterpolatedPoints().at( i ).x(),
+                                        m_nurbsObject->InterpolatedPoints().at( i ).y(),
+                                        m_nurbsObject->InterpolatedPoints().at( i ).z() ) );
+        m_texCoords->push_back( osg::Vec2d( m_nurbsObject->GetUVParameters().at( i ).x(),
+                                            m_nurbsObject->GetUVParameters().at( i ).y() ) );
+        m_normals->push_back( _calculateSurfaceNormalAtPoint( i ) );
+
+    }
     if( m_nurbsObject->GetType() == NURBSObject::Surface )
     {
         _updateSurfacePrimitive();
@@ -140,13 +140,13 @@ void NURBSDrawable::_updateCurvePrimitive()
     //std::cout<<"curve points: "<<nUPoints<<std::endl;
     //set up the linestrip for the u iso-curves
     osg::DrawElementsUShort& drawElements =
-               *( new osg::DrawElementsUShort( GL_LINE_STRIP, nUPoints ) );
+        *( new osg::DrawElementsUShort( GL_LINE_STRIP, nUPoints ) );
 
     unsigned int index = 0;
     addPrimitiveSet( &drawElements );
     for( unsigned int u = 0; u < nUPoints; ++u )
     {
-        drawElements[index++] = u; 
+        drawElements[index++] = u;
     }
 }
 ///////////////////////////////////////////////////////
@@ -158,26 +158,26 @@ void NURBSDrawable::_updateSurfacePrimitive()
 
     //std::cout<<"Num u interpolated points:"<<nUPoints<<std::endl;
     //std::cout<<"Num v interpolated points:"<<nVPoints<<std::endl;
-    for( unsigned int v = 0; v < nVPoints - 1;++v )
+    for( unsigned int v = 0; v < nVPoints - 1; ++v )
     {
         //std::cout<<"v: "<<v<<std::endl;
         osg::DrawElementsUShort& drawElements =
-                *( new osg::DrawElementsUShort( GL_TRIANGLE_STRIP,
-                                                2*nUPoints ) );
+            *( new osg::DrawElementsUShort( GL_TRIANGLE_STRIP,
+                                            2 * nUPoints ) );
         unsigned int index = 0;
-        drawElements[index++] = ( ( v )*nUPoints );
-        drawElements[index++] = ( ( v + 1 )*nUPoints );
-        drawElements[index++] = ( ( v )*nUPoints + 1 );
-        
+        drawElements[index++] = ( ( v ) * nUPoints );
+        drawElements[index++] = ( ( v + 1 ) * nUPoints );
+        drawElements[index++] = ( ( v ) * nUPoints + 1 );
+
         //interior points
-        for( unsigned int u = 1; u < nUPoints-1 ; u++ )
+        for( unsigned int u = 1; u < nUPoints - 1 ; u++ )
         {
-            drawElements[index++] = ( ( v + 1 )*nUPoints + u );
-            drawElements[index++] = ( ( v )*nUPoints + u + 1);
+            drawElements[index++] = ( ( v + 1 ) * nUPoints + u );
+            drawElements[index++] = ( ( v ) * nUPoints + u + 1 );
             //drawElements[index++] = ( ( v )*nUPoints + u );
-           // std::cout<<( v + 1 )*nUPoints + u<<" "<<( v )*nUPoints + u <<std::endl;
+            // std::cout<<( v + 1 )*nUPoints + u<<" "<<( v )*nUPoints + u <<std::endl;
         }
-        drawElements[index++] = ( ( v + 1 )*nUPoints + (nUPoints - 1) );
+        drawElements[index++] = ( ( v + 1 ) * nUPoints + ( nUPoints - 1 ) );
         addPrimitiveSet( &drawElements );
     }
 
@@ -186,10 +186,10 @@ void NURBSDrawable::_updateSurfacePrimitive()
 osg::Vec3 NURBSDrawable::_calculateSurfaceNormalAtPoint( unsigned int index )
 {
     osg::Vec3 normal( 0, 1, 0 );
-    if( m_nurbsObject->GetMinimumDegree() > 1 && (m_nurbsObject->GetType() == NURBSObject::Surface ) )
+    if( m_nurbsObject->GetMinimumDegree() > 1 && ( m_nurbsObject->GetType() == NURBSObject::Surface ) )
     {
         ves::xplorer::scenegraph::nurbs::NURBSSurface* surface =
-               static_cast<ves::xplorer::scenegraph::nurbs::NURBSSurface*>( m_nurbsObject );
+            static_cast<ves::xplorer::scenegraph::nurbs::NURBSSurface*>( m_nurbsObject );
 
         ves::xplorer::scenegraph::nurbs::Point dSdV = surface->GetSurfaceDerivatives()[1][0].at( index );
         ves::xplorer::scenegraph::nurbs::Point dSdU = surface->GetSurfaceDerivatives()[0][1].at( index );

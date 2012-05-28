@@ -49,7 +49,7 @@ namespace util
 {
 // function declarations
 ///Reads in a grid (vtkDataSet) and returns it as a surface (vtkPolyData).
-VE_UTIL_EXPORTS vtkPolyData * cfdGrid2Surface( vtkDataObject *dataSet, float deciVal );
+VE_UTIL_EXPORTS vtkPolyData* cfdGrid2Surface( vtkDataObject* dataSet, float deciVal );
 }// end of util namesapce
 }// end of xplorer namesapce
 }// end of ves namesapce

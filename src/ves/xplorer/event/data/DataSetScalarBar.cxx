@@ -60,7 +60,7 @@ using namespace ves::xplorer::scenegraph;
 DataSetScalarBar::DataSetScalarBar( void )
 {
     vprDEBUG( vesDBG, 2 ) << "constructing cfdScalarBarActor"
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
     bbox[ 0 ] = bbox[ 2 ] = bbox[ 4 ] = 0.0f;
     bbox[ 1 ] = bbox[ 3 ] = bbox[ 5 ] = 1.0f;
 
@@ -73,11 +73,11 @@ DataSetScalarBar::DataSetScalarBar( void )
 DataSetScalarBar::~DataSetScalarBar()
 {
     vprDEBUG( vesDBG, 2 ) << "deconstructing cfdScalarBarActor"
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
     // may note need to delete anything
     vprDEBUG( vesDBG, 2 ) << "   finished deconstructing cfdScalarBarActor"
-    << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSetScalarBar::SetBoundingBox( double* inBBox )
@@ -162,7 +162,7 @@ ScalarBar* DataSetScalarBar::CreateScalarBar( void )
     //std::cout << scalarRange[ 0 ] << " " <<  scalarRange[ 1 ] <<std::endl;
     ColorRange* cr = new ColorRange( scalarRange[ 0 ], scalarRange[ 1 ], cs );
     ScalarBar* sb = new ScalarBar( 100, 3, cr, activeScalarName,
-                                                  ScalarBar::VERTICAL, 0.1f, myPrinter );
+                                   ScalarBar::VERTICAL, 0.1f, myPrinter );
     //sb->setScalarPrinter(new MyScalarPrinter);
     sb->setTextProperties( textProps );
 

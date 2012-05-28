@@ -75,32 +75,32 @@ HeadPositionCallback::HeadPositionCallback( const HeadPositionCallback& ctc, con
 ////////////////////////////////////////////////////////////////////////////////
 void HeadPositionCallback::operator()(
     osg::Node* node, osg::NodeVisitor* nv )
-{    
+{
 
 #ifndef ALIGN_WITH_HEAD
-    gmtl::Matrix44d worldMat = 
+    gmtl::Matrix44d worldMat =
         vxs::SceneManager::instance()->GetInvertedNavMatrix();
 #else
-    gmtl::Matrix44d worldMat = 
+    gmtl::Matrix44d worldMat =
         vxs::SceneManager::instance()->GetGlobalViewMatrix();
 #endif
 
     gmtl::Point3d transformPoint = m_transformPoint;
 #ifndef ALIGN_WITH_HEAD
-    gmtl::Point3d headPoint = 
+    gmtl::Point3d headPoint =
         gmtl::makeTrans< gmtl::Point3d >( vxs::SceneManager::instance()->GetHeadMatrix() );
     transformPoint += headPoint;
 #endif
     transformPoint = worldMat * transformPoint;
 
     static_cast< osg::PositionAttitudeTransform* >( node )->setPosition(
-        osg::Vec3d( transformPoint.mData[ 0 ], transformPoint.mData[ 1 ], 
-        transformPoint.mData[ 2 ] ) );
+        osg::Vec3d( transformPoint.mData[ 0 ], transformPoint.mData[ 1 ],
+                    transformPoint.mData[ 2 ] ) );
 
     gmtl::Quatd invertedQuat = gmtl::makeRot< gmtl::Quatd >( worldMat );
     osg::Quat quat;
     quat.set( invertedQuat.mData[ 0 ], invertedQuat.mData[ 1 ],
-             invertedQuat.mData[2],invertedQuat.mData[ 3 ]);
+              invertedQuat.mData[2], invertedQuat.mData[ 3 ] );
     static_cast< osg::PositionAttitudeTransform* >( node )->setAttitude( quat );
 
     traverse( node, nv );

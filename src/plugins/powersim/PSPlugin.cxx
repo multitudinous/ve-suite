@@ -60,18 +60,18 @@ using namespace ves::conductor;
 namespace vox = ves::open::xml;
 
 BEGIN_EVENT_TABLE( PSPlugin, ves::conductor::UIPluginBase )
-EVT_MENU( PS_PLUGIN_OPEN, PSPlugin::OnOpen )
-/*
-EVT_MENU( APPLUGIN_SHOW_ASPEN_SIMULATION, PSPlugin::ShowAspenSimulation )
-EVT_MENU( APPLUGIN_HIDE_ASPEN_SIMULATION, PSPlugin::HideAspenSimulation )
-EVT_MENU( APPLUGIN_CLOSE_ASPEN_SIMULATION, PSPlugin::OnCloseAspenSimulation )
-EVT_MENU( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, PSPlugin::OnDisconnectAspenSimulation )
-EVT_MENU( APPLUGIN_RUN_ASPEN_NETWORK, PSPlugin::RunAspenNetwork )
-EVT_MENU( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, PSPlugin::ReinitializeAspenSimulation )
-EVT_MENU( APPLUGIN_STEP_ASPEN_NETWORK, PSPlugin::StepAspenNetwork )
-EVT_MENU( APPLUGIN_SAVE_SIMULATION, PSPlugin::SaveSimulation )
-EVT_MENU( APPLUGIN_SAVEAS_SIMULATION, PSPlugin::SaveAsSimulation )
-*/
+    EVT_MENU( PS_PLUGIN_OPEN, PSPlugin::OnOpen )
+    /*
+    EVT_MENU( APPLUGIN_SHOW_ASPEN_SIMULATION, PSPlugin::ShowAspenSimulation )
+    EVT_MENU( APPLUGIN_HIDE_ASPEN_SIMULATION, PSPlugin::HideAspenSimulation )
+    EVT_MENU( APPLUGIN_CLOSE_ASPEN_SIMULATION, PSPlugin::OnCloseAspenSimulation )
+    EVT_MENU( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, PSPlugin::OnDisconnectAspenSimulation )
+    EVT_MENU( APPLUGIN_RUN_ASPEN_NETWORK, PSPlugin::RunAspenNetwork )
+    EVT_MENU( APPLUGIN_REINITIALIZE_ASPEN_SIMULATION, PSPlugin::ReinitializeAspenSimulation )
+    EVT_MENU( APPLUGIN_STEP_ASPEN_NETWORK, PSPlugin::StepAspenNetwork )
+    EVT_MENU( APPLUGIN_SAVE_SIMULATION, PSPlugin::SaveSimulation )
+    EVT_MENU( APPLUGIN_SAVEAS_SIMULATION, PSPlugin::SaveAsSimulation )
+    */
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( PSPlugin, ves::conductor::UIPluginBase )
@@ -206,7 +206,7 @@ void PSPlugin::OnOpen( wxCommandEvent& event )
     sipFileName.ClearExt();
     sipFileName.SetName( fd.GetFilename() + wxT( ".sip" ) );
 
-    vox::CommandPtr returnState ( new vox::Command() );
+    vox::CommandPtr returnState( new vox::Command() );
     returnState->SetCommandName( "GetNetwork" );
     vox::DataValuePairPtr data( new vox::DataValuePair() );
     data->SetData( "NetworkQuery", "GetNetwork" );
@@ -219,7 +219,7 @@ void PSPlugin::OnOpen( wxCommandEvent& event )
 
     std::vector< std::pair< vox::XMLObjectPtr, std::string > > nodes;
     nodes.push_back( std::pair< vox::XMLObjectPtr, std::string >(
-        returnState, "vecommand" ) );
+                         returnState, "vecommand" ) );
     vox::XMLReaderWriter commandWriter;
     std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
@@ -264,7 +264,7 @@ void PSPlugin::OnOpen( wxCommandEvent& event )
 
     vox::model::SystemPtr tempSystem;
     tempSystem = boost::dynamic_pointer_cast< vox::model::System >(
-        objectVector.at( 0 ) );
+                     objectVector.at( 0 ) );
     vox::model::ModelPtr powersimModel;
     //Set parent model on topmost level
     for( int i = 0; i < tempSystem->GetNumberOfModels(); ++i )

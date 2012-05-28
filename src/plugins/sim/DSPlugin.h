@@ -66,13 +66,13 @@ public:
 
     ///???
     wxString GetConductorName();
-    
+
     ///???
     std::vector< std::string > GetAvailableVariables();
-    
+
     ///???
     std::vector< std::string > GetSelectVariables();
-    
+
     ///???
     void SetSelectVariables( std::vector< std::string> selectedVariables );
 
@@ -88,29 +88,29 @@ protected:
     ///???
     std::vector< std::string > m_selectedOpcList;
     ///???
-    wxTimer * m_timer;
-    
+    wxTimer* m_timer;
+
     ///???
     virtual wxMenu* GetPluginPopupMenu( wxMenu* baseMenu );
-    
+
     ///???
     void OnUnitName( wxCommandEvent& event );
 
     ///???
     void OnOpen( wxCommandEvent& event );
-    
+
     ///???
     void OnCreateOPCList( wxCommandEvent& event );
-    
+
     ///???
     void OnConnect( wxCommandEvent& event );
-    
+
     ///???
     void OnAddVariable( wxCommandEvent& event );
-    
+
     ///???
     void OnTimer( wxTimerEvent& event );
-    
+
     ///???
     void QueryForAllVariables( wxCommandEvent& event );
 

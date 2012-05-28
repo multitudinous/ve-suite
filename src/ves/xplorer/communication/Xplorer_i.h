@@ -50,7 +50,7 @@
 #include <iostream>
 
 class VE_XPLORER_COMM_EXPORTS Body_VEXplorer_i
-            : public virtual POA_Body::VEXplorer
+    : public virtual POA_Body::VEXplorer
 {
 public:
     ///Constructor

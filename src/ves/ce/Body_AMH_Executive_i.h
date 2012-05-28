@@ -57,26 +57,26 @@ namespace ves
 {
 namespace ce
 {
-class VE_CE_EXPORTS Body_AMH_Executive_i 
-    : 
-    public virtual POA_Body::AMH_Executive
+class VE_CE_EXPORTS Body_AMH_Executive_i
+    :
+public virtual POA_Body::AMH_Executive
 {
 public:
-    Body_AMH_Executive_i(PortableServer::POA_ptr poa);
-    
-    virtual ~Body_AMH_Executive_i(void);
-    
+    Body_AMH_Executive_i( PortableServer::POA_ptr poa );
+
+    virtual ~Body_AMH_Executive_i( void );
+
     /*virtual void GetImportData (
                                 Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                 ::CORBA::Long module_id,
                                 ::CORBA::Long port_id
                                 ) ;*/
 
-    virtual void SetModuleMessage (
-                                   Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                                   ::CORBA::Long module_id,
-                                   const char * msg
-                                   ) ;
+    virtual void SetModuleMessage(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        ::CORBA::Long module_id,
+        const char* msg
+    ) ;
 
     /*virtual void SetModuleResult (
                                   Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
@@ -88,103 +88,103 @@ public:
                                   Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
                                   ::CORBA::Long module_id
                                   ) ;*/
-    
-    virtual void SetNetwork (
-                             Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                             const char * network
-                             ) ;
-    
-    virtual void SetModuleUI (
-                              Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                              ::CORBA::Long module_id,
-                              const char * ui
-                              ) ;
-    
-    virtual void GetNetwork (
-                             Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                             const char * moduleName
-                             ) ;
-    
-    virtual void SetWatchList (
-                               Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                               const ::Types::ArrayLong & id
-                               ) ;
-    
-    virtual void GetWatchList (
-                               Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
-                               ) ;
-    
-    virtual void GetStatus (
-                            Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
-                            ) ;
 
-    virtual void StartCalc (
-                            Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
-                            ) ;
- 
-    virtual void StopCalc (
-                           Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
-                           ) ;
-    
-    virtual void PauseCalc (
-                            Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
-                            ) ;
-    
-    virtual void Resume (
-                         Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
-                         ) ;
-    
-    virtual void RegisterUI (
-                             Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                             const char * UIName,
-                             ::Body::UI_ptr ui
-                             ) ;
-    
-    virtual void UnRegisterUI (
-                               Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                               const char * UIName
-                               ) ;
-    
-    virtual void UnRegisterUnit (
-                                 Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                                 const char * UnitName
-                                 ) ;
-    
-    virtual void RegisterUnit (
-                               Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                               const char * UnitName,
-                               ::Body::Unit_ptr unit,
-                               ::CORBA::Long flag
-                               ) ;
-    
+    virtual void SetNetwork(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        const char* network
+    ) ;
+
+    virtual void SetModuleUI(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        ::CORBA::Long module_id,
+        const char* ui
+    ) ;
+
+    virtual void GetNetwork(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        const char* moduleName
+    ) ;
+
+    virtual void SetWatchList(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        const ::Types::ArrayLong& id
+    ) ;
+
+    virtual void GetWatchList(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
+    ) ;
+
+    virtual void GetStatus(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
+    ) ;
+
+    virtual void StartCalc(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
+    ) ;
+
+    virtual void StopCalc(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
+    ) ;
+
+    virtual void PauseCalc(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
+    ) ;
+
+    virtual void Resume(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
+    ) ;
+
+    virtual void RegisterUI(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        const char* UIName,
+        ::Body::UI_ptr ui
+    ) ;
+
+    virtual void UnRegisterUI(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        const char* UIName
+    ) ;
+
+    virtual void UnRegisterUnit(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        const char* UnitName
+    ) ;
+
+    virtual void RegisterUnit(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        const char* UnitName,
+        ::Body::Unit_ptr unit,
+        ::CORBA::Long flag
+    ) ;
+
     /*virtual void GetGlobalMod (
                                Body::AMH_ExecutiveResponseHandler_ptr _tao_rh
                                ) ;*/
 
-    virtual void Query (
-                        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                        const char * commands
-                        ) ;
-    
-    
-    virtual void SetID (
-                        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                        const char * moduleName,
-                        ::CORBA::Long id
-                        ) ;
-    
-    virtual void DeleteModuleInstance (
-                                       Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                                       const char * moduleName,
-                                       ::CORBA::Long module_id
-                                       ) ;
-    
-    virtual void SetParams (
-                            Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
-                            const char * moduleName,
-                            ::CORBA::Long module_id,
-                            const char * param
-                            ) ;
+    virtual void Query(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        const char* commands
+    ) ;
+
+
+    virtual void SetID(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        const char* moduleName,
+        ::CORBA::Long id
+    ) ;
+
+    virtual void DeleteModuleInstance(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        const char* moduleName,
+        ::CORBA::Long module_id
+    ) ;
+
+    virtual void SetParams(
+        Body::AMH_ExecutiveResponseHandler_ptr _tao_rh,
+        const char* moduleName,
+        ::CORBA::Long module_id,
+        const char* param
+    ) ;
 
     void execute_next_mod( long module_id );
 
@@ -193,7 +193,7 @@ private:
     ///Map to store connections from all of the VE-Xplorer and VE-Conductor
     ///UI interfaces
     std::map<std::string, ::Body::UI_var> m_uiMap;
-    
+
     std::map< std::string, Execute_Thread* > m_execThread;
     //std::map< std::string, QueryThread* > m_queryThreads;
 
@@ -203,16 +203,16 @@ private:
 
     ///AMI handler for asynchronous calls to conductor
     //Body_AMI_UIHandler_i m_uiAMIHandler;
-    
+
     Types::ArrayLong m_watchList;
-    
+
     ACE_Thread_Mutex m_mutex;
     ACE_Thread_Mutex m_query;
 
     std::string GetResults( int rt );
-    
-    void ClientMessage( const char *msg );
-    
+
+    void ClientMessage( const char* msg );
+
     void execute( std::string );
 };
 }

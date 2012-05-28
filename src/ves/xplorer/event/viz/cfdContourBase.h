@@ -92,7 +92,7 @@ public:
     ///Sets the Mapper Input
     ///\param polydata
     //void SetMapperInput( vtkPolyData* polydata );
-    
+
     ///Sets the Fill Type
     ///\param fillType
     void SetFillType( const int fillType );
@@ -118,7 +118,7 @@ protected:
     vtkPolyDataNormals*  normals;///<polydata normals.
     ///Convert cutting plane to point data
     vtkCellDataToPointData* mC2p;
-    
+
     cfdCuttingPlane* cuttingPlane;///<cutting plane
 
     unsigned int m_selectDataMapping;

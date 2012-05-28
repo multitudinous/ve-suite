@@ -63,7 +63,7 @@ class VE_SCENEGRAPH_EXPORTS LocalToWorldNodePath : public osg::NodeVisitor
 public:
     typedef std::pair< osg::Node*, osg::NodePath > NodeAndPath;
     typedef std::vector< NodeAndPath > NodeAndPathList;
-    
+
     ///Constructor
     ///\param stopNode The node with coordinate system to transform to
     ///\param startNode The local node to transform

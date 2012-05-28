@@ -53,14 +53,14 @@ StarCDTranslator::~StarCDTranslator()
 {}
 //////////////////////////////////////////////////////////////////////////
 void StarCDTranslator::StarCDPreTranslateCbk::Preprocess( int argc, char** argv,
-                                                          cfdTranslatorToVTK* toVTK )
+        cfdTranslatorToVTK* toVTK )
 {
     PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void StarCDTranslator::StarCDTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                     cfdTranslatorToVTK* toVTK,
-                                                     vtkAlgorithm*& )
+        cfdTranslatorToVTK* toVTK,
+        vtkAlgorithm*& )
 {
     StarCDTranslator* starCDToVTK =
         dynamic_cast<StarCDTranslator*>( toVTK );
@@ -82,7 +82,7 @@ void StarCDTranslator::StarCDTranslateCbk::Translate( vtkDataObject*& outputData
 void StarCDTranslator::DisplayHelp( void )
 {
     std::cout << "|\tStarCD Translator Usage:" << std::endl
-    << "\t -singleFile <filename_to_load> -o <output_dir> "
-    << "-outFileName <output_filename> -loader star -w file" << std::endl;
+              << "\t -singleFile <filename_to_load> -o <output_dir> "
+              << "-outFileName <output_filename> -loader star -w file" << std::endl;
 }
 

@@ -46,40 +46,40 @@
 class AceFunctorHandler : public ACE_Event_Handler
 {
 public:
-   typedef Loki::Functor<int, LOKI_TYPELIST_3(int, siginfo_t*, ucontext_t*)> 
-      SignalHandler;
+    typedef Loki::Functor<int, LOKI_TYPELIST_3( int, siginfo_t*, ucontext_t* )>
+    SignalHandler;
 
-   AceFunctorHandler()
-   {
-   }
+    AceFunctorHandler()
+    {
+    }
 
-   ~AceFunctorHandler()
-   {
-   }
+    ~AceFunctorHandler()
+    {
+    }
 
-   /**
-    * Sets the signal handler for this event handler object.
-    *
-    * @param   handler     the functor to invoke on a handle_signal call.
-    */
-   void setSignalHandler(const SignalHandler& handler)
-   {
-      mSignalHandler = handler;
-   }
+    /**
+     * Sets the signal handler for this event handler object.
+     *
+     * @param   handler     the functor to invoke on a handle_signal call.
+     */
+    void setSignalHandler( const SignalHandler& handler )
+    {
+        mSignalHandler = handler;
+    }
 
-   int handle_signal(int signum, siginfo_t* si, ucontext_t* ut)
-   {
-      if (!mSignalHandler.empty())
-      {
-         return mSignalHandler(signum, si, ut);
-      }
-      return 0;
-   }
+    int handle_signal( int signum, siginfo_t* si, ucontext_t* ut )
+    {
+        if( !mSignalHandler.empty() )
+        {
+            return mSignalHandler( signum, si, ut );
+        }
+        return 0;
+    }
 
 private:
 
-   /// The functor that is invoked when a signal event occurs.
-   SignalHandler                                mSignalHandler;
+    /// The functor that is invoked when a signal event occurs.
+    SignalHandler                                mSignalHandler;
 };
 
 #endif

@@ -83,7 +83,7 @@ public:
     ///
     btKinematicClosestNotMeRayResultCallback( btCollisionObject* me ) :
         btCollisionWorld::ClosestRayResultCallback(
-                btVector3( 0.0, 0.0, 0.0 ), btVector3( 0.0, 0.0, 0.0 ) )
+            btVector3( 0.0, 0.0, 0.0 ), btVector3( 0.0, 0.0, 0.0 ) )
     {
         m_me = me;
     }
@@ -98,7 +98,7 @@ public:
         }
 
         return ClosestRayResultCallback::addSingleResult(
-            rayResult, normalInWorldSpace );
+                   rayResult, normalInWorldSpace );
     }
 
 protected:
@@ -137,7 +137,7 @@ public:
         //for trigger filtering
         if( !convexResult.m_hitCollisionObject->hasContactResponse() )
         {
-            return btScalar(1.0);
+            return btScalar( 1.0 );
         }
 
         btVector3 hitNormalWorld;
@@ -153,9 +153,9 @@ public:
             //    convexResult.m_hitNormalLocal;
             ///New code from Skew-Matrix example:
             ///need to transform normal into worldspace
-			hitNormalWorld = 
+            hitNormalWorld =
                 convexResult.m_hitCollisionObject->
-                getWorldTransform().getBasis()*convexResult.m_hitNormalLocal;
+                getWorldTransform().getBasis() * convexResult.m_hitNormalLocal;
         }
 
         btScalar dotUp = m_up.dot( hitNormalWorld );
@@ -165,7 +165,7 @@ public:
         }
 
         return ClosestConvexResultCallback::addSingleResult(
-            convexResult, normalInWorldSpace );
+                   convexResult, normalInWorldSpace );
     }
 
 protected:
@@ -204,8 +204,8 @@ KinematicCharacterController::KinematicCharacterController()
     :
     btActionInterface(),
 
-    m_physicsSimulator( *(PhysicsSimulator::instance()) ),
-    m_dynamicsWorld( *(m_physicsSimulator.GetDynamicsWorld()) ),
+    m_physicsSimulator( *( PhysicsSimulator::instance() ) ),
+    m_dynamicsWorld( *( m_physicsSimulator.GetDynamicsWorld() ) ),
 
     m_touchingContact( false ),
     m_wasOnGround( false ),
@@ -260,7 +260,7 @@ KinematicCharacterController::KinematicCharacterController()
     m_isColliding( false ),
 
     m_lineGeode( NULL ),
-    
+
     m_moveComplete( false )
 {
     //Set max slope for character climbing
@@ -274,10 +274,10 @@ KinematicCharacterController::KinematicCharacterController()
 
     //Create the shader used to render the lines and points
     std::string fragmentSource =
-    "void main() \n"
-    "{ \n"
+        "void main() \n"
+        "{ \n"
         "gl_FragColor = vec4( 1.0, 0.6, 0.0, 1.0 ); \n"
-    "} \n";
+        "} \n";
 
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     fragmentShader->setType( osg::Shader::FRAGMENT );
@@ -307,10 +307,10 @@ KinematicCharacterController::~KinematicCharacterController()
 void KinematicCharacterController::SetConvexShape( btConvexShape* convexShape )
 {
     if( m_convexShape != NULL )
-    {    
+    {
         delete( m_convexShape );
     }
-    
+
     m_convexShape = convexShape;
     m_ghostObject->setCollisionShape( m_convexShape );
     m_ghostObject->setCollisionFlags( btCollisionObject::CF_CHARACTER_OBJECT );
@@ -347,12 +347,12 @@ bool KinematicCharacterController::recoverFromPenetration(
         btBroadphasePair* collisionPair = &btHOPC->getOverlappingPairArray()[ i ];
 
         //for trigger filtering
-        if (!static_cast<btCollisionObject*>(collisionPair->m_pProxy0->m_clientObject)->hasContactResponse()
-            || !static_cast<btCollisionObject*>(collisionPair->m_pProxy1->m_clientObject)->hasContactResponse())
+        if( !static_cast<btCollisionObject*>( collisionPair->m_pProxy0->m_clientObject )->hasContactResponse()
+                || !static_cast<btCollisionObject*>( collisionPair->m_pProxy1->m_clientObject )->hasContactResponse() )
         {
             continue;
         }
-            
+
         if( collisionPair->m_algorithm )
         {
             collisionPair->m_algorithm->getAllContactManifolds( m_manifoldArray );
@@ -365,12 +365,12 @@ bool KinematicCharacterController::recoverFromPenetration(
                 manifold->getBody0() == m_ghostObject ? btScalar( -1.0 ) : btScalar( 1.0 );
             //In bullet 2.78 or greater the number of contact points is greater
             //than 1. In bullet 2.77 that was not the case. So in the recover
-            //function we must manage the different forces that are on the chracter 
+            //function we must manage the different forces that are on the chracter
             //so that the appropriate response is achieved with the interactions
             //with the ground and other objects.
             for( int p = 0; p < manifold->getNumContacts(); ++p )
             {
-                const btManifoldPoint&pt = manifold->getContactPoint( p );
+                const btManifoldPoint& pt = manifold->getContactPoint( p );
 
                 btScalar dist = pt.getDistance();
                 if( dist < 0.0 )
@@ -381,10 +381,10 @@ bool KinematicCharacterController::recoverFromPenetration(
                         //??
                         m_touchingNormal = pt.m_normalWorldOnB * directionSign;
                     }
-                    
+
                     btVector3 currentDir = pt.m_normalWorldOnB * directionSign;
                     /*btScalar distance3 = currentDir.length2();
-                    
+
                     if( distance3 > SIMD_EPSILON )
                     {
                         if( onGround() )
@@ -403,7 +403,7 @@ bool KinematicCharacterController::recoverFromPenetration(
                     {
                         m_currentPosition += currentDir * dist * btScalar( 0.1 );
                     }
-                    //if something is in front of us then take into account 
+                    //if something is in front of us then take into account
                     //ground friction
                     //( currentDir.dot( forwardDir ) > btScalar( 0.05 ) )
                     //( currentDir.dot( lateralDir ) > btScalar( 0.05 ) )
@@ -412,7 +412,7 @@ bool KinematicCharacterController::recoverFromPenetration(
                         m_isColliding = true;
                         m_currentPosition += currentDir * dist * btScalar( 0.002 );
                     }
-                    
+
                     penetration = true;
                 }
                 else
@@ -438,7 +438,7 @@ void KinematicCharacterController::stepUp( btCollisionWorld* world )
     m_targetPosition =
         m_currentPosition + getUpAxisDirections()[ m_upAxis ] *
         ( m_stepHeight +
-        ( m_verticalOffset > btScalar( 0.0 )
+          ( m_verticalOffset > btScalar( 0.0 )
             ? m_verticalOffset
             : btScalar( 0.0 ) ) );
 
@@ -565,12 +565,12 @@ void KinematicCharacterController::stepForwardAndStrafe(
             m_ghostObject->getBroadphaseHandle()->m_collisionFilterGroup;
         callback.m_collisionFilterMask =
             m_ghostObject->getBroadphaseHandle()->m_collisionFilterMask;
-        
+
         ///New code from Skew-Matrix example:
         // Do not return hits for default objects. We want our character to bash into
         // these and knock them around.
         callback.m_collisionFilterMask &= ~btBroadphaseProxy::DefaultFilter;
-        
+
         btScalar margin = m_convexShape->getMargin();
         m_convexShape->setMargin( margin + m_addedMargin );
 
@@ -587,10 +587,10 @@ void KinematicCharacterController::stepForwardAndStrafe(
             m_isColliding = true;
             //We moved only a fraction
             //btScalar hitDistance =
-                //( callback.m_hitPointWorld - m_currentPosition ).length();
+            //( callback.m_hitPointWorld - m_currentPosition ).length();
 
             //m_currentPosition.setInterpolate3(
-                //m_currentPosition, m_targetPosition, callback.m_closestHitFraction );
+            //m_currentPosition, m_targetPosition, callback.m_closestHitFraction );
 
             updateTargetPositionBasedOnCollision( callback.m_hitNormalWorld );
             btVector3 currentDir = m_targetPosition - m_currentPosition;
@@ -629,19 +629,19 @@ void KinematicCharacterController::stepDown(
     //Phase 3: down
     //btScalar additionalDownStep = ( m_wasOnGround /*&& !onGround()*/ ) ? m_stepHeight : btScalar( 0.0 );
     //btVector3 step_drop =
-        //getUpAxisDirections()[ m_upAxis ] * ( m_currentStepOffset + additionalDownStep );
+    //getUpAxisDirections()[ m_upAxis ] * ( m_currentStepOffset + additionalDownStep );
     //btScalar downVelocity =
-        //( additionalDownStep == btScalar( 0.0 ) && m_verticalVelocity < btScalar( 0.0 )
-            //? -m_verticalVelocity
-            //: btScalar( 0.0 ) ) * dt;
-    //btVector3 gravity_drop = getUpAxisDirections()[ m_upAxis ] * downVelocity; 
+    //( additionalDownStep == btScalar( 0.0 ) && m_verticalVelocity < btScalar( 0.0 )
+    //? -m_verticalVelocity
+    //: btScalar( 0.0 ) ) * dt;
+    //btVector3 gravity_drop = getUpAxisDirections()[ m_upAxis ] * downVelocity;
     //m_targetPosition -= ( step_drop + gravity_drop );
 
     btScalar downVelocity =
         ( m_verticalVelocity < 0.0 ? -m_verticalVelocity : 0.0 ) * dt;
     if( downVelocity > 0.0 &&
-        downVelocity < m_stepHeight &&
-        ( m_wasOnGround /*|| !m_wasJumping*/ ) )
+            downVelocity < m_stepHeight &&
+            ( m_wasOnGround /*|| !m_wasJumping*/ ) )
     {
         downVelocity = m_stepHeight;
     }
@@ -650,7 +650,7 @@ void KinematicCharacterController::stepDown(
                           ( m_currentStepOffset + downVelocity );
 
     m_targetPosition -= step_drop;
-    
+
     btTransform start( btMatrix3x3::getIdentity() );
     btTransform end( btMatrix3x3::getIdentity() );
 
@@ -673,7 +673,7 @@ void KinematicCharacterController::stepDown(
     if( callback.hasHit() )
     {
         if( ( callback.m_hitCollisionObject->getCollisionFlags() &
-             btCollisionObject::CF_STATIC_OBJECT ) == 0 )
+                btCollisionObject::CF_STATIC_OBJECT ) == 0 )
         {
             // It's dynamic. Make it respond a little.
             // This allows the fulcrum / lever to work; otherwise, the lever would
@@ -682,14 +682,14 @@ void KinematicCharacterController::stepDown(
             btTransform wt = callback.m_hitCollisionObject->getWorldTransform();
             wt.setOrigin( wt.getOrigin() + response );
             callback.m_hitCollisionObject->setWorldTransform( wt );
-                        
+
             // Now that we've moved the dynamic object just slightly, make sure we leave
             // the kinematic character at the collision point, leaving just a slight gap
             // between the character and the object we just moved. That allows the dynamic
             // object to "spring back" if it is over-constrained (such as, pinned between
             // the character and the ground).
         }
-        
+
         // we dropped a fraction of the height -> hit floor
         m_currentPosition.setInterpolate3(
             m_currentPosition, m_targetPosition, callback.m_closestHitFraction );
@@ -791,7 +791,7 @@ void KinematicCharacterController::preStep( btCollisionWorld* collisionWorld )
     //With this code in place the character slides on surfaces like they are ice
     //and the character is unable to move up sloped surfaces with the
     //setVelocityForTimeInterval method. The setDisplacement will enable the
-    //character to move up the surface but the character will still slide down 
+    //character to move up the surface but the character will still slide down
     //the surface once input has stopped for the character movement. These
     //problems were introduced somewhere between bullet 2.77 and bullet 2.78.
     //More info:
@@ -833,7 +833,7 @@ void KinematicCharacterController::playerStep(
         //No motion
         return;
     }
-    
+
     m_wasOnGround = onGround();
 
     if( !m_fly )
@@ -867,8 +867,8 @@ void KinematicCharacterController::playerStep(
     {
         stepForwardAndStrafe( collisionWorld, m_displacement );
 
-        btScalar newLength = (m_currentPosition - xform.getOrigin()).length();
-        if( m_wasOnGround && (m_displacement.length() <= newLength) )
+        btScalar newLength = ( m_currentPosition - xform.getOrigin() ).length();
+        if( m_wasOnGround && ( m_displacement.length() <= newLength ) )
         {
             m_moveComplete = true;
             m_displacement[ 0 ] = 0.;
@@ -881,7 +881,7 @@ void KinematicCharacterController::playerStep(
         //printf( "  time: %f", m_velocityTimeInterval );
         //Still have some time left for moving!
         btScalar dtMoving =
-           ( dt < m_velocityTimeInterval ) ? dt : m_velocityTimeInterval;
+            ( dt < m_velocityTimeInterval ) ? dt : m_velocityTimeInterval;
         m_velocityTimeInterval -= dt;
 
         //How far will we move while we are moving?
@@ -892,7 +892,7 @@ void KinematicCharacterController::playerStep(
         //Okay, step
         stepForwardAndStrafe( collisionWorld, move );
     }
-    
+
     //Do sweep test below the character
     if( !m_fly )
     {
@@ -948,7 +948,7 @@ void KinematicCharacterController::jump()
     btTransform xform;
     m_rigidBody->getMotionState()->getWorldTransform( xform );
     btVector3 up = xform.getBasis()[ 1 ];
-    up.normalize ();
+    up.normalize();
     btScalar magnitude = ( btScalar( 1.0 ) / m_rigidBody->getInvMass() ) * btScalar( 8.0 );
     m_rigidBody->applyCentralImpulse( up * magnitude );
 #endif

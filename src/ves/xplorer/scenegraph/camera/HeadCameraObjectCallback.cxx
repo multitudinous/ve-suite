@@ -83,10 +83,10 @@ void HeadCameraObjectCallback::operator()( osg::Node* node, osg::NodeVisitor* )
     ///is in VR Juggler space (y up) so that when the view matrix is multiplied
     ///in the 90 is taken back out.
     gmtl::Matrix44d worldMat = ves::xplorer::scenegraph::SceneManager::instance()->
-        GetGlobalViewMatrix();
+                               GetGlobalViewMatrix();
     DCS& dcs = cameraObject->GetDCS();
     dcs.SetMat( worldMat );
-    
+
     osg::Matrixd tempMatrix( dcs.GetMat().getData() );
     if( tempMatrix != m_dcsMatrix )
     {

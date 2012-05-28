@@ -117,7 +117,7 @@ void VEMsgInterpreter::_initCORBA( int argc, char** argv )
 
         naming_context = CosNaming::NamingContext::_narrow( naming_context_object.in() );
     }
-    catch ( CORBA::Exception & )
+    catch( CORBA::Exception& )
     {
         // Finally destroy the ORB
         orb->destroy();
@@ -135,9 +135,11 @@ void VEMsgInterpreter::_initCORBA( int argc, char** argv )
         try
         {
             if( !CORBA::is_nil( naming_context.in() ) )
+            {
                 ve_object = naming_context->resolve( name );
+            }
         }
-        catch ( CORBA::Exception & )
+        catch( CORBA::Exception& )
         {
             vprDEBUG( vesDBG, 0 ) << " Can't resolve name " << std::endl << vprDEBUG_FLUSH;
         }
@@ -145,13 +147,15 @@ void VEMsgInterpreter::_initCORBA( int argc, char** argv )
         if( !CORBA::is_nil( ve_object.in() ) )
         {
             _server = VjObs::_narrow( ve_object.in() );
-//         navInterpreter = new VEMsgInterpreter(_server);
+            //         navInterpreter = new VEMsgInterpreter(_server);
         }
 
         if( CORBA::is_nil( _server ) )
+        {
             std::cerr << "VjObs is Nill" << std::endl;
+        }
     }
-    catch ( CORBA::Exception & )
+    catch( CORBA::Exception& )
     {
         std::cerr << "Can't find VE server" << std::endl;
     }
@@ -180,15 +184,15 @@ void VEMsgInterpreter::_sendVoiceCommandToVE()
     _clientInfoArray[ 8 ] = ( double )_teacher_state;
 
     vprDEBUG( vesDBG, 3 ) << " Construct data array to send to server side : " << std::endl
-    << "    command id     : " << _clientInfoArray[ 0 ] << std::endl
-    << "    iso_value      : " << _clientInfoArray[ 1 ] << std::endl
-    << "    timesteps      : " << _clientInfoArray[ 2 ] << std::endl
-    << "    sc             : " << _clientInfoArray[ 3 ] << std::endl
-    << "    min            : " << _clientInfoArray[ 4 ] << std::endl
-    << "    max            : " << _clientInfoArray[ 5 ] << std::endl
-    << "    geo_state      : " << _clientInfoArray[ 6 ] << std::endl
-    << "    pre_state      : " << _clientInfoArray[ 7 ] << std::endl
-    << "    teacher_state  : " << _clientInfoArray[ 8 ] << std::endl << vprDEBUG_FLUSH;
+                          << "    command id     : " << _clientInfoArray[ 0 ] << std::endl
+                          << "    iso_value      : " << _clientInfoArray[ 1 ] << std::endl
+                          << "    timesteps      : " << _clientInfoArray[ 2 ] << std::endl
+                          << "    sc             : " << _clientInfoArray[ 3 ] << std::endl
+                          << "    min            : " << _clientInfoArray[ 4 ] << std::endl
+                          << "    max            : " << _clientInfoArray[ 5 ] << std::endl
+                          << "    geo_state      : " << _clientInfoArray[ 6 ] << std::endl
+                          << "    pre_state      : " << _clientInfoArray[ 7 ] << std::endl
+                          << "    teacher_state  : " << _clientInfoArray[ 8 ] << std::endl << vprDEBUG_FLUSH;
 
     if( !CORBA::is_nil( _server ) )
     {
@@ -197,7 +201,7 @@ void VEMsgInterpreter::_sendVoiceCommandToVE()
             _server->SetClientInfoData( _clientInfoArray );
             vprDEBUG( vesDBG, 3 ) << " Done Setting client data " << std::endl << vprDEBUG_FLUSH;
         }
-        catch ( ... )
+        catch( ... )
         {
             std::string( "Failed to send voice command to VE-Xplorer. Probably need to disconnect and reconnect." );
         }

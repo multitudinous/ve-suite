@@ -49,11 +49,11 @@ public:
     ~SoundUtilities();
 
     // Play the soundFile or sample at the given position.
-    void playSound( const osg::Vec3& pos, const std::string& soundFile, float gain=1.f );
-    void playSound( const osg::Vec3& pos, osgAudio::Sample* sample, float gain=1.f );
+    void playSound( const osg::Vec3& pos, const std::string& soundFile, float gain = 1.f );
+    void playSound( const osg::Vec3& pos, osgAudio::Sample* sample, float gain = 1.f );
 
     // Collision between two materials.
-    void collide( const Material::MaterialType& matA, const Material::MaterialType& matB, const osg::Vec3& pos, float gain=1.f );
+    void collide( const Material::MaterialType& matA, const Material::MaterialType& matB, const osg::Vec3& pos, float gain = 1.f );
 
     // One material sliding against the other.
     void slide( const Material::MaterialType& matA, const Material::MaterialType& matB, const osg::Vec3& pos );
@@ -63,14 +63,14 @@ public:
 
 
     // Add a sound to a Node. Sound will loop.
-    void addSound( osg::Node* node, const std::string& soundFile, float gain=1.f );
-    void addSound( osg::Node* node, osgAudio::Sample* sample, float gain=1.f );
+    void addSound( osg::Node* node, const std::string& soundFile, float gain = 1.f );
+    void addSound( osg::Node* node, osgAudio::Sample* sample, float gain = 1.f );
 
     // Remove a sound from a Node.
     bool removeSound( osg::Node* node );
 
     // Specify an ambient sound.
-    void setAmbient( const std::string& soundFile, float gain=1.f );
+    void setAmbient( const std::string& soundFile, float gain = 1.f );
     void setAmbient( bool ambientEnabled );
     bool getAmbient() const;
 

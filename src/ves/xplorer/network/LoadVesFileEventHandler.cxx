@@ -59,13 +59,13 @@ using namespace ves::xplorer::network;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////////
 LoadVesFileEventHandler::LoadVesFileEventHandler()
-        : ves::xplorer::event::EventHandler()
+    : ves::xplorer::event::EventHandler()
 {
 
 }
 ////////////////////////////////////////////////////////////////////////////////
 LoadVesFileEventHandler::LoadVesFileEventHandler( const LoadVesFileEventHandler& rhs )
-        : ves::xplorer::event::EventHandler( rhs )
+    : ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }

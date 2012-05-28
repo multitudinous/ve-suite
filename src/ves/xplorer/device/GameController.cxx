@@ -122,7 +122,7 @@ GameController::GameController()
     m_uiMode( false )
 {
     m_gamecontroller.init( "VESJoystick" );
-    
+
     // Create a default functional map.
     m_buttonMap->configure( osgwMx::MxGamePad::Button0, osgwMx::FunctionalMap::JumpToWorldOrigin );
     m_buttonMap->configure( osgwMx::MxGamePad::Button1, osgwMx::FunctionalMap::LevelView );
@@ -145,55 +145,55 @@ GameController::GameController()
     //MoveModeWorld - moves in rotate object space
     //MoveModeLocal - moves in global coordinates
     m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeLocal );
-    
+
     // Connect to Juggler's new event handling interface
     //Left stick - X
-    m_analogAxis0EventInterface.init("VJAxis0");
-    m_analogAxis0EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind(&GameController::OnAxis0Event, this, _1) );
+    m_analogAxis0EventInterface.init( "VJAxis0" );
+    m_analogAxis0EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis0Event, this, _1 ) );
     //m_analogAxis0EventInterface.addCallback<raw_analog_event_tag>(boost::bind(&GameController::OnAxis0Event, this, _1));
-    
+
     //Left stick - Y
-    m_analogAxis1EventInterface.init("VJAxis1");
-    m_analogAxis1EventInterface.addCallback<gadget::event::normalized_analog_event_tag>(boost::bind(&GameController::OnAxis1Event, this, _1));
+    m_analogAxis1EventInterface.init( "VJAxis1" );
+    m_analogAxis1EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis1Event, this, _1 ) );
 
     //Right stick - X
-    m_analogAxis2EventInterface.init("VJAxis2");
-    m_analogAxis2EventInterface.addCallback<gadget::event::normalized_analog_event_tag>(boost::bind(&GameController::OnAxis2Event, this, _1));
+    m_analogAxis2EventInterface.init( "VJAxis2" );
+    m_analogAxis2EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis2Event, this, _1 ) );
 
     //Right stick - Y
-    m_analogAxis3EventInterface.init("VJAxis3");
-    m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>(boost::bind(&GameController::OnAxis3Event, this, _1));
-    
+    m_analogAxis3EventInterface.init( "VJAxis3" );
+    m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis3Event, this, _1 ) );
+
     //All the buttons
     m_button0EventInterface.init( "Joystick0_d0" );
-    m_button0EventInterface.addCallback(boost::bind(&GameController::OnButton0Event, this, _1));
+    m_button0EventInterface.addCallback( boost::bind( &GameController::OnButton0Event, this, _1 ) );
 
     m_button1EventInterface.init( "Joystick0_d1" );
-    m_button1EventInterface.addCallback(boost::bind(&GameController::OnAxis5Event, this, _1));
+    m_button1EventInterface.addCallback( boost::bind( &GameController::OnAxis5Event, this, _1 ) );
 
     m_button2EventInterface.init( "Joystick0_d2" );
-    m_button2EventInterface.addCallback(boost::bind(&GameController::OnButton2Event, this, _1));
+    m_button2EventInterface.addCallback( boost::bind( &GameController::OnButton2Event, this, _1 ) );
 
     m_button3EventInterface.init( "Joystick0_d3" );
-    m_button3EventInterface.addCallback(boost::bind(&GameController::OnAxis4Event, this, _1));
+    m_button3EventInterface.addCallback( boost::bind( &GameController::OnAxis4Event, this, _1 ) );
 
     m_button4EventInterface.init( "Joystick0_d4" );
-    m_button4EventInterface.addCallback(boost::bind(&GameController::OnButton4Event, this, _1));
+    m_button4EventInterface.addCallback( boost::bind( &GameController::OnButton4Event, this, _1 ) );
 
     m_button5EventInterface.init( "Joystick0_d5" );
-    m_button5EventInterface.addCallback(boost::bind(&GameController::OnButton5Event, this, _1));
+    m_button5EventInterface.addCallback( boost::bind( &GameController::OnButton5Event, this, _1 ) );
 
     m_button6EventInterface.init( "Joystick0_d6" );
-    m_button6EventInterface.addCallback(boost::bind(&GameController::OnButton6Event, this, _1));
+    m_button6EventInterface.addCallback( boost::bind( &GameController::OnButton6Event, this, _1 ) );
 
     m_button7EventInterface.init( "Joystick0_d7" );
-    m_button7EventInterface.addCallback(boost::bind(&GameController::OnButton7Event, this, _1));
+    m_button7EventInterface.addCallback( boost::bind( &GameController::OnButton7Event, this, _1 ) );
 
     m_button10EventInterface.init( "Joystick0_d10" );
-    m_button10EventInterface.addCallback(boost::bind(&GameController::OnButton10Event, this, _1));
+    m_button10EventInterface.addCallback( boost::bind( &GameController::OnButton10Event, this, _1 ) );
 
     m_button11EventInterface.init( "Joystick0_d11" );
-    m_button11EventInterface.addCallback(boost::bind(&GameController::OnButton11Event, this, _1));
+    m_button11EventInterface.addCallback( boost::bind( &GameController::OnButton11Event, this, _1 ) );
 
     /*eventmanager::EventManager* evm = eventmanager::EventManager::instance();
     using eventmanager::SignalWrapper;
@@ -213,22 +213,22 @@ GameController::GameController()
     evm->RegisterSignal(
         new SignalWrapper< StartEndPointSignal_type >( &m_startEndPointSignal ),
         "GameController.StartEndPoint", eventmanager::EventManager::unspecified_SignalType );
-    
+
     RegisterButtonSignals();
     RegisterKeySignals();
-    */    
+    */
     CONNECTSIGNALS_1( "%NavigationRotationMode", void( std::string ),
-                     &GameController::SetRotationMode,
-                     m_connections, any_SignalType, normal_Priority );  
-    
+                      &GameController::SetRotationMode,
+                      m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_1( "%CharacterUpdate", void( bool const& ),
-                     &GameController::SetCharacterState,
-                     m_connections, any_SignalType, normal_Priority );  
+                      &GameController::SetCharacterState,
+                      m_connections, any_SignalType, normal_Priority );
 
     // Register signal(s) with EventManager
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_updateData ),
-        "GameController.UpdateData");
+        "GameController.UpdateData" );
 
     //m_hideShowUI =
     //    reinterpret_cast< eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
@@ -236,7 +236,7 @@ GameController::GameController()
     //    ->mSignal;
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_hideShowUI ),
-        "GameController.HideShowUI");
+        "GameController.HideShowUI" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 GameController::~GameController()
@@ -285,16 +285,16 @@ void GameController::OnAxis0Event( const float event )
     //float y = normalizeAxisValue( devState.lY );
     if( !m_uiMode )
     {
-        bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
-            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
-        
+        bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY,
+                       ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+
         if( !success )
         {
             return;
         }
-        
+
         m_success = success;
-        
+
         m_updateData( m_success );
     }
     else
@@ -313,7 +313,7 @@ void GameController::OnAxis1Event( const float event )
     UpdateForwardAndUp();
 
     m_mxGamePadStyle->setButtons( 0 );
-    
+
     // Left stick: Move.
     // Normalize values to range -1.0 to 1.0.
     // These are units to move in world coordinates per event or per frame.
@@ -322,16 +322,16 @@ void GameController::OnAxis1Event( const float event )
     //float y = normalizeAxisValue( devState.lY );
     if( !m_uiMode )
     {
-        bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY, 
-            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+        bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY,
+                       ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
 
         if( !success )
         {
             return;
         }
-        
+
         m_success = success;
-        
+
         m_updateData( m_success );
     }
     else
@@ -365,17 +365,17 @@ void GameController::OnAxis2Event( const float event )
     if( !m_uiMode )
     {
         m_rightStickX *= -1.0;
-        
-        bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
-            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
-        
+
+        bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY,
+                       ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+
         if( !success )
         {
             return;
         }
-        
+
         m_success = success;
-        
+
         m_updateData( m_success );
     }
     else
@@ -394,7 +394,7 @@ void GameController::OnAxis3Event( const float event )
     UpdateForwardAndUp();
 
     m_mxGamePadStyle->setButtons( m_buttons );
-    
+
     // Right stick: Rotate.
     // Base class angle values are in degrees. By calling
     // normalizeAxisValue, we pass in -1 to 1 degrees.
@@ -409,17 +409,17 @@ void GameController::OnAxis3Event( const float event )
     if( !m_uiMode )
     {
         m_rightStickY *= -1.0;
-        
-        bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY, 
-            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
-        
+
+        bool success = m_mxGamePadStyle->setRightStick( m_rightStickX, m_rightStickY,
+                       ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+
         if( !success )
         {
             return;
         }
-        
+
         m_success = success;
-        
+
         m_updateData( m_success );
     }
     else
@@ -434,19 +434,19 @@ void GameController::OnAxis4Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     if( event == gadget::DigitalState::OFF )
     {
         return;
     }
 
-    switch(event) 
+    switch( event )
     {
     case gadget::DigitalState::ON:
-    {   
+    {
         UpdateForwardAndUp();
-        m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button13, 
-            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+        m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button13,
+                                      ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -455,7 +455,7 @@ void GameController::OnAxis4Event( gadget::DigitalState::State event )
     }
     case gadget::DigitalState::TOGGLE_OFF:
     {
-         break;
+        break;
     }
     default:
         break;
@@ -468,19 +468,19 @@ void GameController::OnAxis5Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     if( event == gadget::DigitalState::OFF )
     {
         return;
     }
-    
-    switch(event) 
+
+    switch( event )
     {
     case gadget::DigitalState::ON:
-    {        
+    {
         UpdateForwardAndUp();
-        m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button12, 
-            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+        m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button12,
+                                      ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -502,16 +502,16 @@ void GameController::OnButton0Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     if( event == gadget::DigitalState::OFF )
     {
         return;
     }
-    
-    switch(event) 
+
+    switch( event )
     {
     case gadget::DigitalState::ON:
-    {   
+    {
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -540,16 +540,16 @@ void GameController::OnButton2Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     if( event == gadget::DigitalState::OFF )
     {
         return;
     }
-    
-    switch(event) 
+
+    switch( event )
     {
     case gadget::DigitalState::ON:
-    {   
+    {
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -574,16 +574,16 @@ void GameController::OnButton4Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     if( event == gadget::DigitalState::OFF )
     {
         return;
     }
-    
-    switch(event) 
+
+    switch( event )
     {
     case gadget::DigitalState::ON:
-    {   
+    {
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -608,16 +608,16 @@ void GameController::OnButton5Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     if( event == gadget::DigitalState::OFF )
     {
         return;
     }
-    
-    switch(event) 
+
+    switch( event )
     {
     case gadget::DigitalState::ON:
-    {        
+    {
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -640,16 +640,16 @@ void GameController::OnButton6Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     if( event == gadget::DigitalState::OFF )
     {
         return;
     }
 
-    switch(event) 
+    switch( event )
     {
     case gadget::DigitalState::ON:
-    {        
+    {
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -672,16 +672,16 @@ void GameController::OnButton7Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     if( event == gadget::DigitalState::OFF )
     {
         return;
     }
-    
-    switch(event) 
+
+    switch( event )
     {
     case gadget::DigitalState::ON:
-    {        
+    {
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -703,16 +703,16 @@ void GameController::OnButton10Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     if( event == gadget::DigitalState::OFF )
     {
         return;
     }
-    
-    switch(event) 
+
+    switch( event )
     {
     case gadget::DigitalState::ON:
-    {        
+    {
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -746,16 +746,16 @@ void GameController::OnButton11Event( gadget::DigitalState::State event )
     {
         return;
     }
-    
+
     if( event == gadget::DigitalState::OFF )
     {
         return;
     }
-    
-    switch(event) 
+
+    switch( event )
     {
     case gadget::DigitalState::ON:
-    {        
+    {
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
@@ -813,16 +813,16 @@ void GameController::UpdateForwardAndUp()
     {
         return;
     }
-    
+
     gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_gamecontroller->getData() );
     const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
     const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     gmtl::Matrix44d zUpMatrix = gmtl::makeRot< gmtl::Matrix44d >(
-        gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
-    
+                                    gmtl::AxisAngled( gmtl::Math::deg2Rad( -90.0 ), x_axis ) );
+
     vrjWandMat = myMat * vrjWandMat * zUpMatrix;
-    
+
     gmtl::Vec3d vjVec;
     vjVec.set( 0.0f, 0.0f, 1.0f );
     gmtl::xform( vjVec, vrjWandMat, vjVec );

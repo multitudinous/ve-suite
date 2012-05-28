@@ -90,7 +90,7 @@ void VectorFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& s
     ves::open::xml::DataValuePairPtr selectvecorscalrDisp( new ves::open::xml::DataValuePair() );
     selectvecorscalrDisp->SetDataType( "STRING" );
     selectvecorscalrDisp->SetDataName( "Select Data Mapping" );
-    selectvecorscalrDisp->SetDataString( boost::any_cast<std::string > ( set.GetPropertyAttribute( "DataMapping", "enumCurrentString" ) ));
+    selectvecorscalrDisp->SetDataString( boost::any_cast<std::string > ( set.GetPropertyAttribute( "DataMapping", "enumCurrentString" ) ) );
     m_vectorInformation.push_back( selectvecorscalrDisp );
 
     // Mode: Single or Multiple
@@ -170,7 +170,7 @@ void VectorFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     {
         SendUpdatedSettingsToXplorer( newCommand, set );
     }
-    catch ( ... )
+    catch( ... )
     {
         //QMessageBox msg;
         //msg.setText( "Invalid Parent" );
@@ -182,7 +182,7 @@ void VectorFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
 void VectorFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
 {
     m_advancedSettings.clear();
-    
+
     // With a bit of re-thinking here and some normalization of names, we may be
     // able to convert much of the following code to something like:
     //
@@ -198,38 +198,38 @@ void VectorFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set
     //              appropriate cast -- esp for enums, to use associated enumCurrentString
     //      ...4. Add DVP to _advancedSettings
     // }
-    
+
     if( set.PropertyExists( "Advanced_VectorThreshold_Min" ) )
     {
         std::vector< double > tempData;
         tempData.push_back( boost::any_cast<double>
-                           ( set.GetPropertyValue( "Advanced_VectorThreshold_Min" ) ) );
+                            ( set.GetPropertyValue( "Advanced_VectorThreshold_Min" ) ) );
         tempData.push_back( boost::any_cast<double>
-                           ( set.GetPropertyValue( "Advanced_VectorThreshold_Max" ) ) );
-                           
+                            ( set.GetPropertyValue( "Advanced_VectorThreshold_Max" ) ) );
+
         ves::open::xml::DataValuePairPtr contourOpacity( new ves::open::xml::DataValuePair() );
         contourOpacity->SetData( "Vector Threshold", tempData );
         m_advancedSettings.push_back( contourOpacity );
     }
-    
+
     if( set.PropertyExists( "Advanced_VectorScale" ) )
     {
         ves::open::xml::DataValuePairPtr warpedScale( new ves::open::xml::DataValuePair() );
         warpedScale->SetData( "Vector Scale",
-                             boost::any_cast<double>
-                             ( set.GetPropertyValue( "Advanced_VectorScale" ) ) );
+                              boost::any_cast<double>
+                              ( set.GetPropertyValue( "Advanced_VectorScale" ) ) );
         m_advancedSettings.push_back( warpedScale );
     }
-    
+
     if( set.PropertyExists( "Advanced_VectorRatio" ) )
     {
         ves::open::xml::DataValuePairPtr LODSetting( new ves::open::xml::DataValuePair() );
         LODSetting->SetData( "Vector Ratio",
-                            boost::any_cast<double>
-                            ( set.GetPropertyValue( "Advanced_VectorRatio" ) ) );
+                             boost::any_cast<double>
+                             ( set.GetPropertyValue( "Advanced_VectorRatio" ) ) );
         m_advancedSettings.push_back( LODSetting );
     }
-    
+
 
     if( set.PropertyExists( "Advanced_ScaleByVectorMagnitude" ) )
     {
@@ -238,32 +238,32 @@ void VectorFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set
         warpOptionFlag->SetDataType( "UNSIGNED INT" );
         if( boost::any_cast<bool>( set.GetPropertyValue( "Advanced_ScaleByVectorMagnitude" ) ) )
         {
-            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 1 ) );
+            warpOptionFlag->SetDataValue( static_cast < unsigned int >( 1 ) );
         }
         else
         {
-            warpOptionFlag->SetDataValue( static_cast < unsigned int > ( 0 ) );
+            warpOptionFlag->SetDataValue( static_cast < unsigned int >( 0 ) );
         }
         m_advancedSettings.push_back( warpOptionFlag );
     }
-    
+
     if( set.PropertyExists( "UseGPUTools" ) )
     {
-        unsigned int checkBox = 
+        unsigned int checkBox =
             boost::any_cast<bool>( set.GetPropertyValue( "UseGPUTools" ) );
         ves::open::xml::DataValuePairPtr gpuToolsDVP( new ves::open::xml::DataValuePair() );
         gpuToolsDVP->SetData( "GPU Tools", checkBox );
         m_advancedSettings.push_back( gpuToolsDVP );
     }
-    
+
     //"GPU Tools"
-    
+
     //    if( m_datasetSelection->IsEnabled() )
     //    {
     //        ves::open::xml::DataValuePairPtr surfToolsDVP( new ves::open::xml::DataValuePair() );
     //        surfToolsDVP->SetData( "SURF Tools", ConvertUnicode( m_datasetSelection->GetValue().c_str() ) );
     //        _advancedSettings.push_back( surfToolsDVP );
     //    }
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////////

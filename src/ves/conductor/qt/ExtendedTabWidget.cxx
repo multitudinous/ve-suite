@@ -38,8 +38,8 @@ namespace ves
 namespace conductor
 {
 
-ExtendedTabWidget::ExtendedTabWidget(QWidget *parent) :
-    QTabWidget(parent)
+ExtendedTabWidget::ExtendedTabWidget( QWidget* parent ) :
+    QTabWidget( parent )
 {
 }
 

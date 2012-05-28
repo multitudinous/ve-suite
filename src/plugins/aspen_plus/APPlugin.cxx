@@ -105,12 +105,12 @@ bool APPlugin::IsBKPOpen()
     if( mUserPrefBuffer )
     {
         CommandPtr aspenBKPFile = mUserPrefBuffer->
-            GetCommand( "Aspen_Plus_Preferences" );
+                                  GetCommand( "Aspen_Plus_Preferences" );
 
         if( aspenBKPFile->GetCommandName() != "NULL" )
         {
             DataValuePairPtr bkpPtr =
-            aspenBKPFile->GetDataValuePair( "BKPFileName" );
+                aspenBKPFile->GetDataValuePair( "BKPFileName" );
             if( bkpPtr )
             {
                 return true;
@@ -126,12 +126,12 @@ wxString APPlugin::GetConductorName()
 }
 /////////////////////////////////////////////////////////////////////////////
 void APPlugin::OnUnitName( wxCommandEvent& event )
-{    
+{
     UIPLUGIN_CHECKID( event )
     wxTextEntryDialog newUnitName( 0,
-                                 _( "Enter the name for your unit:" ),
-                                 _( "Set Unit Name..." ),
-                                 "VE-PSI", wxOK | wxCANCEL );
+                                   _( "Enter the name for your unit:" ),
+                                   _( "Set Unit Name..." ),
+                                   "VE-PSI", wxOK | wxCANCEL );
     //check for existing unit
 
     if( newUnitName.ShowModal() == wxID_OK )
@@ -146,10 +146,10 @@ void APPlugin::OnOpen( wxCommandEvent& event )
 
     if( IsBKPOpen() )
     {
-        wxMessageDialog md( m_canvas, 
-            wxT( "Simulation already open.\nClose it and open another?" ),
-            wxT( "Confirm" ),
-            wxYES_NO);
+        wxMessageDialog md( m_canvas,
+                            wxT( "Simulation already open.\nClose it and open another?" ),
+                            wxT( "Confirm" ),
+                            wxYES_NO );
         if( md.ShowModal() == wxID_NO )
         {
             return;
@@ -176,9 +176,9 @@ void APPlugin::OnOpen( wxCommandEvent& event )
 
     wxFileName bkpFileName;
     bkpFileName.ClearExt();
-    bkpFileName.SetName( fd.GetFilename() + wxT(".bkp") );
+    bkpFileName.SetName( fd.GetFilename() + wxT( ".bkp" ) );
 
-    CommandPtr returnState ( new Command() );
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "getNetwork" );
     returnState->AddDataValuePair( vendorData );
     DataValuePairPtr data( new DataValuePair() );
@@ -197,30 +197,30 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     //Get results
     std::string nw_str = serviceList->Query( status );
-    
+
     if( nw_str.empty() )
     {
-        wxMessageDialog md( m_canvas, wxT("No Aspen Unit connected.\nPlease launch Aspen Unit."), wxT("Error"), wxOK);
+        wxMessageDialog md( m_canvas, wxT( "No Aspen Unit connected.\nPlease launch Aspen Unit." ), wxT( "Error" ), wxOK );
         md.ShowModal();
         return;
     }
 
     // If there is nothing on the CE
-    if( nw_str.compare("BKPDNE") == 0 )
+    if( nw_str.compare( "BKPDNE" ) == 0 )
     {
-        wxMessageDialog md(m_canvas, wxT("Aspen Unit is unable to find the bkp file.\nDid you select the correct directory in Aspen Unit?" ), wxT("Error"), wxOK );
+        wxMessageDialog md( m_canvas, wxT( "Aspen Unit is unable to find the bkp file.\nDid you select the correct directory in Aspen Unit?" ), wxT( "Error" ), wxOK );
         md.ShowModal();
         //Log( "BKP File Does NOT exist.\n" );
         return;
-    }    
-    else if( nw_str.compare("APWDNE") == 0 )
+    }
+    else if( nw_str.compare( "APWDNE" ) == 0 )
     {
-        wxMessageDialog md( m_canvas, wxT("Aspen Unit is unable to find the apw file.\nDid you select the correct directory in Aspen Unit?" ), wxT("Error"), wxOK);
+        wxMessageDialog md( m_canvas, wxT( "Aspen Unit is unable to find the apw file.\nDid you select the correct directory in Aspen Unit?" ), wxT( "Error" ), wxOK );
         md.ShowModal();
         //Log( "APW File Does NOT exist.\n" );
         return;
     }
-    
+
     //Parse the network string thst was returned from the VE-PSI Unit
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
@@ -235,14 +235,14 @@ void APPlugin::OnOpen( wxCommandEvent& event )
         networkWriter.GetLoadedXMLObjects();
 
     //Now we need to make this plugin the top level plugin becuase
-    //the aspen flowsheet is actually a subnetwork of this 
+    //the aspen flowsheet is actually a subnetwork of this
     //main aspen plus plugin
     ves::open::xml::model::SystemPtr tempSystem;
     tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
     //set a null pointer as the top most parent model on topmost level
-    for( size_t modelCount = 0; 
-        modelCount < tempSystem->GetNumberOfModels(); 
-        ++modelCount )
+    for( size_t modelCount = 0;
+            modelCount < tempSystem->GetNumberOfModels();
+            ++modelCount )
     {
         //Not sure why we set a null pointer here...
         tempSystem->GetModel( modelCount )->SetParentModel( m_veModel );
@@ -255,16 +255,16 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     //Now let the rest of VE-Conductor know about the new network
     m_canvas->AddSubNetworks();
 #if 0
-    std::ofstream netdump ("netdump.txt");
+    std::ofstream netdump( "netdump.txt" );
     netdump << nw_str;
     netdump.close();
 #endif
-    
+
     event.SetId( UPDATE_HIER_TREE );
     ::wxPostEvent( m_canvas, event );
 
     //create hierarchy page
-    //hierarchyTree->PopulateTree( 
+    //hierarchyTree->PopulateTree(
     //    mDataBufferEngine->GetTopSystemId() );
 
     //Log( "Simulation Opened.\n" );
@@ -342,7 +342,7 @@ void APPlugin::HideAspenSimulation( wxCommandEvent& event )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void APPlugin::DisconnectAspenSimulation( void )
-{    
+{
     //Log( "Close Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
@@ -365,8 +365,8 @@ void APPlugin::DisconnectAspenSimulation( void )
 }
 ////////////////////////////////////////////////////////////////////////////////////
 void APPlugin::CloseAspenSimulation( void )
-{ 
-    SetName( _("APPlugin") );
+{
+    SetName( _( "APPlugin" ) );
     wxCommandEvent event;
     event.SetId( UIPLUGINBASE_SET_UI_PLUGIN_NAME );
     GlobalNameUpdate( event );
@@ -548,18 +548,18 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     }
 
     baseMenu->Enable( UIPLUGINBASE_CONDUCTOR_MENU, true );
-    (baseMenu->FindItemByPosition( 0 ))->GetSubMenu()->Enable( 
+    ( baseMenu->FindItemByPosition( 0 ) )->GetSubMenu()->Enable(
         UIPLUGINBASE_MODEL_INPUTS, false );
-    (baseMenu->FindItemByPosition( 0 ))->GetSubMenu()->Enable( 
+    ( baseMenu->FindItemByPosition( 0 ) )->GetSubMenu()->Enable(
         UIPLUGINBASE_MODEL_RESULTS, false );
-    (baseMenu->FindItemByPosition( 0 ))->GetSubMenu()->Enable( 
+    ( baseMenu->FindItemByPosition( 0 ) )->GetSubMenu()->Enable(
         UIPLUGINBASE_SHOW_ICON_CHOOSER, false );
 
     mAspenMenu = new wxMenu();
     mAspenMenu->Append( APPLUGIN_SET_UNIT, _( "Unit Name" ) );
     mAspenMenu->Enable( APPLUGIN_SET_UNIT, true );
     mAspenMenu->Append( APPLUGIN_OPEN_SIM, _( "Open" ) );
-        mAspenMenu->Enable( APPLUGIN_OPEN_SIM, true );
+    mAspenMenu->Enable( APPLUGIN_OPEN_SIM, true );
     //mAspenMenu->Append( APPLUGIN_CLOSE_ASPEN_SIMULATION, _( "Close" ) );
     mAspenMenu->Append( APPLUGIN_DISCONNECT_ASPEN_SIMULATION, _( "Disconnect" ) );
     mAspenMenu->Append( APPLUGIN_SHOW_ASPEN_SIMULATION, _( "Show" ) );
@@ -571,7 +571,7 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mAspenMenu->Append( APPLUGIN_SAVEAS_SIMULATION, _( "SaveAs" ) );
 
     baseMenu->Insert( 0, APPLUGIN_ASPEN_MENU,   _( "Aspen" ), mAspenMenu,
-                    _( "Used in conjunction with Aspen" ) );
+                      _( "Used in conjunction with Aspen" ) );
     baseMenu->Enable( APPLUGIN_ASPEN_MENU, true );
 
     if( GetVEModel()->GetSubSystem() != NULL )

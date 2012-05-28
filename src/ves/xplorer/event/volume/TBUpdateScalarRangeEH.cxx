@@ -51,7 +51,7 @@ TextureBasedUpdateScalarRangeEventHandler::TextureBasedUpdateScalarRangeEventHan
 ///////////////////////////////////////////////////////////////////
 TextureBasedUpdateScalarRangeEventHandler
 ::TextureBasedUpdateScalarRangeEventHandler( const TextureBasedUpdateScalarRangeEventHandler& ceh )
-: ves::xplorer::event::TextureBasedEventHandler( ceh )
+    : ves::xplorer::event::TextureBasedEventHandler( ceh )
 {}
 /////////////////////////////////////////////////////////////////////
 TextureBasedUpdateScalarRangeEventHandler::~TextureBasedUpdateScalarRangeEventHandler()
@@ -89,7 +89,7 @@ void TextureBasedUpdateScalarRangeEventHandler::_operateOnNode( XMLObjectPtr veX
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateScalarRange( floatRange );
 
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid TextureDataSet!!" << std::endl;
         std::cout << "TextureBasedUpdateScalarRangeEventHandler::_operateOnNode()" << std::endl;

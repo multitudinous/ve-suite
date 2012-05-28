@@ -90,7 +90,7 @@ public:
     ///Set the data arrays to load for the translator
     ///\param activeArrays The active arrays to load for the translators
     void SetScalarsAndVectorsToRead( std::vector< std::string > activeArrays );
-    
+
 private:
     ///The name of the data file.
     std::string inputDataName;

@@ -105,7 +105,7 @@ Unit::~Unit()
 bool Unit::SetInputToUniform(
     Unit* unit, const std::string& uniform, bool add )
 {
-    if( uniform.length() < 1 ) 
+    if( uniform.length() < 1 )
     {
         return false;
     }
@@ -121,7 +121,7 @@ bool Unit::SetInputToUniform(
     //    std::pair< std::string, unsigned int >(
     //        uniform, mInputToUniformMap.size() );
     mInputToUniformMap.push_back( std::pair< std::string, osg::ref_ptr< Unit > >( uniform, unit ) );
-    return true;  
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void Unit::RemoveInputToUniform( Unit* parent, bool remove )
@@ -177,7 +177,7 @@ osg::Texture* Unit::GetInputTexture( size_t inputIndex ) const
     {
         return itr->second.get();
     }*/
-    
+
     std::cout << "Unit::GetInputTexture: "
               << "texture " << inputIndex
               << " not found in mInputTextures!"
@@ -223,7 +223,7 @@ void Unit::Initialize()
 
     //Check if we have input reference size
     if( GetInputTextureIndexForViewportReference() >= 0 &&
-        GetInputTexture( GetInputTextureIndexForViewportReference() ) )
+            GetInputTexture( GetInputTextureIndexForViewportReference() ) )
     {
         //If no viewport, so create it
         if( !mViewport.valid() )
@@ -233,9 +233,9 @@ void Unit::Initialize()
 
         //Change viewport sizes
         mViewport->width() = GetInputTexture(
-            GetInputTextureIndexForViewportReference() )->getTextureWidth();
+                                 GetInputTextureIndexForViewportReference() )->getTextureWidth();
         mViewport->height() = GetInputTexture(
-            GetInputTextureIndexForViewportReference() )->getTextureHeight();
+                                  GetInputTextureIndexForViewportReference() )->getTextureHeight();
 
         //Just notice that the viewport size is changed
         NoticeChangeViewport();
@@ -287,8 +287,8 @@ void Unit::SetInputTexturesFromParents()
 {
     //Scan the input to uniform map
     rtt::Unit* unit( NULL );
-    for( Unit::InputToUniformMap::iterator itumItr = mInputToUniformMap.begin(); 
-        itumItr != mInputToUniformMap.end(); ++itumItr )
+    for( Unit::InputToUniformMap::iterator itumItr = mInputToUniformMap.begin();
+            itumItr != mInputToUniformMap.end(); ++itumItr )
     {
         //unit = itumItr->first.get();
         unit = itumItr->second.get();
@@ -296,8 +296,8 @@ void Unit::SetInputTexturesFromParents()
         {
             //Add each found texture as input
             const Unit::TextureMap& textureMap = unit->GetOutputTextureMap();
-            for( Unit::TextureMap::const_iterator tmItr = textureMap.begin(); 
-                tmItr != textureMap.end(); ++tmItr )
+            for( Unit::TextureMap::const_iterator tmItr = textureMap.begin();
+                    tmItr != textureMap.end(); ++tmItr )
             {
                 //osg::Texture* texture = tmItr->second.get();
                 osg::Texture* texture = tmItr->get();
@@ -310,19 +310,19 @@ void Unit::SetInputTexturesFromParents()
                 else
                 {
                     osg::notify( osg::WARN )
-                        << "rtt::Unit::SetInputTexturesFromParents(): "
-                        << unit->getName()
-                        << " has invalid output texture!"
-                        << std::endl;
+                            << "rtt::Unit::SetInputTexturesFromParents(): "
+                            << unit->getName()
+                            << " has invalid output texture!"
+                            << std::endl;
                 }
             }
         }
         else
         {
             osg::notify( osg::WARN )
-                << "rtt::Unit::SetInputTexturesFromParents(): "
-                << "This is a bad unit."
-                << std::endl;
+                    << "rtt::Unit::SetInputTexturesFromParents(): "
+                    << "This is a bad unit."
+                    << std::endl;
         }
     }
 }
@@ -332,8 +332,8 @@ void Unit::UpdateUniforms()
     osg::StateSet* stateset = mGeode->getOrCreateStateSet();
 
     //Setup input texture uniforms
-    for( InputToUniformMap::iterator itr = mInputToUniformMap.begin(); 
-        itr != mInputToUniformMap.end(); ++itr )
+    for( InputToUniformMap::iterator itr = mInputToUniformMap.begin();
+            itr != mInputToUniformMap.end(); ++itr )
     {
         //Only valid inputs
         //if( itr->first.valid() )
@@ -342,11 +342,11 @@ void Unit::UpdateUniforms()
             size_t index = itr - mInputToUniformMap.begin();
             //Setup uniform
             osg::Uniform* texture = stateset->getOrCreateUniform(
-                //itr->second.first,
-                itr->first,
-                rtt::ConvertTextureToUniformType(
-                    //itr->first->GetOutputTexture( 0 ) ) );
-                    itr->second->GetOutputTexture( 0 ) ) );
+                                        //itr->second.first,
+                                        itr->first,
+                                        rtt::ConvertTextureToUniformType(
+                                            //itr->first->GetOutputTexture( 0 ) ) );
+                                            itr->second->GetOutputTexture( 0 ) ) );
 
             //texture->set( static_cast< int >( itr->second.second ) );
             texture->set( static_cast< int >( index ) );
@@ -357,8 +357,8 @@ void Unit::UpdateUniforms()
 void Unit::NoticeChangeViewport()
 {
     //Change size of the result texture according to the viewport
-    for( TextureMap::iterator itr = mOutputTextures.begin(); 
-        itr != mOutputTextures.end(); ++itr )
+    for( TextureMap::iterator itr = mOutputTextures.begin();
+            itr != mOutputTextures.end(); ++itr )
     {
         //if( itr->second.valid() )
         if( itr->valid() )
@@ -385,8 +385,8 @@ void Unit::AssignInputTexture()
     osg::StateSet* stateset = getOrCreateStateSet();
 
     //For all entries
-    for( TextureMap::iterator itr = mInputTextures.begin(); 
-        itr != mInputTextures.end(); ++itr )
+    for( TextureMap::iterator itr = mInputTextures.begin();
+            itr != mInputTextures.end(); ++itr )
     {
         //Set texture if it is valid
         //if( itr->second.valid() )
@@ -411,25 +411,25 @@ void Unit::CreateTexturedQuadDrawable(
     osg::ref_ptr< osg::Vec3Array > quadVertices = new osg::Vec3Array();
     quadVertices->resize( 4 );
 
-    (*quadVertices)[ 0 ] = corner;
-    (*quadVertices)[ 1 ] = corner + widthVec;
-    (*quadVertices)[ 2 ] = corner + widthVec + heightVec;
-    (*quadVertices)[ 3 ] = corner + heightVec;
+    ( *quadVertices )[ 0 ] = corner;
+    ( *quadVertices )[ 1 ] = corner + widthVec;
+    ( *quadVertices )[ 2 ] = corner + widthVec + heightVec;
+    ( *quadVertices )[ 3 ] = corner + heightVec;
 
     //Get the texture coordinates for the quad
     osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
     quadTexCoords->resize( 4 );
 
-    (*quadTexCoords)[ 0 ].set( l, b );
-    (*quadTexCoords)[ 1 ].set( r, b );
-    (*quadTexCoords)[ 2 ].set( r, t );
-    (*quadTexCoords)[ 3 ].set( l, t );
+    ( *quadTexCoords )[ 0 ].set( l, b );
+    ( *quadTexCoords )[ 1 ].set( r, b );
+    ( *quadTexCoords )[ 2 ].set( r, t );
+    ( *quadTexCoords )[ 3 ].set( l, t );
 
     //Create the quad geometry
     osg::Geometry* quadGeometry = new osg::Geometry();
     quadGeometry->setVertexArray( quadVertices.get() );
     quadGeometry->addPrimitiveSet( new osg::DrawArrays(
-        osg::PrimitiveSet::QUADS, 0, quadVertices->size() ) );
+                                       osg::PrimitiveSet::QUADS, 0, quadVertices->size() ) );
     quadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
     quadGeometry->setUseDisplayList( true );
     quadGeometry->setColorBinding( osg::Geometry::BIND_OFF );

@@ -45,11 +45,11 @@ class progress_streambuf: public std::basic_filebuf< Elem, Tr >
 public:
     typedef std::basic_filebuf< Elem, Tr > base_type;
 
-    explicit progress_streambuf( const std::string &filename )
-            :
-            base_type(),
-            count_( 0 ),
-            prev_perc_( 0 )
+    explicit progress_streambuf( const std::string& filename )
+        :
+        base_type(),
+        count_( 0 ),
+        prev_perc_( 0 )
     {
         if( base_type::open( filename.c_str(), std::ios_base::in | std::ios_base::binary ) )
         {
@@ -181,7 +181,7 @@ private:
     bool mIsSTLFile;
     ///Control how the occlusion culling settings are handled
     std::string m_occlusionSettings;
-    
+
     ///Load an image file
     osg::Node* LoadTextureFile( std::string const& filename );
 };

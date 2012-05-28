@@ -59,21 +59,21 @@ using namespace ves::open::xml;
 ///Constructor                  //
 //////////////////////////////////
 CADNode::CADNode( const std::string& name )
-        :
-        ves::open::xml::XMLObject(),
-        m_name( name ),
-        m_type( "Node" ),
-        m_visibility( true ),
-        m_physics( false ),
-        m_mass( 1.0f ),
-        m_friction( 1.0f ),
-        m_restitution( 0.0f ),
-        mPhysicsMesh( "Bounding Box" ),
-        m_decimationValue( "Exact" ),
-        mOpacity( 1.f ),
-        mMakeTransparentOnVis( true ),
-        m_longitude( 0.0 ),
-        m_latitude( 0.0 )
+    :
+    ves::open::xml::XMLObject(),
+    m_name( name ),
+    m_type( "Node" ),
+    m_visibility( true ),
+    m_physics( false ),
+    m_mass( 1.0f ),
+    m_friction( 1.0f ),
+    m_restitution( 0.0f ),
+    mPhysicsMesh( "Bounding Box" ),
+    m_decimationValue( "Exact" ),
+    mOpacity( 1.f ),
+    mMakeTransparentOnVis( true ),
+    m_longitude( 0.0 ),
+    m_latitude( 0.0 )
 {
     m_transform = TransformPtr( new Transform() );
 
@@ -120,7 +120,7 @@ void CADNode::SetParent( const std::string& parent )
 ///////////////////////////////////////////////////////
 void CADNode::SetTransform( ves::open::xml::TransformPtr transform )
 {
-    m_transform = ves::open::xml::TransformPtr( new ves::open::xml::Transform(  *transform ) );
+    m_transform = ves::open::xml::TransformPtr( new ves::open::xml::Transform( *transform ) );
 }
 ///////////////////////////////////////////////////////////
 void CADNode::AddAttribute( ves::open::xml::cad::CADAttributePtr attribute )
@@ -139,7 +139,7 @@ void CADNode::RemoveAttribute( const std::string& attributeName )
             itr != m_attributeList.end();
             itr++ )
     {
-        if (( *itr )->GetAttributeName() == attributeName )
+        if( ( *itr )->GetAttributeName() == attributeName )
         {
             m_attributeList.erase( itr );
             break;
@@ -270,7 +270,7 @@ ves::open::xml::TransformPtr CADNode::GetTransform()
 float CADNode::GetOpacity() const
 {
     return mOpacity;
-}    
+}
 ////////////////////////////////////////////////////////////////////////////////
 bool CADNode::GetTransparentFlag() const
 {
@@ -288,7 +288,7 @@ ves::open::xml::cad::CADAttributePtr CADNode::GetAttribute( unsigned int index )
     {
         return m_attributeList.at( index );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "ERROR!!!!!" << std::endl;
         std::cout << "Invalid index!!!" << std::endl;
@@ -337,7 +337,7 @@ void CADNode::_updateVEElement( const std::string& input )
         SetAttribute( "physicsMesh", mPhysicsMeshType );
         SetAttribute( "physicsDecimation", m_decimationValue );
     }
-  
+
     SetAttribute( "opacity", mOpacity );
     SetAttribute( "makeTransparentOnVis", mMakeTransparentOnVis );
 
@@ -367,10 +367,10 @@ void CADNode::_updateVEElement( const std::string& input )
 void CADNode::_updateNodeName()
 {
     DOMElement* nodeNameElement = mRootDocument->createElement(
-                                  Convert( "name" ).toXMLString() );
+                                      Convert( "name" ).toXMLString() );
 
     DOMText* nodeName = mRootDocument->createTextNode(
-                        Convert( m_name ).toXMLString() );
+                            Convert( m_name ).toXMLString() );
 
     nodeNameElement->appendChild( nodeName );
     mVeElement->appendChild( nodeNameElement );
@@ -379,10 +379,10 @@ void CADNode::_updateNodeName()
 void CADNode::_updateNodeType()
 {
     DOMElement* nodeTypeElement = mRootDocument->createElement(
-                                  Convert( "type" ).toXMLString() );
+                                      Convert( "type" ).toXMLString() );
 
     DOMText* nodeType = mRootDocument->createTextNode(
-                        Convert( m_type ).toXMLString() );
+                            Convert( m_type ).toXMLString() );
 
     nodeTypeElement->appendChild( nodeType );
     mVeElement->appendChild( nodeTypeElement );
@@ -409,7 +409,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     }
     ///Find opacity
     if( currentElement->getAttributeNode(
-        Convert( "opacity" ).toXMLString() ) )
+                Convert( "opacity" ).toXMLString() ) )
     {
         XMLObject::GetAttribute( currentElement, "opacity", mOpacity );
     }
@@ -419,10 +419,10 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     }
     ///Find transparent flag
     if( currentElement->getAttributeNode(
-        Convert( "makeTransparentOnVis" ).toXMLString() ) )
+                Convert( "makeTransparentOnVis" ).toXMLString() ) )
     {
-        XMLObject::GetAttribute( currentElement, 
-            "makeTransparentOnVis", mMakeTransparentOnVis );
+        XMLObject::GetAttribute( currentElement,
+                                 "makeTransparentOnVis", mMakeTransparentOnVis );
     }
     else
     {
@@ -430,7 +430,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     }
     ///Find if the node is on
     if( currentElement->getAttributeNode(
-        Convert( "visibility" ).toXMLString() ) )
+                Convert( "visibility" ).toXMLString() ) )
     {
         XMLObject::GetAttribute( currentElement, "visibility", m_visibility );
     }
@@ -438,7 +438,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     {
         m_visibility = true;
     }
-    
+
     //Get all of the Physics variables
     m_physics = false;
     XMLObject::GetAttribute( currentElement, "physics", m_physics );
@@ -446,7 +446,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     if( m_physics )
     {
         if( currentElement->getAttributeNode(
-            Convert( "mass" ).toXMLString() ) )
+                    Convert( "mass" ).toXMLString() ) )
         {
             XMLObject::GetAttribute( currentElement, "mass", m_mass );
         }
@@ -454,9 +454,9 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
         {
             m_mass = 1.0f;
         }
-        
+
         if( currentElement->getAttributeNode(
-            Convert( "friction" ).toXMLString() ) )
+                    Convert( "friction" ).toXMLString() ) )
         {
             XMLObject::GetAttribute( currentElement, "friction", m_friction );
         }
@@ -464,9 +464,9 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
         {
             m_friction = 1.0f;
         }
-        
+
         if( currentElement->getAttributeNode(
-            Convert( "restitution" ).toXMLString() ) )
+                    Convert( "restitution" ).toXMLString() ) )
         {
             XMLObject::GetAttribute( currentElement, "restitution", m_restitution );
         }
@@ -474,7 +474,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
         {
             m_restitution = 0.0f;
         }
-        
+
         XMLObject::GetAttribute( currentElement, "physicsLOD", mPhysicsLODType );
         XMLObject::GetAttribute( currentElement, "physicsMotion", mPhysicsMotionType );
         XMLObject::GetAttribute( currentElement, "physicsMesh", mPhysicsMeshType );
@@ -513,7 +513,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     {
         XMLObject::GetAttribute( currentElement, "id", mUuid );
     }
-    
+
     {
         DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
         if( typeNode )
@@ -521,7 +521,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
             GetDataFromElement( typeNode, m_type );
         }
     }
-    
+
     {
         m_parent = "";
         DOMElement* parentNode = GetSubElement( currentElement, "parent", 0 );
@@ -530,7 +530,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
             GetDataFromElement( parentNode, m_parent );
         }
     }
-    
+
     m_attributeList.clear();
     DOMNodeList* attributeNodes = currentElement->getElementsByTagName( Convert( "attribute" ).toXMLString() );
     XMLSize_t nNewAttributes = attributeNodes->getLength();
@@ -566,7 +566,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     DOMElement* activeAttribNode = GetSubElement( currentElement, std::string( "activeAttributeName" ), 0 );
     if( activeAttribNode )
     {
-        GetDataFromElement( activeAttribNode, m_activeAttributeName);
+        GetDataFromElement( activeAttribNode, m_activeAttributeName );
         SetActiveAttribute( m_activeAttributeName );
     }
 
@@ -606,7 +606,7 @@ ves::open::xml::cad::CADNodeAnimationPtr CADNode::GetAnimation( unsigned int ind
     {
         return m_animations.at( index );
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid animation index: " << index << std::endl;
         std::cout << "CADNode::GetAnimation()" << std::endl;
@@ -633,10 +633,10 @@ size_t CADNode::GetNumberOfAnimations()
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADNode::CADNode( const CADNode& rhs, bool clone )
-        : ves::open::xml::XMLObject( rhs )
+    : ves::open::xml::XMLObject( rhs )
 {
     m_parent = "";
-    m_transform = ves::open::xml::TransformPtr( new ves::open::xml::Transform(  *rhs.m_transform ) );
+    m_transform = ves::open::xml::TransformPtr( new ves::open::xml::Transform( *rhs.m_transform ) );
 
     m_attributeList.clear();
     for( size_t i = 0; i < rhs.m_attributeList.size(); i++ )
@@ -666,7 +666,7 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
     mPhysicsMotionType = rhs.mPhysicsMotionType;
     mPhysicsLODType = rhs.mPhysicsLODType;
     m_decimationValue = rhs.m_decimationValue;
-    
+
     m_longitude = rhs.m_longitude;
     m_latitude = rhs.m_latitude;
 
@@ -677,10 +677,10 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
     {
         boost::uuids::random_generator generator;
         boost::uuids::uuid u( generator() );
-        
+
         std::stringstream ss;
         ss << u;
-        
+
         mUuid.assign( ss.str() );
     }
 }
@@ -705,7 +705,7 @@ CADNode& CADNode::operator=( const CADNode& rhs )
             m_animations.push_back( rhs.m_animations.at( i ) );
         }
 
-        m_transform = TransformPtr( new Transform(  *rhs.m_transform ) );
+        m_transform = TransformPtr( new Transform( *rhs.m_transform ) );
         m_activeAttributeName = rhs.m_activeAttributeName;
         m_visibility = rhs.m_visibility;
         mOpacity = rhs.mOpacity;
@@ -721,37 +721,37 @@ CADNode& CADNode::operator=( const CADNode& rhs )
         m_decimationValue = rhs.m_decimationValue;
 
         mMakeTransparentOnVis = rhs.mMakeTransparentOnVis;
-        
+
         //_uID = rhs._uID;
         m_parent = rhs.m_parent;
         m_name = rhs.m_name;
 
         m_longitude = rhs.m_longitude;
         m_latitude = rhs.m_latitude;
-        
+
         m_occlusionCulling = rhs.m_occlusionCulling;
     }
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADNode::SetLongitude ( double value )
+void CADNode::SetLongitude( double value )
 {
-  m_longitude = value;
+    m_longitude = value;
 }
 ////////////////////////////////////////////////////////////////////////////////
 double CADNode::GetLongitude() const
 {
-  return m_longitude;
+    return m_longitude;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADNode::SetLatitude ( double value )
+void CADNode::SetLatitude( double value )
 {
-  m_latitude = value;
+    m_latitude = value;
 }
 ////////////////////////////////////////////////////////////////////////////////
 double CADNode::GetLatitude() const
 {
-  return m_latitude;
+    return m_latitude;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADNode::SetOcclusionSettings( const std::string& occlusionSetting )

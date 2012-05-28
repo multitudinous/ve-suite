@@ -35,7 +35,7 @@
 
 int main( int argc, char** argv )
 {
-    SAPIVoiceInterpreter *vI = new SAPIVoiceInterpreter( argc, argv );
+    SAPIVoiceInterpreter* vI = new SAPIVoiceInterpreter( argc, argv );
 
     if( vI->SAPIInit() )
     {

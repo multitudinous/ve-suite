@@ -59,16 +59,16 @@ public:
     ///???
     wxString GetFilename();
 
-private:        
+private:
     ///???
     void OnClose( wxCloseEvent& event );
-    
+
     ///???
     void CreateGUIControls();
-    
+
     ///???
     wxComboBox* m_comboBox;
-    
+
     DECLARE_EVENT_TABLE();
 };
 

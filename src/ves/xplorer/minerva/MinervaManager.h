@@ -53,19 +53,66 @@
 #include <string>
 #include <map>
 
-namespace Minerva { namespace Common { class Extents; } }
-namespace Minerva { namespace Core { namespace TileEngine { class Body; } } }
-namespace Minerva { namespace Core { namespace Data { class Camera; class Container; } } }
-namespace Minerva { namespace Core { namespace Layers { class RasterLayer; } } }
-namespace Usul { namespace Jobs { class Manager; } }
-namespace osg { class Matrixd; class osg::Vec2d; }
+namespace Minerva
+{
+namespace Common
+{
+class Extents;
+}
+}
+namespace Minerva
+{
+namespace Core
+{
+namespace TileEngine
+{
+class Body;
+}
+}
+}
+namespace Minerva
+{
+namespace Core
+{
+namespace Data
+{
+class Camera;
+class Container;
+}
+}
+}
+namespace Minerva
+{
+namespace Core
+{
+namespace Layers
+{
+class RasterLayer;
+}
+}
+}
+namespace Usul
+{
+namespace Jobs
+{
+class Manager;
+}
+}
+namespace osg
+{
+class Matrixd;
+class osg::Vec2d;
+}
 
-namespace ves {
-namespace xplorer {
-namespace minerva {
+namespace ves
+{
+namespace xplorer
+{
+namespace minerva
+{
 
-  class EventHandler;
-  class ModelWrapper;
+class EventHandler;
+class ModelWrapper;
 
 class VE_XPLORER_EXPORTS MinervaManager
 {
@@ -76,9 +123,9 @@ public:
     typedef Minerva::Common::Extents Extents;
 
     void AddEarthToScene();
-    void AddElevationLayer ( Minerva::Core::Layers::RasterLayer* );
-    void AddRasterLayer ( Minerva::Core::Layers::RasterLayer* );
-    void AddModel ( const std::string& guid, ModelWrapper* model );
+    void AddElevationLayer( Minerva::Core::Layers::RasterLayer* );
+    void AddRasterLayer( Minerva::Core::Layers::RasterLayer* );
+    void AddModel( const std::string& guid, ModelWrapper* model );
 
     ///Get the tile engine body for minerva
     ///\return The minerva tile engine body
@@ -90,22 +137,22 @@ public:
 
     Minerva::Core::Layers::RasterLayer* GetLayer( const std::string& guid ) const;
 
-    ModelWrapper* GetModel ( const std::string& guid ) const;
-    bool HasModel ( const std::string& guid ) const;
+    ModelWrapper* GetModel( const std::string& guid ) const;
+    bool HasModel( const std::string& guid ) const;
 
-    void GetViewMatrix ( Minerva::Core::Data::Camera* camera, gmtl::Matrix44d& matrix ) const;
+    void GetViewMatrix( Minerva::Core::Data::Camera* camera, gmtl::Matrix44d& matrix ) const;
 
     void PreFrameUpdate();
 
-    void RemoveElevationLayer ( const std::string& guid );
-    void RemoveRasterLayer ( const std::string& guid );
-    void RemoveModel ( const std::string& guid );
+    void RemoveElevationLayer( const std::string& guid );
+    void RemoveRasterLayer( const std::string& guid );
+    void RemoveModel( const std::string& guid );
 
-    void UpdateModel ( ModelWrapper* );
+    void UpdateModel( ModelWrapper* );
 
 private:
 
-    bool _removeLayer ( Minerva::Core::Data::Container *group, const std::string& guid, Extents& extents );
+    bool _removeLayer( Minerva::Core::Data::Container* group, const std::string& guid, Extents& extents );
 
     void _loadPlugins();
     void _unloadPlugins();
@@ -117,17 +164,17 @@ private:
     //MinervaManager ( const MinervaManager& );
     //MinervaManager& operator= ( const MinervaManager& );
 
-    vprSingletonHeader ( MinervaManager );
+    vprSingletonHeader( MinervaManager );
 
-    typedef std::map<std::string,EventHandler*> EventHandlers;
-    typedef std::map<std::string,ModelWrapper*> Models;
+    typedef std::map<std::string, EventHandler*> EventHandlers;
+    typedef std::map<std::string, ModelWrapper*> Models;
 
     EventHandlers _eventHandlers;
     CommandPtr _currentCommand;
     Body* _body;
     Usul::Jobs::Manager* _manager;
     osg::ref_ptr<osg::Node> _scene;
-    Models _models; 
+    Models _models;
 };
 
 

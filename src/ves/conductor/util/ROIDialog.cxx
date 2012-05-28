@@ -40,7 +40,7 @@
 using namespace ves::conductor::util;
 ////////////////////////////////////////////////////////////////
 ROIDialog::ROIDialog( wxWindow* parent, int id, std::string title )
-        : BaseDialog( parent, id, title )
+    : BaseDialog( parent, id, title )
 {
     _xBounds = 0;
     _yBounds = 0;

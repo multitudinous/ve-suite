@@ -181,15 +181,15 @@ void cfdVolumeVisualization::SetPlayMode( VisMode mode )
     _mode = mode;
     if( _tm )
     {
-        switch ( _mode )
+        switch( _mode )
         {
-            case PLAY:
-                _tm->setPlayMode( cfdTextureManager::PLAY );
-                break;
-            case STOP:
-            default:
-                _tm->setPlayMode( cfdTextureManager::STOP );
-                break;
+        case PLAY:
+            _tm->setPlayMode( cfdTextureManager::PLAY );
+            break;
+        case STOP:
+        default:
+            _tm->setPlayMode( cfdTextureManager::STOP );
+            break;
         };
     }
     else
@@ -206,15 +206,15 @@ void cfdVolumeVisualization::SetPlayDirection( Direction dir )
     _traverseDirection = dir;
     if( _tm )
     {
-        switch ( _traverseDirection )
+        switch( _traverseDirection )
         {
-            case FORWARD:
-                _tm->setDirection( 1 );
-                break;
-            case BACKWARD:
-            default:
-                _tm->setDirection( -1 );
-                break;
+        case FORWARD:
+            _tm->setDirection( 1 );
+            break;
+        case BACKWARD:
+        default:
+            _tm->setDirection( -1 );
+            break;
         };
     }
     else
@@ -297,7 +297,9 @@ void cfdVolumeVisualization::SetBoundingBox( float* bbox )
 void cfdVolumeVisualization::SetTextureManager( cfdTextureManager* tm )
 {
     if( tm->GetDataType( 0 ) == cfdTextureManager::VECTOR )
+    {
         return;
+    }
 
     _tm = tm;
 
@@ -363,7 +365,9 @@ osg::ref_ptr<osg::StateSet> cfdVolumeVisualization::GetStateSet()
     else
     {
         if( _verbose )
+        {
             std::cout << "Invalid state set in cfdVolumeVisualization::GetStateSet!" << std::endl;
+        }
         return 0;
     }
 }
@@ -394,7 +398,9 @@ osg::ref_ptr<osg::Texture3D> cfdVolumeVisualization::GetTextureData()
     else
     {
         if( _verbose )
+        {
             std::cout << "Invalid texture data in cfdVolumeVisualization::GetTextureData()!" << std::endl;
+        }
         return 0;
     }
 }
@@ -422,10 +428,10 @@ void cfdVolumeVisualization::AddClipPlane( ClipPlane direction, double* position
     if( _clipNode.valid() )
     {
         _clipNode->addClipPlane( new osg::ClipPlane( direction,
-                                                     position[0],
-                                                     position[1],
-                                                     position[2],
-                                                     position[3] ) );
+                                 position[0],
+                                 position[1],
+                                 position[2],
+                                 position[3] ) );
     }
     else
     {
@@ -475,7 +481,7 @@ void cfdVolumeVisualization::RemoveClipPlane( ClipPlane direction )
         unsigned int planeIndex = 0;
         if( _clipNode->getNumClipPlanes() )
         {
-            for( unsigned int i = 0; i < ( unsigned int )_clipNode->getNumClipPlanes();i++ )
+            for( unsigned int i = 0; i < ( unsigned int )_clipNode->getNumClipPlanes(); i++ )
             {
                 plane = _clipNode->getClipPlane( i );
                 if( plane->getClipPlaneNum() == ( unsigned int )direction )
@@ -509,14 +515,14 @@ void cfdVolumeVisualization::RemoveClipPlane( ClipPlane direction )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::UpdateClipPlanePosition( ClipPlane direction,
-                                                      double* newPosition )
+        double* newPosition )
 {
     osg::ref_ptr<osg::ClipPlane> plane = 0;
     if( _clipNode.valid() )
     {
         if( _clipNode->getNumClipPlanes() )
         {
-            for( unsigned int i = 0; i < ( unsigned int )_clipNode->getNumClipPlanes();i++ )
+            for( unsigned int i = 0; i < ( unsigned int )_clipNode->getNumClipPlanes(); i++ )
             {
                 plane = _clipNode->getClipPlane( i );
                 if( plane->getClipPlaneNum() == ( unsigned int )direction )
@@ -577,10 +583,10 @@ void cfdVolumeVisualization::_createStateSet()
             tMat->setMatrix( osg::Matrix::identity() );
             _stateSet->setTextureAttributeAndModes( 0, tMat.get() );
 
-            osg::BlendColor* bc = 
-            new osg::BlendColor( osg::Vec4( 0., 0., 0., 0.5 ) );
+            osg::BlendColor* bc =
+                new osg::BlendColor( osg::Vec4( 0., 0., 0., 0.5 ) );
             _stateSet->setAttributeAndModes( bc, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
-            
+
             osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
             bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
 
@@ -602,7 +608,9 @@ void cfdVolumeVisualization::_createStateSet()
     else
     {
         if( _verbose )
+        {
             std::cout << "Invalid TexGenNode in cfdVolumeVisualization::_createStateSet!" << std::endl;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -638,7 +646,9 @@ void cfdVolumeVisualization::_attachTextureToStateSet( osg::StateSet* ss )
     else
     {
         if( _verbose )
+        {
             std::cout << "Invalid state set in cfdVolumeVisualization::GetStateSet!" << std::endl;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -692,15 +702,15 @@ void cfdVolumeVisualization::_buildSlices()
     float y = halfSize;
     float dy = -_diagonal / ( float )( _nSlices - 1 );
 
-    osg::ref_ptr<osg::Vec3Array> ycoords = new osg::Vec3Array( 4*_nSlices );
+    osg::ref_ptr<osg::Vec3Array> ycoords = new osg::Vec3Array( 4 * _nSlices );
     geom->setVertexArray( ycoords.get() );
 
     for( unsigned int i = 0; i < _nSlices; ++i, y += dy )
     {
-        ( *ycoords )[i*4+0].set( -halfSize, y, halfSize );
-        ( *ycoords )[i*4+1].set( -halfSize, y, -halfSize );
-        ( *ycoords )[i*4+2].set( halfSize, y, -halfSize );
-        ( *ycoords )[i*4+3].set( halfSize, y, halfSize );
+        ( *ycoords )[i * 4 + 0].set( -halfSize, y, halfSize );
+        ( *ycoords )[i * 4 + 1].set( -halfSize, y, -halfSize );
+        ( *ycoords )[i * 4 + 2].set( halfSize, y, -halfSize );
+        ( *ycoords )[i * 4 + 3].set( halfSize, y, halfSize );
     }
 
 

@@ -58,7 +58,7 @@ public:
 
     void SetBounds( const double* bounds );
 
-    vtkPlane * GetPlane( );
+    vtkPlane* GetPlane( );
 
     ///This reads in the requested value for the cutting plane.
     ///\param requestedValue
