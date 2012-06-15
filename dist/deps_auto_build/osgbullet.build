@@ -24,12 +24,12 @@ CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )
 CMAKE_PARAMS+=( -DBulletInstallLocation="${BULLET_INSTALL_DIR}" )
 CMAKE_PARAMS+=( -DBULLET_INCLUDE_DIR="${BULLET_INSTALL_DIR}/include" )
 CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG_INSTALL_DIR}" )
-CMAKE_PARAMS+=( -DOSGWORKS_INCLUDE_DIR="${OSGWORKS_INSTALL_DIR}/include" )
+CMAKE_PARAMS+=( -DosgWorks_DIR="${OSGWORKS_INSTALL_DIR}/lib" )
 
 case $PLATFORM in
   Windows)
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
-    CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/osgwTools.lib" )
+    #CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/osgwTools.lib" )
     MSVC_CONFIG=RelWithDebInfo
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
@@ -41,11 +41,11 @@ case $PLATFORM in
     ;;
   Darwin)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
-    CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/libosgwTools.dylib" )
+    #CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/libosgwTools.dylib" )
     ;;
   Linux)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
-    CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/libosgwTools.so" )
+    #CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/libosgwTools.so" )
     CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
     CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
     ;;
