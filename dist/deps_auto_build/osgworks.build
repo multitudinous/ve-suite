@@ -16,8 +16,7 @@ CMAKE_PARAMS+=( -DOSGWORKS_BUILD_EXAMPLES=ON )
 CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )
 CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG_INSTALL_DIR}" )
 
-SKIP_FPC_INSTALL="no"
-FPC_FILE=osgworks.fpc
+SKIP_FPC_INSTALL="yes"
 
 case $PLATFORM in
   Windows)
