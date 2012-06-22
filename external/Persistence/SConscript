@@ -10,27 +10,31 @@ import SConsAddons.Util as sca_util
 Import('baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform')
 Import('poco_options boost_options' )
 
+MONGO_DRIVER_PATH = GetOption('mongodriverpath')
+
 openDir = os.path.abspath( pj(RootDir, 'external', 'Persistence') )
 buildSrcDir = pj('#',buildDir,'external','Persistence')
 
 lib_env = ves_pkg.getEnv().Clone()
 
-headers = sca_util.getHeadersRecursive( pj( openDir, 'include','Persistence') )
-sources = sca_util.getSourcesRecursive( pj( openDir, 'src','lib' ) )
+headers = sca_util.getHeadersRecursive( pj( openDir, 'src','Persistence') )
+sources = sca_util.getSourcesRecursive( pj( openDir, 'src','Persistence' ) )
 
-headers = map(lambda s: pj('include','Persistence', s), 
+headers = map(lambda s: pj('src','Persistence', s), 
                 headers)
-sources = map(lambda s: pj('src','lib', s), 
+sources = map(lambda s: pj('src','Persistence', s), 
                 sources)
 
-lib_env.Append( CPPPATH = [pj(openDir, 'include')] )
-lib_env.Append( CPPPATH = ['/home/penn/fire/dev/deps/mongo-cxx-driver-v2.0'] )
+lib_env.Append( CPPPATH = [pj(openDir, 'src')] )
+#lib_env.Append( CPPPATH = ['/home/penn/fire/dev/deps/mongo-cxx-driver-v2.0'] )
+lib_env.Append( CPPPATH = [MONGO_DRIVER_PATH] )
 
 lib_env.AppendUnique( CPPDEFINES = ['Persistence_LIBRARY'] )
 
 lib_env.Append( LIBS = [ 'mongoclient'])
 
-lib_env.Append(LIBPATH = ['/home/penn/fire/dev/deps/mongo-cxx-driver-v2.0'])
+#lib_env.Append(LIBPATH = ['/home/penn/fire/dev/deps/mongo-cxx-driver-v2.0'])
+lib_env.Append( LIBPATH = [MONGO_DRIVER_PATH] )
                         
 poco_options.apply( lib_env )
 boost_options.apply( lib_env )
