@@ -1,3 +1,35 @@
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2012 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <stdlib.h>
 #include <iostream>
 
@@ -11,8 +43,12 @@
 #include <Persistence/SQLiteStore.h>
 #include <Persistence/MongoStore.h>
 
+//#define USE_PROPERTYSETS
+#ifdef USE_PROPERTYSETS
 #include "PropertySet.h"
 #include "Property.h"
+#endif
+
 #include <boost/any.hpp>
 
 int main(int argc, char *argv[])
@@ -69,6 +105,7 @@ int main(int argc, char *argv[])
         }
     }
 
+#ifdef USE_PROPERTYSETS
     ves::xplorer::data::PropertySet ps;
     cout << "Testing a propertySet..." << endl;
     ps.SetTypeName( "TestPropertySet" );
@@ -95,6 +132,7 @@ int main(int argc, char *argv[])
          << ps.GetDatumValue< std::string >( "ENUM" ) << endl;
     cout << "\tENUM index: "
          << ps.GetPropertyAttributeValue< int >( "ENUM", "enumCurrentIndex" ) << endl;
+#endif
 
     // Set up a datamanager to test persistence
     DataManager manager;
@@ -114,6 +152,7 @@ int main(int argc, char *argv[])
     //manager.AttachStore( mongostore, Store::BACKINGSTORE_ROLE );
     manager.AttachStore( mongostore, Store::WORKINGSTORE_ROLE );
 
+ #ifdef USE_PROPERTYSETS
     // This works for any type of store connected as WORKING_ROLE
     //manager.Drop( "TestPropertySet" );
 
@@ -155,6 +194,7 @@ int main(int argc, char *argv[])
     {
         manager.Drop( "TestPropertySet" );
     }
+#endif
 
     // Build up a persistable with some useful test types
     Persistable q;

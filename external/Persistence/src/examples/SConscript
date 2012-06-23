@@ -7,6 +7,9 @@ import SConsAddons.Util as sca_util
 Import('baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform')
 Import('poco_options boost_options' )
 
+MONGO_DRIVER_PATH = GetOption('mongodriverpath')
+print "******* mdp = ",MONGO_DRIVER_PATH
+
 openDir = os.path.abspath( pj(RootDir, 'external', 'Persistence','src','examples') )
 buildSrcDir = pj('#',buildDir,'external','Persistence','src','examples')
 
@@ -23,8 +26,9 @@ sources = map(lambda s: s,
 lib_env.Append( LIBS = [ 'Persistence' ] )
 lib_env.Append(LIBPATH = [  pj('#',buildDir,'external','Persistence')] )
 
-lib_env.Append( CPPPATH = [pj('#',buildDir,'external','Persistence','include')] )
-lib_env.Append( CPPPATH = ['/home/penn/fire/dev/deps/mongo-cxx-driver-v2.0'] )
+lib_env.Append( CPPPATH = [pj('#',buildDir,'external','Persistence','src')] )
+#lib_env.Append( CPPPATH = ['/home/penn/fire/dev/deps/mongo-cxx-driver-v2.0'] )
+lib_env.Append( CPPPATH = [MONGO_DRIVER_PATH] )
                         
 poco_options.apply( lib_env )
 boost_options.apply( lib_env )
