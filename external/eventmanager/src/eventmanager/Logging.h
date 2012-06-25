@@ -48,9 +48,6 @@ namespace eventmanager
 typedef ClassPtrDef<Poco::LogStream>::type  LogStreamPtr;
 }
 
-//#define DECLARE_LOGGER Poco::Logger& m_Logger; LogStreamPtr m_LogStream
-//#define CREATE_LOG_STREAM m_LogStream = LogStreamPtr( new Poco::LogStream::LogStream( m_Logger ) )
-
 #define _LOG_CALL( prio, msg ) do {if( m_logger.prio() ){ (*m_logStream).prio() << msg << std::endl; } } while( 0 )
 #define _STATIC_LOG_CALL( prio, name, msg ) do { Poco::Logger& logger = Poco::Logger::get( name ); if( logger.prio() ){Poco::LogStream logstream( logger ); logstream.information() << msg << std::endl; } } while( 0 )
 
@@ -80,12 +77,9 @@ typedef ClassPtrDef<Poco::LogStream>::type  LogStreamPtr;
 #define STATIC_LOG_INFO( name, msg ) _STATIC_LOG_CALL( information, name, msg )
 
 
-// DEBUG and TRACE log messages will only be compiled in when VES_DEBUG
+// DEBUG and TRACE log messages will only be compiled in when EVENTMANAGER_DEBUG
 // is defined. This allows the liberal use of DEBUG and TRACE messages to
 // track down difficult bugs without affecting performace of production builds.
-// VES_DEBUG can either be defined via SCons for the entire build or can be
-// individually defined in a single class before the include statement for
-// this file.
 #if defined(EVENTMANAGER_DEBUG)
     #define LOG_DEBUG( msg ) _LOG_CALL( debug, msg )
     #define LOG_TRACE( msg ) _LOG_CALL( trace, msg )

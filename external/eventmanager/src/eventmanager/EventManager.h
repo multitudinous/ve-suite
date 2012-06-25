@@ -478,9 +478,10 @@ private:
                     int priority );
 
     ///
-    /// Holds the signal name and its corresponding SignalWrapper*.
-    /// Used for connecting a slot to a signal when the exact signal name is known.
-    std::map< std::string, SignalWrapperBase* > mSignals;
+    /// Holds the signal name along with its corresponding SignalWrapper* and
+    /// the weak pointer used for lifetime management.
+    /// Used for connecting a slot to a signal.
+    std::map< std::string, std::pair< SignalWrapperBase*, boost::weak_ptr< EventBase > > > mSignals;
 
     ///
     /// Holds a weak_ptr to a connection and a raw ptr to the corresponding

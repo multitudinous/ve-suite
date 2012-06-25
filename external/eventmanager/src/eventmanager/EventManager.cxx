@@ -59,7 +59,7 @@ EventManager* EventManager::instance()
 ////////////////////////////////////////////////////////////////////////////////
 EventManager::EventManager():
     mMonotonicID(0),
-    m_logger( Poco::Logger::get("xplorer.EventManager") )
+    m_logger( Poco::Logger::get("EventManager") )
 {
     m_logStream = LogStreamPtr( new Poco::LogStream( m_logger ) );
 
@@ -83,12 +83,12 @@ EventManager::~EventManager()
 
     // Delete all our signals
     {
-        std::map<std::string, SignalWrapperBase*>::const_iterator iter = mSignals.begin();
-        std::map<std::string, SignalWrapperBase*>::const_iterator max = mSignals.end();
+        std::map< std::string, std::pair< SignalWrapperBase*, boost::weak_ptr< EventBase > > >::const_iterator iter = mSignals.begin();
+        std::map< std::string, std::pair< SignalWrapperBase*, boost::weak_ptr< EventBase > > >::const_iterator max = mSignals.end();
 
         while( iter != max )
         {
-            delete ( iter->second );
+            delete ( iter->second.first );
             ++iter;
         }
     }
@@ -125,20 +125,22 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
     // Add this signal to the lookup table
     try
     {
-        bool exists = false;
-        ( *mSession ) << "SELECT 1 FROM signals WHERE name=:name",
-                Poco::Data::use( sigName ),
-                Poco::Data::into( exists ),
-                Poco::Data::now;
-
-        if( exists )
+        std::map< std::string, std::pair< SignalWrapperBase*, boost::weak_ptr< EventBase > > >::iterator iter = mSignals.find( sigName );
+        if( iter != mSignals.end() )
         {
-            // FIXME: Need to somehow determine if this signal is still valid; if not,
-            // don't log the warning.
-
-
-            LOG_WARNING( "RegisterSignal: " << sigName << " will hide previous signal with same name" );
-            std::string warning( "RegisterSignal: " );
+            // Check whether signal is still valid; remove if not.
+            shared_ptr<EventBase> eventLock = iter->second.second.lock();
+            if( !eventLock )
+            {
+                LOG_INFO( "RegisterSignal: Removing expired Event/Signal \""
+                          << sigName << "\"" );
+                mSignals.erase( iter );
+            }
+            else
+            {
+                LOG_WARNING( "RegisterSignal: " << sigName
+                             << " will hide previous signal with same name" );
+            }
 
             ( *mSession ) << "UPDATE signals SET type=:type WHERE name=:name",
                     Poco::Data::use( sigType ),
@@ -160,8 +162,10 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
          LOG_ERROR( ex.displayText() );
     }
 
-    // Store the signal in the signal map
-    mSignals[sigName] = sig;
+    // Store the signal and weakptr to EventBase in the signal map
+     mSignals[sigName] = std::pair< SignalWrapperBase*,
+             boost::weak_ptr< EventBase > >
+             ( sig, sig->GetEventWeakPtr() );
 
     ConnectToPreviousSlots( sigName );
 }
@@ -233,52 +237,28 @@ void EventManager::_ConnectSignal( const std::string& sigName,
                                   bool store )
 {
     LOG_TRACE( "_ConnectSignal" );
-    // Find the appropriate SignalWrapperBase
-    std::map< std::string, SignalWrapperBase* >::const_iterator iter = mSignals.find( sigName );
+    // Find the appropriate SignalWrapperBase; using non-const iterator because
+    // we will erase this entry if it has expired (can't lock weak ptr).
+    std::map< std::string, std::pair< SignalWrapperBase*, boost::weak_ptr< EventBase > > >::iterator iter = mSignals.find( sigName );
     if( iter != mSignals.end() )
     {
-        // FIXME: Need to somehow determine if this signal is still valid before
-        // doing anything with it. If it is no longer valid, remove it from
-        // mSignals and database.
-        // Here's one way: everytime a SignalWrapper is created, caller must
-        // pass in a LifetimeTracker object, which is just a shared pointer to
-        // *something*. The SignalWrapper makes a weak pointer off of that. Any
-        // time before we access a signal stored inside a SignalWrapper, we first
-        // attempt to lock the weak ptr to the LifetimeTracker. If it fails, we
-        // treat the signal as no longer being valid.
-        // Advantages to this method:
-        //  1. Existing code is easy to fix because we can search for register signal
-        //     calls and add the tracker there.
-        //  2. Objects with multiple signals (and we have many like that) can
-        //     reuse the same tracker for all their signals.
-        //  3. We don't have to change anything dealing with the signal declarations
-        //     , as opposed to any method that would require the signals themselves
-        //     to be wrapped in a smart pointer.
-        // Disadvantages to this method:
-        // 1. Since the lifetime tracker isn't directly attached to the signal
-        //    itself, there's still room for the API user to shoot himself in
-        //    the foot by letting a signal go out of scope, but keeping the
-        //    lifetime tracker alive.
-        //
-        // Different method:
-        // Make an event<T> class that contains a boost::signals2::signal<T>
-        // *and* a smart pointer for lifetime tracking. We can then S&R on
-        // boost::signals2::signal and proceed as above.
-        // Advantages:
-        //   1. Eliminates the big disadvantage of previous method.
-        //   2. Abstracts code from directly referring to boost::signals2, which
-        //      might be nice if there's ever a boost::signals3 or something.
-        // Disadvantages:
-        //   1. Mucks about with all of our signal declarations, but in majority
-        //      of cases this shouldn't be a big problem. May have some issues
-        //      with big batches of generated signals like in KeyboardMouse.
-
-
+        // Check whether signal is still valid; remove if not.
+        shared_ptr<EventBase> eventLock = iter->second.second.lock();
+        if( !eventLock )
+        {
+            LOG_INFO( "_ConnectSignal: Removing expired Event/Signal \""
+                      << sigName << "\"" );
+            mSignals.erase( iter );
+            ( *mSession ) << "DELETE FROM signals where name=:name",
+                    Poco::Data::use( sigName ),
+                    Poco::Data::now;
+            return;
+        }
 
         LOG_DEBUG( "_ConnectSignal: Connecting " << slot << " to signal "
-                << sigName << " (" << iter->second->GetSignalAddress() << ")" );
+                << sigName << " (" << iter->second.first->GetSignalAddress() << ")" );
         // Tell the SignalWrapper to connect its signal to this slot
-        SignalWrapperBase* signalWrapper = iter->second;
+        SignalWrapperBase* signalWrapper = iter->second.first;
         if( signalWrapper->ConnectSlot( slot, connections, priority ) )
         {
             LOG_DEBUG( "_ConnectSignal: Connection successful" );

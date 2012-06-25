@@ -36,6 +36,7 @@
 #include <eventmanager/SlotWrapper.h>
 #include <eventmanager/ScopedConnectionList.h>
 #include <eventmanager/SignalWrapperBase.h>
+#include <eventmanager/Event.h>
 
 
 
@@ -57,7 +58,7 @@ public:
 
     /**
     * Constructs a SignalWrapper of type T.
-    * @param signal Pointer to a boost::signals2::signal<T> object.
+    * @param event Pointer to an Event<T> object.
      * 
      * Example usage:
      * @code
@@ -69,9 +70,10 @@ public:
      * SignalWrapper< boost::signals2::signal< void (double, int) > > myWrapper( &mySignal );
      * @endcode
     **/
-    SignalWrapper( T* signal ) :
-    mSignal( signal )
+    SignalWrapper( Event<T>* event ) :
+        mEvent( event )
     {
+        mEventBase = event;
     }
 
     virtual ~SignalWrapper()
@@ -82,11 +84,11 @@ public:
                               ScopedConnectionList& connections,
                               int priority )
     {
-        SlotWrapper<T>* castSlot = dynamic_cast < SlotWrapper<T>* > ( slot );
+        SlotWrapper< boost::signals2::signal<T> >* castSlot = dynamic_cast < SlotWrapper< boost::signals2::signal<T> >* > ( slot );
         if ( castSlot )
         {
             boost::shared_ptr< boost::signals2::scoped_connection > connection( new boost::signals2::scoped_connection );
-            *( connection.get() ) = mSignal->connect( priority, castSlot->GetSlot() );
+            *( connection.get() ) = mEvent->signal.connect( priority, castSlot->GetSlot() );
 
             // If the connection was successful, we store the details of it
             if ( connection->connected() )
@@ -109,15 +111,12 @@ public:
 
     virtual long unsigned int GetSignalAddress()
     {
-        return reinterpret_cast<long unsigned int>(mSignal);
+        return reinterpret_cast<long unsigned int>( &(mEvent->signal) );
     }
 
 
-public:
-    // Made public so we can pass around SignalWrapperBase instances and be
-    // able to extract the underlying signal. There's no real need to add the
-    // overhead of get/set methods with a lightweight wrapper class like this.
-    T* mSignal;
+private:
+    Event<T>* mEvent;
 
 };
 

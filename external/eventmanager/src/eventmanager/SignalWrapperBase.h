@@ -36,6 +36,7 @@
 #include<boost/signals2/signal.hpp>
 
 #include <eventmanager/SlotWrapperBase.h>
+#include <eventmanager/EventBase.h>
 
 
 namespace eventmanager
@@ -79,8 +80,14 @@ public:
     /// out.
     virtual long unsigned int GetSignalAddress() = 0;
 
+    virtual boost::weak_ptr< EventBase > GetEventWeakPtr()
+    {
+        return mEventBase->GetWeakPtr();
+    }
+
 protected:
     std::list< boost::weak_ptr< boost::signals2::scoped_connection > > mConnections;
+    EventBase* mEventBase;
 
 };
 
