@@ -237,7 +237,7 @@ echo \"Decompressing...\"
 DECOMPRESS_DIR=\`mktemp -d /tmp/ves-installer-decompress-dir.XXXXXX\`
 ARCHIVE=\`awk '/^__ARCHIVE_BELOW_THIS_LINE__/ { print NR + 1; exit 0; }' \$0\`
 
-tail -n+\$ARCHIVE \$0 | tar xj -C \$DECOMPRESS_DIR
+tail -n+\$ARCHIVE \$0 | bzcat | tar x -C \$DECOMPRESS_DIR
 
 echo \"Finished decompressing\"
 
