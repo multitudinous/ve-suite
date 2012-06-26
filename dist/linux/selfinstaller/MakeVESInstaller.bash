@@ -30,8 +30,8 @@ function usage()
 
 function postinstall()
 {
-    SETVAR_COMMAND=\"\"
-    SETVAR_DELIMITER=\"\"
+    SETENV_COMMAND=\"\"
+    SETENV_DELIMITER=\"\"
     prefix=\$1
     place_env_file_at_install_root=\$2
     env_file_dir=\$HOME
@@ -42,14 +42,15 @@ function postinstall()
     fi
 
     env_file_path=\$env_file_dir/VE-SuiteEnv
-     
-    if [ \$SHELL = \"/bin/bash\" ]
+
+    if [ \$SHELL = \"/bin/tcsh\" ]
     then
-        SETVAR_COMMAND=\"export\"
-        SETVAR_DELIMITER=\"=\"
+        SETENV_COMMAND=\"setenv\"
+        SETENV_DELIMITER=\" \"
     else
-        SETVAR_COMMAND=\"setenv\"
-        SETVAR_DELIMITER=\" \"
+        # assume a Bourne-compatible shell
+        SETENV_COMMAND=\"export\"
+        SETENV_DELIMITER=\"=\"
     fi
 
     if [ -e \$env_file_path ]
@@ -58,19 +59,19 @@ function postinstall()
     fi
 
     # set up VES_PREFIX
-    var_assign_string=\"\$SETVAR_COMMAND VES_PREFIX\$SETVAR_DELIMITER\"
+    var_assign_string=\"\$SETENV_COMMAND VES_PREFIX\$SETENV_DELIMITER\"
     var_value_string=\$prefix
 
     echo \$var_assign_string\$var_value_string >> \$env_file_path
 
     # set up PATH
-    var_assign_string=\"\$SETVAR_COMMAND PATH\$SETVAR_DELIMITER\"
+    var_assign_string=\"\$SETENV_COMMAND PATH\$SETENV_DELIMITER\"
     var_value_string='\$VES_PREFIX/bin:\$PATH'
 
     echo \$var_assign_string\$var_value_string >> \$env_file_path
 
     # set up LD_LIBRARY_PATH
-    var_assign_string=\"\$SETVAR_COMMAND LD_LIBRARY_PATH\$SETVAR_DELIMITER\"
+    var_assign_string=\"\$SETENV_COMMAND LD_LIBRARY_PATH\$SETENV_DELIMITER\"
     if [ -n \"\$LD_LIBRARY_PATH\" ]
     then
         var_value_string='\$VES_PREFIX/lib:\$VES_PREFIX/lib/vtk-5.8:\$VES_PREFIX/lib64:\$LD_LIBRARY_PATH'
@@ -81,7 +82,7 @@ function postinstall()
     echo \$var_assign_string\$var_value_string >> \$env_file_path
 
     # set up OSG_FILE_PATH
-    var_assign_string=\"\$SETVAR_COMMAND OSG_FILE_PATH\$SETVAR_DELIMITER\"
+    var_assign_string=\"\$SETENV_COMMAND OSG_FILE_PATH\$SETENV_DELIMITER\"
     var_value_string='\$VES_PREFIX/share/osgBullet/data:\$VES_PREFIX/share/osgWorks/data:\$VES_PREFIX/share/backdropFX/data'
 
     echo \$var_assign_string\$var_value_string >> \$env_file_path
@@ -89,14 +90,14 @@ function postinstall()
     # set up VJ_BASE_DIR
     if [ -n \"\$VJ_BASE_DIR\" ]
     then
-        var_assign_string=\"\$SETVAR_COMMAND VJ_BASE_DIR\$SETVAR_DELIMITER\"
+        var_assign_string=\"\$SETENV_COMMAND VJ_BASE_DIR\$SETENV_DELIMITER\"
         var_value_string='\$VES_PREFIX'
 
         echo \$var_assign_string\$var_value_string >> \$env_file_path
     fi
 
     # set up OSGNOTIFYLEVEL
-    var_assign_string=\"\$SETVAR_COMMAND OSGNOTIFYLEVEL\$SETVAR_DELIMITER\"
+    var_assign_string=\"\$SETENV_COMMAND OSGNOTIFYLEVEL\$SETENV_DELIMITER\"
     var_value_string='WARNING'
 
     echo \$var_assign_string\$var_value_string >> \$env_file_path
@@ -107,7 +108,7 @@ function postinstall()
     wxpython_base_dir=\$(find lib64 -type d -name \"python*\")
     if [ -n \"\$wxpython_base_dir\" ]
     then
-        var_assign_string=\"\$SETVAR_COMMAND PYTHONPATH\$SETVAR_DELIMITER\"
+        var_assign_string=\"\$SETENV_COMMAND PYTHONPATH\$SETENV_DELIMITER\"
         if [ -n \"\$PYTHONPATH\" ]
         then
             var_value_string='/site-packages/wx-2.8-gtk2-unicode:\$PYTHONPATH'
