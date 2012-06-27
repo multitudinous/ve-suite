@@ -161,6 +161,16 @@ else
     mkdir -p \$VES_INSTALL_PREFIX
 fi
 
+# check for at least 2.5 GiB of free space in VES_INSTALL_PREFIX
+if [ \$(df \$VES_INSTALL_PREFIX | awk 'FNR == 3 {print \$3}') -lt 2621440 ]
+then
+    echo \"ERROR!\"
+    echo \"  VE-Suite needs at least 2.5 GiB in \$VES_INSTALL_PREFIX\"
+    echo \"  to install. Free some space on the volume containing\"
+    echo \"  \$VES_INSTALL_PREFIX and try again.\"
+    exit 1
+fi 
+
 # Install VE-Suite
 echo \"Installing...\"
 echo \"...Stage 1...\"
@@ -230,6 +240,17 @@ done
 if [ -z \$INSTALL_PREFIX ]
 then
     usage
+    exit 1
+fi
+
+# check for 2.5 GiB of free space in /tmp
+if [ \$(df /tmp | awk 'FNR == 3 {print \$3}') -lt 2621440 ]
+then
+    echo \"ERROR!\"
+    echo \"  The VE-Suite installer needs at least 2.5 GiB\"
+    echo \"  of free space in /tmp to decompress its payload.\"
+    echo \"  Free some space on the volume containing /tmp\"
+    echo \"  and try again.\"
     exit 1
 fi
 
