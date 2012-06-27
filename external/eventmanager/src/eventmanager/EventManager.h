@@ -43,7 +43,7 @@
 
 #include <Poco/SingletonHolder.h>
 
-#include <eventmanager/SignalWrapper.h>
+#include <eventmanager/Event.h>
 #include <eventmanager/ScopedConnectionList.h>
 #include <eventmanager/ConnectionMonopoly.h>
 #include <eventmanager/SlotWrapper.h>
@@ -51,148 +51,6 @@
 #include <eventmanager/Exports.h>
 
 #include <eventmanager/Logging.h>
-
-// Macros to make connecting signals an easier process
-// To add more macros for making connections that require N arguments,
-// add a new CONNECT____N macro, adding the appropriate number of parameters
-// to the boost::bind call and then add both a CONNECTSIGNAL_N and a
-// CONNECTSIGNALS_N macro that use the CONNECT____N macro.
-
-#define CONNECTSIGNALPRE( signature ) do{\
-        typedef boost::signals2::signal< signature > sig_type; \
-        sig_type::slot_type* slotFunctor = new sig_type::slot_type(
-
-#define CONNECTSIGNALPOST  ); \
-                eventmanager::SlotWrapper< sig_type >* slotWrapper = new eventmanager::SlotWrapper< sig_type >( slotFunctor );
-
-#define CONNECTSIGNALCALL( name, connections, priority ) \
-        eventmanager::EventManager::instance()->ConnectSignal( name, slotWrapper, \
-            connections, eventmanager::EventManager::priority ); \
-        }while(0)
-
-#define CONNECTSIGNALSCALL( name, connections, type, priority ) \
-        eventmanager::EventManager::instance()->ConnectSignals( name, slotWrapper, \
-            connections, eventmanager::EventManager::type, eventmanager::EventManager::priority ); \
-        }while(0)
-
-#define CONNECT____0( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ) ) CONNECTSIGNALPOST
-#define CONNECT____1( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ), _1 ) CONNECTSIGNALPOST
-#define CONNECT____2( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ), _1, _2 ) CONNECTSIGNALPOST
-#define CONNECT____3( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ), _1, _2, _3 ) CONNECTSIGNALPOST
-#define CONNECT____4( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ), _1, _2, _3, _4 ) CONNECTSIGNALPOST
-#define CONNECT____5( signature, slot ) CONNECTSIGNALPRE( signature ) boost::bind( slot, boost::ref( *this ), _1, _2, _3, _4, _5 ) CONNECTSIGNALPOST
-
-
-#define CONNECTSIGNAL_0( name, signature, slot, connections, priority ) \
-            CONNECT____0( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
-
-#define CONNECTSIGNAL_1( name, signature, slot, connections, priority ) \
-            CONNECT____1( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
-
-#define CONNECTSIGNAL_2( name, signature, slot, connections, priority ) \
-            CONNECT____2( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
-
-#define CONNECTSIGNAL_3( name, signature, slot, connections, priority ) \
-            CONNECT____3( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
-
-#define CONNECTSIGNAL_4( name, signature, slot, connections, priority ) \
-            CONNECT____4( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
-
-#define CONNECTSIGNAL_5( name, signature, slot, connections, priority ) \
-            CONNECT____5( signature, slot ) CONNECTSIGNALCALL( name, connections, priority )
-
-
-
-#define CONNECTSIGNALS_0( name, signature, slot, connections, type, priority ) \
-            CONNECT____0( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-#define CONNECTSIGNALS_1( name, signature, slot, connections, type, priority ) \
-            CONNECT____1( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-#define CONNECTSIGNALS_2( name, signature, slot, connections, type, priority ) \
-            CONNECT____2( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-#define CONNECTSIGNALS_3( name, signature, slot, connections, type, priority ) \
-            CONNECT____3( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-#define CONNECTSIGNALS_4( name, signature, slot, connections, type, priority ) \
-            CONNECT____4( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-#define CONNECTSIGNALS_5( name, signature, slot, connections, type, priority ) \
-            CONNECT____5( signature, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-
-// This block takes an extra parameter: a custom combiner. This version must
-// be used if the signal to which you are trying to connect uses a custom
-// combiner.
-#define CONNECTSIGNALPRE_COMBINER( signature, combiner ) do{\
-        typedef boost::signals2::signal< signature, combiner > sig_type; \
-        sig_type::slot_type* slotFunctor = new sig_type::slot_type(
-
-#define CONNECT____0_COMBINER( signature, combiner, slot ) \
-                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, boost::ref( *this ) ) CONNECTSIGNALPOST
-
-#define CONNECT____1_COMBINER( signature, combiner, slot ) \
-                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, boost::ref( *this ), _1 ) CONNECTSIGNALPOST
-
-#define CONNECT____2_COMBINER( signature, combiner, slot ) \
-                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, boost::ref( *this ), _1, _2 ) CONNECTSIGNALPOST
-
-#define CONNECT____3_COMBINER( signature, combiner, slot ) \
-                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, boost::ref( *this ), _1, _2, _3 ) CONNECTSIGNALPOST
-
-#define CONNECT____4_COMBINER( signature, combiner, slot ) \
-                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, boost::ref( *this ), _1, _2, _3, _4 ) CONNECTSIGNALPOST
-
-#define CONNECT____5_COMBINER( signature, combiner, slot ) \
-                CONNECTSIGNALPRE_COMBINER( signature, combiner ) \
-                boost::bind( slot, boost::ref( *this ), _1, _2, _3, _4, _5 ) CONNECTSIGNALPOST
-
-#define CONNECTSIGNALS_0_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
-            CONNECT____0_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-#define CONNECTSIGNALS_1_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
-            CONNECT____1_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-#define CONNECTSIGNALS_2_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
-            CONNECT____2_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-#define CONNECTSIGNALS_3_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
-            CONNECT____3_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-#define CONNECTSIGNALS_4_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
-            CONNECT____4_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-#define CONNECTSIGNALS_5_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
-            CONNECT____5_COMBINER( signature, combiner, slot ) CONNECTSIGNALSCALL( name, connections, type, priority )
-
-/// The CONNECTSIGNAL_STATIC and CONNECTSIGNALS_STATIC macros are to be used
-/// to connect signals to slots that do not reside in a class. In most cases,
-/// such slots will be static functions declared in a header. Internally, the
-/// difference between these two macros and the CONNECTSIGNAL(S)_N macros
-/// is that the _STATIC versions do not use boost::bind to make a functor from
-/// a class method. The _COMBINER version accepts a custom combiner, which is
-/// required if the signal to which you are trying to connect uses a custom
-/// combiner.
-#define CONNECTSIGNAL_STATIC( name, signature, slot, connections, priority ) \
-            CONNECTSIGNALPRE( signature ) slot CONNECTSIGNALPOST CONNECTSIGNALCALL( name, connections, priority )
-
-#define CONNECTSIGNALS_STATIC( name, signature, slot, connections, type, priority ) \
-            CONNECTSIGNALPRE( signature ) slot CONNECTSIGNALPOST CONNECTSIGNALSCALL( name, connections, type, priority )
-
-#define CONNECTSIGNAL_STATIC_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
-            CONNECTSIGNALPRE_COMBINER( signature, combiner ) slot CONNECTSIGNALPOST CONNECTSIGNALCALL( name, connections, type, priority )
-
-#define CONNECTSIGNALS_STATIC_COMBINER( name, signature, combiner, slot, connections, type, priority ) \
-            CONNECTSIGNALPRE_COMBINER( signature, combiner ) slot CONNECTSIGNALPOST CONNECTSIGNALSCALL( name, connections, type, priority )
-
-
-
 
 namespace Poco
 {
@@ -204,16 +62,49 @@ class Session;
 
 namespace eventmanager
 {
-
-/**
- * EventManager provides a centralized place to manage and connect signals and slots
- * based on the boost::signals2 library. Objects desiring to make a signal (event)
- * available to listeners should register the signal with EventManager
- * via EventManager::RegisterSignal. Listener objects desiring to receive a
- * particular event should call EventManager::ConnectSignal or
- * EventManager::ConnectSignals, specifying the name of the signal to which they
- * would like to connect (or some other valid search criterion) and should
- * provide a slot of the appropriate type.
+/// @file EventManager.h
+/// @namespace eventmanager
+/** @class EventManager
+ * EventManager provides a centralized place to manage and connect
+ * signals (events) and slots based on the boost::signals2 library.
+ * EventManager provides the following distinct advantages to using
+ * boost::signals2 directly:
+ * \li Allows connection by name (or pattern), and eliminates the need to pass
+ *     references or pointers of the signal-containing objects to the
+ *     slot-containing objects. The slot-containing object (and the developer)
+ *     need not know anything at all about the signal-containing object. All you
+ *     need to know is the signal's registered name and it's signature.
+ * \li Provides automatic lifetime management of signal-slot connections. We do
+ *     this by requiring a ScopedConnectionList to be passed in whenever
+ *     connecting to a signal
+ * \li Supports asynchronous connections, by which we mean it is possible to
+ *     request a connection to a signal that has not been registered (or even
+ *     instantiated) yet. When (if) the signal is later registered, EventManager
+ *     sees that a connection was requested for that signal and makes the
+ *     connection. This feature is especially useful in multithreaded programs,
+ *     where it is often impossible to guarantee that a signal in thread A will
+ *     be created before a connection is requested in thread B. In single-
+ *     threaded programs, this allows the developer to instantiate objects when
+ *     they are needed, rather than having to order their creation to satisfy
+ *     a collection of signal connections.
+ *
+ * Objects desiring to make a signal (event) available to listeners should
+ * register the signal with EventManager via EventManager::RegisterSignal.
+ * Listener objects desiring to receive a particular event can call the
+ * CONNECTSIGNAL... macros from EventManager.h or, preferably, the templated
+ * functions in ConnectSignals.h to make the signal-slot connection.
+ * Alternatively, listening objects can follow the somewhat more difficult
+ * process outlined in the documentation to EventManager::ConnectSignal. The
+ * difference, of course, is that the more difficult process can handle special
+ * situations that are not covered by the macros or templated functions. For
+ * the vast majority of circumstances, though, the macros or function templates
+ * are wholly adequate.
+ *
+ * The documentation for this library uses the terms and concepts "signal" and
+ * "event" more or less interchangeably. When we refer to an "Event", however,
+ * we are specifically referring to the class \c eventmanager::Event.
+ * That name was chosen to avoid confusion with the class
+ * \c boost::signals2::signal.
 **/
 class EVENTMANAGER_EXPORT EventManager
 {
@@ -224,8 +115,9 @@ public:
      * the same signature but different intended purposes. The various
      * SignalTypeS are <b>not</b> associated with a particular signature. The
      * presence of this enum allows connecting slots to request a connection to
-     * a particular type of signal, even if they don't know the signal's name
-     * (or perhaps want to be connected to all signals of a certain type.)
+     * a particular <em>type</em> of signal, even if they don't know the
+     * signal's name (or perhaps want to be connected to all signals of a
+     * certain type.)
      **/
     enum SignalType
     {
@@ -262,9 +154,8 @@ public:
 
     /**
      * Registers a signal for exposure to other objects.
-     * @param sig Pointer to a templated SignalWrapper which contains the
-     * signal. Since SignalWrapper inherits from SignalWrapperBase, there is
-     * no need to explicitly cast to SignalWrapperBase*.
+     * @param sig Pointer to an Event. Since Event inherits from
+     * EventBase, there is no need to explicitly cast to EventBase*.
      * @param sigName A unique name chosen by the caller. EventManager makes no
      * attempt to check or ensure uniqueness of the name. The reccommended way
      * to ensure uniqueness is to prepend a "meaningful" name with either a
@@ -283,30 +174,30 @@ public:
      *
      * Example usage:
      * @code
-     * boost::signals2::signal<void (int)> mySignal;
+     * Event<void (int)> mySignal;
      *
-     * RegisterSignal( new SignalWrapper<void (int)>( &mySignal ),
+     * RegisterSignal( &mySignal,
      *                 "some-unique-prefix.mySignal",
      *                 computation_SignalType );
      * @endcode
-     * @see SignalWrapper
+     * @see Event
      **/
-    void RegisterSignal( SignalWrapperBase* sig,
+    void RegisterSignal( EventBase* sig,
                          const std::string& sigName,
                          SignalType sigType = unspecified_SignalType );
 
     /**
      * Request a weak monoploy on a signal.
-     * @param connection Shared pointer to the scoped_connection object associated with the
-     * signal that should be monopolized.
+     * @param connection Shared pointer to the scoped_connection object
+     * associated with the signal that should be monopolized.
      *
-     * A weak monopoly means that all <em>existing</em> connections to the signal except the
-     * connection passed in will be blocked until the monopoly is destroyed.
-     * The monopoly does not affect new connections made on the signal after
-     * the monopoly is set up. For example, if A, B, and C are connected to a
-     * signal, B and C will be blocked when A creates a monopoly. However, if
-     * D later connects to the signal, it will not be blocked even though B and
-     * C still are.
+     * A weak monopoly means that all <em>existing</em> connections to the
+     * signal except the connection passed in will be blocked until the monopoly
+     * is destroyed. The monopoly does not affect new connections made on the
+     * signal after the monopoly is set up. For example, if A, B, and C are
+     * connected to a signal, B and C will be blocked when A creates a monopoly.
+     * However, if D later connects to the signal, it will not be blocked even
+     * though B and C still are.
      *
      * This method returns a boost::shared_ptr to a ConnectionMonopoly that the
      * caller should keep in scope as long as it wants the monopoly to remain in
@@ -321,18 +212,19 @@ public:
 
     /**
      * Request a strong monopoly on a signal.
-     * @param connection Shared pointer to the scoped_connection object associated with the
-     * signal that should be monopolized.
+     * @param connection Shared pointer to the scoped_connection object
+     * associated with the signal that should be monopolized.
      * 
      * A strong monopoly is similar to a weak monopoly as described in
-     * EventManager::MonopolizeConnectionWeak, with the difference that new connections to the
-     * signal will be affected as well as existing connections. In the example
-     * from EventManager::MonopolizeConnectionWeak, D will successfully connect to the signal
-     * but will not receive the signal until A ends its monopoly. There is a
-     * slight chance that if the signal is fired at just the right time,
-     * D will be called once, directly after it makes the connection but before
-     * its block is in place. This is unavoidable because a connection must
-     * be made before the connection can be blocked.
+     * EventManager::MonopolizeConnectionWeak, with the difference that new
+     * connections to the signal will be affected as well as existing
+     * connections. In the example from EventManager::MonopolizeConnectionWeak,
+     * D will successfully connect to the signal but will not receive the signal
+     * until A ends its monopoly. There is a slight chance that if the signal is
+     * fired at just the right time, D will be called once, directly after it
+     * makes the connection but before its block is in place. This is
+     * unavoidable because a connection must be made before the connection can
+     * be blocked.
      * @see MonopolizeConnectionWeak
      * @see ConnectionMonopoly
      **/
@@ -345,11 +237,15 @@ public:
      * to be connected to the signal. SlotWrapper inherits from SlotWrapperBase,
      * so there is no need to explicitly cast SlotWrapper as SlotWrapperBase.
      * @param connections Reference to the ScopedConnectionList that will hold
-     * the resulting scoped_connection. The signal-slot connection will remain valid
-     * as long as the scoped_connection object held in connections remains in scope.
-     * @param priority The calling priority for this connection. Defaults to normal_Priority.
+     * the resulting scoped_connection. The signal-slot connection will remain
+     * valid as long as the scoped_connection object held in connections remains
+     * in scope.
+     * @param priority The calling priority for this connection. Defaults to
+     *        normal_Priority.
      *
-     * Example:
+     * Example: (if you don't want all the gory details, just skip down to the
+     * section that begins "The easiest way to avoid the headache of this
+     * process").
      * @code
      * class Receiver
      * {
@@ -368,31 +264,50 @@ public:
      * typedef boost::signals2::signal<void (int ) > signal_t;
      *
      * // Use boost::bind to make a functor out of the member method that is the slot
-     * signal_t::slot_type slotFunctor( boost::bind( &Receiver::MyIntSlot, &rec, _1 ) );
+     * signal_t::slot_type slotFunctor( boost::bind( &Receiver::MyIntSlot,
+     *                                               &rec, _1 ) );
      *
      * // Wrap the functored slot in a slotwrapper
      * SlotWrapper< signal_t > slotWrapper( slotFunctor );
      * 
      * // Call into EventManager to connect this instance of Receiver::MyIntSlot
      * // to the signal named "ExactSignalName"
-     * ConnectSignal( "ExactSignalName", &slotWrapper, rec.mConnections, normal_Priority );
+     * ConnectSignal( "ExactSignalName", &slotWrapper, rec.mConnections,
+     *                 normal_Priority );
      * @endcode
      *
-     * In the above example, it is <b>critical</b> to create slotFunctor as an lvalue
-     * on the stack before passing it to the slotwrapper. If we were to try to
-     * put the creation of slotFunctor inside the call to SlotWrapper's ctor,
-     * the functor would be an rvalue and the reference that SlotWrapper expects
-     *  would be invalid immediately after the call. Doing so would lead to a
-     * connection to a non-existent function and an exception of type
+     * In the above example, it is <b>critical</b> to create slotFunctor as an
+     * lvalue on the stack before passing it to the slotwrapper. If we were to
+     * try to put the creation of slotFunctor inside the call to SlotWrapper's
+     * ctor, the functor would be an rvalue and the reference that SlotWrapper
+     * expects would be invalid immediately after the call. Doing so would lead
+     * to a connection to a non-existent function and an exception of type
      * boost::function: empty function.
      * @code
      * // This will compile, but won't work. Don't do this:
-     * SlotWrapper< signal_t > slotWrapper( boost::bind( &Receiver::MyIntSlot, &rec, _1 ) );
+     * SlotWrapper< signal_t > slotWrapper( boost::bind( &Receiver::MyIntSlot,
+     *                                      &rec, _1 ) );
      *
      * // You MUST use multiple steps like this:
-     * signal_t::slot_type slotFunctor( boost::bind( &Receiver::MyIntSlot, &rec, _1 ) );
+     * signal_t::slot_type slotFunctor( boost::bind( &Receiver::MyIntSlot,
+     *                                               &rec, _1 ) );
      * SlotWrapper< signal_t > slotWrapper( slotFunctor );
      * @endcode
+     *
+     * <b>The easiest way to avoid the headache of this process is to use the
+     * template functions in ConnectSignals.h to do the heavy lifting for you.
+     * </b> Then you don't need to worry about the slot functor, boost::bind,
+     * or any of the rest of it. <b>All</b> of the above code can then be simply
+     * replaced by:
+     * @code
+     * ConnectSignals_1< void(int), Receiver >( "ExactSignalName",
+     *                                          &Receiver::MyIntSlot,
+     *                                          &rec,
+     *                                          rec.mConnections,
+     *                                          any_SignalType,
+     *                                          normal_Priority )
+     * @endcode
+     *
      * @see ConnectSignals
      **/
     void ConnectSignal( const std::string& sigName,
@@ -401,10 +316,10 @@ public:
                         int priority = normal_Priority );
 
     /**
-     * Connects to <em>all</em> signals whose name contains stringToMatch, whose signal type
-     * matches sigType, and whose signature matches that of the slot. Note carefully
-     * that last part: a connection can be successfully made <em>only</em> if the slot and
-     * signal signature match exactly.
+     * Connects to <em>all</em> signals whose name contains stringToMatch, whose
+     * signal type matches sigType, and whose signature matches that of the
+     * slot. Note carefully that last part: a connection can be successfully
+     * made if and only if the slot and signal signature match exactly.
      * @param stringToMatch A substring of a signal name to look for. If
      * stringToMatch is "%", then any signal name will match. The "%"
      * character is the wildcard for matches, so to match all signals whose
@@ -415,7 +330,8 @@ public:
      * which should be connected to the signal(s).
      * @param connections Reference to a ScopedConnectionList which will manage
      * the lifetime of this connection.
-     * @param sigType The type of signal(s) to which the slot should be connected
+     * @param sigType The type of signal(s) to which the slot should be
+     *        connected
      * @param priority The priority of the resulting connection.
      * @see ConnectSignal
      * @see SlotWrapper
@@ -431,7 +347,7 @@ public:
 
 private:
     
-    /// Constructor
+    /// Constructor; note that it's private since EventManager is a singleton
     EventManager();
     
     /// Destructor
@@ -441,18 +357,19 @@ private:
     friend class Poco::SingletonHolder< EventManager >;
 
     ///
-    /// Helper function that finds signals matching certain criteria in the signals database.
+    /// Helper function that finds signals matching certain criteria in the
+    /// signals database.
     void GetMatches( const std::string stringToMatch,
                      SignalType sigType,
                      std::vector< std::string >& names );
 
     ///
-    /// Stores a weak_ptr to the connection and a pointer to the affected SignalWrapper
-    /// after a connection has been made.
+    /// Stores a weak_ptr to the connection and a pointer to the affected
+    /// Event after a connection has been made.
     /// This allows mConnections to be searched for a specific connection
     /// and thereby figure out which signal it was connected to.
     void StoreConnection( ScopedConnectionList& connections,
-                          SignalWrapperBase* sigWrapper );
+                          boost::weak_ptr<EventBase> event );
 
     ///
     /// Connects a newly-registered signal to slots that have requested a
@@ -460,9 +377,9 @@ private:
     void ConnectToPreviousSlots( const std::string& sigName );
 
     ///
-    /// Looks in the slot table for slots attempting to connect to sigName (can be
-    /// a generalized search pattern) and returns a list of mapIds and associated
-    /// priorities from the table.
+    /// Looks in the slot table for slots attempting to connect to sigName
+    /// (can be a generalized search pattern) and returns a list of mapIds
+    /// and associated priorities from the table.
     void GetSlotMatches( const std::string& sigName, std::vector< int >& ids, std::vector< int >& priorities );
 
     void _ConnectSignal( const std::string& sigName,
@@ -471,6 +388,8 @@ private:
                          int priority,
                          bool store );
 
+    ///
+    /// Stores slot information off for asynchronous connection
     void StoreSlot( const std::string& sigName,
                     SlotWrapperBase* slot,
                     ScopedConnectionList& connections,
@@ -478,21 +397,21 @@ private:
                     int priority );
 
     ///
-    /// Holds the signal name along with its corresponding SignalWrapper* and
-    /// the weak pointer used for lifetime management.
-    /// Used for connecting a slot to a signal.
-    std::map< std::string, std::pair< SignalWrapperBase*, boost::weak_ptr< EventBase > > > mSignals;
+    /// Holds the signal name along with a weak_ptr to the corresponding
+    /// EventBase. Used for connecting a slot to a signal.
+    std::map< std::string, boost::weak_ptr< EventBase > > mSignals;
 
     ///
-    /// Holds a weak_ptr to a connection and a raw ptr to the corresponding
-    /// SignalWrapper. Used for dealing with signal monopolies.
-    typedef std::map< boost::weak_ptr< boost::signals2::scoped_connection >, SignalWrapperBase* > ConnectionMap_type;
+    /// Holds a weak_ptr to a connection and a weak_ptr to the corresponding
+    /// Event. Used for dealing with signal monopolies.
+    typedef std::map< boost::weak_ptr< boost::signals2::scoped_connection >,
+        boost::weak_ptr<EventBase> > ConnectionMap_type;
     ConnectionMap_type mConnections;
 
     ///
-    /// Holds a weak_ptr to a ConnectionMonopoly and a raw ptr to the corresponding
-    /// SignalWrapper. Used for dealing with strong signal monopolies.
-    typedef std::map< SignalWrapperBase*, boost::weak_ptr< ConnectionMonopoly > > StrongMonopolies_type;
+    /// Holds a weak_ptr to a ConnectionMonopoly and a weak_ptr to the
+    /// corresponding Event. Used for dealing with strong signal monopolies.
+    typedef std::map< boost::weak_ptr<EventBase>, boost::weak_ptr< ConnectionMonopoly > > StrongMonopolies_type;
     StrongMonopolies_type mStrongMonopolies;
 
     ///

@@ -80,17 +80,18 @@ EventManager::EventManager():
 EventManager::~EventManager()
 {
     LOG_TRACE( "dtor" );
+    Shutdown();
 
     // Delete all our signals
     {
-        std::map< std::string, std::pair< SignalWrapperBase*, boost::weak_ptr< EventBase > > >::const_iterator iter = mSignals.begin();
-        std::map< std::string, std::pair< SignalWrapperBase*, boost::weak_ptr< EventBase > > >::const_iterator max = mSignals.end();
+//        std::map< std::string, boost::weak_ptr< EventBase > >::const_iterator iter = mSignals.begin();
+//        std::map< std::string, boost::weak_ptr< EventBase > >::const_iterator max = mSignals.end();
 
-        while( iter != max )
-        {
-            delete ( iter->second.first );
-            ++iter;
-        }
+//        while( iter != max )
+//        {
+//            delete ( iter->second );
+//            ++iter;
+//        }
     }
 
     // Delete all our stored slots
@@ -118,18 +119,19 @@ void EventManager::Shutdown()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& sigName, SignalType sigType )
+void EventManager::RegisterSignal( EventBase *sig, const std::string& sigName, SignalType sigType )
 {
     LOG_DEBUG( "RegisterSignal: " << sigName );
 
     // Add this signal to the lookup table
     try
     {
-        std::map< std::string, std::pair< SignalWrapperBase*, boost::weak_ptr< EventBase > > >::iterator iter = mSignals.find( sigName );
+        // Check whether a signal with this name already exists
+        std::map< std::string, boost::weak_ptr< EventBase > >::iterator iter = mSignals.find( sigName );
         if( iter != mSignals.end() )
         {
             // Check whether signal is still valid; remove if not.
-            shared_ptr<EventBase> eventLock = iter->second.second.lock();
+            shared_ptr<EventBase> eventLock = iter->second.lock();
             if( !eventLock )
             {
                 LOG_INFO( "RegisterSignal: Removing expired Event/Signal \""
@@ -163,9 +165,7 @@ void EventManager::RegisterSignal( SignalWrapperBase* sig, const std::string& si
     }
 
     // Store the signal and weakptr to EventBase in the signal map
-     mSignals[sigName] = std::pair< SignalWrapperBase*,
-             boost::weak_ptr< EventBase > >
-             ( sig, sig->GetEventWeakPtr() );
+     mSignals[sigName] = sig->GetWeakPtr();
 
     ConnectToPreviousSlots( sigName );
 }
@@ -239,11 +239,12 @@ void EventManager::_ConnectSignal( const std::string& sigName,
     LOG_TRACE( "_ConnectSignal" );
     // Find the appropriate SignalWrapperBase; using non-const iterator because
     // we will erase this entry if it has expired (can't lock weak ptr).
-    std::map< std::string, std::pair< SignalWrapperBase*, boost::weak_ptr< EventBase > > >::iterator iter = mSignals.find( sigName );
+    std::map< std::string, boost::weak_ptr< EventBase > >::iterator iter = mSignals.find( sigName );
     if( iter != mSignals.end() )
     {
+        weak_ptr<EventBase> event = iter->second;
         // Check whether signal is still valid; remove if not.
-        shared_ptr<EventBase> eventLock = iter->second.second.lock();
+        shared_ptr<EventBase> eventLock = event.lock();
         if( !eventLock )
         {
             LOG_INFO( "_ConnectSignal: Removing expired Event/Signal \""
@@ -256,18 +257,17 @@ void EventManager::_ConnectSignal( const std::string& sigName,
         }
 
         LOG_DEBUG( "_ConnectSignal: Connecting " << slot << " to signal "
-                << sigName << " (" << iter->second.first->GetSignalAddress() << ")" );
+                << sigName << " (" << eventLock->GetSignalAddress() << ")" );
         // Tell the SignalWrapper to connect its signal to this slot
-        SignalWrapperBase* signalWrapper = iter->second.first;
-        if( signalWrapper->ConnectSlot( slot, connections, priority ) )
+        if( eventLock->ConnectSlot( slot, connections, priority ) )
         {
             LOG_DEBUG( "_ConnectSignal: Connection successful" );
             //Connection was successful; store the details
-            StoreConnection( connections, signalWrapper );
+            StoreConnection( connections, event );
 
             // Check whether there is currently a strong monopoly on this signal.
             // If so, immediately block the connection that was just made.
-            StrongMonopolies_type::iterator mIter = mStrongMonopolies.find( signalWrapper );
+            StrongMonopolies_type::iterator mIter = mStrongMonopolies.find( event );
             if( mIter != mStrongMonopolies.end() )
             {
                 if( shared_ptr< ConnectionMonopoly > monopoly = mIter->second.lock() )
@@ -403,7 +403,7 @@ void EventManager::GetSlotMatches( const std::string& sigName, std::vector< int 
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EventManager::StoreConnection( ScopedConnectionList& connections, SignalWrapperBase* sigWrapper )
+void EventManager::StoreConnection( ScopedConnectionList& connections, boost::weak_ptr<EventBase> event )
 {
     LOG_TRACE( "StoreConnection" );
     // Only store the connection if it represents an active connection
@@ -411,7 +411,7 @@ void EventManager::StoreConnection( ScopedConnectionList& connections, SignalWra
     if( connection->connected() )
     {
         weak_ptr< scoped_connection > weakConnection( connection );
-        mConnections[ weakConnection ] = sigWrapper;
+        mConnections[ weakConnection ] = event;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -425,7 +425,7 @@ shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionWeak( shared_
 
     if( iter != mConnections.end() )
     {
-        SignalWrapperBase* signalWrapper = iter->second;
+        shared_ptr<EventBase> signalWrapper = iter->second.lock();
         // Get the list of all connections from the signal wrapper and set up blocks
         // on all connections besides the one passed in here
         std::list< weak_ptr< scoped_connection > > connections = signalWrapper->GetConnections();
@@ -470,7 +470,7 @@ shared_ptr< ConnectionMonopoly > EventManager::MonopolizeConnectionStrong( share
 
     if( iter != mConnections.end() )
     {
-        SignalWrapperBase* signalWrapper = iter->second;
+        weak_ptr<EventBase> signalWrapper = iter->second;
 
         // Store a weak ptr to the monopoly and which SignalWrapper it affects so
         // the monopoly can be updated whenever a new slot connects to the signal

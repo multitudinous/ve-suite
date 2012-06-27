@@ -33,15 +33,16 @@
 #pragma once
 
 
+
+namespace eventmanager
+{
+/// @file BooleanPropagationCombiner.h
+/// @namespace eventmanager
+/// @class BooleanPropagationCombiner
 /// Custom combiner for signals that accept a boolean return value. Propagation
 /// of the signal stops when a slot returns @c true. This can be used to
 /// set up hierachichal chains of slots in which one slot can sink the signal
 /// so that all slots below it in the hierarchy don't get called.
-
-
-namespace eventmanager
-{
-
 struct EVENTMANAGER_EXPORT BooleanPropagationCombiner {
 typedef bool result_type; // This typedef is req'd by boost::signals2 combiner
                           // interface.

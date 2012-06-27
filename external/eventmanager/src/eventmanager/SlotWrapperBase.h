@@ -39,12 +39,15 @@
 
 namespace eventmanager
 {
-
-/// Base class for templated SlotWrapper.
-/// Existence of a base class allows disparate instances of SlotWrapper<> to be
-/// passed into the same function without requiring multiple overloaded variations,
-/// and also allows disparate instance of SlotWrapper<> to be held in a single
-/// container.
+/// @file SlotWrapperBase.h
+/// @namespace eventmanager
+/** @class SlotWrapperBae
+  * Base class for templated SlotWrapper.
+  * Existence of a base class allows disparate instances of SlotWrapper<> to be
+  * passed into the same function without requiring multiple overloaded variations,
+  * and also allows disparate instance of SlotWrapper<> to be held in a single
+  * container.
+**/
 class SlotWrapperBase
 {
 public:

@@ -41,8 +41,9 @@
 
 namespace eventmanager
 {
-
-/**
+/// @file ConnectionMonopoly.h
+/// @namespace eventmanager
+/** @class ConnectionMonopoly
  * A shared_ptr to a ConnectionMonopoly is returned by calls to either of the variants of
  *  EventManager::MonopolizeConnection[] and holds a list of shared_connection_block objects.
  * These shared_connection_blocks are scoped objects that prevent other slots

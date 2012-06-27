@@ -43,8 +43,9 @@
 
 namespace eventmanager
 {
-
-/**
+/// @file ScopedConnectionList.h
+/// @namespace eventmanager
+/** @class ScopedConnectionList
  * ScopedConnectionList is essentially a smart container for boost::signals2::scoped_connection
  * objects. It provides an easy way for another class to keep a set of scoped_connectionS
  * in scope for the entire lifetime of the class. It also provides a few simple methods

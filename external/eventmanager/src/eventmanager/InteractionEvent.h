@@ -37,7 +37,18 @@
 
 namespace eventmanager
 {
-
+/// @file InteractionEvent.h
+/// @namespace eventmanager
+/** @class InteractionEvent
+  * A class that can be used to express keyboard and mouse events compactly.
+  * The eventmanager library does use this internally, but we provide it here
+  * for application developers since custom handling of mouse and keyboard
+  * events is a common application requirement. This class is intended to be
+  * used as the argument to a signal that passes around keyboard and mouse
+  * events. Using this class along with a BooleanPropagationCombiner will allow
+  * you to easily mimick the common practice of sinking keyboard and mouse
+  * events in certain classes.
+  **/
 class EVENTMANAGER_EXPORT InteractionEvent
 {
 public:

@@ -39,11 +39,15 @@
 
 namespace eventmanager
 {
-
-/**
+/// @file SlotWrapper.h
+/// @namespace eventmanager
+/** @class SlotWrapper
  * SlotWrapper provides a wrapper around a slot, allowing slots with different
  * types (signatures) to be passed into the same function and to be held in
- * containers (via SignalWrapperBase).
+ * containers (via SignalWrapperBase). If you use the functions in
+ * ConnectSignals.h to make connections between signals and slots (and we
+ * highly reccommend this practice) you will never need to explicitly use
+ * this class.
  *
  * SlotWrapper holds a reference to a boost::signals2::signal<T>::slot_type.
  **/
