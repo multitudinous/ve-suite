@@ -4,6 +4,7 @@
 #include <PropertySetBrowser/PropertySet.h>
 #include <PropertySetBrowser/MakeLive.h>
 #include <eventmanager/EventManager.h>
+#include <eventmanager/OptionalMacros.h>
 
 #include <iostream>
 #include <cmath>

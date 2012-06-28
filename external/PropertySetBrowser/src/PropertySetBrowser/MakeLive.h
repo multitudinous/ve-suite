@@ -114,18 +114,14 @@ public:
         m_SignalName.append( signalName );
 
         using eventmanager::EventManager;
-        using eventmanager::SignalWrapper;
         if( m_passUUID )
         {
-            EventManager::instance()->RegisterSignal(
-                        new SignalWrapper<m_Signal_Type>( &m_Signal ),
-                        m_SignalName );
+            EventManager::instance()->RegisterSignal( &m_Signal, m_SignalName );
         }
         else
         {
-            EventManager::instance()->RegisterSignal(
-                      new SignalWrapper<m_SignalNoUUID_Type>( &m_SignalNoUUID ),
-                      m_SignalName );
+            EventManager::instance()->RegisterSignal( &m_SignalNoUUID,
+                                                      m_SignalName );
         }
         property->SignalValueChanged.connect(
                     boost::bind( &MakeLive<T>::ValueChangedSlot, this, _1 )  );
@@ -142,11 +138,11 @@ public:
                 T value = property->extract<T>();
                 if( m_passUUID )
                 {
-                    m_Signal( m_UUID, value );
+                    m_Signal.signal( m_UUID, value );
                 }
                 else
                 {
-                    m_SignalNoUUID( value );
+                    m_SignalNoUUID.signal( value );
                 }
             }
         }
@@ -159,9 +155,9 @@ public:
     }
 
 private:
-    typedef boost::signals2::signal<void(const std::string&, T)> m_Signal_Type;
+    typedef eventmanager::Event<void(const std::string&, T)> m_Signal_Type;
     m_Signal_Type m_Signal;
-    typedef boost::signals2::signal< void( T ) > m_SignalNoUUID_Type;
+    typedef eventmanager::Event< void( T ) > m_SignalNoUUID_Type;
     m_SignalNoUUID_Type m_SignalNoUUID;
     std::string m_SignalName;
     const std::string& m_UUID;
@@ -210,9 +206,7 @@ public:
         m_SignalName.append( signalName );
 
         using eventmanager::EventManager;
-        using eventmanager::SignalWrapper;
-        EventManager::instance()->RegisterSignal(
-                  new SignalWrapper<m_Signal_Type>( &m_Signal ), m_SignalName );
+        EventManager::instance()->RegisterSignal( &m_Signal, m_SignalName );
 
         std::vector< PropertyPtr >::const_iterator iter = m_Properties.begin();
         while( iter != m_Properties.end() )
@@ -247,7 +241,7 @@ public:
                 result.push_back( (*iter)->extract<T>() );
                 ++iter;
             }
-            m_Signal( m_UUID, result );
+            m_Signal.signal( m_UUID, result );
         }
         catch(...)
         {
@@ -258,7 +252,7 @@ public:
     }
 
 private:
-    typedef boost::signals2::signal< void( const std::string&, const std::vector< T >& ) > m_Signal_Type;
+    typedef eventmanager::Event< void( const std::string&, const std::vector< T >& ) > m_Signal_Type;
     m_Signal_Type m_Signal;
     std::string m_SignalName;
     const std::string& m_UUID;
