@@ -187,30 +187,42 @@ int HyperLabICEGP::InitializeLabModels()
     osg::ref_ptr< osgDB::ReaderWriter::Options > options = new osgDB::ReaderWriter::Options;
     options->setOptionString( "dds_flip" );
     
-    //osg::ref_ptr< osg::Group > root = new osg::Group;
+    osg::ref_ptr< osg::Group > renderRoot = new osg::Group;
     osg::ref_ptr< osg::Node > models = osgDB::readNodeFile( "Models/ControlRoom_v9.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
-        return( 1 );
+        //return( 1 );
     }
-    
+    renderRoot->addChild( models.get() );
+
+    models = osgDB::readNodeFile( "Models/HyperLab_Facility_v3.osg", options.get() );
+    if( !( models.valid() ) )
+    {
+        osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
+        //return( 1 );
+    }
+    renderRoot->addChild( models.get() );
+
     {
         // Main prep work for rendering.
 #ifdef NETL_DEMO
         float textSize( 0.f );
         bool parallaxMap( false );
-        RenderPrep renderPrep( models.get(), textSize, parallaxMap );
+        RenderPrep renderPrep( renderRoot.get(), textSize, parallaxMap );
 #endif
     }
     
-    osg::ref_ptr< osg::Node > facility = osgDB::readNodeFile( "Models/HyperLab_Facility_v1.osg", options.get() );
-    if( !( facility.valid() ) )
+    osg::ref_ptr< osg::Node > equipment = osgDB::readNodeFile( "Models/HyperEquipment_Temp01.osg", options.get() );
+    if( !( equipment.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
-        return( 1 );
+        //return( 1 );
     }
-    
+
+    {
+        util::MaterialPresent materialPresent( equipment.get() );
+    }
     /*osg::ref_ptr< osg::Node > collisions = osgDB::readNodeFile( "Models/HyperLab_Collision_v1.osg", options.get() );
     if( !( collisions.valid() ) )
     {
@@ -223,16 +235,16 @@ int HyperLabICEGP::InitializeLabModels()
         osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform(
             osg::Matrix::scale( osg::Vec3( CM2FEET, CM2FEET, CM2FEET ) ) );
         mt->setDataVariance( osg::Object::STATIC );
-        mt->addChild( models.get() );
-        mt->addChild( facility.get() );
+        mt->addChild( renderRoot.get() );
+        mt->addChild( equipment.get() );
         //mt->addChild( collisions.get() );
         
         osgUtil::Optimizer optimizer;
         optimizer.optimize( mt.get(), osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS );
     }
     
-    root->addChild( models.get() );
-    root->addChild( facility.get() );
+    root->addChild( renderRoot.get() );
+    root->addChild( equipment.get() );
     //root->addChild( collisions.get() );
 
     std::cout << "Loaded all of the models and physics for the Gate." << std::endl;
