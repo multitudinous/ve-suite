@@ -284,6 +284,7 @@ protected Q_SLOTS:
     void on_actionShowPreferencesTab_triggered();
 
     // Something in the qt slots mechanism breaks down if these are surrounded by a #ifndef/#endif block.
+    void on_actionGISStack_triggered( );
     void on_actionAdd_Planet_triggered( bool );
     void on_actionRemove_Planet_triggered( bool );
     void on_actionConfigure_Layers_triggered( bool );
@@ -326,6 +327,8 @@ private:
     ves::conductor::IconStack* m_navMenuStack;
     ///View menu stack
     ves::conductor::IconStack* m_viewMenuStack;
+    ///GIS Stack
+    ves::conductor::IconStack* m_gisMenuStack;
     ///Tree tab
     ves::conductor::TreeTab* mScenegraphTreeTab;
     ///The map of all tabs:

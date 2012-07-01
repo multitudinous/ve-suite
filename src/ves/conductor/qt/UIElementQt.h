@@ -41,6 +41,7 @@
 
 #include <ves/conductor/qt/UIElement.h>
 #include <ves/conductor/qt/NonScrollGraphicsView.h>
+#include <ves/xplorer/Logging.h>
 
 #include <QtCore/QObject>
 #include <QtGui/QWidget>

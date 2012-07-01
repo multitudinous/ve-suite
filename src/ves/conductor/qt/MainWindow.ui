@@ -110,15 +110,6 @@ QToolButton:hover
     <property name="title">
      <string>&amp;VE-Xplorer</string>
     </property>
-    <widget class="QMenu" name="menuGIS">
-     <property name="title">
-      <string>GIS</string>
-     </property>
-     <addaction name="actionAdd_Planet"/>
-     <addaction name="actionRemove_Planet"/>
-     <addaction name="actionConfigure_Layers"/>
-    </widget>
-    <addaction name="menuGIS"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -223,16 +214,28 @@ QToolButton:hover
    </property>
   </action>
   <action name="actionAdd_Planet">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/xpm/ToolBar/GIS/GIS_Control_Earth2.png</normaloff>:/xpm/ToolBar/GIS/GIS_Control_Earth2.png</iconset>
+   </property>
    <property name="text">
     <string>Add Planet</string>
    </property>
   </action>
   <action name="actionRemove_Planet">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/xpm/ToolBar/GIS/GIS_Control_Earth2.png</normaloff>:/xpm/ToolBar/GIS/GIS_Control_Earth2.png</iconset>
+   </property>
    <property name="text">
     <string>Remove Planet</string>
    </property>
   </action>
   <action name="actionConfigure_Layers">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/xpm/ToolBar/GIS/GIS_Control_Layers.png</normaloff>:/xpm/ToolBar/GIS/GIS_Control_Layers.png</iconset>
+   </property>
    <property name="text">
     <string>Configure Layers...</string>
    </property>
@@ -491,7 +494,7 @@ QToolButton:hover
   <action name="actionShowPluginsTab">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/xpm/ToolBar/PluginsButton.jpg</normaloff>:/xpm/ToolBar/PluginsButton.jpg</iconset>
+     <normaloff>:/xpm/ToolBar/PluginsButton.png</normaloff>:/xpm/ToolBar/PluginsButton.png</iconset>
    </property>
    <property name="text">
     <string>Plugins</string>
@@ -500,7 +503,7 @@ QToolButton:hover
   <action name="actionShowPreferencesTab">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/xpm/ToolBar/SettingsButton.jpg</normaloff>:/xpm/ToolBar/SettingsButton.jpg</iconset>
+     <normaloff>:/xpm/ToolBar/SettingsButton.png</normaloff>:/xpm/ToolBar/SettingsButton.png</iconset>
    </property>
    <property name="text">
     <string>Preferences</string>
@@ -509,7 +512,7 @@ QToolButton:hover
   <action name="actionViewStack">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/xpm/ToolBar/TabsButton.jpg</normaloff>:/xpm/ToolBar/TabsButton.jpg</iconset>
+     <normaloff>:/xpm/ToolBar/TabsButton.png</normaloff>:/xpm/ToolBar/TabsButton.png</iconset>
    </property>
    <property name="text">
     <string>View</string>
@@ -543,6 +546,18 @@ QToolButton:hover
    </property>
    <property name="text">
     <string>ShowTestPlot</string>
+   </property>
+  </action>
+  <action name="actionGISStack">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/xpm/ToolBar/GIS/GIS_Control_Earth.png</normaloff>:/xpm/ToolBar/GIS/GIS_Control_Earth.png</iconset>
+   </property>
+   <property name="text">
+    <string>GIS options</string>
+   </property>
+   <property name="toolTip">
+    <string>GIS options</string>
    </property>
   </action>
  </widget>

@@ -240,7 +240,7 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
     {
         toolbar->addAction( ui->actionViewStack );
         m_viewMenuStack = new IconStack( toolbar->
-                                         widgetForAction( ui->actionViewStack ), this );
+                                 widgetForAction( ui->actionViewStack ), this );
         m_viewMenuStack->SetExtendedToolBarParent( toolbar );
         m_viewMenuStack->AddAction( ui->actionShowPreferencesTab );
         if( m_displayFeatures.contains( "Plugins" ) )
@@ -255,6 +255,24 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
         m_viewMenuStack->AddAction( ui->actionShowTestPlot );
         m_viewMenuStack->setObjectName( "m_viewMenuStack" );
     }
+
+    // The GIS stack
+#ifdef MINERVA_GIS_SUPPORT
+
+    {
+        if( m_displayFeatures.contains( "GIS" ) )
+        {
+            toolbar->addAction( ui->actionGISStack );
+            m_gisMenuStack = new IconStack( toolbar->
+                                  widgetForAction( ui->actionGISStack ), this );
+            m_gisMenuStack->SetExtendedToolBarParent( toolbar );
+            m_gisMenuStack->AddAction( ui->actionAdd_Planet );
+            m_gisMenuStack->AddAction( ui->actionRemove_Planet );
+            m_gisMenuStack->AddAction( ui->actionConfigure_Layers );
+            m_gisMenuStack->setObjectName( "m_gisMenuStack" );
+        }
+    }
+#endif
 
     // Make sure there is no statusbar on this widget.
     //setStatusBar(0);
@@ -1160,8 +1178,7 @@ void MainWindow::on_actionAdd_Planet_triggered( bool )
         mMinervaStackedWidget->
         setFeature( ves::xplorer::minerva::MinervaManager::instance()->
                     GetTileEngineBody()->container() );
-        ui->tabWidget->
-        setCurrentIndex( AddTab( mMinervaStackedWidget, "Minerva Layers" ) );
+        ActivateTab( AddTab( mMinervaStackedWidget, "Minerva Layers" ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1179,7 +1196,16 @@ void MainWindow::on_actionRemove_Planet_triggered( bool )
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionConfigure_Layers_triggered( bool )
 {
-    ;
+    if( !mMinveraStackedWidget )
+    {
+        mMinervaStackedWidget = new ves::conductor::qt::minerva::StackedWidget();
+        mMinervaStackedWidget->
+            setFeature( ves::xplorer::minerva::MinervaManager::instance()->
+                GetTileEngineBody()->container() );
+    }
+
+    ui->tabWidget->
+           setCurrentIndex( AddTab( mMinervaStackedWidget, "Minerva Layers" ) );
 }
 #else
 void MainWindow::on_actionAdd_Planet_triggered( bool )
@@ -1387,6 +1413,18 @@ void MainWindow::on_actionCharacterFlyMode_triggered( bool triggered )
     ui->actionCharacterNavigation->setEnabled( !triggered );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionGISStack_triggered( )
+{
+    if( m_gisMenuStack->isVisible() )
+    {
+        m_gisMenuStack->hide();
+    }
+    else
+    {
+        m_gisMenuStack->Show();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionViewStack_triggered( )
 {
     if( m_viewMenuStack->isVisible() )
@@ -1421,30 +1459,6 @@ void MainWindow::on_actionShowPreferencesTab_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionNew_triggered( const QString& workingDir )
 {
-    /*
-    //Temporary crash button.
-    {
-        std::cout << "Registering crash signal" << std::endl << std::flush;
-        //boost::signals2::signal<void()> crashSignal;
-        ves::xplorer::eventmanager::Event<void()> crashEvent;
-        eventmanager::EventManager::instance()->RegisterSignal(
-           new eventmanager::SignalWrapper< boost::signals2::signal<void()> >( &(crashEvent.signal) ),
-           "CRASHME" );
-        std::cout << "Connecting to crash signal" << std::endl << std::flush;
-        CONNECTSIGNAL_0( "CRASHME",
-                         void ( ),
-                         &MainWindow::on_actionShowPreferencesTab_triggered,
-                         mConnections, normal_Priority );
-        crashEvent();
-    }// crashSignal goes out of scope, so the signalpointer is no longer valid.
-    // Attempt to connect to an invalid signal....
-    //std::cout << "Connecting to invalid crash signal" << std::endl << std::flush;
-    //    CONNECTSIGNAL_0( "CRASHME",
-    //                     void ( ),
-    //                     &MainWindow::on_actionShowPreferencesTab_triggered,
-    //                     mConnections, normal_Priority );
-    */
-
     onRecentFileRejected();
     // If workingDir is empty, this method was called by clicking the "New File"
     // icon. If workingDir is not empty, this method was called by successful

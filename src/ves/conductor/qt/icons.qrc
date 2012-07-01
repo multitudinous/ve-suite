@@ -74,6 +74,9 @@
     <file>../xpm/ToolBar/Preferences.png</file>
     <file>../xpm/ToolBar/Tabs.png</file>
     <file>../xpm/ToolBar/PluginsButton.jpg</file>
+    <file>../xpm/ToolBar/PluginsButton.png</file>
+    <file>../xpm/ToolBar/SettingsButton.png</file>
+    <file>../xpm/ToolBar/TabsButton.png</file>
     <file>../xpm/ToolBar/SettingsButton.jpg</file>
     <file>../xpm/ToolBar/TabsButton.jpg</file>
   </qresource>
