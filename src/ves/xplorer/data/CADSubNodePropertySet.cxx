@@ -231,6 +231,9 @@ void CADSubNodePropertySet::DisableSkeleton()
 
     /*AddProperty( "Filename", emptyString, "Filename: not visible in UI" );
     SetPropertyAttribute( "Filename", "userVisible", false );*/
+    SetPropertyAttribute( "Audio", "userVisible", false );
+    SetPropertyAttribute( "Audio_SoundFile", "userVisible", false );
+    SetPropertyAttribute( "Audio_Level", "userVisible", false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 PropertySetPtr CADSubNodePropertySet::CreateNew()

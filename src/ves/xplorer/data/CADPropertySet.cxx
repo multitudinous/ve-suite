@@ -216,6 +216,16 @@ void CADPropertySet::CreateSkeleton()
 
     AddProperty( "Filename", emptyString, "Filename: not visible in UI" );
     SetPropertyAttribute( "Filename", "userVisible", false );
+
+    AddProperty( "Audio", boost::any(), "Audio" );
+    SetPropertyAttribute( "Audio", "isUIGroupOnly", true );
+    SetPropertyAttribute( "Audio", "setExpanded", false );
+    AddProperty( "Audio_SoundFile", std::string(""), "Sound File" );
+    SetPropertyAttribute( "Audio_SoundFile", "isFilePath", true );
+    AddProperty( "Audio_Level", 5, "Level" );
+    SetPropertyAttribute( "Audio_Level", "minimumValue", 0 );
+    SetPropertyAttribute( "Audio_Level", "maximumValue", 10 );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADPropertySet::Scale( PropertyPtr& property )
@@ -252,7 +262,7 @@ void CADPropertySet::AddDynamicAnalysisData( PropertyPtr& )
 
     m_animateCAD->operator()( nodeType, fileName, modeID );
 
-    // All properties here are live; save to db whenever they change.
+    // This property should be treated as live; save to db whenever it changes.
     WriteToDatabase();
 }
 ////////////////////////////////////////////////////////////////////////////////
