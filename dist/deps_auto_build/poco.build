@@ -1,5 +1,5 @@
 PACKAGE_NAME=POCO
-BASE_DIR="${DEV_BASE_DIR}/poco-1.4.1p1-all"
+BASE_DIR="${DEV_BASE_DIR}/poco-1.4.3p1-all"
 
 SOURCE_RETRIEVAL_METHOD=wget
 
@@ -10,7 +10,8 @@ INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
 case $PLATFORM in
   Windows)
     # ./buildwin.cmd  90 build shared release Win32 nosamples devenv
-    SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.zip
+    SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.3/poco-1.4.3p1-all.zip
+    #SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.zip
     SOURCE_FORMAT=zip
 
     unset PROJ_STR
@@ -56,7 +57,8 @@ case $PLATFORM in
     MSVC_SOLUTION+=( "${SOURCE_DIR}/PageCompiler/File2Page/File2Page${PLATFORM_SUFFIX}_vs90.sln" )
     ;;
   Darwin)
-    SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.tar.gz
+    SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.3/poco-1.4.3p1-all.tar.gz
+    #SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.tar.gz
     SOURCE_FORMAT=tgz
 
     PREBUILD_METHOD=configure
@@ -68,7 +70,8 @@ case $PLATFORM in
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     ;;
   Linux)
-    SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.tar.gz
+    SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.3/poco-1.4.3p1-all.tar.gz
+    #SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.1/poco-1.4.1p1-all.tar.gz
     SOURCE_FORMAT=tgz
 
     PREBUILD_METHOD=configure
