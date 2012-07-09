@@ -32,7 +32,7 @@ case $PLATFORM in
     ;;
   Darwin)
     SCONS_PARAMS+=( var_arch=x64 )
-    SCONS_PARAMS+=( darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk )
+    #SCONS_PARAMS+=( darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk )
     ;;
   Linux)
     SCONS_PARAMS+=( var_arch=x64 )
