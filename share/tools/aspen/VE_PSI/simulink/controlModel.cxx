@@ -31,6 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
+//#include <ves/builder/DataLoader/tecplot/tecplotReader.h>
+
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -38,9 +40,13 @@
 #include <sstream>
 #include <ctime>
 
+#include <boost/filesystem/operations.hpp>
+
 #include "engine.h"
 #include "matrix.h"
 #include "mex.h"
+
+//using namespace ves::builder::DataLoader;
 
 void wait( int seconds )
 {
@@ -84,7 +90,25 @@ int main( int argc, char** argv )
     {
         std::cout << "Error: Need one argument specifying a simulink model!" << std::endl;
         std::cout << "    For example: " << argv[ 0 ] << " ves_test" << std::endl;
-        std::cout << "    (note that mdl extension is not used)" << std::endl;
+        std::cout << "    (note that '.mdl' extension is not used)" << std::endl;
+        return( EXIT_FAILURE );
+    }
+
+    // Do some tests to make sure second argument is a simulink model filename in correct format...
+    std::string modelName( argv[ 1 ] );
+    boost::filesystem::path ext = boost::filesystem::path( modelName ).extension();
+    //std::cout << "\nextension = " << ext << std::endl;
+    if( ext == ".mdl" )
+    {
+        std::cerr << "\nWarning: Extension '.mdl' is not expected on input file '"
+                  << modelName << "'." << std::endl;
+        std::cerr << "Extension will be stripped to allow program to continue. " << std::endl;
+        modelName = boost::filesystem::path( modelName ).stem().string();
+    }
+    else if( ext != "" )
+    {
+        std::cerr << "\nError: Provided filename is not of correct format." << std::endl;
+        std::cerr << "Should be a simulink model file without '.mdl' extension" << std::endl;
         return( EXIT_FAILURE );
     }
 
@@ -98,13 +122,11 @@ int main( int argc, char** argv )
         return( EXIT_FAILURE );
     }
 
-    std::string modelName( argv[ 1 ] );
-    std::cout << "Opening simulink model '" << modelName << "'" << std::endl;
-
     //matlabCommand(s) are strings that you could directly enter in the MATLAB Command Window
     std::string matlabCommand;
 
     // open the simulink window with your model
+    std::cout << "Opening simulink model '" << modelName << "'" << std::endl;
     matlabCommand = "open_system('" + modelName + "')";
     engEvalString(ep, matlabCommand.c_str() );
 
@@ -162,11 +184,32 @@ int main( int argc, char** argv )
             jj << j;
 
             std::string parameterName = GetStringFromMatlabCommand( ep, "parameters{" + jj.str() + "};" );
-            std::cout << "   " << parameterName << std::endl;
-            //std::string parameterValue = GetStringFromMatlabCommand( ep, "get_param('" + blockName + "','" + parameterName + "');" );
-            //std::cout << "   " << parameterName << " = " << parameterValue << std::endl;
+
+            // Something wierd about Scope block. Parameters are not accessed in the way other blocks are.
+            // Workaround: For Scope block, just list parameters without trying to get parameter values.
+            if( blockName.substr(blockName.size()-5,5) == "Scope")
+            {
+                std::cout << "   " << parameterName << std::endl;
+            }
+            else
+            {
+                std::string parameterValue = GetStringFromMatlabCommand( ep, "get_param('" + blockName + "','" + parameterName + "');" );
+                std::cout << "   " << parameterName << " = " << parameterValue << std::endl;
+            }
         }
     }
+
+    // Test of setting existing parameter...
+    std::string blockName = "ves_test/Gain";
+    std::string parameterName = "Gain";
+    double newGain = 2;
+    std::stringstream newValue;
+    newValue << newGain;
+    matlabCommand = "set_param('" + blockName + "', '" + parameterName + "', '" + newValue.str() + "');";
+    engEvalString(ep, matlabCommand.c_str() );
+
+    std::string parameterValue = GetStringFromMatlabCommand( ep, "get_param('" + blockName + "','" + parameterName + "');" );
+    std::cout << "\n   new parameterValue  = " << parameterValue << std::endl;
 
 /*
     //listblks = get_param(blks, 'BlockType') 
@@ -206,9 +249,7 @@ int main( int argc, char** argv )
         str[i] = mxArrayToString( blocks[i] );
         std::cout << "blocksString = " << str[i] << std::endl;
     }
-
 */
-
 
 /*
 %callback for the stop simulation button
@@ -221,7 +262,7 @@ myfun(simdata) %just an example, insert here your own function
     std::cout << "\nHit return to continue" << std::endl;
     fgetc(stdin);
     
-    // We're done! Free memory, close MATLAB engine and exit.
+    // Free memory, close MATLAB engine and exit.
     std::cout << "Freeing memory, closing MATLAB engine, and exiting" << std::endl;
     engClose(ep);
     
