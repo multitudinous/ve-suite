@@ -31,6 +31,7 @@ case $PLATFORM in
     CONFIGURE=../configure
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     CONFIGURE_PARAMS+=( --disable-framework )
+	CONFIGURE_PARAMS+=( --enable-debug=no )
     ;;
   Linux)
     PREBUILD_METHOD=configure

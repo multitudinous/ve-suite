@@ -1,9 +1,9 @@
 PACKAGE_NAME=PNG
-BASE_DIR="${DEV_BASE_DIR}/libpng-1.5.2"
+BASE_DIR="${DEV_BASE_DIR}/libpng-1.5.11"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
-SOURCE_URL=http://prdownloads.sourceforge.net/libpng/libpng-1.5.2.tar.gz
+SOURCE_URL=http://prdownloads.sourceforge.net/libpng/libpng-1.5.11.tar.gz
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
