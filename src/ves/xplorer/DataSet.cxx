@@ -440,7 +440,7 @@ vtkLookupTable* DataSet::GetLookupTable()
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetGreyscale()
 {
-    this->lut->SetNumberOfColors( 402 );            //default is 256
+    this->lut->SetNumberOfColors( 402 );
     this->lut->SetHueRange( 0.0f , 0.0f );
     this->lut->SetSaturationRange( 0.0f , 0.0f );
     this->lut->SetValueRange( 0.2f , 1.0f );
