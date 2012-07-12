@@ -1,0 +1,299 @@
+Index: include/osg/Array
+===================================================================
+--- include/osg/Array	(revision 13097)
++++ include/osg/Array	(working copy)
+@@ -197,7 +197,7 @@
+         TemplateArray& operator = (const TemplateArray& array)
+         {
+             if (this==&array) return *this;
+-            assign(array.begin(),array.end());
++            this->assign(array.begin(),array.end());
+             return *this;
+         } 
+ 
+@@ -283,7 +283,7 @@
+         TemplateIndexArray& operator = (const TemplateIndexArray& array)
+         {
+             if (this==&array) return *this;
+-            assign(array.begin(),array.end());
++            this->assign(array.begin(),array.end());
+             return *this;
+         } 
+ 
+Index: include/osgAnimation/Interpolator
+===================================================================
+--- include/osgAnimation/Interpolator	(revision 13097)
++++ include/osgAnimation/Interpolator	(working copy)
+@@ -84,7 +84,7 @@
+                 return;
+             }
+ 
+-            int i = getKeyIndexFromTime(keyframes,time);
++            int i = this->getKeyIndexFromTime(keyframes,time);
+             result = keyframes[i].getValue();
+         }
+     };
+@@ -110,7 +110,7 @@
+                 return;
+             }
+         
+-            int i = getKeyIndexFromTime(keyframes,time);
++            int i = this->getKeyIndexFromTime(keyframes,time);
+             float blend = (time - keyframes[i].getTime()) / ( keyframes[i+1].getTime() -  keyframes[i].getTime());
+             const TYPE& v1 =  keyframes[i].getValue();
+             const TYPE& v2 =  keyframes[i+1].getValue();
+@@ -137,7 +137,7 @@
+                 return;
+             }
+ 
+-            int i = getKeyIndexFromTime(keyframes,time);
++            int i = this->getKeyIndexFromTime(keyframes,time);
+             float blend = (time -  keyframes[i].getTime()) / ( keyframes[i+1].getTime() -  keyframes[i].getTime());
+             const TYPE& q1 =  keyframes[i].getValue();
+             const TYPE& q2 =  keyframes[i+1].getValue();
+@@ -165,7 +165,7 @@
+                 return;
+             }
+ 
+-            int i = getKeyIndexFromTime(keyframes,time);
++            int i = this->getKeyIndexFromTime(keyframes,time);
+             float blend = (time - keyframes[i].getTime()) / ( keyframes[i+1].getTime() -  keyframes[i].getTime());
+             TYPE v1,v2;
+             keyframes[i].getValue().uncompress(keyframes.mScale, keyframes.mMin, v1);
+@@ -196,7 +196,7 @@
+                 return;
+             }
+ 
+-            int i = getKeyIndexFromTime(keyframes,time);
++            int i = this->getKeyIndexFromTime(keyframes,time);
+       
+             float t = (time - keyframes[i].getTime()) / ( keyframes[i+1].getTime() -  keyframes[i].getTime());
+             float one_minus_t = 1.0-t;
+Index: src/osgPlugins/Inventor/ConvertFromInventor.h
+===================================================================
+--- src/osgPlugins/Inventor/ConvertFromInventor.h	(revision 13097)
++++ src/osgPlugins/Inventor/ConvertFromInventor.h	(working copy)
+@@ -1,6 +1,6 @@
+ #ifndef _CONVERTFROMINVENTOR_H_
+ #define _CONVERTFROMINVENTOR_H_
+-
++#define NDEBUG 1
+ #include <osg/Group>
+ #include <osg/Geometry>
+ #include <osg/PrimitiveSet>
+Index: src/osgPlugins/Inventor/ReaderWriterIV.cpp
+===================================================================
+--- src/osgPlugins/Inventor/ReaderWriterIV.cpp	(revision 13097)
++++ src/osgPlugins/Inventor/ReaderWriterIV.cpp	(working copy)
+@@ -2,7 +2,7 @@
+ #include <osg/Notify>
+ #include <osgDB/FileUtils>
+ #include <osgDB/FileNameUtils>
+-
++#define NDEBUG 1
+ // Inventor headers
+ #include <Inventor/SoDB.h>
+ #include <Inventor/SoInteraction.h>
+Index: src/osgPlugins/Inventor/ConvertToInventor.cpp
+===================================================================
+--- src/osgPlugins/Inventor/ConvertToInventor.cpp	(revision 13097)
++++ src/osgPlugins/Inventor/ConvertToInventor.cpp	(working copy)
+@@ -42,6 +42,10 @@
+ #include <osg/ShapeDrawable>
+ #include <osg/TexEnv>
+ #include <osg/TexGen>
++//#ifdef __COIN__
++#define NDEBUG 1
++//#endif
++
+ #include <Inventor/nodes/SoBaseColor.h>
+ #include <Inventor/nodes/SoCoordinate3.h>
+ #include <Inventor/nodes/SoCoordinate4.h>
+Index: src/osgPlugins/Inventor/ConvertFromInventor.cpp
+===================================================================
+--- src/osgPlugins/Inventor/ConvertFromInventor.cpp	(revision 13097)
++++ src/osgPlugins/Inventor/ConvertFromInventor.cpp	(working copy)
+@@ -1,3 +1,5 @@
++#define NDEBUG 1
++
+ #include "ConvertFromInventor.h"
+ 
+ #include "PendulumCallback.h"
+Index: src/osgPlugins/Inventor/ConvertToInventor.h
+===================================================================
+--- src/osgPlugins/Inventor/ConvertToInventor.h	(revision 13097)
++++ src/osgPlugins/Inventor/ConvertToInventor.h	(working copy)
+@@ -30,6 +30,7 @@
+ #include <stack>
+ #include <osg/CullFace>
+ #include <osg/FrontFace>
++#define NDEBUG 1
+ 
+ class SoSeparator;
+ 
+Index: src/osgPlugins/lwo/lwo2parser.h
+===================================================================
+--- src/osgPlugins/lwo/lwo2parser.h	(revision 13097)
++++ src/osgPlugins/lwo/lwo2parser.h	(working copy)
+@@ -69,7 +69,7 @@
+ 					throw parser_error("invalid file format");
+ 				}
+ 				while (it < end)
+-					chk->data.push_back(parse_chunk(it, "FORM"));
++					chk->data.push_back(this->parse_chunk(it, "FORM"));
+ 				return chk;
+ 			}
+ 		}
+Index: src/osgViewer/DarwinUtils.mm
+===================================================================
+--- src/osgViewer/DarwinUtils.mm	(revision 13097)
++++ src/osgViewer/DarwinUtils.mm	(working copy)
+@@ -47,7 +47,53 @@
+ 
+ namespace osgDarwin {
+ 
++// Lion replacement for CGDisplayBitsPerPixel(CGDirectDisplayID displayId)
++//
++size_t displayBitsPerPixel( CGDirectDisplayID displayId )
++{
++#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
++	return CGDisplayBitsPerPixel(displayId);
++#else
++	CGDisplayModeRef mode = CGDisplayCopyDisplayMode(displayId);
++	if (!mode)
++	{
++		OSG_WARN << "CGDisplayCopyDisplayMode returned NULL" << std::endl;
++		return 0;
++	}
+ 
++	CFStringRef pixEnc = CGDisplayModeCopyPixelEncoding(mode);
++	if (!pixEnc)
++	{
++		OSG_WARN << "CGDisplayModeCopyPixelEncoding returned NULL" << std::endl;
++		CGDisplayModeRelease(mode);
++		return 0;
++	}
++
++	size_t depth = 0;
++	if (CFStringCompare(pixEnc, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
++	{
++		depth = 32;
++	}
++	else if (CFStringCompare(pixEnc, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
++	{
++		depth = 16;
++	}
++	else if (CFStringCompare(pixEnc, CFSTR(IO8BitIndexedPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
++	{
++		depth = 8;
++	}
++	else
++	{
++		OSG_WARN << "Unable to match pixel encoding '" << CFStringGetCStringPtr(pixEnc, kCFStringEncodingUTF8) << "'" << std::endl;
++	}
++
++	CGDisplayModeRelease(mode);
++	CFRelease(pixEnc);
++
++	return depth;
++#endif
++}
++
+ static inline CGRect toCGRect(NSRect nsRect)
+ {
+     CGRect cgRect;
+@@ -313,7 +359,7 @@
+     CGDirectDisplayID id = getDisplayID(si);
+     resolution.width = CGDisplayPixelsWide(id);
+     resolution.height = CGDisplayPixelsHigh(id);
+-    resolution.colorDepth = CGDisplayBitsPerPixel(id);
++    resolution.colorDepth = displayBitsPerPixel(id);
+     resolution.refreshRate = getDictDouble (CGDisplayCurrentMode(id), kCGDisplayRefreshRate);        // Not tested
+     if (resolution.refreshRate<0) resolution.refreshRate = 0;
+ }
+@@ -402,7 +448,7 @@
+     CFDictionaryRef display_mode_values =
+         CGDisplayBestModeForParametersAndRefreshRate(
+                         displayid, 
+-                        CGDisplayBitsPerPixel(displayid), 
++                        displayBitsPerPixel(displayid), 
+                         width, height,  
+                         refresh,  
+                         NULL);
+@@ -432,7 +478,7 @@
+     CFDictionaryRef display_mode_values =
+         CGDisplayBestModeForParametersAndRefreshRate(
+                         displayid, 
+-                        CGDisplayBitsPerPixel(displayid), 
++                        displayBitsPerPixel(displayid), 
+                         width, height,  
+                         refreshRate,  
+                         &success);
+Index: src/OpenThreads/common/Atomic.cpp
+===================================================================
+--- src/OpenThreads/common/Atomic.cpp	(revision 13097)
++++ src/OpenThreads/common/Atomic.cpp	(working copy)
+@@ -143,7 +143,7 @@
+ AtomicPtr::assign(void* ptrNew, const void* const ptrOld)
+ {
+ #if defined(_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS)
+-    return __sync_bool_compare_and_swap(&_ptr, ptrOld, ptrNew);
++    return __sync_bool_compare_and_swap(&_ptr, (void *)ptrOld, ptrNew);
+ #elif defined(_OPENTHREADS_ATOMIC_USE_WIN32_INTERLOCKED)
+     return ptrOld == InterlockedCompareExchangePointer((PVOID volatile*)&_ptr, (PVOID)ptrNew, (PVOID)ptrOld);
+ #elif defined(_OPENTHREADS_ATOMIC_USE_BSD_ATOMIC)
+Index: CMakeLists.txt
+===================================================================
+--- CMakeLists.txt	(revision 13097)
++++ CMakeLists.txt	(working copy)
+@@ -658,6 +658,11 @@
+ # Set defaults for Universal Binaries. We want 32-bit Intel/PPC on 10.4
+ # and 32/64-bit Intel/PPC on >= 10.5. Anything <= 10.3 doesn't support.
+ IF(APPLE)
++    # Determine the canonical name of the selected Platform SDK
++    EXECUTE_PROCESS(COMMAND "defaults" "read" "${CMAKE_OSX_SYSROOT}/SDKSettings.plist" "CanonicalName" 
++        OUTPUT_VARIABLE APPLE_PLATFORM_SDK_CANONICAL_NAME
++        OUTPUT_STRIP_TRAILING_WHITESPACE)
++    
+     # These are just defaults/recommendations, but how we want to build
+     # out of the box. But the user needs to be able to change these options.
+     # So we must only set the values the first time CMake is run, or we
+@@ -669,23 +674,27 @@
+         # version information we need. (Darwin versions can be changed
+         # independently of OS X versions.)
+         # It does look like CMake handles the CMAKE_OSX_SYSROOT automatically.
+-        IF(EXISTS /Developer/SDKs/MacOSX10.5.sdk)
++        IF(${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.7")
++            SET(OSG_DEFAULT_IMAGE_PLUGIN_FOR_OSX "imageio" CACHE STRING "Forced imageio default image plugin for OSX" FORCE)
++            # 64 Bit Works, PPC is not supported any more
++            SET(CMAKE_OSX_ARCHITECTURES "i386;x86_64" CACHE STRING "Build architectures for OSX" FORCE)
++            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.7 -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
++        ELSEIF(${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.6" /
++            ${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.5")
+             # 64-bit compiles are not supported with Carbon. We should enable 
+             # 64-bit compilation by default once osgviewer has been 
+             # rewritten with Cocoa.
+             #SET(CMAKE_OSX_ARCHITECTURES "ppc;i386;ppc64;x86_64" CACHE STRING "Build architectures for OSX" FORCE)
+             SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX" FORCE)
+             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.5 -ftree-vectorize -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
+-        ELSE(EXISTS /Developer/SDKs/MacOSX10.5.sdk)
+-            IF(EXISTS /Developer/SDKs/MacOSX10.4u.sdk)
+-                SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX" FORCE)
+-                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.4 -ftree-vectorize -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
+-            ELSE(EXISTS /Developer/SDKs/MacOSX10.4u.sdk)
+-                # No Universal Binary support
+-                # Should break down further to set the -mmacosx-version-min,
+-                # but the SDK detection is too unreliable here.
+-            ENDIF(EXISTS /Developer/SDKs/MacOSX10.4u.sdk)
+-        ENDIF(EXISTS /Developer/SDKs/MacOSX10.5.sdk)
++        ELSEIF(${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.4")
++            SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX" FORCE)
++            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.4 -ftree-vectorize -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
++        ELSE(EXISTS /Developer/SDKs/MacOSX10.4u.sdk)
++            # No Universal Binary support
++            # Should break down further to set the -mmacosx-version-min,
++            # but the SDK detection is too unreliable here.
++        ENDIF()
+     ENDIF(NOT OSG_CONFIG_HAS_BEEN_RUN_BEFORE)
+ 
+     OPTION(OSG_BUILD_APPLICATION_BUNDLES "Enable the building of applications and examples as OSX Bundles" OFF)

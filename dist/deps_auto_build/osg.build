@@ -60,14 +60,14 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DCMAKE_OSX_ARCHITECTURES=x86_64 )
     CMAKE_PARAMS+=( -DOSG_DEFAULT_IMAGE_PLUGIN_FOR_OSX=imageio )
     CMAKE_PARAMS+=( -DOSG_WINDOWING_SYSTEM=Cocoa )
-    CMAKE_PARAMS+=( -DJPEG_LIBRARY="${VTK_INSTALL_DIR}/lib/${VTK_VERSION_DIR}/libvtkjpeg.dylib" )
-    CMAKE_PARAMS+=( -DTIFF_LIBRARY="${VTK_INSTALL_DIR}/lib/${VTK_VERSION_DIR}/libvtktiff.dylib" )
+    #CMAKE_PARAMS+=( -DJPEG_LIBRARY="${VTK_INSTALL_DIR}/lib/${VTK_VERSION_DIR}/libvtkjpeg.dylib" )
+    #CMAKE_PARAMS+=( -DTIFF_LIBRARY="${VTK_INSTALL_DIR}/lib/${VTK_VERSION_DIR}/libvtktiff.dylib" )
     CMAKE_PARAMS+=( -DFREETYPE_LIBRARY="${VTK_INSTALL_DIR}/lib/${VTK_VERSION_DIR}/libvtkfreetype.dylib" )
     CMAKE_PARAMS+=( -DLIBXML2_LIBRARIES="${VTK_INSTALL_DIR}/lib/${VTK_VERSION_DIR}/libvtklibxml2.dylib" )
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="/usr/include" )
     CMAKE_PARAMS+=( -DZLIB_LIBRARY="/usr/lib/libz.dylib" )
-    CMAKE_PARAMS+=( -DPNG_PNG_INCLUDE_DIR="${PNG_INSTALL_DIR}/include" )
-    CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng.a" )
+    #CMAKE_PARAMS+=( -DPNG_PNG_INCLUDE_DIR="${PNG_INSTALL_DIR}/include" )
+    #CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng.a" )
     CMAKE_PARAMS+=( -DINVENTOR_LIBRARY_RELEASE="${COIN3D_INSTALL_DIR}/lib/libCoin.dylib" )
     if [ -d "/Applications/Autodesk/FBXSDK20102" ]; then
         CMAKE_PARAMS+=( -DFBX_ROOT="/Applications/Autodesk/FBXSDK20102" )
@@ -75,6 +75,8 @@ case $PLATFORM in
         CMAKE_PARAMS+=( -DFBX_LIBRARY_DEBUG="/Applications/Autodesk/FBXSDK20102/lib/libfbxsdk_gcc4_ubd.a" )
         CMAKE_PARAMS+=( -DFBX_INCLUDE_DIR="/Applications/Autodesk/FBXSDK20102/include" )
     fi
+    #apply the patch for mac specifically for 10.7
+    POST_RETRIEVAL_METHOD="patch -p0 -i ${VES_SRC_DIR}/share/patches/osg/macos10.7.patch"
     ;;
   Linux)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
