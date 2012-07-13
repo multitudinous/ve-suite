@@ -1196,7 +1196,7 @@ void MainWindow::on_actionRemove_Planet_triggered( bool )
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionConfigure_Layers_triggered( bool )
 {
-    if( !mMinveraStackedWidget )
+    if( !mMinervaStackedWidget )
     {
         mMinervaStackedWidget = new ves::conductor::qt::minerva::StackedWidget();
         mMinervaStackedWidget->
