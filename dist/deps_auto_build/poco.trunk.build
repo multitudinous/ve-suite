@@ -3,7 +3,7 @@ BASE_DIR="${DEV_BASE_DIR}/poco"
 
 SOURCE_RETRIEVAL_METHOD=svn
 SOURCE_URL=https://poco.svn.sourceforge.net/svnroot/poco/poco/trunk
-SOURCE_REVISION=1435
+SOURCE_REVISION=1885
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
@@ -32,6 +32,8 @@ case $PLATFORM in
     MSVC_SOLUTION+=( "${SOURCE_DIR}/Foundation/Foundation${PLATFORM_SUFFIX}_vs90.sln" )
     #XML
     MSVC_SOLUTION+=( "${SOURCE_DIR}/XML/XML${PLATFORM_SUFFIX}_vs90.sln" )
+    #JSON
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/JSON/JSON${PLATFORM_SUFFIX}_vs90.sln" )
     #Util
     MSVC_SOLUTION+=( "${SOURCE_DIR}/Util/Util${PLATFORM_SUFFIX}_vs90.sln" )
     #Net
@@ -50,10 +52,6 @@ case $PLATFORM in
     #MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/MySQL/MySQL${PLATFORM_SUFFIX}_vs90.sln" )
     #Zip
     MSVC_SOLUTION+=( "${SOURCE_DIR}/Zip/Zip${PLATFORM_SUFFIX}_vs90.sln" )
-    #PageCompiler
-    #MSVC_SOLUTION+=( "${SOURCE_DIR}/PageCompiler/PageCompiler${PLATFORM_SUFFIX}_vs90.sln" )
-    #PageCompiler/File2Page
-    #MSVC_SOLUTION+=( "${SOURCE_DIR}/PageCompiler/File2Page/File2Page${PLATFORM_SUFFIX}_vs90.sln" )
     ;;
   Darwin)
     PREBUILD_METHOD=configure
