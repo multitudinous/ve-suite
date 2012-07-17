@@ -30,29 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <simulinkModel.h>
 
-//#include <ves/builder/DataLoader/tecplot/tecplotReader.h>
-
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <ctime>
-
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem/operations.hpp>
 
-#include "engine.h"
-#include "matrix.h"
-#include "mex.h"
-
-//using namespace ves::builder::DataLoader;
-
-void wait( int seconds )
-{
-    clock_t endwait = clock () + seconds * CLOCKS_PER_SEC ;
-    while( clock() < endwait ) {}
-}
+#include <fstream>
+#include <iostream>
 
 double GetResultFromMatlabCommand( Engine *ep, std::string matlabCommand )
 {
@@ -84,132 +68,173 @@ std::string GetSimulinkString( Engine *ep, std::string modelName, std::string pa
     return( GetStringFromMatlabCommand( ep, matlabCommand ) );
 }
 
-int main( int argc, char** argv )
+simulinkModel::simulinkModel( std::string inputFileNameAndPath )
 {
-    if( argc != 2 )
-    {
-        std::cout << "Error: Need one argument specifying a simulink model!" << std::endl;
-        std::cout << "    For example: " << argv[ 0 ] << " ves_test" << std::endl;
-        std::cout << "    (note that '.mdl' extension is not used)" << std::endl;
-        return( EXIT_FAILURE );
-    }
+    this->existFlag = 1;
 
-    // Do some tests to make sure second argument is a simulink model filename in correct format...
-    std::string modelName( argv[ 1 ] );
-    boost::filesystem::path ext = boost::filesystem::path( modelName ).extension();
-    //std::cout << "\nextension = " << ext << std::endl;
+    // Do some tests to make sure provided name is a simulink model filename in correct format...
+    boost::filesystem::path ext = boost::filesystem::path( inputFileNameAndPath ).extension();
+#ifdef PRINT_HEADERS
+    std::cout << "\nextension = " << ext << std::endl;
+#endif // PRINT_HEADERS
     if( ext == ".mdl" )
     {
         std::cerr << "\nWarning: Extension '.mdl' is not expected on input file '"
-                  << modelName << "'." << std::endl;
+                  << inputFileNameAndPath << "'." << std::endl;
         std::cerr << "Extension will be stripped to allow program to continue. " << std::endl;
-        modelName = boost::filesystem::path( modelName ).stem().string();
+        inputFileNameAndPath = boost::filesystem::path( inputFileNameAndPath ).stem().string();
     }
     else if( ext != "" )
     {
         std::cerr << "\nError: Provided filename is not of correct format." << std::endl;
         std::cerr << "Should be a simulink model file without '.mdl' extension" << std::endl;
-        return( EXIT_FAILURE );
+        return;
     }
+
+    // Make sure that simulink model filename exists...
+    boost::filesystem::path full_path = boost::filesystem::path( inputFileNameAndPath ).replace_extension( ".mdl" );
+#ifdef PRINT_HEADERS
+    std::cout << "\nTesting exist status of file " << full_path << std::endl;
+#endif // PRINT_HEADERS
+
+    if( ! boost::filesystem::exists( full_path ) )
+    {
+        std::cerr << "Error: input file does not exist or is not readable." << std::endl;
+        return;
+    }
+
+    this->modelName = inputFileNameAndPath;
+    std::cout << "\nReading file '" << this->modelName << "'" << std::endl;
 
     std::cout << "Starting MATLAB engine" << std::endl;
 
     // Call engOpen with a NULL string. This starts a MATLAB process on the current host
-    Engine *ep;
-    if (!(ep = engOpen("")))
+    if ( ! ( this->ep = engOpen("") ) )
     {
         std::cerr << "Error: Can't start MATLAB engine" << std::endl;
-        return( EXIT_FAILURE );
+        return;
     }
 
-    //matlabCommand(s) are strings that you could directly enter in the MATLAB Command Window
-    std::string matlabCommand;
+    this->existFlag = 0;    // All good to go
+}
 
+simulinkModel::~simulinkModel()
+{
+#ifdef PRINT_HEADERS
+    std::cerr << "deleting simulinkModel\n" << std::endl;
+#endif // PRINT_HEADERS
+
+    // Free memory, close MATLAB engine and exit.
+    std::cout << "Freeing memory, closing MATLAB engine, and exiting" << std::endl;
+    engClose( this->ep );
+}
+
+int simulinkModel::DoesNotExist()
+{
+    return this->existFlag;
+}
+
+void simulinkModel::open()
+{
     // open the simulink window with your model
-    std::cout << "Opening simulink model '" << modelName << "'" << std::endl;
-    matlabCommand = "open_system('" + modelName + "')";
-    engEvalString(ep, matlabCommand.c_str() );
-
+    std::cout << "Opening simulink model '" << this->modelName << "'" << std::endl;
+    this->matlabCommand = "open_system('" + this->modelName + "')";
+    engEvalString( this->ep, this->matlabCommand.c_str() );
 /*
     // load the model but don't show it in a window
     matlabCommand = "load_system('" + modelName + "')";
     engEvalString(ep, matlabCommand.c_str() );
 */
+}
 
+void simulinkModel::startSimulation()
+{
     // Use SimulationCommand to start, stop, pause, continue, update 
     std::cout << "Starting simulation" << std::endl;
-    matlabCommand = "set_param('" + modelName + "','SimulationCommand', 'start');";
-    engEvalString(ep, matlabCommand.c_str() );
+    this->matlabCommand = "set_param('" + this->modelName + "','SimulationCommand', 'start');";
+    engEvalString( this->ep, this->matlabCommand.c_str() );
+}
 
-    //i status is either 'running' or 'stopped'
-    std::string status = GetSimulinkString( ep, modelName, "SimulationStatus" );
-    std::cout << "status = " << status << std::endl;
+std::string simulinkModel::GetSimulationStatus()
+{
+    std::string status = GetSimulinkString( this->ep, this->modelName, "SimulationStatus" );
+    return status;
+}
 
-    double simTime;
-    do 
-    {
-        wait( 1 );
+double simulinkModel::GetSimulationTime()
+{
+    double simTime = GetSimulinkParameter( this->ep, this->modelName, "SimulationTime" );
+    return simTime;
+}
 
-        simTime = GetSimulinkParameter( ep, modelName, "SimulationTime" );
-        status = GetSimulinkString( ep, modelName, "SimulationStatus" );
-        std::cout << "simulation time = " << simTime << ", status = " << status << std::endl;
-    }
-    while( status == "running" );
-    //while( simTime != 0 );
+void simulinkModel::ReadBlockNames()
+{
+    this->matlabCommand = "blks = find_system('" + this->modelName + "', 'Type', 'block');";
+    engEvalString( this->ep, this->matlabCommand.c_str() );
 
-    // Get a list of the blocks in the system
-    matlabCommand = "blks = find_system('" + modelName + "', 'Type', 'block');";
-    engEvalString(ep, matlabCommand.c_str() );
+    this->numBlocks = GetResultFromMatlabCommand( this->ep, "length(blks);" );
+    std::cout << "numBlocks = " << this->numBlocks << std::endl;
 
-    int numBlocks = GetResultFromMatlabCommand( ep, "length(blks);" );
-    std::cout << "numBlocks = " << numBlocks << std::endl;
-    for( int i=1; i<= numBlocks; i++ )
+    for( int i=1; i<= this->numBlocks; i++ )
     {
         std::stringstream out;
         out << i;
         //data is stored in cells rather than directly as strings
         //thus can't access as blks(i). Instead use blks{i,1}.
         std::string blockName = GetStringFromMatlabCommand( ep, "blks{" + out.str() + ",1};" );
+        this->blockNameList.push_back( blockName );
+    }
+}
 
-        // get list of parameter names in a 1x1 struct
-        matlabCommand = "parameters = fieldnames(get_param('" + blockName + "','dialogparameters'));";
-        engEvalString(ep, matlabCommand.c_str() );
+void simulinkModel::ReadParameterNames( int blockNumber )
+{
+    std::string blockName = this->blockNameList[ blockNumber ];
 
-        int numParameters = GetResultFromMatlabCommand( ep, "length(parameters);" );
-        std::cout << blockName << ", numParameters = " << numParameters << std::endl;
+    // get list of parameter names in a 1x1 struct
+    this->matlabCommand = "parameters = fieldnames(get_param('" + blockName + "','dialogparameters'));";
+    engEvalString( this->ep, this->matlabCommand.c_str() );
 
-        for( int j=1; j<= numParameters; j++ )
+    int numParameters = GetResultFromMatlabCommand( this->ep, "length(parameters);" );
+    std::cout << blockName << ", numParameters = " << numParameters << std::endl;
+
+    for( int j=1; j<= numParameters; j++ )
+    {
+        std::stringstream jj;
+        jj << j;
+
+        std::string parameterName = GetStringFromMatlabCommand( ep, "parameters{" + jj.str() + "};" );
+
+        // Something wierd about Scope block. Parameters are not accessed in the way other blocks are.
+        // Workaround: For Scope block, just list parameters without trying to get parameter values.
+        if( blockName.substr(blockName.size()-5,5) == "Scope")
         {
-            std::stringstream jj;
-            jj << j;
-
-            std::string parameterName = GetStringFromMatlabCommand( ep, "parameters{" + jj.str() + "};" );
-
-            // Something wierd about Scope block. Parameters are not accessed in the way other blocks are.
-            // Workaround: For Scope block, just list parameters without trying to get parameter values.
-            if( blockName.substr(blockName.size()-5,5) == "Scope")
-            {
-                std::cout << "   " << parameterName << std::endl;
-            }
-            else
-            {
-                std::string parameterValue = GetStringFromMatlabCommand( ep, "get_param('" + blockName + "','" + parameterName + "');" );
-                std::cout << "   " << parameterName << " = " << parameterValue << std::endl;
-            }
+            std::cout << "   " << parameterName << std::endl;
+        }
+        else
+        {
+            std::string parameterValue = GetStringFromMatlabCommand( this->ep, "get_param('" + blockName + "','" + parameterName + "');" );
+            std::cout << "   " << parameterName << " = " << parameterValue << std::endl;
         }
     }
+}
 
-    // Test of setting existing parameter...
-    std::string blockName = "ves_test/Gain";
-    std::string parameterName = "Gain";
-    double newGain = 2;
-    std::stringstream newValue;
-    newValue << newGain;
-    matlabCommand = "set_param('" + blockName + "', '" + parameterName + "', '" + newValue.str() + "');";
-    engEvalString(ep, matlabCommand.c_str() );
+int simulinkModel::GetNumBlocks()
+{
+    return this->numBlocks;
+}
 
-    std::string parameterValue = GetStringFromMatlabCommand( ep, "get_param('" + blockName + "','" + parameterName + "');" );
-    std::cout << "\n   new parameterValue  = " << parameterValue << std::endl;
+void simulinkModel::SetParameter( std::string blockName, std::string parameterName, std::string newValue )
+{
+    this->matlabCommand = "set_param('" + blockName + "', '" + parameterName + "', '" + newValue + "');";
+    engEvalString( this->ep, this->matlabCommand.c_str() );
+}
+
+std::string simulinkModel::GetParameter( std::string blockName, std::string parameterName )
+{
+    return GetStringFromMatlabCommand( this->ep, "get_param('" + blockName + "','" + parameterName + "');" );
+}
+
+
 
 /*
     //listblks = get_param(blks, 'BlockType') 
@@ -258,13 +283,4 @@ set_param('mymodel', 'SimulationCommand', 'stop') %send the stop command to it
 simdata = evalin('base', 'simout'); %get the simulation data exported by the block T W
 myfun(simdata) %just an example, insert here your own function 
 */
-    // use fgetc() to pause
-    std::cout << "\nHit return to continue" << std::endl;
-    fgetc(stdin);
-    
-    // Free memory, close MATLAB engine and exit.
-    std::cout << "Freeing memory, closing MATLAB engine, and exiting" << std::endl;
-    engClose(ep);
-    
-    return( EXIT_SUCCESS );
-}
+

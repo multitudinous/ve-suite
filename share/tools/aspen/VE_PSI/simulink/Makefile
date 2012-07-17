@@ -13,7 +13,7 @@ CXX = g++
 CXXFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX${MAC_OS}.sdk -g -Wno-deprecated -Wall
 
 # Standard preprocessor flags (common for CC and CXX)
-CPPFLAGS ?= -DPRINT_HEADERS
+#CPPFLAGS ?= -DPRINT_HEADERS
 
 # Standard linker flags 
 LDFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX${MAC_OS}.sdk -g \
@@ -23,7 +23,7 @@ LDFLAGS ?= -arch x86_64 -isysroot /Developer/SDKs/MacOSX${MAC_OS}.sdk -g \
 
 
 ### Variables: ###
-SOURCES=controlModel.cxx
+SOURCES=main.cxx simulinkModel.cxx
 OBJECTS=$(SOURCES:.cxx=.o)
 HEADERS=$(SOURCES:.cxx=.h)
 EXECUTABLE=controlModel
