@@ -32,45 +32,15 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <simulinkModel.h>
 
-#include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem/operations.hpp>
 
 #include <fstream>
 #include <iostream>
-
-double GetResultFromMatlabCommand( Engine *ep, std::string matlabCommand )
-{
-    engEvalString(ep, matlabCommand.c_str() );
-    mxArray *tempMxArray = engGetVariable(ep,"ans");
-    double returnValue = mxGetScalar( tempMxArray );
-    mxDestroyArray( tempMxArray );
-    return( returnValue );
-}
-
-double GetSimulinkParameter( Engine *ep, std::string modelName, std::string paramString )
-{
-    std::string matlabCommand = "get_param('" + modelName + "','" + paramString + "');";
-    return( GetResultFromMatlabCommand( ep, matlabCommand ) );
-}
-
-std::string GetStringFromMatlabCommand( Engine *ep, std::string matlabCommand )
-{
-    engEvalString(ep, matlabCommand.c_str() );
-    mxArray *tempMxArray = engGetVariable(ep,"ans");
-    char * resultString = mxArrayToString( tempMxArray );
-    mxDestroyArray( tempMxArray );
-    return( std::string(resultString) );
-}
-
-std::string GetSimulinkString( Engine *ep, std::string modelName, std::string paramString )
-{
-    std::string matlabCommand = "get_param('" + modelName + "','" + paramString + "');";
-    return( GetStringFromMatlabCommand( ep, matlabCommand ) );
-}
+#include <sstream>
 
 simulinkModel::simulinkModel( std::string inputFileNameAndPath )
 {
-    this->existFlag = 1;
+    this->ep = NULL;
 
     // Do some tests to make sure provided name is a simulink model filename in correct format...
     boost::filesystem::path ext = boost::filesystem::path( inputFileNameAndPath ).extension();
@@ -104,7 +74,7 @@ simulinkModel::simulinkModel( std::string inputFileNameAndPath )
     }
 
     this->modelName = inputFileNameAndPath;
-    std::cout << "\nReading file '" << this->modelName << "'" << std::endl;
+    //std::cout << "\nReading file '" << this->modelName << "'" << std::endl;
 
     std::cout << "Starting MATLAB engine" << std::endl;
 
@@ -115,27 +85,6 @@ simulinkModel::simulinkModel( std::string inputFileNameAndPath )
         return;
     }
 
-    this->existFlag = 0;    // All good to go
-}
-
-simulinkModel::~simulinkModel()
-{
-#ifdef PRINT_HEADERS
-    std::cerr << "deleting simulinkModel\n" << std::endl;
-#endif // PRINT_HEADERS
-
-    // Free memory, close MATLAB engine and exit.
-    std::cout << "Freeing memory, closing MATLAB engine, and exiting" << std::endl;
-    engClose( this->ep );
-}
-
-int simulinkModel::DoesNotExist()
-{
-    return this->existFlag;
-}
-
-void simulinkModel::open()
-{
     // open the simulink window with your model
     std::cout << "Opening simulink model '" << this->modelName << "'" << std::endl;
     this->matlabCommand = "open_system('" + this->modelName + "')";
@@ -147,7 +96,32 @@ void simulinkModel::open()
 */
 }
 
-void simulinkModel::startSimulation()
+simulinkModel::~simulinkModel()
+{
+#ifdef PRINT_HEADERS
+    std::cout << "deleting simulinkModel\n" << std::endl;
+#endif // PRINT_HEADERS
+
+    if( this->ep != NULL )
+    {
+        std::cout << "Freeing memory and closing MATLAB engine." << std::endl;
+        engClose( this->ep );
+    }
+}
+
+int simulinkModel::DoesNotExist()
+{
+    if( this->ep == NULL )
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void simulinkModel::StartSimulation()
 {
     // Use SimulationCommand to start, stop, pause, continue, update 
     std::cout << "Starting simulation" << std::endl;
@@ -157,13 +131,13 @@ void simulinkModel::startSimulation()
 
 std::string simulinkModel::GetSimulationStatus()
 {
-    std::string status = GetSimulinkString( this->ep, this->modelName, "SimulationStatus" );
+    std::string status = GetSimulinkString( "SimulationStatus" );
     return status;
 }
 
 double simulinkModel::GetSimulationTime()
 {
-    double simTime = GetSimulinkParameter( this->ep, this->modelName, "SimulationTime" );
+    double simTime = GetSimulinkParameter( "SimulationTime" );
     return simTime;
 }
 
@@ -172,7 +146,7 @@ void simulinkModel::ReadBlockNames()
     this->matlabCommand = "blks = find_system('" + this->modelName + "', 'Type', 'block');";
     engEvalString( this->ep, this->matlabCommand.c_str() );
 
-    this->numBlocks = GetResultFromMatlabCommand( this->ep, "length(blks);" );
+    this->numBlocks = GetResultFromMatlabCommand( "length(blks);" );
     std::cout << "numBlocks = " << this->numBlocks << std::endl;
 
     for( int i=1; i<= this->numBlocks; i++ )
@@ -181,7 +155,7 @@ void simulinkModel::ReadBlockNames()
         out << i;
         //data is stored in cells rather than directly as strings
         //thus can't access as blks(i). Instead use blks{i,1}.
-        std::string blockName = GetStringFromMatlabCommand( ep, "blks{" + out.str() + ",1};" );
+        std::string blockName = GetStringFromMatlabCommand( "blks{" + out.str() + ",1};" );
         this->blockNameList.push_back( blockName );
     }
 }
@@ -194,7 +168,7 @@ void simulinkModel::ReadParameterNames( int blockNumber )
     this->matlabCommand = "parameters = fieldnames(get_param('" + blockName + "','dialogparameters'));";
     engEvalString( this->ep, this->matlabCommand.c_str() );
 
-    int numParameters = GetResultFromMatlabCommand( this->ep, "length(parameters);" );
+    int numParameters = GetResultFromMatlabCommand( "length(parameters);" );
     std::cout << blockName << ", numParameters = " << numParameters << std::endl;
 
     for( int j=1; j<= numParameters; j++ )
@@ -202,7 +176,7 @@ void simulinkModel::ReadParameterNames( int blockNumber )
         std::stringstream jj;
         jj << j;
 
-        std::string parameterName = GetStringFromMatlabCommand( ep, "parameters{" + jj.str() + "};" );
+        std::string parameterName = GetStringFromMatlabCommand( "parameters{" + jj.str() + "};" );
 
         // Something wierd about Scope block. Parameters are not accessed in the way other blocks are.
         // Workaround: For Scope block, just list parameters without trying to get parameter values.
@@ -212,7 +186,7 @@ void simulinkModel::ReadParameterNames( int blockNumber )
         }
         else
         {
-            std::string parameterValue = GetStringFromMatlabCommand( this->ep, "get_param('" + blockName + "','" + parameterName + "');" );
+            std::string parameterValue = GetStringFromMatlabCommand( "get_param('" + blockName + "','" + parameterName + "');" );
             std::cout << "   " << parameterName << " = " << parameterValue << std::endl;
         }
     }
@@ -231,7 +205,37 @@ void simulinkModel::SetParameter( std::string blockName, std::string parameterNa
 
 std::string simulinkModel::GetParameter( std::string blockName, std::string parameterName )
 {
-    return GetStringFromMatlabCommand( this->ep, "get_param('" + blockName + "','" + parameterName + "');" );
+    return GetStringFromMatlabCommand( "get_param('" + blockName + "','" + parameterName + "');" );
+}
+
+double simulinkModel::GetResultFromMatlabCommand( std::string matlabCommand )
+{
+    engEvalString( this->ep, matlabCommand.c_str() );
+    mxArray *tempMxArray = engGetVariable( this->ep,"ans" );
+    double returnValue = mxGetScalar( tempMxArray );
+    mxDestroyArray( tempMxArray );
+    return( returnValue );
+}
+
+double simulinkModel::GetSimulinkParameter( std::string paramString )
+{
+    std::string matlabCommand = "get_param('" + this->modelName + "','" + paramString + "');";
+    return( GetResultFromMatlabCommand( matlabCommand ) );
+}
+
+std::string simulinkModel::GetStringFromMatlabCommand( std::string matlabCommand )
+{
+    engEvalString( this->ep, matlabCommand.c_str() );
+    mxArray *tempMxArray = engGetVariable( this->ep,"ans" );
+    char * resultString = mxArrayToString( tempMxArray );
+    mxDestroyArray( tempMxArray );
+    return( std::string(resultString) );
+}
+
+std::string simulinkModel::GetSimulinkString( std::string paramString )
+{
+    std::string matlabCommand = "get_param('" + this->modelName + "','" + paramString + "');";
+    return( GetStringFromMatlabCommand( matlabCommand ) );
 }
 
 

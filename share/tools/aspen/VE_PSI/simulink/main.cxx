@@ -36,16 +36,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
-//#include <sstream>
 #include <ctime>
-
-//#include <boost/filesystem/operations.hpp>
-
-//#include "engine.h"
-//#include "matrix.h"
-//#include "mex.h"
-
-//using namespace ves::builder::DataLoader;
 
 void wait( int seconds )
 {
@@ -71,11 +62,9 @@ int main( int argc, char** argv )
         return( EXIT_FAILURE );
     }
 
-    model->open();
+    model->StartSimulation();
 
-    model->startSimulation();
-
-    //i status is either 'running' or 'stopped'
+    // status is either 'running' or 'stopped'
     std::string status = model->GetSimulationStatus();
     std::cout << "status = " << status << std::endl;
 
@@ -110,6 +99,8 @@ int main( int argc, char** argv )
     // use fgetc() to pause
     std::cout << "\nHit return to continue" << std::endl;
     fgetc(stdin);
-    
+   
+    delete model;
+
     return( EXIT_SUCCESS );
 }

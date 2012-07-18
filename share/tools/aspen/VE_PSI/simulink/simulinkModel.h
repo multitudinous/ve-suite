@@ -33,8 +33,6 @@
 #ifndef SIMULINKMODEL_H
 #define SIMULINKMODEL_H
 
-#include <iostream>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -51,9 +49,7 @@ public:
     
     int DoesNotExist();
 
-    void open();
-
-    void startSimulation();
+    void StartSimulation();
 
     std::string GetSimulationStatus();
 
@@ -69,7 +65,6 @@ public:
 
     void ReadParameterNames( int blockNumber );
 
-
 private:
     std::string modelName;
     Engine *ep;
@@ -78,7 +73,15 @@ private:
     std::vector<std::string> blockNameList;
     int numBlocks;
     int blockNumber;
-    int existFlag;
+
+    double GetResultFromMatlabCommand( std::string matlabCommand );
+
+    double GetSimulinkParameter( std::string paramString );
+
+    std::string GetStringFromMatlabCommand( std::string matlabCommand );
+
+    std::string GetSimulinkString( std::string paramString );
+
 };
 #endif
 
