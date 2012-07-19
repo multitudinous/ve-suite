@@ -68,7 +68,7 @@ extern osg::ref_ptr<osg::Texture2D> RTTtex;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-//#define NETL_DEMO
+#define NETL_DEMO
 
 #include "HyperLabICEGP.h"
 #ifdef NETL_DEMO
@@ -196,7 +196,15 @@ int HyperLabICEGP::InitializeLabModels()
     }
     renderRoot->addChild( models.get() );
 
-    models = osgDB::readNodeFile( "Models/HyperLab_Facility_v3.osg", options.get() );
+    models = osgDB::readNodeFile( "Models/HyperLab_Facility_v5.osg", options.get() );
+    if( !( models.valid() ) )
+    {
+        osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
+        //return( 1 );
+    }
+    renderRoot->addChild( models.get() );
+
+    models = osgDB::readNodeFile( "Models/HyperSystem_v5.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
@@ -212,16 +220,9 @@ int HyperLabICEGP::InitializeLabModels()
         RenderPrep renderPrep( renderRoot.get(), textSize, parallaxMap );
 #endif
     }
-    
-    osg::ref_ptr< osg::Node > equipment = osgDB::readNodeFile( "Models/HyperEquipment_Temp01.osg", options.get() );
-    if( !( equipment.valid() ) )
-    {
-        osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
-        //return( 1 );
-    }
 
     {
-        util::MaterialPresent materialPresent( equipment.get() );
+        //util::MaterialPresent materialPresent( equipment.get() );
     }
     /*osg::ref_ptr< osg::Node > collisions = osgDB::readNodeFile( "Models/HyperLab_Collision_v1.osg", options.get() );
     if( !( collisions.valid() ) )
@@ -236,7 +237,7 @@ int HyperLabICEGP::InitializeLabModels()
             osg::Matrix::scale( osg::Vec3( CM2FEET, CM2FEET, CM2FEET ) ) );
         mt->setDataVariance( osg::Object::STATIC );
         mt->addChild( renderRoot.get() );
-        mt->addChild( equipment.get() );
+        //mt->addChild( equipment.get() );
         //mt->addChild( collisions.get() );
         
         osgUtil::Optimizer optimizer;
@@ -244,7 +245,7 @@ int HyperLabICEGP::InitializeLabModels()
     }
     
     root->addChild( renderRoot.get() );
-    root->addChild( equipment.get() );
+    //root->addChild( equipment.get() );
     //root->addChild( collisions.get() );
 
     std::cout << "Loaded all of the models and physics for the Gate." << std::endl;
