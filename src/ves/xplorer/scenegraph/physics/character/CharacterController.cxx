@@ -263,7 +263,7 @@ void CharacterController::Initialize()
     }
 
     ///In non desktop mode make the camera the character
-    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    //if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
         mCameraDistance = mMinCameraDistance;
         mCharacterAnimations->setNodeMask( 0 );
