@@ -375,13 +375,13 @@ AppendOptions( opts, options, poco_options )
 #AppendOptions( opts, options, mongo_options )
 
 # Setup osgWorks library
-if GetPlatform() == 'win32':
-    osgworks_options = fp_option.FlagPollBasedOption( "osgWorks", "osgWorks", "1.0.0", True, True, None,
+#if GetPlatform() == 'win32':
+osgworks_options = fp_option.FlagPollBasedOption( "osgWorks", "osgWorks", "1.0.0", True, True, None,
 		                              compileTest = True, headerToCheck = "osgwTools/Version.h" )
-else:
-    osgworks_options = SConsAddons.Options.StandardPackageOption("osgWorks",
-      "osgWorks utility library, default : osgWorks_incdir=<osgWorks>/include osgWorks_libdir=<osgWorks>/lib(64)", 
-      pj('osgwTools','Export.h'), library=['osgwTools','osgwMx','osgwQuery'], symbol="main", required=True)
+#else:
+#    osgworks_options = SConsAddons.Options.StandardPackageOption("osgWorks",
+#      "osgWorks utility library, default : osgWorks_incdir=<osgWorks>/include osgWorks_libdir=<osgWorks>/lib(64)", 
+#      pj('osgwTools','Export.h'), library=['osgwTools','osgwMx','osgwQuery'], symbol="main", required=True)
 AppendOptions( opts, options, osgworks_options )
 
 #Setup minerva library
