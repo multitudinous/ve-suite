@@ -376,7 +376,7 @@ AppendOptions( opts, options, poco_options )
 
 # Setup osgWorks library
 #if GetPlatform() == 'win32':
-osgworks_options = fp_option.FlagPollBasedOption( "osgWorks", "osgWorks", "1.0.0", True, True, None,
+osgworks_options = fp_option.FlagPollBasedOption( "osgWorks", "osgWorks", "2.0.0", True, True, None,
 		                              compileTest = True, headerToCheck = "osgwTools/Version.h" )
 #else:
 #    osgworks_options = SConsAddons.Options.StandardPackageOption("osgWorks",
