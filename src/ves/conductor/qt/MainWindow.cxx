@@ -818,6 +818,7 @@ void MainWindow::LoadGeometryFile( std::string filename )
         m_cadHandler->CreateAssembly( parentID );
         scenegraph::DCS* assembly = m_cadHandler->GetAssembly( parentID );
         assembly->SetCADPart( activeModel->GetModelData()->GetGeometry() );
+        assembly->SetModelData( activeModel->GetModelData() );
         m_cadHandler->GetAssembly( parentID )->setName( "Model_Geometry" );
         m_cadHandler->SetRootCADNodeID( parentID );
 
