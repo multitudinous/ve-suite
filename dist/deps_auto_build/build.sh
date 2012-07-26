@@ -303,11 +303,18 @@ function source_retrieval()
     svn)
       cd "${DEV_BASE_DIR}";
       SVN_CO="svn co"
+
       if [ -n "${SOURCE_REVISION:+x}" ]; then
         SVN_CO="${SVN_CO} -r ${SOURCE_REVISION}";
         echo "using custom command ${SVN_CO}" 
       fi
-      ${SVN_CO} ${SOURCE_URL} "${BASE_DIR}"
+
+      if [ $PLATFORM = "Windows" ]; then
+        TEMP_BASE_DIR=`cygpath -u "${BASE_DIR}"`
+        ${SVN_CO} ${SOURCE_URL} "${TEMP_BASE_DIR}"
+      else
+        ${SVN_CO} ${SOURCE_URL} "${BASE_DIR}"
+      fi
       ;;
     hg)
       cd "${DEV_BASE_DIR}";
