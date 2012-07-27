@@ -10,14 +10,21 @@ INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
 PREBUILD_METHOD=cmake
 
 CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
-CMAKE_PARAMS+=( -DPOCO_ROOT="${POCO_INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DPOCO_INCLUDE_DIR="${POCO_INSTALL_DIR}/include" )
 
 SKIP_FPC_INSTALL="yes"
 
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/boost-1_46_1" )
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/boost-1_50" )
+    CMAKE_PARAMS+=( -DBOOST_ROOT="${BOOST_INSTALL_DIR}" )
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    
+    CMAKE_PARAMS+=( -DPOCO_PocoDataSQLite_LIBRARY="${POCO_INSTALL_DIR}/lib/PocoDataSQLite.lib" )
+    CMAKE_PARAMS+=( -DPOCO_PocoFoundation_LIBRARY="${POCO_INSTALL_DIR}/lib/PocoFoundation.lib" )
+    CMAKE_PARAMS+=( -DPOCO_PocoUtil_LIBRARY="${POCO_INSTALL_DIR}/lib/PocoUtil.lib" )
+    CMAKE_PARAMS+=( -DPOCO_PocoData_LIBRARY="${POCO_INSTALL_DIR}/lib/PocoData.lib" )
+
     MSVC_CONFIG=RelWithDebInfo
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32

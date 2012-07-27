@@ -1,5 +1,5 @@
 PACKAGE_NAME=BOOST
-BASE_DIR="${DEV_BASE_DIR}/boost_1_46_1"
+BASE_DIR="${DEV_BASE_DIR}/boost_1_50_0"
 
 SOURCE_RETRIEVAL_METHOD=wget
 
@@ -25,7 +25,7 @@ fi
 
 case $PLATFORM in
   Windows)
-    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.46.1/boost_1_46_1.zip
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.50.0/boost_1_50_0.zip
     SOURCE_FORMAT=zip
 
     BJAM_PREBUILD=./bootstrap.bat
