@@ -37,9 +37,21 @@ case $PLATFORM in
   Darwin)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DBOOST_ROOT="${BOOST_INSTALL_DIR}" )
+
+    CMAKE_PARAMS+=( -DPOCO_PocoDataSQLite_LIBRARY="${POCO_INSTALL_DIR}/lib/libPocoDataSQLite.dylib" )
+    CMAKE_PARAMS+=( -DPOCO_PocoFoundation_LIBRARY="${POCO_INSTALL_DIR}/lib/libPocoFoundation.dylib" )
+    CMAKE_PARAMS+=( -DPOCO_PocoUtil_LIBRARY="${POCO_INSTALL_DIR}/lib/libPocoUtil.dylib" )
+    CMAKE_PARAMS+=( -DPOCO_PocoData_LIBRARY="${POCO_INSTALL_DIR}/lib/libPocoData.dylib" )
     ;;
   Linux)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DBOOST_ROOT="${BOOST_INSTALL_DIR}" )
+
+    CMAKE_PARAMS+=( -DPOCO_PocoDataSQLite_LIBRARY="${POCO_INSTALL_DIR}/lib/libPocoDataSQLite.so" )
+    CMAKE_PARAMS+=( -DPOCO_PocoFoundation_LIBRARY="${POCO_INSTALL_DIR}/lib/libPocoFoundation.so" )
+    CMAKE_PARAMS+=( -DPOCO_PocoUtil_LIBRARY="${POCO_INSTALL_DIR}/lib/libPocoUtil.so" )
+    CMAKE_PARAMS+=( -DPOCO_PocoData_LIBRARY="${POCO_INSTALL_DIR}/lib/libPocoData.so" )
     ;;
 esac
