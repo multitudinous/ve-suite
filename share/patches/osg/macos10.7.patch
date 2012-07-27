@@ -251,7 +251,7 @@ Index: CMakeLists.txt
  # and 32/64-bit Intel/PPC on >= 10.5. Anything <= 10.3 doesn't support.
  IF(APPLE)
 +    # Determine the canonical name of the selected Platform SDK
-+    EXECUTE_PROCESS(COMMAND "defaults" "read" "${CMAKE_OSX_SYSROOT}/SDKSettings.plist" "CanonicalName" 
++    EXECUTE_PROCESS(COMMAND "defaults" "read" "${CMAKE_OSX_SYSROOT}/SDKSettings" "CanonicalName" 
 +        OUTPUT_VARIABLE APPLE_PLATFORM_SDK_CANONICAL_NAME
 +        OUTPUT_STRIP_TRAILING_WHITESPACE)
 +    
@@ -268,7 +268,7 @@ Index: CMakeLists.txt
 +            # 64 Bit Works, PPC is not supported any more
 +            SET(CMAKE_OSX_ARCHITECTURES "i386;x86_64" CACHE STRING "Build architectures for OSX" FORCE)
 +            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.7 -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
-+        ELSEIF(${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.6" /
++        ELSEIF(${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.6" OR
 +            ${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.5")
              # 64-bit compiles are not supported with Carbon. We should enable 
              # 64-bit compilation by default once osgviewer has been 
