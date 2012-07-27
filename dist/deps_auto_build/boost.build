@@ -22,6 +22,9 @@ if [ "$ARCH" = "64-bit" ]; then
 else
   BJAM_PARAMS+=( address-model=32 )
 fi
+BJAM_PARAMS+=( --without-python )
+BJAM_PARAMS+=( --without-wave )
+BJAM_PARAMS+=( --without-graph_parallel )
 
 case $PLATFORM in
   Windows)
@@ -35,14 +38,14 @@ case $PLATFORM in
     BUILD_TARGET=install
     ;;
   Darwin)
-    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.46.1/boost_1_46_1.tar.bz2
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.50.0/boost_1_50_0.tar.bz2
     SOURCE_FORMAT=bz2
 
     BJAM_PREBUILD=./bootstrap.sh
     BJAM_PARAMS+=( toolset=darwin )
     ;;
   Linux)
-    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.46.1/boost_1_46_1.tar.bz2
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.50.1/boost_1_50_0.tar.bz2
     SOURCE_FORMAT=bz2
 
     BJAM_PREBUILD=./bootstrap.sh
