@@ -43,6 +43,7 @@
  * \class ves::xplorer::VESQtApplication
  * \namepsace ves::xplorer
  * VESQtApplication API
+ * http://qt-project.org/doc/qt-4.8/developing-on-mac.html
  */
 namespace ves
 {

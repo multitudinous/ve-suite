@@ -37,6 +37,13 @@
 #import <Foundation/NSPathUtilities.h>
 #import <AppKit/NSApplication.h>
 
+#ifdef __APPLE__
+//https://bugs.launchpad.net/hugin/+bug/910160
+#ifdef check
+#undef check
+#endif
+#endif
+
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
 
 #import <vrj/Kernel/Kernel.h>
@@ -75,6 +82,8 @@
         //For more information on the code below please see the qt source:
         //http://google.com/codesearch/p?hl=en#yTMZqbVYb-M/src/gui/kernel/qcocoaapplication_mac.mm&q=qt_sendEvent&sa=N&cd=14&ct=rc
         //http://google.com/codesearch/p?hl=en#pcZOP4ePwcM/trunk/Ogitor/qt-src-4.7.1/src/gui/kernel/qcocoaapplication_mac.mm&q=qt_sendEvent&d=3
+        //http://qt.gitorious.org/qt/qt/blobs/4.8/src/gui/kernel/qapplication_mac.mm
+        //http://qt.gitorious.org/qt/qt/blobs/4.8/src/gui/kernel/qapplication_mac.mm#line2611
         //qcocoaaplication_mac.mm
         //If it is not a qt event...send it normally
         if( ![NSApp qt_sendEvent:event] )
