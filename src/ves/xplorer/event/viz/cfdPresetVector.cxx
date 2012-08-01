@@ -174,7 +174,7 @@ void cfdPresetVector::Update( void )
                 vtkCutter* cutter = vtkCutter::New();
                 cutter->SetInput( GetActiveDataSet()->GetDataSet() );
                 cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-                //cutter->Update();
+                cutter->Update();
                 delete this->cuttingPlane;
                 this->cuttingPlane = NULL;
                 c2p->SetInputConnection( cutter->GetOutputPort() );
@@ -189,6 +189,7 @@ void cfdPresetVector::Update( void )
 
             // get every nth point from the dataSet data
             this->ptmask->SetInputConnection( ApplyGeometryFilterNew( c2p->GetOutputPort() ) );
+            //std::cout << this->GetVectorRatioFactor() << std::endl;
             this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
             this->ptmask->Update();
 

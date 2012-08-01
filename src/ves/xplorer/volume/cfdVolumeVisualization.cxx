@@ -57,7 +57,6 @@
 #include <osg/BlendFunc>
 
 #include <osg/Billboard>
-#include <osg/ClipNode>
 #include <osg/TexGenNode>
 #include <osg/Material>
 #include <osg/Shape>

@@ -45,8 +45,6 @@
 // VTK Classes
 class vtkPolyData;
 class vtkActor;
-class vtkGlyph3D;
-class vtkMaskPoints;
 class vtkCompositeDataGeometryFilter;
 class vtkGeometryFilter;
 class vtkAlgorithmOutput;
