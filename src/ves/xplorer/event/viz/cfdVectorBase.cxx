@@ -239,6 +239,9 @@ void cfdVectorBase::SetGlyphWithThreshold()
     double currentScalarRange[ 2 ];
     this->GetActiveDataSet()->GetRange( currentScalarRange );
 
+    //This is required for use with VTK 5.10
+    ptmask->SetMaximumNumberOfPoints( GetActiveDataSet()->GetNumberOfPoints() );
+
     if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] &&
             _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
     {
