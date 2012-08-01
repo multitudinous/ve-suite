@@ -266,8 +266,8 @@ Index: CMakeLists.txt
 +        IF(${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.7")
 +            SET(OSG_DEFAULT_IMAGE_PLUGIN_FOR_OSX "imageio" CACHE STRING "Forced imageio default image plugin for OSX" FORCE)
 +            # 64 Bit Works, PPC is not supported any more
-+            SET(CMAKE_OSX_ARCHITECTURES "i386;x86_64" CACHE STRING "Build architectures for OSX" FORCE)
-+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.7 -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
++            SET(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Build architectures for OSX" FORCE)
++            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.7" CACHE STRING "Flags used by the compiler during all build types." FORCE)
 +        ELSEIF(${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.6" OR
 +            ${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.5")
              # 64-bit compiles are not supported with Carbon. We should enable 
@@ -275,7 +275,7 @@ Index: CMakeLists.txt
              # rewritten with Cocoa.
              #SET(CMAKE_OSX_ARCHITECTURES "ppc;i386;ppc64;x86_64" CACHE STRING "Build architectures for OSX" FORCE)
              SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX" FORCE)
-             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.5 -ftree-vectorize -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
+             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.5 -ftree-vectorize" CACHE STRING "Flags used by the compiler during all build types." FORCE)
 -        ELSE(EXISTS /Developer/SDKs/MacOSX10.5.sdk)
 -            IF(EXISTS /Developer/SDKs/MacOSX10.4u.sdk)
 -                SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX" FORCE)
