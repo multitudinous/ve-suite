@@ -26,6 +26,8 @@
 #include <vtkFLUENTReader.h>
 #include <vtkCutter.h>
 #include <vtksys/ios/sstream>
+#include <vtkMaskPoints.h>
+#include <vtkDataSetSurfaceFilter.h>
 
 #include <vtkTriangleFilter.h>
 #include <vtkStripper.h>
@@ -39,15 +41,24 @@ int main(int argc, char* argv[])
     vtkAlgorithm::SetDefaultExecutivePrototype(prototype);
     prototype->Delete();
 
-    vtkDataSet* dataset = 0;
+	vtkXMLDataReader* polydataReader;
+    polydataReader = vtkXMLUnstructuredGridReader::New();
+	polydataReader->SetFileName(argv[1]);
+    //polydataReader->DebugOn();
+    polydataReader->Update();
+    //polydataReader->Print( std::cout );
+    vtkDataSet* dataset = polydataReader->GetOutputAsDataSet();
 
     vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
-    c2p->SetInput( dataset );
-    c2p->Update();
+    //c2p->SetInput( dataset );
+    //c2p->Update();
 
     // get every nth point from the dataSet data
     vtkCompositeDataGeometryFilter* m_multiGroupGeomFilter = vtkCompositeDataGeometryFilter::New();
     vtkGeometryFilter* m_geometryFilter = vtkGeometryFilter::New();
+    //vtkDataSetSurfaceFilter* m_geometryFilter = vtkDataSetSurfaceFilter::New();
+    //m_geometryFilter->PassThroughPointIdsOn();
+    //m_geometryFilter->PassThroughCellIdsOn();
     if( dataset->IsA( "vtkCompositeDataSet" ) )
     {
         m_multiGroupGeomFilter->SetInputConnection( c2p->GetOutputPort() );
@@ -58,9 +69,16 @@ int main(int argc, char* argv[])
         m_geometryFilter->SetInputConnection( c2p->GetOutputPort() );
         //return m_geometryFilter->GetOutputPort();
     }
-    //ptmask = vtkMaskPoints::New();
-    //ptmask->RandomModeOn();
-    
+    vtkMaskPoints* ptmask = vtkMaskPoints::New();
+    //ptmask->DebugOn();
+    ptmask->SetOnRatio( 3 );
+    ptmask->SetRandomModeType( 1 );
+    //ptmask->SetInputConnection(c2p->GetOutputPort());
+    ptmask->SetMaximumNumberOfPoints( dataset->GetNumberOfPoints() );
+    ptmask->SetInput( dataset );
+    ptmask->RandomModeOn();
+    ptmask->Update();
+
     // Using glyph3D to insert arrow to the data sets
     vtkGlyph3D* glyph = vtkGlyph3D::New();
     
@@ -78,7 +96,7 @@ int main(int argc, char* argv[])
         if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] &&
            _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
         {
-            tfilter->SetInputConnection( m_geometryFilter->GetOutputPort() );
+            tfilter->SetInputConnection( ptmask->GetOutputPort() );
             tfilter->ThresholdBetween( _vectorThreshHoldValues[ 0 ],
                                       _vectorThreshHoldValues[ 1 ] );
             //tfilter->SetInputArrayToProcess( 0, 0, 0,
@@ -91,7 +109,7 @@ int main(int argc, char* argv[])
         }
         else if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] )
         {
-            tfilter->SetInputConnection( m_geometryFilter->GetOutputPort() );
+            tfilter->SetInputConnection( ptmask->GetOutputPort() );
             tfilter->ThresholdByUpper( _vectorThreshHoldValues[ 0 ] );
             //tfilter->SetInputArrayToProcess( 0, 0, 0,
             //                                vtkDataObject::FIELD_ASSOCIATION_POINTS, 
@@ -102,7 +120,7 @@ int main(int argc, char* argv[])
         }
         else if( _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
         {
-            tfilter->SetInputConnection( m_geometryFilter->GetOutputPort() );
+            tfilter->SetInputConnection( ptmask->GetOutputPort() );
             tfilter->ThresholdByLower( _vectorThreshHoldValues[ 1 ] );
             //tfilter->SetInputArrayToProcess( 0, 0, 0,
             //                                vtkDataObject::FIELD_ASSOCIATION_POINTS, 
@@ -113,7 +131,7 @@ int main(int argc, char* argv[])
         }
         else
         {
-            glyph->SetInputConnection( m_geometryFilter->GetOutputPort() );
+            glyph->SetInputConnection( ptmask->GetOutputPort() );
         }
     }
 
