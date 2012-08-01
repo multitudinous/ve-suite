@@ -262,6 +262,10 @@ void cfdVectorBase::SetGlyphWithThreshold()
 
     //This is required for use with VTK 5.10
     ptmask->SetMaximumNumberOfPoints( GetActiveDataSet()->GetNumberOfPoints() );
+#if ( VTK_MAJOR_VERSION >= 5 ) && ( VTK_MINOR_VERSION >= 10 )
+    //New feature for selecting points at random in VTK 5.10
+    ptmask->SetRandomModeType( 1 );
+#endif
 
     if( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] &&
             _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
