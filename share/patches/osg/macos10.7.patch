@@ -1,6 +1,31 @@
+Index: include/osg/Math
+===================================================================
+--- include/osg/Math	(revision 13106)
++++ include/osg/Math	(working copy)
+@@ -37,6 +37,11 @@
+     #if (__GNUC__ < 4)
+         #define APPLE_PRE_10_2
+     #endif
++    
++    #if (MAC_OS_X_MIN_REQUIRED < MAC_OS_XVERSION_10_6)
++        #define APPLE_PRE_10_6
++    #endif
++    
+ #endif
+ #endif
+ 
+@@ -45,7 +50,7 @@
+ #endif
+ 
+ #if defined (sun) || \
+-    defined (__APPLE__) || \
++    defined (APPLE_PRE_10_6) || \
+     (defined (_AIX) && defined (__GNUC__))
+ 
+     #include <float.h>
 Index: include/osg/Array
 ===================================================================
---- include/osg/Array	(revision 13097)
+--- include/osg/Array	(revision 13106)
 +++ include/osg/Array	(working copy)
 @@ -197,7 +197,7 @@
          TemplateArray& operator = (const TemplateArray& array)
@@ -22,7 +47,7 @@ Index: include/osg/Array
  
 Index: include/osgAnimation/Interpolator
 ===================================================================
---- include/osgAnimation/Interpolator	(revision 13097)
+--- include/osgAnimation/Interpolator	(revision 13106)
 +++ include/osgAnimation/Interpolator	(working copy)
 @@ -84,7 +84,7 @@
                  return;
@@ -71,7 +96,7 @@ Index: include/osgAnimation/Interpolator
              float one_minus_t = 1.0-t;
 Index: src/osgPlugins/Inventor/ConvertFromInventor.h
 ===================================================================
---- src/osgPlugins/Inventor/ConvertFromInventor.h	(revision 13097)
+--- src/osgPlugins/Inventor/ConvertFromInventor.h	(revision 13106)
 +++ src/osgPlugins/Inventor/ConvertFromInventor.h	(working copy)
 @@ -1,6 +1,6 @@
  #ifndef _CONVERTFROMINVENTOR_H_
@@ -83,7 +108,7 @@ Index: src/osgPlugins/Inventor/ConvertFromInventor.h
  #include <osg/PrimitiveSet>
 Index: src/osgPlugins/Inventor/ReaderWriterIV.cpp
 ===================================================================
---- src/osgPlugins/Inventor/ReaderWriterIV.cpp	(revision 13097)
+--- src/osgPlugins/Inventor/ReaderWriterIV.cpp	(revision 13106)
 +++ src/osgPlugins/Inventor/ReaderWriterIV.cpp	(working copy)
 @@ -2,7 +2,7 @@
  #include <osg/Notify>
@@ -96,7 +121,7 @@ Index: src/osgPlugins/Inventor/ReaderWriterIV.cpp
  #include <Inventor/SoInteraction.h>
 Index: src/osgPlugins/Inventor/ConvertToInventor.cpp
 ===================================================================
---- src/osgPlugins/Inventor/ConvertToInventor.cpp	(revision 13097)
+--- src/osgPlugins/Inventor/ConvertToInventor.cpp	(revision 13106)
 +++ src/osgPlugins/Inventor/ConvertToInventor.cpp	(working copy)
 @@ -42,6 +42,10 @@
  #include <osg/ShapeDrawable>
@@ -111,7 +136,7 @@ Index: src/osgPlugins/Inventor/ConvertToInventor.cpp
  #include <Inventor/nodes/SoCoordinate4.h>
 Index: src/osgPlugins/Inventor/ConvertFromInventor.cpp
 ===================================================================
---- src/osgPlugins/Inventor/ConvertFromInventor.cpp	(revision 13097)
+--- src/osgPlugins/Inventor/ConvertFromInventor.cpp	(revision 13106)
 +++ src/osgPlugins/Inventor/ConvertFromInventor.cpp	(working copy)
 @@ -1,3 +1,5 @@
 +#define NDEBUG 1
@@ -121,7 +146,7 @@ Index: src/osgPlugins/Inventor/ConvertFromInventor.cpp
  #include "PendulumCallback.h"
 Index: src/osgPlugins/Inventor/ConvertToInventor.h
 ===================================================================
---- src/osgPlugins/Inventor/ConvertToInventor.h	(revision 13097)
+--- src/osgPlugins/Inventor/ConvertToInventor.h	(revision 13106)
 +++ src/osgPlugins/Inventor/ConvertToInventor.h	(working copy)
 @@ -30,6 +30,7 @@
  #include <stack>
@@ -133,7 +158,7 @@ Index: src/osgPlugins/Inventor/ConvertToInventor.h
  
 Index: src/osgPlugins/lwo/lwo2parser.h
 ===================================================================
---- src/osgPlugins/lwo/lwo2parser.h	(revision 13097)
+--- src/osgPlugins/lwo/lwo2parser.h	(revision 13106)
 +++ src/osgPlugins/lwo/lwo2parser.h	(working copy)
 @@ -69,7 +69,7 @@
  					throw parser_error("invalid file format");
@@ -146,7 +171,7 @@ Index: src/osgPlugins/lwo/lwo2parser.h
  		}
 Index: src/osgViewer/DarwinUtils.mm
 ===================================================================
---- src/osgViewer/DarwinUtils.mm	(revision 13097)
+--- src/osgViewer/DarwinUtils.mm	(revision 13106)
 +++ src/osgViewer/DarwinUtils.mm	(working copy)
 @@ -47,7 +47,53 @@
  
@@ -231,7 +256,7 @@ Index: src/osgViewer/DarwinUtils.mm
                          &success);
 Index: src/OpenThreads/common/Atomic.cpp
 ===================================================================
---- src/OpenThreads/common/Atomic.cpp	(revision 13097)
+--- src/OpenThreads/common/Atomic.cpp	(revision 13106)
 +++ src/OpenThreads/common/Atomic.cpp	(working copy)
 @@ -143,7 +143,7 @@
  AtomicPtr::assign(void* ptrNew, const void* const ptrOld)
@@ -244,17 +269,17 @@ Index: src/OpenThreads/common/Atomic.cpp
  #elif defined(_OPENTHREADS_ATOMIC_USE_BSD_ATOMIC)
 Index: CMakeLists.txt
 ===================================================================
---- CMakeLists.txt	(revision 13097)
+--- CMakeLists.txt	(revision 13106)
 +++ CMakeLists.txt	(working copy)
 @@ -658,6 +658,11 @@
  # Set defaults for Universal Binaries. We want 32-bit Intel/PPC on 10.4
  # and 32/64-bit Intel/PPC on >= 10.5. Anything <= 10.3 doesn't support.
  IF(APPLE)
 +    # Determine the canonical name of the selected Platform SDK
-+    EXECUTE_PROCESS(COMMAND "defaults" "read" "${CMAKE_OSX_SYSROOT}/SDKSettings" "CanonicalName" 
++    EXECUTE_PROCESS(COMMAND "defaults" "read" "${CMAKE_OSX_SYSROOT}/SDKSettings" "CanonicalName"
 +        OUTPUT_VARIABLE APPLE_PLATFORM_SDK_CANONICAL_NAME
 +        OUTPUT_STRIP_TRAILING_WHITESPACE)
-+    
++
      # These are just defaults/recommendations, but how we want to build
      # out of the box. But the user needs to be able to change these options.
      # So we must only set the values the first time CMake is run, or we
@@ -266,8 +291,8 @@ Index: CMakeLists.txt
 +        IF(${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.7")
 +            SET(OSG_DEFAULT_IMAGE_PLUGIN_FOR_OSX "imageio" CACHE STRING "Forced imageio default image plugin for OSX" FORCE)
 +            # 64 Bit Works, PPC is not supported any more
-+            SET(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Build architectures for OSX" FORCE)
-+            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.7" CACHE STRING "Flags used by the compiler during all build types." FORCE)
++            SET(CMAKE_OSX_ARCHITECTURES "i386;x86_64" CACHE STRING "Build architectures for OSX" FORCE)
++            SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.7 -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
 +        ELSEIF(${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.6" OR
 +            ${APPLE_PLATFORM_SDK_CANONICAL_NAME} STREQUAL "macosx10.5")
              # 64-bit compiles are not supported with Carbon. We should enable 
@@ -275,7 +300,7 @@ Index: CMakeLists.txt
              # rewritten with Cocoa.
              #SET(CMAKE_OSX_ARCHITECTURES "ppc;i386;ppc64;x86_64" CACHE STRING "Build architectures for OSX" FORCE)
              SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX" FORCE)
-             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.5 -ftree-vectorize" CACHE STRING "Flags used by the compiler during all build types." FORCE)
+             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.5 -ftree-vectorize -fvisibility-inlines-hidden" CACHE STRING "Flags used by the compiler during all build types." FORCE)
 -        ELSE(EXISTS /Developer/SDKs/MacOSX10.5.sdk)
 -            IF(EXISTS /Developer/SDKs/MacOSX10.4u.sdk)
 -                SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX" FORCE)
