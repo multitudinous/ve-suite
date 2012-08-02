@@ -1,41 +1,59 @@
 PACKAGE_NAME=CPPDOM
-BASE_DIR="${DEV_BASE_DIR}/cppdom-1.2.0"
+BASE_DIR="${DEV_BASE_DIR}/cppdom-1.3.0"
 
-SOURCE_RETRIEVAL_METHOD=wget
-SOURCE_URL=http://sourceforge.net/projects/xml-cppdom/files/CppDOM/1.2.0/cppdom-1.2.0.tar.bz2
-SOURCE_FORMAT=bz2
+#SOURCE_RETRIEVAL_METHOD=wget
+#SOURCE_URL=http://sourceforge.net/projects/xml-cppdom/files/CppDOM/1.2.0/cppdom-1.2.0.tar.bz2
+#SOURCE_FORMAT=bz2
+
+SOURCE_RETRIEVAL_METHOD=svn
+SOURCE_URL=https://xml-cppdom.svn.sourceforge.net/svnroot/xml-cppdom/trunk
 
 SOURCE_DIR="${BASE_DIR}"
-BUILD_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
 INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
 
-SKIP_PREBUILD=yes
-PREBUILD_METHOD=scons
+#SKIP_PREBUILD=yes
+#BUILD_METHOD=scons
+PREBUILD_METHOD=cmake
 
-BUILD_METHOD=scons
+SKIP_FPC_INSTALL="yes"
 
-SCONS_PARAMS+=( prefix="${INSTALL_DIR}" )
-SCONS_PARAMS+=( var_type=optimized )
-SCONS_PARAMS+=( var_libtype=shared )
+#SCONS_PARAMS+=( prefix="${INSTALL_DIR}" )
+#SCONS_PARAMS+=( var_type=optimized )
+#SCONS_PARAMS+=( var_libtype=shared )
+
+CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DBUILD_TESTING=OFF )
+CMAKE_PARAMS+=( -DBUILD_SPIRIT_PARSER=OFF )
 
 case $PLATFORM in
   Windows)
-    SCONS_PARAMS+=( MSVC_VERSION=9.0 )
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+
+    #SCONS_PARAMS+=( MSVC_VERSION=9.0 )
+    MSVC_CONFIG=RelWithDebInfo
     if [ "$ARCH" = "64-bit" ]; then
-      SCONS_PARAMS+=( MSVS_ARCH=amd64 )
-      SCONS_PARAMS+=( var_arch=x64 )
+      #SCONS_PARAMS+=( MSVS_ARCH=amd64 )
+      #SCONS_PARAMS+=( var_arch=x64 )
+      MSVC_PLATFORM=Win32
     else
-      SCONS_PARAMS+=( MSVS_ARCH=x86 )
-      SCONS_PARAMS+=( var_arch=ia32 )
+      #SCONS_PARAMS+=( MSVS_ARCH=x86 )
+      #SCONS_PARAMS+=( var_arch=ia32 )
+      MSVC_PLATFORM=x64
     fi
-    BUILD_TARGET=install
+    #BUILD_TARGET=install
+    MSVC_SOLUTION="cppdom.sln"
     ;;
   Darwin)
-    SCONS_PARAMS+=( var_arch=x64 )
+    #SCONS_PARAMS+=( var_arch=x64 )
     #SCONS_PARAMS+=( darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
   Linux)
-    SCONS_PARAMS+=( var_arch=x64 )
-    SCONS_PARAMS+=( BoostBaseDir="${BOOST_INSTALL_DIR}" )
+    #SCONS_PARAMS+=( var_arch=x64 )
+    #SCONS_PARAMS+=( BoostBaseDir="${BOOST_INSTALL_DIR}" )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
+    CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
     ;;
 esac
