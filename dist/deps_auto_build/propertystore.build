@@ -19,7 +19,7 @@ SKIP_FPC_INSTALL="yes"
 
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/boost-1_50" )
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/${BOOST_VERSION_DIR}" )
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
     
     CMAKE_PARAMS+=( -DPOCO_PocoDataSQLite_LIBRARY="${POCO_INSTALL_DIR}/lib/PocoDataSQLite.lib" )
