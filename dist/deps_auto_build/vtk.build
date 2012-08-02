@@ -3,7 +3,6 @@ BASE_DIR="${DEV_BASE_DIR}/VTK-5.10"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
-SOURCE_URL=http://www.vtk.org/files/release/5.8/vtk-5.8.0.tar.gz
 SOURCE_URL=http://www.vtk.org/files/release/5.10/vtk-5.10.0.tar.gz
 VTK_VERSION_DIR=vtk-5.10
 
