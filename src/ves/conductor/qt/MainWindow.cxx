@@ -51,6 +51,7 @@
 #include <ves/conductor/qt/PreferencesTab.h>
 #include <ves/conductor/qt/plugin/PluginSelectionTab.h>
 //#include <ves/conductor/qt/VisFeatureManager.h>
+#include <ves/conductor/qt/CameraTab.h>
 #include <ves/conductor/qt/XMLDataBufferEngine.h>
 #include <ves/conductor/qt/extendedWidgets/ExtendedToolBar.h>
 #include <ves/conductor/qt/UITabs.h>
@@ -133,6 +134,7 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
     m_pluginsTab( 0 ),
     m_constraintsTab( 0 ),
     m_recentTab( 0 ),
+    m_cameraTab( 0 ),
     m_logger( Poco::Logger::get( "conductor.MainWindow" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
@@ -252,8 +254,11 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
         {
             m_viewMenuStack->AddAction( ui->actionConstraints );
         }
-        m_viewMenuStack->AddAction( ui->actionShowTestPlot );
+        //m_viewMenuStack->AddAction( ui->actionShowTestPlot );
+        m_viewMenuStack->AddAction( ui->actionShowCameraTab );
+
         m_viewMenuStack->setObjectName( "m_viewMenuStack" );
+
     }
 
     // The GIS stack
@@ -295,6 +300,9 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
     {
         m_constraintsTab = new ves::conductor::Constraints( 0 );
     }
+
+    //TODO: guard this with displayFeatures
+    m_cameraTab = new ves::conductor::CameraTab( 0 );
 
     this->on_actionRecent_triggered();
 
@@ -1672,7 +1680,11 @@ void MainWindow::SetLogSplitter( Poco::SplitterChannel* splitter )
     //m_qtLogView = new QtLogChannel();
     //splitter->addChannel( m_qtLogView );
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionShowCameraTab_triggered()
+{
+    ActivateTab( AddTab( m_cameraTab, "Cameras" ) );
+}
 ////////////////////////////////////////////////////////////////////////////////
 
 // TESTPLOT

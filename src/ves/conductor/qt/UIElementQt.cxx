@@ -676,7 +676,7 @@ bool UIElementQt::eventFilter( QObject* object, QEvent* event )
             {
 
                 QPoint p = widget->mapToGlobal( rect.topLeft() );
-                QPoint g = p;
+                //QPoint g = p;
                 p = this->mapFromGlobal( p );
                 // Under certain circumstances (not sure exactly which), either
                 // p.x or p.y is -1. We check for this and set to zero, since

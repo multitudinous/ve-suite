@@ -1,5 +1,11 @@
 <RCC>
   <qresource>
+    <file>images/flythrough.png</file>
+    <file>images/camera.png</file>
+    <file>images/cameras.png</file>
+    <file>images/slideshow.png</file>
+    <file>images/down.png</file>
+    <file>images/up.png</file>
     <file>../xpm/ToolBar/GIS/GIS_Control_Earth.png</file>
     <file>../xpm/ToolBar/GIS/GIS_Control_Earth2.png</file>
     <file>../xpm/ToolBar/GIS/GIS_Control_Layers.png</file>

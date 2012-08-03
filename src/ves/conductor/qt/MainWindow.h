@@ -64,6 +64,7 @@ class IconStack;
 class PluginSelectionTab;
 class Constraints;
 class RecentFiles;
+class CameraTab;
 
 namespace qt
 {
@@ -291,6 +292,8 @@ protected Q_SLOTS:
 
     void on_actionConstraints_triggered();
 
+    void on_actionShowCameraTab_triggered();
+
     /// Temporary slot to demonstrate qwtPlot integration
     void on_actionShowTestPlot_triggered();
 
@@ -356,6 +359,8 @@ private:
     ves::conductor::Constraints* m_constraintsTab;
 
     ves::conductor::RecentFiles* m_recentTab;
+
+    ves::conductor::CameraTab* m_cameraTab;
 
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)

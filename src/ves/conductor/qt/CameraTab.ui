@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CameraTab</class>
+ <widget class="QWidget" name="CameraTab">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>478</width>
+    <height>416</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <property name="margin">
+    <number>2</number>
+   </property>
+   <item>
+    <widget class="QCheckBox" name="m_pictureModeToggler">
+     <property name="text">
+      <string>Picture Mode On</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="m_showHideSettingsButton">
+       <property name="text">
+        <string>Show Camera Mode Settings</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="ves::conductor::GenericPropertyBrowser" name="m_overallSettings" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>50</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QToolButton" name="m_snapshotButton">
+         <property name="toolTip">
+          <string>Save snapshot from selected camera</string>
+         </property>
+         <property name="text">
+          <string>Save snapshot</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
+           <normaloff>:/images/camera.png</normaloff>:/images/camera.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="m_allSnapshotButton">
+         <property name="toolTip">
+          <string>Save snapshots from all cameras</string>
+         </property>
+         <property name="text">
+          <string>Save all snapshots</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
+           <normaloff>:/images/cameras.png</normaloff>:/images/cameras.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="m_presentationButton">
+         <property name="toolTip">
+          <string>Make OpenOffice presentation</string>
+         </property>
+         <property name="text">
+          <string>Presentation</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
+           <normaloff>:/images/slideshow.png</normaloff>:/images/slideshow.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="m_flythroughButton">
+         <property name="toolTip">
+          <string>Begin flythrough</string>
+         </property>
+         <property name="text">
+          <string>Flythrough</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
+           <normaloff>:/images/flythrough.png</normaloff>:/images/flythrough.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QListWidget" name="m_cameraListWidget"/>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QToolButton" name="m_addCameraButton">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
+           <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="m_removeCameraButton">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
+           <normaloff>:/images/remove.png</normaloff>:/images/remove.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="m_cameraUpButton">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
+           <normaloff>:/images/up.png</normaloff>:/images/up.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="m_cameraDownButton">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
+           <normaloff>:/images/down.png</normaloff>:/images/down.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="ves::conductor::GenericPropertyBrowser" name="m_perCameraSettings" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>100</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ves::conductor::GenericPropertyBrowser</class>
+   <extends>QWidget</extends>
+   <header>ves/conductor/qt/propertyBrowser/GenericPropertyBrowser.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>m_showHideSettingsButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_overallSettings</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>126</x>
+     <y>46</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>146</x>
+     <y>113</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pictureModeToggler</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_cameraListWidget</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>43</x>
+     <y>15</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>98</x>
+     <y>151</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pictureModeToggler</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_addCameraButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>388</x>
+     <y>14</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>456</x>
+     <y>137</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pictureModeToggler</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_removeCameraButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>324</x>
+     <y>11</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>442</x>
+     <y>190</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pictureModeToggler</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_cameraUpButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>324</x>
+     <y>13</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>442</x>
+     <y>235</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pictureModeToggler</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_cameraDownButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>289</x>
+     <y>8</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>450</x>
+     <y>291</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pictureModeToggler</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_allSnapshotButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>198</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>190</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pictureModeToggler</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_presentationButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>234</x>
+     <y>14</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>30</x>
+     <y>241</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pictureModeToggler</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_flythroughButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>250</x>
+     <y>11</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>25</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pictureModeToggler</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_perCameraSettings</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>14</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>253</x>
+     <y>337</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

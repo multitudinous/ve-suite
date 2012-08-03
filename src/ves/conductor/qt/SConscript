@@ -51,6 +51,9 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'RecentFiles.h')]
 cppSources += lib_env.qt_moc(source)
 
+source = [pj(buildSrcDir,'CameraTab.h')]
+cppSources += lib_env.qt_moc(source)
+
 #source = [pj(buildSrcDir,'QtLogChannel.h')]
 #cppSources += lib_env.qt_moc(source)
 
@@ -138,7 +141,7 @@ cppHeaders += lib_env.qt_uic(source)
 source = [pj(buildSrcDir,'plugin','PluginPorts.ui')]
 cppHeaders += lib_env.qt_uic(source)
 
-source = [pj(buildSrcDir,'CameraPlacementTool.ui')]
+source = [pj(buildSrcDir,'CameraTab.ui')]
 cppHeaders += lib_env.qt_uic(source)
 
 if minerva_options.isAvailable():
