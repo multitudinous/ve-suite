@@ -90,7 +90,9 @@ public:
     //META_Node( ves::xplorer::scenegraph::camera, CameraManager );
 
     ///Override the addChild function to only accept Cameras
-    virtual bool addChild( std::string const& name );
+    //FIXME? Changed signature of function with addition of uuid, so this is
+    //no longer an override. Is this important?
+    virtual bool addChild( const std::string &name, std::string const& uuid = "" );
 
     ///
     CameraObject* ConvertNodeToCameraObject( osg::Node* const node );
@@ -145,6 +147,9 @@ public:
     ///Override the setChild function to only accept Cameras
     virtual bool setChild( unsigned int i, CameraObject* node );
 
+    ///Returns a child camera object based on UUID
+    CameraObject* GetCameraObject( const std::string& uuid );
+
     ///
     void SetProjectionEffectOpacity( double const& value );
 
@@ -153,6 +158,9 @@ public:
 
     ///Write the images for the active camera only
     void WriteActiveCameraImageFile( std::string const& saveImageDir );
+
+    ///Write image for a particular camera, not necessarily the active one
+    void WriteCameraImageFile( std::string const& uuid, std::string const& saveImageDir );
 
     ///Send camera manager data to conductor to enable the gui
     ///to be in sync with Xplorer
@@ -218,6 +226,8 @@ private:
 
     ///The directory for storing images
     std::string m_imageDir;
+
+    std::map< std::string, CameraObject* > m_cameraMap;
 };
 } //end camera
 } //end scenegraph

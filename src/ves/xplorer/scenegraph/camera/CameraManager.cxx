@@ -133,7 +133,7 @@ CameraManager::~CameraManager()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraManager::addChild( std::string const& name )
+bool CameraManager::addChild( const std::string &name, std::string const& uuid )
 {
     osg::ref_ptr< CameraObject > cameraObject =
         new CameraObject( m_projectionTechnique, m_texGenNode.get() );
@@ -145,10 +145,14 @@ bool CameraManager::addChild( std::string const& name )
     ///We need to rotate the camera geometry 90 initially so that the geometry
     ///is in VR Juggler space (y up) so that when the view matrix is multiplied
     ///in the 90 is taken back out.
+    //2012-08-03: RPT: this transform no longer appears to be necessary, so has
+    //been commented out. It's unclear to me why this has changed, so tagging
+    //this as #Suspicous.
     myMat = ves::xplorer::scenegraph::SceneManager::instance()->
-            GetGlobalViewMatrix() * myMat;
+            GetGlobalViewMatrix();// * myMat;
     dcs.SetMat( myMat );
 
+    m_cameraMap[ uuid ] = cameraObject.get();
     return osg::Group::addChild( cameraObject.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -156,6 +160,17 @@ CameraObject* CameraManager::ConvertNodeToCameraObject(
     osg::Node* const node )
 {
     return dynamic_cast< CameraObject* >( node );
+}
+////////////////////////////////////////////////////////////////////////////////
+CameraObject* CameraManager::GetCameraObject( const std::string &uuid )
+{
+    std::map< std::string, CameraObject* >::const_iterator itr =
+            m_cameraMap.find( uuid );
+    if( itr != m_cameraMap.end() )
+    {
+        return itr->second;
+    }
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::DisplayProjectionEffect(
@@ -285,11 +300,13 @@ void CameraManager::removeChildren()
 
     SetActiveCameraObject( NULL );
 
+    m_cameraMap.clear();
     _children.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraManager::replaceChild( CameraObject* origChild, CameraObject* newChild )
 {
+    //TODO: Not sure what should happen to m_cameraMap in this case
     return osg::Group::replaceChild( origChild, newChild );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -350,7 +367,8 @@ void CameraManager::SetCameraViewQuadResolution( unsigned int const& scale )
 {
     if( SceneManager::instance()->IsDesktopMode() )
     {
-        m_rttQuadTransform->setScale( osg::Vec3( scale, scale, 1.0 ) );
+        // 0.56 coeff approximates 16:9 display, which is default camera setting
+        m_rttQuadTransform->setScale( osg::Vec3( scale, 0.56 * scale, 1.0 ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -378,7 +396,8 @@ osg::Geode* CameraManager::CreateMasterCameraQuad()
         ( *cameraViewQuadVertices )[ 3 ].set( 0.0, 1.0, 0.0 );
 
         //Set initial scale to match quad size in UI
-        m_rttQuadTransform->setScale( osg::Vec3( 300.0, 300.0, 1.0 ) );
+        // 300x168 approximates 16:9, which is default camera aspect ratio
+        m_rttQuadTransform->setScale( osg::Vec3( 300.0, 168.0, 1.0 ) );
     }
     else
     {
@@ -543,6 +562,22 @@ void CameraManager::WriteActiveCameraImageFile( std::string const& saveImageDir 
     if( activeCameraObject )
     {
         activeCameraObject->WriteImageFile( m_imageDir );
+        m_isTakingScreenCap = true;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraManager::WriteCameraImageFile( std::string const& uuid, std::string const& saveImageDir )
+{
+    if( !saveImageDir.empty() )
+    {
+        m_imageDir = saveImageDir;
+    }
+
+    scenegraph::camera::CameraObject* const cameraObject =
+            GetCameraObject( uuid );
+    if( cameraObject )
+    {
+        cameraObject->WriteImageFile( m_imageDir );
         m_isTakingScreenCap = true;
     }
 }
