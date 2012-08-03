@@ -78,6 +78,7 @@
 #include <ves/xplorer/event/environment/CameraPlacementEventHandler.h>
 
 #include <ves/xplorer/event/environment/EnvironmentSlots.h>
+#include <ves/xplorer/event/environment/CameraPlacementSlots.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -258,6 +259,80 @@ EnvironmentHandler::EnvironmentHandler()
                            &ves::xplorer::event::environment::UpdateBackgroundColor,
                            m_connections, any_SignalType, normal_Priority );
 
+    // Camera Placement events
+    CONNECTSIGNALS_STATIC( "%DisableCameraTools",
+                           void( bool ),
+                           &ves::xplorer::event::environment::DisableCameraTools,
+                           m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNALS_STATIC( "%AddCamera",
+                           void( const std::string&, const std::string& ),
+                           &ves::xplorer::event::environment::AddCamera,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%RemoveCamera",
+                           void( const std::string& uuid ),
+                           &ves::xplorer::event::environment::RemoveCamera,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SelectCamera",
+                           void( const std::string& ),
+                           &ves::xplorer::event::environment::SelectCamera,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%ChangeCameraName",
+                           void( const std::string&, const std::string& ),
+                           &ves::xplorer::event::environment::ChangeCameraName,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%CameraManagerOn",
+                           void( bool ),
+                           &ves::xplorer::event::environment::CameraManagerOn,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%CameraWindowOn",
+                           void( bool ),
+                           &ves::xplorer::event::environment::CameraWindowOn,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%CameraWindowResolution",
+                           void( int ),
+                           &ves::xplorer::event::environment::CameraWindowResolution,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%PictureModeOn",
+                           void( bool ),
+                           &ves::xplorer::event::environment::PictureModeOn,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SaveCameraImage",
+                           void( const std::string& ),
+                           &ves::xplorer::event::environment::SaveCameraImage,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SaveAllCameraImages",
+                           void(  ),
+                           &ves::xplorer::event::environment::SaveAllCameraImages,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%CameraAutoComputeFarPlane",
+                           void( const std::string&, bool ),
+                           &ves::xplorer::event::environment::CameraAutoComputeFarPlane,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%ShowCameraGeometry",
+                           void( const std::string&, bool ),
+                           &ves::xplorer::event::environment::ShowCameraGeometry,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%ShowCameraFrustumGeometry",
+                           void( const std::string&, bool ),
+                           &ves::xplorer::event::environment::ShowCameraFrustumGeometry,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%CameraProjectionUpdate",
+                           void( const std::string& ),
+                           &ves::xplorer::event::environment::CameraProjectionUpdate,
+                           m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()
