@@ -445,20 +445,25 @@ void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
         newSelectedDCS->SetTechnique( "Select" );
     }
 
-    vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
+
+
+    vprDEBUG( vesDBG, 1 ) << "|\tObject has name "
                           << vesObject->getName()
                           << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
+    vprDEBUG( vesDBG, 1 ) << "|\tObject's descriptors "
                           << vesObject->getDescriptions().at( 1 )
-                          << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 1 ) << "|\tObject is part of model "
-                          << newSelectedDCS->GetModelData()->GetID()
                           << std::endl << vprDEBUG_FLUSH;
 
     // Change the active model to the one corresponding to this piece of geometry
-    ves::xplorer::ModelHandler::instance()->
-    SetActiveModel( newSelectedDCS->GetModelData()->GetID() );
-
+    ves::open::xml::model::ModelPtr model = newSelectedDCS->GetModelData();
+    if( model )
+    {
+        vprDEBUG( vesDBG, 1 ) << "|\tObject is part of model "
+                              << newSelectedDCS->GetModelData()->GetID()
+                              << std::endl << vprDEBUG_FLUSH;
+        ves::xplorer::ModelHandler::instance()->
+            SetActiveModel( newSelectedDCS->GetModelData()->GetID() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::ClearPointConstraint()
