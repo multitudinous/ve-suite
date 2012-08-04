@@ -401,6 +401,30 @@ bdfx_options = fp_option.FlagPollBasedOption("backdropFX",
                                                   compileTest=True, headerToCheck="backdropFX/Effect.h")
 AppendOptions( opts, options, bdfx_options )
 
+switchwire_options = fp_option.FlagPollBasedOption("switchire",
+                                                  "switchwire", "0.2.0", True, True,
+                                                  None,
+                                                  compileTest=True, headerToCheck="eventmanager/Exports.h")
+AppendOptions( opts, options, switchwire_options )
+
+crunchstore_options = fp_option.FlagPollBasedOption("crunchstore",
+                                                  "crunchstore", "0.2.0", True, True,
+                                                  None,
+                                                  compileTest=True, headerToCheck="Persistence/ExportConfig.h")
+AppendOptions( opts, options, crunchstore_options )
+
+propertystore_options = fp_option.FlagPollBasedOption("propertystore",
+                                                  "propertystore", "0.2.0", True, True,
+                                                  None,
+                                                  compileTest=True, headerToCheck="PropertySetBrowser/Exports.h")
+AppendOptions( opts, options, propertystore_options )
+
+storyteller_options = fp_option.FlagPollBasedOption("storyteller",
+                                                  "storyteller", "0.2.0", True, True,
+                                                  None,
+                                                  compileTest=True, headerToCheck="snap/Exports.h")
+AppendOptions( opts, options, storyteller_options )
+
 #Setup qt on linux
 if GetPlatform() != 'darwin':
    qt_options = fp_option.FlagPollBasedOption("Qt libraries",
@@ -426,7 +450,9 @@ Export( 'opts', 'vtk_options', 'osg_options',
 	    'minerva_options',
         'osgbullet_options', 
         #'osgbulletplus_options',
-        'bdfx_options', 'lemon_options'
+        'bdfx_options', 'lemon_options',
+        'switchwire_options','crunchstore_options',
+        'storyteller_options','propertystore_options'
         #, 'mongo_options'
 	)
 
