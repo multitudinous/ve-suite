@@ -227,6 +227,7 @@ function unsetvars()
   unset SOURCE_REVISION
   unset GIT_BRANCH_VERSION
   unset PREBUILD_METHOD
+  unset FPC_FILE
 }
 
 #

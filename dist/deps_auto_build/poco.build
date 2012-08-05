@@ -62,6 +62,9 @@ case $PLATFORM in
                     cp -R ../Net/include ${INSTALL_DIR}/. && cp -R ../Data/include ${INSTALL_DIR}/. && \
                     cp -R ../Data/SQLite/include ${INSTALL_DIR}/. && \
                     cp -R ../bin64 ${INSTALL_DIR}/bin && cp -R ../lib64 ${INSTALL_DIR}/lib "
+    
+    SKIP_FPC_INSTALL="no"
+    FPC_FILE=POCO.fpc
     ;;
   Darwin)
     SOURCE_URL=http://sourceforge.net/projects/poco/files/sources/poco-1.4.3/poco-1.4.3p1-all.tar.gz

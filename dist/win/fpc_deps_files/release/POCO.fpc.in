@@ -7,7 +7,7 @@ Name: POCO
 Description: POCO release pre-compiled for VES
 Provides: POCO
 Requires: 
-Version: 1.4.1
+Version: 1.4.3
 Libs: /libpath:"${libdir}" PocoData.lib PocoFoundation.lib PocoDataSQLite.lib
 Cflags: /I"${includedir}"
 Arch: noarch
