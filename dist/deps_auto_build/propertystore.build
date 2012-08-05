@@ -27,13 +27,14 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DPOCO_PocoUtil_LIBRARY="${POCO_INSTALL_DIR}/lib/PocoUtil.lib" )
     CMAKE_PARAMS+=( -DPOCO_PocoData_LIBRARY="${POCO_INSTALL_DIR}/lib/PocoData.lib" )
 
+    CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.0_x64/bin/qmake.exe" )
     MSVC_CONFIG=RelWithDebInfo
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else
       MSVC_PLATFORM=x64
     fi
-    MSVC_SOLUTION="crunchstore.sln"
+    MSVC_SOLUTION="propertystore.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
   Darwin)

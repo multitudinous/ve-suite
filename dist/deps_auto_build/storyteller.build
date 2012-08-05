@@ -30,7 +30,7 @@ case $PLATFORM in
     else
       MSVC_PLATFORM=x64
     fi
-    MSVC_SOLUTION="crunchstore.sln"
+    MSVC_SOLUTION="storyteller.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
   Darwin)
