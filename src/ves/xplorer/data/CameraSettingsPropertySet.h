@@ -68,10 +68,10 @@ private:
     ///Create the skeleton
     void CreateSkeleton();
 
-    bool NearValidator( PropertyPtr& property, boost::any newValue );
-    bool FarValidator( PropertyPtr& property, boost::any newValue );
+    bool NearValidator( PropertyPtr& propertyPtr, boost::any newValue );
+    bool FarValidator( PropertyPtr& propertyPtr, boost::any newValue );
 
-    void ProjectionChanged( PropertyPtr& );
+    void ProjectionChanged( PropertyPtr& propertyPtr );
 
     ves::util::StringSignal_type m_projectionChangedSignal;
 

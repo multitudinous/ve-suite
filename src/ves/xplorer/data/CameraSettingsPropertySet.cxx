@@ -166,27 +166,27 @@ void CameraSettingsPropertySet::EnableLiveProperties( bool live )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraSettingsPropertySet::NearValidator( PropertyPtr& property, boost::any newValue )
+bool CameraSettingsPropertySet::NearValidator( PropertyPtr&, boost::any newValue )
 {
-    double near = boost::any_cast< double >( newValue );
-    double far = boost::any_cast< double >( GetPropertyValue( "Projection_FarPlane" ) );
+    double nearVal = boost::any_cast< double >( newValue );
+    double farVal = boost::any_cast< double >( GetPropertyValue( "Projection_FarPlane" ) );
 
-    if( !(near < far) )
+    if( !(nearVal < farVal) )
     {
-        SetPropertyValue( "Projection_FarPlane", near + 0.1 );
+        SetPropertyValue( "Projection_FarPlane", nearVal + 0.1 );
     }
 
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraSettingsPropertySet::FarValidator( PropertyPtr& property, boost::any newValue )
+bool CameraSettingsPropertySet::FarValidator( PropertyPtr&, boost::any newValue )
 {
-    double near = boost::any_cast< double >( GetPropertyValue( "Projection_NearPlane" ) );
-    double far = boost::any_cast< double >( newValue );
+    double nearVal = boost::any_cast< double >( GetPropertyValue( "Projection_NearPlane" ) );
+    double farVal = boost::any_cast< double >( newValue );
 
-    if( !(near < far) )
+    if( !(nearVal < farVal) )
     {
-        SetPropertyValue( "Projection_NearPlane", near - 0.1 );
+        SetPropertyValue( "Projection_NearPlane", nearVal - 0.1 );
     }
 
     return true;
