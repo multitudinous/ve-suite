@@ -51,6 +51,10 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/OneDIntArray.h>
 
+#include <osgwMx/MxCore.h>
+
+#include <osg/io_utils>
+
 // --- vrJuggler Includes --- //
 #include <vpr/System.h>
 
@@ -87,10 +91,7 @@ NavigationAnimationEngine::NavigationAnimationEngine()
     mSetCenterPoint( false ),
     mCenterPointDCS( 0 )
 {
-    mEventHandlers[ std::string( "QC_LOAD_STORED_POINTS" ) ] =
-        new ves::xplorer::event::QuatCamLoadFileEventHandler();
-    mEventHandlers[ std::string( "QC_CLEAR_QUAT_DATA" ) ] =
-        new ves::xplorer::event::QuatCamClearDataEventHandler();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 NavigationAnimationEngine::~NavigationAnimationEngine()
@@ -140,15 +141,22 @@ void NavigationAnimationEngine::PreFrameUpdate()
     gmtl::Vec3d tempVec;
     gmtl::Vec3d curVec;
 
+    osgwMx::MxCore& core = 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
+    osg::Matrixd currentView = core.getInverseMatrix();
+
     //osg vec to gmtl vec
-    double* temp = _worldDCS->GetVETranslationArray();
+    //double* temp = _worldDCS->GetVETranslationArray();
+    osg::Vec3d temp = currentView.getTrans();
     for( int i = 0; i < 3; ++i )
     {
         curVec[ i ] = temp[ i ];
     }
 
     //convert osg quat to gmtl quat
-    osg::Quat tempWorldQuat = _worldDCS->GetQuat();
+    //osg::Quat tempWorldQuat = _worldDCS->GetQuat();
+    osg::Quat tempWorldQuat = currentView.getRotate();
+    
     gmtl::Quatd tempQuat( tempWorldQuat[0], tempWorldQuat[1],
                           tempWorldQuat[2], tempWorldQuat[3] );
 
@@ -182,19 +190,28 @@ void NavigationAnimationEngine::PreFrameUpdate()
     gmtl::slerp( tempResQuat, t, tempQuat, mEndQuat );
 
     //convert gmtl vec to double *
-    double tempConvVec[3] ;
+    /*double tempConvVec[3] ;
     tempConvVec[0] = tempVec[0];
     tempConvVec[1] = tempVec[1];
-    tempConvVec[2] = tempVec[2];
+    tempConvVec[2] = tempVec[2];*/
+    osg::Vec3d posVec;
+    posVec[ 0 ] = tempVec[0];
+    posVec[ 1 ] = tempVec[1];
+    posVec[ 2 ] = tempVec[2];
 
-    _worldDCS->SetTranslationArray( tempConvVec );
-
+    //_worldDCS->SetTranslationArray( tempConvVec );
+    //core.setPosition( posVec );
+    currentView.setTrans( posVec );
+    
     //convert gmtl quat to osg quat
     osg::Quat tempOSGQuat(
         tempResQuat[0], tempResQuat[1], tempResQuat[2], tempResQuat[3] );
-
+    currentView.setRotate( tempOSGQuat );
+    
     //rotate and translate
-    _worldDCS->SetQuat( tempOSGQuat );
+    //_worldDCS->SetQuat( tempOSGQuat );
+    core.setByInverseMatrix( currentView );
+    
     if( mSetCenterPoint == true && !mBeginAnim )
     {
         //Move the center point to the center of the selected object
@@ -212,7 +229,7 @@ void NavigationAnimationEngine::PreFrameUpdate()
             mCenterPointDCS->getBound().center() * tempMatrix;
         gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
         ves::xplorer::DeviceHandler::instance()->
-        SetCenterPoint( &tempCenter );
+            SetCenterPoint( &tempCenter );
     }
 
     m_frameTimer->reset();
@@ -240,7 +257,11 @@ void NavigationAnimationEngine::SetAnimationEndPoints(
     //Set up the interval constant
     gmtl::Vec3d curVec;
     //osg vec to gmtl vec
-    double* temp = _worldDCS->GetVETranslationArray();
+    //double* temp = _worldDCS->GetVETranslationArray();
+    osgwMx::MxCore& core = 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
+    osg::Vec3d temp = core.getInverseMatrix().getTrans();
+
     for( int i = 0; i < 3; ++i )
     {
         curVec[ i ] = temp[ i ];

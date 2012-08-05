@@ -124,8 +124,6 @@ private:
     ///Update the gui with the new data
     void UpdateViewGUIPointData();
 
-    ///Map of event handlers for texture-based vis
-    std::map< std::string, ves::xplorer::event::EventHandler* > mEventHandlers;
     ///
     double t;
     ///

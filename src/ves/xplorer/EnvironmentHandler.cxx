@@ -484,7 +484,7 @@ void EnvironmentHandler::PreFrameUpdate()
         ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
     }*/
 
-    ves::xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
+    //ves::xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
     ves::xplorer::NavigationAnimationEngine::instance()->PreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
