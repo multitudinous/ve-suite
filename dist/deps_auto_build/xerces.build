@@ -27,9 +27,9 @@ case $PLATFORM in
     #POST_RETRIEVAL_METHOD="mkdir -p ${INSTALL_DIR} && mv ./bin ${INSTALL_DIR}/. && mv ./lib ${INSTALL_DIR}/. && mv ./include ${INSTALL_DIR}/. && mv ./share ${INSTALL_DIR}/."
     unset PROJ_STR
     unset BUILD_TARGET
-    unset BUILD_DIR
-    unset PREBUILD_METHOD
-    unset BUILD_METHOD
+    #unset BUILD_DIR
+    PREBUILD_METHOD=none
+    BUILD_METHOD=none
     ;;
   Darwin)
     PREBUILD_METHOD=configure
