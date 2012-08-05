@@ -35,11 +35,11 @@ case $PLATFORM in
     if [ "$ARCH" = "64-bit" ]; then
       #SCONS_PARAMS+=( MSVS_ARCH=amd64 )
       #SCONS_PARAMS+=( var_arch=x64 )
-      MSVC_PLATFORM=Win32
+      MSVC_PLATFORM=x64
     else
       #SCONS_PARAMS+=( MSVS_ARCH=x86 )
       #SCONS_PARAMS+=( var_arch=ia32 )
-      MSVC_PLATFORM=x64
+      MSVC_PLATFORM=Win32
     fi
     #BUILD_TARGET=install
     MSVC_SOLUTION="cppdom.sln"
