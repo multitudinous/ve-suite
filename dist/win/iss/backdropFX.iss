@@ -54,13 +54,13 @@ Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
 Source: {#VESAUTODEPSDIR}\{#BDFXDIRNAME}\{#VESINSTALLDIR}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#VESAUTODEPSDIR}\{#BDFXDIRNAME}\{#VESINSTALLDIR}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#BDFXDIRNAME}\{#VESINSTALLDIR}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VESAUTODEPSDIR}\{#BDFXDIRNAME}\{#VESINSTALLDIR}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 ;Source: {#VESAUTODEPSDIR}\{#BDFXDIRNAME}\{#VESINSTALLDIR}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VESAUTODEPSDIR}\{#BDFXDIRNAME}\{#VESINSTALLDIR}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\backdropfx.fpc.in; DestDir: {app}\lib\flagpoll; DestName: backdropfx.fpc; Languages: ; Flags: ignoreversion
+;Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\backdropfx.fpc.in; DestDir: {app}\lib\flagpoll; DestName: backdropfx.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 

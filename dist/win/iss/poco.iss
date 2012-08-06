@@ -4,7 +4,7 @@
   #include <vesenv.iss>
 #endif
 
-#define MyAppVer "1.4.1"
+#define MyAppVer "1.4.3"
 #define MyAppName "POCO Pre-Compile"
 #define MyAppVerName "POCO"
 #define MyAppPublisher "VERG"
@@ -54,30 +54,16 @@ Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
 ; includes
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\Foundation\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\XML\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\Util\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\Zip\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\Data\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\Data\MySQL\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\Data\ODBC\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\Data\SQLite\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
+Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\{#VESINSTALLDIR}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+; libs
+Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\{#VESINSTALLDIR}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+; dlls
+Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\{#VESINSTALLDIR}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 
-#ifdef x64
-; libs
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\lib64\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-; dlls
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\bin64\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-#else
-; libs
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-; dlls
-Source: {#VESAUTODEPSDIR}\{#POCODIRNAME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-#endif
 ;Source: {#SQLITEHOME}\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\POCO.fpc.in; DestDir: {app}\lib\flagpoll; DestName: POCO.fpc; Languages: ; Flags: ignoreversion
+;Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\POCO.fpc.in; DestDir: {app}\lib\flagpoll; DestName: POCO.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}

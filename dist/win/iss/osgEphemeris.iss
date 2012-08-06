@@ -56,11 +56,11 @@ Name: eng; MessagesFile: compiler:Default.isl
 ;Data for binary download
 ;Source: {#OSGEPHEMERISSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VESAUTODEPSDIR}\{#OSGEPHEMERISDIRNAME}\{#VESINSTALLDIR}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#VESAUTODEPSDIR}\{#OSGEPHEMERISDIRNAME}\{#VESINSTALLDIR}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#VESAUTODEPSDIR}\{#OSGEPHEMERISDIRNAME}\{#VESINSTALLDIR}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VESAUTODEPSDIR}\{#OSGEPHEMERISDIRNAME}\{#VESINSTALLDIR}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VESAUTODEPSDIR}\{#OSGEPHEMERISDIRNAME}\{#VESINSTALLDIR}\..\doc\*.jpg; DestDir: {app}\share\osgEphemeris; Flags: ignoreversion recursesubdirs; 
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgephemeris.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgephemeris.fpc; Languages: ; Flags: ignoreversion
+;Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgephemeris.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgephemeris.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 

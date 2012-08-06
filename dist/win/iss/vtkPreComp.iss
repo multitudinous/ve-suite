@@ -4,7 +4,7 @@
   #include <vesenv.iss>
 #endif
 
-#define MyAppVer "5.8.0"
+#define MyAppVer "5.10.0"
 #define MyAppName "VTK Pre-Compile"
 #define MyAppVerName "VTK"
 #define MyAppPublisher "VERG"
@@ -54,8 +54,9 @@ Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
 Source: {#VESAUTODEPSDIR}\{#VTKDIRNAME}\{#VESINSTALLDIR}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#VESAUTODEPSDIR}\{#VTKDIRNAME}\{#VESINSTALLDIR}\lib\*lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#VTKDIRNAME}\{#VESINSTALLDIR}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VESAUTODEPSDIR}\{#VTKDIRNAME}\{#VESINSTALLDIR}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\VTK.fpc.in; DestDir: {app}\lib\flagpoll; DestName: VTK.fpc; Languages: ; Flags: ignoreversion

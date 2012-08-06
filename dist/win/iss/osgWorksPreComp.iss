@@ -56,11 +56,11 @@ Name: eng; MessagesFile: compiler:Default.isl
 ;Data for binary download
 Source: {#VESAUTODEPSDIR}\{#OSGWORKSDIRNAME}\{#VESINSTALLDIR}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VESAUTODEPSDIR}\{#OSGWORKSDIRNAME}\{#VESINSTALLDIR}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#VESAUTODEPSDIR}\{#OSGWORKSDIRNAME}\{#VESINSTALLDIR}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#VESAUTODEPSDIR}\{#OSGWORKSDIRNAME}\{#VESINSTALLDIR}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VESAUTODEPSDIR}\{#OSGWORKSDIRNAME}\{#VESINSTALLDIR}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VESAUTODEPSDIR}\{#OSGWORKSDIRNAME}\{#VESINSTALLDIR}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgworks.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgworks.fpc; Languages: ; Flags: ignoreversion
+;Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgworks.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgworks.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 

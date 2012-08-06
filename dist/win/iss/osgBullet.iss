@@ -54,13 +54,13 @@ Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
 Source: {#VESAUTODEPSDIR}\{#OSGBULLETDIRNAME}\{#VESINSTALLDIR}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#VESAUTODEPSDIR}\{#OSGBULLETDIRNAME}\{#VESINSTALLDIR}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#OSGBULLETDIRNAME}\{#VESINSTALLDIR}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VESAUTODEPSDIR}\{#OSGBULLETDIRNAME}\{#VESINSTALLDIR}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VESAUTODEPSDIR}\{#OSGBULLETDIRNAME}\{#VESINSTALLDIR}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs
 ; Source: {#OSGBULLETSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgbullet.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgbullet.fpc; Languages: ; Flags: ignoreversion
+;Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgbullet.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgbullet.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 

@@ -93,7 +93,7 @@ Source: {#VESAUTODEPSDIR}\{#COIN3DDIRNAME}\{#VESINSTALLDIR}\lib\*.lib; DestDir: 
 Source: {#VESAUTODEPSDIR}\{#COIN3DDIRNAME}\{#VESINSTALLDIR}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 ;#endif
 ;FPC file integration
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\OSG.fpc.in; DestDir: {app}\lib\flagpoll; DestName: OSG.fpc; Languages: ; Flags: ignoreversion
+;Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\OSG.fpc.in; DestDir: {app}\lib\flagpoll; DestName: OSG.fpc; Languages: ; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 
