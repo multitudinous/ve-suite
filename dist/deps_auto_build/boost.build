@@ -46,7 +46,7 @@ case $PLATFORM in
     BJAM_PARAMS+=( toolset=darwin )
     ;;
   Linux)
-    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.50.1/boost_1_50_0.tar.bz2
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.50.0/boost_1_50_0.tar.bz2
     SOURCE_FORMAT=bz2
 
     BJAM_PREBUILD=./bootstrap.sh
