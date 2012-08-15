@@ -1,6 +1,7 @@
 <RCC>
   <qresource>
     <file>images/flythrough.png</file>
+    <file>images/flythroughLoop.png</file>
     <file>images/camera.png</file>
     <file>images/cameras.png</file>
     <file>images/slideshow.png</file>

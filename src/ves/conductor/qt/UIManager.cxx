@@ -144,6 +144,12 @@ UIManager::UIManager() :
     CONNECTSIGNALS_0( "%HideShowUI%", void (), &UIManager::ToggleVisibility, mConnections,
                       any_SignalType, highest_Priority );
 
+    CONNECTSIGNALS_0( "%FlythroughBegin", void (), &UIManager::HideAllElements, mConnections,
+                      any_SignalType, highest_Priority );
+
+    CONNECTSIGNALS_0( "%FlythroughEnd", void (), &UIManager::ShowAllElements, mConnections,
+                      any_SignalType, highest_Priority );
+
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool ( int, int, int, int ),
                                ves::xplorer::eventmanager::BooleanPropagationCombiner,
                                &UIManager::MouseMoveEvent, mInputConnections,
@@ -375,9 +381,9 @@ void UIManager::HideAllElements()
     mHide = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIManager::ShowAllElements( bool showOnlyActive )
+void UIManager::ShowAllElements( /*bool showOnlyActive*/ )
 {
-    boost::ignore_unused_variable_warning( showOnlyActive );
+    //boost::ignore_unused_variable_warning( showOnlyActive );
     // May not be able to touch scenegraph directly at the moment;
     // Set show flag to be discovered during update
     mShow = true;

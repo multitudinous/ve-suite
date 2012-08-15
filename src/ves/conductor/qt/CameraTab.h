@@ -38,6 +38,7 @@ private Q_SLOTS:
     void on_m_allSnapshotButton_clicked();
     void on_m_presentationButton_clicked();
     void on_m_flythroughButton_clicked();
+    void on_m_loopingFlythroughButton_toggled( bool flag );
     void on_m_cameraListWidget_currentItemChanged( QListWidgetItem* current,
                                                    QListWidgetItem*  );
     
@@ -53,11 +54,17 @@ private:
 
     int m_monotonicCount;
 
+    std::vector< std::string > m_flythroughList;
+
     ///When true, we emit signal to notify of active camera selection change.
     ///List order changes cause two selections in quick succession, neither of
     ///which should be treated as an actual change in the active camera. This
     ///flag lets us suppress those changes.
     bool m_notifyCameraChange;
+
+    ///Stores state of camera window before flythrough so state can be reset
+    ///when flythrough ends
+    bool m_cameraWindowEnabled;
 
     ///Logger reference
     Poco::Logger& m_logger;
@@ -68,11 +75,22 @@ private:
     ///Required to connect to EventManagered signals
     ves::xplorer::eventmanager::ScopedConnectionList m_connections;
 
+    ///Connections list used only for "FlythroughEnd" signal. This gets its
+    ///own list because we want to be able to easily disconnect from this one
+    ///signal.
+    ves::xplorer::eventmanager::ScopedConnectionList m_flythroughConnections;
+
     ves::util::TwoStringSignal_type m_addCameraSignal;
     ves::util::StringSignal_type m_selectCameraSignal;
     ves::util::StringSignal_type m_saveCameraImageSignal;
     ves::util::VoidSignal_type m_saveAllCameraImagesSignal;
     ves::util::StringSignal_type m_removeCameraSignal;
+    boost::signals2::signal< void (const std::vector<std::string>&) > m_flythroughSignal;
+    ves::util::VoidSignal_type m_endFlythroughSignal;
+    ves::util::BoolSignal_type m_loopFlythroughSignal;
+
+    ///Connected to "FlythroughEnd" signal
+    void FlythroughHasEnded();
 
 };
 

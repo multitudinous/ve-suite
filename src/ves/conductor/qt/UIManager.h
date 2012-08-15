@@ -152,7 +152,7 @@ public:
     void HideAllElements();
 
     ///Show all UI elements
-    void ShowAllElements( bool showOnlyActive = true );
+    void ShowAllElements( /*bool showOnlyActive = true*/ );
 
     /// Toggle visibility of all UI elements; that is, hide the entire UI branch
     /// if it is currently visible, and show it if it is currently hidden.

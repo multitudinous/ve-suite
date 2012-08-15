@@ -58,20 +58,30 @@ CameraTab::CameraTab(QWidget *parent) :
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_saveAllCameraImagesSignal ),
         "CameraTab.SaveAllCameraImages" );
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< boost::signals2::signal< void (const std::vector<std::string>&) > >( &m_flythroughSignal ),
+        "CameraTab.BeginFlythrough" );
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_endFlythroughSignal ),
+        "CameraTab.EndFlythrough" );
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_loopFlythroughSignal ),
+        "CameraTab.LoopFlythrough" );
+
 
     CONNECTSIGNALS_1( "%PictureModeOn",
                     void( bool ),
                     &ves::conductor::CameraTab::PictureModeOn,
                     m_connections, any_SignalType, normal_Priority );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 CameraTab::~CameraTab()
 {
     delete ui;
     delete m_perCameraSettingsBrowser;
     delete m_overallSettingsBrowser;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void CameraTab::PictureModeOn( bool flag )
 {
     // There is a hidden checkbox on the ui form that is set up in the .ui file
@@ -79,7 +89,7 @@ void CameraTab::PictureModeOn( bool flag )
     // CameraTab.ui to change which widgets get toggled.
     ui->m_pictureModeToggler->setChecked( flag );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_cameraListWidget_currentItemChanged(
         QListWidgetItem* current, QListWidgetItem* )
 {
@@ -106,7 +116,7 @@ void CameraTab::on_m_cameraListWidget_currentItemChanged(
     ui->m_perCameraSettings->RefreshContents();
     ui->m_perCameraSettings->show();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_addCameraButton_clicked()
 {
     QString name("Camera");
@@ -128,7 +138,7 @@ void CameraTab::on_m_addCameraButton_clicked()
     ui->m_cameraListWidget->addItem( cameraItem );
     ui->m_cameraListWidget->setCurrentItem( cameraItem );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_removeCameraButton_clicked()
 {
     QListWidgetItem* item = ui->m_cameraListWidget->currentItem();
@@ -145,7 +155,7 @@ void CameraTab::on_m_removeCameraButton_clicked()
     delete item;
     m_removeCameraSignal( uuid );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_cameraUpButton_clicked()
 {
     int currentRow = ui->m_cameraListWidget->currentRow();
@@ -164,7 +174,7 @@ void CameraTab::on_m_cameraUpButton_clicked()
 
     m_notifyCameraChange = true;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_cameraDownButton_clicked()
 {
     int currentRow = ui->m_cameraListWidget->currentRow();
@@ -183,7 +193,7 @@ void CameraTab::on_m_cameraDownButton_clicked()
 
     m_notifyCameraChange = true;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_snapshotButton_clicked()
 {
     if( !ui->m_pictureModeToggler->isChecked() )
@@ -199,20 +209,77 @@ void CameraTab::on_m_snapshotButton_clicked()
         m_saveCameraImageSignal( "PICTURE_MODE" );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_allSnapshotButton_clicked()
 {
     m_saveAllCameraImagesSignal();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_presentationButton_clicked()
 {
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_flythroughButton_clicked()
 {
+    if( ui->m_cameraListWidget->count() == 0 )
+    {
+        return;
+    }
 
+    for( int index = 0; index < ui->m_cameraListWidget->count(); ++index )
+    {
+        QListWidgetItem* item = ui->m_cameraListWidget->item( index );
+        std::string uuid = item->data( Qt::UserRole ).toString().toStdString();
+        m_flythroughList.push_back( uuid );
+    }
+
+    // Hide all camera and frustum geometry
+    if( m_overallSet )
+    {
+        m_overallSet->SetPropertyValue( "DisableCameraTools", true );
+
+        // Hide the camera window, but remember what its setting was beforehand
+        m_cameraWindowEnabled = boost::any_cast< bool >( m_overallSet->GetPropertyValue( "CameraWindow" ) );
+        m_overallSet->SetPropertyValue( "CameraWindow", false );
+    }
+
+    // Request notification when flythrough is done so we can undo hiding camera
+    // geometry and such
+    CONNECTSIGNALS_0( "%FlythroughEnd",
+                    void( ),
+                    &ves::conductor::CameraTab::FlythroughHasEnded,
+                    m_flythroughConnections, any_SignalType, normal_Priority );
+
+    m_flythroughSignal( m_flythroughList );
 }
+////////////////////////////////////////////////////////////////////////////////
+void CameraTab::on_m_loopingFlythroughButton_toggled( bool flag )
+{
+    if( flag )
+    {
+        m_loopFlythroughSignal( true );
+        on_m_flythroughButton_clicked();
+    }
+    else
+    {
+        m_loopFlythroughSignal( false );
+        m_endFlythroughSignal();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraTab::FlythroughHasEnded()
+{
+    m_flythroughList.clear();
 
+    m_flythroughConnections.DropConnections();
+
+    if( m_overallSet )
+    {
+        m_overallSet->SetPropertyValue( "DisableCameraTools", false );
+        m_overallSet->SetPropertyValue( "CameraWindow",
+                                        m_cameraWindowEnabled );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 }} // ves::conductor
