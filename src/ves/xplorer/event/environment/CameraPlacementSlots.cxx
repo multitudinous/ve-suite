@@ -227,6 +227,69 @@ void SelectCamera( const std::string& uuid )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void BeginFlythrough( const std::vector< std::string >& cameraUUIDList )
+{
+    if( cameraUUIDList.empty() )
+    {
+        return;
+    }
+
+    // Convert camera uuids into a vector of paired vec3s and quaternions
+    std::vector < std::pair < gmtl::Vec3d, gmtl::Quatd > > animPointList;
+    scenegraph::SceneManager& sceneManager =
+        *scenegraph::SceneManager::instance();
+    scenegraph::camera::CameraManager& cameraManager =
+        sceneManager.GetCameraManager();
+    scenegraph::camera::CameraObject* cameraObject;
+    std::vector< std::string >::const_iterator itr = cameraUUIDList.begin();
+    while( itr != cameraUUIDList.end() )
+    {
+        cameraObject = cameraManager.GetCameraObject( *itr );
+        if( cameraObject )
+        {
+            scenegraph::DCS& selectedDCS = cameraObject->GetDCS();
+            gmtl::Matrix44d selectedMatrix = selectedDCS.GetMat();
+            selectedMatrix = gmtl::invert( selectedMatrix );
+            const gmtl::Matrix44d tempHeadMatrix = sceneManager.GetHeadMatrix();
+            const gmtl::AxisAngled myAxisAngle( gmtl::Math::deg2Rad( double( -90 ) ), 1, 0, 0 );
+            gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
+            selectedMatrix = tempHeadMatrix * myMat * selectedMatrix;
+
+            gmtl::Vec3d navToPoint =
+                gmtl::makeTrans< gmtl::Vec3d >( selectedMatrix );
+            gmtl::Quatd rotationPoint =
+                gmtl::makeRot< gmtl::Quatd >( selectedMatrix );
+
+            std::pair < gmtl::Vec3d, gmtl::Quatd > animPoint( navToPoint, rotationPoint );
+            animPointList.push_back( animPoint );
+        }
+        ++itr;
+    }
+
+    NavigationAnimationEngine& nae =
+        *( NavigationAnimationEngine::instance() );
+    nae.SetDCS( sceneManager.GetNavDCS() );
+    nae.SetAnimationPoints( animPointList );
+}
+////////////////////////////////////////////////////////////////////////////////
+void EndFlythrough()
+{
+    NavigationAnimationEngine::instance()->StopAnimation();
+}
+////////////////////////////////////////////////////////////////////////////////
+void LoopFlythrough( bool flag )
+{
+    NavigationAnimationEngine::instance()->SetAnimationLoopingOn( flag );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SetFlythroughSpeed( double speed )
+{
+    if( speed > 0 )
+    {
+        NavigationAnimationEngine::instance()->SetAnimationSpeed( speed );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void CameraManagerOn( bool flag )
 {
     scenegraph::SceneManager::instance()->GetCameraManager().EnableCPT( flag );

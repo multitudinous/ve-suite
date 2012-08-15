@@ -68,6 +68,10 @@ void CameraFocalDistance( const std::string& uuid, double focalDistance );
 void CameraFocalRange( const std::string& uuid, double focalRange );
 void CameraMaxCircleOfConfusion( const std::string& uuid, double maxCircle );
 void CameraProjectionUpdate( const std::string& uuid );
+void BeginFlythrough( const std::vector< std::string >& cameraUUIDList );
+void EndFlythrough( );
+void LoopFlythrough( bool flag );
+void SetFlythroughSpeed( double speed );
 
 } //end environment
 } //end event

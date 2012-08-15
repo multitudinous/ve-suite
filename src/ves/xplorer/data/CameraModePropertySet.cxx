@@ -80,6 +80,9 @@ void CameraModePropertySet::CreateSkeleton()
     AddProperty( "CameraManager", false, "Camera Manager" );
     AddProperty( "PictureMode", false, "Picture Mode" );
 
+    AddProperty( "FlythroughSpeed", 10.0, "Flythrough speed (ft/s)" );
+    SetPropertyAttribute( "FlythroughSpeed", "minimumValue", 0.1 );
+
     //TODO: Highlight tool stuff goes here; not sure yet what it is or should look like
 
     AddProperty( "Display", boost::any(), "Display Settings" );
@@ -119,6 +122,11 @@ void CameraModePropertySet::EnableLiveProperties( bool live )
         p = MakeLiveBasePtr( new MakeLive<bool>( mUUIDString,
                              GetProperty( "PictureMode" ),
                              "PictureModeOn", false ) );
+        mLiveObjects.push_back( p );
+
+        p = MakeLiveBasePtr( new MakeLive<double>( mUUIDString,
+                             GetProperty( "FlythroughSpeed" ),
+                             "FlythroughSpeed", false ) );
         mLiveObjects.push_back( p );
 
         p = MakeLiveBasePtr( new MakeLive<bool>( mUUIDString,

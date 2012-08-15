@@ -42,6 +42,8 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
 // --- vrJuggler Includes --- //
 #include <gmtl/Vec.h>
 #include <gmtl/Quat.h>
@@ -120,6 +122,10 @@ public:
     ///Increment the animation speed
     void IncrementAnimationSpeed( double increment );
 
+    void StopAnimation();
+
+    void SetAnimationLoopingOn( bool flag );
+
 private:
     ///Update the gui with the new data
     void UpdateViewGUIPointData();
@@ -148,6 +154,15 @@ private:
     ves::xplorer::scenegraph::DCS* mCenterPointDCS;
     ///The last angle
     double m_lastAngle;
+
+    std::vector < std::pair < gmtl::Vec3d, gmtl::Quatd > > m_animationPoints;
+
+    size_t m_animationPointIndex;
+
+    bool m_loopAnimation;
+
+    ves::util::VoidSignal_type m_flythroughBeginSignal;
+    ves::util::VoidSignal_type m_flythroughEndSignal;
 };
 } //end xplorer
 } //end ves

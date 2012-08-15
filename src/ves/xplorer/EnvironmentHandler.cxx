@@ -279,6 +279,26 @@ EnvironmentHandler::EnvironmentHandler()
                            &ves::xplorer::event::environment::SelectCamera,
                            m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_STATIC( "%BeginFlythrough",
+                           void( const std::vector<std::string>& ),
+                           &ves::xplorer::event::environment::BeginFlythrough,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%EndFlythrough",
+                           void( ),
+                           &ves::xplorer::event::environment::EndFlythrough,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%LoopFlythrough",
+                           void( const bool& ),
+                           &ves::xplorer::event::environment::LoopFlythrough,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%FlythroughSpeed",
+                           void( double ),
+                           &ves::xplorer::event::environment::SetFlythroughSpeed,
+                           m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_STATIC( "%ChangeCameraName",
                            void( const std::string&, const std::string& ),
                            &ves::xplorer::event::environment::ChangeCameraName,

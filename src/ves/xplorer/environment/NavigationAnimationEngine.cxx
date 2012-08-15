@@ -47,6 +47,8 @@
 #include <ves/xplorer/event/environment/QCClearDataEH.h>
 #include <ves/xplorer/event/environment/QCLoadFileEH.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/OneDIntArray.h>
@@ -89,9 +91,16 @@ NavigationAnimationEngine::NavigationAnimationEngine()
     m_frameTimer( new vpr::Timer() ),
     mBeginAnim( false ),
     mSetCenterPoint( false ),
-    mCenterPointDCS( 0 )
+    mCenterPointDCS( 0 ),
+    m_loopAnimation( false )
 {
-    ;
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_flythroughBeginSignal ),
+        "NavigationAnimationEngine.FlythroughBegin" );
+
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_flythroughEndSignal ),
+        "NavigationAnimationEngine.FlythroughEnd" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 NavigationAnimationEngine::~NavigationAnimationEngine()
@@ -146,7 +155,6 @@ void NavigationAnimationEngine::PreFrameUpdate()
     osg::Matrixd currentView = core.getInverseMatrix();
 
     //osg vec to gmtl vec
-    //double* temp = _worldDCS->GetVETranslationArray();
     osg::Vec3d temp = currentView.getTrans();
     for( int i = 0; i < 3; ++i )
     {
@@ -154,53 +162,79 @@ void NavigationAnimationEngine::PreFrameUpdate()
     }
 
     //convert osg quat to gmtl quat
-    //osg::Quat tempWorldQuat = _worldDCS->GetQuat();
     osg::Quat tempWorldQuat = currentView.getRotate();
     
-    gmtl::Quatd tempQuat( tempWorldQuat[0], tempWorldQuat[1],
+    gmtl::Quatd curQuat( tempWorldQuat[0], tempWorldQuat[1],
                           tempWorldQuat[2], tempWorldQuat[3] );
 
-    //See if we only have a small distance left to travel. If so then lets
-    //exit the animation
+    // Notice that if m_animationPointIndex == 0, this implies that we will
+    // first animate from the current camera position to the initial animation
+    // point before animating through the animation points.
+    mEndVec = m_animationPoints.at( m_animationPointIndex ).first;
+    mEndQuat = m_animationPoints.at( m_animationPointIndex ).second;
+
+
     gmtl::Vec3d deltaLeft = mEndVec - curVec;
     float length = gmtl::length( deltaLeft );
+    double timeConstant = length / m_movementSpeed;
+    double numSegments = timeConstant / m_deltaTime;
+    movementIntervalCalc = 1.0 / numSegments;
+
+    if( ( length == 0 ) || ( movementIntervalCalc > 1.0 ) || ( numSegments < 2.0 ) )
+    {
+        movementIntervalCalc = 0.01;
+    }
+
+    //See if we only have a small distance left to travel.
     gmtl::AxisAngled currentAngle;
-    gmtl::set( currentAngle, tempQuat );
+    gmtl::set( currentAngle, curQuat );
     double angle = currentAngle.getAngle();
     double deltaAngle = gmtl::Math::abs( m_lastAngle - angle );
     m_lastAngle = angle;
     if( deltaAngle < 0.01 && length < 0.01 )
     {
+        //std::cout << "\tSmall distance left" << std::endl << std::flush;
         ///Override what was determined earlier because we know we do
         ///not have to move that far.
         t = 1.0f;
-        mBeginAnim = false;
+        if( (m_animationPoints.size() - 1) == m_animationPointIndex )
+        {
+            // Either loop or kill the animation
+            if( m_loopAnimation )
+            {
+                t = 0.0f;
+                m_lastAngle = 0.0;
+                mSetCenterPoint = false;
+                m_animationPointIndex = 0;
+            }
+            else
+            {
+                mBeginAnim = false;
+                m_flythroughEndSignal();
+            }
+        }
     }
     else
     {
         t += movementIntervalCalc;
         if( t >= ( 1.0f - movementIntervalCalc ) )
         {
+            //std::cout << "\tt exceeds 1" << std::endl << std::flush;
             t = 1.0f;
-            mBeginAnim = false;
         }
     }
+
     //interpolate the rotation and translation
     gmtl::lerp( tempVec, t, curVec, mEndVec );
-    gmtl::slerp( tempResQuat, t, tempQuat, mEndQuat );
+    gmtl::slerp( tempResQuat, t, curQuat, mEndQuat );
 
     //convert gmtl vec to double *
-    /*double tempConvVec[3] ;
-    tempConvVec[0] = tempVec[0];
-    tempConvVec[1] = tempVec[1];
-    tempConvVec[2] = tempVec[2];*/
     osg::Vec3d posVec;
     posVec[ 0 ] = tempVec[0];
     posVec[ 1 ] = tempVec[1];
     posVec[ 2 ] = tempVec[2];
 
-    //_worldDCS->SetTranslationArray( tempConvVec );
-    //core.setPosition( posVec );
+
     currentView.setTrans( posVec );
     
     //convert gmtl quat to osg quat
@@ -209,28 +243,52 @@ void NavigationAnimationEngine::PreFrameUpdate()
     currentView.setRotate( tempOSGQuat );
     
     //rotate and translate
-    //_worldDCS->SetQuat( tempOSGQuat );
     core.setByInverseMatrix( currentView );
-    
-    if( mSetCenterPoint == true && !mBeginAnim )
-    {
-        //Move the center point to the center of the selected object
-        osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
-            new ves::xplorer::scenegraph::CoordinateSystemTransform(
-            ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
-            mCenterPointDCS, true );
-        gmtl::Matrix44d localToWorldMatrix =
-            cst->GetTransformationMatrix( false );
 
-        //Multiplying by the new local matrix mCenterPoint
-        osg::Matrixd tempMatrix;
-        tempMatrix.set( localToWorldMatrix.getData() );
-        osg::Vec3d center =
-            mCenterPointDCS->getBound().center() * tempMatrix;
-        gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
-        ves::xplorer::DeviceHandler::instance()->
-            SetCenterPoint( &tempCenter );
+    if( t == 1.0 )
+    {
+        t= 0.0f;
+        ++m_animationPointIndex;
+        // If we just used up the last animation point, either loop or kill the
+        // animation
+        if( m_animationPoints.size() == m_animationPointIndex )
+        {
+            if( m_loopAnimation )
+            {
+                t = 0.0f;
+                m_lastAngle = 0.0;
+                mSetCenterPoint = false;
+                m_animationPointIndex = 0;
+            }
+            else
+            {
+                mBeginAnim = false;
+                m_flythroughEndSignal();
+            }
+        }
     }
+
+    // TODO: Figure out what setCenterPoint is supposed to do and deal with it
+    // -RPT
+//    if( mSetCenterPoint == true && !mBeginAnim )
+//    {
+//        //Move the center point to the center of the selected object
+//        osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
+//            new ves::xplorer::scenegraph::CoordinateSystemTransform(
+//            ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
+//            mCenterPointDCS, true );
+//        gmtl::Matrix44d localToWorldMatrix =
+//            cst->GetTransformationMatrix( false );
+
+//        //Multiplying by the new local matrix mCenterPoint
+//        osg::Matrixd tempMatrix;
+//        tempMatrix.set( localToWorldMatrix.getData() );
+//        osg::Vec3d center =
+//            mCenterPointDCS->getBound().center() * tempMatrix;
+//        gmtl::Point3d tempCenter( center.x(), center.y(), center.z() );
+//        ves::xplorer::DeviceHandler::instance()->
+//            SetCenterPoint( &tempCenter );
+//    }
 
     m_frameTimer->reset();
     m_frameTimer->startTiming();
@@ -246,44 +304,82 @@ void NavigationAnimationEngine::SetAnimationEndPoints(
     gmtl::Vec3d navToPoint, gmtl::Quatd rotationPoint,
     bool setCenterPoint, ves::xplorer::scenegraph::DCS* centerPointDCS )
 {
+    m_animationPoints.clear();
+    std::pair < gmtl::Vec3d, gmtl::Quatd > endPoint( navToPoint, rotationPoint );
+    std::vector < std::pair < gmtl::Vec3d, gmtl::Quatd > > animationPoints;
+    animationPoints.push_back( endPoint );
+    SetAnimationPoints( animationPoints );
+
+    // TODO: Ignoring all the stuff with setcenterPoint until I understand
+    // what it does -RPT
+//    mBeginAnim = true;
+//    mEndVec = navToPoint;
+//    mEndQuat = rotationPoint;
+//    t = 0.0f;
+//    m_lastAngle = 0.0;
+//    mSetCenterPoint = setCenterPoint;
+//    mCenterPointDCS = centerPointDCS;
+
+//    //Set up the interval constant
+//    gmtl::Vec3d curVec;
+//    //osg vec to gmtl vec
+//    //double* temp = _worldDCS->GetVETranslationArray();
+//    osgwMx::MxCore& core =
+//        ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
+//    osg::Vec3d temp = core.getInverseMatrix().getTrans();
+
+//    for( int i = 0; i < 3; ++i )
+//    {
+//        curVec[ i ] = temp[ i ];
+//    }
+//    gmtl::Vec3d deltaLeft = mEndVec - curVec;
+//    float length = gmtl::length( deltaLeft );
+//    //movementIntervalCalc =
+//    //    1.0 / ( length / ( m_movementSpeed * m_deltaTime ) );
+
+//    double timeConstant = length / m_movementSpeed;
+//    double numSegments = timeConstant / m_deltaTime;
+//    movementIntervalCalc = 1.0 / numSegments;
+//    //std::cout << numSegments << " " <<  movementIntervalCalc << std::endl;
+//    if( ( length == 0 ) || ( movementIntervalCalc > 1.0 ) || ( numSegments < 2.0 ) )
+//    {
+//        movementIntervalCalc = 0.01;
+//    }
+    //std::cout << length << " " << m_movementSpeed << " " << m_deltaTime << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
+void NavigationAnimationEngine::SetAnimationPoints( std::vector < std::pair < gmtl::Vec3d,
+                         gmtl::Quatd > > animationPoints )
+{
+    if( animationPoints.empty() )
+    {
+        return;
+    }
+
+    m_animationPoints = animationPoints;
+
+    // Set up member variables for start of animation
     mBeginAnim = true;
-    mEndVec = navToPoint;
-    mEndQuat = rotationPoint;
     t = 0.0f;
     m_lastAngle = 0.0;
-    mSetCenterPoint = setCenterPoint;
-    mCenterPointDCS = centerPointDCS;
-
-    //Set up the interval constant
-    gmtl::Vec3d curVec;
-    //osg vec to gmtl vec
-    //double* temp = _worldDCS->GetVETranslationArray();
-    osgwMx::MxCore& core = 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
-    osg::Vec3d temp = core.getInverseMatrix().getTrans();
-
-    for( int i = 0; i < 3; ++i )
-    {
-        curVec[ i ] = temp[ i ];
-    }
-    gmtl::Vec3d deltaLeft = mEndVec - curVec;
-    float length = gmtl::length( deltaLeft );
-    //movementIntervalCalc =
-    //    1.0 / ( length / ( m_movementSpeed * m_deltaTime ) );
-
-    double timeConstant = length / m_movementSpeed;
-    double numSegments = timeConstant / m_deltaTime;
-    movementIntervalCalc = 1.0 / numSegments;
-    //std::cout << numSegments << " " <<  movementIntervalCalc << std::endl;
-    if( ( length == 0 ) || ( movementIntervalCalc > 1.0 ) || ( numSegments < 2.0 ) )
-    {
-        movementIntervalCalc = 0.01;
-    }
-    //std::cout << length << " " << m_movementSpeed << " " << m_deltaTime << std::endl;
+    mSetCenterPoint = false;
+    m_animationPointIndex = 0;
+    m_flythroughBeginSignal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool NavigationAnimationEngine::IsActive()
 {
     return mBeginAnim;
+}
+////////////////////////////////////////////////////////////////////////////////
+void NavigationAnimationEngine::StopAnimation()
+{
+    mBeginAnim = false;
+    m_flythroughEndSignal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void NavigationAnimationEngine::SetAnimationLoopingOn( bool flag )
+{
+    m_loopAnimation = flag;
 }
 ////////////////////////////////////////////////////////////////////////////////
