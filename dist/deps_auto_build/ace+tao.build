@@ -41,6 +41,7 @@ case $PLATFORM in
     CONFIGURE_PARAMS+=( --disable-tao-examples)
     CONFIGURE_PARAMS+=( --disable-ace-tests )
     CONFIGURE_PARAMS+=( --disable-ace-examples )
+    CONFIGURE_PARAMS+=( --disable-ssl )
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     #unset BUILD_TARGET
     ;;
