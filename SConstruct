@@ -404,25 +404,25 @@ AppendOptions( opts, options, bdfx_options )
 switchwire_options = fp_option.FlagPollBasedOption("switchire",
                                                   "switchwire", "0.2.0", True, True,
                                                   None,
-                                                  compileTest=True, headerToCheck="eventmanager/Exports.h")
+                                                  compileTest=True, headerToCheck="switchwire/Exports.h")
 AppendOptions( opts, options, switchwire_options )
 
 crunchstore_options = fp_option.FlagPollBasedOption("crunchstore",
                                                   "crunchstore", "0.2.0", True, True,
                                                   None,
-                                                  compileTest=True, headerToCheck="Persistence/ExportConfig.h")
+                                                  compileTest=True, headerToCheck="crunchstore/ExportConfig.h")
 AppendOptions( opts, options, crunchstore_options )
 
 propertystore_options = fp_option.FlagPollBasedOption("propertystore",
                                                   "propertystore", "0.2.0", True, True,
                                                   None,
-                                                  compileTest=True, headerToCheck="PropertySetBrowser/Exports.h")
+                                                  compileTest=True, headerToCheck="propertystore/Exports.h")
 AppendOptions( opts, options, propertystore_options )
 
 storyteller_options = fp_option.FlagPollBasedOption("storyteller",
                                                   "storyteller", "0.2.0", True, True,
                                                   None,
-                                                  compileTest=True, headerToCheck="snap/Exports.h")
+                                                  compileTest=True, headerToCheck="storyteller/Exports.h")
 AppendOptions( opts, options, storyteller_options )
 
 #Setup qt on linux
