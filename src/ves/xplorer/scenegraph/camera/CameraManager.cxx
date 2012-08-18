@@ -43,6 +43,8 @@
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 #include <ves/xplorer/scenegraph/HeadPositionCallback.h>
 
+#include <ves/xplorer/eventmanager/EventManager.h>
+
 #include <ves/xplorer/scenegraph/technique/ProjectionTechnique.h>
 
 #include <ves/xplorer/Debug.h>
@@ -112,6 +114,10 @@ CameraManager::CameraManager()
     //CPT we will need to review this change and potentially remove the
     //Enable code below.
     Enable( false );
+
+    eventmanager::EventManager::instance()->RegisterSignal(
+        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_cameraImagesSavedSignal ),
+        "CameraManager.CameraImagesSaved" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraManager::CameraManager(
@@ -625,6 +631,7 @@ void CameraManager::PostFrameUpdate()
             }
         }
         m_isTakingScreenCap = false;
+        m_cameraImagesSavedSignal();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

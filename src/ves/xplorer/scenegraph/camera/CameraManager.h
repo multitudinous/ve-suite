@@ -41,6 +41,8 @@
 
 #include <ves/open/xml/DataValuePair.h>
 
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
 // --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/Geode>
@@ -228,6 +230,10 @@ private:
     std::string m_imageDir;
 
     std::map< std::string, CameraObject* > m_cameraMap;
+
+    ///Signal fired after all camera images have been saved. Needed since this
+    ///is not a synchronous process
+    ves::util::VoidSignal_type m_cameraImagesSavedSignal;
 };
 } //end camera
 } //end scenegraph

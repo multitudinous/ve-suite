@@ -77,6 +77,9 @@ void CameraModePropertySet::CreateSkeleton()
     AddProperty( "DisableCameraTools", true, "NOT VISIBLE IN BROWSER" );
     SetPropertyAttribute( "DisableCameraTools", "userVisible", false );
 
+    AddProperty( "CameraImageSavePath", std::string("."), "Image/Presentation save location" );
+    SetPropertyAttribute( "CameraImageSavePath", "isFilePath", true );
+
     AddProperty( "CameraManager", false, "Camera Manager" );
     AddProperty( "PictureMode", false, "Picture Mode" );
 

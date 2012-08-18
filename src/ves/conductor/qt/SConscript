@@ -184,7 +184,8 @@ lib_env.Append(LIBS = ['ves_open_xml',
                        'ves_xplorer_scenegraph',
                        'QtSolutions_PropertyBrowser-2.5',
                        'osgQtTree',
-                       'qwt'
+                       'qwt',
+                       'storyteller'
                       ])
 lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'open', 'xml'),

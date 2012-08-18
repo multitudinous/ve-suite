@@ -59,8 +59,10 @@ void CameraManagerOn( bool flag );
 void CameraWindowOn( bool flag );
 void CameraWindowResolution( int resolution );
 void PictureModeOn( bool flag );
-void SaveCameraImage( const std::string& uuid );
-void SaveAllCameraImages( );
+/// Call with "" as path to use setting from CameraModePropertySet
+void SaveCameraImage( const std::string& uuid, const std::string& path );
+/// Call with "" as path to use setting from CameraModePropertySet
+void SaveAllCameraImages( const std::string& path );
 void CameraAutoComputeFarPlane( const std::string& uuid, bool flag );
 void ShowCameraGeometry( const std::string& uuid, bool flag );
 void ShowCameraFrustumGeometry( const std::string& uuid, bool flag );

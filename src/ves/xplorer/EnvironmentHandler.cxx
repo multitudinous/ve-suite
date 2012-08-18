@@ -325,12 +325,12 @@ EnvironmentHandler::EnvironmentHandler()
                            m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%SaveCameraImage",
-                           void( const std::string& ),
+                           void( const std::string&, const std::string& ),
                            &ves::xplorer::event::environment::SaveCameraImage,
                            m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%SaveAllCameraImages",
-                           void(  ),
+                           void( const std::string& ),
                            &ves::xplorer::event::environment::SaveAllCameraImages,
                            m_connections, any_SignalType, normal_Priority );
 

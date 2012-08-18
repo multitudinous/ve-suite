@@ -80,10 +80,14 @@ private:
     ///signal.
     ves::xplorer::eventmanager::ScopedConnectionList m_flythroughConnections;
 
+    ///Special connection list for making presentations. Used for same reason as
+    ///m_flythroughConnections, but for presentations.
+    ves::xplorer::eventmanager::ScopedConnectionList m_presentationConnections;
+
     ves::util::TwoStringSignal_type m_addCameraSignal;
     ves::util::StringSignal_type m_selectCameraSignal;
-    ves::util::StringSignal_type m_saveCameraImageSignal;
-    ves::util::VoidSignal_type m_saveAllCameraImagesSignal;
+    ves::util::TwoStringSignal_type m_saveCameraImageSignal;
+    ves::util::StringSignal_type m_saveAllCameraImagesSignal;
     ves::util::StringSignal_type m_removeCameraSignal;
     boost::signals2::signal< void (const std::vector<std::string>&) > m_flythroughSignal;
     ves::util::VoidSignal_type m_endFlythroughSignal;
@@ -91,6 +95,13 @@ private:
 
     ///Connected to "FlythroughEnd" signal
     void FlythroughHasEnded();
+
+    ///Used to cache presentation image dir while awaiting CameraImagesSaved
+    ///signal
+    std::string m_presentationImageDir;
+
+    ///Connected to "CameraManager.CameraImagesSaved" signal
+    void MakePresentation();
 
 };
 

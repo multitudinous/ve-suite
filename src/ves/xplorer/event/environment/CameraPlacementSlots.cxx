@@ -66,6 +66,8 @@
 
 #include <boost/concept_check.hpp>
 
+#include <Poco/Path.h>
+
 namespace ves
 {
 namespace xplorer
@@ -93,7 +95,7 @@ void DisableCameraTools( bool flag )
         set->SetUUID( "00000000-0101-1010-1111-000011110000" );
         set->LoadFromDatabase();
         bool cwo = boost::any_cast<bool>( set->GetPropertyValue( "CameraWindow" ) );
-        CameraWindowOn( flag );
+        CameraWindowOn( cwo );
     }
 
     //Slot is "disable", call is "enable", so negate flag.
@@ -335,7 +337,26 @@ void PictureModeOn( bool flag )
     scenegraph::SceneManager::instance()->GetCameraManager().SetPictureMode( flag );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SaveCameraImage( const std::string& uuid )
+std::string ResolveSaveImagePath( std::string path )
+{
+    if( path.empty() )
+    {
+        ves::xplorer::data::PropertySetPtr set =
+                ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CameraModePropertySet );
+        //See CameraModePropertySet for explanation of this uuid
+        set->SetUUID( "00000000-0101-1010-1111-000011110000" );
+        set->LoadFromDatabase();
+        path = boost::any_cast<std::string>( set->GetPropertyValue( "CameraImageSavePath" ) );
+    }
+
+    Poco::Path imagePath( path );
+    imagePath.setFileName( "" );
+    imagePath.makeAbsolute();
+
+    return imagePath.toString(Poco::Path::PATH_UNIX);
+}
+////////////////////////////////////////////////////////////////////////////////
+void SaveCameraImage( const std::string& uuid, const std::string& path )
 {
     scenegraph::SceneManager& sceneManager =
         *scenegraph::SceneManager::instance();
@@ -345,7 +366,7 @@ void SaveCameraImage( const std::string& uuid )
         return;
     }
 
-    std::string saveImageDir = ".";
+    std::string saveImageDir = ResolveSaveImagePath( path );
 
     // Setting the uuid to "PICTURE_MODE" lets us know this is not normal camera
     // that has been explicitly placed in the scene. CameraManager knows how to deal
@@ -360,7 +381,7 @@ void SaveCameraImage( const std::string& uuid )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SaveAllCameraImages( )
+void SaveAllCameraImages( const std::string& path )
 {
     scenegraph::SceneManager& sceneManager =
         *scenegraph::SceneManager::instance();
@@ -370,7 +391,7 @@ void SaveAllCameraImages( )
         return;
     }
 
-    std::string saveImageDir = ".";
+    std::string saveImageDir = ResolveSaveImagePath( path );
 
     sceneManager.GetCameraManager().WriteAllImageFiles( saveImageDir );
 }

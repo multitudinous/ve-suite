@@ -6,6 +6,11 @@
 #include <ves/xplorer/data/CameraSettingsPropertySet.h>
 #include <ves/xplorer/data/CameraModePropertySet.h>
 
+#include <storyteller/PresentationMaker.h>
+
+#include <Poco/Path.h>
+#include <Poco/File.h>
+
 #include <iostream>
 
 namespace ves
@@ -53,10 +58,10 @@ CameraTab::CameraTab(QWidget *parent) :
         new eventmanager::SignalWrapper< ves::util::StringSignal_type >( &m_selectCameraSignal ),
         "CameraTab.SelectCamera" );
     eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::StringSignal_type >( &m_saveCameraImageSignal ),
+        new eventmanager::SignalWrapper< ves::util::TwoStringSignal_type >( &m_saveCameraImageSignal ),
         "CameraTab.SaveCameraImage" );
     eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_saveAllCameraImagesSignal ),
+        new eventmanager::SignalWrapper< ves::util::StringSignal_type >( &m_saveAllCameraImagesSignal ),
         "CameraTab.SaveAllCameraImages" );
     eventmanager::EventManager::instance()->RegisterSignal(
         new eventmanager::SignalWrapper< boost::signals2::signal< void (const std::vector<std::string>&) > >( &m_flythroughSignal ),
@@ -201,23 +206,85 @@ void CameraTab::on_m_snapshotButton_clicked()
         QListWidgetItem* item = ui->m_cameraListWidget->currentItem();
         if( item )
         {
-            m_saveCameraImageSignal( item->data( Qt::UserRole ).toString().toStdString() );
+            // Empty path forces default to value of CameraImageSavePath in
+            // CameraModePropertySet
+            m_saveCameraImageSignal( item->data( Qt::UserRole ).toString().toStdString(), "" );
         }
     }
     else
     {
-        m_saveCameraImageSignal( "PICTURE_MODE" );
+        // Empty path forces default to value of CameraImageSavePath in
+        // CameraModePropertySet
+        m_saveCameraImageSignal( "PICTURE_MODE", "" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_allSnapshotButton_clicked()
 {
-    m_saveAllCameraImagesSignal();
+    if( !m_overallSet )
+    {
+        return;
+    }
+
+    // Empty path forces default to value of CameraImageSavePath in
+    // CameraModePropertySet
+    m_saveAllCameraImagesSignal( "" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_presentationButton_clicked()
 {
+    if( !m_overallSet )
+    {
+        return;
+    }
 
+    // Build up a temporary directory based on CameraImageSavePath value of
+    // CameraModePropertySet, with ves_tmp appended.
+    std::string savePathBase = boost::any_cast<std::string>( m_overallSet->GetPropertyValue( "CameraImageSavePath" ) );
+
+    Poco::Path imagePath( savePathBase );
+    imagePath.setFileName( "" );
+    imagePath.makeAbsolute();
+    imagePath.pushDirectory( "ves_tmp" );
+    Poco::File tmpFile( imagePath );
+    if( tmpFile.exists() )
+    {
+        tmpFile.remove( true );
+    }
+    tmpFile.createDirectory();
+
+    m_presentationImageDir = imagePath.toString(Poco::Path::PATH_UNIX);
+    m_saveAllCameraImagesSignal( m_presentationImageDir );
+
+    // Connect to the "done" signal for this process so we will know when the
+    // images have been written. This doesn't happen synchronously, so we can't
+    // assume the images exist until we get this signal.
+    CONNECTSIGNALS_0( "CameraManager.CameraImagesSaved",
+                    void( ),
+                    &ves::conductor::CameraTab::MakePresentation,
+                    m_presentationConnections, any_SignalType, normal_Priority );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraTab::MakePresentation()
+{
+    m_presentationConnections.DropConnections();
+
+    storyteller::PresentationMaker pm;
+    pm.AddDirectory( m_presentationImageDir, false );
+
+    Poco::Path presPath( m_presentationImageDir );
+    presPath.popDirectory();
+    presPath.setFileName( "presentation.odp" );
+
+    pm.MakePresentation( presPath.toString(Poco::Path::PATH_UNIX) );
+
+    // Remove the temporary image directory
+    Poco::Path remPath( m_presentationImageDir );
+    Poco::File tmpFile( remPath );
+    if( tmpFile.exists() )
+    {
+        tmpFile.remove( true );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_flythroughButton_clicked()

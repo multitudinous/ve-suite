@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>478</width>
-    <height>416</height>
+    <height>462</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -455,8 +455,24 @@
      <y>14</y>
     </hint>
     <hint type="destinationlabel">
-     <x>253</x>
-     <y>337</y>
+     <x>255</x>
+     <y>459</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pictureModeToggler</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_loopingFlythroughButton</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>79</x>
+     <y>13</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>327</y>
     </hint>
    </hints>
   </connection>
