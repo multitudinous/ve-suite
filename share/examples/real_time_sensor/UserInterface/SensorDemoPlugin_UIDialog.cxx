@@ -63,7 +63,8 @@
 
 #include "SensorDemoPlugin_UIDialog.h"
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <Poco/Data/SQLite/SQLite.h>
 #include <Poco/Data/SQLite/Connector.h>
@@ -96,16 +97,16 @@ SensorDemoPlugin_UIDialog::SensorDemoPlugin_UIDialog(QWidget *parent) :
     connect( ui->m_textInput03, SIGNAL(textChanged(QString)),
              this, SLOT(InputTextChanged(QString)));*/
 
-    ves::xplorer::eventmanager::EventManager* evm =
-        ves::xplorer::eventmanager::EventManager::instance();
-    using ves::xplorer::eventmanager::SignalWrapper;
+    switchwire::EventManager* evm =
+        switchwire::EventManager::instance();
+
     
     {
         std::string signalName = "SensorDemoPlugin_UIDialog" +
             boost::lexical_cast<std::string>( this ) + ".ConnectToSensorServer";
         evm->RegisterSignal(
-            new SignalWrapper< ves::util::TwoStringSignal_type >( &m_connectSensorSignal ),
-            signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+            ( &m_connectSensorSignal ),
+            signalName, switchwire::EventManager::unspecified_SignalType );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,7 +115,7 @@ void SensorDemoPlugin_UIDialog::on_m_sensorClientConnect_clicked()
     std::cout << "get ip address and send it to xplorer" << std::endl;
     std::cout << ui->m_sensorClientIP->text().toStdString() << " " 
         << ui->m_sensorPort->text().toStdString() << std::endl;
-    m_connectSensorSignal( ui->m_sensorClientIP->text().toStdString(), 
+    m_connectSensorSignal.signal( ui->m_sensorClientIP->text().toStdString(),
                           ui->m_sensorPort->text().toStdString() );
 }
 ////////////////////////////////////////////////////////////////////////////////

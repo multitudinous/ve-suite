@@ -47,11 +47,11 @@
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
-typedef boost::signals2::signal< void ( const std::vector< int >&, const std::vector< int >&, const std::vector< int >&, const std::vector< double >&  ) > ColorDoubleVectorSignal_type;
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+typedef switchwire::Event< void ( const std::vector< int >&, const std::vector< int >&, const std::vector< int >&, const std::vector< double >&  ) > ColorDoubleVectorSignal_type;
 
-typedef boost::signals2::signal< void (  const std::vector< double >&  ) > DoubleVectorSignal_type;
+typedef switchwire::Event< void (  const std::vector< double >&  ) > DoubleVectorSignal_type;
 
 namespace ves
 {
@@ -227,7 +227,7 @@ private:
 	std::vector<double> timeIndex;
 	double minTime, lastTime, maxTime;
 	/// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 	
 	bool colorizeByHits;
 	//internal colour array (not the one sent to OSG

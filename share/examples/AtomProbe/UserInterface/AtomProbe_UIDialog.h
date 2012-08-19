@@ -45,12 +45,13 @@
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+
 #include <vector>
 //#include <QtCore/QString>
-typedef boost::signals2::signal< void ( const std::vector< double >&, const std::vector< double >&  ) > TwoDoubleVectorSignal_type;
-typedef boost::signals2::signal< void ( const std::vector< int >&, const std::vector< int >&, const std::vector< int >&, const std::vector< bool >&  ) > ColorBoolVectorSignal_type;
+typedef switchwire::Event< void ( const std::vector< double >&, const std::vector< double >&  ) > TwoDoubleVectorSignal_type;
+typedef switchwire::Event< void ( const std::vector< int >&, const std::vector< int >&, const std::vector< int >&, const std::vector< bool >&  ) > ColorBoolVectorSignal_type;
 
 
 
@@ -148,7 +149,7 @@ private:
 	double numPulses;
 	std::vector<bool> hitEnabled;
 	/// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 };
 
 #endif // TankPlugin_UIDIALOG_H

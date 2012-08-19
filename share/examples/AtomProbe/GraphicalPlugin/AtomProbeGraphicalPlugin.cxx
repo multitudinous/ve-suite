@@ -210,31 +210,31 @@ AtomProbeGraphicalPlugin::AtomProbeGraphicalPlugin()
 	bgcolor.push_back(1.0);
 	
 	ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor(bgcolor);
-	ves::xplorer::eventmanager::EventManager* evm =
-	ves::xplorer::eventmanager::EventManager::instance();
-	using ves::xplorer::eventmanager::SignalWrapper;
+    switchwire::EventManager* evm =
+    switchwire::EventManager::instance();
+
     
     {
         std::string signalName = "AtomProbeGraphicalPlugin" +
 		boost::lexical_cast<std::string>( this ) + ".HistogramDataSignal";
         evm->RegisterSignal(
-							new SignalWrapper< ColorDoubleVectorSignal_type >( &m_HistogramDataSignal ),
-							signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+                            ( &m_HistogramDataSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
     }
 	
 	{
         std::string signalName = "AtomProbeGraphicalPlugin" +
 		boost::lexical_cast<std::string>( this ) + ".MaskHistogramDataSignal";
         evm->RegisterSignal(
-							new SignalWrapper< DoubleVectorSignal_type >( &m_MaskHistogramDataSignal ),
-							signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+                            ( &m_MaskHistogramDataSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
     }
 	{
         std::string signalName = "AtomProbeGraphicalPlugin" +
 		boost::lexical_cast<std::string>( this ) + ".NumPulses";
         evm->RegisterSignal(
-							new SignalWrapper< ves::util::DoubleSignal_type >( &m_NumPulsesSignal ),
-							signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+                            ( &m_NumPulsesSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
     }
 	
 	
@@ -406,7 +406,7 @@ void AtomProbeGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 			HSVtoRGB( &r, &g,&b, h, s, v );
 			colours2->push_back(osg::Vec4ub(r,g,b,a));
 		}
-		m_NumPulsesSignal(currentTime);
+        m_NumPulsesSignal.signal(currentTime);
 		maxTime = currentTime;
 		//delete buffer;
 		//fclose(fp);
@@ -875,7 +875,7 @@ void AtomProbeGraphicalPlugin::reColorize(int variable, float bottomClip, float 
 	atomProbeGeometry->setColorArray(colours);
 	atomProbeGeometry->setVertexArray(vertices);
 	atomProbeGeometry->setPrimitiveSet(0,new osg::DrawArrays(GL_POINTS,0,vertices->size()));
-	m_HistogramDataSignal(rr,gg,bb, histogram);
+    m_HistogramDataSignal.signal(rr,gg,bb, histogram);
 	//reMask(currentMaskVariable, currentMaskBottom, currentMaskTop);
 
 }
@@ -956,7 +956,7 @@ void AtomProbeGraphicalPlugin::reMask(int variable, float bottomClip, float topC
 	//atomProbeGeometry->setColorArray(coloursOnCard);
 	//atomProbeGeometry->setVertexArray(vertices);
 	//atomProbeGeometry->setPrimitiveSet(0,new osg::DrawArrays(GL_POINTS,0,vertices->size()));
-	m_MaskHistogramDataSignal(histogram);
+    m_MaskHistogramDataSignal.signal(histogram);
 	currentAtoms = atomsTemp;
 	
 

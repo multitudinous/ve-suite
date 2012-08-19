@@ -36,8 +36,8 @@
 #include "AtomProbe_UIDialog.h"
 #include "ui_AtomProbe_UIDialog.h"
 #include <ves/xplorer/command/CommandManager.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
-
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/replace.hpp>
@@ -79,48 +79,48 @@ AtomProbe_UIDialog::AtomProbe_UIDialog(QWidget *parent) :
 	connect(ui->hit3Color, SIGNAL(clicked()), this, SLOT(setHit3Color()));
 	connect(ui->pulseSlider, SIGNAL(sliderMoved(int)), this, SLOT(setLastTime(int)));
 	
-	ves::xplorer::eventmanager::EventManager* evm =
-	ves::xplorer::eventmanager::EventManager::instance();
-    using ves::xplorer::eventmanager::SignalWrapper;
+    switchwire::EventManager* evm =
+    switchwire::EventManager::instance();
+
     
     {
         std::string signalName = "AtomProbe_UIDialog" +
 		boost::lexical_cast<std::string>( this ) + ".SelectColorizeDataSignal";
         evm->RegisterSignal(
-							new SignalWrapper< ves::util::IntSignal_type >( &m_SelectColorizeDataSignal ),
-							signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+                            ( &m_SelectColorizeDataSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
     }
 	
 	{
         std::string signalName = "AtomProbe_UIDialog" +
 		boost::lexical_cast<std::string>( this ) + ".SetMaskVariableSignal";
         evm->RegisterSignal(
-							new SignalWrapper< ves::util::IntSignal_type >( &m_SetMaskVariableSignal ),
-							signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+                            ( &m_SetMaskVariableSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
     }
 	
 	{
         std::string signalName = "AtomProbe_UIDialog" +
 		boost::lexical_cast<std::string>( this ) + ".SetMaskBottomSignal";
         evm->RegisterSignal(
-							new SignalWrapper< ves::util::DoubleSignal_type >( &m_SetMaskBottomSignal ),
-							signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+                            ( &m_SetMaskBottomSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
     }
 	
 	{
         std::string signalName = "AtomProbe_UIDialog" +
 		boost::lexical_cast<std::string>( this ) + ".SetMaskTopSignal";
         evm->RegisterSignal(
-							new SignalWrapper< ves::util::DoubleSignal_type >( &m_SetMaskTopSignal ),
-							signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+                            ( &m_SetMaskTopSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
     }
 	
 	{
         std::string signalName = "AtomProbe_UIDialog" +
 		boost::lexical_cast<std::string>( this ) + ".SetHitColorizeSignal";
         evm->RegisterSignal(
-							new SignalWrapper< ColorBoolVectorSignal_type >( &m_SetHitColorizeSignal ),
-							signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+                            ( &m_SetHitColorizeSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
     }
 	
 	
@@ -128,8 +128,8 @@ AtomProbe_UIDialog::AtomProbe_UIDialog(QWidget *parent) :
         std::string signalName = "AtomProbe_UIDialog" +
 		boost::lexical_cast<std::string>( this ) + ".SetLastTimeSignal";
         evm->RegisterSignal(
-							new SignalWrapper< ves::util::DoubleSignal_type >( &m_SetLastTimeSignal ),
-							signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+                            ( &m_SetLastTimeSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
     }
 	
 	
@@ -335,7 +335,7 @@ void AtomProbe_UIDialog::setData(int data) {
 	ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
 	
 	
-	m_SelectColorizeDataSignal(data);
+    m_SelectColorizeDataSignal.signal(data);
 	
 	ui->colorizeLabel->setText(labelText[data]);
 	
@@ -438,7 +438,7 @@ void AtomProbe_UIDialog::setMaskData(int data) {
 	ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );*/
 	std::cout <<"set mask var qt" << std::endl;
 	ui->maskLabel->setText(labelText[data]);
-	m_SetMaskVariableSignal(data);
+    m_SetMaskVariableSignal.signal(data);
 	
 	//QColor woot = QColorDialog::getColor();
 	//std::cout << woot.red() << " " << woot.green() << " " << woot.blue() << std::endl;
@@ -467,7 +467,7 @@ void AtomProbe_UIDialog::setMaskBottom(double bottom) {
 	command->SetCommandName( mCommandName );
 	ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );*/
 	std::cout <<"set mask bottom qt" << std::endl;
-	m_SetMaskBottomSignal(bottom);
+    m_SetMaskBottomSignal.signal(bottom);
 	//updateMaskHistogram();
 	
 	
@@ -491,7 +491,7 @@ void AtomProbe_UIDialog::setMaskTop(double top) {
 	command->SetCommandName( mCommandName );
 	ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );*/
 	std::cout <<"set mask top qt" << std::endl;
-	m_SetMaskTopSignal(top);
+    m_SetMaskTopSignal.signal(top);
 	//updateMaskHistogram();
 	
 	
@@ -516,7 +516,7 @@ void AtomProbe_UIDialog::setLastTime(int pulse) {
 	 command->SetCommandName( mCommandName );
 	 ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );*/
 	std::cout <<"set last time qt" << std::endl;
-	m_SetLastTimeSignal(pulse);
+    m_SetLastTimeSignal.signal(pulse);
 	//updateMaskHistogram();
 	
 	
@@ -551,28 +551,28 @@ void AtomProbe_UIDialog::qtUpdateMaskHistogram() {
 void AtomProbe_UIDialog::setHit0Enabled(int state) {
 	//std::cout << "state changed" << std::endl;
 	hitEnabled[0] = state;
-	m_SetHitColorizeSignal(rrHit, ggHit,bbHit,hitEnabled);
+    m_SetHitColorizeSignal.signal(rrHit, ggHit,bbHit,hitEnabled);
 	
 }
 
 void AtomProbe_UIDialog::setHit1Enabled(int state) {
 	//std::cout << "state changed" << std::endl;
 	hitEnabled[1] = state;
-	m_SetHitColorizeSignal(rrHit, ggHit,bbHit,hitEnabled);
+    m_SetHitColorizeSignal.signal(rrHit, ggHit,bbHit,hitEnabled);
 	
 }
 
 void AtomProbe_UIDialog::setHit2Enabled(int state) {
 	//std::cout << "state changed" << std::endl;
 	hitEnabled[2] = state;
-	m_SetHitColorizeSignal(rrHit, ggHit,bbHit,hitEnabled);
+    m_SetHitColorizeSignal.signal(rrHit, ggHit,bbHit,hitEnabled);
 	
 }
 
 void AtomProbe_UIDialog::setHit3Enabled(int state) {
 	//std::cout << "state changed" << std::endl;
 	hitEnabled[3] = state;
-	m_SetHitColorizeSignal(rrHit, ggHit,bbHit,hitEnabled);
+    m_SetHitColorizeSignal.signal(rrHit, ggHit,bbHit,hitEnabled);
 	
 }
 
@@ -588,7 +588,7 @@ void AtomProbe_UIDialog::setHit0Color() {
 	pal.setColor(ui->hit0ColorLabel->backgroundRole(), woot);
 	ui->hit0ColorLabel->setPalette(pal);
 	ui->hit0ColorLabel->setAutoFillBackground(true);
-	m_SetHitColorizeSignal(rrHit, ggHit,bbHit,hitEnabled);
+    m_SetHitColorizeSignal.signal(rrHit, ggHit,bbHit,hitEnabled);
 	
 }
 
@@ -604,7 +604,7 @@ void AtomProbe_UIDialog::setHit1Color() {
 	pal.setColor(ui->hit1ColorLabel->backgroundRole(), woot);
 	ui->hit1ColorLabel->setPalette(pal);
 	ui->hit1ColorLabel->setAutoFillBackground(true);
-	m_SetHitColorizeSignal(rrHit, ggHit,bbHit,hitEnabled);
+    m_SetHitColorizeSignal.signal(rrHit, ggHit,bbHit,hitEnabled);
 	
 }
 
@@ -620,7 +620,7 @@ void AtomProbe_UIDialog::setHit2Color() {
 	pal.setColor(ui->hit2ColorLabel->backgroundRole(), woot);
 	ui->hit2ColorLabel->setPalette(pal);
 	ui->hit2ColorLabel->setAutoFillBackground(true);
-	m_SetHitColorizeSignal(rrHit, ggHit,bbHit,hitEnabled);
+    m_SetHitColorizeSignal.signal(rrHit, ggHit,bbHit,hitEnabled);
 	
 }
 
@@ -636,7 +636,7 @@ void AtomProbe_UIDialog::setHit3Color() {
 	pal.setColor(ui->hit3ColorLabel->backgroundRole(), woot);
 	ui->hit3ColorLabel->setPalette(pal);
 	ui->hit3ColorLabel->setAutoFillBackground(true);
-	m_SetHitColorizeSignal(rrHit, ggHit,bbHit,hitEnabled);
+    m_SetHitColorizeSignal.signal(rrHit, ggHit,bbHit,hitEnabled);
 	
 }
 

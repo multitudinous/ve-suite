@@ -47,8 +47,8 @@
 #include <utility>
 #include <string>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <Poco/Tuple.h>
 #include <Poco/Data/Statement.h>
@@ -187,7 +187,7 @@ private:
     //Poco::Data::RecordSet m_currentStatement;
     
     /// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
     ///Sample thread
     vpr::Thread* m_sampleThread;
     ///

@@ -37,7 +37,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/OneDStringArray.h>
 #include <ves/xplorer/command/CommandManager.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/conductor/qt/UITabs.h>
 
@@ -90,16 +91,16 @@ ImageManipulationPlugin_UIDialog::ImageManipulationPlugin_UIDialog(QWidget *pare
     connect( ui->m_textInput03, SIGNAL(textChanged(QString)),
              this, SLOT(InputTextChanged(QString)));*/
 
-    ves::xplorer::eventmanager::EventManager* evm =
-        ves::xplorer::eventmanager::EventManager::instance();
-    using ves::xplorer::eventmanager::SignalWrapper;
+    switchwire::EventManager* evm =
+        switchwire::EventManager::instance();
+
     
     {
         std::string signalName = "ImageManipulationPlugin_UIDialog" +
             boost::lexical_cast<std::string>( this ) + ".ConnectToSensorServer";
         evm->RegisterSignal(
-            new SignalWrapper< ves::util::TwoStringSignal_type >( &m_connectSensorSignal ),
-            signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
+            ( &m_connectSensorSignal ),
+            signalName, switchwire::EventManager::unspecified_SignalType );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +111,7 @@ void ImageManipulationPlugin_UIDialog::on_m_sensorClientConnect_clicked()
         << ui->m_sensorClientIP->text().toStdString() << " " 
         << ui->m_sensorPort->text().toStdString() << " "
         << ui->m_heaterPort->text().toStdString() << std::endl;
-    m_connectSensorSignal( ui->m_sensorClientIP->text().toStdString(), ui->m_sensorPort->text().toStdString() );
+    m_connectSensorSignal.signal( ui->m_sensorClientIP->text().toStdString(), ui->m_sensorPort->text().toStdString() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ImageManipulationPlugin_UIDialog::on_m_heaterClientConnect_clicked()

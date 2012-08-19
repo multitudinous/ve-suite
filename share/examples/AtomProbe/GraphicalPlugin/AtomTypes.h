@@ -9,13 +9,13 @@
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 
-typedef boost::signals2::signal< void ( const std::vector< int >&, const std::vector< int >&, const std::vector< int >&, const std::vector< double >&  ) > ColorDoubleVectorSignal_type;
+typedef switchwire::Event< void ( const std::vector< int >&, const std::vector< int >&, const std::vector< int >&, const std::vector< double >&  ) > ColorDoubleVectorSignal_type;
 
-typedef boost::signals2::signal< void (  const std::vector< double >&  ) > DoubleVectorSignal_type;
+typedef switchwire::Event< void (  const std::vector< double >&  ) > DoubleVectorSignal_type;
 
 
 void SwapBytes(void *pv, size_t n);
