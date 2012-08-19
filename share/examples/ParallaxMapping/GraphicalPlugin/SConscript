@@ -33,7 +33,7 @@ osgworks_options.apply( env )
 if osgal_options.isAvailable():
    osgal_options.apply( env )
    env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
-switchwire_options.apply( lib_env )
+switchwire_options.apply( env )
 
 if GetPlatform() == 'win32':
     env[ 'no_import_lib' ] = 1
