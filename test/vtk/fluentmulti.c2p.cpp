@@ -27,7 +27,7 @@
 #include "vtkCompositeDataPipeline.h"
 #include "vtkFLUENTReader.h"
 #include "vtkCutter.h"
-#include <vtksys/ios/sstream>
+//#include <vtksys/ios/sstream>
 
 #include <vtkTriangleFilter.h>
 #include <vtkStripper.h>
