@@ -10,6 +10,7 @@ host_type = distutils.util.get_platform()
 Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
 Import('tao_options xerces_options osgworks_options LIBDIR')
 Import('bullet_options osgbullet_options osgal_options vtk_options bdfx_options xerces_options')
+Import('switchwire_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'share', 'examples', 'WarrantyTool', 'UserInterface','qtVersion') )
 buildSrcDir = pj('#',buildDir,'share', 'examples', 'WarrantyTool', 'UserInterface','qtVersion')
@@ -96,6 +97,7 @@ osgworks_options.apply( lib_env )
 osgbullet_options.apply( lib_env )
 bdfx_options.apply( lib_env )
 xerces_options.apply( lib_env )
+switchwire_options.apply( lib_env )
 
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
