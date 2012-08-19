@@ -8,6 +8,7 @@ Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir vpr_options vrjuggl
 Import('minerva_options boost_options osgal_options' )
 Import('tao_options xerces_options osg_options')
 Import('bullet_options osgbullet_options storyteller_options')
+Import('switchwire_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt') )
 buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt')
@@ -233,6 +234,7 @@ bullet_options.apply(lib_env)
 osgbullet_options.apply(lib_env)
 boost_options.apply( lib_env )
 storyteller_options.apply( lib_env )
+switchwire_options.apply( lib_env )
 
 if minerva_options.isAvailable():
 	lib_env.AppendUnique( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )
