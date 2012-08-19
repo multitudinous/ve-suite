@@ -97,7 +97,7 @@ if GetPlatform() == 'win32':
     lib_env.AppendUnique( CPPDEFINES = ['QT_NO_DEBUG'] )
 
 lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_DEFAULTPLUGIN_LIBRARY'])
-lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )
+#lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )
 lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external') ] )
 
 #create a bundle instead of a shared library
