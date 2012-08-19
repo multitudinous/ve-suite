@@ -6,6 +6,7 @@ pj = os.path.join
 Import( 'baseEnv ves_pkg GetPlatform buildDir osg_options vtk_options xerces_options GetSVNVersion RootDir' )
 Import( 'minerva_options tao_options boost_options vrjuggler_options osgal_options osgworks_options' )
 Import( 'ApplyBulletVars bullet_options osgbullet_options bdfx_options poco_options storyteller_options' )
+Import( 'switchwire_options' )
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'xplorer') )
 buildSrcDir = pj('#',buildDir,'src', 'apps', 'xplorer')
@@ -89,6 +90,7 @@ bullet_options.apply( env )
 bdfx_options.apply( env )
 poco_options.apply( env )
 storyteller_options.apply( env )
+switchwire_options.apply( env )
 
 if GetPlatform() != 'darwin':
     Import('qt_options')

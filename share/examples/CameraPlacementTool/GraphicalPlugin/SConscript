@@ -8,6 +8,8 @@ host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vrjuggler_options osg_options' )
 Import( 'osgal_options xerces_options vtk_options GetPlatform osgworks_options' )
+Import( 'switchwire_options' )
+
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'CameraPlacementTool', 'GraphicalPlugin' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -33,6 +35,7 @@ if osgal_options.isAvailable():
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 osgworks_options.apply( lib_env )
+switchwire_options.apply( lib_env )
 
 lib_env.Append( CPPDEFINES = [ ] )  
 if GetPlatform() == 'win32':
