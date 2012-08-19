@@ -756,9 +756,9 @@ if not SConsAddons.Util.hasHelpFlag():
     test = pj( buildDir, 'test', 'osg')
     issBuilder = pj(buildDir,'dist','win','iss')
     qtTestBuilder = pj(buildDir,'test','qt','BasicQtOffscreenRender')
-    qtpropertybrowserSubdirs = pj( buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource' )
+    #qtpropertybrowserSubdirs = pj( buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource' )
     qwtSubdirs = pj( buildDir, 'external', 'qwt-6.0.0-rc5' )
-    persistenceSubdirs = pj( buildDir, 'external', 'Persistence' )
+    #persistenceSubdirs = pj( buildDir, 'external', 'Persistence' )
 
     ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, minervaDataSubdirs
@@ -766,7 +766,7 @@ if not SConsAddons.Util.hasHelpFlag():
 	       ]
 
     if baseEnv[ 'MakeQtSupport' ] == 'yes':
-        ves_dirs.append( qtpropertybrowserSubdirs )
+        #ves_dirs.append( qtpropertybrowserSubdirs )
         ves_dirs.append( qwtSubdirs )
         ves_dirs.append(pj(buildDir, 'external','osgQtTree'))
         if GetPlatform() != 'win32':
