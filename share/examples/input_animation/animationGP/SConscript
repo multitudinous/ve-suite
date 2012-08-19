@@ -7,6 +7,8 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg buildDir RootDir osgworks_options gmtl_options vrjuggler_options osg_options osgal_options xerces_options vtk_options GetPlatform tao_options' )
+Import('switchwire_options')
+
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'input_animation', 'animationGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -34,6 +36,7 @@ xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 tao_options.apply( lib_env )
 osgworks_options.apply( lib_env )
+switchwire_options.apply( lib_env )
 
 lib = ves_pkg.createLoadableModule( 'VEAnimationGraphicalPlugin', lib_env,
     installPrefix = pj( 'share', 'vesuite', 'examples', 'input_animation', 'Plugins', 'GE', host_type ) )  
