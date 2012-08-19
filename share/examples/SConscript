@@ -22,7 +22,6 @@ exampleSubdirs = Split("""
     dynamic_vehicle_sim_tool
     TankPlugin
     real_time_sensor
-    painting
     Multiscale2
     image_manipulation
     constraint_demo
@@ -31,6 +30,7 @@ exampleSubdirs = Split("""
 #VascularSimViewer
 #sensor_overlay
 #VirtualLab
+#painting
 
 if poco_options.isAvailable():
     exampleSubdirs.append( 'WarrantyTool' )
