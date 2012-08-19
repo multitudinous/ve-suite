@@ -5,7 +5,7 @@ import glob
 pj = os.path.join
 
 Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
-Import('tao_options xerces_options osgworks_options LIBDIR')
+Import('tao_options xerces_options osgworks_options LIBDIR storyteller_options')
 Import('bullet_options osgbullet_options osgal_options vtk_options bdfx_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt', 'DefaultPlugin') )
@@ -84,6 +84,7 @@ vtk_options.apply( lib_env )
 osgworks_options.apply( lib_env )
 osgbullet_options.apply( lib_env )
 bdfx_options.apply( lib_env )
+storyteller_options.apply( lib_env )
 
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
