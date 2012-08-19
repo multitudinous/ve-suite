@@ -10,12 +10,6 @@ srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer', 'eventmanager') )
 sources = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
-#sources = [pj(srcDir,'EventMapper.cxx')]
-#sources += [pj(srcDir,'EventFactory.cxx')]
-
-#headers = [pj(srcDir,'EventMapper.h')]
-#headers += [pj(srcDir,'EventFactory.h')]
-
 lib_env = ves_pkg.getEnv().Clone()
 
 #vtk_options.apply( lib_env )
