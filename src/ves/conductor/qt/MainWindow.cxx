@@ -72,10 +72,10 @@
 #include <ves/xplorer/util/cfdVTKFileHandler.h>
 #include <ves/open/xml/OneDStringArray.h>
 
-#include <ves/xplorer/eventmanager/SlotWrapper.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
-//#include <ves/xplorer/eventmanager/Event.h>
+//#include <switchwire/Event.h>
 
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/data/CADPropertySet.h>
@@ -229,12 +229,12 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
         m_navMenuStack->AddAction( ui->actionCharacterFlyMode );
         m_navMenuStack->setObjectName( "m_navMenustack" );
 
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new eventmanager::SignalWrapper< NavJumpSignal_type >( &m_jumpSignal ),
+        switchwire::EventManager::instance()->RegisterSignal(
+            ( &m_jumpSignal ),
             "MainWindow.JumpSignal" );
 
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_characterEnable ),
+        switchwire::EventManager::instance()->RegisterSignal(
+            ( &m_characterEnable ),
             "MainWindow.CharacterUpdate" );
     }
 
@@ -1373,22 +1373,22 @@ void MainWindow::on_actionNavigationStack_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionSmallJump_hovered()
 {
-    m_jumpSignal( "Small" );
+    m_jumpSignal.signal( "Small" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionMediumJump_triggered()
 {
-    m_jumpSignal( "Medium" );
+    m_jumpSignal.signal( "Medium" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionLargeJump_triggered()
 {
-    m_jumpSignal( "Large" );
+    m_jumpSignal.signal( "Large" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionBoundingBoxJump_triggered()
 {
-    m_jumpSignal( "Bounding Box" );
+    m_jumpSignal.signal( "Bounding Box" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionWorldNavigation_triggered()
@@ -1409,7 +1409,7 @@ void MainWindow::on_actionCharacterNavigation_triggered( bool triggered )
 
     ui->actionCharacterFlyMode->setEnabled( !triggered );
 
-    m_characterEnable( triggered );
+    m_characterEnable.signal( triggered );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionCharacterFlyMode_triggered( bool triggered )
@@ -1507,9 +1507,9 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
               << workingDir.toStdString() << std::endl << std::flush;
     QDir::setCurrent( workingDir );
 
-    reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
-    ( eventmanager::EventFactory::instance()->GetSignal( "WorkingDirectoryChanged" ) )
-    ->mSignal->operator()( workingDir.toStdString() );
+    reinterpret_cast< ves::util::StringSignal_type* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "WorkingDirectoryChanged" ) )
+    ->signal( workingDir.toStdString() );
 
     // Close out the fileDialog tab and kill the file dialog
     RemoveTab( mFileDialog );
@@ -1522,9 +1522,9 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
 
     // Let xplorer know we are loading a new ves file so that it can do any
     // necessary cleanup, such as resetting the database
-    reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
-    ( eventmanager::EventFactory::instance()->GetSignal( "VesFileLoading" ) )
-    ->mSignal->operator()( "New" );
+    reinterpret_cast< ves::util::StringSignal_type* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VesFileLoading" ) )
+    ->signal( "New" );
 
     XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
 

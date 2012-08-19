@@ -31,7 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/xplorer/data/DatabaseDetailsPropertySet.h>
 #include <ves/xplorer/data/CADPropertySet.h>
@@ -87,8 +88,8 @@ DatabaseManager::DatabaseManager()
     :
     mPool( 0 )
 {
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< boost::signals2::signal< void() > >( &m_resyncFromDatabase ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_resyncFromDatabase ),
         "DatabaseManager.ResyncFromDatabase" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -234,7 +235,7 @@ void DatabaseManager::ResetAll()
     }
 
     // Give everyone else a chance to alter their state to agree with a reset.
-    m_resyncFromDatabase();
+    m_resyncFromDatabase.signal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::SaveAs( const std::string& path )
@@ -308,7 +309,7 @@ bool DatabaseManager::LoadFrom( const std::string& path )
         ConvertFromOld();
     }
 
-    m_resyncFromDatabase();
+    m_resyncFromDatabase.signal();
 
     return true;
 }

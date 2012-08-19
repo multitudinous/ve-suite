@@ -39,7 +39,7 @@
 #include "SceneGLTransformInfoPtr.h"
 
 #include <ves/xplorer/TextureBasedVizHandlerPtr.h>
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 #include <ves/xplorer/Logging.h>
 
@@ -60,7 +60,7 @@
 #include <osg/LightModel>
 
 // --- Boost Includes --- //
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 #include <boost/program_options.hpp>
 
 // --- Poco Includes --- //
@@ -349,10 +349,10 @@ private:
 
     /// Signal "App.LatePreFrame", emitted during LatePreFrame to allow
     /// other objects to sync operations to the draw loop
-    typedef boost::signals2::signal< void () > latePreFrame_SignalType;
+    typedef switchwire::Event< void () > latePreFrame_SignalType;
     latePreFrame_SignalType mLatePreFrame;
 
-    typedef boost::signals2::signal< void( bool const& ) > exit_SignalType;
+    typedef switchwire::Event< void( bool const& ) > exit_SignalType;
     exit_SignalType m_exitSignal;
     ///Logger
     Poco::Logger& m_logger;
@@ -366,7 +366,7 @@ private:
     unsigned int m_frameSetNearFarRatio;
     /// Required to be able to connect up to signals.
     /// Required for connecting to signals via EventManager
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
     ///Are we exiting yet
     bool m_exitApp;
     ///

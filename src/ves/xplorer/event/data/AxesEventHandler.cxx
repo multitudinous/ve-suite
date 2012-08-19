@@ -37,7 +37,8 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/device/cfdCursor.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
 
 #include <ves/open/xml/XMLObject.h>

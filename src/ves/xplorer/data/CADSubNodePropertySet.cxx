@@ -35,8 +35,8 @@
 #include <ves/xplorer/data/MakeLive.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>

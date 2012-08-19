@@ -35,8 +35,8 @@
 #include <ves/xplorer/data/MakeLive.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
@@ -67,9 +67,8 @@ CADPropertySet::CADPropertySet()
     ///Tie up the animation controls
     {
         m_animateCAD =
-            reinterpret_cast< eventmanager::SignalWrapper< ves::util::ThreeStringSignal_type >* >
-            ( eventmanager::EventFactory::instance()->GetSignal( "CADPropertySet.CADAnimation" ) )
-            ->mSignal;
+            reinterpret_cast< ves::util::ThreeStringSignal_type* >
+            ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "CADPropertySet.CADAnimation" ) );
     }
 
     CreateSkeleton();
@@ -260,7 +259,7 @@ void CADPropertySet::AddDynamicAnalysisData( PropertyPtr& )
     std::string const nodeType = "Part";
     std::string const modeID = GetUUIDAsString();
 
-    m_animateCAD->operator()( nodeType, fileName, modeID );
+    m_animateCAD->signal( nodeType, fileName, modeID );
 
     // This property should be treated as live; save to db whenever it changes.
     WriteToDatabase();

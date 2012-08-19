@@ -36,7 +36,7 @@
 #include <ves/xplorer/data/PropertySetPtr.h>
 
 #include <ves/xplorer/Logging.h>
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
@@ -120,7 +120,7 @@ private:
     ves::xplorer::LogStreamPtr m_logStream;
 
     ///Manages slot connections
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 
 };
 } // namespace conductor

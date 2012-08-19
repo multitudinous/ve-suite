@@ -40,7 +40,7 @@
 
 #include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
 
-#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+#include <switchwire/BooleanPropagationCombiner.h>
 
 #include <ves/xplorer/Logging.h>
 
@@ -74,8 +74,8 @@ class btRigidBody;
 class btTypedConstraint;
 
 // --- Boost includes --- //
-#include <boost/signals2/signal.hpp>
-//#include <ves/xplorer/eventmanager/InteractionEvent.h>
+#include <switchwire/Event.h>
+//#include <switchwire/InteractionEvent.h>
 
 // --- STL Includes --- //
 #include <bitset>
@@ -150,7 +150,7 @@ private:
     /// signal for generating the start and end point for selection and other
     ///interaction tools.
     /// Params are: start point and end point
-    typedef boost::signals2::signal< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
+    typedef switchwire::Event< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
     StartEndPointSignal_type m_startEndPointSignal;
 
     /// Temporarily needed until legacy functions in this class can be
@@ -193,14 +193,14 @@ private:
 
     /// MouseMove signal
     /// Params are: x, y, z, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal < bool ( int, int, int, int ),
-            eventmanager::BooleanPropagationCombiner > MouseMoveSignal_type;
+    typedef switchwire::Event < bool ( int, int, int, int ),
+            switchwire::BooleanPropagationCombiner > MouseMoveSignal_type;
     MouseMoveSignal_type m_mouseMove;
 
     /// MouseDoubleClick signal
     /// Params are: button, x, y, z, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal < bool ( gadget::Keys, int, int, int, int ),
-            eventmanager::BooleanPropagationCombiner > MouseDoubleClickSignal_type;
+    typedef switchwire::Event < bool ( gadget::Keys, int, int, int, int ),
+            switchwire::BooleanPropagationCombiner > MouseDoubleClickSignal_type;
     MouseDoubleClickSignal_type m_mouseDoubleClick;
 
     /// Sets up the mouse/wand button signal map
@@ -214,18 +214,18 @@ private:
 
     /// Scroll signal type
     /// Params are: deltaX, deltaY, x, y, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal < bool ( int, int, int, int, int ),
-            eventmanager::BooleanPropagationCombiner > ScrollSignal_type;
+    typedef switchwire::Event < bool ( int, int, int, int, int ),
+            switchwire::BooleanPropagationCombiner > ScrollSignal_type;
     ScrollSignal_type m_scroll;
 
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal < bool ( gadget::Keys, int, int, int ),
-            eventmanager::BooleanPropagationCombiner > ButtonPressSignal_type;
+    typedef switchwire::Event < bool ( gadget::Keys, int, int, int ),
+            switchwire::BooleanPropagationCombiner > ButtonPressSignal_type;
 
     /// ButtonRelease signal type
-    typedef boost::signals2::signal < bool ( gadget::Keys, int, int, int ),
-            eventmanager::BooleanPropagationCombiner > ButtonReleaseSignal_type;
+    typedef switchwire::Event < bool ( gadget::Keys, int, int, int ),
+            switchwire::BooleanPropagationCombiner > ButtonReleaseSignal_type;
 
     /// Map to hold ButtonPress signals
     /// First arg is actually a gadget::Keys
@@ -258,10 +258,10 @@ private:
     /// Third arg is the unicode representation of the key
     ///NOTE: As soon as VR Juggler supports wide body chars we can change the
     ///char argument back to a wchar_t
-    typedef boost::signals2::signal < bool ( gadget::Keys, int, char ),
-            eventmanager::BooleanPropagationCombiner > KeyPressSignal_type;
+    typedef switchwire::Event < bool ( gadget::Keys, int, char ),
+            switchwire::BooleanPropagationCombiner > KeyPressSignal_type;
 
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, char ) > KeyPressSignal_rtype;
+    typedef switchwire::Event< bool ( gadget::Keys, int, char ) > KeyPressSignal_rtype;
 
     /// KeyRelease signal type
     /// First arg is the key that was pressed
@@ -269,10 +269,10 @@ private:
     /// Third arg is the unicode representation of the key
     ///NOTE: As soon as VR Juggler supports wide body chars we can change the
     ///char argument back to a wchar_t
-    typedef boost::signals2::signal < bool ( gadget::Keys, int, char ),
-            eventmanager::BooleanPropagationCombiner > KeyReleaseSignal_type;
+    typedef switchwire::Event < bool ( gadget::Keys, int, char ),
+            switchwire::BooleanPropagationCombiner > KeyReleaseSignal_type;
 
-    typedef boost::signals2::signal< bool ( gadget::Keys, int, char ) > KeyReleaseSignal_rtype;
+    typedef switchwire::Event< bool ( gadget::Keys, int, char ) > KeyReleaseSignal_rtype;
 
     /// Map to hold individual KeyPress signals
     typedef std::map< gadget::Keys, KeyPressSignal_type* > KeyPressSignalMapType;

@@ -38,7 +38,7 @@
 #include <ves/xplorer/ModelPtr.h>
 #include <ves/open/xml/XMLObjectPtr.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 #include <string>
 
@@ -84,7 +84,7 @@ public:
 
 private:
     ves::xplorer::Model* _activeModel;
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 };
 
 }

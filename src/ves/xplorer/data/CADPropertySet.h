@@ -37,8 +37,6 @@
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
-#include <boost/signals2/signal.hpp>
-
 #include <ves/VEConfig.h>
 
 namespace ves

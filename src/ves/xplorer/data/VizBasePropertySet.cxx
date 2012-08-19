@@ -48,38 +48,14 @@ using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 VizBasePropertySet::VizBasePropertySet()
 {
-    /*
-    ves::xplorer::eventmanager::EventManager* evm =
-        ves::xplorer::eventmanager::EventManager::instance();
-    using ves::xplorer::eventmanager::SignalWrapper;
-
-    ///Setup the delete viz feature
-    {
-        std::string signalName = "VizBasePropertySet" +
-            boost::lexical_cast<std::string>( this ) + ".DeleteVizFeature";
-        evm->RegisterSignal(
-            new SignalWrapper< ves::util::StringSignal_type >( &m_deleteVizSignal ),
-            signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-    }
-    /Setup the add viz feature
-    {
-        std::string signalName = "VizBasePropertySet" +
-            boost::lexical_cast<std::string>( this ) + ".AddVizFeature";
-        evm->RegisterSignal(
-            new SignalWrapper< ves::util::TwoStringSignal_type >( &m_addVizSignal ),
-            signalName, ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-    }*/
-
     // Grab pointers to addVizFeature and DeleteVizFeature signals from EventFactory.
     m_addVizSignal =
-        reinterpret_cast< eventmanager::SignalWrapper< ves::util::TwoStringSignal_type >* >
-        ( eventmanager::EventFactory::instance()->GetSignal( "VizBasePropertySet.AddVizFeature" ) )
-        ->mSignal;
+        reinterpret_cast< ves::util::TwoStringSignal_type* >
+        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VizBasePropertySet.AddVizFeature" ) );
 
     m_deleteVizSignal =
-        reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
-        ( eventmanager::EventFactory::instance()->GetSignal( "VizBasePropertySet.DeleteVizFeature" ) )
-        ->mSignal;
+        reinterpret_cast< ves::util::StringSignal_type* >
+        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VizBasePropertySet.DeleteVizFeature" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VizBasePropertySet::VizBasePropertySet( const VizBasePropertySet& orig )
@@ -105,8 +81,7 @@ void VizBasePropertySet::RegisterPropertySet( std::string const& tableName )
 bool VizBasePropertySet::DeleteFromDatabase( Poco::Data::Session* const session,
         std::string const& TableName )
 {
-    //m_deleteVizSignal( GetUUIDAsString() );
-    m_deleteVizSignal->operator()( GetUUIDAsString() );
+    m_deleteVizSignal->signal( GetUUIDAsString() );
     ///Send the signal to xplorer to tell it to remove the viz feature
     return PropertySet::DeleteFromDatabase( session, TableName );
 }
@@ -116,8 +91,7 @@ bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session,
 {
     bool temp = PropertySet::WriteToDatabase( session, TableName, statement );
 
-    //    m_addVizSignal( GetUUIDAsString(), TableName );
-    m_addVizSignal->operator()( GetUUIDAsString(), TableName );
+    m_addVizSignal->signal( GetUUIDAsString(), TableName );
 
     ///Send the signal to xplorer to tell it to add the viz feature
     return temp;

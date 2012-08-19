@@ -65,8 +65,8 @@
 #include <ves/xplorer/behavior/Navigation.h>
 #include <ves/xplorer/behavior/Selection.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

@@ -42,9 +42,9 @@
 
 #include <ves/xplorer/event/cad/CADSlotInitializerPtr.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 
 #include <ves/open/xml/CommandPtr.h>
 
@@ -183,12 +183,12 @@ private:
     ///A mutex to protect variables accesses
     vpr::Mutex mValueLock;
 
-    typedef boost::signals2::signal<void ( const std::string& )> ActiveModelChangedSignal_type;
+    typedef switchwire::Event<void ( const std::string& )> ActiveModelChangedSignal_type;
     ActiveModelChangedSignal_type mActiveModelChangedSignal;
     ///Slot for initializing CAD
     ves::xplorer::event::cad::CADSlotInitializerPtr m_CADSlotInitializer;
     /// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
     ///Whether we have a db or not
     bool m_dbPresent;
 };

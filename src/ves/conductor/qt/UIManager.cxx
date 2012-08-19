@@ -36,10 +36,10 @@
 #include <ves/conductor/qt/UIElement.h>
 #include <ves/conductor/qt/UIUpdateCallback.h>
 
-#include <ves/xplorer/eventmanager/InteractionEvent.h>
-#include <ves/xplorer/eventmanager/SlotWrapper.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+#include <switchwire/InteractionEvent.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+#include <switchwire/BooleanPropagationCombiner.h>
 
 #include <ves/xplorer/scenegraph/Select.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -127,11 +127,10 @@ UIManager::UIManager() :
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     // Register signals
-    ves::xplorer::eventmanager::EventManager* evm = ves::xplorer::eventmanager::EventManager::instance();
-    using ves::xplorer::eventmanager::SignalWrapper;
+    switchwire::EventManager* evm = switchwire::EventManager::instance();
 
     evm->RegisterSignal(
-        new SignalWrapper< voidBoolSignalType >( &mUIEnterLeaveSignal ),
+        ( &mUIEnterLeaveSignal ),
         "UIManager.EnterLeaveUI" );
 
     CONNECTSIGNALS_2( "%.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &UIManager::SetStartEndPoint,
@@ -151,37 +150,37 @@ UIManager::UIManager() :
                       any_SignalType, highest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool ( int, int, int, int ),
-                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &UIManager::MouseMoveEvent, mInputConnections,
                                any_SignalType, highest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonPress%", bool ( gadget::Keys, int, int, int ),
-                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &UIManager::ButtonPressEvent, mInputConnections,
                                button_SignalType, highest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonRelease%", bool ( gadget::Keys, int, int, int ),
-                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &UIManager::ButtonReleaseEvent, mInputConnections,
                                button_SignalType, highest_Priority );
 
     CONNECTSIGNALS_5_COMBINER( "%Mouse.DoubleClick%", bool( gadget::Keys, int, int, int, int ),
-                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &UIManager::MouseDoubleClickEvent, mInputConnections,
                                button_SignalType, highest_Priority );
 
     CONNECTSIGNALS_3_COMBINER( "%KeyPress%", bool ( gadget::Keys, int, char ),
-                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &UIManager::KeyPressEvent, mInputConnections,
                                keyboard_SignalType, highest_Priority );
 
     CONNECTSIGNALS_3_COMBINER( "%KeyRelease%", bool ( gadget::Keys, int, char ),
-                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &UIManager::KeyReleaseEvent, mInputConnections,
                                keyboard_SignalType, highest_Priority );
 
     CONNECTSIGNALS_5_COMBINER( "%Mouse.Scroll%", bool ( int, int, int, int, int ),
-                               ves::xplorer::eventmanager::BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &UIManager::MouseScrollEvent, mInputConnections,
                                input_SignalType, highest_Priority );
 
@@ -666,7 +665,7 @@ void UIManager::_hideAll()
 
     // Make mouse/keyboard monopolizing state consistent with no UI
     mMouseInsideUI = false;
-    mUIEnterLeaveSignal( false );
+    mUIEnterLeaveSignal.signal( false );
     _monopolizeInput( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -830,7 +829,7 @@ void UIManager::_doMinimize()
     if( !Ortho2DTestPointerCoordinates( mCurrentXPointer, mCurrentYPointer ) )
     {
         mMouseInsideUI = false;
-        mUIEnterLeaveSignal( false );
+        mUIEnterLeaveSignal.signal( false );
         _monopolizeInput( false );
     }
 
@@ -994,7 +993,7 @@ void UIManager::HideElement( UIElement* element )
     if( !Ortho2DTestPointerCoordinates( mCurrentXPointer, mCurrentYPointer ) )
     {
         mMouseInsideUI = false;
-        mUIEnterLeaveSignal( false );
+        mUIEnterLeaveSignal.signal( false );
         _monopolizeInput( false );
     }
 }
@@ -1196,13 +1195,13 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
     if( OrthoTest && !mMouseInsideUI )
     {
         mMouseInsideUI = true;
-        mUIEnterLeaveSignal( true );
+        mUIEnterLeaveSignal.signal( true );
         _monopolizeInput( true );
     }
     else if( !OrthoTest && mMouseInsideUI )
     {
         mMouseInsideUI = false;
-        mUIEnterLeaveSignal( false );
+        mUIEnterLeaveSignal.signal( false );
         _monopolizeInput( false );
     }
 
@@ -1382,10 +1381,10 @@ void UIManager::_monopolizeInput( bool monopolize )
     if( monopolize )
     {
         // Monopolize all key/button input events
-        ves::xplorer::eventmanager::EventManager* evm =
-            ves::xplorer::eventmanager::EventManager::instance();
+        switchwire::EventManager* evm =
+            switchwire::EventManager::instance();
 
-        ves::xplorer::eventmanager::ScopedConnectionList::ConnectionList_type::iterator iter
+        switchwire::ScopedConnectionList::ConnectionList_type::iterator iter
             = mInputConnections.GetBegin();
 
         while( iter != mInputConnections.GetEnd() )
@@ -1399,7 +1398,7 @@ void UIManager::_monopolizeInput( bool monopolize )
     {
         // Release all key/button monopolies
         std::vector < boost::shared_ptr <
-        ves::xplorer::eventmanager::ConnectionMonopoly >
+        switchwire::ConnectionMonopoly >
         >::iterator iter = mInputMonopolies.begin();
         while( iter != mInputMonopolies.end() )
         {

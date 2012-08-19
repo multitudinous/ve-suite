@@ -36,7 +36,8 @@
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/data/MakeLive.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
@@ -48,7 +49,7 @@ using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 StreamlinePropertySet::StreamlinePropertySet()
 {
-    using eventmanager::SignalWrapper;
+    
 
     ///Signal for turning on seed points
     {
@@ -56,9 +57,9 @@ StreamlinePropertySet::StreamlinePropertySet()
         name += boost::lexical_cast<std::string>( this );
         name += ".ActivateSeedPoints";
 
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< ActivateSeedPointsSignal_type >( &m_activateSeedPoints ),
-            name, eventmanager::EventManager::unspecified_SignalType );
+        switchwire::EventManager::instance()->RegisterSignal(
+            ( &m_activateSeedPoints ),
+            name, switchwire::EventManager::unspecified_SignalType );
     }
     ///Signal to change the bounds of seed points
     {
@@ -66,9 +67,9 @@ StreamlinePropertySet::StreamlinePropertySet()
         name += boost::lexical_cast<std::string>( this );
         name += ".UpdateSeedPointBounds";
 
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< UpdateSeedPointBoundsSignal_type >( &m_updateSeedPointBounds ),
-            name, eventmanager::EventManager::unspecified_SignalType );
+        switchwire::EventManager::instance()->RegisterSignal(
+            ( &m_updateSeedPointBounds ),
+            name, switchwire::EventManager::unspecified_SignalType );
     }
     ///Signal to change the active dataset
     {
@@ -76,9 +77,9 @@ StreamlinePropertySet::StreamlinePropertySet()
         name += boost::lexical_cast<std::string>( this );
         name += ".ActiveDataSet";
 
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< UpdateActiveDataSetSignal_type >( &m_activeDataSet ),
-            name, eventmanager::EventManager::unspecified_SignalType );
+        switchwire::EventManager::instance()->RegisterSignal(
+            ( &m_activeDataSet ),
+            name, switchwire::EventManager::unspecified_SignalType );
     }
 
     mTableName = "Streamline";
@@ -288,7 +289,7 @@ void StreamlinePropertySet::UpdateSeedPointDisplay( PropertyPtr property )
 {
     const std::string dataSetName =
         boost::any_cast< std::string >( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
-    m_activeDataSet( dataSetName );
+    m_activeDataSet.signal( dataSetName );
 
     bool showDataSet = boost::any_cast< bool >( property->GetValue() );
 
@@ -302,9 +303,9 @@ void StreamlinePropertySet::UpdateSeedPointDisplay( PropertyPtr property )
         seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_YMax" ) ) );
         seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_ZMin" ) ) );
         seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_ZMax" ) ) );
-        m_updateSeedPointBounds( seedPointBounds );
+        m_updateSeedPointBounds.signal( seedPointBounds );
     }
 
-    m_activateSeedPoints( dataSetName, showDataSet );
+    m_activateSeedPoints.signal( dataSetName, showDataSet );
 }
 ////////////////////////////////////////////////////////////////////////////////

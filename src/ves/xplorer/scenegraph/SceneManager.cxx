@@ -36,9 +36,8 @@
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
-#include <ves/xplorer/eventmanager/EventFactory.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #ifdef VE_SOUND
 #include <ves/xplorer/scenegraph/Sound.h>
@@ -159,8 +158,8 @@ SceneManager::SceneManager()
     m_nullGlowTextureUniform = new osg::Uniform( "tex", 0 );
     ///For models without textures
 
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_updateData ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_updateData ),
         "SceneManager.UpdateData" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -664,7 +663,7 @@ void SceneManager::PrePhysicsLatePreFrameUpdate()
     //on the current view matrix.
     if( !m_isDesktopMode && mCharacterController->IsEnabled() )
     {
-        m_updateData( true );
+        m_updateData.signal( true );
     }
 
     m_previousVRJHeadMatrix = m_vrjHeadMatrix;

@@ -37,7 +37,7 @@
 
 // --- Boost includes --- //
 #include <boost/noncopyable.hpp>
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 
 // --- C++ headers --- //
 #include <string>
@@ -170,7 +170,7 @@ private:
 
     /// Signal registered as "DatabaseManager.ResyncFromDatabase" that is
     /// emitted during calls to LoadFrom.
-    boost::signals2::signal< void() > m_resyncFromDatabase;
+    switchwire::Event< void() > m_resyncFromDatabase;
 };
 
 }// namespace data

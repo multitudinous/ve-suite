@@ -37,7 +37,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 #include <ves/xplorer/scenegraph/physics/character/KinematicCharacterController.h>
 
@@ -390,7 +390,7 @@ private:
 
     /// Required to be able to connect up to signals.
     /// Required for connecting to signals via EventManager
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 
     ///
     osg::ref_ptr< osg::PositionAttitudeTransform > m_scaleDown;

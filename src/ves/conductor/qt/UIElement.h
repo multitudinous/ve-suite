@@ -47,7 +47,8 @@
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
+#include <switchwire/InteractionEvent.h>
 
 namespace osg
 {
@@ -127,7 +128,7 @@ public:
     ///
     /// Required override.
     ////////////////////////////////////////////////////////////////////////////////
-    virtual void SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
+    virtual void SendInteractionEvent( switchwire::InteractionEvent& event );
 
     virtual void SendButtonPressEvent( gadget::Keys button, int x, int y, int state );
     virtual void SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
@@ -292,7 +293,7 @@ protected:
     ///Tell whether the UI enter or leave
     bool m_mouseInsideUI;
     /// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
     ///Keep a ratio of the number of pixels per foot for non-desktop mode
     double m_pixelUIRatio;
     ///The min and max corners for this element

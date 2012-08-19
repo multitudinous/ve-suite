@@ -47,108 +47,71 @@ EventFactory::EventFactory():
 {
     LOG_TRACE( "ctor" );
 
-    EventManager* evm = EventManager::instance();
+    switchwire::EventManager* evm = switchwire::EventManager::instance();
 
     //Delete viz feature
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::StringSignal_type >( &m_deleteVizSignal );
-        evm->RegisterSignal( swb, "VizBasePropertySet.DeleteVizFeature",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "VizBasePropertySet.DeleteVizFeature" ] = swb;
-    }
+    evm->RegisterSignal( &m_deleteVizSignal, "VizBasePropertySet.DeleteVizFeature",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "VizBasePropertySet.DeleteVizFeature" ] = &m_deleteVizSignal;
+
 
     //Add viz feature
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::TwoStringSignal_type >( &m_addVizSignal );
-        evm->RegisterSignal( swb, "VizBasePropertySet.AddVizFeature",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "VizBasePropertySet.AddVizFeature" ] = swb;
-    }
+    evm->RegisterSignal( &m_addVizSignal, "VizBasePropertySet.AddVizFeature",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "VizBasePropertySet.AddVizFeature" ] = &m_addVizSignal;
+
 
     //Ves File Loading
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::StringSignal_type >( &m_vesFileLoadingSignal );
-        evm->RegisterSignal( swb, "VesFileLoading",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "VesFileLoading" ] = swb;
-    }
+    evm->RegisterSignal( &m_vesFileLoadingSignal, "VesFileLoading",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "VesFileLoading" ] = &m_vesFileLoadingSignal;
+
 
     //Ves File Loaded
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::StringSignal_type >( &m_vesFileLoadedSignal );
-        evm->RegisterSignal( swb, "VesFileLoaded",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "VesFileLoaded" ] = swb;
-    }
+    evm->RegisterSignal( &m_vesFileLoadedSignal, "VesFileLoaded",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "VesFileLoaded" ] = &m_vesFileLoadedSignal;
+
     //Working Directory has changed
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::StringSignal_type >( &m_workingDirChangedSignal );
-        evm->RegisterSignal( swb, "WorkingDirectoryChanged",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "WorkingDirectoryChanged" ] = swb;
-    }
+    evm->RegisterSignal( &m_workingDirChangedSignal, "WorkingDirectoryChanged",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "WorkingDirectoryChanged" ] = &m_workingDirChangedSignal;
+
     // Delete a CAD node
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::ThreeStringSignal_type >( &m_deleteCADNodeSignal );
-        evm->RegisterSignal( swb, "DeleteCADNode",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "DeleteCADNode" ] = swb;
-    }
+    evm->RegisterSignal( &m_deleteCADNodeSignal, "DeleteCADNode",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "DeleteCADNode" ] = &m_deleteCADNodeSignal;
+
     //Change the active model
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::StringSignal_type >( &m_changeActiveModelSignal );
-        evm->RegisterSignal( swb, "ChangeActiveModel",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "ChangeActiveModel" ] = swb;
-    }
+    evm->RegisterSignal( &m_changeActiveModelSignal, "ChangeActiveModel",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "ChangeActiveModel" ] = &m_changeActiveModelSignal;
+
     //Add multi body dynamics data to a CAD file
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::ThreeStringSignal_type >( &m_dynamicsDataCADNodeSignal );
-        evm->RegisterSignal( swb, "CADPropertySet.CADAnimation",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "CADPropertySet.CADAnimation" ] = swb;
-    }
+    evm->RegisterSignal( &m_dynamicsDataCADNodeSignal, "CADPropertySet.CADAnimation",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "CADPropertySet.CADAnimation" ] = &m_dynamicsDataCADNodeSignal;
+
     ///Signal for Background Color
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::BoolAndDoubleVectorSignal_type >( &m_changeBackgroundColorSignal );
-        evm->RegisterSignal( swb, "PreferencesPropertySet.UsePreferredBackgroundColor",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "PreferencesPropertySet.UsePreferredBackgroundColor" ] = swb;
-    }
+    evm->RegisterSignal( &m_changeBackgroundColorSignal, "PreferencesPropertySet.UsePreferredBackgroundColor",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "PreferencesPropertySet.UsePreferredBackgroundColor" ] = &m_changeBackgroundColorSignal;
+
     // Update Network
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::VoidSignal_type >( &m_updateNetworkSignal );
-        evm->RegisterSignal( swb, "UpdateNetwork",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "UpdateNetwork" ] = swb;
-    }
+    evm->RegisterSignal( &m_updateNetworkSignal, "UpdateNetwork",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "UpdateNetwork" ] = &m_updateNetworkSignal;
+
     // Add a texture dataset
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::TwoStringSignal_type >( &m_addTBETScalarSignal );
-        evm->RegisterSignal( swb, "DatasetPropertySet.TBETAddScalarSignal",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "DatasetPropertySet.TBETAddScalarSignal" ] = swb;
-    }
+    evm->RegisterSignal( &m_addTBETScalarSignal, "DatasetPropertySet.TBETAddScalarSignal",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "DatasetPropertySet.TBETAddScalarSignal" ] = &m_addTBETScalarSignal;
+
 
     // Scenegraph has changed
-    {
-        SignalWrapperBase* swb =
-            new SignalWrapper< ves::util::VoidSignal_type >( &m_scenegraphChangedSignal );
-        evm->RegisterSignal( swb, "ScenegraphChanged",
-                             ves::xplorer::eventmanager::EventManager::unspecified_SignalType );
-        m_signals[ "ScenegraphChanged" ] = swb;
-    }
+    evm->RegisterSignal( &m_scenegraphChangedSignal, "ScenegraphChanged",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "ScenegraphChanged" ] = &m_scenegraphChangedSignal;
 }
 
 EventFactory::~EventFactory()
@@ -156,9 +119,9 @@ EventFactory::~EventFactory()
 
 }
 
-SignalWrapperBase* EventFactory::GetSignal( const std::string& signalName )
+switchwire::EventBase* EventFactory::GetSignal( const std::string& signalName )
 {
-    std::map< std::string, SignalWrapperBase* >::const_iterator iter =
+    std::map< std::string, switchwire::EventBase* >::const_iterator iter =
         m_signals.find( signalName );
     if( iter != m_signals.end() )
     {

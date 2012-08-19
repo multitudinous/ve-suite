@@ -48,7 +48,7 @@
 
 #include <ves/open/xml/CommandPtr.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 #include <ves/xplorer/Logging.h>
 
@@ -232,7 +232,7 @@ private:
     typedef std::tr1::unordered_map<vpr::GUID, cfdGraphicsObject*, vpr::GUID::hash> graphics_objects_map;
     graphics_objects_map m_graphicsObjectMap;
     /// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
     ///Logger reference
     Poco::Logger& m_logger;
     ///Actual stream for this class

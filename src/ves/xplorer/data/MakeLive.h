@@ -35,7 +35,8 @@
 #include <ves/xplorer/data/Property.h>
 #include <ves/xplorer/data/PropertySet.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <string>
 #include <iostream>
@@ -43,7 +44,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/any.hpp>
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 #include <boost/lexical_cast.hpp>
 #include <boost/concept_check.hpp>
 
@@ -116,15 +117,14 @@ public:
         m_SignalName.append( "." );
         m_SignalName.append( signalName );
 
-        using ves::xplorer::eventmanager::EventManager;
-        using ves::xplorer::eventmanager::SignalWrapper;
+        using switchwire::EventManager;
         if( m_passUUID )
         {
-            EventManager::instance()->RegisterSignal( new SignalWrapper<m_Signal_Type>( &m_Signal ), m_SignalName );
+            EventManager::instance()->RegisterSignal( ( &m_Signal ), m_SignalName );
         }
         else
         {
-            EventManager::instance()->RegisterSignal( new SignalWrapper<m_SignalNoUUID_Type>( &m_SignalNoUUID ), m_SignalName );
+            EventManager::instance()->RegisterSignal( ( &m_SignalNoUUID ), m_SignalName );
         }
         property->SignalValueChanged.connect( boost::bind( &MakeLive<T>::ValueChangedSlot, this, _1 ) );
     }
@@ -139,11 +139,11 @@ public:
                 T value = boost::any_cast<T>( bval );
                 if( m_passUUID )
                 {
-                    m_Signal( m_UUID, value );
+                    m_Signal.signal( m_UUID, value );
                 }
                 else
                 {
-                    m_SignalNoUUID( value );
+                    m_SignalNoUUID.signal( value );
                 }
             }
         }
@@ -155,9 +155,9 @@ public:
     }
 
 private:
-    typedef boost::signals2::signal< void( const std::string&, T ) > m_Signal_Type;
+    typedef switchwire::Event< void( const std::string&, T ) > m_Signal_Type;
     m_Signal_Type m_Signal;
-    typedef boost::signals2::signal< void( T ) > m_SignalNoUUID_Type;
+    typedef switchwire::Event< void( T ) > m_SignalNoUUID_Type;
     m_SignalNoUUID_Type m_SignalNoUUID;
     std::string m_SignalName;
     std::string& m_UUID;
@@ -186,15 +186,14 @@ public:
         m_SignalName.append( "." );
         m_SignalName.append( signalName );
 
-        using ves::xplorer::eventmanager::EventManager;
-        using ves::xplorer::eventmanager::SignalWrapper;
+        using switchwire::EventManager;
         if( m_passUUID )
         {
-            EventManager::instance()->RegisterSignal( new SignalWrapper<m_Signal_Type>( &m_Signal ), m_SignalName );
+            EventManager::instance()->RegisterSignal( ( &m_Signal ), m_SignalName );
         }
         else
         {
-            EventManager::instance()->RegisterSignal( new SignalWrapper<m_SignalNoUUID_Type>( &m_SignalNoUUID ), m_SignalName );
+            EventManager::instance()->RegisterSignal( ( &m_SignalNoUUID ), m_SignalName );
         }
         property->SignalValueChanged.connect( boost::bind( &MakeLive<std::string>::ValueChangedSlot, this, _1 ) );
     }
@@ -208,11 +207,11 @@ public:
                 std::string value = boost::any_cast<std::string>( property->GetAttribute( "enumCurrentString" ) );
                 if( m_passUUID )
                 {
-                    m_Signal( m_UUID, value );
+                    m_Signal.signal( m_UUID, value );
                 }
                 else
                 {
-                    m_SignalNoUUID( value );
+                    m_SignalNoUUID.signal( value );
                 }
             }
             else
@@ -223,11 +222,11 @@ public:
                     std::string value = boost::any_cast<std::string>( bval );
                     if( m_passUUID )
                     {
-                        m_Signal( m_UUID, value );
+                        m_Signal.signal( m_UUID, value );
                     }
                     else
                     {
-                        m_SignalNoUUID( value );
+                        m_SignalNoUUID.signal( value );
                     }
                 }
             }
@@ -240,9 +239,9 @@ public:
     }
 
 private:
-    typedef boost::signals2::signal< void( const std::string&, std::string ) > m_Signal_Type;
+    typedef switchwire::Event< void( const std::string&, std::string ) > m_Signal_Type;
     m_Signal_Type m_Signal;
-    typedef boost::signals2::signal< void( std::string ) > m_SignalNoUUID_Type;
+    typedef switchwire::Event< void( std::string ) > m_SignalNoUUID_Type;
     m_SignalNoUUID_Type m_SignalNoUUID;
     std::string m_SignalName;
     std::string& m_UUID;
@@ -289,9 +288,8 @@ public:
         m_SignalName.append( "." );
         m_SignalName.append( signalName );
 
-        using ves::xplorer::eventmanager::EventManager;
-        using ves::xplorer::eventmanager::SignalWrapper;
-        EventManager::instance()->RegisterSignal( new SignalWrapper<m_Signal_Type>( &m_Signal ), m_SignalName );
+        using switchwire::EventManager;
+        EventManager::instance()->RegisterSignal( ( &m_Signal ), m_SignalName );
 
         std::vector< PropertyPtr >::const_iterator iter = m_Properties.begin();
         while( iter != m_Properties.end() )
@@ -323,7 +321,7 @@ public:
                 result.push_back( boost::any_cast<T>( ( *iter )->GetValue() ) );
                 ++iter;
             }
-            m_Signal( m_UUID, result );
+            m_Signal.signal( m_UUID, result );
         }
         catch( ... )
         {
@@ -333,7 +331,7 @@ public:
     }
 
 private:
-    typedef boost::signals2::signal< void( const std::string&, const std::vector< T >& ) > m_Signal_Type;
+    typedef switchwire::Event< void( const std::string&, const std::vector< T >& ) > m_Signal_Type;
     m_Signal_Type m_Signal;
     std::string m_SignalName;
     std::string& m_UUID;
@@ -361,9 +359,8 @@ public:
         m_SignalName.append( "." );
         m_SignalName.append( signalName );
 
-        using ves::xplorer::eventmanager::EventManager;
-        using ves::xplorer::eventmanager::SignalWrapper;
-        EventManager::instance()->RegisterSignal( new SignalWrapper<m_Signal_Type>( &m_Signal ), m_SignalName );
+        using switchwire::EventManager;
+        EventManager::instance()->RegisterSignal( ( &m_Signal ), m_SignalName );
 
         std::vector< PropertyPtr >::const_iterator iter = m_Properties.begin();
         while( iter != m_Properties.end() )
@@ -401,7 +398,7 @@ public:
                 }
                 ++iter;
             }
-            m_Signal( m_UUID, result );
+            m_Signal.signal( m_UUID, result );
 
         }
         catch( ... )
@@ -412,7 +409,7 @@ public:
     }
 
 private:
-    typedef boost::signals2::signal< void( const std::string&, const std::vector< std::string >& ) > m_Signal_Type;
+    typedef switchwire::Event< void( const std::string&, const std::vector< std::string >& ) > m_Signal_Type;
     m_Signal_Type m_Signal;
     std::string m_SignalName;
     std::string& m_UUID;

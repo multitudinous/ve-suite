@@ -38,7 +38,8 @@
 
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -169,7 +170,7 @@ AppWrapper::~AppWrapper()
     m_vjObsWrapper = NULL;
     m_jugglerIsRunning = false;
 
-    ves::xplorer::eventmanager::EventManager::instance()->Shutdown();
+    switchwire::EventManager::instance()->Shutdown();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool AppWrapper::JugglerIsRunning()

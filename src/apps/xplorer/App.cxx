@@ -65,8 +65,8 @@
 
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/eventmanager/EventMapper.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElementQt.h>
 #include <ves/conductor/qt/MainWindow.h>
@@ -260,7 +260,7 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
                                  ortho2DMatrix, identityMatrix, zUpMatrix ) );
 
     ///Setup the event mapper to initialize the default signals
-    ves::xplorer::eventmanager::EventMapper::instance();
+    eventmanager::EventMapper::instance();
 
     //Set the current database file and clear it out in case it contains data
     //from a previous session
@@ -305,12 +305,12 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
 
     // Register signal(s) with EventManager
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< latePreFrame_SignalType >( &mLatePreFrame ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &mLatePreFrame ),
         "App.LatePreFrame" );
 
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< exit_SignalType >( &m_exitSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_exitSignal ),
         "App.Exit" );
 
     CONNECTSIGNALS_2( "%NearFarRatio", void( bool const&, double const& ),
@@ -337,7 +337,7 @@ App::~App()
 void App::exit()
 {
     m_exitApp = true;
-    m_exitSignal( m_exitApp );
+    m_exitSignal.signal( m_exitApp );
 
 #if defined( _DARWIN )
     if( m_signalLock.test() )
@@ -853,7 +853,7 @@ void App::latePreFrame()
     ///////////////////////
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame EventMapper", 20 );
-        ves::xplorer::eventmanager::EventMapper::instance()->LatePreFrameUpdate();
+        eventmanager::EventMapper::instance()->LatePreFrameUpdate();
     }
     ///////////////////////
 #ifdef MINERVA_GIS_SUPPORT
@@ -894,7 +894,7 @@ void App::latePreFrame()
     ///////////////////////
     // Signal allowing other listeners to perform processing synced to draw
     {
-        mLatePreFrame();
+        mLatePreFrame.signal();
     }
     ///////////////////////
 

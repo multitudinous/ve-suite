@@ -86,7 +86,7 @@ public:
     virtual int GetElementWidth();
     virtual int GetElementHeight();
     const virtual osg::Vec4f GetTextureCoordinates();
-    virtual void SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent& event );
+    virtual void SendInteractionEvent( switchwire::InteractionEvent& event );
 
     virtual void SendButtonPressEvent( gadget::Keys button, int x, int y, int state );
     virtual void SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
@@ -187,7 +187,7 @@ private:
 
 protected Q_SLOTS:
     void _render();
-    //void _sendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
+    //void _sendEvent( switchwire::InteractionEvent* event );
     void _resizeCanvas( int width, int height );
 
     void _buttonPressEvent( gadget::Keys button, int x, int y, int state );
@@ -209,7 +209,7 @@ protected Q_SLOTS:
 Q_SIGNALS:
     void RequestRender();
     void PutResizeCanvas( int width, int height );
-    //void PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* event );
+    //void PutSendEvent( switchwire::InteractionEvent* event );
     void PutButtonPressEvent( gadget::Keys button, int x, int y, int state );
     void PutButtonReleaseEvent( gadget::Keys button, int x, int y, int state );
     void PutDoubleClickEvent( gadget::Keys button, int x, int y, int state );

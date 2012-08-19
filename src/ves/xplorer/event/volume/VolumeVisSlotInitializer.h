@@ -33,7 +33,7 @@
 
 #pragma once
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 namespace ves
 {
@@ -50,7 +50,7 @@ public:
     VolumeVisSlotInitializer();
 
 private:
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 };
 
 } // namespace cad

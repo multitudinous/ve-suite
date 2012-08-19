@@ -40,7 +40,7 @@
 
 #include <ves/VEConfig.h>
 
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 
 namespace ves
 {
@@ -98,7 +98,7 @@ private:
     void CreateSkeleton();
 
     ///Update signal containing new seed points dimensions
-    typedef boost::signals2::signal< void ( bool const&, double const& ) > UpdateCheckAndValueSignal_type;
+    typedef switchwire::Event< void ( bool const&, double const& ) > UpdateCheckAndValueSignal_type;
     UpdateCheckAndValueSignal_type m_nearFarRatio;
     UpdateCheckAndValueSignal_type m_draggerScaling;
 
@@ -106,7 +106,7 @@ private:
     ves::util::BoolAndDoubleVectorSignal_type* m_backgroundColor;
 
     ///Update signal for check box preferences
-    //    typedef boost::signals2::signal< void ( bool const& ) > CheckValueSignal_type;
+    //    typedef switchwire::Event< void ( bool const& ) > CheckValueSignal_type;
     //    CheckValueSignal_type m_navZEqual0;
     //    CheckValueSignal_type m_navZGreater0;
     //    CheckValueSignal_type m_shutdownXplorer;
@@ -115,7 +115,7 @@ private:
     //    CheckValueSignal_type m_screenAlignedNormals;
 
     ///Update signal for check box preferences
-    //    typedef boost::signals2::signal< void ( const double ) > DoubleValueSignal_type;
+    //    typedef switchwire::Event< void ( const double ) > DoubleValueSignal_type;
     //    DoubleValueSignal_type m_lodScaling;
 };
 } // namespace data

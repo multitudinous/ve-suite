@@ -45,7 +45,8 @@
 
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -130,8 +131,8 @@ WandEvents::WandEvents()
 
     LOG_TRACE( "Done attempting to connect to wand Button0 signals" );
 
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_objectPickedSignal ),
         "WandEvents.ObjectPickedSignal" );
 
     m_cadSelectionMode = false;
@@ -347,7 +348,7 @@ void WandEvents::ProcessSelection()
     // FindVESObject
     osg::NodePath np = intersections.begin()->nodePath;
     ///Send the data back to the ui for the expanding tree
-    m_objectPickedSignal( np );
+    m_objectPickedSignal.signal( np );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WandEvents::ClearPointConstraint()

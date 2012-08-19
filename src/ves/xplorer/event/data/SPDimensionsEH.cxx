@@ -37,8 +37,8 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/event/data/SeedPoints.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SlotWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

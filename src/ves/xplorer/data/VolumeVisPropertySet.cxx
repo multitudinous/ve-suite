@@ -36,7 +36,8 @@
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/data/MakeLive.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
@@ -48,7 +49,7 @@ using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 VolumeVisPropertySet::VolumeVisPropertySet()
 {
-    using eventmanager::SignalWrapper;
+    
 
     ///Signal to change the active dataset
     {
@@ -56,9 +57,9 @@ VolumeVisPropertySet::VolumeVisPropertySet()
         name += boost::lexical_cast<std::string>( this );
         name += ".TBETUpdateScalarRange";
 
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< ves::util::TwoDoubleSignal_type >( &m_updateTBETScalarRange ),
-            name, eventmanager::EventManager::unspecified_SignalType );
+        switchwire::EventManager::instance()->RegisterSignal(
+            ( &m_updateTBETScalarRange ),
+            name, switchwire::EventManager::unspecified_SignalType );
     }
     ///Signal to change the active dataset
     {
@@ -66,9 +67,9 @@ VolumeVisPropertySet::VolumeVisPropertySet()
         name += boost::lexical_cast<std::string>( this );
         name += ".TBETUpdateScalar";
 
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< UpdateScalar_type >( &m_updateTBETScalar ),
-            name, eventmanager::EventManager::unspecified_SignalType );
+        switchwire::EventManager::instance()->RegisterSignal(
+            ( &m_updateTBETScalar ),
+            name, switchwire::EventManager::unspecified_SignalType );
     }
 
     mTableName = "VolumeVis";
@@ -108,7 +109,7 @@ void VolumeVisPropertySet::UpdateScalarRange( PropertyPtr )
     castMax = boost::any_cast<double>( max->GetValue() );
     castMin = boost::any_cast<double>( min->GetValue() );
 
-    m_updateTBETScalarRange( castMin, castMax );
+    m_updateTBETScalarRange.signal( castMin, castMax );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VolumeVisPropertySet::UpdateScalar( PropertyPtr property )
@@ -130,7 +131,7 @@ void VolumeVisPropertySet::UpdateScalar( PropertyPtr property )
     castMax = boost::any_cast<double>( max->GetValue() );
     castMin = boost::any_cast<double>( min->GetValue() );
 
-    m_updateTBETScalar( currentScalar, "Scalar", castMin, castMax );
+    m_updateTBETScalar.signal( currentScalar, "Scalar", castMin, castMax );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VolumeVisPropertySet::CreateSkeleton()

@@ -47,7 +47,7 @@
 
 #include <ves/xplorer/plugin/PluginBase.h>
 
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 
 namespace ves
 {
@@ -79,7 +79,7 @@ public:
 
     vpr::LibraryFinder::LibraryList libs;
 
-    typedef boost::signals2::signal < void ( const std::string&,
+    typedef switchwire::Event < void ( const std::string&,
             ves::xplorer::plugin::PluginBase* ) > createPluginSignal_type;
     createPluginSignal_type m_createUIPlugin;
 };

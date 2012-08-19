@@ -52,7 +52,8 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
@@ -111,19 +112,16 @@ TreeTab::TreeTab( QWidget* parent ) :
                       &TreeTab::OnObjectPicked,
                       mConnections, any_SignalType, normal_Priority );
 
-    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-        new ves::xplorer::eventmanager::SignalWrapper <
-        boost::signals2::signal< void( osg::NodePath& ) > > ( &m_highlightAndSetManipulators ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_highlightAndSetManipulators ),
         "TreeTab.HighlightAndSetManipulators" );
 
-    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-        new ves::xplorer::eventmanager::SignalWrapper <
-        boost::signals2::signal< void( osg::NodePath& ) > > ( &m_highlightNode ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_highlightNode ),
         "TreeTab.HighlightNode" );
 
-    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-        new ves::xplorer::eventmanager::SignalWrapper <
-        ves::util::StringSignal_type > ( &m_CADNodeSelected ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_CADNodeSelected ),
         "TreeTab.CADNodeSelected" );
 
     CONNECTSIGNALS_1( "%NodeAdded",
@@ -302,7 +300,7 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
 
             mBrowser->RefreshAll();
 
-            m_highlightNode( nodePath );
+            m_highlightNode.signal( nodePath );
         }
         else
         {
@@ -354,13 +352,13 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
         //Set the selected DCS
         osg::NodePath nodePath = osgwTools::stringToNodePath( nodepath,
                                  ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
-        m_highlightAndSetManipulators( nodePath );
+        m_highlightAndSetManipulators.signal( nodePath );
     }
 
     if( type == "CAD" )
     {
         LOG_DEBUG( "Firing CADNodeSelected signal" );
-        m_CADNodeSelected( nodepath );
+        m_CADNodeSelected.signal( nodepath );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -528,9 +526,9 @@ void TreeTab::on_m_deleteButton_clicked()
     }
 
     using namespace ves::xplorer;
-    reinterpret_cast< eventmanager::SignalWrapper< ves::util::ThreeStringSignal_type >* >
-    ( eventmanager::EventFactory::instance()->GetSignal( "DeleteCADNode" ) )
-    ->mSignal->operator()( parentID, nodeID, type );
+    reinterpret_cast< ves::util::ThreeStringSignal_type* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "DeleteCADNode" ) )
+    ->signal( parentID, nodeID, type );
 
     RefreshTree();
 }

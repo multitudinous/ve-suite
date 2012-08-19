@@ -40,7 +40,7 @@
 
 #include <ves/xplorer/device/Device.h>
 
-#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+#include <switchwire/BooleanPropagationCombiner.h>
 
 // --- vrJuggler Includes --- //
 
@@ -79,7 +79,7 @@ class btRigidBody;
 class btTypedConstraint;
 
 // --- Boost includes --- //
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 
 // --- STL Includes --- //
 #include <bitset>
@@ -201,13 +201,13 @@ private:
     /// signal for generating the start and end point for selection and other
     ///interaction tools.
     /// Params are: start point and end point
-    typedef boost::signals2::signal< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
+    typedef switchwire::Event< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
     StartEndPointSignal_type m_startEndPointSignal;
 
     /// MouseMove signal
     /// Params are: x, y, z, state (modifier mask OR'd with button mask)
     typedef boost::signals2::signal < bool ( int, int, int, int ),
-            eventmanager::BooleanPropagationCombiner > MouseMoveSignal_type;
+            switchwire::BooleanPropagationCombiner > MouseMoveSignal_type;
     MouseMoveSignal_type m_mouseMove;
 
     ///Hide show ui signal type
@@ -219,7 +219,7 @@ private:
     /// Scroll signal type
     /// Params are: deltaX, deltaY, x, y, state (modifier mask OR'd with button mask)
     typedef boost::signals2::signal < bool ( int, int, int, int, int ),
-            eventmanager::BooleanPropagationCombiner > ScrollSignal_type;
+            switchwire::BooleanPropagationCombiner > ScrollSignal_type;
     ScrollSignal_type m_scroll;
 
     //osg::ref_ptr< osgwMx::MxInputAdapterGadgeteerGamePad > m_gadgetInputAdapter;

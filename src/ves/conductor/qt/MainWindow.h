@@ -40,7 +40,7 @@
 //Needed for NodePath
 #include <osg/Node>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
@@ -341,7 +341,7 @@ private:
     std::string mActiveTab;
 
     /// Maintains the list of signals this object is connected to
-    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
+    switchwire::ScopedConnectionList mConnections;
 
     // Main tabs that this class owns and manages
     QWidget* mVisualizationTab;
@@ -364,7 +364,7 @@ private:
 
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< void ( const std::string ) > NavJumpSignal_type;
+    typedef switchwire::Event< void ( const std::string ) > NavJumpSignal_type;
     NavJumpSignal_type m_jumpSignal;
 
     ///Control the syncing of the ves db

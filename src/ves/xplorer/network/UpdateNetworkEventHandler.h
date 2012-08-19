@@ -40,7 +40,7 @@
  */
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 namespace ves
 {
@@ -97,7 +97,7 @@ public:
     void UpdateNetwork();
 
 private:
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 };
 }
 }

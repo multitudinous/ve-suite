@@ -37,7 +37,8 @@ env.Append( LIBS = [ 'ves_open_xml',
                      'ves_conductor_qtui',
                      'ves_xplorer_data',
                      'ves_xplorer_eventmanager',
-                     'qwt' ])
+                     'qwt',
+                     'switchwire' ])
 
 env.Append(LIBPATH = [  pj('#',buildDir,'src','ves','xplorer','scenegraph'),
                         pj('#',buildDir,'src','ves','xplorer','util'),

@@ -43,8 +43,9 @@
 
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+#include <switchwire/BooleanPropagationCombiner.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -119,11 +120,11 @@ Selection::Selection()
     m_cadSelectionMode( false )
 {
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &Selection::ProcessSelection,
+                               switchwire::BooleanPropagationCombiner, &Selection::ProcessSelection,
                                m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &Selection::RegisterButtonPress,
+                               switchwire::BooleanPropagationCombiner, &Selection::RegisterButtonPress,
                                m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
@@ -131,7 +132,7 @@ Selection::Selection()
 
     CONNECTSIGNALS_3_COMBINER( "KeyboardMouse.KeyPress_KEY_Z",
                                bool( gadget::Keys, int, char ),
-                               eventmanager::BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &Selection::ProcessUndoEvent, m_connections,
                                keyboard_SignalType, normal_Priority );
 
@@ -155,8 +156,8 @@ Selection::Selection()
                       &Selection::HighlightNode,
                       m_connections, any_SignalType, high_Priority );
 
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_objectPickedSignal ),
         "Selection.ObjectPickedSignal" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -314,7 +315,7 @@ void Selection::ProcessSelection()
         // Tell everyone else we have a null selection. nullPath must be l-value
         // since signal passes it by reference
         osg::NodePath nullPath;
-        m_objectPickedSignal( nullPath );
+        m_objectPickedSignal.signal( nullPath );
 
         return;
     }
@@ -363,7 +364,7 @@ void Selection::ProcessSelection()
 
     //Now find the new selected object
     osg::NodePath nodePath = intersections.begin()->nodePath;
-    m_objectPickedSignal( nodePath );
+    m_objectPickedSignal.signal( nodePath );
     osg::Node* vesObject = scenegraph::FindVESObject( nodePath );
     boost::ignore_unused_variable_warning( vesObject );
 
@@ -372,7 +373,7 @@ void Selection::ProcessSelection()
     HighlightAndSetManipulators( nodePath );
 
     ///Send the data back to the ui for the expanding tree
-    //m_objectPickedSignal( nodePathCopy );
+    //m_objectPickedSignal.signal( nodePathCopy );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )

@@ -43,8 +43,8 @@
 #include <ves/xplorer/scenegraph/util/CharacterAnimation.h>
 
 #include <ves/xplorer/eventmanager/EventMapper.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 // --- VRJuggler Includes --- //
 #include <gmtl/Misc/MatrixConvert.h>

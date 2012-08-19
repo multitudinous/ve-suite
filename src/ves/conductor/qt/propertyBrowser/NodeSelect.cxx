@@ -39,7 +39,8 @@
 
 #include <ves/conductor/qt/UITabs.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 namespace ves
 {

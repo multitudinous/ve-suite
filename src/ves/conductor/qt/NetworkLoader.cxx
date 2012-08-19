@@ -40,13 +40,12 @@
 #include <ves/conductor/qt/XMLDataBufferEngine.h>
 #include <ves/conductor/qt/UserPreferencesDataBuffer.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/data/CADPropertySet.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
@@ -78,12 +77,12 @@ namespace conductor
 ////////////////////////////////////////////////////////////////////////////////
 NetworkLoader::NetworkLoader()
 {
-    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-        new ves::xplorer::eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_dbPresent ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_dbPresent ),
         "NetworkLoader.dbPresent" );
 
-    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-        new ves::xplorer::eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_navReset ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_navReset ),
         "ResetNavToGlobalOrigin" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -126,12 +125,12 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     }
 #endif
     using namespace ves::xplorer;
-    reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
-    ( eventmanager::EventFactory::instance()->GetSignal( "WorkingDirectoryChanged" ) )
-    ->mSignal->operator()( newWorkingDir );
+    reinterpret_cast< ves::util::StringSignal_type* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "WorkingDirectoryChanged" ) )
+    ->signal( newWorkingDir );
 
     ///Now lets reset the view back to 0,0,0
-    m_navReset();
+    m_navReset.signal();
 
     //A new working directory also means that
     //the STORED scenes are no longer valid
@@ -157,9 +156,9 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     {
         // Let xplorer know we are loading a new ves file so that it can do any
         // necessary cleanup, such as resetting the database
-        reinterpret_cast< xplorer::eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
+        reinterpret_cast< ves::util::StringSignal_type* >
         ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VesFileLoading" ) )
-        ->mSignal->operator()( m_filename );
+        ->signal( m_filename );
 
         //Send a new start position for all apps
         //do this before loading the ves data
@@ -206,11 +205,11 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     std::string const& db( system->GetDBReference() );
     if( !db.empty() )
     {
-        m_dbPresent( true );
+        m_dbPresent.signal( true );
     }
     else
     {
-        m_dbPresent( false );
+        m_dbPresent.signal( false );
     }
 
     ///This code will be moved in the future. It is Aspen specific code.
@@ -267,9 +266,9 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
 
     // This signal replaces the above block. xplorerColor doesn't appear to be
     // processed anywhere, so was left out of the signal.
-    reinterpret_cast< eventmanager::SignalWrapper< boost::signals2::signal< void( ) > >* >
-    ( eventmanager::EventFactory::instance()->GetSignal( "UpdateNetwork" ) )
-    ->mSignal->operator()( );
+    reinterpret_cast< ves::util::VoidSignal_type* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "UpdateNetwork" ) )
+    ->signal( );
 
     // RPT: Make the first model in the network active
     // Connect to the ActiveModelChangedSignal. Just below we will send in a command
@@ -286,9 +285,9 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     {
         std::string const modelID = system->GetModel( 0 )->GetID();
 
-        reinterpret_cast< eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
-        ( eventmanager::EventFactory::instance()->GetSignal( "ChangeActiveModel" ) )
-        ->mSignal->operator()( modelID );
+        reinterpret_cast< ves::util::StringSignal_type* >
+        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "ChangeActiveModel" ) )
+        ->signal( modelID );
     }
 
     //Now manage the data that is user specific to this ves file
@@ -306,9 +305,9 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         backgroundColor.push_back( 0.0f );
         backgroundColor.push_back( 1.0f );
 
-        reinterpret_cast< eventmanager::SignalWrapper< ves::util::BoolAndDoubleVectorSignal_type >* >
-        ( eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
-        ->mSignal->operator()( true, backgroundColor );
+        reinterpret_cast< ves::util::BoolAndDoubleVectorSignal_type* >
+        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
+        ->signal( true, backgroundColor );
     }
 
     {
@@ -322,9 +321,9 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
             activeModelDVP->GetData( color );
 
             //ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( tempCommand );
-            reinterpret_cast< eventmanager::SignalWrapper< ves::util::BoolAndDoubleVectorSignal_type >* >
-            ( eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
-            ->mSignal->operator()( true, color );
+            reinterpret_cast< ves::util::BoolAndDoubleVectorSignal_type* >
+            ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
+            ->signal( true, color );
         }
 
         // Create the command and data value pairs
@@ -458,9 +457,9 @@ void NetworkLoader::OnActiveModelChanged( const std::string& )
     }
 
     // Notify of completion of this file load
-    reinterpret_cast< xplorer::eventmanager::SignalWrapper< ves::util::StringSignal_type >* >
+    reinterpret_cast< ves::util::StringSignal_type* >
     ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VesFileLoaded" ) )
-    ->mSignal->operator()( m_filename );
+    ->signal( m_filename );
 
     //Autodestruct
     delete this;

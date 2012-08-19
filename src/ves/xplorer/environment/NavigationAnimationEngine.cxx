@@ -47,7 +47,8 @@
 #include <ves/xplorer/event/environment/QCClearDataEH.h>
 #include <ves/xplorer/event/environment/QCLoadFileEH.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -94,12 +95,12 @@ NavigationAnimationEngine::NavigationAnimationEngine()
     mCenterPointDCS( 0 ),
     m_loopAnimation( false )
 {
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_flythroughBeginSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_flythroughBeginSignal ),
         "NavigationAnimationEngine.FlythroughBegin" );
 
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_flythroughEndSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_flythroughEndSignal ),
         "NavigationAnimationEngine.FlythroughEnd" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -210,7 +211,7 @@ void NavigationAnimationEngine::PreFrameUpdate()
             else
             {
                 mBeginAnim = false;
-                m_flythroughEndSignal();
+                m_flythroughEndSignal.signal();
             }
         }
     }
@@ -263,7 +264,7 @@ void NavigationAnimationEngine::PreFrameUpdate()
             else
             {
                 mBeginAnim = false;
-                m_flythroughEndSignal();
+                m_flythroughEndSignal.signal();
             }
         }
     }
@@ -364,7 +365,7 @@ void NavigationAnimationEngine::SetAnimationPoints( std::vector < std::pair < gm
     m_lastAngle = 0.0;
     mSetCenterPoint = false;
     m_animationPointIndex = 0;
-    m_flythroughBeginSignal();
+    m_flythroughBeginSignal.signal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool NavigationAnimationEngine::IsActive()
@@ -375,7 +376,7 @@ bool NavigationAnimationEngine::IsActive()
 void NavigationAnimationEngine::StopAnimation()
 {
     mBeginAnim = false;
-    m_flythroughEndSignal();
+    m_flythroughEndSignal.signal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationAnimationEngine::SetAnimationLoopingOn( bool flag )

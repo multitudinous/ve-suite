@@ -39,8 +39,9 @@
 
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+#include <switchwire/BooleanPropagationCombiner.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -104,31 +105,31 @@ CameraEvents::CameraEvents()
 {
     //Setup connection to mouse events
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseMove,
+                               switchwire::BooleanPropagationCombiner, &CameraEvents::ProcessMouseMove,
                                m_connections, any_SignalType, highest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
+                               switchwire::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
                                m_connections, any_SignalType, highest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
+                               switchwire::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
                                m_connections, any_SignalType, highest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
+                               switchwire::BooleanPropagationCombiner, &CameraEvents::ProcessMousePress,
                                m_connections, any_SignalType, highest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
+                               switchwire::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
                                m_connections, any_SignalType, highest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease2%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
+                               switchwire::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
                                m_connections, any_SignalType, highest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease3%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
+                               switchwire::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
                                m_connections, any_SignalType, highest_Priority );
 
     CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ),

@@ -40,7 +40,8 @@
 
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <osg/BoundingSphere>
 #include <osg/Vec3d>

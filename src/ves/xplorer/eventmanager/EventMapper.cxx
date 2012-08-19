@@ -32,8 +32,9 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #include <ves/xplorer/eventmanager/EventMapper.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+#include <switchwire/BooleanPropagationCombiner.h>
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
@@ -60,27 +61,27 @@ EventMapper::EventMapper()
     // Connect to signals to get all keypresses, keyreleases, buttonpresses,
     // and buttonreleases
     CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonPress%", bool ( gadget::Keys, int, int, int ),
-                               BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &EventMapper::ButtonPressEvent, mConnections,
                                button_SignalType, normal_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "%Mouse.ButtonRelease%", bool ( gadget::Keys, int, int, int ),
-                               BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &EventMapper::ButtonReleaseEvent, mConnections,
                                button_SignalType, normal_Priority );
 
     CONNECTSIGNALS_5_COMBINER( "%Mouse.DoubleClick%", bool( gadget::Keys, int, int, int, int ),
-                               BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &EventMapper::MouseDoubleClickEvent, mConnections,
                                button_SignalType, normal_Priority );
 
     CONNECTSIGNALS_3_COMBINER( "%KeyPress%", bool ( gadget::Keys, int, char ),
-                               BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &EventMapper::KeyPressEvent, mConnections,
                                keyboard_SignalType, normal_Priority );
 
     CONNECTSIGNALS_3_COMBINER( "%KeyRelease%", bool ( gadget::Keys, int, char ),
-                               BooleanPropagationCombiner,
+                               switchwire::BooleanPropagationCombiner,
                                &EventMapper::KeyReleaseEvent, mConnections,
                                keyboard_SignalType, normal_Priority );
 
@@ -224,8 +225,8 @@ void EventMapper::QueueAndEmit( std::string& eventName, gadget::Keys key )
         BehaviorMapType::const_iterator bmIter = mSyncNoneBehaviorMap.find( ebIter->second );
         if( bmIter != mSyncNoneBehaviorMap.end() )
         {
-            voidSignalType* sig = bmIter->second;
-            ( *sig )();
+            ves::util::VoidSignal_type* sig = bmIter->second;
+            ( *sig ).signal();
         }
         else
         {
@@ -255,8 +256,8 @@ void EventMapper::EmitSyncGraphicsSignals()
         BehaviorMapType::const_iterator bmIter = mSyncGraphicsBehaviorMap.find( *queue );
         if( bmIter != mSyncGraphicsBehaviorMap.end() )
         {
-            voidSignalType* sig = bmIter->second;
-            ( *sig )();
+            ves::util::VoidSignal_type* sig = bmIter->second;
+            ( *sig ).signal();
         }
         ++queue;
     }
@@ -290,12 +291,10 @@ void EventMapper::AddMappableBehavior( const std::string& BehaviorName, syncType
     // map based on sync type.
 
     // Register signal for behavior
-    voidSignalType* signal = new( voidSignalType );
+    ves::util::VoidSignal_type* signal = new( ves::util::VoidSignal_type );
     std::string name( "EventMapper." );
     name.append( BehaviorName );
-    ves::xplorer::eventmanager::EventManager::instance()->RegisterSignal(
-        new ves::xplorer::eventmanager::SignalWrapper< voidSignalType >( signal ),
-        name );
+    switchwire::EventManager::instance()->RegisterSignal( signal, name );
 
     // Add signal to appropriate map based on sync type
     if( sync == syncNone )

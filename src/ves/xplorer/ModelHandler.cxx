@@ -93,8 +93,8 @@
 #include <ves/xplorer/volume/cfdTextureManager.h>
 using namespace ves::xplorer::volume;
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 //#include <vtkPolyDataWriter.h>
 #include <vtkPolyDataNormals.h>
@@ -195,8 +195,8 @@ ModelHandler::ModelHandler()
         new ves::xplorer::event::cad::OcclusionSettingsEventHandler();
 
     // Register signal(s) with EventManager
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ActiveModelChangedSignal_type >( &mActiveModelChangedSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &mActiveModelChangedSignal ),
         "ModelHandler.ActiveModelChangedSignal" );
 
     CONNECTSIGNALS_STATIC( "%SetContourPlaneGreyscale", void( std::string const&, std::vector< bool > const& ),
@@ -280,7 +280,7 @@ void ModelHandler::SetActiveModel( std::string const& modelNumber )
                                   << modelNumber
                                   << " is set." << std::endl << vprDEBUG_FLUSH;
             _activeModel = _modelList.at( i );
-            mActiveModelChangedSignal( modelNumber );
+            mActiveModelChangedSignal.signal( modelNumber );
             break;
         }
     }

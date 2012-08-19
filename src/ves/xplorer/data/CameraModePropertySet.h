@@ -39,8 +39,6 @@
 
 #include <ves/VEConfig.h>
 
-#include <boost/signals2/signal.hpp>
-
 namespace ves
 {
 namespace xplorer

@@ -33,7 +33,7 @@
 #pragma once
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 #include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
 
 #include <gadget/Type/PositionInterface.h>
@@ -44,7 +44,7 @@
 #include <osgUtil/LineSegmentIntersector>
 
 // --- Boost includes --- //
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 
 // --- Bullet Includes --- //
 class btRigidBody;
@@ -120,10 +120,10 @@ private:
     osg::Vec3d m_endPoint;
 
     /// Required connections list for connecting to events via EventManager
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 
     ///Object picked
-    typedef boost::signals2::signal< void ( osg::NodePath& ) > ObjectPickedSignal_type;
+    typedef switchwire::Event< void ( osg::NodePath& ) > ObjectPickedSignal_type;
     ObjectPickedSignal_type m_objectPickedSignal;
 
     ///Physics simulator pointer

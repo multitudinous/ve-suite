@@ -37,7 +37,8 @@
 
 #include <ves/conductor/qt/ConstraintManager.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <QtCore/qstring.h>
 

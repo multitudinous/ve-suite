@@ -277,12 +277,11 @@ void DatasetPropertySet::LoadVTIScalars( PropertyPtr& )
     std::cout << "DatasetPropertySet::LoadVTIScalars: "  << directory << " " << filename << " " << scalarName << std::endl;
 
     ves::util::TwoStringSignal_type* addTexture =
-        reinterpret_cast< eventmanager::SignalWrapper< ves::util::TwoStringSignal_type >* >
-        ( eventmanager::EventFactory::instance()->GetSignal( "DatasetPropertySet.TBETAddScalarSignal" ) )
-        ->mSignal;
+        reinterpret_cast< ves::util::TwoStringSignal_type* >
+        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "DatasetPropertySet.TBETAddScalarSignal" ) );
 
     std::string const nodeID = GetUUIDAsString();
-    addTexture->operator()( nodeID, directory );
+    addTexture->signal( nodeID, directory );
 
     WriteToDatabase();
 }

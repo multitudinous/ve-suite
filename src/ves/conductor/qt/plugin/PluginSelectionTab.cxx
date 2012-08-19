@@ -35,7 +35,8 @@
 #include <ves/conductor/qt/plugin/PluginSelectionTab.h>
 #include <ves/conductor/qt/MainWindow.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
@@ -601,9 +602,9 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
     }
 
     // Scenegraph will have changed after this operation; announce this
-    reinterpret_cast< ves::xplorer::eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
-    ( ves::xplorer::eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
-    ->mSignal->operator()();
+    reinterpret_cast< ves::util::VoidSignal_type* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
+    ->signal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::qFileLoadedSlot( const std::string& fileName )
@@ -668,9 +669,9 @@ void PluginSelectionTab::RemovePlugin( UIPluginInterface* plugin )
     delete plugin;
 
     // Scenegraph will have changed after this operation; announce this
-    reinterpret_cast< ves::xplorer::eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
-    ( ves::xplorer::eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
-    ->mSignal->operator()();
+    reinterpret_cast< ves::util::VoidSignal_type* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
+    ->signal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

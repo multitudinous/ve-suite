@@ -5,7 +5,7 @@
 #include <ves/xplorer/data/PropertySetPtr.h>
 
 #include <ves/xplorer/Logging.h>
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 #include <QtGui/QListWidgetItem>
 
@@ -73,23 +73,23 @@ private:
     ves::xplorer::LogStreamPtr m_logStream;
 
     ///Required to connect to EventManagered signals
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 
     ///Connections list used only for "FlythroughEnd" signal. This gets its
     ///own list because we want to be able to easily disconnect from this one
     ///signal.
-    ves::xplorer::eventmanager::ScopedConnectionList m_flythroughConnections;
+    switchwire::ScopedConnectionList m_flythroughConnections;
 
     ///Special connection list for making presentations. Used for same reason as
     ///m_flythroughConnections, but for presentations.
-    ves::xplorer::eventmanager::ScopedConnectionList m_presentationConnections;
+    switchwire::ScopedConnectionList m_presentationConnections;
 
     ves::util::TwoStringSignal_type m_addCameraSignal;
     ves::util::StringSignal_type m_selectCameraSignal;
     ves::util::TwoStringSignal_type m_saveCameraImageSignal;
     ves::util::StringSignal_type m_saveAllCameraImagesSignal;
     ves::util::StringSignal_type m_removeCameraSignal;
-    boost::signals2::signal< void (const std::vector<std::string>&) > m_flythroughSignal;
+    switchwire::Event< void (const std::vector<std::string>&) > m_flythroughSignal;
     ves::util::VoidSignal_type m_endFlythroughSignal;
     ves::util::BoolSignal_type m_loopFlythroughSignal;
 

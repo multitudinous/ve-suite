@@ -62,7 +62,8 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/xplorer/data/DatabaseManager.h>
 

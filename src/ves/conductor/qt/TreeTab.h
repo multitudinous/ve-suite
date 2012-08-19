@@ -36,7 +36,7 @@
 #define QT_NO_KEYWORDS
 
 #include <ves/xplorer/data/PropertySetPtr.h>
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 #include <ves/xplorer/Logging.h>
 
@@ -46,7 +46,7 @@
 
 #include <osg/Node>
 
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 
 namespace Ui
 {
@@ -165,10 +165,10 @@ private:
 
     ves::xplorer::data::PropertySetPtr mActiveSet;
 
-    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
+    switchwire::ScopedConnectionList mConnections;
 
-    boost::signals2::signal< void( osg::NodePath& ) > m_highlightAndSetManipulators;
-    boost::signals2::signal< void( osg::NodePath& ) > m_highlightNode;
+    switchwire::Event< void( osg::NodePath& ) > m_highlightAndSetManipulators;
+    switchwire::Event< void( osg::NodePath& ) > m_highlightNode;
     ves::util::StringSignal_type m_CADNodeSelected;
 
     ///Logger reference

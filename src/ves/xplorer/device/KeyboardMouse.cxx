@@ -56,8 +56,8 @@
 
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 // --- vrJuggler Includes --- //
 #include <vrj/vrjParam.h>
@@ -130,24 +130,24 @@ KeyboardMouse::KeyboardMouse()
         boost::bind( &KeyboardMouse::onMouseDoubleClick, this, _1 )
     );
 #endif
-    eventmanager::EventManager* evm = eventmanager::EventManager::instance();
-    using eventmanager::SignalWrapper;
+    switchwire::EventManager* evm = switchwire::EventManager::instance();
+    
 
     evm->RegisterSignal(
-        new SignalWrapper< MouseMoveSignal_type >( &m_mouseMove ),
-        "KeyboardMouse.MouseMove", eventmanager::EventManager::mouse_SignalType );
+        ( &m_mouseMove ),
+        "KeyboardMouse.MouseMove", switchwire::EventManager::mouse_SignalType );
 
     evm->RegisterSignal(
-        new SignalWrapper< MouseDoubleClickSignal_type >( &m_mouseDoubleClick ),
-        "KeyboardMouse.DoubleClick", eventmanager::EventManager::button_SignalType );
+        ( &m_mouseDoubleClick ),
+        "KeyboardMouse.DoubleClick", switchwire::EventManager::button_SignalType );
 
     evm->RegisterSignal(
-        new SignalWrapper< ScrollSignal_type >( &m_scroll ),
-        "KeyboardMouse.Scroll", eventmanager::EventManager::input_SignalType );
+        ( &m_scroll ),
+        "KeyboardMouse.Scroll", switchwire::EventManager::input_SignalType );
 
     evm->RegisterSignal(
-        new SignalWrapper< StartEndPointSignal_type >( &m_startEndPointSignal ),
-        "KeyboardMouse.StartEndPoint", eventmanager::EventManager::unspecified_SignalType );
+        ( &m_startEndPointSignal ),
+        "KeyboardMouse.StartEndPoint", switchwire::EventManager::unspecified_SignalType );
 
     RegisterButtonSignals();
     RegisterKeySignals();
@@ -220,7 +220,7 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
             mKeyPressSignalMap.find( keyEvt->getKey() );
         if( itr != mKeyPressSignalMap.end() )
         {
-            ( *( itr->second ) )( keyEvt->getKey(), keyEvt->getModifierMask(),
+            ( *( itr->second ) ).signal( keyEvt->getKey(), keyEvt->getModifierMask(),
                                   //For use when unicode works in VR Juggler
                                   //keyEvt->getKeyUnicode() );
                                   keyEvt->getKeyChar() );
@@ -250,7 +250,7 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
             mKeyReleaseSignalMap.find( keyEvt->getKey() );
         if( itr != mKeyReleaseSignalMap.end() )
         {
-            ( *( itr->second ) )( keyEvt->getKey(), keyEvt->getModifierMask(),
+            ( *( itr->second ) ).signal( keyEvt->getKey(), keyEvt->getModifierMask(),
                                   //For use when unicode works in VR Juggler
                                   //keyEvt->getKeyUnicode() );
                                   keyEvt->getKeyChar() );
@@ -283,7 +283,7 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
 
         //Send current Start and end points
         SetStartEndPoint( m_startPoint, m_endPoint );
-        m_startEndPointSignal( m_startPoint, m_endPoint );
+        m_startEndPointSignal.signal( m_startPoint, m_endPoint );
 
         /*vprDEBUG( vesDBG, 4 )
             << "|\tKeyboardMouse::onKeyboardMouseEvent::MouseButtonPressEvent "
@@ -295,7 +295,7 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
             mButtonPressSignalMap.find( mouseEvt->getButton() );
         if( itr != mButtonPressSignalMap.end() )
         {
-            ( *( itr->second ) )( mouseEvt->getButton(), mouseEvt->getX(),
+            ( *( itr->second ) ).signal( mouseEvt->getButton(), mouseEvt->getX(),
                                   mouseEvt->getY(), mouseEvt->getState() );
         }
 
@@ -318,13 +318,13 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
 
         //Send current Start and end points
         SetStartEndPoint( m_startPoint, m_endPoint );
-        m_startEndPointSignal( m_startPoint, m_endPoint );
+        m_startEndPointSignal.signal( m_startPoint, m_endPoint );
 
         ButtonReleaseSignalMapType::const_iterator itr =
             mButtonReleaseSignalMap.find( mouseEvt->getButton() );
         if( itr != mButtonReleaseSignalMap.end() )
         {
-            ( *( itr->second ) )( mouseEvt->getButton(), mouseEvt->getX(),
+            ( *( itr->second ) ).signal( mouseEvt->getButton(), mouseEvt->getX(),
                                   mouseEvt->getY(), mouseEvt->getState() );
         }
 
@@ -349,7 +349,7 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
         {
             //Send current Start and end points - needed for constraint selection
             SetStartEndPoint( m_startPoint, m_endPoint );
-            m_startEndPointSignal( m_startPoint, m_endPoint );
+            m_startEndPointSignal.signal( m_startPoint, m_endPoint );
         }
 
         //vprDEBUG( vesDBG, 2 )
@@ -358,7 +358,7 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
         //    << ", 0, " << mouseEvt->getState()
         //    << std::endl << vprDEBUG_FLUSH;
         // x, y, z, state (modifier mask OR'd with button mask)
-        m_mouseMove( mouseEvt->getX(), mouseEvt->getY(), 0, mouseEvt->getState() );
+        m_mouseMove.signal( mouseEvt->getX(), mouseEvt->getY(), 0, mouseEvt->getState() );
 
         break;
     }
@@ -367,7 +367,7 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
 
-        m_scroll( int( mouseEvt->getScrollDeltaX() ), int( mouseEvt->getScrollDeltaY() ),
+        m_scroll.signal( int( mouseEvt->getScrollDeltaX() ), int( mouseEvt->getScrollDeltaY() ),
                   mouseEvt->getX(), mouseEvt->getY(), mouseEvt->getState() );
         break;
     }
@@ -391,15 +391,15 @@ void KeyboardMouse::onMouseDoubleClick( gadget::EventPtr event )
         << ", " << mouseEvt->getY() << ", " << mouseEvt->getState()
         << std::endl << vprDEBUG_FLUSH;*/
 
-    m_mouseDoubleClick( mouseEvt->getButton(), mouseEvt->getX(),
+    m_mouseDoubleClick.signal( mouseEvt->getButton(), mouseEvt->getX(),
                         mouseEvt->getY(), 0, mouseEvt->getState() );
 
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RegisterButtonSignals()
 {
-    eventmanager::EventManager* evm = eventmanager::EventManager::instance();
-    using eventmanager::SignalWrapper;
+    switchwire::EventManager* evm = switchwire::EventManager::instance();
+    
 
     int buttonOneIndex = gadget::MBUTTON1 - 1;
 
@@ -421,14 +421,14 @@ void KeyboardMouse::RegisterButtonSignals()
             mButtonReleaseSignalHolder[ releaseName ];
 
         evm->RegisterSignal(
-            new SignalWrapper< ButtonPressSignal_type >(
+            (
                 mButtonPressSignalHolder[ pressName ] ),
-            pressName, eventmanager::EventManager::button_SignalType );
+            pressName, switchwire::EventManager::button_SignalType );
 
         evm->RegisterSignal(
-            new SignalWrapper< ButtonReleaseSignal_type >(
+            (
                 mButtonReleaseSignalHolder[ releaseName ] ),
-            releaseName, eventmanager::EventManager::button_SignalType );
+            releaseName, switchwire::EventManager::button_SignalType );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -438,8 +438,8 @@ void KeyboardMouse::RegisterKeySignals()
     mKeyboardMousePtr = gadget::KeyboardMousePtr(
                             gadget::KeyboardMouse::create() );
 
-    eventmanager::EventManager* evm = eventmanager::EventManager::instance();
-    using eventmanager::SignalWrapper;
+    switchwire::EventManager* evm = switchwire::EventManager::instance();
+    
 
     // We will iterate through the values of gadget::Keys, adding a press and
     // release signal for each. The signals added will have names such as
@@ -475,15 +475,15 @@ void KeyboardMouse::RegisterKeySignals()
             mKeyReleaseSignalHolder[ releaseName ];
 
         evm->RegisterSignal(
-            new SignalWrapper< KeyPressSignal_type >(
+            (
                 mKeyPressSignalHolder[ pressName ] ),
             pressName,
-            eventmanager::EventManager::keyboard_SignalType );
+            switchwire::EventManager::keyboard_SignalType );
         evm->RegisterSignal(
-            new SignalWrapper< KeyReleaseSignal_type >(
+            (
                 mKeyReleaseSignalHolder[ releaseName ] ),
             releaseName,
-            eventmanager::EventManager::keyboard_SignalType );
+            switchwire::EventManager::keyboard_SignalType );
 
         ++key;
     }
@@ -507,15 +507,15 @@ void KeyboardMouse::RegisterKeySignals()
             mKeyReleaseSignalHolder[ releaseName ];
 
         evm->RegisterSignal(
-            new SignalWrapper< KeyPressSignal_type >(
+            (
                 mKeyPressSignalHolder[ pressName ] ),
             pressName,
-            eventmanager::EventManager::keyboard_SignalType );
+            switchwire::EventManager::keyboard_SignalType );
         evm->RegisterSignal(
-            new SignalWrapper< KeyReleaseSignal_type >(
+            (
                 mKeyReleaseSignalHolder[ releaseName ] ),
             releaseName,
-            eventmanager::EventManager::keyboard_SignalType );
+            switchwire::EventManager::keyboard_SignalType );
 
         ++key;
     }

@@ -34,8 +34,8 @@
 #include <ves/xplorer/event/cad/CADSlotInitializer.h>
 #include <ves/xplorer/event/cad/CADSlots.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SlotWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 namespace ves
 {

@@ -34,8 +34,8 @@
 #include <ves/xplorer/plugin/PluginBase.h>
 #include <ves/xplorer/Debug.h>
 #include <ves/open/xml/model/Model.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <iostream>
 
@@ -62,9 +62,8 @@ PluginLoader::PluginLoader()
 {
     plugins.clear();
 
-    ves::xplorer::eventmanager::EventManager::instance()->
-    RegisterSignal( new ves::xplorer::eventmanager::SignalWrapper
-                    < createPluginSignal_type >( &m_createUIPlugin ),
+    switchwire::EventManager::instance()->
+    RegisterSignal( ( &m_createUIPlugin ),
                     "PluginLoader.CreatePlugin" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +122,7 @@ PluginBase* PluginLoader::CreateObject( std::string _objname )
 
     PluginBase* result = CreateNewPlugin( selectPlugin );
 
-    m_createUIPlugin( _objname, result );
+    m_createUIPlugin.signal( _objname, result );
 
     return result;
 }

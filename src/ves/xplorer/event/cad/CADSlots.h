@@ -603,9 +603,9 @@ static void SetPhysicsOnCADNode( std::string const& nodeID,
     }
 
     // Scenegraph will have changed after this operation; announce this
-    reinterpret_cast< eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
-    ( eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
-    ->mSignal->operator()();
+    reinterpret_cast< ves::util::VoidSignal_type* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
+    ->signal();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

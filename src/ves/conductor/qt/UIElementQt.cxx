@@ -38,7 +38,7 @@
 // --- VES includes --- //
 #include <ves/conductor/qt/UIElementQt.h>
 #include <ves/conductor/qt/ui_titlebar.h>
-#include <ves/xplorer/eventmanager/InteractionEvent.h>
+#include <switchwire/InteractionEvent.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
@@ -183,8 +183,8 @@ void UIElementQt::Initialize()
         // of mode Qt::QueuedConnection so that the slot will only be processed
         // when the thread that created this object has execution.
         //QObject::connect( this, SIGNAL( RequestRender() ), this, SLOT( _render() ), Qt::QueuedConnection );
-        //QObject::connect( this, SIGNAL( PutSendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ),
-        //                  this, SLOT( _sendEvent( ves::xplorer::eventmanager::InteractionEvent* ) ), Qt::QueuedConnection );
+        //QObject::connect( this, SIGNAL( PutSendEvent( switchwire::InteractionEvent* ) ),
+        //                  this, SLOT( _sendEvent( switchwire::InteractionEvent* ) ), Qt::QueuedConnection );
 
         QObject::connect( this, SIGNAL( PutResizeCanvas( int, int ) ),
                           this, SLOT( _resizeCanvas( int, int ) ), Qt::QueuedConnection );
@@ -297,10 +297,10 @@ const osg::Vec4f UIElementQt::GetTextureCoordinates()
     return m_coordinates;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElementQt::SendInteractionEvent( ves::xplorer::eventmanager::InteractionEvent& )
+void UIElementQt::SendInteractionEvent( switchwire::InteractionEvent& )
 {
-    //    ves::xplorer::eventmanager::InteractionEvent* m_event =
-    //            new ves::xplorer::eventmanager::InteractionEvent( event );
+    //    switchwire::InteractionEvent* m_event =
+    //            new switchwire::InteractionEvent( event );
     //
     //    Q_EMIT PutSendEvent( m_event );
 }

@@ -45,9 +45,9 @@
 
 #include <ves/open/xml/CommandPtr.h>
 
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 
-#include <ves/xplorer/eventmanager/InteractionEvent.h>
+#include <switchwire/InteractionEvent.h>
 
 #include <ves/xplorer/Logging.h>
 
@@ -225,7 +225,7 @@ private:
     void OnWandButton5DoubleClick( gadget::DigitalState::State event );
 
     /// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 
     ///LAte PreFrame slot to generate mouse mve events
     void LatePreFrameUpdate();
@@ -283,17 +283,17 @@ private:
 
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > WandButtonPressSignal_type;
+    typedef switchwire::Event< void ( gadget::Keys, int, int, int ) > WandButtonPressSignal_type;
 
     /// ButtonRelease signal type
-    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > WandButtonReleaseSignal_type;
+    typedef switchwire::Event< void ( gadget::Keys, int, int, int ) > WandButtonReleaseSignal_type;
 
     /// ButtonRelease signal type
-    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int ) > WandButtonOnSignal_type;
+    typedef switchwire::Event< void ( gadget::Keys, int, int, int ) > WandButtonOnSignal_type;
 
     /// MouseDoubleClick signal
     /// Params are: button, x, y, z, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< void ( gadget::Keys, int, int, int, int ) > WandDoubleClickSignal_type;
+    typedef switchwire::Event< void ( gadget::Keys, int, int, int, int ) > WandDoubleClickSignal_type;
 
     /// Map to hold ButtonPress signals
     typedef std::map< std::string, WandButtonPressSignal_type* > WandButtonPressSignalMapType;
@@ -312,12 +312,12 @@ private:
     /// signal for generating the start and end point for selection and other
     ///interaction tools.
     /// Params are: start point and end point
-    typedef boost::signals2::signal< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
+    typedef switchwire::Event< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
     StartEndPointSignal_type m_startEndPointSignal;
 
     /// MouseMove signal
     /// Params are: x, y, z, state (modifier mask OR'd with button mask)
-    typedef boost::signals2::signal< void ( int, int, int, int ) > WandMoveSignal_type;
+    typedef switchwire::Event< void ( int, int, int, int ) > WandMoveSignal_type;
     WandMoveSignal_type m_wandMove;
 
     ///The signature to tell others the game pad is active

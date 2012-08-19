@@ -35,7 +35,8 @@
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/data/MakeLive.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <boost/bind.hpp>
@@ -48,7 +49,7 @@ using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 PreferencesPropertySet::PreferencesPropertySet()
 {
-    using eventmanager::SignalWrapper;
+    
 
     ///Signal for Near-Far Ratio
     {
@@ -56,9 +57,9 @@ PreferencesPropertySet::PreferencesPropertySet()
         name += boost::lexical_cast<std::string>( this );
         name += ".NearFarRatio";
 
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< UpdateCheckAndValueSignal_type >( &m_nearFarRatio ),
-            name, eventmanager::EventManager::unspecified_SignalType );
+        switchwire::EventManager::instance()->RegisterSignal(
+            ( &m_nearFarRatio ),
+            name, switchwire::EventManager::unspecified_SignalType );
     }
     ///Signal for DraggerScaling
     {
@@ -66,15 +67,14 @@ PreferencesPropertySet::PreferencesPropertySet()
         name += boost::lexical_cast<std::string>( this );
         name += ".DraggerScaling";
 
-        eventmanager::EventManager::instance()->RegisterSignal(
-            new SignalWrapper< UpdateCheckAndValueSignal_type >( &m_draggerScaling ),
-            name, eventmanager::EventManager::unspecified_SignalType );
+        switchwire::EventManager::instance()->RegisterSignal(
+            ( &m_draggerScaling ),
+            name, switchwire::EventManager::unspecified_SignalType );
     }
     ///Signal for Background Color
     {
-        m_backgroundColor = reinterpret_cast< eventmanager::SignalWrapper< ves::util::BoolAndDoubleVectorSignal_type >* >
-                            ( eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
-                            ->mSignal;
+        m_backgroundColor = reinterpret_cast< ves::util::BoolAndDoubleVectorSignal_type* >
+                            ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) );
     }
 
     mTableName = "XplorerPreferences";
@@ -362,7 +362,7 @@ void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr& )
     colors.push_back( g );
     colors.push_back( b );
 
-    m_backgroundColor->operator()( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
+    m_backgroundColor->signal( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::SaveChanges( PropertyPtr& )
@@ -372,11 +372,11 @@ void PreferencesPropertySet::SaveChanges( PropertyPtr& )
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateDraggerScaling( PropertyPtr& property )
 {
-    m_draggerScaling( boost::any_cast<bool>( GetPropertyValue( "DraggerScaling" ) ), boost::any_cast<double>( property->GetValue() ) );
+    m_draggerScaling.signal( boost::any_cast<bool>( GetPropertyValue( "DraggerScaling" ) ), boost::any_cast<double>( property->GetValue() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateNearFarRatio( PropertyPtr& property )
 {
-    m_nearFarRatio( boost::any_cast<bool>( GetPropertyValue( "NearFarRatio" ) ), boost::any_cast<double>( property->GetValue() ) );
+    m_nearFarRatio.signal( boost::any_cast<bool>( GetPropertyValue( "NearFarRatio" ) ), boost::any_cast<double>( property->GetValue() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

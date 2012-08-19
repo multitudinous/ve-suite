@@ -2,7 +2,8 @@
 #include <ves/conductor/qt/ui_CameraTab.h>
 
 #include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/data/CameraSettingsPropertySet.h>
 #include <ves/xplorer/data/CameraModePropertySet.h>
 
@@ -48,29 +49,29 @@ CameraTab::CameraTab(QWidget *parent) :
 
     using namespace ves::xplorer;
 
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::TwoStringSignal_type >( &m_addCameraSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_addCameraSignal ),
         "CameraTab.AddCamera" );
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::StringSignal_type >( &m_removeCameraSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_removeCameraSignal ),
         "CameraTab.RemoveCamera" );
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::StringSignal_type >( &m_selectCameraSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_selectCameraSignal ),
         "CameraTab.SelectCamera" );
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::TwoStringSignal_type >( &m_saveCameraImageSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_saveCameraImageSignal ),
         "CameraTab.SaveCameraImage" );
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::StringSignal_type >( &m_saveAllCameraImagesSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_saveAllCameraImagesSignal ),
         "CameraTab.SaveAllCameraImages" );
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< boost::signals2::signal< void (const std::vector<std::string>&) > >( &m_flythroughSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_flythroughSignal ),
         "CameraTab.BeginFlythrough" );
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_endFlythroughSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_endFlythroughSignal ),
         "CameraTab.EndFlythrough" );
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_loopFlythroughSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_loopFlythroughSignal ),
         "CameraTab.LoopFlythrough" );
 
 
@@ -103,7 +104,7 @@ void CameraTab::on_m_cameraListWidget_currentItemChanged(
         std::string uuid = current->data( Qt::UserRole ).toString().toStdString();
         if( m_notifyCameraChange )
         {
-            m_selectCameraSignal( uuid );
+            m_selectCameraSignal.signal( uuid );
         }
         m_perCameraSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
         m_perCameraSet->SetUUID( uuid );
@@ -138,7 +139,7 @@ void CameraTab::on_m_addCameraButton_clicked()
     tempSet->WriteToDatabase();
     cameraItem->setData( Qt::UserRole, QString::fromStdString( uuid ) );
 
-    m_addCameraSignal( uuid, name.toStdString() );
+    m_addCameraSignal.signal( uuid, name.toStdString() );
 
     ui->m_cameraListWidget->addItem( cameraItem );
     ui->m_cameraListWidget->setCurrentItem( cameraItem );
@@ -158,7 +159,7 @@ void CameraTab::on_m_removeCameraButton_clicked()
     tempSet->SetUUID( uuid );
     tempSet->DeleteFromDatabase();
     delete item;
-    m_removeCameraSignal( uuid );
+    m_removeCameraSignal.signal( uuid );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_cameraUpButton_clicked()
@@ -208,14 +209,14 @@ void CameraTab::on_m_snapshotButton_clicked()
         {
             // Empty path forces default to value of CameraImageSavePath in
             // CameraModePropertySet
-            m_saveCameraImageSignal( item->data( Qt::UserRole ).toString().toStdString(), "" );
+            m_saveCameraImageSignal.signal( item->data( Qt::UserRole ).toString().toStdString(), "" );
         }
     }
     else
     {
         // Empty path forces default to value of CameraImageSavePath in
         // CameraModePropertySet
-        m_saveCameraImageSignal( "PICTURE_MODE", "" );
+        m_saveCameraImageSignal.signal( "PICTURE_MODE", "" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -228,7 +229,7 @@ void CameraTab::on_m_allSnapshotButton_clicked()
 
     // Empty path forces default to value of CameraImageSavePath in
     // CameraModePropertySet
-    m_saveAllCameraImagesSignal( "" );
+    m_saveAllCameraImagesSignal.signal( "" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_presentationButton_clicked()
@@ -254,7 +255,7 @@ void CameraTab::on_m_presentationButton_clicked()
     tmpFile.createDirectory();
 
     m_presentationImageDir = imagePath.toString(Poco::Path::PATH_UNIX);
-    m_saveAllCameraImagesSignal( m_presentationImageDir );
+    m_saveAllCameraImagesSignal.signal( m_presentationImageDir );
 
     // Connect to the "done" signal for this process so we will know when the
     // images have been written. This doesn't happen synchronously, so we can't
@@ -318,20 +319,20 @@ void CameraTab::on_m_flythroughButton_clicked()
                     &ves::conductor::CameraTab::FlythroughHasEnded,
                     m_flythroughConnections, any_SignalType, normal_Priority );
 
-    m_flythroughSignal( m_flythroughList );
+    m_flythroughSignal.signal( m_flythroughList );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_loopingFlythroughButton_toggled( bool flag )
 {
     if( flag )
     {
-        m_loopFlythroughSignal( true );
+        m_loopFlythroughSignal.signal( true );
         on_m_flythroughButton_clicked();
     }
     else
     {
-        m_loopFlythroughSignal( false );
-        m_endFlythroughSignal();
+        m_loopFlythroughSignal.signal( false );
+        m_endFlythroughSignal.signal();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

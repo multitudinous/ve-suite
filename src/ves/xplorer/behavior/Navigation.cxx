@@ -43,8 +43,9 @@
 
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+#include <switchwire/BooleanPropagationCombiner.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -125,19 +126,19 @@ Navigation::Navigation()
     mCenterPointJump( 10.0 )
 {
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &Navigation::ProcessNavigation,
+                               switchwire::BooleanPropagationCombiner, &Navigation::ProcessNavigation,
                                m_connections, any_SignalType, lowest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
+                               switchwire::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
                                m_connections, any_SignalType, lowest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
+                               switchwire::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
                                m_connections, any_SignalType, lowest_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
+                               switchwire::BooleanPropagationCombiner, &Navigation::RegisterButtonPress,
                                m_connections, any_SignalType, lowest_Priority );
 
     CONNECTSIGNALS_1( "MainWindow.JumpSignal", void( const std::string ),
@@ -147,8 +148,8 @@ Navigation::Navigation()
     CONNECTSIGNALS_0( "ResetNavToGlobalOrigin", void(),
                       &Navigation::ResetToGlobalOrigin,
                       m_connections, any_SignalType, normal_Priority );
-    //eventmanager::EventManager::instance()->RegisterSignal(
-    //    new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
+    //switchwire::EventManager::instance()->RegisterSignal(
+    //    ( &m_objectPickedSignal ),
     //    "KeyboardMouse.ObjectPickedSignal" );
 }
 ////////////////////////////////////////////////////////////////////////////////

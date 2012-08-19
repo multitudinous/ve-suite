@@ -35,7 +35,8 @@
 // --- VES Includes --- //
 #include <ves/conductor/qt/UIElement.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
@@ -199,7 +200,7 @@ const osg::Vec4f UIElement::GetTextureCoordinates()
     return osg::Vec4f( 0.f, 1.f, 0.f, 1.f );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event )
+void UIElement::SendInteractionEvent( switchwire::InteractionEvent& event )
 {
     boost::ignore_unused_variable_warning( event );
 }

@@ -56,8 +56,8 @@
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <ves/conductor/qt/UIManager.h>
@@ -200,8 +200,8 @@ Wand::Wand()
     m_wandButtonOnSignalMap["Wand.ButtonOn6"] = new WandButtonOnSignal_type;
     m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick6"] = new WandDoubleClickSignal_type;
 
-    eventmanager::EventManager* evm = eventmanager::EventManager::instance();
-    using eventmanager::SignalWrapper;
+    switchwire::EventManager* evm = switchwire::EventManager::instance();
+    
 
     ///Setup Button Press
     for( WandButtonPressSignalMapType::const_iterator
@@ -209,9 +209,9 @@ Wand::Wand()
             iter != m_wandButtonPressSignalMap.end(); ++iter )
     {
         evm->RegisterSignal(
-            new SignalWrapper< WandButtonPressSignal_type >( iter->second ),
+            iter->second,
             iter->first,
-            eventmanager::EventManager::button_SignalType );
+            switchwire::EventManager::button_SignalType );
     }
 
     ///Setup Button Release
@@ -220,9 +220,9 @@ Wand::Wand()
             iter != m_wandButtonReleaseSignalMap.end(); ++iter )
     {
         evm->RegisterSignal(
-            new SignalWrapper< WandButtonReleaseSignal_type >( iter->second ),
+            iter->second,
             iter->first,
-            eventmanager::EventManager::button_SignalType );
+            switchwire::EventManager::button_SignalType );
     }
 
     ///Setup Button On
@@ -231,9 +231,9 @@ Wand::Wand()
             iter != m_wandButtonOnSignalMap.end(); ++iter )
     {
         evm->RegisterSignal(
-            new SignalWrapper< WandButtonOnSignal_type >( iter->second ),
+            iter->second,
             iter->first,
-            eventmanager::EventManager::button_SignalType );
+            switchwire::EventManager::button_SignalType );
     }
 
     ///Setup Button Double Click
@@ -242,33 +242,29 @@ Wand::Wand()
             iter != m_wandDoubleClickSignalMap.end(); ++iter )
     {
         evm->RegisterSignal(
-            new SignalWrapper< WandDoubleClickSignal_type >( iter->second ),
+            iter->second,
             iter->first,
-            eventmanager::EventManager::button_SignalType );
+            switchwire::EventManager::button_SignalType );
     }
 
     evm->RegisterSignal(
-        new SignalWrapper< StartEndPointSignal_type >( &m_startEndPointSignal ),
-        "Wand.StartEndPoint", eventmanager::EventManager::unspecified_SignalType );
+        ( &m_startEndPointSignal ),
+        "Wand.StartEndPoint", switchwire::EventManager::unspecified_SignalType );
 
     evm->RegisterSignal(
-        new SignalWrapper< WandMoveSignal_type >( &m_wandMove ),
-        "Wand.WandMove", eventmanager::EventManager::mouse_SignalType );
+        ( &m_wandMove ),
+        "Wand.WandMove", switchwire::EventManager::mouse_SignalType );
 
     // Register signal(s) with EventManager
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_updateData ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_updateData ),
         "Wand.UpdateData" );
 
     CONNECTSIGNAL_0( "App.LatePreFrame", void(), &Wand::LatePreFrameUpdate,
                      m_connections, highest_Priority );
 
-    //m_hideShowUI =
-    //    reinterpret_cast< eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
-    //    ( eventmanager::EventFactory::instance()->GetSignal( "EventMapper.HideShowUI" ) )
-    //    ->mSignal;
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_hideShowUI ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_hideShowUI ),
         "Wand.HideShowUI" );
 
 
@@ -1199,7 +1195,7 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     PreProcessNav();
 
     //SetupStartEndPoint( m_startPoint, m_endPoint );
-    m_startEndPointSignal( m_startPoint, m_endPoint );
+    m_startEndPointSignal.signal( m_startPoint, m_endPoint );
 
     ///For now we are going to map Wand button 0 to Mouse button 1
     switch( event )
@@ -1209,17 +1205,17 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
         //LOG_INFO( "OnWandButton0Event: DigitalState::ON" );
         UpdateSelectionLine( true );
 
-        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn0"] ) )( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn0"] ) ).signal( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
 
         //m_buttonMoveState = gadget::KEY_DOWN|gadget::BUTTON1_MASK;
-        m_wandMove( 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
+        m_wandMove.signal( 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
 
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
         //LOG_INFO( "OnWandButton0Event: DigitalState::TOGGLE_ON" );
-        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress0"] ) )( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress0"] ) ).signal( gadget::MBUTTON1, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
@@ -1227,7 +1223,7 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
         //LOG_INFO( "OnWandButton0Event: DigitalState::TOGGLE_OFF" );
         UpdateSelectionLine( false );
 
-        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"] ) )( gadget::MBUTTON1, 0, 0, gadget::KEY_UP );
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"] ) ).signal( gadget::MBUTTON1, 0, 0, gadget::KEY_UP );
         m_triggerWandMove = true;
 
         //m_buttonMoveState = 0;
@@ -1254,17 +1250,17 @@ void Wand::OnWandButton1Event( gadget::DigitalState::State event )
     {
     case gadget::DigitalState::ON:
     {
-        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn1"] ) )( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN | gadget::BUTTON2_MASK );
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn1"] ) ).signal( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN | gadget::BUTTON2_MASK );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress1"] ) )( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN | gadget::BUTTON2_MASK );
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress1"] ) ).signal( gadget::MBUTTON2, 0, 0, gadget::KEY_DOWN | gadget::BUTTON2_MASK );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
     {
-        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease1"] ) )( gadget::MBUTTON2, 0, 0, gadget::KEY_UP );
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease1"] ) ).signal( gadget::MBUTTON2, 0, 0, gadget::KEY_UP );
         m_triggerWandMove = true;
         break;
     }
@@ -1361,17 +1357,17 @@ void Wand::OnWandButton2Event( gadget::DigitalState::State event )
     {
     case gadget::DigitalState::ON:
     {
-        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn2"] ) )( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN | gadget::BUTTON3_MASK );
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn2"] ) ).signal( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN | gadget::BUTTON3_MASK );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress2"] ) )( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN | gadget::BUTTON3_MASK );
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress2"] ) ).signal( gadget::MBUTTON3, 0, 0, gadget::KEY_DOWN | gadget::BUTTON3_MASK );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
     {
-        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease2"] ) )( gadget::MBUTTON3, 0, 0, gadget::KEY_UP );
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease2"] ) ).signal( gadget::MBUTTON3, 0, 0, gadget::KEY_UP );
         m_triggerWandMove = true;
         break;
     }
@@ -1405,17 +1401,17 @@ void Wand::OnWandButton3Event( gadget::DigitalState::State event )
     {
     case gadget::DigitalState::ON:
     {
-        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn3"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn3"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress3"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress3"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
     {
-        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease3"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease3"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
         m_triggerWandMove = true;
         break;
     }
@@ -1448,17 +1444,17 @@ void Wand::OnWandButton4Event( gadget::DigitalState::State event )
     {
     case gadget::DigitalState::ON:
     {
-        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn4"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn4"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress4"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress4"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
     {
-        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease4"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease4"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
         m_triggerWandMove = true;
         break;
     }
@@ -1513,17 +1509,17 @@ void Wand::OnWandButton5Event( gadget::DigitalState::State event )
     {
     case gadget::DigitalState::ON:
     {
-        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn5"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn5"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress5"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress5"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
     {
-        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease5"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease5"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
         m_triggerWandMove = true;
         break;
     }
@@ -1651,19 +1647,19 @@ void Wand::OnWandButton6Event( gadget::DigitalState::State event )
     {
     case gadget::DigitalState::ON:
     {
-        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn6"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
+        ( *( m_wandButtonOnSignalMap["Wand.ButtonOn6"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::ON );
         break;
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        m_hideShowUI();
+        m_hideShowUI.signal();
 
-        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress6"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
+        ( *( m_wandButtonPressSignalMap["Wand.ButtonPress6"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_ON );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
     {
-        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease6"] ) )( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
+        ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease6"] ) ).signal( gadget::KEY_NONE, 0, 0, gadget::DigitalState::TOGGLE_OFF );
         m_triggerWandMove = true;
         break;
     }
@@ -1680,7 +1676,7 @@ void Wand::OnWandButton0DoubleClick( gadget::DigitalState::State event )
     }
 
     //LOG_INFO( "OnWandButton0DoubleClick: DigitalState::ON" );
-    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick0"] ) )( gadget::MBUTTON1, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick0"] ) ).signal( gadget::MBUTTON1, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON1_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton1DoubleClick( gadget::DigitalState::State event )
@@ -1690,7 +1686,7 @@ void Wand::OnWandButton1DoubleClick( gadget::DigitalState::State event )
         return;
     }
 
-    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick1"] ) )( gadget::MBUTTON2, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON2_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick1"] ) ).signal( gadget::MBUTTON2, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON2_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton2DoubleClick( gadget::DigitalState::State event )
@@ -1700,7 +1696,7 @@ void Wand::OnWandButton2DoubleClick( gadget::DigitalState::State event )
         return;
     }
 
-    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick2"] ) )( gadget::MBUTTON3, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON3_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick2"] ) ).signal( gadget::MBUTTON3, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON3_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton3DoubleClick( gadget::DigitalState::State event )
@@ -1710,7 +1706,7 @@ void Wand::OnWandButton3DoubleClick( gadget::DigitalState::State event )
         return;
     }
 
-    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick3"] ) )( gadget::MBUTTON4, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON4_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick3"] ) ).signal( gadget::MBUTTON4, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON4_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton4DoubleClick( gadget::DigitalState::State event )
@@ -1720,7 +1716,7 @@ void Wand::OnWandButton4DoubleClick( gadget::DigitalState::State event )
         return;
     }
 
-    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick4"] ) )( gadget::MBUTTON5, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON5_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick4"] ) ).signal( gadget::MBUTTON5, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON5_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandButton5DoubleClick( gadget::DigitalState::State event )
@@ -1730,7 +1726,7 @@ void Wand::OnWandButton5DoubleClick( gadget::DigitalState::State event )
         return;
     }
 
-    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick5"] ) )( gadget::MBUTTON6, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON6_MASK );
+    ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick5"] ) ).signal( gadget::MBUTTON6, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON6_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::PreProcessNav()
@@ -1801,7 +1797,7 @@ void Wand::PostProcessNav()
         m_sceneManager.GetMxCoreViewMatrix().rotateOrbit( axisAngle[ 0 ],
             osg::Vec3d( axisAngle[ 1 ], axisAngle[ 2 ], axisAngle[ 3 ] ) );*/
 
-        m_updateData( true );
+        m_updateData.signal( true );
 
         //m_worldQuat *= m_rotIncrement;
 
@@ -1865,9 +1861,9 @@ void Wand::LatePreFrameUpdate()
     }
 
     PreProcessNav();
-    m_startEndPointSignal( m_startPoint, m_endPoint );
+    m_startEndPointSignal.signal( m_startPoint, m_endPoint );
     //UpdateSelectionLine( true );
-    m_wandMove( 0, 0, 0, 0 );
+    m_wandMove.signal( 0, 0, 0, 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::OnWandMoveTimer( Poco::Util::TimerTask& task )

@@ -41,7 +41,7 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 #include <ves/open/xml/CommandPtr.h>
 
@@ -275,7 +275,7 @@ protected:
     scenegraph::camera::CameraManager& m_cameraManager;
 
     /// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 
 };
 } //end device

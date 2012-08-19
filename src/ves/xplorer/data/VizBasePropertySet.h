@@ -100,7 +100,7 @@ protected:
 
 
     ///Signal to generate deleting a viz feature
-    //typedef boost::signals2::signal< void ( std::string const& ) > DeleteVizFeatureSignal_type;
+    //typedef switchwire::Event< void ( std::string const& ) > DeleteVizFeatureSignal_type;
     ///The delete viz signal
     ves::util::StringSignal_type* m_deleteVizSignal;
     ///The add viz signal

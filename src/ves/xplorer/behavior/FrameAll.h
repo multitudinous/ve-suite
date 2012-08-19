@@ -33,7 +33,7 @@
 #pragma once
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 namespace ves
 {
@@ -63,7 +63,7 @@ private:
     void DoFrameAll();
 
     /// Required connections list for connecting to events via EventManager
-    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
+    switchwire::ScopedConnectionList mConnections;
 };
 
 }

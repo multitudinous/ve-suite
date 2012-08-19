@@ -35,7 +35,7 @@
 
 #define QT_NO_KEYWORDS
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 #include <QtGui/QWidget>
 #include <map>
@@ -99,7 +99,7 @@ private:
 
     std::map< QListWidgetItem*, QWidget* > m_itemWidgetMap;
 
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 
 protected Q_SLOTS:
     /// Handles clicks on Add Plugin button

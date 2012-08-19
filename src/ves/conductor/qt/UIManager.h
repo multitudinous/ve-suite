@@ -39,8 +39,9 @@
 
 #include <ves/xplorer/Logging.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
-#include <ves/xplorer/eventmanager/ConnectionMonopoly.h>
+#include <switchwire/ScopedConnectionList.h>
+#include <switchwire/ConnectionMonopoly.h>
+#include <switchwire/Event.h>
 
 #include <ves/conductor/qt/TextureSubloader.h>
 // --- VR Juggler includes --- //
@@ -170,7 +171,7 @@ public:
     void Initialize( osg::Group* parentNode );
 
     ///Propagates mouse and keyboard events to elements
-    //bool SendInteractionEvent( xplorer::eventmanager::InteractionEvent& event );
+    //bool SendInteractionEvent( switchwire::InteractionEvent& event );
 
     /// Receives mouse scroll events
     bool MouseScrollEvent( int deltaX, int deltaY, int x, int y, int state );
@@ -381,21 +382,21 @@ private:
     void _monopolizeInput( bool monopolize );
 
     /// Holds all non-input signal connections
-    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
+    switchwire::ScopedConnectionList mConnections;
     /// Holds all Key/Button input signal connections
-    ves::xplorer::eventmanager::ScopedConnectionList mInputConnections;
+    switchwire::ScopedConnectionList mInputConnections;
 
     ///
     std::map< UIElement*, osg::Vec4 > mElementPositionsOrtho2D;
     std::map< UIElement*, osg::ref_ptr< TextureSubloader > > m_subloaders;
 
-    typedef boost::signals2::signal< void( bool ) > voidBoolSignalType;
+    typedef switchwire::Event< void( bool ) > voidBoolSignalType;
     /// Emits true when mouse enters and false when mouse leaves a UIElement
     voidBoolSignalType mUIEnterLeaveSignal;
     ///Let everyone know if we are over the UI
     bool mMouseInsideUI;
 
-    std::vector< boost::shared_ptr< ves::xplorer::eventmanager::ConnectionMonopoly > > mInputMonopolies;
+    std::vector< boost::shared_ptr< switchwire::ConnectionMonopoly > > mInputMonopolies;
     ///Selection start end point line
     osg::Vec3d m_startPoint;
     osg::Vec3d m_endPoint;

@@ -40,7 +40,7 @@
 
 #include <ves/open/xml/XMLObjectPtr.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 namespace ves
 {
@@ -81,7 +81,7 @@ protected:
     ///The variable of the global base object to operate on
     ves::xplorer::GlobalBase* _baseObject;
     /// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 };
 
 }

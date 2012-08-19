@@ -32,7 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/qt/ConstraintManager.h>
 #include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/xplorer/data/constraints/AngularSpringConstraintPropertySet.h>
 #include <ves/xplorer/data/constraints/LinearAndAngularSpringConstraintPropertySet.h>

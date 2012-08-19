@@ -34,8 +34,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Device.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SlotWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 

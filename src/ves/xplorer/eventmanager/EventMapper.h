@@ -38,10 +38,11 @@
 #include <vector>
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
 #include <ves/xplorer/Logging.h>
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
 
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
+#include <switchwire/ScopedConnectionList.h>
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
@@ -144,14 +145,12 @@ private:
     const std::string getKeyName( const gadget::Keys keyId ) const;
 
 private:
-    ves::xplorer::eventmanager::ScopedConnectionList mConnections;
-
-    typedef boost::signals2::signal< void () > voidSignalType;
+    switchwire::ScopedConnectionList mConnections;
 
     typedef std::map< std::string, std::string > EventBehaviorMapType;
     EventBehaviorMapType mEventBehaviorMap;
 
-    typedef std::map< std::string, voidSignalType* > BehaviorMapType;
+    typedef std::map< std::string, ves::util::VoidSignal_type* > BehaviorMapType;
     BehaviorMapType mSyncNoneBehaviorMap;
 
     BehaviorMapType mSyncGraphicsBehaviorMap;

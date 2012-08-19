@@ -44,7 +44,8 @@
 //#include <ves/open/xml/model/System.h>
 #include <ves/open/xml/model/Network.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/xplorer/data/DatabaseManager.h>
 

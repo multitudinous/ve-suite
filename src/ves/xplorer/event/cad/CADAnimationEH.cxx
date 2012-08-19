@@ -51,8 +51,8 @@
 #include <ves/xplorer/util/fileIO.h>
 #include <ves/xplorer/Debug.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SlotWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <osg/Node>
 #include <osg/AnimationPath>

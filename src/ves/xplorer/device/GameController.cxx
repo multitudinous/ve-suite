@@ -64,8 +64,8 @@
 
 #include <ves/xplorer/scenegraph/manipulator/TransformManipulator.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <ves/open/xml/model/Model.h>
@@ -195,28 +195,6 @@ GameController::GameController()
     m_button11EventInterface.init( "Joystick0_d11" );
     m_button11EventInterface.addCallback( boost::bind( &GameController::OnButton11Event, this, _1 ) );
 
-    /*eventmanager::EventManager* evm = eventmanager::EventManager::instance();
-    using eventmanager::SignalWrapper;
-
-    evm->RegisterSignal(
-        new SignalWrapper< MouseMoveSignal_type >( &m_mouseMove ),
-        "GameController.MouseMove", eventmanager::EventManager::mouse_SignalType );
-
-    evm->RegisterSignal(
-        new SignalWrapper< MouseDoubleClickSignal_type >( &m_mouseDoubleClick ),
-        "GameController.DoubleClick", eventmanager::EventManager::button_SignalType );
-
-    evm->RegisterSignal(
-        new SignalWrapper< ScrollSignal_type >( &m_scroll ),
-        "GameController.Scroll", eventmanager::EventManager::input_SignalType );
-
-    evm->RegisterSignal(
-        new SignalWrapper< StartEndPointSignal_type >( &m_startEndPointSignal ),
-        "GameController.StartEndPoint", eventmanager::EventManager::unspecified_SignalType );
-
-    RegisterButtonSignals();
-    RegisterKeySignals();
-    */
     CONNECTSIGNALS_1( "%NavigationRotationMode", void( std::string ),
                       &GameController::SetRotationMode,
                       m_connections, any_SignalType, normal_Priority );
@@ -226,16 +204,12 @@ GameController::GameController()
                       m_connections, any_SignalType, normal_Priority );
 
     // Register signal(s) with EventManager
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::BoolSignal_type >( &m_updateData ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_updateData ),
         "GameController.UpdateData" );
 
-    //m_hideShowUI =
-    //    reinterpret_cast< eventmanager::SignalWrapper< ves::util::VoidSignal_type >* >
-    //    ( eventmanager::EventFactory::instance()->GetSignal( "EventMapper.HideShowUI" ) )
-    //    ->mSignal;
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::VoidSignal_type >( &m_hideShowUI ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_hideShowUI ),
         "GameController.HideShowUI" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -295,7 +269,7 @@ void GameController::OnAxis0Event( const float event )
 
         m_success = success;
 
-        m_updateData( m_success );
+        m_updateData.signal( m_success );
     }
     else
     {
@@ -332,7 +306,7 @@ void GameController::OnAxis1Event( const float event )
 
         m_success = success;
 
-        m_updateData( m_success );
+        m_updateData.signal( m_success );
     }
     else
     {
@@ -376,7 +350,7 @@ void GameController::OnAxis2Event( const float event )
 
         m_success = success;
 
-        m_updateData( m_success );
+        m_updateData.signal( m_success );
     }
     else
     {
@@ -420,7 +394,7 @@ void GameController::OnAxis3Event( const float event )
 
         m_success = success;
 
-        m_updateData( m_success );
+        m_updateData.signal( m_success );
     }
     else
     {
@@ -654,7 +628,7 @@ void GameController::OnButton6Event( gadget::DigitalState::State event )
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        m_hideShowUI();
+        m_hideShowUI.signal();
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:

@@ -40,7 +40,7 @@
 #include <ves/xplorer/data/PropertySetPtr.h>
 
 #include <ves/xplorer/Logging.h>
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 #include <vector>
 #include <string>
@@ -121,7 +121,7 @@ private:
     ///Actual stream for this class
     ves::xplorer::LogStreamPtr m_logStream;
     ///Required to connect to EventManagered signals
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 };
 
 } // namespace conductor

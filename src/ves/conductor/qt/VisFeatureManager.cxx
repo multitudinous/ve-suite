@@ -32,7 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/qt/VisFeatureManager.h>
 #include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 ///Contours
 #include <ves/xplorer/data/ContourPlanePropertySet.h>

@@ -38,7 +38,7 @@
  */
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 namespace ves
 {

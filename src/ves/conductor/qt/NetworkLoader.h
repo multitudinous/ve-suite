@@ -35,7 +35,7 @@
 
 #include <string>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
 namespace ves
@@ -78,7 +78,7 @@ private:
     /// indicating loading is done.
     std::string m_filename;
     ///Signals tools
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
     ///The signal to tell whether we have a db or not
     ves::util::BoolSignal_type m_dbPresent;
     ///The signal for reseting the view

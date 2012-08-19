@@ -36,8 +36,8 @@
 
 #include <ves/xplorer/event/volume/VolumeVisSlots.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SlotWrapper.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 namespace ves
 {

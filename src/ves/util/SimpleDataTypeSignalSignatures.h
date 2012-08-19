@@ -33,9 +33,9 @@
 #ifndef VES_UTIL_SIMPLE_DATA_TYPE_SIGNAL_SIGNATURE_H
 #define VES_UTIL_SIMPLE_DATA_TYPE_SIGNAL_SIGNATURE_H
 
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 
-//#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+//#include <switchwire/BooleanPropagationCombiner.h>
 
 #include <vector>
 #include <string>
@@ -45,26 +45,26 @@ namespace ves
 namespace util
 {
 ///Signal with no arguments and no returns
-typedef boost::signals2::signal< void () > VoidSignal_type;
+typedef switchwire::Event< void ( void ) > VoidSignal_type;
 
 ///Signal for a String
-typedef boost::signals2::signal< void ( std::string const& ) > StringSignal_type;
-typedef boost::signals2::signal< void ( std::string const&, std::string const& ) > TwoStringSignal_type;
-typedef boost::signals2::signal< void ( std::string const&, std::string const&, std::string const& ) > ThreeStringSignal_type;
+typedef switchwire::Event< void ( std::string const& ) > StringSignal_type;
+typedef switchwire::Event< void ( std::string const&, std::string const& ) > TwoStringSignal_type;
+typedef switchwire::Event< void ( std::string const&, std::string const&, std::string const& ) > ThreeStringSignal_type;
 
 ///Signal for a bool
-typedef boost::signals2::signal< void ( bool const& ) > BoolSignal_type;
+typedef switchwire::Event< void ( bool const& ) > BoolSignal_type;
 
 ///Signal for double
-typedef boost::signals2::signal< void ( double const& ) > DoubleSignal_type;
-typedef boost::signals2::signal< void ( double const&, double const& ) > TwoDoubleSignal_type;
-typedef boost::signals2::signal< void ( double const&, double const&, double const& ) > ThreeDoubleSignal_type;
+typedef switchwire::Event< void ( double const& ) > DoubleSignal_type;
+typedef switchwire::Event< void ( double const&, double const& ) > TwoDoubleSignal_type;
+typedef switchwire::Event< void ( double const&, double const&, double const& ) > ThreeDoubleSignal_type;
 
 ///Signal for int
-typedef boost::signals2::signal< void ( int const& ) > IntSignal_type;
+typedef switchwire::Event< void ( int const& ) > IntSignal_type;
 
 ///Signal for bools and vectors
-typedef boost::signals2::signal< void ( const bool, const std::vector< double >& ) > BoolAndDoubleVectorSignal_type;
+typedef switchwire::Event< void ( const bool, const std::vector< double >& ) > BoolAndDoubleVectorSignal_type;
 
 }
 }

@@ -42,13 +42,14 @@
 
 // --- Boost includes --- //
 #include <boost/noncopyable.hpp>
-#include <boost/signals2/signal.hpp>
+
+#include <switchwire/Event.h>
+#include <switchwire/EventManager.h>
 
 // --- VES includes --- //
 #include <ves/VEConfig.h>
 #include <ves/xplorer/Logging.h>
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/SignalWrapperBase.h>
+
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
 namespace ves
@@ -61,7 +62,7 @@ class VE_EVENTMANAGER_EXPORTS EventFactory
 {
 public:
 
-    SignalWrapperBase* GetSignal( const std::string& signalName );
+    switchwire::EventBase* GetSignal( const std::string& signalName );
 
 private:
 
@@ -75,7 +76,7 @@ private:
     vprSingletonHeader( EventFactory );
 
     /// Holds the signals
-    std::map< std::string, SignalWrapperBase* > m_signals;
+    std::map< std::string, switchwire::EventBase* > m_signals;
 
     // ------------------------------------
     // Put signal type declarations here.

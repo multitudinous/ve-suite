@@ -46,7 +46,7 @@
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/model/SystemPtr.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
@@ -258,7 +258,7 @@ private:
     PortableServer::POA* m_ChildPOA;
 
     ///Wire up the slots
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 
 };
 } //end network

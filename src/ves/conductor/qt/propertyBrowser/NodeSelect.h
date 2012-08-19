@@ -40,7 +40,7 @@ It is being used in accordance with the terms of LGPL **/
 
 #include <QtGui/QLineEdit>
 #include <QtGui/QFileDialog>
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 #include <ves/xplorer/Logging.h>
 
 namespace ves
@@ -79,7 +79,7 @@ private slots:
 private:
     QLineEdit* theLineEdit;
 
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 
     ///Logger reference
     Poco::Logger& m_logger;

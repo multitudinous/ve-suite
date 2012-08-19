@@ -35,8 +35,8 @@
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/data/MakeLive.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/EventFactory.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
@@ -55,8 +55,8 @@ CameraSettingsPropertySet::CameraSettingsPropertySet()
     signame += boost::lexical_cast<std::string>( this );
     signame += ".CameraProjectionUpdate";
 
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::StringSignal_type >( &m_projectionChangedSignal ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_projectionChangedSignal ),
         signame );
 
     CreateSkeleton();
@@ -195,5 +195,5 @@ bool CameraSettingsPropertySet::FarValidator( PropertyPtr&, boost::any newValue 
 void CameraSettingsPropertySet::ProjectionChanged( PropertyPtr& )
 {
     WriteToDatabaseNoOverride();
-    m_projectionChangedSignal( mUUIDString );
+    m_projectionChangedSignal.signal( mUUIDString );
 }

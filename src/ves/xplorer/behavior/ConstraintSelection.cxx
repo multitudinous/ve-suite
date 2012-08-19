@@ -39,8 +39,9 @@
 
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+#include <switchwire/BooleanPropagationCombiner.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -103,22 +104,24 @@ ConstraintSelection::ConstraintSelection()
     m_pickConstraint( 0 )
 {
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &ConstraintSelection::ProcessSelection,
+                               switchwire::BooleanPropagationCombiner, &ConstraintSelection::ProcessSelection,
                                m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &ConstraintSelection::RegisterButtonPress,
+                               switchwire::BooleanPropagationCombiner, &ConstraintSelection::RegisterButtonPress,
                                m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &ConstraintSelection::SetStartEndPoint,
                       m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &ConstraintSelection::ProcessNavigation,
+                               switchwire::BooleanPropagationCombiner, &ConstraintSelection::ProcessNavigation,
                                m_connections, any_SignalType, normal_Priority );
 
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ObjectPickedSignal_type >( &m_objectPickedSignal ),
+    // FIXME: This signal is never fired. Is it needed, or should it be
+    // fired somewhere? -RPT
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_objectPickedSignal ),
         "ConstraintSelection.ObjectPickedSignal" );
 }
 ////////////////////////////////////////////////////////////////////////////////

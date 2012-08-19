@@ -34,7 +34,8 @@
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/DeviceHandler.h>

@@ -38,7 +38,8 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -70,8 +71,8 @@ AddVTKDataSetEventHandler::AddVTKDataSetEventHandler()
     : ves::xplorer::event::EventHandler()
 {
     _activeModel = 0;
-    eventmanager::EventManager::instance()->RegisterSignal(
-        new eventmanager::SignalWrapper< ves::util::StringSignal_type >( &m_datafileLoaded ),
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_datafileLoaded ),
         "AddVTKDataSetEventHandler.DatafileLoaded" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -310,7 +311,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                         AddChild( lastDataAdded->GetDCS() );
                         _activeModel->SetActiveDataSet( 0 );
                     }
-                    m_datafileLoaded( tempDataSetFilename );
+                    m_datafileLoaded.signal( tempDataSetFilename );
                 }
             }
             //////////////////////////////////////////////////////////////

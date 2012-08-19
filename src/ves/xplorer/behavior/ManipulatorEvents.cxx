@@ -39,8 +39,9 @@
 
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
-#include <ves/xplorer/eventmanager/EventManager.h>
-#include <ves/xplorer/eventmanager/BooleanPropagationCombiner.h>
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+#include <switchwire/BooleanPropagationCombiner.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -107,31 +108,31 @@ ManipulatorEvents::ManipulatorEvents()
 {
     //Setup connection to mouse events
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseMove,
+                               switchwire::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseMove,
                                m_connections, any_SignalType, high_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress1%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
+                               switchwire::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
                                m_connections, any_SignalType, high_Priority );
 
     //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress2%", bool( gadget::Keys, int, int, int ),
-    //    eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
+    //    switchwire::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
     //    m_connections, any_SignalType, high_Priority );
 
     //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonPress3%", bool( gadget::Keys, int, int, int ),
-    //    eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
+    //    switchwire::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMousePress,
     //    m_connections, any_SignalType, high_Priority );
 
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ),
-                               eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseRelease,
+                               switchwire::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseRelease,
                                m_connections, any_SignalType, high_Priority );
 
     //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease2%", bool( gadget::Keys, int, int, int ),
-    //    eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseRelease,
+    //    switchwire::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseRelease,
     //    m_connections, any_SignalType, high_Priority );
 
     //CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease3%", bool( gadget::Keys, int, int, int ),
-    //    eventmanager::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseRelease,
+    //    switchwire::BooleanPropagationCombiner, &ManipulatorEvents::ProcessMouseRelease,
     //    m_connections, any_SignalType, high_Priority );
 
 

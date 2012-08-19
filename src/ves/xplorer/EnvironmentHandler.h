@@ -45,7 +45,7 @@
 
 #include <ves/xplorer/event/data/SeedPoints.h>
 
-#include <ves/xplorer/eventmanager/ScopedConnectionList.h>
+#include <switchwire/ScopedConnectionList.h>
 
 // --- VTK Includes --- //
 class vtkPolyData;
@@ -220,7 +220,7 @@ private:
     ///The model containing ephemeris data
     osg::ref_ptr<osgEphemeris::EphemerisModel> m_ephemerisModel;
     /// Required to be able to connect up to signals.
-    ves::xplorer::eventmanager::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_connections;
 };
 }
 }

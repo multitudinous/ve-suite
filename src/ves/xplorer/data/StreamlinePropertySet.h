@@ -39,7 +39,7 @@
 
 #include <ves/VEConfig.h>
 
-#include <boost/signals2/signal.hpp>
+#include <switchwire/Event.h>
 
 namespace ves
 {
@@ -73,13 +73,13 @@ protected:
     virtual void CreateSkeleton();
 
     ///Update signal to control turning off and on seed points
-    typedef boost::signals2::signal< void ( const std::string&, const bool ) > ActivateSeedPointsSignal_type;
+    typedef switchwire::Event< void ( const std::string&, const bool ) > ActivateSeedPointsSignal_type;
     ActivateSeedPointsSignal_type m_activateSeedPoints;
     ///Update signal to control the bounding box for seed points
-    typedef boost::signals2::signal< void ( const std::vector< double >& ) > UpdateSeedPointBoundsSignal_type;
+    typedef switchwire::Event< void ( const std::vector< double >& ) > UpdateSeedPointBoundsSignal_type;
     UpdateSeedPointBoundsSignal_type m_updateSeedPointBounds;
     ///Update signal to control changing the active dataset
-    typedef boost::signals2::signal< void ( const std::string& ) > UpdateActiveDataSetSignal_type;
+    typedef switchwire::Event< void ( const std::string& ) > UpdateActiveDataSetSignal_type;
     UpdateActiveDataSetSignal_type m_activeDataSet;
 };
 
