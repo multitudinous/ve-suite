@@ -7,6 +7,7 @@ Import( 'baseEnv ves_pkg GetPlatform buildDir osg_options vtk_options xerces_opt
 Import( 'minerva_options tao_options boost_options vrjuggler_options osgal_options osgworks_options' )
 Import( 'ApplyBulletVars bullet_options osgbullet_options bdfx_options poco_options storyteller_options' )
 Import( 'switchwire_options' )
+Import('propertystore_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'xplorer') )
 buildSrcDir = pj('#',buildDir,'src', 'apps', 'xplorer')
@@ -91,13 +92,12 @@ bdfx_options.apply( env )
 poco_options.apply( env )
 storyteller_options.apply( env )
 switchwire_options.apply( env )
+propertystore_options.apply( env )
 
 if GetPlatform() != 'darwin':
     Import('qt_options')
     qt_options.apply(env)
-    env.AppendUnique( CPPDEFINES = ['QT_ON','QT_QTPROPERTYBROWSER_IMPORT'] )
-    env.Append(LIBS = ['QtSolutions_PropertyBrowser-2.5'])
-    env.Append(LIBPATH = [pj('#', buildDir, 'external', 'qtpropertybrowser-2.5_1-opensource', 'src')])
+    env.AppendUnique( CPPDEFINES = ['QT_ON'] )
     env.Append(LIBS = ['osgQtTree'])
     env.Append(LIBPATH = [pj('#', buildDir, 'external', 'osgQtTree')])
 else:

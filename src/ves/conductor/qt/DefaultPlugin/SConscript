@@ -7,6 +7,7 @@ pj = os.path.join
 Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
 Import('tao_options xerces_options osgworks_options LIBDIR storyteller_options')
 Import('bullet_options osgbullet_options osgal_options vtk_options bdfx_options')
+Import('propertystore_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt', 'DefaultPlugin') )
 buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt', 'DefaultPlugin')
@@ -67,7 +68,7 @@ lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'xplorer'),
 if GetPlatform() != 'darwin':
     Import('qt_options')
     qt_options.apply(lib_env)
-    lib_env.AppendUnique( CPPDEFINES = ['QT_ON','QT_QTPROPERTYBROWSER_IMPORT'] )
+    lib_env.AppendUnique( CPPDEFINES = ['QT_ON'] )
 else:
     import qt46
     qt46.applyQtBuildFlags(lib_env)
@@ -85,6 +86,7 @@ osgworks_options.apply( lib_env )
 osgbullet_options.apply( lib_env )
 bdfx_options.apply( lib_env )
 storyteller_options.apply( lib_env )
+propertystore_options.apply( lib_env )
 
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
@@ -97,7 +99,6 @@ if GetPlatform() == 'win32':
     lib_env.AppendUnique( CPPDEFINES = ['QT_NO_DEBUG'] )
 
 lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_DEFAULTPLUGIN_LIBRARY'])
-#lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )
 lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external') ] )
 
 #create a bundle instead of a shared library
