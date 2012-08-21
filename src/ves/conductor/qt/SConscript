@@ -205,7 +205,7 @@ lib_env.Append(LIBPATH = [
 if GetPlatform() != 'darwin':
     Import('qt_options')
     qt_options.apply(lib_env)
-    lib_env.AppendUnique( CPPDEFINES = ['QT_ON']#,'QT_QTPROPERTYBROWSER_IMPORT'] )
+    lib_env.AppendUnique( CPPDEFINES = ['QT_ON'])#,'QT_QTPROPERTYBROWSER_IMPORT'] )
 else:
     import qt46
     qt46.applyQtBuildFlags(lib_env)
