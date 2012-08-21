@@ -73,7 +73,7 @@ lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'xplorer'),
 if GetPlatform() != 'darwin':
     Import('qt_options')
     qt_options.apply(lib_env)
-    lib_env.AppendUnique( CPPDEFINES = ['QT_ON','QT_QTPROPERTYBROWSER_IMPORT'] )
+    lib_env.AppendUnique( CPPDEFINES = ['QT_ON'] )
 else:
     import qt46
     qt46.applyQtBuildFlags(lib_env)
@@ -104,7 +104,6 @@ if osgal_options.isAvailable():
    lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
 
 lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_HyperLabICEPlugin_LIBRARY'])
-#lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external','qtpropertybrowser-2.5_1-opensource','src') ] )
 lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external') ] )
 lib_env.AppendUnique( CPPPATH = [ buildSrcDir ] )
 
