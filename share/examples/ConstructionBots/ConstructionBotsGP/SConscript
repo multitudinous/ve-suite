@@ -45,6 +45,9 @@ lib_env.Append( CPPDEFINES = [ ] )
 if GetPlatform() == 'win32':
    lib_env['no_import_lib'] = 1
    lib_env['WINDOWS_INSERT_MANIFEST'] = False
+   #LIBCPMT is being linked in via a third party library so there is
+   # no need for us to link in the dynamic version of the library as well
+   lib_env.AppendUnique( LINKFLAGS = ['/NODEFAULTLIB:LIBCMT'] )
 
 lib = ves_pkg.createLoadableModule( 'ConstructionBotsGP', lib_env,
     installPrefix = pj( 'share', 'vesuite', 'examples', 'ConstructionBots', 'Plugins', 'GE', host_type ) )

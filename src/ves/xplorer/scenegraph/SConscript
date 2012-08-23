@@ -52,6 +52,11 @@ else:
    
 lib_env.Append( CPPDEFINES = ['VE_SCENEGRAPH_LIBRARY','VE_SCENEGRAPH_UTILS_LIBRARY','VE_NURBS_LIBRARY','VE_NURBS_UTILS_LIBRARY'])
 
+if GetPlatform() == 'win32':
+    #LIBCPMT is being linked in via a third party library so there is
+    # no need for us to link in the dynamic version of the library as well
+    lib_env.AppendUnique( LINKFLAGS = ['/NODEFAULTLIB:LIBCMT'] )
+
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_scenegraph',
                                                         lib_env,
