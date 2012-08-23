@@ -1,0 +1,40 @@
+PACKAGE_NAME=glog
+BASE_DIR="${DEV_BASE_DIR}/glog-0.3.2"
+
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_FORMAT=tgz
+SOURCE_URL=http://google-glog.googlecode.com/files/glog-0.3.2.tar.gz
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+PREBUILD_METHOD=cmake
+#FPC_FILE=bullet.fpc
+#SKIP_FPC_INSTALL="no"
+
+case $PLATFORM in
+  Windows)
+    unset PROJ_STR
+    unset BUILD_TARGET
+    unset PREBUILD_METHOD
+    BUILD_METHOD=devenv
+    MSVC_CONFIG=Release
+    if [ ${ARCH} = "32-bit" ]; then
+      MSVC_PLATFORM=Win32
+      #PLATFORM_SUFFIX=
+    else
+      MSVC_PLATFORM=x64
+      PLATFORM_SUFFIX=_x64
+    fi
+
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/google-glog.sln" )
+
+    #POST_BUILD_METHOD="find . -name \*.pdb -exec cp {} ${INSTALL_DIR}/lib/. \; -print"
+    ;;
+  Darwin |  Linux)
+    BUILD_TARGET="install"
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    ;;
+esac

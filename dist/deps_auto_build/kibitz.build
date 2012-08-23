@@ -1,0 +1,19 @@
+PACKAGE_NAME=kibitz
+BASE_DIR="${DEV_BASE_DIR}/kibitz"
+
+SOURCE_RETRIEVAL_METHOD=git
+SOURCE_URL=https://github.com/murphybytes/kibitz.git
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+
+case $PLATFORM in
+  Windows)
+    unset PROJ_STR
+    unset BUILD_TARGET
+    ;;
+  Darwin | Linux)
+    ;;
+esac
+

@@ -1,0 +1,24 @@
+PACKAGE_NAME=zmq
+BASE_DIR="${DEV_BASE_DIR}/zmq"
+
+SOURCE_RETRIEVAL_METHOD=git
+SOURCE_URL=https://github.com/zeromq/libzmq.git
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+
+case $PLATFORM in
+  Windows)
+    unset PROJ_STR
+    unset BUILD_TARGET
+    ;;
+  Darwin | Linux)
+    BUILD_TARGET="install"
+    PREBUILD_METHOD=configure
+    POST_RETRIEVAL_METHOD="./autogen.sh"
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    ;;
+esac
+
