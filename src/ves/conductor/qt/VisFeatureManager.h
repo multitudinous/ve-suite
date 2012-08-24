@@ -33,7 +33,7 @@
 #pragma once
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/data/PropertySetPtr.h>
+#include <propertystore/PropertySetPtr.h>
 
 #include <ves/xplorer/Logging.h>
 #include <switchwire/ScopedConnectionList.h>
@@ -87,7 +87,7 @@ public:
      * the returned pointer will be a null pointer. The caller is expected to
      * manage the lifetime of the created object.
      **/
-    ves::xplorer::data::PropertySetPtr CreateNewFeature( const std::string& featureType );
+    propertystore::PropertySetPtr CreateNewFeature( const std::string& featureType );
 
 
     std::vector< std::pair< std::string, std::string > >
@@ -112,7 +112,7 @@ private:
     ///Map to hold a mapping between feature names and table names
     std::map< std::string, std::string > m_featureNameToTableName;
 
-    std::map< std::string, ves::xplorer::data::PropertySetPtr > m_featureTypeToSetPtrMap;
+    std::map< std::string, propertystore::PropertySetPtr > m_featureTypeToSetPtrMap;
 
     ///Logger reference
     Poco::Logger& m_logger;

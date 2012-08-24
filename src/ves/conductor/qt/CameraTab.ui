@@ -55,7 +55,7 @@
     </layout>
    </item>
    <item>
-    <widget class="ves::conductor::GenericPropertyBrowser" name="m_overallSettings" native="true">
+    <widget class="ves::conductor::VesTreePropertyBrowser" name="m_overallSettings" native="true">
      <property name="minimumSize">
       <size>
        <width>10</width>
@@ -277,7 +277,7 @@
     </layout>
    </item>
    <item>
-    <widget class="ves::conductor::GenericPropertyBrowser" name="m_perCameraSettings" native="true">
+    <widget class="ves::conductor::VesTreePropertyBrowser" name="m_perCameraSettings" native="true">
      <property name="minimumSize">
       <size>
        <width>10</width>
@@ -290,9 +290,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ves::conductor::GenericPropertyBrowser</class>
+   <class>ves::conductor::VesTreePropertyBrowser</class>
    <extends>QWidget</extends>
-   <header>ves/conductor/qt/propertyBrowser/GenericPropertyBrowser.h</header>
+   <header>ves/conductor/qt/propertyBrowser/VesTreePropertyBrowser.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

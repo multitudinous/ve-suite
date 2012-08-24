@@ -1594,7 +1594,7 @@ void MainWindow::UseAsSurfaceDataQueued( const std::string uuid, bool flag )
 {
     ves::xplorer::data::CADPropertySet cad;
     cad.SetUUID( uuid );
-    cad.LoadFromDatabase();
+    cad.Load();
     std::string filename =
         boost::any_cast<std::string>( cad.GetPropertyValue( "Filename" ) );
 

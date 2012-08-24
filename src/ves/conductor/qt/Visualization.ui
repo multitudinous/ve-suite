@@ -227,7 +227,7 @@ QListWidget::item:selected
            </layout>
           </item>
           <item>
-           <widget class="ves::conductor::GenericPropertyBrowser" name="vfpb" native="true">
+           <widget class="ves::conductor::VesTreePropertyBrowser" name="vfpb" native="true">
             <property name="acceptDrops">
              <bool>false</bool>
             </property>
@@ -245,9 +245,9 @@ QListWidget::item:selected
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>ves::conductor::GenericPropertyBrowser</class>
+   <class>ves::conductor::VesTreePropertyBrowser</class>
    <extends>QWidget</extends>
-   <header>ves/conductor/qt/propertyBrowser/GenericPropertyBrowser.h</header>
+   <header>ves/conductor/qt/propertyBrowser/VesTreePropertyBrowser.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

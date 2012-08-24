@@ -37,7 +37,7 @@
 
 #include <QtGui/QDialog>
 
-#include <ves/xplorer/data/PropertySetPtr.h>
+#include <propertystore/PropertySetPtr.h>
 
 #include <ves/xplorer/Logging.h>
 #include <switchwire/ScopedConnectionList.h>
@@ -62,7 +62,6 @@ namespace ves
 {
 namespace conductor
 {
-class PropertyBrowser;
 
 class Visualization : public QDialog
 {
@@ -108,10 +107,8 @@ protected Q_SLOTS:
 private:
     void ResyncFromDatabaseSlot();
     Ui::Visualization* m_ui;
-    ///The property browser widget for all vis features
-    PropertyBrowser* mFeatureBrowser;
     ///The current property set being worked with on the vis pane
-    ves::xplorer::data::PropertySetPtr mTempSet;
+    propertystore::PropertySetPtr mTempSet;
     ///Not sure about this one
     bool mIgnoreIndexChange;
     ///A vector if ids for something

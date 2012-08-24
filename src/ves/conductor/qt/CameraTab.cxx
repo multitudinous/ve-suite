@@ -1,7 +1,6 @@
 #include <ves/conductor/qt/CameraTab.h>
 #include <ves/conductor/qt/ui_CameraTab.h>
 
-#include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/data/CameraSettingsPropertySet.h>
@@ -28,20 +27,15 @@ CameraTab::CameraTab(QWidget *parent) :
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
     ui->setupUi(this);
-    m_perCameraSettingsBrowser = new PropertyBrowser( this );
-    m_overallSettingsBrowser = new PropertyBrowser( this );
 
-    m_overallSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CameraModePropertySet );
+    m_overallSet = propertystore::PropertySetPtr( new ves::xplorer::data::CameraModePropertySet );
     if( m_overallSet )
     {
         m_overallSet->EnableLiveProperties( true );
         m_overallSet->SetPropertyValue( "DisableCameraTools", false );
         m_overallSet->SetPropertyValue( "CameraWindow", true );
-        m_overallSettingsBrowser->ParsePropertySet( m_overallSet );
-        m_overallSettingsBrowser->RefreshAll();
 
-        ui->m_overallSettings->setPropertyBrowser( m_overallSettingsBrowser );
-        ui->m_overallSettings->RefreshContents();
+        ui->m_overallSettings->ParsePropertySet( m_overallSet );
         ui->m_overallSettings->show();
     }
     ui->m_showHideSettingsButton->toggle();
@@ -84,8 +78,6 @@ CameraTab::CameraTab(QWidget *parent) :
 CameraTab::~CameraTab()
 {
     delete ui;
-    delete m_perCameraSettingsBrowser;
-    delete m_overallSettingsBrowser;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraTab::PictureModeOn( bool flag )
@@ -106,20 +98,17 @@ void CameraTab::on_m_cameraListWidget_currentItemChanged(
         {
             m_selectCameraSignal.signal( uuid );
         }
-        m_perCameraSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
+        m_perCameraSet = propertystore::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
         m_perCameraSet->SetUUID( uuid );
         m_perCameraSet->EnableLiveProperties( true );
-        m_perCameraSet->LoadFromDatabase();
+        m_perCameraSet->Load();
     }
     else
     {
-        m_perCameraSet = ves::xplorer::data::PropertySetPtr();
+        m_perCameraSet = propertystore::PropertySetPtr();
     }
-    m_perCameraSettingsBrowser->ParsePropertySet( m_perCameraSet );
-    m_perCameraSettingsBrowser->RefreshAll();
 
-    ui->m_perCameraSettings->setPropertyBrowser( m_perCameraSettingsBrowser );
-    ui->m_perCameraSettings->RefreshContents();
+    ui->m_perCameraSettings->ParsePropertySet( m_perCameraSet );
     ui->m_perCameraSettings->show();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -132,11 +121,11 @@ void CameraTab::on_m_addCameraButton_clicked()
     m_monotonicCount++;
 
     QListWidgetItem* cameraItem = new QListWidgetItem( name );
-    ves::xplorer::data::PropertySetPtr tempSet;
-    tempSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
+    propertystore::PropertySetPtr tempSet;
+    tempSet = propertystore::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
     tempSet->SetPropertyValue( "NameTag", name.toStdString() );
     std::string uuid = tempSet->GetUUIDAsString();
-    tempSet->WriteToDatabase();
+    tempSet->Save();
     cameraItem->setData( Qt::UserRole, QString::fromStdString( uuid ) );
 
     m_addCameraSignal.signal( uuid, name.toStdString() );
@@ -153,11 +142,11 @@ void CameraTab::on_m_removeCameraButton_clicked()
         return;
     }
     // TODO: pull user data from item to get UUID and remove this entry from store.
-    ves::xplorer::data::PropertySetPtr tempSet;
-    tempSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
+    propertystore::PropertySetPtr tempSet;
+    tempSet = propertystore::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
     std::string uuid( item->data( Qt::UserRole ).toString().toStdString() );
     tempSet->SetUUID( uuid );
-    tempSet->DeleteFromDatabase();
+    tempSet->Remove();
     delete item;
     m_removeCameraSignal.signal( uuid );
 }

@@ -34,7 +34,7 @@
 #pragma once
 
 #define QT_NO_KEYWORDS
-#include <ves/xplorer/data/PropertySetPtr.h>
+#include <propertystore/PropertySetPtr.h>
 
 #include <QtGui/QWidget>
 #include <QtCore/QAbstractItemModel>
@@ -58,7 +58,7 @@ namespace ves
 {
 namespace conductor
 {
-class PropertyBrowser;
+//class PropertyBrowser;
 
 class PreferencesTab : public QWidget
 {
@@ -75,9 +75,9 @@ protected Q_SLOTS:
 private:
     Ui::PreferencesTab* ui;
 
-    ves::xplorer::data::PropertySetPtr m_propertySet;
+    propertystore::PropertySetPtr m_propertySet;
 
-    PropertyBrowser* m_featureBrowser;
+    //PropertyBrowser* m_featureBrowser;
 };
 
 } // namespace conductor

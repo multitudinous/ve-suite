@@ -15,15 +15,15 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="ves::conductor::GenericPropertyBrowser" name="preferencesPropertyBrowser" native="true"/>
+    <widget class="ves::conductor::VesTreePropertyBrowser" name="preferencesPropertyBrowser" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ves::conductor::GenericPropertyBrowser</class>
+   <class>ves::conductor::VesTreePropertyBrowser</class>
    <extends>QWidget</extends>
-   <header>ves/conductor/qt/propertyBrowser/GenericPropertyBrowser.h</header>
+   <header>ves/conductor/qt/propertyBrowser/VesTreePropertyBrowser.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

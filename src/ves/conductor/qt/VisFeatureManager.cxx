@@ -68,12 +68,12 @@ VisFeatureManager::VisFeatureManager()
 
     // ADD ANY NEW VIZ FEATURE TYPES HERE OR THE UI WILL NOT BE ABLE TO DISPLAY
     // THEM!
-    m_featureTypeToSetPtrMap["Contours"] = PropertySetPtr( new ContourPlanePropertySet() );
-    m_featureTypeToSetPtrMap["Vectors"] = PropertySetPtr( new VectorPlanePropertySet() );
-    m_featureTypeToSetPtrMap["Streamlines"] = PropertySetPtr( new StreamlinePropertySet() );
-    m_featureTypeToSetPtrMap["Isosurfaces"] = PropertySetPtr( new IsosurfacePropertySet() );
-    m_featureTypeToSetPtrMap["Polydata"] = PropertySetPtr( new PolydataPropertySet() );
-    m_featureTypeToSetPtrMap["Texture-based"] = PropertySetPtr( new VolumeVisPropertySet() );
+    m_featureTypeToSetPtrMap["Contours"] = propertystore::PropertySetPtr( new ContourPlanePropertySet() );
+    m_featureTypeToSetPtrMap["Vectors"] = propertystore::PropertySetPtr( new VectorPlanePropertySet() );
+    m_featureTypeToSetPtrMap["Streamlines"] = propertystore::PropertySetPtr( new StreamlinePropertySet() );
+    m_featureTypeToSetPtrMap["Isosurfaces"] = propertystore::PropertySetPtr( new IsosurfacePropertySet() );
+    m_featureTypeToSetPtrMap["Polydata"] = propertystore::PropertySetPtr( new PolydataPropertySet() );
+    m_featureTypeToSetPtrMap["Texture-based"] = propertystore::PropertySetPtr( new VolumeVisPropertySet() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VisFeatureManager::~VisFeatureManager()
@@ -81,14 +81,14 @@ VisFeatureManager::~VisFeatureManager()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const std::string& featureType )
+propertystore::PropertySetPtr VisFeatureManager::CreateNewFeature( const std::string& featureType )
 {
     using namespace ves::xplorer::data;
 
     // Attempt to find featureType in the map that was set up in the ctor.
     // If found, call the factory method of the associated ProertySet to get a
     // new set of that type.
-    std::map< std::string, PropertySetPtr >::const_iterator iter =
+    std::map< std::string, propertystore::PropertySetPtr >::const_iterator iter =
         m_featureTypeToSetPtrMap.find( featureType );
     if( iter != m_featureTypeToSetPtrMap.end() )
     {
@@ -96,7 +96,7 @@ ves::xplorer::data::PropertySetPtr VisFeatureManager::CreateNewFeature( const st
     }
     else
     {
-        return PropertySetPtr();
+        return propertystore::PropertySetPtr();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -104,22 +104,22 @@ void VisFeatureManager::ResyncFromDatabase()
 {
     using namespace ves::xplorer::data;
     std::vector<std::string> ids;
-    PropertySetPtr propSet;
+    propertystore::PropertySetPtr propSet;
 
-    std::map< std::string, PropertySetPtr >::const_iterator iter =
+    std::map< std::string, propertystore::PropertySetPtr >::const_iterator iter =
         m_featureTypeToSetPtrMap.begin();
     while( iter != m_featureTypeToSetPtrMap.end() )
     {
         propSet = iter->second->CreateNew();
         if( propSet.get() )
         {
-            ids = DatabaseManager::instance()->GetStringVector( propSet->GetTableName(), "uuid" );
+            ids = DatabaseManager::instance()->GetStringVector( propSet->GetTypeName(), "uuid" );
             for( size_t index = 0; index < ids.size(); ++index )
             {
                 propSet->SetUUID( ids.at( index ) );
-                propSet->LoadFromDatabase();
+                propSet->Load();
                 // The write operation causes the feature to be added to the scene
-                propSet->WriteToDatabase();
+                propSet->Save();
             }
         }
         ++iter;
@@ -134,12 +134,12 @@ VisFeatureManager::GetNameIDPairsForFeature( const std::string& featureType )
     std::vector<std::string> names;
     using namespace ves::xplorer::data;
 
-    std::map< std::string, PropertySetPtr >::const_iterator iter =
+    std::map< std::string, propertystore::PropertySetPtr >::const_iterator iter =
         m_featureTypeToSetPtrMap.find( featureType );
     if( iter != m_featureTypeToSetPtrMap.end() )
     {
-        ids = DatabaseManager::instance()->GetStringVector( iter->second->GetTableName(), "uuid" );
-        names = DatabaseManager::instance()->GetStringVector( iter->second->GetTableName(), "NameTag" );
+        ids = DatabaseManager::instance()->GetStringVector( iter->second->GetTypeName(), "uuid" );
+        names = DatabaseManager::instance()->GetStringVector( iter->second->GetTypeName(), "NameTag" );
 
         // Pair up the names and IDs
         std::pair< std::string, std::string > tempPair;

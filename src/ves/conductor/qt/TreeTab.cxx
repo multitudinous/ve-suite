@@ -33,7 +33,7 @@
 #define VES_DEBUG
 #include <ves/conductor/qt/TreeTab.h>
 
-#include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+
 
 #include <osgQtTree/osgQtTree.h>
 #include <osgQtTree/treemodel.h>
@@ -93,8 +93,6 @@ TreeTab::TreeTab( QWidget* parent ) :
     ui->mTreeView->setModel( mModel );
     ui->mTreeView->header()->setResizeMode( QHeaderView::ResizeToContents );
 
-    mBrowser = new PropertyBrowser( this );
-
     qRegisterMetaType<osg::NodePath>();
     qRegisterMetaType<std::string>();
     QObject::connect( this, SIGNAL( ObjectPicked( osg::NodePath ) ),
@@ -143,7 +141,6 @@ TreeTab::TreeTab( QWidget* parent ) :
 ////////////////////////////////////////////////////////////////////////////////
 TreeTab::~TreeTab()
 {
-    delete mBrowser;
     delete mModel;
     delete ui;
 }
@@ -232,7 +229,7 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     // lost
     if( mActiveSet.get() != 0 )
     {
-        mActiveSet->WriteToDatabase();
+        mActiveSet->Save();
     }
 
     // Get the node associated with this QModelIndex
@@ -285,28 +282,22 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
 
             std::string uuid = CreateSubNodePropertySet( node, nodePath );
             mActiveSet =
-                ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CADSubNodePropertySet() );
+                propertystore::PropertySetPtr( new ves::xplorer::data::CADSubNodePropertySet() );
             mActiveSet->SetUUID( uuid );
 
-            mBrowser->ParsePropertySet( mActiveSet );
-
-            ui->cadPropertyBrowser->setPropertyBrowser( mBrowser );
-            // Don't autosize the columns when we refresh the propertybrowser
-            ui->cadPropertyBrowser->RefreshContents( false );
+            ui->cadPropertyBrowser->ParsePropertySet( mActiveSet, false );
             ui->cadPropertyBrowser->show();
 
             // Load properties from db
-            mActiveSet->LoadFromDatabase();
-
-            mBrowser->RefreshAll();
+            mActiveSet->Load();
 
             m_highlightNode.signal( nodePath );
         }
         else
         {
             // Clear out the PropertyBrowser widget
-            ves::xplorer::data::PropertySetPtr nullPtr;
-            mBrowser->ParsePropertySet( nullPtr );
+            propertystore::PropertySetPtr nullPtr;
+            ui->cadPropertyBrowser->ParsePropertySet( nullPtr, false );
             mActiveSet = nullPtr;
         }
 
@@ -320,29 +311,24 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     // Create a CADPropertySet and load it in the browser
     if( type == "CAD" )
     {
-        mActiveSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CADPropertySet() );
+        mActiveSet = propertystore::PropertySetPtr( new ves::xplorer::data::CADPropertySet() );
         mActiveSet->SetUUID( newSelectedDCS->GetCADPart()->GetID() );
     }
     else if( type == "DATA" )
     {
-        mActiveSet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::DatasetPropertySet() );
+        mActiveSet = propertystore::PropertySetPtr( new ves::xplorer::data::DatasetPropertySet() );
         mActiveSet->SetUUID( node->getDescriptions().at( 1 ) );
     }
-    mBrowser->ParsePropertySet( mActiveSet );
 
-    ui->cadPropertyBrowser->setPropertyBrowser( mBrowser );
-    // Don't autosize the columns when we refresh the propertybrowser
-    ui->cadPropertyBrowser->RefreshContents( false );
+    ui->cadPropertyBrowser->ParsePropertySet( mActiveSet, false );
     ui->cadPropertyBrowser->show();
 
     // Load properties from db
-    mActiveSet->LoadFromDatabase();
+    mActiveSet->Load();
 
     SyncTransformFromDCS( newSelectedDCS );
     // Turn on live updates
     mActiveSet->EnableLiveProperties( true );
-
-    mBrowser->RefreshAll();
 
     // highlight will be true if this method was called from the tree widget in
     // any form, and false if it was called as a side-effect of
@@ -399,8 +385,8 @@ void TreeTab::on_RefreshButton_clicked()
 {
     if( mActiveSet )
     {
-        mActiveSet->LoadFromDatabase();
-        mBrowser->RefreshAll();
+        mActiveSet->Load();
+        ui->cadPropertyBrowser->RefreshAllValues();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -408,7 +394,7 @@ void TreeTab::on_OKButton_clicked()
 {
     if( mActiveSet )
     {
-        mActiveSet->WriteToDatabase();
+        mActiveSet->Save();
         //        ves::xplorer::ModelHandler::instance()->GetActiveModel()->
         //                GetModelCADHandler()->
         //                UpdateCADNode( mActiveSet->GetUUIDAsString() );
@@ -581,7 +567,7 @@ std::string TreeTab::CreateSubNodePropertySet( osg::Node* node, osg::NodePath& p
 
     //newSet.SetPropertyValue( "Visibile", newPart->GetVisibility() );
 
-    newSet.WriteToDatabase();
+    newSet.Save();
     return uuid;
 }
 ////////////////////////////////////////////////////////////////////////////////

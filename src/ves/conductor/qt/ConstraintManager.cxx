@@ -71,19 +71,19 @@ ConstraintManager::ConstraintManager()
 
     // ADD ANY NEW CONSTRAINT TYPES HERE OR THE UI WILL NOT BE ABLE TO DISPLAY
     // THEM!
-    m_constraintTypeToSetPtrMap["Angular Spring"] = PropertySetPtr( new AngularSpringConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Linear and Angular Spring"] = PropertySetPtr( new LinearAndAngularSpringConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Linear Spring"] = PropertySetPtr( new LinearSpringConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Ball and Socket"] = PropertySetPtr( new BallAndSocketConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Box"] = PropertySetPtr( new BoxConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Cardan"] = PropertySetPtr( new CardanConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Fixed"] = PropertySetPtr( new FixedConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Hinge"] = PropertySetPtr( new HingeConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Planar"] = PropertySetPtr( new PlanarConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Ragdoll"] = PropertySetPtr( new RagdollConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Slider"] = PropertySetPtr( new SliderConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Twist Slider"] = PropertySetPtr( new TwistSliderConstraintPropertySet() );
-    m_constraintTypeToSetPtrMap["Wheel Suspension"] = PropertySetPtr( new WheelSuspensionConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Angular Spring"] = propertystore::PropertySetPtr( new AngularSpringConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Linear and Angular Spring"] = propertystore::PropertySetPtr( new LinearAndAngularSpringConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Linear Spring"] = propertystore::PropertySetPtr( new LinearSpringConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Ball and Socket"] = propertystore::PropertySetPtr( new BallAndSocketConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Box"] = propertystore::PropertySetPtr( new BoxConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Cardan"] = propertystore::PropertySetPtr( new CardanConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Fixed"] = propertystore::PropertySetPtr( new FixedConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Hinge"] = propertystore::PropertySetPtr( new HingeConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Planar"] = propertystore::PropertySetPtr( new PlanarConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Ragdoll"] = propertystore::PropertySetPtr( new RagdollConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Slider"] = propertystore::PropertySetPtr( new SliderConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Twist Slider"] = propertystore::PropertySetPtr( new TwistSliderConstraintPropertySet() );
+    m_constraintTypeToSetPtrMap["Wheel Suspension"] = propertystore::PropertySetPtr( new WheelSuspensionConstraintPropertySet() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ConstraintManager::~ConstraintManager()
@@ -91,14 +91,14 @@ ConstraintManager::~ConstraintManager()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::data::PropertySetPtr ConstraintManager::CreateNewConstraint( const std::string& constraintType )
+propertystore::PropertySetPtr ConstraintManager::CreateNewConstraint( const std::string& constraintType )
 {
     using namespace ves::xplorer::data;
 
     // Attempt to find constraintType in the map that was set up in the ctor.
     // If found, call the factory method of the associated ProertySet to get a
     // new set of that type.
-    std::map< std::string, PropertySetPtr >::const_iterator iter =
+    std::map< std::string, propertystore::PropertySetPtr >::const_iterator iter =
         m_constraintTypeToSetPtrMap.find( constraintType );
     if( iter != m_constraintTypeToSetPtrMap.end() )
     {
@@ -107,7 +107,7 @@ ves::xplorer::data::PropertySetPtr ConstraintManager::CreateNewConstraint( const
     }
     else
     {
-        return PropertySetPtr();
+        return propertystore::PropertySetPtr();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -115,22 +115,22 @@ void ConstraintManager::ResyncFromDatabase()
 {
     using namespace ves::xplorer::data;
     std::vector<std::string> ids;
-    PropertySetPtr propSet;
+    propertystore::PropertySetPtr propSet;
 
-    std::map< std::string, PropertySetPtr >::const_iterator iter =
+    std::map< std::string, propertystore::PropertySetPtr >::const_iterator iter =
         m_constraintTypeToSetPtrMap.begin();
     while( iter != m_constraintTypeToSetPtrMap.end() )
     {
         propSet = iter->second->CreateNew();
         if( propSet.get() )
         {
-            ids = DatabaseManager::instance()->GetStringVector( propSet->GetTableName(), "uuid" );
+            ids = DatabaseManager::instance()->GetStringVector( propSet->GetTypeName(), "uuid" );
             for( size_t index = 0; index < ids.size(); ++index )
             {
                 propSet->SetUUID( ids.at( index ) );
-                propSet->LoadFromDatabase();
+                propSet->Load();
                 // The write operation causes the constraint to be added to the scene
-                propSet->WriteToDatabase();
+                propSet->Save();
             }
         }
         ++iter;
@@ -145,12 +145,12 @@ ConstraintManager::GetNameIDPairsForConstraint( const std::string& constraintTyp
     std::vector<std::string> names;
     using namespace ves::xplorer::data;
 
-    std::map< std::string, PropertySetPtr >::const_iterator iter =
+    std::map< std::string, propertystore::PropertySetPtr >::const_iterator iter =
         m_constraintTypeToSetPtrMap.find( constraintType );
     if( iter != m_constraintTypeToSetPtrMap.end() )
     {
-        ids = DatabaseManager::instance()->GetStringVector( iter->second->GetTableName(), "uuid" );
-        names = DatabaseManager::instance()->GetStringVector( iter->second->GetTableName(), "NameTag" );
+        ids = DatabaseManager::instance()->GetStringVector( iter->second->GetTypeName(), "uuid" );
+        names = DatabaseManager::instance()->GetStringVector( iter->second->GetTypeName(), "NameTag" );
 
         // Pair up the names and IDs
         std::pair< std::string, std::string > tempPair;

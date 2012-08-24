@@ -62,26 +62,23 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'extendedWidgets','ExtendedToolBar.h')]
 cppSources += lib_env.qt_moc(source)
 
-source = [pj(buildSrcDir,'propertyBrowser','PropertyBrowser.h')]
-cppSources += lib_env.qt_moc(source)
-
 source = [pj(buildSrcDir,'propertyBrowser','FileEdit.h')]
 cppSources += lib_env.qt_moc(source)
 
-source = [pj(buildSrcDir,'propertyBrowser','FileEditFactory.h')]
+#source = [pj(buildSrcDir,'propertyBrowser','FileEditFactory.h')]
+#cppSources += lib_env.qt_moc(source)
+
+#source = [pj(buildSrcDir,'propertyBrowser','FilePathManager.h')]
+#cppSources += lib_env.qt_moc(source)
+
+source = [pj(buildSrcDir,'propertyBrowser','NodeEdit.h')]
 cppSources += lib_env.qt_moc(source)
 
-source = [pj(buildSrcDir,'propertyBrowser','FilePathManager.h')]
-cppSources += lib_env.qt_moc(source)
+#source = [pj(buildSrcDir,'propertyBrowser','NodeSelectFactory.h')]
+#cppSources += lib_env.qt_moc(source)
 
-source = [pj(buildSrcDir,'propertyBrowser','NodeSelect.h')]
-cppSources += lib_env.qt_moc(source)
-
-source = [pj(buildSrcDir,'propertyBrowser','NodeSelectFactory.h')]
-cppSources += lib_env.qt_moc(source)
-
-source = [pj(buildSrcDir,'propertyBrowser','NodeSelectManager.h')]
-cppSources += lib_env.qt_moc(source)
+#source = [pj(buildSrcDir,'propertyBrowser','NodeSelectManager.h')]
+#cppSources += lib_env.qt_moc(source)
 
 source = [pj(buildSrcDir,'Visualization.h')]
 cppSources += lib_env.qt_moc(source)
@@ -89,7 +86,7 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'Constraints.h')]
 cppSources += lib_env.qt_moc(source)
 
-source = [pj(buildSrcDir,'propertyBrowser','GenericPropertyBrowser.h')]
+source = [pj(buildSrcDir,'propertyBrowser','VesTreePropertyBrowser.h')]
 cppSources += lib_env.qt_moc(source)
 
 if minerva_options.isAvailable():

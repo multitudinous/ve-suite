@@ -417,7 +417,7 @@ void NetworkLoader::OnActiveModelChanged( const std::string& )
     ves::xplorer::data::CADPropertySet temp;
     std::vector<std::string> ids =
         ves::xplorer::data::DatabaseManager::instance()->
-        GetStringVector( temp.GetTableName(), "uuid" );
+        GetStringVector( temp.GetTypeName(), "uuid" );
 
     // Iterate through each available set and load it from db
     std::vector<std::string>::const_iterator idIter = ids.begin();
@@ -442,13 +442,13 @@ void NetworkLoader::OnActiveModelChanged( const std::string& )
         // with, we turn physics back on. The slot for turning physics on will
         // in turn set all the other physics properties on the rigid body.
         tcadSet.SetUUID( *idIter );
-        tcadSet.LoadFromDatabase( );
+        tcadSet.Load( );
         bool physics = boost::any_cast<bool>( tcadSet.GetPropertyValue( "Physics_Enable" ) );
         cadSet.SetUUID( *idIter );
         cadSet.SetPropertyValue( "Physics_Enable", true );
         cadSet.EnableLiveProperties( true );
         cadSet.SetPropertyValue( "Physics_Enable", false );
-        cadSet.LoadFromDatabase( );
+        cadSet.Load( );
         if( physics )
         {
             cadSet.SetPropertyValue( "Physics_Enable", true );

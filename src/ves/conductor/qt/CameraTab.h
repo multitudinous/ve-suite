@@ -2,7 +2,7 @@
 
 #include <QtGui/QWidget>
 
-#include <ves/xplorer/data/PropertySetPtr.h>
+#include <propertystore/PropertySetPtr.h>
 
 #include <ves/xplorer/Logging.h>
 #include <switchwire/ScopedConnectionList.h>
@@ -19,7 +19,7 @@ namespace ves
 {
 namespace conductor
 {
-class PropertyBrowser;
+//class PropertyBrowser;
 
 class CameraTab : public QWidget
 {
@@ -47,10 +47,10 @@ private:
 
     Ui::CameraTab *ui;
 
-    PropertyBrowser* m_overallSettingsBrowser;
-    PropertyBrowser* m_perCameraSettingsBrowser;
-    ves::xplorer::data::PropertySetPtr m_overallSet;
-    ves::xplorer::data::PropertySetPtr m_perCameraSet;
+    //PropertyBrowser* m_overallSettingsBrowser;
+    //PropertyBrowser* m_perCameraSettingsBrowser;
+    propertystore::PropertySetPtr m_overallSet;
+    propertystore::PropertySetPtr m_perCameraSet;
 
     int m_monotonicCount;
 

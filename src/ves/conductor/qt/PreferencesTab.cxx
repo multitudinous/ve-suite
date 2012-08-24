@@ -37,7 +37,7 @@
 #include <ves/xplorer/data/PreferencesPropertySet.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 
-#include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+
 
 
 #include <iostream>
@@ -53,35 +53,17 @@ PreferencesTab::PreferencesTab( QWidget* parent ) :
 {
     ui->setupUi( this );
 
-    m_featureBrowser = new PropertyBrowser( this );
+    m_propertySet = propertystore::PropertySetPtr( new ves::xplorer::data::PreferencesPropertySet() );
 
-    m_propertySet = ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::PreferencesPropertySet() );
+    m_propertySet->Save();
 
-    m_propertySet->WriteToDatabase();
-
-    // Let the PropertyBrowser container parse the initial property set
-    m_featureBrowser->ParsePropertySet( m_propertySet );
-
-    // ui.preferencesPropertyBrowser is an instance of GenericPropertyBrowser,
-    // which knows how
-    // to take the Qt-ized data from a PropertyBrowser such as
-    // m_featureBrowser and display it in the GUI.
-    ui->preferencesPropertyBrowser->setPropertyBrowser( m_featureBrowser );
-    ui->preferencesPropertyBrowser->RefreshContents();
+    ui->preferencesPropertyBrowser->ParsePropertySet( m_propertySet );
     ui->preferencesPropertyBrowser->show();
-
-    // No need to load before parsing, since values in browser are not
-    // set during parsing. They're only set by signals from the property
-    // set when things changed, which loading will do. But this doesn't
-    // work until after parsing is complete.
-    m_propertySet->LoadFromDatabase();
-    m_featureBrowser->RefreshAll();
 }
 ////////////////////////////////////////////////////////////////////////////////
 PreferencesTab::~PreferencesTab()
 {
     delete ui;
-    delete m_featureBrowser;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesTab::changeEvent( QEvent* e )

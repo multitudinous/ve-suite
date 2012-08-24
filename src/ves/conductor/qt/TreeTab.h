@@ -35,7 +35,7 @@
 
 #define QT_NO_KEYWORDS
 
-#include <ves/xplorer/data/PropertySetPtr.h>
+#include <propertystore/PropertySetPtr.h>
 #include <switchwire/ScopedConnectionList.h>
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 #include <ves/xplorer/Logging.h>
@@ -74,7 +74,6 @@ class DCS;
 }
 namespace conductor
 {
-class PropertyBrowser;
 
 class TreeTab : public QWidget
 {
@@ -161,9 +160,7 @@ private:
 
     TreeModel* mModel;
 
-    PropertyBrowser* mBrowser;
-
-    ves::xplorer::data::PropertySetPtr mActiveSet;
+    propertystore::PropertySetPtr mActiveSet;
 
     switchwire::ScopedConnectionList mConnections;
 

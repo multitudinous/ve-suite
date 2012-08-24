@@ -175,7 +175,7 @@ void CADFileLoader::WritePartToDB( std::string const& vegFileNamePath,
     //newSet.SetPropertyValue( "GPS_Longitude",  );
     //newSet.SetPropertyValue( "GPS_Latitude", );
 
-    newSet.WriteToDatabase();
+    newSet.Save();
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor

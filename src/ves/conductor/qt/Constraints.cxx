@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/qt/Constraints.h>
-#include <ves/conductor/qt/propertyBrowser/PropertyBrowser.h>
+
 
 #include <ves/conductor/qt/ui_Constraints.h>
 
@@ -60,8 +60,6 @@ Constraints::Constraints( QWidget* parent )
 {
     m_ui->setupUi( this );
 
-    mFeatureBrowser = new PropertyBrowser( this );
-
     //    CONNECTSIGNALS_0( "%ResyncFromDatabase", void(),
     //                      &Constraints::ResyncFromDatabaseSlot,
     //                      m_connections, any_SignalType, lowest_Priority );
@@ -73,7 +71,6 @@ Constraints::~Constraints()
 {
     LOG_TRACE( "dtor" );
     delete m_ui;
-    delete mFeatureBrowser;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Constraints::changeEvent( QEvent* e )
@@ -94,13 +91,13 @@ void Constraints::on_WritePropertiesButton_clicked()
     if( mTempSet )
     {
         LOG_DEBUG( "on_WritePropertiesButton_clicked" );
-        mTempSet->WriteToDatabase();
+        mTempSet->Save();
         //const std::string featureName =
         //    m_ui->FeaturesList->currentItem()->text().toStdString();
         //ConstraintManager::instance()->
         //    UpdateFeature( featureName, mTempSet->GetUUIDAsString() );
 
-        mTempSet = ves::xplorer::data::PropertySetPtr();
+        mTempSet = propertystore::PropertySetPtr();
 
         // Save off the list index so we can re-select this one after updating
         int lastKnownIndex = m_ui->FeatureIDSelector->currentIndex();
@@ -114,8 +111,8 @@ void Constraints::on_RefreshPropertiesButton_clicked()
 {
     if( mTempSet )
     {
-        mTempSet->LoadFromDatabase();
-        mFeatureBrowser->RefreshAll();
+        mTempSet->Load();
+        m_ui->vfpb->RefreshAllValues();
         LOG_DEBUG( "on_RefreshPropertiesButton_clicked" );
     }
 }
@@ -141,9 +138,9 @@ void Constraints::on_DeleteFeatureButton_clicked()
 {
     if( mTempSet )
     {
-        mTempSet->DeleteFromDatabase();
-        ves::xplorer::data::PropertySetPtr nullPtr;
-        mFeatureBrowser->ParsePropertySet( nullPtr );
+        mTempSet->Remove();
+        propertystore::PropertySetPtr nullPtr;
+        m_ui->vfpb->ParsePropertySet( nullPtr );
         mTempSet = nullPtr;
         UpdateFeatureIDSelectorChoices();
         m_ui->FeatureIDSelector->setCurrentIndex( m_ui->FeatureIDSelector->count() - 1 );
@@ -151,10 +148,10 @@ void Constraints::on_DeleteFeatureButton_clicked()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Constraints::on_FeaturesList_currentTextChanged( const QString& currentText )
+void Constraints::on_FeaturesList_currentTextChanged( const QString& )
 {
     LOG_DEBUG( "on_FeaturesList_currentTextChanged: " << currentText.toStdString() );
-    ves::xplorer::data::PropertySetPtr nullPtr;
+    propertystore::PropertySetPtr nullPtr;
     mTempSet = nullPtr;
     UpdateFeatureIDSelectorChoices();
 }
@@ -225,7 +222,7 @@ void Constraints::on_FeatureIDSelector_currentIndexChanged( int index )
     if( ( index == -1 ) || ( index > int( m_ids.size() ) ) )
     {
         LOG_TRACE( "on_FeatureIDSelector_currentIndexChanged: Removing any visible PropertySet" );
-        mFeatureBrowser->ParsePropertySet( ves::xplorer::data::PropertySetPtr() );
+        m_ui->vfpb->ParsePropertySet( propertystore::PropertySetPtr() );
         return;
     }
 
@@ -237,15 +234,9 @@ void Constraints::on_FeatureIDSelector_currentIndexChanged( int index )
     if( mTempSet )
     {
         mTempSet->SetUUID( m_ids.at( index ) );
-        mFeatureBrowser->ParsePropertySet( mTempSet );
-        mTempSet->LoadFromDatabase();
-        mFeatureBrowser->RefreshAll();
+        mTempSet->Load();
 
-        // ui.vfpb is an instance of GenericPropertyBrowser, which knows how
-        // to take the Qt-ized data from a PropertyBrowser such as
-        // mFeatureBrowser and display it in the GUI.
-        m_ui->vfpb->setPropertyBrowser( mFeatureBrowser );
-        m_ui->vfpb->RefreshContents();
+        m_ui->vfpb->ParsePropertySet( mTempSet );
         m_ui->vfpb->show();
     }
 
@@ -253,7 +244,7 @@ void Constraints::on_FeatureIDSelector_currentIndexChanged( int index )
 ////////////////////////////////////////////////////////////////////////////////
 void Constraints::ResyncFromDatabaseSlot()
 {
-    mTempSet = ves::xplorer::data::PropertySetPtr();
+    mTempSet = propertystore::PropertySetPtr();
     UpdateFeatureIDSelectorChoices();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -36,7 +36,7 @@
 
 #include <QtGui/QDialog>
 
-#include <ves/xplorer/data/PropertySetPtr.h>
+#include <propertystore/PropertySetPtr.h>
 
 #include <ves/xplorer/Logging.h>
 #include <switchwire/ScopedConnectionList.h>
@@ -61,7 +61,7 @@ namespace ves
 {
 namespace conductor
 {
-class PropertyBrowser;
+//class PropertyBrowser;
 
 class Constraints : public QDialog
 {
@@ -108,9 +108,9 @@ private:
     void ResyncFromDatabaseSlot();
     Ui::Constraints* m_ui;
     ///The property browser widget for all constraints
-    PropertyBrowser* mFeatureBrowser;
+    //PropertyBrowser* mFeatureBrowser;
     ///The current property set being worked with on the constraints pane
-    ves::xplorer::data::PropertySetPtr mTempSet;
+    propertystore::PropertySetPtr mTempSet;
     ///A vector of ids for something
     std::vector< std::string > m_ids;
     ///Logger reference
