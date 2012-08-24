@@ -31,12 +31,14 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#include <ves/conductor/qt/propertyBrowser/FileEdit.h>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QToolButton>
 #include <QtGui/QFileDialog>
 #include <QtGui/QFocusEvent>
 
+#include <iostream>
+
+#include <ves/conductor/qt/propertyBrowser/FileEdit.h>
 #include <ves/conductor/qt/UITabs.h>
 
 namespace ves
@@ -44,27 +46,16 @@ namespace ves
 namespace conductor
 {
 
-FileEdit::FileEdit( QWidget* parent )
-    : QWidget( parent ),
+FileEdit::FileEdit(QWidget *parent)
+    : ExternalStringSelect( parent ),
       m_fileDialog( 0 )
 {
-    QHBoxLayout* layout = new QHBoxLayout( this );
-    layout->setMargin( 0 );
-    layout->setSpacing( 0 );
-    theLineEdit = new QLineEdit( this );
-    theLineEdit->setSizePolicy( QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred ) );
-    QToolButton* button = new QToolButton( this );
-    button->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred ) );
-    button->setText( QLatin1String( "..." ) );
-    layout->addWidget( theLineEdit );
-    layout->addWidget( button );
-    setFocusProxy( theLineEdit );
-    setFocusPolicy( Qt::StrongFocus );
-    setAttribute( Qt::WA_InputMethodEnabled );
-    connect( theLineEdit, SIGNAL( textEdited( const QString& ) ),
-             this, SIGNAL( filePathChanged( const QString& ) ) );
-    connect( button, SIGNAL( clicked() ),
-             this, SLOT( buttonClicked() ) );
+
+}
+
+propertystore::ExternalStringSelect* FileEdit::createNew( QWidget* parent )
+{
+    return new FileEdit( parent );
 }
 
 void FileEdit::buttonClicked()
@@ -73,6 +64,7 @@ void FileEdit::buttonClicked()
 
     if( m_fileDialog )
     {
+        m_fileDialog->raise();
         tabs->ActivateTab( m_fileDialog );
         return;
     }
@@ -82,70 +74,43 @@ void FileEdit::buttonClicked()
     m_fileDialog->setAttribute( Qt::WA_DeleteOnClose );
     m_fileDialog->setFileMode( QFileDialog::ExistingFile );
 
-    //m_fileDialog->setNameFilters( theFilter );
+    connect( m_fileDialog, SIGNAL(fileSelected(const QString &)),
+                      this, SLOT(onFileSelected(const QString&)) );
+    connect( m_fileDialog, SIGNAL(rejected()), this,
+                      SLOT( onFileCancelled() ) );
 
-    connect( m_fileDialog, SIGNAL( fileSelected( const QString& ) ),
-             this, SLOT( onFileSelected( const QString& ) ) );
-    connect( m_fileDialog, SIGNAL( rejected() ), this,
-             SLOT( onFileCancelled() ) );
+    //m_fileDialog->show();
 
     tabs->ActivateTab( tabs->AddTab( m_fileDialog, "Select File" ) );
 }
 
 void FileEdit::onFileSelected( const QString& filePath )
 {
-
-    QDir path = QDir::current();
-    QString relativePath = path.relativeFilePath( filePath );
-    theLineEdit->setText( relativePath );
-
     ves::conductor::UITabs::instance()->RemoveTab( m_fileDialog );
 
-    if( m_fileDialog != 0 )
+    if ( m_fileDialog != 0 )
     {
         m_fileDialog->close();
         m_fileDialog = 0;
     }
 
-    emit filePathChanged( relativePath );
+    QDir path = QDir::current();
+    QString relativePath = path.relativeFilePath( filePath );
+    // Now that we've pre-processed the path, let the base class handle updating
+    // everything
+    onExternalStringSelected( relativePath.toStdString() );
 }
 
 void FileEdit::onFileCancelled()
 {
     ves::conductor::UITabs::instance()->RemoveTab( m_fileDialog );
 
-    if( m_fileDialog != 0 )
+    if ( m_fileDialog != 0 )
     {
         m_fileDialog->close();
         m_fileDialog = 0;
     }
 }
 
-void FileEdit::focusInEvent( QFocusEvent* e )
-{
-    theLineEdit->event( e );
-    if( e->reason() == Qt::TabFocusReason || e->reason() == Qt::BacktabFocusReason )
-    {
-        theLineEdit->selectAll();
-    }
-    QWidget::focusInEvent( e );
-}
 
-void FileEdit::focusOutEvent( QFocusEvent* e )
-{
-    theLineEdit->event( e );
-    QWidget::focusOutEvent( e );
-}
-
-void FileEdit::keyPressEvent( QKeyEvent* e )
-{
-    theLineEdit->event( e );
-}
-
-void FileEdit::keyReleaseEvent( QKeyEvent* e )
-{
-    theLineEdit->event( e );
-}
-
-}
-}
+}} //ves::conductor

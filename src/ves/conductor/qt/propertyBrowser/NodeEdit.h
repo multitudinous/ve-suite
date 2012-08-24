@@ -37,35 +37,46 @@
 
 #include <propertystore/ExternalStringSelect.h>
 
+#include <switchwire/ScopedConnectionList.h>
+#include <ves/xplorer/Logging.h>
+
 #include <ves/VEConfig.h>
 
-/// @file FileEdit.h
+/// @file NodeEdit.h
 /// @namespace ves::conductor
-/// @class FileEdit is an editor widget consisting of a textedit and associated
-/// button. When clicked, the button brings up a QFileDialog so the user may
-/// select a file. Once chosen, the file path is converted to a relative path
-/// (relative to the present working directory) and is placed into the textedit.
-/// This class copies from propertystore::FileEdit and adds a small amount of
-/// custom processing.
+/// @class NodeEdit is an editor widget consisting of a textedit and associated
+/// button. When clicked, the button brings up the scenegraph TreeTab to allow
+/// selection of a node.
 namespace ves
 {
 namespace conductor
 {
 
-class VE_CONDUCTOR_QTUI_EXPORTS FileEdit : public propertystore::ExternalStringSelect
+class VE_CONDUCTOR_QTUI_EXPORTS NodeEdit : public propertystore::ExternalStringSelect
 {
     Q_OBJECT
 public:
-    FileEdit(QWidget *parent = 0);
+    NodeEdit(QWidget *parent = 0);
     virtual propertystore::ExternalStringSelect* createNew( QWidget* parent );
 
 public Q_SLOTS:
     virtual void buttonClicked();
-    virtual void onFileSelected( const QString& filePath );
-    virtual void onFileCancelled();
+    //virtual void onFileSelected( const QString& nodePath );
+    //virtual void onFileCancelled();
+
+    void onNodeSelected( const std::string& nodePath );
+    void onNodeSelectedQueued( const std::string nodePath );
+
+Q_SIGNALS:
+    void nodeSelectedQSignal( const std::string nodePath );
 
 private:
-    QFileDialog* m_fileDialog;
+    switchwire::ScopedConnectionList m_connections;
+
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 }} // ves::conductor
