@@ -185,7 +185,7 @@ DataSet::~DataSet()
 {
     xplorer::data::DatasetPropertySet set;
     set.LoadByKey( "Filename", fileName );
-    set.DeleteFromDatabase();
+    set.Remove();
 
     this->lut->Delete();
     this->lut = NULL;
@@ -2034,7 +2034,7 @@ void DataSet::WriteDatabaseEntry()
 
     Print();
 
-    set.WriteToDatabase();
+    set.Save();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::LoadTemporalDataSet( vtkDataObject* temporalDataSet )
