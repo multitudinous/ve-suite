@@ -252,9 +252,11 @@ bool CameraManager::Handle(
     if( !intersections.empty() )
     {
         osg::NodePath nodePath = intersections.begin()->nodePath;
-        cameraObject =
-            ConvertNodeToCameraObject(
-                scenegraph::FindVESObject( nodePath )->getParent( 0 ) );
+        osg::ref_ptr< osg::Node > tempNode = scenegraph::FindVESObject( nodePath );
+        if( tempNode.valid() )
+        {
+            cameraObject = ConvertNodeToCameraObject( tempNode->getParent( 0 ) );
+        }
     }
 
     switch( event )
