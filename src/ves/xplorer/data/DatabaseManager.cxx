@@ -37,6 +37,8 @@
 #include <ves/xplorer/data/DatabaseDetailsPropertySet.h>
 #include <ves/xplorer/data/CADPropertySet.h>
 #include <ves/xplorer/data/CADSubNodePropertySet.h>
+#include <ves/xplorer/data/CameraModePropertySet.h>
+#include <ves/xplorer/data/CameraSettingsPropertySet.h>
 #include <ves/xplorer/data/ContourPlanePropertySet.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/data/IsosurfacePropertySet.h>
@@ -62,17 +64,16 @@
 
 // --- Poco includes --- //
 #include <Poco/Data/SessionPool.h>
-#include <Poco/Data/SQLite/Connector.h>
+//#include <Poco/Data/SQLite/Connector.h>
 #include <Poco/Data/RecordSet.h>
 #include <Poco/Data/Session.h>
 #include <Poco/Data/DataException.h>
 
 #include <boost/shared_ptr.hpp>
-//#define BOOST_FILESYSTEM_VERSION 2
 #include <boost/filesystem.hpp>
+#include <boost/smart_ptr/shared_array.hpp>
 
 #include <iostream>
-#include <boost/smart_ptr/shared_array.hpp>
 
 namespace ves
 {
@@ -85,9 +86,19 @@ vprSingletonImp( DatabaseManager );
 //vprSingletonImpLifetime( DatabaseManager, 0 );
 ////////////////////////////////////////////////////////////////////////////////
 DatabaseManager::DatabaseManager()
-    :
-    mPool( 0 )
 {
+    // Right now we use a null buffer and a null cache. These will be replaced
+    // with actual caching and buffering strategies at some point in the future.
+    m_cache =
+            crunchstore::DataAbstractionLayerPtr( new crunchstore::NullCache );
+    m_buffer =
+            crunchstore::DataAbstractionLayerPtr( new crunchstore::NullBuffer );
+    m_dataManager =
+            crunchstore::DataManagerPtr( new crunchstore::DataManager );
+    m_dataManager->SetCache( m_cache );
+    m_dataManager->SetBuffer( m_buffer );
+    m_workingStore = crunchstore::SQLiteStorePtr( new crunchstore::SQLiteStore );
+
     switchwire::EventManager::instance()->RegisterSignal(
         ( &m_resyncFromDatabase ),
         "DatabaseManager.ResyncFromDatabase" );
@@ -100,111 +111,64 @@ DatabaseManager::~DatabaseManager()
 ////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::Shutdown()
 {
-    if( mPool )
-    {
-        //std::cout << "Number of idle Poco::Sessions " << mPool->idle()
-        //    << " Number of dead Poco::Sessions " << mPool->dead() << std::endl;
-        //This must be deleted from the thread that it was created from
-        delete mPool;
-        mPool = 0;
-    }
-    try
-    {
-        Poco::Data::SQLite::Connector::unregisterConnector();
-    }
-    catch( ... )
-    {
-        ;
-    }
+    m_dataManager->DetachStore( m_workingStore );
     //Remove working db file
     boost::filesystem::remove( m_path );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::SetDatabasePath( const std::string& path )
 {
-    if( mPool )
-    {
-        delete mPool;
-        mPool = 0;
-        Poco::Data::SQLite::Connector::unregisterConnector();
-    }
+    std::cout << "DatabaseManager::SetDatabasePath " << path << std::endl << std::flush;
 
-    Poco::Data::SQLite::Connector::registerConnector();
-    mPool = new Poco::Data::SessionPool( "SQLite", path, 1, 32, 10 );
+    m_dataManager->DetachStore( m_workingStore );
+    m_workingStore->SetStorePath( path );
+    m_dataManager->AttachStore( m_workingStore,
+                              crunchstore::Store::WORKINGSTORE_ROLE );
     m_path = path;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Poco::Data::SessionPool* DatabaseManager::GetPool()
-{
-    return mPool;
-}
+//Poco::Data::SessionPool* DatabaseManager::GetPool()
+//{
+//    return mPool;
+//}
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::string > DatabaseManager::GetStringVector( const std::string& tableName, const std::string& columnName, const std::string& searchCriteria, bool distinct )
+std::vector< std::string > DatabaseManager::GetStringVector(
+        const std::string& tableName,
+        const std::string& columnName )
 {
-    std::vector< std::string > returnValue;
-
-    // If table doesn't exist, return an empty vector
+    std::vector< std::string > results;
     if( !TableExists( tableName ) )
     {
-        return returnValue;
+        //std::cout << "$$$ DatabaseManager::GetStringVector: Table " << tableName << " does not exist! (Looking for column " << columnName << ")" << std::endl << std::flush;
+        return results;
     }
 
-    Poco::Data::Session session( mPool->get() );
-    Poco::Data::Statement statement( session );
+    std::vector< crunchstore::SearchCriterion > criteria;
+    m_dataManager->Search( tableName, criteria, columnName, results );
+//    std::cout << "DataManager::GetStringVector:\n\ttableName = " << tableName <<
+//                 "\n\tcolumnName = " << columnName << "\n\tresults.size = " << results.size() << std::endl << std::flush;
+    return results;
 
-    // Build the following query: "SELECT [DISTINCT] columnName FROM tableName [WHERE searchCriteria]"
-    statement << "SELECT ";
-    if( distinct )
-    {
-        statement << "DISTINCT ";
-    }
-    statement << columnName << " FROM " << tableName;
-    if( !searchCriteria.empty() )
-    {
-        statement << " WHERE " << searchCriteria;
-    }
-
-    try
-    {
-        statement.execute();
-        Poco::Data::RecordSet recordset( statement );
-        if( recordset.rowCount() != 0 )
-        {
-            for( size_t rowIndex = 0; rowIndex < recordset.rowCount(); rowIndex++ )
-            {
-                returnValue.push_back( recordset.value( 0, rowIndex ).convert<std::string > () );
-            }
-        }
-    }
-    catch( Poco::Data::DataException& e )
-    {
-        std::cout << "DatabaseManager::GetStringVector: " << e.displayText() << std::endl;
-    }
-
-    return returnValue;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::TableExists( const std::string& tableName )
 {
-    bool exists = false;
-    Poco::Data::Session session( mPool->get() );
-    try
-    {
-        session << "SELECT 1 FROM sqlite_master WHERE name='" << tableName << "'",
-                Poco::Data::into( exists ),
-                Poco::Data::now;
-    }
-    catch( Poco::Data::DataException& e )
-    {
-        std::cout << e.displayText() << std::endl;
-        exists = false;
-    }
-    return exists;
+    return m_workingStore->HasTypeName( tableName );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::ResetAll()
 {
-    Poco::Data::Session session( mPool->get() );
+    std::cout << "DatabaseManager::ResetAll" << std::endl << std::flush;
+    // Warning: This method is absolutely, positively specific to using an
+    // sqlite store. We do this operation directly on the db rather than using
+    // crunchstore's Remove() method on each entry, because that strategy would
+    // be *very* slow. We could potentially use a combination of
+    // crunchstore::Search() and crunchstore::Drop() to accomplish this, but
+    // that would still be slower than doing it directly because crunchstore
+    // does not support bulk transactions. Bulk transactions speed up this
+    // process greatly.
+
+    Poco::Data::Session session( m_workingStore->GetPool()->get() );
     Poco::Data::Statement statement( session );
     statement << "select name from sqlite_master where type = 'table'";
 
@@ -240,12 +204,15 @@ void DatabaseManager::ResetAll()
 ////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::SaveAs( const std::string& path )
 {
+    std::cout << "DatabaseManager::SaveAs" << path << std::endl << std::flush;
+    // Warning: This assumes we are using sqlite for the working store. If we
+    // switch to something else, this code will need to be re-thought.
     DatabaseDetailsPropertySet details;
 
-    if( !TableExists( details.GetTableName() ) )
+    if( !TableExists( details.GetTypeName() ) )
     {
         details.SetPropertyValue( "DatabaseVersion", CURRENT_DB_VERSION );
-        details.WriteToDatabase();
+        details.Save();
     }
 
     try
@@ -265,6 +232,11 @@ bool DatabaseManager::SaveAs( const std::string& path )
 ////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::LoadFrom( const std::string& path )
 {
+    std::cout << "DatabaseManager::LoadFrom " << path << std::endl << std::flush;
+    // Warning: This assumes we are using sqlite for the working store. If we
+    // switch to something else, this code will need to be re-thought.
+
+
     // Order of events:
     // 1. Shutdown db, so we release everything.
     // 2. Copy the db file given in path over top of working db.
@@ -294,11 +266,11 @@ bool DatabaseManager::LoadFrom( const std::string& path )
     DatabaseDetailsPropertySet details;
     std::vector<std::string> ids;
     double dbVersion = 0.0;
-    ids = DatabaseManager::instance()->GetStringVector( details.GetTableName(), "uuid" );
+    ids = GetStringVector( details.GetTypeName(), "uuid" );
     if( !ids.empty() )
     {
         details.SetUUID( ids.at( 0 ) );
-        details.LoadFromDatabase();
+        details.Load();
         if( details.PropertyExists( "DatabaseVersion" ) )
         {
             dbVersion = boost::any_cast<double>( details.GetPropertyValue( "DatabaseVersion" ) );
@@ -316,60 +288,61 @@ bool DatabaseManager::LoadFrom( const std::string& path )
 ////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::ConvertFromOld()
 {
-    std::vector<PropertySetPtr> propList;
+    std::cout << "DatabaseManager::ConvertFromOld" << std::endl << std::flush;
+    std::vector< propertystore::PropertySetPtr > propList;
 
-    propList.push_back( PropertySetPtr( new PreferencesPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new PreferencesPropertySet() ) );
 
-    propList.push_back( PropertySetPtr( new CADPropertySet() ) );
-    propList.push_back( PropertySetPtr( new CADSubNodePropertySet() ) );
-    propList.push_back( PropertySetPtr( new ContourPlanePropertySet() ) );
-    propList.push_back( PropertySetPtr( new DatasetPropertySet() ) );
-    propList.push_back( PropertySetPtr( new IsosurfacePropertySet() ) );
-    propList.push_back( PropertySetPtr( new PolydataPropertySet() ) );
-    propList.push_back( PropertySetPtr( new StreamlinePropertySet() ) );
-    propList.push_back( PropertySetPtr( new VectorPlanePropertySet() ) );
-    propList.push_back( PropertySetPtr( new VolumeVisPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new CADPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new CADSubNodePropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new CameraModePropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new CameraSettingsPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new ContourPlanePropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new DatasetPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new IsosurfacePropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new PolydataPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new StreamlinePropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new VectorPlanePropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new VolumeVisPropertySet() ) );
 
     using namespace ves::xplorer::data::constraints;
-    propList.push_back( PropertySetPtr( new AngularSpringConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new LinearAndAngularSpringConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new LinearSpringConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new BallAndSocketConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new BoxConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new CardanConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new FixedConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new HingeConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new PlanarConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new RagdollConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new SliderConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new TwistSliderConstraintPropertySet() ) );
-    propList.push_back( PropertySetPtr( new WheelSuspensionConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new AngularSpringConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new LinearAndAngularSpringConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new LinearSpringConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new BallAndSocketConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new BoxConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new CardanConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new FixedConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new HingeConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new PlanarConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new RagdollConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new SliderConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new TwistSliderConstraintPropertySet() ) );
+    propList.push_back( propertystore::PropertySetPtr( new WheelSuspensionConstraintPropertySet() ) );
 
     std::vector<std::string> ids;
-    std::vector<PropertySetPtr> properties;
-    PropertySetPtr propSet;
+    std::vector< propertystore::PropertySetPtr > properties;
+    propertystore::PropertySetPtr propSet;
 
     for( size_t listIndex = 0; listIndex < propList.size(); ++listIndex )
     {
         propSet = propList.at( listIndex )->CreateNew();
-        ids = DatabaseManager::instance()->GetStringVector( propSet->GetTableName(), "uuid" );
+        ids = DatabaseManager::instance()->GetStringVector( propSet->GetTypeName(), "uuid" );
         for( size_t index = 0; index < ids.size(); ++index )
         {
             propSet = propList.at( listIndex )->CreateNew();
             propSet->SetUUID( ids.at( index ) );
-            propSet->LoadFromDatabase();
+            propSet->Load();
             properties.push_back( propSet );
         }
-        Poco::Data::Session session( mPool->get() );
-        if( TableExists( propSet->GetTableName() ) )
-        {
-            session << "DROP TABLE " << propSet->GetTableName(), Poco::Data::now;
-        }
+
+        m_dataManager->Drop( propSet->GetTypeName(),
+                            crunchstore::DataAbstractionLayer::WORKING_ROLE );
     }
 
     for( size_t index = 0; index < properties.size(); ++index )
     {
-        properties.at( index )->WriteToDatabase();
+        properties.at( index )->Save();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

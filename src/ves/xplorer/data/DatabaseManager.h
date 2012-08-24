@@ -35,6 +35,12 @@
 // --- VR Juggler includes --- //
 #include <vpr/Util/Singleton.h>
 
+#include <crunchstore/DataManager.h>
+#include <crunchstore/DataAbstractionLayerPtr.h>
+#include <crunchstore/NullBuffer.h>
+#include <crunchstore/NullCache.h>
+#include <crunchstore/SQLiteStore.h>
+
 // --- Boost includes --- //
 #include <boost/noncopyable.hpp>
 #include <switchwire/Event.h>
@@ -45,7 +51,7 @@
 
 #include <ves/VEConfig.h>
 
-#define CURRENT_DB_VERSION 2011.1204
+#define CURRENT_DB_VERSION 2012.0820
 
 // Forward declarations
 namespace Poco
@@ -78,15 +84,10 @@ public:
     /// @param path Path of the database file
     void SetDatabasePath( const std::string& path );
 
-    ///
-    /// Returns a pointer to the session pool. Callers can get a valid session
-    /// like so:
-    /// @code
-    /// Poco::Data::Session mySession( GetPool()->get() );
-    /// @endcode
-    /// The session created in this way will be automatically returned to the
-    /// SessionPool when mySession goes out of scope.
-    Poco::Data::SessionPool* GetPool();
+    crunchstore::DataManagerPtr GetDataManager() const
+    {
+        return m_dataManager;
+    }
 
     /**
      * Returns a vector of strings of the data contained in
@@ -111,9 +112,7 @@ public:
      * @return Vector of strings
      */
     std::vector< std::string > GetStringVector( const std::string& tableName,
-            const std::string& columnName,
-            const std::string& searchCriteria = "",
-            bool distinct = false );
+            const std::string& columnName );
 
     /**
      * Checks whether table with @c tableName exists in the current database.
@@ -162,8 +161,13 @@ private:
 
     void ConvertFromOld();
 
+    crunchstore::DataManagerPtr m_dataManager;
+    crunchstore::DataAbstractionLayerPtr m_cache;
+    crunchstore::DataAbstractionLayerPtr m_buffer;
+    crunchstore::SQLiteStorePtr m_workingStore;
+
     /// Holds the session pool
-    Poco::Data::SessionPool* mPool;
+    //Poco::Data::SessionPool* mPool;
 
     /// Holds the current db path
     std::string m_path;

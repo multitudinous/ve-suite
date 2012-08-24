@@ -5,7 +5,7 @@ pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR vtk_options boost_options RootDir vpr_options')
 Import('gmtl_options vrjuggler_options buildDir osg_options poco_options')
-Import('switchwire_options')
+Import('switchwire_options propertystore_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer', 'data') )
 sources = sca_util.getSourcesRecursive( srcDir )
@@ -21,6 +21,7 @@ vrjuggler_options.apply( lib_env )
 osg_options.apply( lib_env )
 poco_options.apply( lib_env )
 switchwire_options.apply( lib_env )
+propertystore_options.apply( lib_env )
 
 lib_env.Append( CPPDEFINES = ['VE_DATA_LIBRARY'] )
 lib_env.AppendUnique(LIBS = ['ves_xplorer_eventmanager'])
