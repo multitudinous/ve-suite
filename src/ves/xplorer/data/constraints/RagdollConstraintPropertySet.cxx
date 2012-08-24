@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 RagdollConstraintPropertySet::RagdollConstraintPropertySet()
 {
-    mTableName = "RagdollConstraint";
+    SetTypeName( "RagdollConstraint" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr RagdollConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr RagdollConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new RagdollConstraintPropertySet );
+    return propertystore::PropertySetPtr( new RagdollConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void RagdollConstraintPropertySet::CreateSkeleton()
@@ -71,7 +71,7 @@ void RagdollConstraintPropertySet::CreateSkeleton()
     AddProperty( "AngularLimit_From", 0, "From" );
     AddProperty( "AngularLimit_To", 180, "To" );
 
-    AddProperty( "ObjectA_ReferenceAxisA", 0, "Reference Axis A" );
+    AddProperty( "ObjectA_ReferenceAxisA", std::string(""), "Reference Axis A" );
     std::vector<std::string> enumValues;
     enumValues.push_back( "X of Object" );
     enumValues.push_back( "Y of Object" );
@@ -79,7 +79,7 @@ void RagdollConstraintPropertySet::CreateSkeleton()
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "enumValues", enumValues );
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "userVisible", false );
 
-    AddProperty( "ObjectB_ReferenceAxisB", 0, "Reference Axis B" );
+    AddProperty( "ObjectB_ReferenceAxisB", std::string(""), "Reference Axis B" );
     SetPropertyAttribute( "ObjectB_ReferenceAxisB", "enumValues", enumValues );
     SetPropertyAttribute( "ObjectB_ReferenceAxisB", "userVisible", false );
 }

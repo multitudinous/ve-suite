@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 BoxConstraintPropertySet::BoxConstraintPropertySet()
 {
-    mTableName = "BoxConstraint";
+    SetTypeName( "BoxConstraint" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr BoxConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr BoxConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new BoxConstraintPropertySet );
+    return propertystore::PropertySetPtr( new BoxConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BoxConstraintPropertySet::CreateSkeleton()

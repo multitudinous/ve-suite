@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/VizBasePropertySet.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
-#include <ves/xplorer/data/Property.h>
+#include <propertystore/Property.h>
 
 #include <ves/util/Exception.h>
 
@@ -78,22 +78,20 @@ void VizBasePropertySet::RegisterPropertySet( std::string const& tableName )
     SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool VizBasePropertySet::DeleteFromDatabase( Poco::Data::Session* const session,
-        std::string const& TableName )
+bool VizBasePropertySet::Remove(  )
 {
     m_deleteVizSignal->signal( GetUUIDAsString() );
     ///Send the signal to xplorer to tell it to remove the viz feature
-    return PropertySet::DeleteFromDatabase( session, TableName );
+    return PropertySet::Remove(  );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session,
-        std::string const& TableName, Poco::Data::Statement& statement )
+bool VizBasePropertySet::Save(  )
 {
-    bool temp = PropertySet::WriteToDatabase( session, TableName, statement );
-
-    m_addVizSignal->signal( GetUUIDAsString(), TableName );
+    bool temp = propertystore::PropertySet::Save( );
 
     ///Send the signal to xplorer to tell it to add the viz feature
+    m_addVizSignal->signal( GetUUIDAsString(), GetTypeName() );
+
     return temp;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -106,27 +104,27 @@ bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session,
     // Dummy value to ensure this gets set up as an enum
     enumValues.push_back( "Select Scalar Data" );
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataOptions, this, _1 ) );
+    GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataOptions, this, _1 ) );
 
     AddProperty( "DataSet_ScalarRange", boost::any(), "Scalar Range" );
     SetPropertyAttribute( "DataSet_ScalarRange", "isUIGroupOnly", true );
     SetPropertyAttribute( "DataSet_ScalarRange", "setExpanded", true );
 
     AddProperty( "DataSet_ScalarRange_Min", 0.0, "Min" );
-    mPropertyMap["DataSet_ScalarRange_Min"]->SetDisabled();
+    GetProperty( "DataSet_ScalarRange_Min" )->SetDisabled();
 
     AddProperty( "DataSet_ScalarRange_Max", 1.0, "Max" );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SetDisabled();
+    GetProperty( "DataSet_ScalarRange_Max" )->SetDisabled();
 
-    mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
-    mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    GetProperty( "DataSet_ScalarData" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
+    GetProperty( "DataSet_ScalarRange_Min" )->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    GetProperty( "DataSet_ScalarRange_Max" )->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
 
     AddProperty( "DataSet_VectorData", 0, "Vector Data" );
     enumValues.clear();
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
+    GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
 
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
@@ -142,7 +140,7 @@ bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session,
     SetPropertyAttribute( "DataSet", "enumValues", enumValues );
     // Now that DataSet has choices loaded, force an update on the available
     // scalar and vector data
-    PropertyPtr nullPtr;
+    propertystore::PropertyPtr nullPtr;
     UpdateScalarDataOptions( nullPtr );
     UpdateVectorDataOptions( nullPtr );
 
@@ -172,7 +170,7 @@ bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session,
 
     // Connect SignalValueChanged of "Mode" to a function that enables and disables
     // its sub-properties as appropriate
-    PropertyPtr mode = mPropertyMap["Mode"];
+    propertystore::PropertyPtr mode = GetProperty( "Mode" );
     if( mode )
     {
         mode->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateModeOptions, this, _1 ) );
@@ -183,7 +181,7 @@ bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session,
     AddProperty( "Mode_CyclePrecomputedSurfaces", false, "Cycle Precomputed Surfaces" );
     // We disable this one by default since the selected Mode,
     // "Specify a Single Plane", does not support this option.
-    mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetDisabled();
+    GetProperty( "Mode_CyclePrecomputedSurfaces" )->SetDisabled();
 
 
     AddProperty( "PlaneLocation", 0.00, "Plane Location" );
@@ -212,15 +210,15 @@ bool VizBasePropertySet::WriteToDatabase( Poco::Data::Session* const session,
     AddProperty( "Advanced_ScaleByVectorMagnitude", false, "Scale By Vector Magnitude" );
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-void VizBasePropertySet::UpdateScalarDataOptions( PropertyPtr property )
+void VizBasePropertySet::UpdateScalarDataOptions( propertystore::PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
     VES_BEGIN_TRY
     PSVectorOfStrings enumValues;
-    const std::string selectedDataset = boost::any_cast< std::string >( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    const std::string selectedDataset = GetDatumValue< std::string >( "DataSet" );
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
-    enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "ScalarNames" ) );
+    enumValues = dataset.GetDatumValue< std::vector< std::string > >( "ScalarNames" );
     if( enumValues.empty() )
     {
         enumValues.push_back( "No scalars available" );
@@ -232,30 +230,30 @@ void VizBasePropertySet::UpdateScalarDataOptions( PropertyPtr property )
         SetPropertyAttribute( "ColorByScalar", "enumValues", enumValues );
     }
 
-    PropertyPtr nullPtr;
+    propertystore::PropertyPtr nullPtr;
     UpdateScalarDataRange( nullPtr );
     UpdateVectorDataOptions( nullPtr );
     VES_END_TRY( "An error occured with setting the selected scalar" )
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VizBasePropertySet::UpdateScalarDataRange( PropertyPtr property )
+void VizBasePropertySet::UpdateScalarDataRange( propertystore::PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
 
-    mPropertyMap["DataSet_ScalarRange_Min"]->SetEnabled();
-    mPropertyMap["DataSet_ScalarRange_Max"]->SetEnabled();
+    GetProperty( "DataSet_ScalarRange_Min" )->SetEnabled();
+    GetProperty( "DataSet_ScalarRange_Max" )->SetEnabled();
 
     // Load the current Dataset and get the list of min and max values for its scalars
-    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    std::string selectedDataset = GetDatumValue< std::string >( "DataSet" );
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
-    std::vector<double> mins = boost::any_cast< std::vector<double> >( dataset.GetPropertyValue( "ScalarMins" ) );
-    std::vector<double> maxes = boost::any_cast< std::vector<double> >( dataset.GetPropertyValue( "ScalarMaxes" ) );
+    std::vector<double> mins = dataset.GetDatumValue< std::vector<double> >( "ScalarMins" );
+    std::vector<double> maxes = dataset.GetDatumValue< std::vector<double> >( "ScalarMaxes" );
 
     // DataSet_ScalarData is an exact copy of the ScalarNames property of the Dataset,
     // so its number in the enum will be the same as the index into the min and max
     // lists
-    int index = boost::any_cast<int>( GetPropertyValue( "DataSet_ScalarData" ) );
+    int index = GetPropertyAttributeValue<int>( "DataSet_ScalarData", "enumCurrentIndex" );
 
     if( ( !mins.empty() ) && ( !maxes.empty() ) )
     {
@@ -270,17 +268,17 @@ void VizBasePropertySet::UpdateScalarDataRange( PropertyPtr property )
         SetPropertyAttribute( "DataSet_ScalarRange_Max", "maximumValue", max );
 
         // Set min and max to the lower and upper boundary values, respectively
-        bool success = SetPropertyValue( "DataSet_ScalarRange_Min", min );
-        success = SetPropertyValue( "DataSet_ScalarRange_Max", max );
+        SetPropertyValue( "DataSet_ScalarRange_Min", min );
+        SetPropertyValue( "DataSet_ScalarRange_Max", max );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VizBasePropertySet::UpdateVectorDataOptions( PropertyPtr property )
+void VizBasePropertySet::UpdateVectorDataOptions( propertystore::PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
 
     PSVectorOfStrings enumValues;
-    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyValue( "DataSet" ) );
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
     enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "VectorNames" ) );
@@ -291,46 +289,46 @@ void VizBasePropertySet::UpdateVectorDataOptions( PropertyPtr property )
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VizBasePropertySet::UpdateModeOptions( PropertyPtr property )
+void VizBasePropertySet::UpdateModeOptions( propertystore::PropertyPtr property )
 {
-    // Make sure the main value is an int as it should be
-    if( property->IsInt() )
+    // Make sure the main value is a string as it should be
+    if( property->IsString() )
     {
-        int value = boost::any_cast<int>( property->GetValue() );
-        if( value == 0 ) // "Specify a Single Plane"
+        std::string value = boost::any_cast<std::string>( property->GetValue() );
+        if( value == "Specify a Single Plane" )
         {
-            mPropertyMap["Mode_UseNearestPrecomputedPlane"]->SetEnabled();
-            mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetDisabled();
+            GetProperty( "Mode_UseNearestPrecomputedPlane" )->SetEnabled();
+            GetProperty( "Mode_CyclePrecomputedSurfaces" )->SetDisabled();
         }
         else
         {
-            mPropertyMap["Mode_UseNearestPrecomputedPlane"]->SetDisabled();
-            mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetEnabled();
+            GetProperty( "Mode_UseNearestPrecomputedPlane" )->SetDisabled();
+            GetProperty( "Mode_CyclePrecomputedSurfaces" )->SetEnabled();
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VizBasePropertySet::EnableLineWidth( PropertyPtr property )
+void VizBasePropertySet::EnableLineWidth( propertystore::PropertyPtr property )
 {
-    // Make sure the main value is an int as it should be
-    if( property->IsInt() )
+    // Make sure the main value is a string as it should be
+    if( property->IsString() )
     {
-        int value = boost::any_cast<int>( property->GetValue() );
-        if( value == 2 ) // "lined"
+        std::string value = boost::any_cast<std::string>( property->GetValue() );
+        if( value == "Lined" )
         {
-            mPropertyMap["Advanced_LinedContourWidth"]->SetEnabled();
+            GetProperty( "Advanced_LinedContourWidth" )->SetEnabled();
         }
         else
         {
-            mPropertyMap["Advanced_LinedContourWidth"]->SetDisabled();
+            GetProperty( "Advanced_LinedContourWidth" )->SetDisabled();
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool VizBasePropertySet::ValidateScalarMinMax( PropertyPtr property, boost::any value )
+bool VizBasePropertySet::ValidateScalarMinMax( propertystore::PropertyPtr property, boost::any value )
 {
-    PropertyPtr min = mPropertyMap["DataSet_ScalarRange_Min"];
-    PropertyPtr max = mPropertyMap["DataSet_ScalarRange_Max"];
+    propertystore::PropertyPtr min = GetProperty( "DataSet_ScalarRange_Min" );
+    propertystore::PropertyPtr max = GetProperty( "DataSet_ScalarRange_Max" );
 
     double castMin, castMax;
 
@@ -355,20 +353,20 @@ bool VizBasePropertySet::ValidateScalarMinMax( PropertyPtr property, boost::any 
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VizBasePropertySet::UpdateDirectionSelection( PropertyPtr property )
+void VizBasePropertySet::UpdateDirectionSelection( propertystore::PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
 
     const std::string value =
-        boost::any_cast<std::string >( GetPropertyAttribute( "Direction", "enumCurrentString" ) );
+        boost::any_cast<std::string >( GetPropertyValue( "Direction" ) );
 
     if( value == "By Surface" )
     {
-        mPropertyMap[ "Direction_Surface" ]->SetEnabled();
+        GetProperty( "Direction_Surface" )->SetEnabled();
     }
     else
     {
-        mPropertyMap[ "Direction_Surface" ]->SetDisabled();
+        GetProperty( "Direction_Surface" )->SetDisabled();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

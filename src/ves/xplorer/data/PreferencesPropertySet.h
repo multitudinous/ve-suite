@@ -33,8 +33,8 @@
 #ifndef VES_XPLORER_DATA_PREFERENCESPROPERTYSET_H
 #define VES_XPLORER_DATA_PREFERENCESPROPERTYSET_H
 
-#include <ves/xplorer/data/PropertySet.h>
-#include <ves/xplorer/data/PropertyPtr.h>
+#include <propertystore/PropertySet.h>
+#include <propertystore/PropertyPtr.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
@@ -53,7 +53,7 @@ namespace data
  * \namespace ves::xplorer::data
  *
  */
-class VE_DATA_EXPORTS PreferencesPropertySet : public PropertySet
+class VE_DATA_EXPORTS PreferencesPropertySet : public propertystore::PropertySet
 {
 public:
     ///Constructor
@@ -65,33 +65,33 @@ public:
 
 private:
     ///Enable method
-    void EnableNearFarRatio( PropertyPtr& property );
+    void EnableNearFarRatio( propertystore::PropertyPtr& property );
     ///Enable method
-    void EnableBackgroundColor( PropertyPtr& property );
+    void EnableBackgroundColor( propertystore::PropertyPtr& property );
     ///Enable method
-    void EnableDraggerScaling( PropertyPtr& property );
+    void EnableDraggerScaling( propertystore::PropertyPtr& property );
 
     ///Relay method for passing signals on to xplorer
-    void UpdateBackgroundColor( PropertyPtr& property );
+    void UpdateBackgroundColor( propertystore::PropertyPtr& property );
     ///Relay method for passing signals on to xplorer
-    //void UpdateNavEqualZero( PropertyPtr property );
+    //void UpdateNavEqualZero( propertystore::PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    //void UpdateNavGreaterZero( PropertyPtr property );
+    //void UpdateNavGreaterZero( propertystore::PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    //void UpdateShutdownXplorer( PropertyPtr property );
+    //void UpdateShutdownXplorer( propertystore::PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    //void UpdatePhysicsDebugger( PropertyPtr property );
+    //void UpdatePhysicsDebugger( propertystore::PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    //void UpdateScriptLogger( PropertyPtr property );
+    //void UpdateScriptLogger( propertystore::PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    //void UpdateScreenAlignedNormals( PropertyPtr property );
+    //void UpdateScreenAlignedNormals( propertystore::PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    void UpdateDraggerScaling( PropertyPtr& property );
+    void UpdateDraggerScaling( propertystore::PropertyPtr& property );
     ///Relay method for passing signals on to xplorer
-    void UpdateNearFarRatio( PropertyPtr& property );
+    void UpdateNearFarRatio( propertystore::PropertyPtr& property );
     ///Relay method for passing signals on to xplorer
-    //void UpdateLODScaling( PropertyPtr property );
-    void SaveChanges( PropertyPtr& property );
+    //void UpdateLODScaling( propertystore::PropertyPtr property );
+    void SaveChanges( propertystore::PropertyPtr& property );
 
 private:
     ///Create the skeleton

@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/DatabaseDetailsPropertySet.h>
-#include <ves/xplorer/data/Property.h>
+#include <propertystore/Property.h>
 #include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/xplorer/data/MakeLive.h>
+#include <propertystore/MakeLive.h>
 
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
@@ -48,7 +48,8 @@ using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 DatabaseDetailsPropertySet::DatabaseDetailsPropertySet()
 {
-    mTableName = "XplorerDBDetails";
+    SetDataManager( DatabaseManager::instance()->GetDataManager() );
+    SetTypeName( "XplorerDBDetails" );
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////

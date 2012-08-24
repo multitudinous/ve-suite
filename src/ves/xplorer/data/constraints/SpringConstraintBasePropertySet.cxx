@@ -52,7 +52,7 @@ SpringConstraintBasePropertySet::~SpringConstraintBasePropertySet()
 ////////////////////////////////////////////////////////////////////////////////
 void SpringConstraintBasePropertySet::CreateSkeleton()
 {
-    AddProperty( "ObjectA_ReferenceAxisA", 0, "Reference Axis A" );
+    AddProperty( "ObjectA_ReferenceAxisA", std::string(""), "Reference Axis A" );
     std::vector<std::string> enumValues;
     enumValues.push_back( "X of Object" );
     enumValues.push_back( "Y of Object" );
@@ -60,7 +60,7 @@ void SpringConstraintBasePropertySet::CreateSkeleton()
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "enumValues", enumValues );
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "userVisible", false );
 
-    AddProperty( "ObjectB_ReferenceAxisB", 0, "Reference Axis B" );
+    AddProperty( "ObjectB_ReferenceAxisB", std::string(""), "Reference Axis B" );
     SetPropertyAttribute( "ObjectB_ReferenceAxisB", "enumValues", enumValues );
     SetPropertyAttribute( "ObjectB_ReferenceAxisB", "userVisible", false );
 

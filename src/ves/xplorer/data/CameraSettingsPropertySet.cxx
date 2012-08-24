@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/CameraSettingsPropertySet.h>
-#include <ves/xplorer/data/Property.h>
+#include <propertystore/Property.h>
 #include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/xplorer/data/MakeLive.h>
+#include <propertystore/MakeLive.h>
 
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
@@ -49,7 +49,8 @@ using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 CameraSettingsPropertySet::CameraSettingsPropertySet()
 {
-    mTableName = "CameraSettings";
+    SetDataManager( DatabaseManager::instance()->GetDataManager() );
+    SetTypeName( "CameraSettings" );
 
     std::string signame( "CameraSettingsPropertySet" );
     signame += boost::lexical_cast<std::string>( this );
@@ -86,7 +87,8 @@ void CameraSettingsPropertySet::CreateSkeleton()
     AddProperty( "Projection_FOVZ", 40.0, "Field of View (z)" );
     SetPropertyAttribute( "Projection_FOVZ", "minimumValue", 0.0 );
     SetPropertyAttribute( "Projection_FOVZ", "maximumValue", 180.0 );
-    AddProperty( "Projection_ImageDimensions", 3, "Image Dimensions" );
+    AddProperty( "Projection_ImageDimensions",
+                 std::string( "1280x720 (HD-Ready)" ), "Image Dimensions" );
     std::vector< std::string > enums;
     enums.push_back( "640x480 (VGA)" );
     enums.push_back( "800x600 (SVGA)" );
@@ -108,8 +110,8 @@ void CameraSettingsPropertySet::CreateSkeleton()
     AddProperty( "Projection_FarPlane", 5.0, "Far Plane" );
     SetPropertyAttribute( "Projection_FarPlane", "minimumValue", 0.2 );
     SetPropertyAttribute( "Projection_FarPlane", "maximumValue", 1000.0 );
-    mPropertyMap["Projection_NearPlane"]->SignalRequestValidation.connect( boost::bind( &CameraSettingsPropertySet::NearValidator, this, _1, _2 ) );
-    mPropertyMap["Projection_FarPlane"]->SignalRequestValidation.connect( boost::bind( &CameraSettingsPropertySet::FarValidator, this, _1, _2 ) );
+    GetProperty( "Projection_NearPlane" )->SignalRequestValidation.connect( boost::bind( &CameraSettingsPropertySet::NearValidator, this, _1, _2 ) );
+    GetProperty( "Projection_FarPlane" )->SignalRequestValidation.connect( boost::bind( &CameraSettingsPropertySet::FarValidator, this, _1, _2 ) );
 
 
     AddProperty( "DOF", boost::any(), "Depth Of Field" );
@@ -129,35 +131,35 @@ void CameraSettingsPropertySet::EnableLiveProperties( bool live )
 {
     if( live )
     {
-        MakeLiveBasePtr p;
-        p = MakeLiveBasePtr( new MakeLive<bool>( mUUIDString,
+        propertystore::MakeLiveBasePtr p;
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool>( m_UUIDString,
                              GetProperty( "ShowCameraGeometry" ),
                              "ShowCameraGeometry" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<bool>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool>( m_UUIDString,
                              GetProperty( "ShowFrustumGeometry" ),
                              "ShowCameraFrustumGeometry" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
         //Equivalent of makeLive, but setup to conform to backend needs
         boost::signals2::connection conn;
-        conn = mPropertyMap["Projection_ImageDimensions"]->SignalValueChanged.connect(
+        conn = GetProperty( "Projection_ImageDimensions" )->SignalValueChanged.connect(
            boost::bind( &CameraSettingsPropertySet::ProjectionChanged, this, _1 ) );
         m_liveConnections.push_back( conn );
-        conn = mPropertyMap["Projection_AutoComputeFarPlane"]->SignalValueChanged.connect(
+        conn = GetProperty( "Projection_AutoComputeFarPlane" )->SignalValueChanged.connect(
            boost::bind( &CameraSettingsPropertySet::ProjectionChanged, this, _1 ) );
         m_liveConnections.push_back( conn );
-        conn = mPropertyMap["Projection_NearPlane"]->SignalValueChanged.connect(
+        conn = GetProperty( "Projection_NearPlane" )->SignalValueChanged.connect(
            boost::bind( &CameraSettingsPropertySet::ProjectionChanged, this, _1 ) );
         m_liveConnections.push_back( conn );
-        conn = mPropertyMap["Projection_FarPlane"]->SignalValueChanged.connect(
+        conn = GetProperty( "Projection_FarPlane" )->SignalValueChanged.connect(
            boost::bind( &CameraSettingsPropertySet::ProjectionChanged, this, _1 ) );
         m_liveConnections.push_back( conn );
     }
     else
     {
-        mLiveObjects.clear();
+        m_liveObjects.clear();
         for( size_t index = 0; index < m_liveConnections.size(); ++index )
         {
             m_liveConnections.at( index ).disconnect();
@@ -166,7 +168,7 @@ void CameraSettingsPropertySet::EnableLiveProperties( bool live )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraSettingsPropertySet::NearValidator( PropertyPtr&, boost::any newValue )
+bool CameraSettingsPropertySet::NearValidator( propertystore::PropertyPtr&, boost::any newValue )
 {
     double nearVal = boost::any_cast< double >( newValue );
     double farVal = boost::any_cast< double >( GetPropertyValue( "Projection_FarPlane" ) );
@@ -179,7 +181,7 @@ bool CameraSettingsPropertySet::NearValidator( PropertyPtr&, boost::any newValue
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraSettingsPropertySet::FarValidator( PropertyPtr&, boost::any newValue )
+bool CameraSettingsPropertySet::FarValidator( propertystore::PropertyPtr&, boost::any newValue )
 {
     double nearVal = boost::any_cast< double >( GetPropertyValue( "Projection_NearPlane" ) );
     double farVal = boost::any_cast< double >( newValue );
@@ -192,8 +194,8 @@ bool CameraSettingsPropertySet::FarValidator( PropertyPtr&, boost::any newValue 
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraSettingsPropertySet::ProjectionChanged( PropertyPtr& )
+void CameraSettingsPropertySet::ProjectionChanged( propertystore::PropertyPtr& )
 {
-    WriteToDatabaseNoOverride();
-    m_projectionChangedSignal.signal( mUUIDString );
+    SaveNoOverride();
+    m_projectionChangedSignal.signal( m_UUIDString );
 }

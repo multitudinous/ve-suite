@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 LinearAndAngularSpringConstraintPropertySet::LinearAndAngularSpringConstraintPropertySet()
 {
-    mTableName = "LinearAndAngularSpring";
+    SetTypeName( "LinearAndAngularSpring" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr LinearAndAngularSpringConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr LinearAndAngularSpringConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new LinearAndAngularSpringConstraintPropertySet );
+    return propertystore::PropertySetPtr( new LinearAndAngularSpringConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void LinearAndAngularSpringConstraintPropertySet::CreateSkeleton()

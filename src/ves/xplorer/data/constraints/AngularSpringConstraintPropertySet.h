@@ -48,7 +48,7 @@ public:
     AngularSpringConstraintPropertySet();
 
     /// Factory ctor
-    virtual PropertySetPtr CreateNew();
+    virtual propertystore::PropertySetPtr CreateNew();
 private:
     ///Create skeleton
     void CreateSkeleton();

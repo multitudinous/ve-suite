@@ -33,8 +33,8 @@
 #ifndef VES_XPLORER_DATA_VECTORPLANEPROPERTYSET_H
 #define VES_XPLORER_DATA_VECTORPLANEPROPERTYSET_H
 
-#include <ves/xplorer/data/PropertySet.h>
-#include <ves/xplorer/data/PropertyPtr.h>
+#include <propertystore/PropertySet.h>
+#include <propertystore/PropertyPtr.h>
 
 #include <ves/xplorer/data/VizBasePropertySet.h>
 
@@ -62,7 +62,7 @@ public:
     virtual ~VectorPlanePropertySet();
 
     /// Factory ctor
-    virtual PropertySetPtr CreateNew();
+    virtual propertystore::PropertySetPtr CreateNew();
 
 protected:
     ///Create the skeleton

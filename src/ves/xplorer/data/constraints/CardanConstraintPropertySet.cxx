@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 CardanConstraintPropertySet::CardanConstraintPropertySet()
 {
-    mTableName = "CardanConstraint";
+    SetTypeName( "CardanConstraint" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr CardanConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr CardanConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new CardanConstraintPropertySet );
+    return propertystore::PropertySetPtr( new CardanConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CardanConstraintPropertySet::CreateSkeleton()
@@ -66,7 +66,7 @@ void CardanConstraintPropertySet::CreateSkeleton()
     AddProperty( "AngularLimit2_From", 0, "From" );
     AddProperty( "AngularLimit2_To", 180, "To" );
 
-    AddProperty( "ObjectA_ReferenceAxisA", 0, "Reference Axis A" );
+    AddProperty( "ObjectA_ReferenceAxisA", std::string(""), "Reference Axis A" );
     std::vector<std::string> enumValues;
     enumValues.push_back( "X of Object" );
     enumValues.push_back( "Y of Object" );
@@ -74,7 +74,7 @@ void CardanConstraintPropertySet::CreateSkeleton()
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "enumValues", enumValues );
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "userVisible", false );
 
-    AddProperty( "ObjectB_ReferenceAxisB", 0, "Reference Axis B" );
+    AddProperty( "ObjectB_ReferenceAxisB", std::string(""), "Reference Axis B" );
     SetPropertyAttribute( "ObjectB_ReferenceAxisB", "enumValues", enumValues );
     SetPropertyAttribute( "ObjectB_ReferenceAxisB", "userVisible", false );
 }

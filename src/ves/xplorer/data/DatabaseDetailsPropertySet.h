@@ -31,8 +31,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-#include <ves/xplorer/data/PropertySet.h>
-#include <ves/xplorer/data/PropertyPtr.h>
+#include <propertystore/PropertySet.h>
+#include <propertystore/PropertyPtr.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
@@ -49,7 +49,7 @@ namespace data
  * \namespace ves::xplorer::data
  *
  */
-class VE_DATA_EXPORTS DatabaseDetailsPropertySet : public PropertySet
+class VE_DATA_EXPORTS DatabaseDetailsPropertySet : public propertystore::PropertySet
 {
 public:
     ///Constructor

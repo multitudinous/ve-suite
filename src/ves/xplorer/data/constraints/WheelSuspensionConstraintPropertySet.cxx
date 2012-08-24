@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 WheelSuspensionConstraintPropertySet::WheelSuspensionConstraintPropertySet()
 {
-    mTableName = "WheelSuspensionConstraint";
+    SetTypeName( "WheelSuspensionConstraint" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr WheelSuspensionConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr WheelSuspensionConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new WheelSuspensionConstraintPropertySet );
+    return propertystore::PropertySetPtr( new WheelSuspensionConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WheelSuspensionConstraintPropertySet::CreateSkeleton()

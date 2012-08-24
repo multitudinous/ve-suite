@@ -32,8 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/IsosurfacePropertySet.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
-#include <ves/xplorer/data/Property.h>
-#include <ves/xplorer/data/MakeLive.h>
+#include <propertystore/Property.h>
+#include <propertystore/MakeLive.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
@@ -45,8 +45,9 @@ using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 IsosurfacePropertySet::IsosurfacePropertySet()
 {
-    mTableName = "Isosurface";
-    RegisterPropertySet( mTableName );
+    SetDataManager( DatabaseManager::instance()->GetDataManager() );
+    SetTypeName( "Isosurface" );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
@@ -62,9 +63,9 @@ IsosurfacePropertySet::~IsosurfacePropertySet()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr IsosurfacePropertySet::CreateNew()
+propertystore::PropertySetPtr IsosurfacePropertySet::CreateNew()
 {
-    return PropertySetPtr( new IsosurfacePropertySet() );
+    return propertystore::PropertySetPtr( new IsosurfacePropertySet() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IsosurfacePropertySet::CreateSkeleton()
@@ -73,42 +74,42 @@ void IsosurfacePropertySet::CreateSkeleton()
         AddProperty( "Hide", false, "Toggle Viz Off" );
         const std::string slotName =
             boost::lexical_cast<std::string>( this ) + ".HideVizFeature";
-        std::vector< PropertyPtr > dataLink;
+        std::vector< propertystore::PropertyPtr > dataLink;
         dataLink.push_back( GetProperty( "Hide" ) );
-        MakeLiveBasePtr p(
-            new MakeLiveLinked< bool >( mUUIDString, dataLink,
+        propertystore::MakeLiveBasePtr p(
+            new propertystore::MakeLiveLinked< bool >( m_UUIDString, dataLink,
                                         slotName ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
-    AddProperty( "DataSet", 0, "Data Set" );
+    AddProperty( "DataSet", std::string(""), "Data Set" );
     PSVectorOfStrings enumValues;
 
-    AddProperty( "DataSet_ScalarData", 0, "Scalar Data" );
+    AddProperty( "DataSet_ScalarData", std::string(""), "Scalar Data" );
     // Dummy value to ensure this gets set up as an enum
     enumValues.push_back( "Select Scalar Data" );
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataOptions, this, _1 ) );
+    GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataOptions, this, _1 ) );
 
     AddProperty( "DataSet_ScalarRange", boost::any(), "Scalar Range" );
     SetPropertyAttribute( "DataSet_ScalarRange", "isUIGroupOnly", true );
     SetPropertyAttribute( "DataSet_ScalarRange", "setExpanded", true );
 
     AddProperty( "DataSet_ScalarRange_Min", 0.0, "Min" );
-    mPropertyMap["DataSet_ScalarRange_Min"]->SetDisabled();
+    GetProperty( "DataSet_ScalarRange_Min" )->SetDisabled();
 
     AddProperty( "DataSet_ScalarRange_Max", 1.0, "Max" );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SetDisabled();
+    GetProperty( "DataSet_ScalarRange_Max" )->SetDisabled();
 
-    mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
-    mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    GetProperty( "DataSet_ScalarData" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
+    GetProperty( "DataSet_ScalarRange_Min" )->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    GetProperty( "DataSet_ScalarRange_Max" )->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
 
-    AddProperty( "DataSet_VectorData", 0, "Vector Data" );
+    AddProperty( "DataSet_VectorData", std::string(""), "Vector Data" );
     enumValues.clear();
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
+    GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
 
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
@@ -123,7 +124,7 @@ void IsosurfacePropertySet::CreateSkeleton()
 
     SetPropertyAttribute( "DataSet", "enumValues", enumValues );
 
-    AddProperty( "ColorByScalar", 0, "Color By Scalar" );
+    AddProperty( "ColorByScalar", std::string(""), "Color By Scalar" );
     enumValues.clear();
     enumValues.push_back( "Select Scalar Data" );
     SetPropertyAttribute( "ColorByScalar", "enumValues", enumValues );
@@ -133,14 +134,14 @@ void IsosurfacePropertySet::CreateSkeleton()
     SetPropertyAttribute( "ColorByScalar_ScalarRange", "setExpanded", true );
 
     AddProperty( "ColorByScalar_ScalarRange_Min", 0.0, "Min" );
-    mPropertyMap["ColorByScalar_ScalarRange_Min"]->SetDisabled();
+    GetProperty( "ColorByScalar_ScalarRange_Min" )->SetDisabled();
 
     AddProperty( "ColorByScalar_ScalarRange_Max", 1.0, "Max" );
-    mPropertyMap["ColorByScalar_ScalarRange_Max"]->SetDisabled();
+    GetProperty( "ColorByScalar_ScalarRange_Max" )->SetDisabled();
 
-    mPropertyMap["ColorByScalar"]->SignalValueChanged.connect( boost::bind( &IsosurfacePropertySet::UpdateColorByScalarDataRange, this, _1 ) );
-    mPropertyMap["ColorByScalar_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &IsosurfacePropertySet::ValidateColorByScalarMinMax, this, _1, _2 ) );
-    mPropertyMap["ColorByScalar_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &IsosurfacePropertySet::ValidateColorByScalarMinMax, this, _1, _2 ) );
+    GetProperty( "ColorByScalar" )->SignalValueChanged.connect( boost::bind( &IsosurfacePropertySet::UpdateColorByScalarDataRange, this, _1 ) );
+    GetProperty( "ColorByScalar_ScalarRange_Min" )->SignalRequestValidation.connect( boost::bind( &IsosurfacePropertySet::ValidateColorByScalarMinMax, this, _1, _2 ) );
+    GetProperty( "ColorByScalar_ScalarRange_Max" )->SignalRequestValidation.connect( boost::bind( &IsosurfacePropertySet::ValidateColorByScalarMinMax, this, _1, _2 ) );
 
     AddProperty( "IsosurfaceValue", 50.0, "Isosurface Value" );
     SetPropertyAttribute( "IsosurfaceValue", "minimumValue",   0.0 );
@@ -153,33 +154,33 @@ void IsosurfacePropertySet::CreateSkeleton()
 
     {
         AddProperty( "Advanced_Greyscale", false, "Greyscale" );
-        /*std::vector< PropertyPtr > greyscale;
+        /*std::vector< propertystore::PropertyPtr > greyscale;
         greyscale.push_back( GetProperty( "Advanced_Greyscale" ) );
         const std::string slotName =
             boost::lexical_cast<std::string>( this ) +".SetIsosurfaceGreyscale";
-        MakeLiveBasePtr p( new MakeLiveLinked< bool >(
-                mUUIDString,
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLiveLinked< bool >(
+                m_UUIDString,
                 greyscale,
                 slotName ) );
-        mLiveObjects.push_back( p );*/
+        m_liveObjects.push_back( p );*/
     }
 
     // Now that DataSet has choices loaded, force an update on the available
     // scalar and vector data
-    PropertyPtr nullPtr;
+    propertystore::PropertyPtr nullPtr;
     UpdateScalarDataOptions( nullPtr );
     //UpdateVectorDataOptions( nullPtr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void IsosurfacePropertySet::UpdateColorByScalarDataRange( PropertyPtr property )
+void IsosurfacePropertySet::UpdateColorByScalarDataRange( propertystore::PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
 
-    mPropertyMap["ColorByScalar_ScalarRange_Min"]->SetEnabled();
-    mPropertyMap["ColorByScalar_ScalarRange_Max"]->SetEnabled();
+    GetProperty( "ColorByScalar_ScalarRange_Min" )->SetEnabled();
+    GetProperty( "ColorByScalar_ScalarRange_Max" )->SetEnabled();
 
     // Load the current Dataset and get the list of min and max values for its scalars
-    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyValue( "DataSet" ) );
     DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", selectedDataset );
     std::vector<double> mins = boost::any_cast< std::vector<double> >( dataset.GetPropertyValue( "ScalarMins" ) );
@@ -188,7 +189,7 @@ void IsosurfacePropertySet::UpdateColorByScalarDataRange( PropertyPtr property )
     // DataSet_ScalarData is an exact copy of the ScalarNames property of the Dataset,
     // so its number in the enum will be the same as the index into the min and max
     // lists
-    int index = boost::any_cast<int>( GetPropertyValue( "ColorByScalar" ) );
+    int index = GetPropertyAttributeValue< int >( "ColorByScalar", "enumCurrentIndex" );
 
     if( ( !mins.empty() ) && ( !maxes.empty() ) )
     {
@@ -208,10 +209,10 @@ void IsosurfacePropertySet::UpdateColorByScalarDataRange( PropertyPtr property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool IsosurfacePropertySet::ValidateColorByScalarMinMax( PropertyPtr property, boost::any value )
+bool IsosurfacePropertySet::ValidateColorByScalarMinMax( propertystore::PropertyPtr property, boost::any value )
 {
-    PropertyPtr min = mPropertyMap["ColorByScalar_ScalarRange_Min"];
-    PropertyPtr max = mPropertyMap["ColorByScalar_ScalarRange_Max"];
+    propertystore::PropertyPtr min = GetProperty( "ColorByScalar_ScalarRange_Min" );
+    propertystore::PropertyPtr max = GetProperty( "ColorByScalar_ScalarRange_Max" );
 
     double castMin, castMax;
 

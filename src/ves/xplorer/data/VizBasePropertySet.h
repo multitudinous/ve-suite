@@ -33,7 +33,7 @@
 #ifndef VES_XPLORER_DATA_VIZBASEPROPERTYSET_H
 #define VES_XPLORER_DATA_VIZBASEPROPERTYSET_H
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
@@ -50,7 +50,7 @@ namespace data
  * \namespace ves::xplorer::data
  *
  */
-class VE_DATA_EXPORTS VizBasePropertySet : public PropertySet
+class VE_DATA_EXPORTS VizBasePropertySet : public propertystore::PropertySet
 {
 public:
     ///Constructor
@@ -61,19 +61,19 @@ public:
     virtual ~VizBasePropertySet();
 
     ///Update method
-    void UpdateModeOptions( PropertyPtr property );
+    void UpdateModeOptions( propertystore::PropertyPtr property );
     ///Enables/Disables line width option for different contour types
-    void EnableLineWidth( PropertyPtr property );
+    void EnableLineWidth( propertystore::PropertyPtr property );
     ///Validate method
-    bool ValidateScalarMinMax( PropertyPtr property, boost::any value );
+    bool ValidateScalarMinMax( propertystore::PropertyPtr property, boost::any value );
     ///Update method
-    void UpdateScalarDataOptions( PropertyPtr property );
+    void UpdateScalarDataOptions( propertystore::PropertyPtr property );
     ///Update method
-    void UpdateScalarDataRange( PropertyPtr property );
+    void UpdateScalarDataRange( propertystore::PropertyPtr property );
     ///Update method
-    void UpdateVectorDataOptions( PropertyPtr property );
+    void UpdateVectorDataOptions( propertystore::PropertyPtr property );
     ///Update method for enabling surface tools
-    void UpdateDirectionSelection( PropertyPtr property );
+    void UpdateDirectionSelection( propertystore::PropertyPtr property );
     /// Override from PropertySet
     virtual void EnableLiveProperties( bool live );
 
@@ -90,13 +90,10 @@ protected:
     ///Delete this PropertySet from the DB. We override this from PropertySet.
     ///\param session The DB sesion holding this data
     ///\param TableName The TableName we are deleting
-    virtual bool DeleteFromDatabase( Poco::Data::Session* const session, std::string const& TableName );
+    virtual bool Remove(  );
 
-    ///Write this PropertySet to the DB. We override this from PropertySet
-    ///\param session The DB sesion holding this data
-    ///\param TableName The TableName we are deleting
-    ///\param statement The POCO write statement with params
-    virtual bool WriteToDatabase( Poco::Data::Session* const session, std::string const& TableName, Poco::Data::Statement& statement );
+    ///Write this PropertySet to the DB. We override this from propertystore::PropertySet
+    virtual bool Save(  );
 
 
     ///Signal to generate deleting a viz feature

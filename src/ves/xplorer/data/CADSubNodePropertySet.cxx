@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/CADSubNodePropertySet.h>
-#include <ves/xplorer/data/Property.h>
-#include <ves/xplorer/data/MakeLive.h>
+#include <propertystore/Property.h>
+#include <propertystore/MakeLive.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 
 #include <switchwire/EventManager.h>
@@ -56,9 +56,10 @@ CADSubNodePropertySet::CADSubNodePropertySet()
     :
     CADPropertySet()
 {
-    mTableName = "CADSubNodePropertySet";
+    SetDataManager( DatabaseManager::instance()->GetDataManager() );
+    SetTypeName( "CADSubNodePropertySet" );
 
-    std::string prependTag( mTableName );
+    std::string prependTag( GetTypeName() );
     prependTag.append( " " );
     std::string tag = boost::any_cast<std::string>( GetPropertyValue( "NameTag" ) );
     SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
@@ -181,16 +182,16 @@ void CADSubNodePropertySet::DisableSkeleton()
     enumValues.push_back( "High" );
     SetPropertyAttribute( "Physics_MeshDecimation", "enumValues", enumValues );
 
-    //    std::vector< PropertyPtr > physicsLink;
+    //    std::vector< propertystore::PropertyPtr > physicsLink;
     //    physicsLink.push_back( GetProperty("Physics_MotionType") );
     //    physicsLink.push_back( GetProperty("Physics_LODType") );
     //    physicsLink.push_back( GetProperty("Physics_MeshType") );
     //    physicsLink.push_back( GetProperty("Physics_MeshDecimation") );
-    //    p = MakeLiveBasePtr(new MakeLiveLinked< std::string >(
-    //            mUUIDString,
+    //    p = propertystore::MakeLiveBasePtr(new propertystore::MakeLiveLinked< std::string >(
+    //            m_UUIDString,
     //            physicsLink,
     //            "SetCADPhysicsMesh"));
-    //    mLiveObjects.push_back(p);*/
+    //    m_liveObjects.push_back(p);*/
 
     SetPropertyAttribute( "Culling", "userVisible", false );
 
@@ -226,7 +227,7 @@ void CADSubNodePropertySet::DisableSkeleton()
 
     /*AddProperty( "DynamicAnalysisData", std::string("null"), "Multi-body Dynamics Data" );
     SetPropertyAttribute( "DynamicAnalysisData", "isFilePath", true );
-    mPropertyMap["DynamicAnalysisData"]->
+    GetProperty( "DynamicAnalysisData" )->
         SignalValueChanged.connect( boost::bind( &CADSubNodePropertySet::AddDynamicAnalysisData, this, _1 ) );*/
 
     /*AddProperty( "Filename", emptyString, "Filename: not visible in UI" );
@@ -236,9 +237,9 @@ void CADSubNodePropertySet::DisableSkeleton()
     SetPropertyAttribute( "Audio_Level", "userVisible", false );
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr CADSubNodePropertySet::CreateNew()
+propertystore::PropertySetPtr CADSubNodePropertySet::CreateNew()
 {
-    return PropertySetPtr( new CADSubNodePropertySet() );
+    return propertystore::PropertySetPtr( new CADSubNodePropertySet() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace data

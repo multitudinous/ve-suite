@@ -32,6 +32,8 @@
 #include <ves/xplorer/data/constraints/ConstraintBasePropertySet.h>
 #include <string>
 
+#include <ves/xplorer/data/DatabaseManager.h>
+
 namespace ves
 {
 namespace xplorer
@@ -43,6 +45,7 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 ConstraintBasePropertySet::ConstraintBasePropertySet()
 {
+    SetDataManager( DatabaseManager::instance()->GetDataManager() );
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////

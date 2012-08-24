@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 SliderConstraintPropertySet::SliderConstraintPropertySet()
 {
-    mTableName = "SliderConstraint";
+    SetTypeName( "SliderConstraint" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr SliderConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr SliderConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new SliderConstraintPropertySet );
+    return propertystore::PropertySetPtr( new SliderConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SliderConstraintPropertySet::CreateSkeleton()

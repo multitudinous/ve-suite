@@ -48,7 +48,7 @@ public:
     CardanConstraintPropertySet();
 
     /// Factory ctor
-    virtual PropertySetPtr CreateNew();
+    virtual propertystore::PropertySetPtr CreateNew();
 private:
     void CreateSkeleton();
 };

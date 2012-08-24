@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 PlanarConstraintPropertySet::PlanarConstraintPropertySet()
 {
-    mTableName = "PlanarConstraint";
+    SetTypeName( "PlanarConstraint" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr PlanarConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr PlanarConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new PlanarConstraintPropertySet );
+    return propertystore::PropertySetPtr( new PlanarConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PlanarConstraintPropertySet::CreateSkeleton()

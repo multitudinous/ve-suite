@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 AngularSpringConstraintPropertySet::AngularSpringConstraintPropertySet()
 {
-    mTableName = "AngularSpring";
+    SetTypeName( "AngularSpring" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr AngularSpringConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr AngularSpringConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new AngularSpringConstraintPropertySet );
+    return propertystore::PropertySetPtr( new AngularSpringConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AngularSpringConstraintPropertySet::CreateSkeleton()

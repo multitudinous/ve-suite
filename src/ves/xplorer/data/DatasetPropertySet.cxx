@@ -31,10 +31,11 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/DatasetPropertySet.h>
-#include <ves/xplorer/data/Property.h>
-#include <ves/xplorer/data/MakeLive.h>
+#include <propertystore/Property.h>
+#include <propertystore/MakeLive.h>
 
 #include <ves/xplorer/eventmanager/EventFactory.h>
+#include <ves/xplorer/data/DatabaseManager.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
@@ -47,9 +48,10 @@ using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 DatasetPropertySet::DatasetPropertySet()
 {
-    mTableName = "Dataset";
+    SetDataManager( DatabaseManager::instance()->GetDataManager() );
+    SetTypeName( "Dataset" );
 
-    std::string prependTag( mTableName );
+    std::string prependTag( GetTypeName() );
     prependTag.append( " " );
     std::string tag = boost::any_cast<std::string>( GetPropertyValue( "NameTag" ) );
     SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
@@ -172,7 +174,7 @@ void DatasetPropertySet::CreateSkeleton()
 
     AddProperty( "TBETScalarChooser", std::string( "null" ), "TBET Scalar Chooser" );
     SetPropertyAttribute( "TBETScalarChooser", "isFilePath", true );
-    mPropertyMap["TBETScalarChooser"]->SignalValueChanged.connect( boost::bind( &DatasetPropertySet::LoadVTIScalars, this, _1 ) );
+    GetProperty( "TBETScalarChooser" )->SignalValueChanged.connect( boost::bind( &DatasetPropertySet::LoadVTIScalars, this, _1 ) );
 
     AddProperty( "TBETScalarNames", stringVector, "TBET Scalar Names" );
     SetPropertyAttribute( "TBETScalarNames", "userVisible", false );
@@ -185,41 +187,41 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
     if( !live )
     {
         // Clearing list will allow live objs to go out of scope and autodelete
-        mLiveObjects.clear();
+        m_liveObjects.clear();
         return;
     }
-    else if( !mLiveObjects.empty() )
+    else if( !m_liveObjects.empty() )
     {
         // Properties are already live
         return;
     }
     else
     {
-        MakeLiveBasePtr p;
+        propertystore::MakeLiveBasePtr p;
 
-        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool const&>( m_UUIDString,
                              GetProperty( "SurfaceWrap" ),
                              "SetDatasetSurfaceWrap" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool const&>( m_UUIDString,
                              GetProperty( "BoundingBox" ),
                              "ShowDatasetBBox" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool const&>( m_UUIDString,
                              GetProperty( "ScalarBar" ),
                              "ShowDatasetScalarBar" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool const&>( m_UUIDString,
                              GetProperty( "Axes" ),
                              "ShowDatasetAxes" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
         // Link up all the transform properties so that a single signal named
         // "TransformCADNode" is fired whenever any of the values changes.
-        std::vector< PropertyPtr > transformLink;
+        std::vector< propertystore::PropertyPtr > transformLink;
         transformLink.push_back( GetProperty( "Transform_Translation_X" ) );
         transformLink.push_back( GetProperty( "Transform_Translation_Y" ) );
         transformLink.push_back( GetProperty( "Transform_Translation_Z" ) );
@@ -229,20 +231,20 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
         transformLink.push_back( GetProperty( "Transform_Scale_X" ) );
         transformLink.push_back( GetProperty( "Transform_Scale_Y" ) );
         transformLink.push_back( GetProperty( "Transform_Scale_Z" ) );
-        p = MakeLiveBasePtr( new MakeLiveLinked< double >(
-                                 mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLiveLinked< double >(
+                                 m_UUIDString,
                                  transformLink,
                                  "TransformDataNode" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool const&>( m_UUIDString,
                              GetProperty( "Visible" ),
                              "ToggleDataNode" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DatasetPropertySet::LoadVTIScalars( PropertyPtr& )
+void DatasetPropertySet::LoadVTIScalars( propertystore::PropertyPtr& )
 {
     if( !m_isLive )
     {
@@ -283,10 +285,10 @@ void DatasetPropertySet::LoadVTIScalars( PropertyPtr& )
     std::string const nodeID = GetUUIDAsString();
     addTexture->signal( nodeID, directory );
 
-    WriteToDatabase();
+    Save();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DatasetPropertySet::Scale( PropertyPtr& property )
+void DatasetPropertySet::Scale( propertystore::PropertyPtr& property )
 {
     bool uniform = boost::any_cast<bool>( GetPropertyValue( "Transform_Scale_Uniform" ) );
     if( uniform )
@@ -311,9 +313,9 @@ void DatasetPropertySet::Scale( PropertyPtr& property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr DatasetPropertySet::CreateNew()
+propertystore::PropertySetPtr DatasetPropertySet::CreateNew()
 {
-    return PropertySetPtr( new DatasetPropertySet() );
+    return propertystore::PropertySetPtr( new DatasetPropertySet() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

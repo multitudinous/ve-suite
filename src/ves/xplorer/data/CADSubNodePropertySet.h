@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 #include <ves/xplorer/data/CADPropertySet.h>
 
 
@@ -60,7 +60,7 @@ public:
     virtual ~CADSubNodePropertySet();
 
     /// Factory ctor
-    virtual PropertySetPtr CreateNew();
+    virtual propertystore::PropertySetPtr CreateNew();
 
 private:
     ///Create the skeleton

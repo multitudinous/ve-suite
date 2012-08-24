@@ -33,8 +33,8 @@
 #ifndef VES_XPLORER_DATA_STREAMLINEPROPERTYSET_H
 #define VES_XPLORER_DATA_STREAMLINEPROPERTYSET_H
 
-#include <ves/xplorer/data/PropertySet.h>
-#include <ves/xplorer/data/PropertyPtr.h>
+#include <propertystore/PropertySet.h>
+#include <propertystore/PropertyPtr.h>
 #include <ves/xplorer/data/VizBasePropertySet.h>
 
 #include <ves/VEConfig.h>
@@ -63,12 +63,12 @@ public:
     virtual ~StreamlinePropertySet();
 
     /// Factory ctor
-    virtual PropertySetPtr CreateNew();
+    virtual propertystore::PropertySetPtr CreateNew();
 
 protected:
     ///Slot connected to the value change of  display seed points
     ///\param property The bool value for the seed point display flag
-    void UpdateSeedPointDisplay( PropertyPtr property );
+    void UpdateSeedPointDisplay( propertystore::PropertyPtr property );
     ///Create the skeleton
     virtual void CreateSkeleton();
 

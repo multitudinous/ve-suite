@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 TwistSliderConstraintPropertySet::TwistSliderConstraintPropertySet()
 {
-    mTableName = "TwistSliderConstraint";
+    SetTypeName( "TwistSliderConstraint" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr TwistSliderConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr TwistSliderConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new TwistSliderConstraintPropertySet );
+    return propertystore::PropertySetPtr( new TwistSliderConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TwistSliderConstraintPropertySet::CreateSkeleton()
@@ -71,7 +71,7 @@ void TwistSliderConstraintPropertySet::CreateSkeleton()
     AddProperty( "AngularLimit_From", 0, "From" );
     AddProperty( "AngularLimit_To", 180, "To" );
 
-    AddProperty( "ObjectA_ReferenceAxisA", 0, "Reference Axis A" );
+    AddProperty( "ObjectA_ReferenceAxisA", std::string(""), "Reference Axis A" );
     std::vector<std::string> enumValues;
     enumValues.push_back( "X of Object" );
     enumValues.push_back( "Y of Object" );
@@ -79,7 +79,7 @@ void TwistSliderConstraintPropertySet::CreateSkeleton()
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "enumValues", enumValues );
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "userVisible", false );
 
-    AddProperty( "ObjectB_ReferenceAxisB", 0, "Reference Axis B" );
+    AddProperty( "ObjectB_ReferenceAxisB", std::string(""), "Reference Axis B" );
     SetPropertyAttribute( "ObjectB_ReferenceAxisB", "enumValues", enumValues );
     SetPropertyAttribute( "ObjectB_ReferenceAxisB", "userVisible", false );
 }

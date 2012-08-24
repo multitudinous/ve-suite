@@ -48,7 +48,7 @@ public:
     WheelSuspensionConstraintPropertySet();
 
     /// Factory ctor
-    virtual PropertySetPtr CreateNew();
+    virtual propertystore::PropertySetPtr CreateNew();
 
 private:
     ///Create skeleton

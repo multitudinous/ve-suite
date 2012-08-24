@@ -32,8 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-#include <ves/xplorer/data/PropertySet.h>
-#include <ves/xplorer/data/PropertyPtr.h>
+#include <propertystore/PropertySet.h>
+#include <propertystore/PropertyPtr.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
@@ -50,7 +50,7 @@ namespace data
  * \namespace ves::xplorer::data
  *
  */
-class VE_DATA_EXPORTS CADPropertySet : public PropertySet
+class VE_DATA_EXPORTS CADPropertySet : public propertystore::PropertySet
 {
 public:
     ///Constructor
@@ -65,15 +65,15 @@ public:
     virtual void EnableLiveProperties( bool live );
 
     /// Factory ctor
-    virtual PropertySetPtr CreateNew();
+    virtual propertystore::PropertySetPtr CreateNew();
 
 private:
     ///Create the skeleton
     void CreateSkeleton();
     ///Add dynamic analysis data
-    void AddDynamicAnalysisData( PropertyPtr& property );
+    void AddDynamicAnalysisData( propertystore::PropertyPtr& property );
     ///Handle uniform scale changes
-    void Scale( PropertyPtr& property );
+    void Scale( propertystore::PropertyPtr& property );
 
     ves::util::ThreeStringSignal_type* m_animateCAD;
 };

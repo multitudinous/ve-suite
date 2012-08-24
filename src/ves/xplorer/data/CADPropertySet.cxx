@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/CADPropertySet.h>
-#include <ves/xplorer/data/Property.h>
-#include <ves/xplorer/data/MakeLive.h>
+#include <propertystore/Property.h>
+#include <propertystore/MakeLive.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 
 #include <switchwire/EventManager.h>
@@ -57,9 +57,10 @@ namespace data
 ////////////////////////////////////////////////////////////////////////////////
 CADPropertySet::CADPropertySet()
 {
-    mTableName = "CADPropertySet";
+    SetDataManager( DatabaseManager::instance()->GetDataManager() );
+    SetTypeName( "CADPropertySet" );
 
-    std::string prependTag( mTableName );
+    std::string prependTag( GetTypeName() );
     prependTag.append( " " );
     std::string tag = boost::any_cast<std::string>( GetPropertyValue( "NameTag" ) );
     SetPropertyValue( "NameTag", tag.insert( 0, prependTag ) );
@@ -142,20 +143,20 @@ void CADPropertySet::CreateSkeleton()
 
     PSVectorOfStrings enumValues;
 
-    AddProperty( "Physics_MotionType", 0, "Motion Type" );
+    AddProperty( "Physics_MotionType", std::string("None"), "Motion Type" );
     enumValues.push_back( "None" );
     enumValues.push_back( "Static" );
     enumValues.push_back( "Dynamic" );
     SetPropertyAttribute( "Physics_MotionType", "enumValues", enumValues );
 
-    AddProperty( "Physics_LODType", 0, "LOD Type" );
+    AddProperty( "Physics_LODType", std::string("None"), "LOD Type" );
     enumValues.clear();
     enumValues.push_back( "None" );
     enumValues.push_back( "Overall" );
     enumValues.push_back( "Compound" );
     SetPropertyAttribute( "Physics_LODType", "enumValues", enumValues );
 
-    AddProperty( "Physics_MeshType", 0, "Mesh Type" );
+    AddProperty( "Physics_MeshType", std::string("None"), "Mesh Type" );
     enumValues.clear();
     enumValues.push_back( "None" );
     enumValues.push_back( "Box" );
@@ -164,7 +165,7 @@ void CADPropertySet::CreateSkeleton()
     enumValues.push_back( "Mesh" );
     SetPropertyAttribute( "Physics_MeshType", "enumValues", enumValues );
 
-    AddProperty( "Physics_MeshDecimation", 0, "Mesh Decimation" );
+    AddProperty( "Physics_MeshDecimation", std::string("Exact"), "Mesh Decimation" );
     enumValues.clear();
     enumValues.push_back( "Exact" );
     enumValues.push_back( "Low" );
@@ -174,18 +175,18 @@ void CADPropertySet::CreateSkeleton()
 
     AddProperty( "Physics_Enable", false, "Enable Physics" );
 
-    //    std::vector< PropertyPtr > physicsLink;
+    //    std::vector< propertystore::PropertyPtr > physicsLink;
     //    physicsLink.push_back( GetProperty("Physics_MotionType") );
     //    physicsLink.push_back( GetProperty("Physics_LODType") );
     //    physicsLink.push_back( GetProperty("Physics_MeshType") );
     //    physicsLink.push_back( GetProperty("Physics_MeshDecimation") );
-    //    p = MakeLiveBasePtr(new MakeLiveLinked< std::string >(
-    //            mUUIDString,
+    //    p = propertystore::MakeLiveBasePtr(new propertystore::MakeLiveLinked< std::string >(
+    //            m_UUIDString,
     //            physicsLink,
     //            "SetCADPhysicsMesh"));
-    //    mLiveObjects.push_back(p);
+    //    m_liveObjects.push_back(p);
 
-    AddProperty( "Culling", 0, "Occlusion Culling" );
+    AddProperty( "Culling", std::string("Off"), "Occlusion Culling" );
     enumValues.clear();
     enumValues.push_back( "Off" );
     enumValues.push_back( "Low" );
@@ -210,7 +211,7 @@ void CADPropertySet::CreateSkeleton()
 
     AddProperty( "DynamicAnalysisData", std::string( "null" ), "Multi-body Dynamics Data" );
     SetPropertyAttribute( "DynamicAnalysisData", "isFilePath", true );
-    mPropertyMap["DynamicAnalysisData"]->
+    GetProperty( "DynamicAnalysisData" )->
     SignalValueChanged.connect( boost::bind( &CADPropertySet::AddDynamicAnalysisData, this, _1 ) );
 
     AddProperty( "Filename", emptyString, "Filename: not visible in UI" );
@@ -227,7 +228,7 @@ void CADPropertySet::CreateSkeleton()
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADPropertySet::Scale( PropertyPtr& property )
+void CADPropertySet::Scale( propertystore::PropertyPtr& property )
 {
     bool uniform = boost::any_cast<bool>( GetPropertyValue( "Transform_Scale_Uniform" ) );
     if( uniform )
@@ -252,7 +253,7 @@ void CADPropertySet::Scale( PropertyPtr& property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADPropertySet::AddDynamicAnalysisData( PropertyPtr& )
+void CADPropertySet::AddDynamicAnalysisData( propertystore::PropertyPtr& )
 {
     std::string const fileName =
         boost::any_cast<std::string>( GetPropertyValue( "DynamicAnalysisData" ) );
@@ -262,7 +263,7 @@ void CADPropertySet::AddDynamicAnalysisData( PropertyPtr& )
     m_animateCAD->signal( nodeType, fileName, modeID );
 
     // This property should be treated as live; save to db whenever it changes.
-    WriteToDatabase();
+    Save();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADPropertySet::EnableLiveProperties( bool live )
@@ -272,31 +273,31 @@ void CADPropertySet::EnableLiveProperties( bool live )
     if( !live )
     {
         // Clearing list will allow live objs to go out of scope and autodelete
-        mLiveObjects.clear();
+        m_liveObjects.clear();
         return;
     }
-    else if( !mLiveObjects.empty() )
+    else if( !m_liveObjects.empty() )
     {
         // Properties are already live
         return;
     }
     else
     {
-        MakeLiveBasePtr p;
+        propertystore::MakeLiveBasePtr p;
 
-        p = MakeLiveBasePtr( new MakeLive<bool>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool>( m_UUIDString,
                              GetProperty( "SurfaceData" ),
                              "UseAsSurfaceData" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<bool const&>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool const&>( m_UUIDString,
                              GetProperty( "Visible" ),
                              "ToggleCADNode" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
         // Link up all the transform properties so that a single signal named
         // "TransformCADNode" is fired whenever any of the values changes.
-        std::vector< PropertyPtr > transformLink;
+        std::vector< propertystore::PropertyPtr > transformLink;
         transformLink.push_back( GetProperty( "Transform_Translation_X" ) );
         transformLink.push_back( GetProperty( "Transform_Translation_Y" ) );
         transformLink.push_back( GetProperty( "Transform_Translation_Z" ) );
@@ -306,64 +307,64 @@ void CADPropertySet::EnableLiveProperties( bool live )
         transformLink.push_back( GetProperty( "Transform_Scale_X" ) );
         transformLink.push_back( GetProperty( "Transform_Scale_Y" ) );
         transformLink.push_back( GetProperty( "Transform_Scale_Z" ) );
-        p = MakeLiveBasePtr( new MakeLiveLinked< double >(
-                                 mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLiveLinked< double >(
+                                 m_UUIDString,
                                  transformLink,
                                  "TransformCADNode" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<double>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<double>( m_UUIDString,
                              GetProperty( "Opacity" ),
                              "SetOpacityOnCADNode" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
         {
-            p = MakeLiveBasePtr( new MakeLive<const bool&>( mUUIDString,
+            p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<const bool&>( m_UUIDString,
                                  GetProperty( "Physics_Enable" ),
                                  "SetPhysicsOnCADNode" ) );
-            mLiveObjects.push_back( p );
+            m_liveObjects.push_back( p );
 
 
-            p = MakeLiveBasePtr( new MakeLive<const double&>( mUUIDString,
+            p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<const double&>( m_UUIDString,
                                  GetProperty( "Physics_Mass" ),
                                  "SetMassOnCADNode" ) );
-            mLiveObjects.push_back( p );
+            m_liveObjects.push_back( p );
 
 
-            p = MakeLiveBasePtr( new MakeLive<const double&>( mUUIDString,
+            p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<const double&>( m_UUIDString,
                                  GetProperty( "Physics_Friction" ),
                                  "SetFrictionOnCADNode" ) );
-            mLiveObjects.push_back( p );
+            m_liveObjects.push_back( p );
 
 
-            p = MakeLiveBasePtr( new MakeLive<const double&>( mUUIDString,
+            p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<const double&>( m_UUIDString,
                                  GetProperty( "Physics_Restitution" ),
                                  "SetRestitutionOnCADNode" ) );
-            mLiveObjects.push_back( p );
+            m_liveObjects.push_back( p );
 
 
-            std::vector< PropertyPtr > physicsLink;
+            std::vector< propertystore::PropertyPtr > physicsLink;
             physicsLink.push_back( GetProperty( "Physics_MotionType" ) );
             physicsLink.push_back( GetProperty( "Physics_LODType" ) );
             physicsLink.push_back( GetProperty( "Physics_MeshType" ) );
             physicsLink.push_back( GetProperty( "Physics_MeshDecimation" ) );
-            p = MakeLiveBasePtr( new MakeLiveLinked< std::string >(
-                                     mUUIDString,
+            p = propertystore::MakeLiveBasePtr( new propertystore::MakeLiveLinked< std::string >(
+                                     m_UUIDString,
                                      physicsLink,
                                      "SetCADPhysicsMesh" ) );
-            mLiveObjects.push_back( p );
+            m_liveObjects.push_back( p );
         }
 
-        p = MakeLiveBasePtr( new MakeLive< std::string >( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive< std::string >( m_UUIDString,
                              GetProperty( "Culling" ),
                              "SetCADCulling" ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr CADPropertySet::CreateNew()
+propertystore::PropertySetPtr CADPropertySet::CreateNew()
 {
-    return PropertySetPtr( new CADPropertySet() );
+    return propertystore::PropertySetPtr( new CADPropertySet() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace data

@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 BallAndSocketConstraintPropertySet::BallAndSocketConstraintPropertySet()
 {
-    mTableName = "BallAndSocketConstraint";
+    SetTypeName( "BallAndSocketConstraint" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr BallAndSocketConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr BallAndSocketConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new BallAndSocketConstraintPropertySet );
+    return propertystore::PropertySetPtr( new BallAndSocketConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BallAndSocketConstraintPropertySet::CreateSkeleton()

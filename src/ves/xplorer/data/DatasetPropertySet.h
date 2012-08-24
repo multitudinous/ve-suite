@@ -33,7 +33,7 @@
 #ifndef _DATASETPROPERTYSET_H
 #define	_DATASETPROPERTYSET_H
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 
 #include <ves/VEConfig.h>
 
@@ -49,7 +49,7 @@ class Property;
  * \namespace ves::xplorer::data
  *
  */
-class VE_DATA_EXPORTS DatasetPropertySet : public PropertySet
+class VE_DATA_EXPORTS DatasetPropertySet : public propertystore::PropertySet
 {
 public:
     ///Constructor
@@ -62,14 +62,14 @@ public:
     virtual void EnableLiveProperties( bool live );
 
     /// Factory ctor
-    virtual PropertySetPtr CreateNew();
+    virtual propertystore::PropertySetPtr CreateNew();
 
 protected:
     ///Handle loading transient texture data
-    void LoadVTIScalars( PropertyPtr& property );
+    void LoadVTIScalars( propertystore::PropertyPtr& property );
 
     ///Handle uniform scaling events
-    void Scale( PropertyPtr& property );
+    void Scale( propertystore::PropertyPtr& property );
 
 private:
     ///Create skeleton

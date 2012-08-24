@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/PreferencesPropertySet.h>
-#include <ves/xplorer/data/Property.h>
+#include <propertystore/Property.h>
 #include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/xplorer/data/MakeLive.h>
+#include <propertystore/MakeLive.h>
 
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
@@ -49,7 +49,7 @@ using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 PreferencesPropertySet::PreferencesPropertySet()
 {
-    
+    SetDataManager( DatabaseManager::instance()->GetDataManager() );
 
     ///Signal for Near-Far Ratio
     {
@@ -77,7 +77,7 @@ PreferencesPropertySet::PreferencesPropertySet()
                             ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) );
     }
 
-    mTableName = "XplorerPreferences";
+    SetTypeName( "XplorerPreferences" );
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,12 +101,12 @@ void PreferencesPropertySet::CreateSkeleton()
         AddProperty( "GeometryLODScale", 1.00, "Geometry LOD Scale" );
         SetPropertyAttribute( "GeometryLODScale", "minimumValue", 0.00 );
         SetPropertyAttribute( "GeometryLODScale", "maximumValue", 100.00 );
-        mPropertyMap["GeometryLODScale"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< double >( mUUIDString,
-                           mPropertyMap["GeometryLODScale"],
+        GetProperty( "GeometryLODScale" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< double >( m_UUIDString,
+                           GetProperty( "GeometryLODScale" ),
                            "PreferencesPropertySet.GeometryLODScale",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     ///Near far ratio
@@ -114,15 +114,15 @@ void PreferencesPropertySet::CreateSkeleton()
     AddProperty( "NearFarRatio", false, "Set Near-Far Ratio" );
     SetPropertyAttribute( "NearFarRatio", "isUIGroupOnly", false );
     SetPropertyAttribute( "NearFarRatio", "setExpanded", true );
-    mPropertyMap["NearFarRatio"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::EnableNearFarRatio, this, _1 ) );
-    mPropertyMap["NearFarRatio"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    GetProperty( "NearFarRatio" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::EnableNearFarRatio, this, _1 ) );
+    GetProperty( "NearFarRatio" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
     AddProperty( "NearFarRatio_Ratio", 0.000005, "Ratio" );
     SetPropertyAttribute( "NearFarRatio_Ratio", "minimumValue", 0.000000 );
     SetPropertyAttribute( "NearFarRatio_Ratio", "maximumValue", 1.000000 );
-    mPropertyMap["NearFarRatio_Ratio"]->SetDisabled();
-    mPropertyMap["NearFarRatio_Ratio"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateNearFarRatio, this, _1 ) );
-    mPropertyMap["NearFarRatio_Ratio"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    GetProperty( "NearFarRatio_Ratio" )->SetDisabled();
+    GetProperty( "NearFarRatio_Ratio" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateNearFarRatio, this, _1 ) );
+    GetProperty( "NearFarRatio_Ratio" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
     SetPropertyAttribute( "NearFarRatio_Ratio", "DisplayPrecision", 8 );
 
 
@@ -130,175 +130,175 @@ void PreferencesPropertySet::CreateSkeleton()
     AddProperty( "DraggerScaling", false, "Enable Dragger Scaling" );
     SetPropertyAttribute( "DraggerScaling", "isUIGroupOnly", false );
     SetPropertyAttribute( "DraggerScaling", "setExpanded", true );
-    mPropertyMap["DraggerScaling"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::EnableDraggerScaling, this, _1 ) );
-    mPropertyMap["DraggerScaling"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    GetProperty( "DraggerScaling" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::EnableDraggerScaling, this, _1 ) );
+    GetProperty( "DraggerScaling" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
     AddProperty( "DraggerScaling_Scale", 6.00,  "Scale Value" );
     SetPropertyAttribute( "DraggerScaling_Scale", "minimumValue", 0.00 );
     SetPropertyAttribute( "DraggerScaling_Scale", "maximumValue", 100.00 );
-    mPropertyMap["DraggerScaling_Scale"]->SetDisabled();
-    mPropertyMap["DraggerScaling_Scale"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateDraggerScaling, this, _1 ) );
-    mPropertyMap["DraggerScaling_Scale"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    GetProperty( "DraggerScaling_Scale" )->SetDisabled();
+    GetProperty( "DraggerScaling_Scale" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateDraggerScaling, this, _1 ) );
+    GetProperty( "DraggerScaling_Scale" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
 
     ///Background color
     AddProperty( "UsePreferredBackgroundColor", false, "Use Preferred Background Color" );
     SetPropertyAttribute( "UsePreferredBackgroundColor", "isUIGroupOnly", false );
     SetPropertyAttribute( "UsePreferredBackgroundColor", "setExpanded", true );
-    mPropertyMap["UsePreferredBackgroundColor"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::EnableBackgroundColor, this, _1 ) );
-    mPropertyMap["UsePreferredBackgroundColor"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    GetProperty( "UsePreferredBackgroundColor" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::EnableBackgroundColor, this, _1 ) );
+    GetProperty( "UsePreferredBackgroundColor" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
     AddProperty( "UsePreferredBackgroundColor_Red", 0.0, "Red" );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Red", "minimumValue", 0.00 );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Red", "maximumValue", 1.00 );
-    mPropertyMap["UsePreferredBackgroundColor_Red"]->SetDisabled();
-    mPropertyMap["UsePreferredBackgroundColor_Red"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateBackgroundColor, this, _1 ) );
-    mPropertyMap["UsePreferredBackgroundColor_Red"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    GetProperty( "UsePreferredBackgroundColor_Red" )->SetDisabled();
+    GetProperty( "UsePreferredBackgroundColor_Red" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateBackgroundColor, this, _1 ) );
+    GetProperty( "UsePreferredBackgroundColor_Red" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
     AddProperty( "UsePreferredBackgroundColor_Green", 0.0, "Green" );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Green", "minimumValue", 0.00 );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Green", "maximumValue", 1.00 );
-    mPropertyMap["UsePreferredBackgroundColor_Green"]->SetDisabled();
-    mPropertyMap["UsePreferredBackgroundColor_Green"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateBackgroundColor, this, _1 ) );
-    mPropertyMap["UsePreferredBackgroundColor_Green"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    GetProperty( "UsePreferredBackgroundColor_Green" )->SetDisabled();
+    GetProperty( "UsePreferredBackgroundColor_Green" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateBackgroundColor, this, _1 ) );
+    GetProperty( "UsePreferredBackgroundColor_Green" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
     AddProperty( "UsePreferredBackgroundColor_Blue", 0.0, "Blue" );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Blue", "minimumValue", 0.00 );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Blue", "maximumValue", 1.00 );
-    mPropertyMap["UsePreferredBackgroundColor_Blue"]->SetDisabled();
-    mPropertyMap["UsePreferredBackgroundColor_Blue"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateBackgroundColor, this, _1 ) );
-    mPropertyMap["UsePreferredBackgroundColor_Blue"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    GetProperty( "UsePreferredBackgroundColor_Blue" )->SetDisabled();
+    GetProperty( "UsePreferredBackgroundColor_Blue" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateBackgroundColor, this, _1 ) );
+    GetProperty( "UsePreferredBackgroundColor_Blue" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
 
     {
         AddProperty( "NavigationZEqual0Lock", false, "Navigation z = 0 Lock" );
-        mPropertyMap["NavigationZEqual0Lock"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
-                           mPropertyMap["NavigationZEqual0Lock"],
+        GetProperty( "NavigationZEqual0Lock" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< bool const& >( m_UUIDString,
+                           GetProperty( "NavigationZEqual0Lock" ),
                            "PreferencesPropertySet.NavigationZEqual0Lock",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     {
         AddProperty( "NavigationZGreater0Lock", false, "Navigation z > 0 Lock" );
-        mPropertyMap["NavigationZGreater0Lock"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
-                           mPropertyMap["NavigationZGreater0Lock"],
+        GetProperty( "NavigationZGreater0Lock" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< bool const& >( m_UUIDString,
+                           GetProperty( "NavigationZGreater0Lock" ),
                            "PreferencesPropertySet.NavigationZGreater0Lock",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     {
         std::vector< std::string > stringVector;
-        AddProperty( "NavigationRotationMode", 0, "Nav Mode" );
+        AddProperty( "NavigationRotationMode", std::string(""), "Nav Mode" );
         stringVector.push_back( "User" );
         stringVector.push_back( "Orbit" );
         SetPropertyAttribute( "NavigationRotationMode", "enumValues", stringVector );
 
-        mPropertyMap["NavigationRotationMode"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< std::string >( mUUIDString,
-                           mPropertyMap["NavigationRotationMode"],
+        GetProperty( "NavigationRotationMode" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< std::string >( m_UUIDString,
+                           GetProperty( "NavigationRotationMode" ),
                            "PreferencesPropertySet.NavigationRotationMode",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     {
         AddProperty( "ShutDownXplorerOption", false, "Shut Down Xplorer Option" );
-        mPropertyMap["ShutDownXplorerOption"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
-                           mPropertyMap["ShutDownXplorerOption"],
+        GetProperty( "ShutDownXplorerOption" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< bool >( m_UUIDString,
+                           GetProperty( "ShutDownXplorerOption" ),
                            "PreferencesPropertySet.ShutDownXplorerOption",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     {
         AddProperty( "PhysicsDebugger", false, "Physics Debugger" );
-        mPropertyMap["PhysicsDebugger"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< const bool& >( mUUIDString,
-                           mPropertyMap["PhysicsDebugger"],
+        GetProperty( "PhysicsDebugger" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< const bool& >( m_UUIDString,
+                           GetProperty( "PhysicsDebugger" ),
                            "PreferencesPropertySet.PhysicsDebugger",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     {
         AddProperty( "CADSelection", false, "CAD Selection" );
-        mPropertyMap["CADSelection"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
-                           mPropertyMap["CADSelection"],
+        GetProperty( "CADSelection" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< bool const& >( m_UUIDString,
+                           GetProperty( "CADSelection" ),
                            "PreferencesPropertySet.CADSelection",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     {
         AddProperty( "ScriptLogger", false, "Script Logger" );
-        mPropertyMap["ScriptLogger"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
-                           mPropertyMap["ScriptLogger"],
+        GetProperty( "ScriptLogger" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< bool >( m_UUIDString,
+                           GetProperty( "ScriptLogger" ),
                            "PreferencesPropertySet.ScriptLogger",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     {
         AddProperty( "ScreenAlignedNormals", false, "Screen Aligned Normals" );
-        mPropertyMap["ScreenAlignedNormals"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool >( mUUIDString,
-                           mPropertyMap["ScreenAlignedNormals"],
+        GetProperty( "ScreenAlignedNormals" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< bool >( m_UUIDString,
+                           GetProperty( "ScreenAlignedNormals" ),
                            "PreferencesPropertySet.ScreenAlignedNormals",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     {
         AddProperty( "DisplayFrameRate", false, "Display Frame Rate" );
-        mPropertyMap["DisplayFrameRate"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< const bool& >( mUUIDString,
-                           mPropertyMap["DisplayFrameRate"],
+        GetProperty( "DisplayFrameRate" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< const bool& >( m_UUIDString,
+                           GetProperty( "DisplayFrameRate" ),
                            "PreferencesPropertySet.DisplayFrameRate",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     {
         AddProperty( "DisplayGlobalAxis", false, "Display Global Axis" );
-        mPropertyMap["DisplayGlobalAxis"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
-                           mPropertyMap["DisplayGlobalAxis"],
+        GetProperty( "DisplayGlobalAxis" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< bool const& >( m_UUIDString,
+                           GetProperty( "DisplayGlobalAxis" ),
                            "PreferencesPropertySet.DisplayGlobalAxis",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     {
         AddProperty( "DeviceGloveDisplay", false, "Display Glove Models" );
-        mPropertyMap["DeviceGloveDisplay"]->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< bool const& >( mUUIDString,
-                           mPropertyMap["DeviceGloveDisplay"],
+        GetProperty( "DeviceGloveDisplay" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< bool const& >( m_UUIDString,
+                           GetProperty( "DeviceGloveDisplay" ),
                            "PreferencesPropertySet.DeviceGloveDisplay",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
     {
         AddProperty( "AmbientAudioSoundFile", std::string( "null" ), "Ambient Audio File" );
         SetPropertyAttribute( "AmbientAudioSoundFile", "isFilePath", true );
-        mPropertyMap["AmbientAudioSoundFile"]->
+        GetProperty( "AmbientAudioSoundFile" )->
         SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-        MakeLiveBasePtr p( new MakeLive< std::string const& >( mUUIDString,
-                           mPropertyMap["AmbientAudioSoundFile"],
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< std::string const& >( m_UUIDString,
+                           GetProperty( "AmbientAudioSoundFile" ),
                            "PreferencesPropertySet.AmbientAudioSoundFile",
                            false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr& property )
+void PreferencesPropertySet::EnableNearFarRatio( propertystore::PropertyPtr& property )
 {
     bool value = boost::any_cast<bool>( property->GetValue() );
 
@@ -311,11 +311,11 @@ void PreferencesPropertySet::EnableNearFarRatio( PropertyPtr& property )
         GetProperty( "NearFarRatio_Ratio" )->SetDisabled();
     }
 
-    PropertyPtr ptr = GetProperty( "NearFarRatio_Ratio" );
+    propertystore::PropertyPtr ptr = GetProperty( "NearFarRatio_Ratio" );
     UpdateNearFarRatio( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::EnableBackgroundColor( PropertyPtr& property )
+void PreferencesPropertySet::EnableBackgroundColor( propertystore::PropertyPtr& property )
 {
     bool value = boost::any_cast<bool>( property->GetValue() );
 
@@ -335,7 +335,7 @@ void PreferencesPropertySet::EnableBackgroundColor( PropertyPtr& property )
     UpdateBackgroundColor( property );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::EnableDraggerScaling( PropertyPtr& property )
+void PreferencesPropertySet::EnableDraggerScaling( propertystore::PropertyPtr& property )
 {
     bool value = boost::any_cast<bool>( property->GetValue() );
 
@@ -348,11 +348,11 @@ void PreferencesPropertySet::EnableDraggerScaling( PropertyPtr& property )
         GetProperty( "DraggerScaling_Scale" )->SetDisabled();
     }
 
-    PropertyPtr ptr = GetProperty( "DraggerScaling_Scale" );
+    propertystore::PropertyPtr ptr = GetProperty( "DraggerScaling_Scale" );
     UpdateDraggerScaling( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr& )
+void PreferencesPropertySet::UpdateBackgroundColor( propertystore::PropertyPtr& )
 {
     double r = boost::any_cast<double>( GetPropertyValue( "UsePreferredBackgroundColor_Red" ) );
     double g = boost::any_cast<double>( GetPropertyValue( "UsePreferredBackgroundColor_Green" ) );
@@ -365,17 +365,17 @@ void PreferencesPropertySet::UpdateBackgroundColor( PropertyPtr& )
     m_backgroundColor->signal( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::SaveChanges( PropertyPtr& )
+void PreferencesPropertySet::SaveChanges( propertystore::PropertyPtr& )
 {
-    WriteToDatabase();
+    Save();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateDraggerScaling( PropertyPtr& property )
+void PreferencesPropertySet::UpdateDraggerScaling( propertystore::PropertyPtr& property )
 {
     m_draggerScaling.signal( boost::any_cast<bool>( GetPropertyValue( "DraggerScaling" ) ), boost::any_cast<double>( property->GetValue() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateNearFarRatio( PropertyPtr& property )
+void PreferencesPropertySet::UpdateNearFarRatio( propertystore::PropertyPtr& property )
 {
     m_nearFarRatio.signal( boost::any_cast<bool>( GetPropertyValue( "NearFarRatio" ) ), boost::any_cast<double>( property->GetValue() ) );
 }

@@ -32,8 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-#include <ves/xplorer/data/PropertySet.h>
-#include <ves/xplorer/data/PropertyPtr.h>
+#include <propertystore/PropertySet.h>
+#include <propertystore/PropertyPtr.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
@@ -52,7 +52,7 @@ namespace data
  * \namespace ves::xplorer::data
  *
  */
-class VE_DATA_EXPORTS CameraSettingsPropertySet : public PropertySet
+class VE_DATA_EXPORTS CameraSettingsPropertySet : public propertystore::PropertySet
 {
 public:
     ///Constructor
@@ -68,10 +68,10 @@ private:
     ///Create the skeleton
     void CreateSkeleton();
 
-    bool NearValidator( PropertyPtr& propertyPtr, boost::any newValue );
-    bool FarValidator( PropertyPtr& propertyPtr, boost::any newValue );
+    bool NearValidator( propertystore::PropertyPtr& propertyPtr, boost::any newValue );
+    bool FarValidator( propertystore::PropertyPtr& propertyPtr, boost::any newValue );
 
-    void ProjectionChanged( PropertyPtr& propertyPtr );
+    void ProjectionChanged( propertystore::PropertyPtr& propertyPtr );
 
     ves::util::StringSignal_type m_projectionChangedSignal;
 

@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 FixedConstraintPropertySet::FixedConstraintPropertySet()
 {
-    mTableName = "FixedConstraint";
+    SetTypeName( "FixedConstraint" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr FixedConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr FixedConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new FixedConstraintPropertySet );
+    return propertystore::PropertySetPtr( new FixedConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FixedConstraintPropertySet::CreateSkeleton()

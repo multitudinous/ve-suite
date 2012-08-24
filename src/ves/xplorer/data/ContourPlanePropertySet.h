@@ -33,8 +33,8 @@
 #ifndef _CONTOURPLANEPROPERTYSET_H
 #define	_CONTOURPLANEPROPERTYSET_H
 
-#include <ves/xplorer/data/PropertySet.h>
-#include <ves/xplorer/data/PropertyPtr.h>
+#include <propertystore/PropertySet.h>
+#include <propertystore/PropertyPtr.h>
 #include <ves/xplorer/data/VizBasePropertySet.h>
 
 #include <ves/VEConfig.h>
@@ -61,7 +61,7 @@ public:
     virtual ~ContourPlanePropertySet();
 
     /// Factory ctor
-    virtual PropertySetPtr CreateNew();
+    virtual propertystore::PropertySetPtr CreateNew();
 
 protected:
     ///Create the skeleton

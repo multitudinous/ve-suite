@@ -33,8 +33,8 @@
 #ifndef VES_XPLORER_DATA_VOLUMEVISPROPERTYSET_H
 #define VES_XPLORER_DATA_VOLUMEVISPROPERTYSET_H
 
-#include <ves/xplorer/data/PropertySet.h>
-#include <ves/xplorer/data/PropertyPtr.h>
+#include <propertystore/PropertySet.h>
+#include <propertystore/PropertyPtr.h>
 #include <ves/xplorer/data/VizBasePropertySet.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
@@ -65,7 +65,7 @@ public:
     virtual ~VolumeVisPropertySet();
 
     /// Factory ctor
-    virtual PropertySetPtr CreateNew();
+    virtual propertystore::PropertySetPtr CreateNew();
 
     ///Setup the live properties
     virtual void EnableLiveProperties( bool live );
@@ -73,15 +73,15 @@ public:
 protected:
     ///Slot connected to the value change of  display seed points
     ///\param property The bool value for the seed point display flag
-    //void UpdateSeedPointDisplay( PropertyPtr property );
+    //void UpdateSeedPointDisplay( propertystore::PropertyPtr property );
     ///Create the skeleton
     virtual void CreateSkeleton();
 
     void ActivateVoilumeVis();
 
-    void UpdateScalarRange( PropertyPtr property );
+    void UpdateScalarRange( propertystore::PropertyPtr property );
 
-    void UpdateScalar( PropertyPtr property );
+    void UpdateScalar( propertystore::PropertyPtr property );
 
     ///????
     ves::util::TwoDoubleSignal_type m_updateTBETScalarRange;

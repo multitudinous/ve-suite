@@ -42,16 +42,16 @@ namespace constraints
 ////////////////////////////////////////////////////////////////////////////////
 HingeConstraintPropertySet::HingeConstraintPropertySet()
 {
-    mTableName = "HingeConstraint";
+    SetTypeName( "HingeConstraint" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr HingeConstraintPropertySet::CreateNew()
+propertystore::PropertySetPtr HingeConstraintPropertySet::CreateNew()
 {
-    return PropertySetPtr( new HingeConstraintPropertySet );
+    return propertystore::PropertySetPtr( new HingeConstraintPropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HingeConstraintPropertySet::CreateSkeleton()
@@ -66,7 +66,7 @@ void HingeConstraintPropertySet::CreateSkeleton()
     AddProperty( "AngularLimit_From", 0, "From" );
     AddProperty( "AngularLimit_To", 180, "To" );
 
-    AddProperty( "ObjectA_ReferenceAxisA", 0, "Reference Axis A" );
+    AddProperty( "ObjectA_ReferenceAxisA", std::string(""), "Reference Axis A" );
     std::vector<std::string> enumValues;
     enumValues.push_back( "X of Object" );
     enumValues.push_back( "Y of Object" );
@@ -74,7 +74,7 @@ void HingeConstraintPropertySet::CreateSkeleton()
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "enumValues", enumValues );
     SetPropertyAttribute( "ObjectA_ReferenceAxisA", "userVisible", false );
 
-    AddProperty( "ObjectB_ReferenceAxisB", 0, "Reference Axis B" );
+    AddProperty( "ObjectB_ReferenceAxisB", std::string(""), "Reference Axis B" );
     SetPropertyAttribute( "ObjectB_ReferenceAxisB", "enumValues", enumValues );
     SetPropertyAttribute( "ObjectB_ReferenceAxisB", "userVisible", false );
 }

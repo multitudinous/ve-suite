@@ -31,7 +31,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 #include <ves/VEConfig.h>
 
 namespace ves
@@ -43,7 +43,7 @@ namespace data
 namespace constraints
 {
 
-class VE_DATA_EXPORTS ConstraintBasePropertySet : public PropertySet
+class VE_DATA_EXPORTS ConstraintBasePropertySet : public propertystore::PropertySet
 {
 public:
     ConstraintBasePropertySet();

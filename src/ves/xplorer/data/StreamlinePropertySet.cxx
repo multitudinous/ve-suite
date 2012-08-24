@@ -32,9 +32,9 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/StreamlinePropertySet.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
-#include <ves/xplorer/data/Property.h>
+#include <propertystore/Property.h>
 #include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/xplorer/data/MakeLive.h>
+#include <propertystore/MakeLive.h>
 
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
@@ -49,7 +49,7 @@ using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 StreamlinePropertySet::StreamlinePropertySet()
 {
-    
+    SetDataManager( DatabaseManager::instance()->GetDataManager() );
 
     ///Signal for turning on seed points
     {
@@ -82,9 +82,9 @@ StreamlinePropertySet::StreamlinePropertySet()
             name, switchwire::EventManager::unspecified_SignalType );
     }
 
-    mTableName = "Streamline";
+    SetTypeName( "Streamline" );
 
-    RegisterPropertySet( mTableName );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
@@ -100,9 +100,9 @@ StreamlinePropertySet::~StreamlinePropertySet()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr StreamlinePropertySet::CreateNew()
+propertystore::PropertySetPtr StreamlinePropertySet::CreateNew()
 {
-    return PropertySetPtr( new StreamlinePropertySet );
+    return propertystore::PropertySetPtr( new StreamlinePropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void StreamlinePropertySet::CreateSkeleton()
@@ -111,42 +111,42 @@ void StreamlinePropertySet::CreateSkeleton()
         AddProperty( "Hide", false, "Toggle Viz Off" );
         const std::string slotName =
             boost::lexical_cast<std::string>( this ) + ".HideVizFeature";
-        std::vector< PropertyPtr > dataLink;
+        std::vector< propertystore::PropertyPtr > dataLink;
         dataLink.push_back( GetProperty( "Hide" ) );
-        MakeLiveBasePtr p(
-            new MakeLiveLinked< bool >( mUUIDString, dataLink,
+        propertystore::MakeLiveBasePtr p(
+            new propertystore::MakeLiveLinked< bool >( m_UUIDString, dataLink,
                                         slotName ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
-    AddProperty( "DataSet", 0, "Data Set" );
+    AddProperty( "DataSet", std::string(""), "Data Set" );
     PSVectorOfStrings enumValues;
 
-    AddProperty( "DataSet_ScalarData", 0, "Scalar Data" );
+    AddProperty( "DataSet_ScalarData", std::string(""), "Scalar Data" );
     // Dummy value to ensure this gets set up as an enum
     enumValues.push_back( "Select Scalar Data" );
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataOptions, this, _1 ) );
+    GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataOptions, this, _1 ) );
 
     AddProperty( "DataSet_ScalarRange", boost::any(), "Scalar Range" );
     SetPropertyAttribute( "DataSet_ScalarRange", "isUIGroupOnly", true );
     SetPropertyAttribute( "DataSet_ScalarRange", "setExpanded", true );
 
     AddProperty( "DataSet_ScalarRange_Min", 0.0, "Min" );
-    mPropertyMap["DataSet_ScalarRange_Min"]->SetDisabled();
+    GetProperty( "DataSet_ScalarRange_Min" )->SetDisabled();
 
     AddProperty( "DataSet_ScalarRange_Max", 1.0, "Max" );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SetDisabled();
+    GetProperty( "DataSet_ScalarRange_Max" )->SetDisabled();
 
-    mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
-    mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    GetProperty( "DataSet_ScalarData" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
+    GetProperty( "DataSet_ScalarRange_Min" )->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    GetProperty( "DataSet_ScalarRange_Max" )->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
 
-    AddProperty( "DataSet_VectorData", 0, "Vector Data" );
+    AddProperty( "DataSet_VectorData", std::string(""), "Vector Data" );
     enumValues.clear();
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
+    GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
 
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
@@ -162,12 +162,12 @@ void StreamlinePropertySet::CreateSkeleton()
     SetPropertyAttribute( "DataSet", "enumValues", enumValues );
     // Now that DataSet has choices loaded, force an update on the available
     // scalar and vector data
-    PropertyPtr nullPtr;
+    propertystore::PropertyPtr nullPtr;
     UpdateScalarDataOptions( nullPtr );
     UpdateVectorDataOptions( nullPtr );
 
     ///Integration controls
-    AddProperty( "IntegrationDirection", 2, "Integration Direction" );
+    AddProperty( "IntegrationDirection", std::string("Both"), "Integration Direction" );
     enumValues.clear();
     enumValues.push_back( "Backward" );
     enumValues.push_back( "Forward" );
@@ -179,7 +179,7 @@ void StreamlinePropertySet::CreateSkeleton()
     SetPropertyAttribute( "SeedPoints", "isUIGroupOnly", true );
     SetPropertyAttribute( "SeedPoints", "setExpanded", true );
     AddProperty( "SeedPoints_DisplaySeedPoints", false, "Display Seed Points" );
-    mPropertyMap["SeedPoints_DisplaySeedPoints"]->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateSeedPointDisplay, this, _1 ) );
+    GetProperty( "SeedPoints_DisplaySeedPoints" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateSeedPointDisplay, this, _1 ) );
     AddProperty( "SeedPoints_NumberOfPointsInX", 5, "Number of Points in X" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInX", "minimumValue",   0 );
     AddProperty( "SeedPoints_NumberOfPointsInY", 5, "Number of Points in Y" );
@@ -190,15 +190,15 @@ void StreamlinePropertySet::CreateSkeleton()
     // Link the three NumberOfPointsIn... properties together and have them
     // fire a signal with signature void( std::vector<int> ) whose tail is
     // named "UpdateSeedPointDimensions"
-    std::vector< PropertyPtr > numberOfPointsLink;
+    std::vector< propertystore::PropertyPtr > numberOfPointsLink;
     numberOfPointsLink.push_back( GetProperty( "SeedPoints_NumberOfPointsInX" ) );
     numberOfPointsLink.push_back( GetProperty( "SeedPoints_NumberOfPointsInY" ) );
     numberOfPointsLink.push_back( GetProperty( "SeedPoints_NumberOfPointsInZ" ) );
-    MakeLiveBasePtr p( new MakeLiveLinked< int >(
-                           mUUIDString,
+    propertystore::MakeLiveBasePtr p( new propertystore::MakeLiveLinked< int >(
+                           m_UUIDString,
                            numberOfPointsLink,
                            "UpdateSeedPointDimensions" ) );
-    mLiveObjects.push_back( p );
+    m_liveObjects.push_back( p );
 
     AddProperty( "SeedPoints_Bounds", boost::any(), "Bounds" );
     SetPropertyAttribute( "SeedPoints_Bounds", "isUIGroupOnly", true );
@@ -229,12 +229,12 @@ void StreamlinePropertySet::CreateSkeleton()
     AddProperty( "UseLastSeedPoints", false, "Use Last Seed Points" );
 
     ///Old values that are no longer used by the vis code
-    AddProperty( "CursorDirection", 0, "Cursor Direction" );
+    AddProperty( "CursorDirection", std::string(""), "Cursor Direction" );
     enumValues.clear();
     enumValues.push_back( "x" );
     SetPropertyAttribute( "CursorDirection", "enumValues", enumValues );
 
-    AddProperty( "CursortType", 0, "Cursor Type" );
+    AddProperty( "CursortType", std::string(""), "Cursor Type" );
     enumValues.clear();
     enumValues.push_back( "none" );
     SetPropertyAttribute( "CursortType", "enumValues", enumValues );
@@ -270,14 +270,14 @@ void StreamlinePropertySet::CreateSkeleton()
     AddProperty( "Advanced_ScaleByVectorMagnitude", false, "Scale By Vector Magnitude" );
 
     ///Mode controls
-    AddProperty( "Mode", 0, "Mode" );
+    AddProperty( "Mode", std::string(""), "Mode" );
     enumValues.clear();
     enumValues.push_back( "Specify a Single Plane" );
     enumValues.push_back( "Use All Precomputed Surfaces" );
     SetPropertyAttribute( "Mode", "enumValues", enumValues );
     // Connect SignalValueChanged of "Mode" to a function that enables and disables
     // its sub-properties as appropriate
-    PropertyPtr mode = mPropertyMap["Mode"];
+    propertystore::PropertyPtr mode = GetProperty( "Mode" );
     if( mode )
     {
         mode->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateModeOptions, this, _1 ) );
@@ -285,10 +285,10 @@ void StreamlinePropertySet::CreateSkeleton()
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamlinePropertySet::UpdateSeedPointDisplay( PropertyPtr property )
+void StreamlinePropertySet::UpdateSeedPointDisplay( propertystore::PropertyPtr property )
 {
     const std::string dataSetName =
-        boost::any_cast< std::string >( GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+        boost::any_cast< std::string >( GetPropertyValue( "DataSet" ) );
     m_activeDataSet.signal( dataSetName );
 
     bool showDataSet = boost::any_cast< bool >( property->GetValue() );

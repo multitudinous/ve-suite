@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/CameraModePropertySet.h>
-#include <ves/xplorer/data/Property.h>
+#include <propertystore/Property.h>
 #include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/xplorer/data/MakeLive.h>
+#include <propertystore/MakeLive.h>
 
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
@@ -48,7 +48,8 @@ using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 CameraModePropertySet::CameraModePropertySet()
 {
-    mTableName = "CameraMode";
+    SetDataManager( DatabaseManager::instance()->GetDataManager() );
+    SetTypeName( "CameraMode" );
     CreateSkeleton();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,40 +112,40 @@ void CameraModePropertySet::EnableLiveProperties( bool live )
 {
     if( live )
     {
-        MakeLiveBasePtr p;
-        p = MakeLiveBasePtr( new MakeLive<bool>( mUUIDString,
+        propertystore::MakeLiveBasePtr p;
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool>( m_UUIDString,
                              GetProperty( "DisableCameraTools" ),
                              "DisableCameraTools", false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<bool>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool>( m_UUIDString,
                              GetProperty( "CameraManager" ),
                              "CameraManagerOn", false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<bool>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool>( m_UUIDString,
                              GetProperty( "PictureMode" ),
                              "PictureModeOn", false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<double>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<double>( m_UUIDString,
                              GetProperty( "FlythroughSpeed" ),
                              "FlythroughSpeed", false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<bool>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool>( m_UUIDString,
                              GetProperty( "CameraWindow" ),
                              "CameraWindowOn", false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
 
-        p = MakeLiveBasePtr( new MakeLive<int>( mUUIDString,
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<int>( m_UUIDString,
                              GetProperty( "CameraWindow_Resolution" ),
                              "CameraWindowResolution", false ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
     else
     {
-        mLiveObjects.clear();
+        m_liveObjects.clear();
     }
 }
 

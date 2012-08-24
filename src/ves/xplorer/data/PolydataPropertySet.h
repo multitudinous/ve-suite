@@ -33,8 +33,8 @@
 #ifndef VES_XPLORER_DATA_POLYDATAPROPERTYSET_H
 #define	VES_XPLORER_DATA_POLYDATAPROPERTYSET_H
 
-#include <ves/xplorer/data/PropertySet.h>
-#include <ves/xplorer/data/PropertyPtr.h>
+#include <propertystore/PropertySet.h>
+#include <propertystore/PropertyPtr.h>
 #include <ves/xplorer/data/VizBasePropertySet.h>
 
 #include <ves/VEConfig.h>
@@ -61,13 +61,13 @@ public:
     virtual ~PolydataPropertySet();
 
     /// Factory ctor
-    virtual PropertySetPtr CreateNew();
+    virtual propertystore::PropertySetPtr CreateNew();
 
 protected:
     ///Validate method
-    bool ValidateColorByScalarMinMax( PropertyPtr property, boost::any value );
+    bool ValidateColorByScalarMinMax( propertystore::PropertyPtr property, boost::any value );
     ///Update the color by scalar
-    void UpdateColorByScalarDataRange( PropertyPtr property );
+    void UpdateColorByScalarDataRange( propertystore::PropertyPtr property );
     ///Create the skeleton
     virtual void CreateSkeleton();
 };

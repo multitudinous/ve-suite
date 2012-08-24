@@ -32,8 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/VectorPlanePropertySet.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
-#include <ves/xplorer/data/Property.h>
-#include <ves/xplorer/data/MakeLive.h>
+#include <propertystore/Property.h>
+#include <propertystore/MakeLive.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
@@ -48,8 +48,9 @@ VectorPlanePropertySet::VectorPlanePropertySet()
     :
     VizBasePropertySet()
 {
-    mTableName = "VectorPlane";
-    RegisterPropertySet( mTableName );
+    SetDataManager( DatabaseManager::instance()->GetDataManager() );
+    SetTypeName( "VectorPlane" );
+    RegisterPropertySet( GetTypeName() );
 
     CreateSkeleton();
 }
@@ -65,9 +66,9 @@ VectorPlanePropertySet::~VectorPlanePropertySet()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-PropertySetPtr VectorPlanePropertySet::CreateNew()
+propertystore::PropertySetPtr VectorPlanePropertySet::CreateNew()
 {
-    return PropertySetPtr( new VectorPlanePropertySet );
+    return propertystore::PropertySetPtr( new VectorPlanePropertySet );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VectorPlanePropertySet::CreateSkeleton()
@@ -76,42 +77,42 @@ void VectorPlanePropertySet::CreateSkeleton()
         AddProperty( "Hide", false, "Toggle Viz Off" );
         const std::string slotName =
             boost::lexical_cast<std::string>( this ) + ".HideVizFeature";
-        std::vector< PropertyPtr > dataLink;
+        std::vector< propertystore::PropertyPtr > dataLink;
         dataLink.push_back( GetProperty( "Hide" ) );
-        MakeLiveBasePtr p(
-            new MakeLiveLinked< bool >( mUUIDString, dataLink,
+        propertystore::MakeLiveBasePtr p(
+            new propertystore::MakeLiveLinked< bool >( m_UUIDString, dataLink,
                                         slotName ) );
-        mLiveObjects.push_back( p );
+        m_liveObjects.push_back( p );
     }
 
-    AddProperty( "DataSet", 0, "Data Set" );
+    AddProperty( "DataSet", std::string(""), "Data Set" );
     PSVectorOfStrings enumValues;
 
-    AddProperty( "DataSet_ScalarData", 0, "Scalar Data" );
+    AddProperty( "DataSet_ScalarData", std::string(""), "Scalar Data" );
     // Dummy value to ensure this gets set up as an enum
     enumValues.push_back( "Select Scalar Data" );
     SetPropertyAttribute( "DataSet_ScalarData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataOptions, this, _1 ) );
+    GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataOptions, this, _1 ) );
 
     AddProperty( "DataSet_ScalarRange", boost::any(), "Scalar Range" );
     SetPropertyAttribute( "DataSet_ScalarRange", "isUIGroupOnly", true );
     SetPropertyAttribute( "DataSet_ScalarRange", "setExpanded", true );
 
     AddProperty( "DataSet_ScalarRange_Min", 0.0, "Min" );
-    mPropertyMap["DataSet_ScalarRange_Min"]->SetDisabled();
+    GetProperty( "DataSet_ScalarRange_Min" )->SetDisabled();
 
     AddProperty( "DataSet_ScalarRange_Max", 1.0, "Max" );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SetDisabled();
+    GetProperty( "DataSet_ScalarRange_Max" )->SetDisabled();
 
-    mPropertyMap["DataSet_ScalarData"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
-    mPropertyMap["DataSet_ScalarRange_Min"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
-    mPropertyMap["DataSet_ScalarRange_Max"]->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    GetProperty( "DataSet_ScalarData" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
+    GetProperty( "DataSet_ScalarRange_Min" )->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
+    GetProperty( "DataSet_ScalarRange_Max" )->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
 
-    AddProperty( "DataSet_VectorData", 0, "Vector Data" );
+    AddProperty( "DataSet_VectorData", std::string(""), "Vector Data" );
     enumValues.clear();
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
-    mPropertyMap["DataSet"]->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
+    GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
 
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
@@ -127,11 +128,11 @@ void VectorPlanePropertySet::CreateSkeleton()
     SetPropertyAttribute( "DataSet", "enumValues", enumValues );
     // Now that DataSet has choices loaded, force an update on the available
     // scalar and vector data
-    PropertyPtr nullPtr;
+    propertystore::PropertyPtr nullPtr;
     UpdateScalarDataOptions( nullPtr );
     UpdateVectorDataOptions( nullPtr );
 
-    AddProperty( "Direction", 0, "Direction" );
+    AddProperty( "Direction", std::string(""), "Direction" );
     enumValues.clear();
     enumValues.push_back( "x" );
     enumValues.push_back( "y" );
@@ -141,13 +142,13 @@ void VectorPlanePropertySet::CreateSkeleton()
     enumValues.push_back( "By Surface" );
     SetPropertyAttribute( "Direction", "enumValues", enumValues );
 
-    AddProperty( "DataMapping", 0, "Data Mapping" );
+    AddProperty( "DataMapping", std::string(""), "Data Mapping" );
     enumValues.clear();
     enumValues.push_back( "Map Scalar Data" );
     enumValues.push_back( "Map Volume Flux Data" );
     SetPropertyAttribute( "DataMapping", "enumValues", enumValues );
 
-    AddProperty( "Mode", 0, "Mode" );
+    AddProperty( "Mode", std::string(""), "Mode" );
     enumValues.clear();
     enumValues.push_back( "Specify a Single Plane" );
     enumValues.push_back( "Use All Precomputed Surfaces" );
@@ -157,7 +158,7 @@ void VectorPlanePropertySet::CreateSkeleton()
 
     // Connect SignalValueChanged of "Mode" to a function that enables and disables
     // its sub-properties as appropriate
-    PropertyPtr mode = mPropertyMap["Mode"];
+    propertystore::PropertyPtr mode = GetProperty( "Mode" );
     if( mode )
     {
         mode->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateModeOptions, this, _1 ) );
@@ -168,7 +169,7 @@ void VectorPlanePropertySet::CreateSkeleton()
     AddProperty( "Mode_CyclePrecomputedSurfaces", false, "Cycle Precomputed Surfaces" );
     // We disable this one by default since the selected Mode,
     // "Specify a Single Plane", does not support this option.
-    mPropertyMap["Mode_CyclePrecomputedSurfaces"]->SetDisabled();
+    GetProperty( "Mode_CyclePrecomputedSurfaces" )->SetDisabled();
 
 
     AddProperty( "PlaneLocation", 0.00, "Plane Location" );
@@ -198,15 +199,15 @@ void VectorPlanePropertySet::CreateSkeleton()
 
     {
         AddProperty( "Advanced_Greyscale", false, "Greyscale" );
-        /*std::vector< PropertyPtr > greyscale;
+        /*std::vector< propertystore::PropertyPtr > greyscale;
         greyscale.push_back( GetProperty( "Advanced_Greyscale" ) );
         const std::string slotName =
             boost::lexical_cast<std::string>( this ) +".SetVectorPlaneGreyscale";
-        MakeLiveBasePtr p( new MakeLiveLinked< bool >(
-                mUUIDString,
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLiveLinked< bool >(
+                m_UUIDString,
                 greyscale,
                 slotName ) );
-        mLiveObjects.push_back( p );*/
+        m_liveObjects.push_back( p );*/
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
