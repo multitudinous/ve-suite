@@ -34,7 +34,7 @@
 
 #include <ves/xplorer/event/volume/VolumeVisSlots.h>
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 #include <ves/xplorer/data/VolumeVisPropertySet.h>
 
 #include <boost/any.hpp>
@@ -63,26 +63,26 @@ void VolumeVisFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
-    xplorer::data::PropertySetPtr ptr = xplorer::data::PropertySetPtr( new xplorer::data::VolumeVisPropertySet() );
+    propertystore::PropertySetPtr ptr = propertystore::PropertySetPtr( new xplorer::data::VolumeVisPropertySet() );
     ptr->SetUUID( recordUUID );
-    ptr->LoadFromDatabase();
+    ptr->Load();
     AddPlane( ptr );
     //Execute( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VolumeVisFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& )
+void VolumeVisFeatureMaker::UpdateContourInformation( propertystore::PropertySet& )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VolumeVisFeatureMaker::AddPlane( xplorer::data::PropertySetPtr& set )
+void VolumeVisFeatureMaker::AddPlane( propertystore::PropertySetPtr& set )
 {
 
     std::string const currentScalar = boost::any_cast<std::string >
-                                      ( set->GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) );
+                                      ( set->GetPropertyValue( "DataSet_ScalarData" ) );
 
     std::string const currentDataset = boost::any_cast<std::string >
-                                       ( set->GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+                                       ( set->GetPropertyValue( "DataSet" ) );
 
     double minimumValue =
         boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Min" ) );
@@ -99,7 +99,7 @@ void VolumeVisFeatureMaker::AddPlane( xplorer::data::PropertySetPtr& set )
     UpdateScalarRange( minimumValue, maximumValue );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VolumeVisFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& )
+void VolumeVisFeatureMaker::UpdateAdvancedSettings( propertystore::PropertySet& )
 {
     ;
 }

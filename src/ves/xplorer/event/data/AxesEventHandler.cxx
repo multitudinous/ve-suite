@@ -139,7 +139,7 @@ void AxesEventHandler::ShowAxes( const std::string& uuid, const bool& show )
     SetGlobalBaseObject();
     ves::xplorer::data::DatasetPropertySet set;
     set.SetUUID( uuid );
-    set.LoadFromDatabase();
+    set.Load();
     std::string datasetName = boost::any_cast<std::string>( set.GetPropertyValue( "Filename" ) );
 
     DataSet* dataSet = _activeModel->GetCfdDataSet(

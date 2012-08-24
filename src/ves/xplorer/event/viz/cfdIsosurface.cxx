@@ -37,7 +37,7 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/data/DataSetScalarBar.h>
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -293,7 +293,7 @@ void cfdIsosurface::UpdatePropertySet()
     double planePosition = boost::any_cast<double>( m_propertySet->GetPropertyValue( "IsosurfaceValue" ) );
     SetRequestedValue( static_cast< int >( planePosition ) );
 
-    colorByScalar = boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "ColorByScalar", "enumCurrentString" ) );
+    colorByScalar = boost::any_cast<std::string >( m_propertySet->GetPropertyValue( "ColorByScalar" ) );
 
     minValue = boost::any_cast<double>( m_propertySet->GetPropertyValue( "ColorByScalar_ScalarRange_Min" ) );
 

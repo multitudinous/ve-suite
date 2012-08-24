@@ -460,7 +460,7 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
     newSet.SetUUID( newPart->GetID() );
     if( ves::xplorer::ModelHandler::instance()->GetDBPresent() )
     {
-        newSet.LoadFromDatabase();
+        newSet.Load();
     }
 
     // Calculate and store the NodePath - for all methods whether import or
@@ -580,7 +580,7 @@ void CADEventHandler::WritePartToDB( ves::open::xml::cad::CADNodePtr newPart )
 
     newSet.SetPropertyValue( "Visibile", newPart->GetVisibility() );
 
-    newSet.WriteToDatabase();
+    newSet.Save();
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEventHandler::GetNodePathString( osg::Node* const startNode,

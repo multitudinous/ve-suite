@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/VectorFeatureMaker.h>
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 #include <ves/xplorer/data/VectorPlanePropertySet.h>
 
 #include <ves/xplorer/command/CommandManager.h>
@@ -68,14 +68,14 @@ void VectorFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
-    xplorer::data::PropertySetPtr ptr = xplorer::data::PropertySetPtr( new xplorer::data::VectorPlanePropertySet() );
+    propertystore::PropertySetPtr ptr = propertystore::PropertySetPtr( new xplorer::data::VectorPlanePropertySet() );
     ptr->SetUUID( recordUUID );
-    ptr->LoadFromDatabase();
-    //AddPlane( static_cast < xplorer::data::PropertySet& > ( vectorSet ) );
+    ptr->Load();
+    //AddPlane( static_cast < propertystore::PropertySet& > ( vectorSet ) );
     Execute( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VectorFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )
+void VectorFeatureMaker::UpdateContourInformation( propertystore::PropertySet& set )
 {
     m_vectorInformation.clear();
 
@@ -83,14 +83,14 @@ void VectorFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& s
     ves::open::xml::DataValuePairPtr contourDirection( new ves::open::xml::DataValuePair() );
     contourDirection->SetDataType( "STRING" );
     contourDirection->SetDataName( std::string( "Direction" ) );
-    std::string value = boost::any_cast<std::string > ( set.GetPropertyAttribute( "Direction", "enumCurrentString" ) );
+    std::string value = boost::any_cast<std::string > ( set.GetPropertyValue( "Direction" ) );
     contourDirection->SetDataString( value );
     m_vectorInformation.push_back( contourDirection );
 
     ves::open::xml::DataValuePairPtr selectvecorscalrDisp( new ves::open::xml::DataValuePair() );
     selectvecorscalrDisp->SetDataType( "STRING" );
     selectvecorscalrDisp->SetDataName( "Select Data Mapping" );
-    selectvecorscalrDisp->SetDataString( boost::any_cast<std::string > ( set.GetPropertyAttribute( "DataMapping", "enumCurrentString" ) ) );
+    selectvecorscalrDisp->SetDataString( boost::any_cast<std::string > ( set.GetPropertyValue( "DataMapping" ) ) );
     m_vectorInformation.push_back( selectvecorscalrDisp );
 
     // Mode: Single or Multiple
@@ -98,15 +98,24 @@ void VectorFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& s
     numberOfPlanes->SetDataType( "STRING" );
     numberOfPlanes->SetDataName( std::string( "Number of Planes" ) );
     std::string numberOfPlanesOption( "Single" );
-    int mode = boost::any_cast<int>( set.GetPropertyValue( "Mode" ) );
-    if( mode == 0 )
+    numberOfPlanesOption = set.GetDatumValue< std::string >( "Mode" );
+    if( numberOfPlanesOption == "Specify a Single Plane" )
     {
         numberOfPlanesOption = "Single";
     }
-    else if( mode == 1 )
+    else if( numberOfPlanesOption == "Use All Precomputed Surfaces" )
     {
         numberOfPlanesOption = "Multiple";
     }
+//    int mode = boost::any_cast<int>( set.GetPropertyValue( "Mode" ) );
+//    if( mode == 0 )
+//    {
+//        numberOfPlanesOption = "Single";
+//    }
+//    else if( mode == 1 )
+//    {
+//        numberOfPlanesOption = "Multiple";
+//    }
     numberOfPlanes->SetDataString( numberOfPlanesOption );
     m_vectorInformation.push_back( numberOfPlanes );
 
@@ -137,12 +146,12 @@ void VectorFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& s
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VectorFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
+void VectorFeatureMaker::AddPlane( propertystore::PropertySet& set )
 {
     UpdateContourInformation( set );
     UpdateAdvancedSettings( set );
 
-    //std::cout << set.GetTableName() << " " << set.GetRecordID() << std::endl;
+    //std::cout << set.GetTypeName() << " " << set.GetRecordID() << std::endl;
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
 
     newCommand->SetCommandName( "UPDATE_VECTOR_SETTINGS" );
@@ -179,7 +188,7 @@ void VectorFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VectorFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
+void VectorFeatureMaker::UpdateAdvancedSettings( propertystore::PropertySet& set )
 {
     m_advancedSettings.clear();
 
@@ -195,7 +204,7 @@ void VectorFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set
     //      ...3. Create a DVP, set its name to string from step 2, set
     //              its value to cast value from set.GetPropertyValue( *iter ).
     //              Casting operation could look at property type to determine
-    //              appropriate cast -- esp for enums, to use associated enumCurrentString
+    //              appropriate cast.
     //      ...4. Add DVP to _advancedSettings
     // }
 

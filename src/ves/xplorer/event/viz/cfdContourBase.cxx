@@ -42,7 +42,7 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 
 #include <ves/xplorer/util/ExtractGeometryCallback.h>
 
@@ -555,7 +555,7 @@ void cfdContourBase::CreateArbSurface()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::UpdatePropertySet()
 {
-    std::string dataMapping = boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "DataMapping", "enumCurrentString" ) );
+    std::string dataMapping = boost::any_cast<std::string >( m_propertySet->GetPropertyValue( "DataMapping" ) );
 
     vprDEBUG( vesDBG, 0 )
             << "|\tSelect scalar or volume flux for contour display: "
@@ -623,7 +623,7 @@ void cfdContourBase::UpdatePropertySet()
     this->deci->SetTargetReduction( realLOD );
 
     std::string contourType =
-        boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "Advanced_ContourType", "enumCurrentString" ) );
+        boost::any_cast<std::string >( m_propertySet->GetPropertyValue( "Advanced_ContourType" ) );
     if( contourType == "Graduated" )
     {
         SetFillType( 0 );

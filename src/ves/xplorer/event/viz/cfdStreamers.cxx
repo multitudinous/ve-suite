@@ -42,7 +42,7 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
@@ -774,7 +774,7 @@ void cfdStreamers::CreateArbSurface()
 void cfdStreamers::UpdatePropertySet()
 {
     //Extract the integration direction
-    std::string intDirection = boost::any_cast<std::string >( m_propertySet->GetPropertyAttribute( "IntegrationDirection", "enumCurrentString" ) );
+    std::string intDirection = boost::any_cast<std::string >( m_propertySet->GetPropertyValue( "IntegrationDirection" ) );
 
     vprDEBUG( vesDBG, 0 ) << "|\tStreamline settings"
                           << std::endl << vprDEBUG_FLUSH;

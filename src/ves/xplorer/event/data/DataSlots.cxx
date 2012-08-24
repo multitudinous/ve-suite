@@ -59,7 +59,7 @@ DataSet* GetSelectedDataset( std::string const& uuid )
 
     ves::xplorer::data::DatasetPropertySet set;
     set.SetUUID( uuid );
-    set.LoadFromDatabase();
+    set.Load();
     const std::string& datasetName =
         boost::any_cast<std::string>( set.GetPropertyValue( "Filename" ) );
 

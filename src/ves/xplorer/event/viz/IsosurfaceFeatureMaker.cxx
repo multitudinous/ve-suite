@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/IsosurfaceFeatureMaker.h>
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 #include <ves/xplorer/data/IsosurfacePropertySet.h>
 #include <ves/xplorer/command/CommandManager.h>
 
@@ -65,14 +65,14 @@ void IsosurfaceFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
-    xplorer::data::PropertySetPtr ptr = xplorer::data::PropertySetPtr( new xplorer::data::IsosurfacePropertySet() );
+    propertystore::PropertySetPtr ptr = propertystore::PropertySetPtr( new xplorer::data::IsosurfacePropertySet() );
     ptr->SetUUID( recordUUID );
-    ptr->LoadFromDatabase();
-    //AddPlane( static_cast < xplorer::data::PropertySet& > ( vectorSet ) );
+    ptr->Load();
+    //AddPlane( static_cast < propertystore::PropertySet& > ( vectorSet ) );
     Execute( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void IsosurfaceFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )
+void IsosurfaceFeatureMaker::UpdateContourInformation( propertystore::PropertySet& set )
 {
     m_contourInformation.clear();
 
@@ -83,7 +83,7 @@ void IsosurfaceFeatureMaker::UpdateContourInformation( xplorer::data::PropertySe
 
     ves::open::xml::DataValuePairPtr colorByScalar( new ves::open::xml::DataValuePair() );
     colorByScalar->SetData( "Color By Scalar", boost::any_cast<std::string >
-                            ( set.GetPropertyAttribute( "ColorByScalar", "enumCurrentString" ) ) );
+                            ( set.GetPropertyValue( "ColorByScalar" ) ) );
     m_contourInformation.push_back( colorByScalar );
 
     ves::open::xml::DataValuePairPtr minValue( new ves::open::xml::DataValuePair() );
@@ -106,7 +106,7 @@ void IsosurfaceFeatureMaker::UpdateContourInformation( xplorer::data::PropertySe
     m_contourInformation.push_back( gpuTools );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void IsosurfaceFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
+void IsosurfaceFeatureMaker::AddPlane( propertystore::PropertySet& set )
 {
     UpdateContourInformation( set );
 
@@ -129,7 +129,7 @@ void IsosurfaceFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void IsosurfaceFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
+void IsosurfaceFeatureMaker::UpdateAdvancedSettings( propertystore::PropertySet& set )
 {
     m_advancedSettings.clear();
 
@@ -145,7 +145,7 @@ void IsosurfaceFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet&
     //      ...3. Create a DVP, set its name to string from step 2, set
     //              its value to cast value from set.GetPropertyValue( *iter ).
     //              Casting operation could look at property type to determine
-    //              appropriate cast -- esp for enums, to use associated enumCurrentString
+    //              appropriate cast.
     //      ...4. Add DVP to _advancedSettings
     // }
 
@@ -182,8 +182,7 @@ void IsosurfaceFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet&
         contourType->SetDataType( "STRING" );
         contourType->SetDataName( std::string( "Type" ) );
         std::string _planeType = boost::any_cast<std::string >
-                                 ( set.GetPropertyAttribute
-                                   ( "Advanced_ContourType", "enumCurrentString" ) );
+                                 ( set.GetPropertyValue( "Advanced_ContourType" ) );
         contourType->SetDataString( _planeType );
         m_advancedSettings.push_back( contourType );
     }

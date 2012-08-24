@@ -42,7 +42,7 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 
 #include <cmath>
 
@@ -584,7 +584,7 @@ void cfdVectorBase::CreateArbSurface()
 void cfdVectorBase::UpdatePropertySet()
 {
     //Extract the integration direction
-    std::string dataMapping = boost::any_cast<std::string > ( m_propertySet->GetPropertyAttribute( "DataMapping", "enumCurrentString" ) );
+    std::string dataMapping = boost::any_cast<std::string > ( m_propertySet->GetPropertyValue( "DataMapping" ) );
 
     vprDEBUG( vesDBG, 0 )
             << "|\tSelect scalar or volume flux for contour display: " << dataMapping

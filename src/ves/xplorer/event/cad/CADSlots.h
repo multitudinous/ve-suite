@@ -579,17 +579,17 @@ static void SetPhysicsOnCADNode( std::string const& nodeID,
         // properties and mesh settings get applied.
         ves::xplorer::data::CADPropertySet set;
         set.SetUUID( nodeID );
-        set.LoadFromDatabase();
+        set.Load();
 
         SetMassOnCADNode( nodeID, boost::any_cast<double>( set.GetPropertyValue( "Physics_Mass" ) ) );
         SetFrictionOnCADNode( nodeID, boost::any_cast<double>( set.GetPropertyValue( "Physics_Friction" ) ) );
         SetRestitutionOnCADNode( nodeID, boost::any_cast<double>( set.GetPropertyValue( "Physics_Restitution" ) ) );
 
         std::vector<std::string> meshDetails;
-        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyAttribute( "Physics_MotionType", "enumCurrentString" ) ) );
-        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyAttribute( "Physics_LODType", "enumCurrentString" ) ) );
-        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyAttribute( "Physics_MeshType", "enumCurrentString" ) ) );
-        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyAttribute( "Physics_MeshDecimation", "enumCurrentString" ) ) );
+        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyValue( "Physics_MotionType" ) ) );
+        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyValue( "Physics_LODType" ) ) );
+        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyValue( "Physics_MeshType" ) ) );
+        meshDetails.push_back( boost::any_cast<std::string>( set.GetPropertyValue( "Physics_MeshDecimation" ) ) );
         SetCADPhysicsMesh( nodeID, meshDetails );
     }
     else

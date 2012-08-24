@@ -89,11 +89,11 @@ void DisableCameraTools( bool flag )
     {
         //Load CameraModePropertySet, check the state of CameraWindow, and
         //take appropriate action
-        ves::xplorer::data::PropertySetPtr set =
-                ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CameraModePropertySet );
+        propertystore::PropertySetPtr set =
+                propertystore::PropertySetPtr( new ves::xplorer::data::CameraModePropertySet );
         //See CameraModePropertySet for explanation of this uuid
         set->SetUUID( "00000000-0101-1010-1111-000011110000" );
-        set->LoadFromDatabase();
+        set->Load();
         bool cwo = boost::any_cast<bool>( set->GetPropertyValue( "CameraWindow" ) );
         CameraWindowOn( cwo );
     }
@@ -106,10 +106,10 @@ void AddCamera( const std::string& uuid, const std::string& name )
 {
     scenegraph::SceneManager::instance()->GetCameraManager().addChild( name, uuid );
 
-    ves::xplorer::data::PropertySetPtr set =
-            ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
+    propertystore::PropertySetPtr set =
+            propertystore::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
     set->SetUUID( uuid );
-    set->LoadFromDatabase();
+    set->Load();
 
     scenegraph::camera::CameraObject* cameraObject = scenegraph::SceneManager::instance()->GetCameraManager().GetCameraObject( uuid );
     bool flag = boost::any_cast< bool >( set->GetPropertyValue( "Projection_AutoComputeFarPlane" ) );
@@ -341,11 +341,11 @@ std::string ResolveSaveImagePath( std::string path )
 {
     if( path.empty() )
     {
-        ves::xplorer::data::PropertySetPtr set =
-                ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CameraModePropertySet );
+        propertystore::PropertySetPtr set =
+                propertystore::PropertySetPtr( new ves::xplorer::data::CameraModePropertySet );
         //See CameraModePropertySet for explanation of this uuid
         set->SetUUID( "00000000-0101-1010-1111-000011110000" );
-        set->LoadFromDatabase();
+        set->Load();
         path = boost::any_cast<std::string>( set->GetPropertyValue( "CameraImageSavePath" ) );
     }
 
@@ -486,16 +486,16 @@ void CameraProjectionUpdate( const std::string& uuid )
         return;
     }
 
-    ves::xplorer::data::PropertySetPtr set =
-            ves::xplorer::data::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
+    propertystore::PropertySetPtr set =
+            propertystore::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
     set->SetUUID( uuid );
-    set->LoadFromDatabase();
+    set->Load();
 
     //Get the ImageDimensions string, which is formatted as "widthxheight label"
     //and split it at "x" and the space between "height" and "label" to pull
     //out the width and height
     std::string imageDims = boost::any_cast<std::string>(
-                set->GetPropertyAttribute( "Projection_ImageDimensions", "enumCurrentString" ) );
+                set->GetPropertyValue( "Projection_ImageDimensions" ) );
     size_t xloc = imageDims.find( 'x' );
     std::string strWidth( imageDims, 0, xloc );
     std::string strHeight( imageDims, xloc + 1, imageDims.find( ' ' ) - xloc - 1 );

@@ -38,7 +38,7 @@
 #include <ves/xplorer/DataSetPtr.h>
 #include <ves/xplorer/scenegraph/Geode.h>
 
-#include <ves/xplorer/data/PropertySetPtr.h>
+#include <propertystore/PropertySetPtr.h>
 
 #include <vector>
 
@@ -204,7 +204,7 @@ public:
     std::string const& GetUUID() const;
 
     ///Set the property set for this feature
-    void SetPropertySet( ves::xplorer::data::PropertySetPtr set );
+    void SetPropertySet( propertystore::PropertySetPtr set );
 
     ///Set the surface dataset name
     void SetDataMapSurfaceName( std::string const& surfName );
@@ -214,7 +214,7 @@ protected:
     ///active dataset.
     DataSet* activeDataSet;
     ///The current property set
-    ves::xplorer::data::PropertySetPtr m_propertySet;
+    propertystore::PropertySetPtr m_propertySet;
     ///geode vector.
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;
     ///point source for vtk polydata.

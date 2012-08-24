@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/StreamlineFeatureMaker.h>
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 #include <ves/xplorer/data/StreamlinePropertySet.h>
 
 #include <ves/xplorer/command/CommandManager.h>
@@ -68,31 +68,31 @@ void StreamlineFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
-    xplorer::data::PropertySetPtr ptr = xplorer::data::PropertySetPtr( new xplorer::data::StreamlinePropertySet() );
+    propertystore::PropertySetPtr ptr = propertystore::PropertySetPtr( new xplorer::data::StreamlinePropertySet() );
     ptr->SetUUID( recordUUID );
-    ptr->LoadFromDatabase();
-    //AddPlane( static_cast < xplorer::data::PropertySet& > ( vectorSet ) );
+    ptr->Load();
+    //AddPlane( static_cast < propertystore::PropertySet& > ( vectorSet ) );
     Execute( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamlineFeatureMaker::UpdateContourInformation( xplorer::data::PropertySet& set )
+void StreamlineFeatureMaker::UpdateContourInformation( propertystore::PropertySet& set )
 {
     m_vectorInformation.clear();
 
     ves::open::xml::DataValuePairPtr streamlineDirection( new ves::open::xml::DataValuePair() );
     streamlineDirection->SetData( std::string( "Cursor Direction" ),
-                                  boost::any_cast<std::string >( set.GetPropertyAttribute( "CursorDirection", "enumCurrentString" ) ) );
+                                  boost::any_cast<std::string >( set.GetPropertyValue( "CursorDirection" ) ) );
 
     m_vectorInformation.push_back( streamlineDirection );
 
-    std::string tempString = boost::any_cast<std::string>( set.GetPropertyAttribute( "CursortType", "enumCurrentString" ) );
+    std::string tempString = boost::any_cast<std::string>( set.GetPropertyValue( "CursortType" ) );
     ves::open::xml::DataValuePairPtr cursorSelection = ves::open::xml::MakeDVP( "Cursor Type", tempString );
 
     m_vectorInformation.push_back( cursorSelection );
 
     ves::open::xml::DataValuePairPtr integrationDirection( new ves::open::xml::DataValuePair() );
     integrationDirection->SetData( std::string( "Integration Direction" ),
-                                   boost::any_cast<std::string >( set.GetPropertyAttribute( "IntegrationDirection", "enumCurrentString" ) ) );
+                                   boost::any_cast<std::string >( set.GetPropertyValue( "IntegrationDirection" ) ) );
 
     m_vectorInformation.push_back( integrationDirection );
 
@@ -107,7 +107,7 @@ void StreamlineFeatureMaker::UpdateContourInformation( xplorer::data::PropertySe
     m_vectorInformation.push_back( nPointsPerPlane );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamlineFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
+void StreamlineFeatureMaker::AddPlane( propertystore::PropertySet& set )
 {
     UpdateContourInformation( set );
     UpdateAdvancedSettings( set );
@@ -119,7 +119,7 @@ void StreamlineFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     displaySeedPoint->AddDataValuePair( seedPointDVP );
 
     ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair() );
-    std::string datasetname = boost::any_cast<std::string>( set.GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    std::string datasetname = boost::any_cast<std::string>( set.GetPropertyValue( "DataSet" ) );
     activeDataset->SetData( "Active Dataset", datasetname );
     displaySeedPoint->AddDataValuePair( activeDataset );
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( displaySeedPoint );
@@ -196,7 +196,7 @@ void StreamlineFeatureMaker::AddPlane( xplorer::data::PropertySet& set )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamlineFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet& set )
+void StreamlineFeatureMaker::UpdateAdvancedSettings( propertystore::PropertySet& set )
 {
     m_advancedSettings.clear();
 
@@ -212,7 +212,7 @@ void StreamlineFeatureMaker::UpdateAdvancedSettings( xplorer::data::PropertySet&
     //      ...3. Create a DVP, set its name to string from step 2, set
     //              its value to cast value from set.GetPropertyValue( *iter ).
     //              Casting operation could look at property type to determine
-    //              appropriate cast -- esp for enums, to use associated enumCurrentString
+    //              appropriate cast.
     //      ...4. Add DVP to _advancedSettings
     // }
 

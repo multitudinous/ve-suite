@@ -38,7 +38,7 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -202,7 +202,7 @@ void ParticleAnimation::UpdatePropertySet()
         boost::any_cast<double>( m_propertySet->GetPropertyValue( "WarpedScaleFactor" ) );
 
     colorByScalar =
-        boost::any_cast< std::string >( m_propertySet->GetPropertyAttribute( "ColorByScalar", "enumCurrentString" ) );
+        boost::any_cast< std::string >( m_propertySet->GetPropertyValue( "ColorByScalar" ) );
 
     warpSurface =
         boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseWarpedSurface" ) );

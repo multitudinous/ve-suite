@@ -288,7 +288,7 @@ std::string const& cfdObjects::GetUUID() const
     return m_uuid;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdObjects::SetPropertySet( ves::xplorer::data::PropertySetPtr set )
+void cfdObjects::SetPropertySet( propertystore::PropertySetPtr set )
 {
     m_propertySet = set;
 }

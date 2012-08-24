@@ -89,14 +89,14 @@ void VisFeatureMakerBase::Update( const std::string& recordUUID )
     // be instantiated alone.
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VisFeatureMakerBase::UpdateAdvancedSettings( ves::xplorer::data::PropertySet& set )
+void VisFeatureMakerBase::UpdateAdvancedSettings( propertystore::PropertySet& set )
 {
     boost::ignore_unused_variable_warning( set );
     // Does nothing, but don't want pure virtual f'n so that this class *can*
     // be instantiated alone.
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VisFeatureMakerBase::UpdateBaseInformation( xplorer::data::PropertySet& set )
+void VisFeatureMakerBase::UpdateBaseInformation( propertystore::PropertySet& set )
 {
     m_vistabBaseInformation.clear();
     m_commandName.clear();
@@ -107,21 +107,21 @@ void VisFeatureMakerBase::UpdateBaseInformation( xplorer::data::PropertySet& set
     activeScalar->SetDataType( "STRING" );
     activeScalar->SetDataName( std::string( "Active Scalar" ) );
     activeScalar->SetDataString( boost::any_cast<std::string >
-                                 ( set.GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) ) );
+                                 ( set.GetPropertyValue( "DataSet_ScalarData" ) ) );
     m_vistabBaseInformation.push_back( activeScalar );
 
     ves::open::xml::DataValuePairPtr activeVector( new ves::open::xml::DataValuePair() );
     activeVector->SetDataType( "STRING" );
     activeVector->SetDataName( std::string( "Active Vector" ) );
     activeVector->SetDataString( boost::any_cast<std::string >
-                                 ( set.GetPropertyAttribute( "DataSet_VectorData", "enumCurrentString" ) ) );
+                                 ( set.GetPropertyValue( "DataSet_VectorData" ) ) );
     m_vistabBaseInformation.push_back( activeVector );
 
     ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair() );
     activeDataset->SetDataType( "STRING" );
     activeDataset->SetDataName( std::string( "Active Dataset" ) );
     activeDataset->SetDataString( boost::any_cast<std::string >
-                                  ( set.GetPropertyAttribute( "DataSet", "enumCurrentString" ) ) );
+                                  ( set.GetPropertyValue( "DataSet" ) ) );
     m_vistabBaseInformation.push_back( activeDataset );
 
     ves::open::xml::DataValuePairPtr scalarMin( new ves::open::xml::DataValuePair() );
@@ -138,9 +138,7 @@ void VisFeatureMakerBase::UpdateBaseInformation( xplorer::data::PropertySet& set
     // from it.
     xplorer::data::DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", boost::any_cast<std::string >
-                       ( set.GetPropertyAttribute
-                         ( "DataSet", "enumCurrentString" )
-                       ) );
+                       ( set.GetPropertyValue( "DataSet" ) ) );
 
     //Bounding box display value
     ves::open::xml::DataValuePairPtr bbox( new ves::open::xml::DataValuePair() );
@@ -168,7 +166,7 @@ void VisFeatureMakerBase::UpdateBaseInformation( xplorer::data::PropertySet& set
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VisFeatureMakerBase::SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand,
-        xplorer::data::PropertySet& set )
+        propertystore::PropertySet& set )
 {
     UpdateBaseInformation( set );
     ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
@@ -188,7 +186,7 @@ void VisFeatureMakerBase::SendUpdatedSettingsToXplorer( ves::open::xml::CommandP
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( newCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
+void VisFeatureMakerBase::Execute( propertystore::PropertySetPtr set )
 {
     //Sleep here while we wait for the ss viz handler to finish computing the
     //last request from the user
@@ -212,21 +210,30 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     if( set->PropertyExists( "Direction" ) )
     {
         direction =
-            boost::any_cast< std::string >( set->GetPropertyAttribute( "Direction", "enumCurrentString" ) );
+            boost::any_cast< std::string >( set->GetPropertyValue( "Direction" ) );
     }
 
     std::string planes;
     if( set->PropertyExists( "Mode" ) )
     {
-        int mode = boost::any_cast<int>( set->GetPropertyValue( "Mode" ) );
-        if( mode == 0 )
+        planes = set->GetDatumValue< std::string >( "Mode" );
+        if( planes == "Specify a Single Plane" )
         {
             planes = "Single";
         }
-        else if( mode == 1 )
+        else if( planes == "Use All Precomputed Surfaces" )
         {
             planes = "Multiple";
         }
+//        int mode = boost::any_cast<int>( set->GetPropertyValue( "Mode" ) );
+//        if( mode == 0 )
+//        {
+//            planes = "Single";
+//        }
+//        else if( mode == 1 )
+//        {
+//            planes = "Multiple";
+//        }
     }
 
     std::string advanced;
@@ -260,7 +267,7 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     if( direction == "By Surface" )
     {
         const std::string dataSetName =
-            boost::any_cast< std::string >( set->GetPropertyAttribute( "Direction_Surface", "enumCurrentString" ) );
+            boost::any_cast< std::string >( set->GetPropertyValue( "Direction_Surface" ) );
         activeObject->SetDataMapSurfaceName( dataSetName );
     }
 
@@ -271,9 +278,7 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     // from it.
     xplorer::data::DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", boost::any_cast<std::string >
-                       ( set->GetPropertyAttribute
-                         ( "DataSet", "enumCurrentString" )
-                       ) );
+                       ( set->GetPropertyValue( "DataSet" ) ) );
     ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->
     SetDataSetScalarState( boost::any_cast<bool>( dataset.GetPropertyValue( "ScalarBar" ) ) );
 
@@ -284,7 +289,7 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
 
         //activeObject->SetVECommand( CommandManager::instance()->GetXMLCommand() );
         //activeObject->UpdateCommand();
-        //xplorer::data::PropertySetWeakPtr tempPtr = xplorer::data::PropertySetWeakPtr( &set );
+        //propertystore::PropertySetWeakPtr tempPtr = propertystore::PropertySetWeakPtr( &set );
         activeObject->SetPropertySet( set );
         activeObject->UpdateCommand();
 
@@ -318,11 +323,11 @@ void VisFeatureMakerBase::Execute( xplorer::data::PropertySetPtr set )
     //SteadyStateVizHandler::instance()->SetActorsAreReady( true );
 }
 //////////////////////////////////////////////////////////////////
-void VisFeatureMakerBase::SetActiveVector( xplorer::data::PropertySetPtr set )
+void VisFeatureMakerBase::SetActiveVector( propertystore::PropertySetPtr set )
 {
     const std::string activeVector =
         boost::any_cast<std::string >( set->
-                                       GetPropertyAttribute( "DataSet_VectorData", "enumCurrentString" ) );
+                                       GetPropertyValue( "DataSet_VectorData" ) );
 
     if( !activeVector.empty() )
     {
@@ -342,9 +347,9 @@ void VisFeatureMakerBase::SetActiveVector( xplorer::data::PropertySetPtr set )
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////
-void VisFeatureMakerBase::SetActiveScalarAndRange( xplorer::data::PropertySetPtr set )
+void VisFeatureMakerBase::SetActiveScalarAndRange( propertystore::PropertySetPtr set )
 {
-    std::string activeScalarName = boost::any_cast<std::string >( set->GetPropertyAttribute( "DataSet_ScalarData", "enumCurrentString" ) );
+    std::string activeScalarName = boost::any_cast<std::string >( set->GetPropertyValue( "DataSet_ScalarData" ) );
 
     double scalarMin = boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Min" ) );
     double scalarMax = boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Max" ) );
@@ -364,9 +369,9 @@ void VisFeatureMakerBase::SetActiveScalarAndRange( xplorer::data::PropertySetPtr
     activeDataset->GetParent()->ResetScalarBarRange( scalarMin, scalarMax );
 }
 //////////////////////////////////////////////////////////////////
-bool VisFeatureMakerBase::SetActiveDataSet( xplorer::data::PropertySetPtr set )
+bool VisFeatureMakerBase::SetActiveDataSet( propertystore::PropertySetPtr set )
 {
-    std::string dataSetName = boost::any_cast<std::string >( set->GetPropertyAttribute( "DataSet", "enumCurrentString" ) );
+    std::string dataSetName = boost::any_cast<std::string >( set->GetPropertyValue( "DataSet" ) );
     xplorer::data::DatasetPropertySet dataset;
     dataset.LoadByKey( "Filename", dataSetName );
     //const std::string& longFilename = boost::any_cast< std::string >( dataset.GetPropertyValue( "LongFilename" ) );

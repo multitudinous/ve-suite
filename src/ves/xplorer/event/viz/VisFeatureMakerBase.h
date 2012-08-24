@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-#include <ves/xplorer/data/PropertySet.h>
+#include <propertystore/PropertySet.h>
 
 #include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/CommandPtr.h>
@@ -65,19 +65,19 @@ public:
 
 protected:
     ///Called by the update function
-    virtual void UpdateAdvancedSettings( ves::xplorer::data::PropertySet& set );
+    virtual void UpdateAdvancedSettings( propertystore::PropertySet& set );
     ///Called by the update function
-    void UpdateBaseInformation( ves::xplorer::data::PropertySet& set );
+    void UpdateBaseInformation( propertystore::PropertySet& set );
     ///Called by the update function
-    void SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand, ves::xplorer::data::PropertySet& set );
+    void SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand, propertystore::PropertySet& set );
 
-    void Execute( xplorer::data::PropertySetPtr set );
+    void Execute( propertystore::PropertySetPtr set );
 
-    void SetActiveVector( xplorer::data::PropertySetPtr set );
+    void SetActiveVector( propertystore::PropertySetPtr set );
 
-    void SetActiveScalarAndRange( xplorer::data::PropertySetPtr set );
+    void SetActiveScalarAndRange( propertystore::PropertySetPtr set );
 
-    bool SetActiveDataSet( xplorer::data::PropertySetPtr set );
+    bool SetActiveDataSet( propertystore::PropertySetPtr set );
 
     ///The name of the command to send back
     std::string m_commandName;

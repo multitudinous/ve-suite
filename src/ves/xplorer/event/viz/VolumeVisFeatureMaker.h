@@ -57,11 +57,11 @@ public:
 
 protected:
     ///Called by the update function
-    void AddPlane( ves::xplorer::data::PropertySetPtr& set );
+    void AddPlane( propertystore::PropertySetPtr& set );
     ///Called by AddPlane
-    void UpdateContourInformation( ves::xplorer::data::PropertySet& set );
+    void UpdateContourInformation( propertystore::PropertySet& set );
     ///Setup the advanced properties
-    virtual void UpdateAdvancedSettings( ves::xplorer::data::PropertySet& set );
+    virtual void UpdateAdvancedSettings( propertystore::PropertySet& set );
 
 private:
     ///The countour setting data
