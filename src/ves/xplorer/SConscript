@@ -9,6 +9,7 @@ Import('tao_options boost_options vrjuggler_options osgal_options GetPlatform os
 Import('poco_options minerva_options')
 Import('ApplyBulletVars bullet_options osgbullet_options')
 Import( 'switchwire_options' )
+Import( 'propertystore_options' )
 
 xplorerSubdirs = Split("""
     scenegraph
@@ -113,6 +114,7 @@ osgworks_options.apply( lib_env )
 osgbullet_options.apply( lib_env )
 bullet_options.apply( lib_env )
 switchwire_options.apply( lib_env )
+propertystore_options.apply( lib_env )
 
 xerces_options.apply( lib_env )
 
