@@ -150,8 +150,8 @@ void SelectCamera( const std::string& uuid )
     DeviceHandler& deviceHandler = *( DeviceHandler::instance() );
     scenegraph::SceneManager& sceneManager =
         *scenegraph::SceneManager::instance();
-    scenegraph::highlight::HighlightManager& highlightManager =
-        sceneManager.GetHighlightManager();
+    //scenegraph::highlight::HighlightManager& highlightManager =
+    //    sceneManager.GetHighlightManager();
     scenegraph::manipulator::TransformManipulator* sceneManipulator =
         sceneManager.GetManipulatorManager().GetSceneManipulator();
     scenegraph::camera::CameraManager& cameraManager =
@@ -454,21 +454,21 @@ void ShowCameraFrustumGeometry( const std::string& uuid, bool flag )
     cameraObject->ShowFrustumGeometry( flag );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraFocalDistance( const std::string& uuid, double focalDistance )
+void CameraFocalDistance( const std::string&, double )
 {
     // Wasn't hooked up in old code; not sure of status.
 
     //mCameraEntity->SetFocalDistance( value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraFocalRange( const std::string& uuid, double focalRange )
+void CameraFocalRange( const std::string&, double )
 {
     // Wasn't hooked up in old code; not sure of status.
 
     //mCameraEntity->SetFocalRange( value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraMaxCircleOfConfusion( const std::string& uuid, double maxCircle )
+void CameraMaxCircleOfConfusion( const std::string&, double )
 {
     // Wasn't hooked up in old code; not sure of status.
 
