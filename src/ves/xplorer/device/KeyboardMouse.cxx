@@ -61,7 +61,7 @@
 
 // --- vrJuggler Includes --- //
 #include <vrj/vrjParam.h>
-#include <vrj/Kernel/Kernel.h>
+//#include <vrj/Kernel/Kernel.h>
 
 #include <vrj/Draw/OpenGL/Window.h>
 
