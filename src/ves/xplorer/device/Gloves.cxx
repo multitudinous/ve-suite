@@ -536,7 +536,7 @@ void Gloves::TranslateObject()
     //double* wandPosition = GetObjLocation();
     osg::Vec3d offsetFromLastPosition;
 
-    double* tempWorldRot = activeDCS->GetRotationArray();
+    //double* tempWorldRot = activeDCS->GetRotationArray();
     //double worldRot[ 3 ];
     //worldRot[ 0 ] = tempWorldRot[ 0 ];
     //worldRot[ 1 ] = tempWorldRot[ 1 ];

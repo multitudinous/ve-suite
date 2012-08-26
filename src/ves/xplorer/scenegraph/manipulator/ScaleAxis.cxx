@@ -120,13 +120,13 @@ osg::Object* ScaleAxis::cloneType() const
 ////////////////////////////////////////////////////////////////////////////////
 void ScaleAxis::ComputeDeltaTransform()
 {
-    const osg::Vec3d origin = m_localToWorld.getTrans();
-    const osg::Vec3d axis = GetAxis();
+    //const osg::Vec3d origin = m_localToWorld.getTrans();
+    //const osg::Vec3d axis = GetAxis();
 
     //Calculate the axis vector and vectors from the translation point
     //const osg::Vec3d originToAxis = axis - origin;
-    const osg::Vec3d originToStart = m_startProjectedPoint - origin;
-    const osg::Vec3d originToEnd = m_endProjectedPoint - origin;
+    //const osg::Vec3d originToStart = m_startProjectedPoint - origin;
+    //const osg::Vec3d originToEnd = m_endProjectedPoint - origin;
 
     //
     /*double scale( 1.0 );
