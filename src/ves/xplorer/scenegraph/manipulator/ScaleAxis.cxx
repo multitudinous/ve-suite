@@ -124,16 +124,16 @@ void ScaleAxis::ComputeDeltaTransform()
     const osg::Vec3d axis = GetAxis();
 
     //Calculate the axis vector and vectors from the translation point
-    const osg::Vec3d originToAxis = axis - origin;
+    //const osg::Vec3d originToAxis = axis - origin;
     const osg::Vec3d originToStart = m_startProjectedPoint - origin;
     const osg::Vec3d originToEnd = m_endProjectedPoint - origin;
 
     //
-    double scale( 1.0 );
+    /*double scale( 1.0 );
     if( originToStart.x() > 0.0 )
     {
         scale = originToEnd.x() / originToStart.x();
-    }
+    }*/
     //const double D = 1.0 / originToAxis.length();
     //const double projS = ( originToStart * originToAxis ) * D;
     //const double projE = ( originToEnd * originToAxis ) * D;
