@@ -101,10 +101,10 @@ void CADAttribute::SetProgram( ves::open::xml::shader::Program glslProgram )
 void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode )
 {
     DOMElement* currentElement = 0;
-    const XMLCh* name;
+    //const XMLCh* name;
     if( xmlNode->getNodeType() == DOMNode::ELEMENT_NODE )
     {
-        name = xmlNode->getNodeName();
+        //name = xmlNode->getNodeName();
         currentElement = dynamic_cast<DOMElement*>( xmlNode );
     }
 

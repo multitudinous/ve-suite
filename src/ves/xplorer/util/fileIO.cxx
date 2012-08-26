@@ -398,7 +398,7 @@ void fileIO::getTagAndValue( std::string textline, std::string& TagName, std::st
     //mod: extracts TAGNAME from .param file and stores in TagName, same for TagValue
     //post: none
     int i = 0;
-    int j = 0;
+    //int j = 0;
 
     //while(textline[i] != '=')
     while( textline[i] != '=' )
@@ -407,7 +407,7 @@ void fileIO::getTagAndValue( std::string textline, std::string& TagName, std::st
     }
     //TagName[j] = '\0';
 
-    j = 0;
+    //j = 0;
     i++;
     while( textline[i]  >= 33 && textline[i] <= 126 )
     {

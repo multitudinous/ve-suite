@@ -199,12 +199,12 @@ CountsVisitor::apply( osg::LOD& node )
 void
 CountsVisitor::apply( osg::PagedLOD& node )
 {
-    osg::Group* grp = node.getParent( 0 );
-    osg::Group* gPar = NULL;
-    if( grp )
-    {
-        gPar = grp->getParent( 0 );
-    }
+    //osg::Group* grp = node.getParent( 0 );
+    //osg::Group* gPar = NULL;
+    //if( grp )
+    //{
+        //gPar = grp->getParent( 0 );
+    //}
 
     _pagedLods++;
     osg::ref_ptr<osg::Object> rp = ( osg::Object* )&node;

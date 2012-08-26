@@ -391,10 +391,10 @@ void CADNode::_updateNodeType()
 void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
 {
     DOMElement* currentElement = 0;
-    const XMLCh* name;
+    //const XMLCh* name;
     if( xmlNode->getNodeType() == DOMNode::ELEMENT_NODE )
     {
-        name = xmlNode->getNodeName();
+        //name = xmlNode->getNodeName();
         currentElement = dynamic_cast<DOMElement*>( xmlNode );
     }
 

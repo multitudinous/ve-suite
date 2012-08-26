@@ -619,7 +619,7 @@ void CharacterController::Move( btScalar dt )
             head->getPositionPtr()->getPositionDataBuffer();
 #endif
         iter_type cur_frame_iter = headSampleBuffer.rbegin();
-        iter_type prev_frame_iter = cur_frame_iter + 1;
+        //iter_type prev_frame_iter = cur_frame_iter + 1;
         const unsigned int dev_num( head->getUnit() );
         m_vjHeadMat2 = m_vjHeadMat1;
 #if __GADGET_version > 2001000

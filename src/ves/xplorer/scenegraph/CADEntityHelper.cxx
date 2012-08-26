@@ -475,8 +475,8 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         root = dynamic_cast< osgOQ::OcclusionQueryNode* >( tempCADNode.get() );
     #endif*/
 
-    unsigned int occlusionThreshold = 1000;
-    unsigned int visibilityThreshold = 100;
+    //unsigned int occlusionThreshold = 1000;
+    //unsigned int visibilityThreshold = 100;
     bool occlude = false;
 
     if( m_occlusionSettings == "Off" )
@@ -486,20 +486,20 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     else if( m_occlusionSettings == "Low" )
     {
         occlude = true;
-        occlusionThreshold = 10000;
-        visibilityThreshold = 100;
+        //occlusionThreshold = 10000;
+        //visibilityThreshold = 100;
     }
     else if( m_occlusionSettings == "Medium" )
     {
         occlude = true;
-        occlusionThreshold = 5000;
-        visibilityThreshold = 250;
+        //occlusionThreshold = 5000;
+        //visibilityThreshold = 250;
     }
     else if( m_occlusionSettings == "High" )
     {
         occlude = true;
-        occlusionThreshold = 2500;
-        visibilityThreshold = 500;
+        //occlusionThreshold = 2500;
+        //visibilityThreshold = 500;
     }
 
     //if( !root.valid() && occlude )

@@ -134,7 +134,7 @@ std::string CreateGraphDOTVisitor::GetMaterialDataString( osg::Node* node )
         osg::Vec4 ambient =  material->getAmbient( osg::Material::FRONT );
         osg::Vec4 diffuse = material->getDiffuse( osg::Material::FRONT );
         osg::Vec4 specular = material->getSpecular( osg::Material::FRONT );
-        osg::Vec4 emission =  material->getEmission( osg::Material::FRONT );
+        //osg::Vec4 emission =  material->getEmission( osg::Material::FRONT );
         float shininess =  material->getShininess( osg::Material::FRONT );
         materialData << "Material Properties" << "\\n"
                      << "Ambient = " << ambient[ 0 ] << ", "
