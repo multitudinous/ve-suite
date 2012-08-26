@@ -46,7 +46,7 @@
 
 #include <gadget/Devices/KeyboardMouseDevice/InputAreaCocoa.h>
 
-#import <vrj/Kernel/Kernel.h>
+//#import <vrj/Kernel/Kernel.h>
 #import "VESDelegate.h"
 #import "App.h"
 
