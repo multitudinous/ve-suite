@@ -103,7 +103,11 @@ void ChangeWorkingDirectoryEventHandler::Execute( const ves::open::xml::XMLObjec
 #ifdef WIN32
     _chdir( newWorkingDir.c_str() );
 #else
-    chdir( newWorkingDir.c_str() );
+    int returnVal = chdir( newWorkingDir.c_str() );
+    if( returnVal < 0 )
+    {
+        std::cout << "Unable to change the working directory." << std::endl;
+    }
 #endif
     //A new working directory also means that
     //the STORED scenes are no longer valid

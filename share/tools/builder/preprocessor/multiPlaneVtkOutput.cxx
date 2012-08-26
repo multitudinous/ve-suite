@@ -112,7 +112,7 @@ void multiPlaneVtkOutput::writeMultiPlanes( vtkDataSet *unsGrid,
 
    if ( myid < xprocs )
    {
-      int pppx, xrem, begin, end;
+      int pppx, xrem, begin = 0, end = 0;
        pppx = X_cutMaxStepRange/xprocs;
        xrem = X_cutMaxStepRange%xprocs;
        
@@ -169,7 +169,7 @@ void multiPlaneVtkOutput::writeMultiPlanes( vtkDataSet *unsGrid,
 
    if( myid >= xprocs && myid < xprocs + yprocs )
    {
-       int pppy, yrem, begin, end;
+       int pppy, yrem, begin = 0, end = 0;
        pppy = Y_cutMaxStepRange/yprocs;
        yrem = Y_cutMaxStepRange%yprocs;
        if ( myid < xprocs + yrem)
@@ -225,7 +225,7 @@ void multiPlaneVtkOutput::writeMultiPlanes( vtkDataSet *unsGrid,
 
    if( myid >= xprocs + yprocs && myid < xprocs + yprocs + zprocs )
    {
-      int pppz, zrem, begin, end;
+      int pppz, zrem, begin = 0, end = 0;
        pppz = Z_cutMaxStepRange/zprocs;
        zrem = Z_cutMaxStepRange%zprocs;
        if ( myid < xprocs + yprocs + zrem )

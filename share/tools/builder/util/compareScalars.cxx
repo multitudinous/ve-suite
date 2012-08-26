@@ -99,8 +99,8 @@ int main( int argc, char *argv[] )
    transFilter->SetTransform( aTransform );
    std::cout<<"writing out translated grid to tempUGrid"<<std::endl;
    
-   vtkUnstructuredGrid* tempUGrid;
-   tempUGrid = (vtkUnstructuredGrid*) (transFilter->GetOutput() );
+   //vtkUnstructuredGrid* tempUGrid;
+   //tempUGrid = (vtkUnstructuredGrid*) (transFilter->GetOutput() );
    //writeVtkThing( tempUGrid, "transformed.vtk", 1 );
    //now grids are matched up approximately, do the differencing
    //all scalars that are equal to zero, differencing is not done
