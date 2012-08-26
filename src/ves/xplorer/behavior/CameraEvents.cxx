@@ -146,14 +146,14 @@ CameraEvents::~CameraEvents()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
+bool CameraEvents::ProcessMousePress( gadget::Keys, int xPos, int yPos, int )
 {
     m_currX = xPos;
     m_currY = yPos;
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
+bool CameraEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yPos, int )
 {
     if( ( xPos > m_currX + 2 ) || ( xPos < m_currX - 2 ) )
     {
@@ -184,10 +184,10 @@ bool CameraEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yP
                 return true;
             }
 
-            osgUtil::LineSegmentIntersector::Intersections& intersections =
-                scenegraph::TestForIntersections(
-                    *m_lineSegmentIntersector.get(),
-                    *m_sceneManager.GetModelRoot() );
+            //osgUtil::LineSegmentIntersector::Intersections& intersections =
+            //    scenegraph::TestForIntersections(
+            //        *m_lineSegmentIntersector.get(),
+            //        *m_sceneManager.GetModelRoot() );
 
             break;
         }
@@ -234,6 +234,10 @@ bool CameraEvents::ProcessMouseRelease( gadget::Keys buttonKey, int xPos, int yP
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraEvents::ProcessMouseMove( int xPos, int yPos, int zPos, int buttonState )
 {
+    boost::ignore_unused_variable_warning( xPos );
+    boost::ignore_unused_variable_warning( yPos );
+    boost::ignore_unused_variable_warning( zPos );
+
     if( buttonState == 0 )
     {
         if( m_cameraManager.IsEnabled() )

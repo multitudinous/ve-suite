@@ -150,8 +150,9 @@ ManipulatorEvents::~ManipulatorEvents()
 ////////////////////////////////////////////////////////////////////////////////
 bool ManipulatorEvents::ProcessMousePress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
 {
-    LOG_DEBUG( "ProcessMousePress( " << buttonKey << ", " << xPos << ", "
-               << yPos << ", " << buttonState << " )" );
+    
+    //LOG_DEBUG( "ProcessMousePress( " << buttonKey << ", " << xPos << ", "
+    //           << yPos << ", " << buttonState << " )" );
 
     //m_currX = xPos;
     //m_currY = yPos;
