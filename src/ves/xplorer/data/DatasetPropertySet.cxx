@@ -293,8 +293,8 @@ void DatasetPropertySet::Scale( propertystore::PropertyPtr& property )
     bool uniform = boost::any_cast<bool>( GetPropertyValue( "Transform_Scale_Uniform" ) );
     if( uniform )
     {
-        double scale = boost::any_cast<double>( property->GetValue() );
-        std::string name = boost::any_cast<std::string>( property->GetAttribute( "nameInSet" ) );
+        double scale =  property->extract<double>();
+        std::string name = property->GetAttribute( "nameInSet" )->extract<std::string>();
         if( name == "Transform_Scale_X" )
         {
             SetPropertyValue( "Transform_Scale_Y", scale );
