@@ -22,12 +22,13 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -Dswitchwire_DIR="${switchwire_INSTALL_DIR}/lib" )
     CMAKE_PARAMS+=( -Dcrunchstore_DIR="${crunchstore_INSTALL_DIR}/lib" )
 
-    CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.0_x64/bin/qmake.exe" )
     MSVC_CONFIG=RelWithDebInfo
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
+      CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.0/bin/qmake.exe" )
     else
       MSVC_PLATFORM=x64
+      CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.0_x64/bin/qmake.exe" )
     fi
     MSVC_SOLUTION="propertystore.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
