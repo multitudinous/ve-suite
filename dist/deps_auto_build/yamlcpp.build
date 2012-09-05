@@ -12,7 +12,6 @@ PREBUILD_METHOD=cmake
 #FPC_FILE=bullet.fpc
 #SKIP_FPC_INSTALL="no"
 
-CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
 CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
 
 case $PLATFORM in
@@ -24,12 +23,13 @@ case $PLATFORM in
     else
       MSVC_PLATFORM=x64
     fi
-    MSVC_SOLUTION="yaml-cpp.sln"
-    #MSVC_PROJECT_NAMES+=( INSTALL )
+    MSVC_SOLUTION="YAML_CPP.sln"
     POST_BUILD_METHOD="find . -name \*.pdb -exec cp {} ${INSTALL_DIR}/lib/. \; -print"
     ;;
   Darwin)
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
   Linux)
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
 esac

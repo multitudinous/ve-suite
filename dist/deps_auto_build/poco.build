@@ -56,12 +56,21 @@ case $PLATFORM in
     #PageCompiler/File2Page
     MSVC_SOLUTION+=( "${SOURCE_DIR}/PageCompiler/File2Page/File2Page${PLATFORM_SUFFIX}_vs90.sln" )
     
-    POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && \
+    if [ ${ARCH} = "32-bit" ]; then
+        POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && \
+                    cp -R ../Zip/include ${INSTALL_DIR}/. && cp -R ../Foundation/include ${INSTALL_DIR}/. && \
+                    cp -R ../XML/include ${INSTALL_DIR}/. && cp -R ../Util/include ${INSTALL_DIR}/. && \
+                    cp -R ../Net/include ${INSTALL_DIR}/. && cp -R ../Data/include ${INSTALL_DIR}/. && \
+                    cp -R ../Data/SQLite/include ${INSTALL_DIR}/. && \
+                    cp -R -T ../bin ${INSTALL_DIR}/bin && cp -R -T ../lib ${INSTALL_DIR}/lib"
+    else
+        POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && \
                     cp -R ../Zip/include ${INSTALL_DIR}/. && cp -R ../Foundation/include ${INSTALL_DIR}/. && \
                     cp -R ../XML/include ${INSTALL_DIR}/. && cp -R ../Util/include ${INSTALL_DIR}/. && \
                     cp -R ../Net/include ${INSTALL_DIR}/. && cp -R ../Data/include ${INSTALL_DIR}/. && \
                     cp -R ../Data/SQLite/include ${INSTALL_DIR}/. && \
                     cp -R -T ../bin64 ${INSTALL_DIR}/bin && cp -R -T ../lib64 ${INSTALL_DIR}/lib"
+    fi
     
     SKIP_FPC_INSTALL="no"
     FPC_FILE=POCO.fpc
