@@ -2,18 +2,35 @@ PACKAGE_NAME=kibitz
 BASE_DIR="${DEV_BASE_DIR}/kibitz"
 
 SOURCE_RETRIEVAL_METHOD=git
-SOURCE_URL=https://github.com/murphybytes/kibitz.git
+SOURCE_URL=https://code.google.com/p/kibitz/
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
 INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+PREBUILD_METHOD=cmake
+
+CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
+
+CMAKE_PARAMS+=( -DBOOST_ROOT="${BOOST_INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DGLOG_ROOT="${glog_INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DYAMLCPP_ROOT="${yamlcpp_INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DZMQ_ROOT="${zmq_INSTALL_DIR}" )
 
 case $PLATFORM in
   Windows)
-    unset PROJ_STR
-    unset BUILD_TARGET
+    #unset PROJ_STR
+    #unset BUILD_TARGET
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    MSVC_CONFIG=RelWithDebInfo
+    if [ ${ARCH} = "32-bit" ]; then
+      MSVC_PLATFORM=Win32
+    else
+      MSVC_PLATFORM=x64
+    fi
+    MSVC_SOLUTION="kibitz.sln"
     ;;
   Darwin | Linux)
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     ;;
 esac
 
