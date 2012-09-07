@@ -55,15 +55,19 @@ public:
 
     double GetSimulationTime();
 
-    int GetNumBlocks();
-
     void SetParameter( std::string blockName, std::string parameterName, std::string newValue );
 
     std::string GetParameter( std::string blockName, std::string parameterName );
     
     void ReadBlockNames();
 
-    void ReadParameterNames( int blockNumber );
+    int GetNumBlocks();
+
+    std::vector<std::string> GetBlockNames();
+
+    std::string GetBlockName( unsigned int );
+
+    std::vector<std::string> GetParameterNames( int blockNumber );
 
 private:
     std::string modelName;

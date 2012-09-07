@@ -147,7 +147,7 @@ void simulinkModel::ReadBlockNames()
     engEvalString( this->ep, this->matlabCommand.c_str() );
 
     this->numBlocks = GetResultFromMatlabCommand( "length(blks);" );
-    std::cout << "numBlocks = " << this->numBlocks << std::endl;
+    //std::cout << "numBlocks = " << this->numBlocks << std::endl;
 
     for( int i=1; i<= this->numBlocks; i++ )
     {
@@ -160,41 +160,94 @@ void simulinkModel::ReadBlockNames()
     }
 }
 
-void simulinkModel::ReadParameterNames( int blockNumber )
+int simulinkModel::GetNumBlocks()
 {
-    std::string blockName = this->blockNameList[ blockNumber ];
-
-    // get list of parameter names in a 1x1 struct
-    this->matlabCommand = "parameters = fieldnames(get_param('" + blockName + "','dialogparameters'));";
-    engEvalString( this->ep, this->matlabCommand.c_str() );
-
-    int numParameters = GetResultFromMatlabCommand( "length(parameters);" );
-    std::cout << blockName << ", numParameters = " << numParameters << std::endl;
-
-    for( int j=1; j<= numParameters; j++ )
+    if( this->blockNameList.empty() )
     {
-        std::stringstream jj;
-        jj << j;
+        this->ReadBlockNames();
+    }
 
-        std::string parameterName = GetStringFromMatlabCommand( "parameters{" + jj.str() + "};" );
+    return this->numBlocks;
+}
 
-        // Something wierd about Scope block. Parameters are not accessed in the way other blocks are.
-        // Workaround: For Scope block, just list parameters without trying to get parameter values.
-        if( blockName.substr(blockName.size()-5,5) == "Scope")
-        {
-            std::cout << "   " << parameterName << std::endl;
-        }
-        else
-        {
-            std::string parameterValue = GetStringFromMatlabCommand( "get_param('" + blockName + "','" + parameterName + "');" );
-            std::cout << "   " << parameterName << " = " << parameterValue << std::endl;
-        }
+std::vector<std::string> simulinkModel::GetBlockNames()
+{
+    if( this->blockNameList.empty() )
+    {
+        this->ReadBlockNames();
+    }
+
+    return this->blockNameList;
+}
+
+std::string simulinkModel::GetBlockName( unsigned int blockNumber )
+{
+    if( this->blockNameList.empty() )
+    {
+        this->ReadBlockNames();
+    }
+
+    if( this->blockNameList.size() > blockNumber )
+    {
+        return this->blockNameList.at( blockNumber );
+    }
+    else
+    {
+        std::cerr << "ERROR: no blockName for blockNumber = " << blockNumber << std::endl;
+        return "";
     }
 }
 
-int simulinkModel::GetNumBlocks()
+std::vector<std::string> simulinkModel::GetParameterNames( int blockNumber )
 {
-    return this->numBlocks;
+    std::vector<std::string> parameterNameList;
+
+    if( this->blockNameList.empty() )
+    {
+        this->ReadBlockNames();
+    }
+
+    if( this->blockNameList.size() > blockNumber )
+    {
+        std::string blockName = this->blockNameList[ blockNumber ];
+
+        // get list of parameter names in a 1x1 struct
+        this->matlabCommand = "parameters = fieldnames(get_param('" + blockName + "','dialogparameters'));";
+        engEvalString( this->ep, this->matlabCommand.c_str() );
+
+        int numParameters = GetResultFromMatlabCommand( "length(parameters);" );
+        //std::cout << blockName << ", numParameters = " << numParameters << std::endl;
+
+        for( int j=1; j<= numParameters; j++ )
+        {
+            std::stringstream jj;
+            jj << j;
+
+            std::string parameterName = GetStringFromMatlabCommand( "parameters{" + jj.str() + "};" );
+
+            parameterNameList.push_back( parameterName );
+ 
+/* 
+            // Something wierd about Scope block. Parameters are not accessed in the way other blocks are.
+            // Workaround: For Scope block, just list parameters without trying to get parameter values.
+            if( blockName.substr(blockName.size()-5,5) == "Scope")
+            {
+                std::cout << "   " << parameterName << std::endl;
+            }
+            else
+            {
+                std::string parameterValue = GetStringFromMatlabCommand( "get_param('" + blockName + "','" + parameterName + "');" );
+                std::cout << "   " << parameterName << " = " << parameterValue << std::endl;
+            }
+*/
+        }
+    }
+    else
+    {
+        std::cerr << "ERROR: no blockName for blockNumber = " << blockNumber << std::endl;
+    }
+
+    return parameterNameList;
 }
 
 void simulinkModel::SetParameter( std::string blockName, std::string parameterName, std::string newValue )

@@ -44,6 +44,9 @@ void wait( int seconds )
     while( clock() < endwait ) {}
 }
 
+// Test model ves_test.mdl uses Simulink Real Time Execution function available at matlabCentral-fileExchange.
+// http://www.mathworks.com/matlabcentral/fileexchange/21908-simulink%C2%AE-real-time-execution
+
 int main( int argc, char** argv )
 {
     if( argc != 2 )
@@ -80,11 +83,18 @@ int main( int argc, char** argv )
     while( status == "running" );
 
     // Get a list of the blocks in the system
-    model->ReadBlockNames();
+    std::vector<std::string> blockNames = model->GetBlockNames();
+    std::cout << "numBlocks = " << blockNames.size() << std::endl;
     
-    for( int i=0; i< model->GetNumBlocks(); i++ )
+    for( int block=0; block< model->GetNumBlocks(); block++ )
     {
-        model->ReadParameterNames( i );
+        std::cout << model->GetBlockName( block ) << std::endl;
+        std::vector<std::string> parameterNames = model->GetParameterNames( block );
+        int numParameters = parameterNames.size();
+        for( int i=1; i<= numParameters; i++ )
+        {
+            std::cout << "   " << parameterNames[ i ] << std::endl;
+        }
     }
 
     // Test of setting existing parameter...
