@@ -22,9 +22,11 @@ case $PLATFORM in
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
       #PLATFORM_SUFFIX=
+      BUILD_STR="Release"
     else
       MSVC_PLATFORM=x64
       PLATFORM_SUFFIX=_x64
+      BUILD_STR="x64/Release"
     fi
 
     MSVC_SOLUTION+=( "${SOURCE_DIR}/google-glog.sln" )
@@ -32,9 +34,9 @@ case $PLATFORM in
     #POST_BUILD_METHOD="find . -name \*.pdb -exec cp {} ${INSTALL_DIR}/lib/. \; -print"
     POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && mkdir -p ${INSTALL_DIR}/include && mkdir -p ${INSTALL_DIR}/lib && \
                 cp -R ../src/windows/glog ${INSTALL_DIR}/include/. && \
-                cp ../x64/Release/*.lib ${INSTALL_DIR}/lib/. && \
-                cp ../x64/Release/*.pdb ${INSTALL_DIR}/lib/. && \
-                cp ../x64/Release/*.dll ${INSTALL_DIR}/lib/."
+                cp ../${BUILD_STR}/*.lib ${INSTALL_DIR}/lib/. && \
+                cp ../${BUILD_STR}/*.pdb ${INSTALL_DIR}/lib/. && \
+                cp ../${BUILD_STR}/*.dll ${INSTALL_DIR}/lib/."
     ;;
   Darwin |  Linux)
     BUILD_TARGET="install"
