@@ -9,8 +9,6 @@ SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
 INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
 PREBUILD_METHOD=cmake
-#FPC_FILE=bullet.fpc
-#SKIP_FPC_INSTALL="no"
 
 case $PLATFORM in
   Windows)
@@ -37,6 +35,8 @@ case $PLATFORM in
                 cp ../${BUILD_STR}/*.lib ${INSTALL_DIR}/lib/. && \
                 cp ../${BUILD_STR}/*.pdb ${INSTALL_DIR}/lib/. && \
                 cp ../${BUILD_STR}/*.dll ${INSTALL_DIR}/lib/."
+    FPC_FILE=glog.fpc
+    SKIP_FPC_INSTALL="no"
     ;;
   Darwin |  Linux)
     BUILD_TARGET="install"

@@ -1,0 +1,14 @@
+prefix=${fp_file_cwd}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include 
+
+Name: glog
+Description: glog release pre-compiled for VES
+Provides: glog
+Requires:
+Version: 0.3.2
+Libs: /libpath:"${libdir}" libglog.lib
+Cflags: /I"${includedir}"
+Arch: noarch
+
