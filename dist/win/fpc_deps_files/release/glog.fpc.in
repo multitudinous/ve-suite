@@ -5,7 +5,7 @@ includedir=${prefix}/include
 
 Name: glog
 Description: glog release pre-compiled for VES
-Provides: glog
+Provides: glog libglog
 Requires:
 Version: 0.3.2
 Libs: /libpath:"${libdir}" libglog.lib

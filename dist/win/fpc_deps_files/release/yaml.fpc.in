@@ -5,7 +5,7 @@ includedir=${prefix}/include
 
 Name: yaml
 Description: yaml release pre-compiled for VES
-Provides: yaml
+Provides: yaml yaml-cpp
 Requires:
 Version: 0.3.0
 Libs: /libpath:"${libdir}" libyaml-cppmd.lib
