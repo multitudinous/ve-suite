@@ -21,6 +21,10 @@ case $PLATFORM in
     #unset PROJ_STR
     #unset BUILD_TARGET
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+
+    CMAKE_PARAMS+=( -DGLOG_INCLUDE_DIRS="${glog_INSTALL_DIR}/include" )
+    CMAKE_PARAMS+=( -DGLOG_LIBRARIES="${glog_INSTALL_DIR}/lib/libglog.lib" )
+
     MSVC_CONFIG=RelWithDebInfo
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
