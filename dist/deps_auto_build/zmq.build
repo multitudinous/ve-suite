@@ -3,6 +3,7 @@ BASE_DIR="${DEV_BASE_DIR}/zmq"
 
 SOURCE_RETRIEVAL_METHOD=git
 SOURCE_URL=https://github.com/zeromq/libzmq.git
+SOURCE_URL=https://github.com/zeromq/zeromq3-x.git
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
@@ -29,6 +30,8 @@ case $PLATFORM in
                 cp -R ../include ${INSTALL_DIR}/. && \
                 cp ../lib/* ${INSTALL_DIR}/lib/. && \
                 cp -R ../bin ${INSTALL_DIR}/."
+    SKIP_FPC_INSTALL="no"
+    FPC_FILE=zmq.fpc
     ;;
   Darwin | Linux)
     BUILD_TARGET="install"
