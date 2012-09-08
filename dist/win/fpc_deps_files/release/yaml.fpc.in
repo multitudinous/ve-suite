@@ -1,0 +1,13 @@
+prefix=${fp_file_cwd}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include 
+
+Name: yaml
+Description: yaml release pre-compiled for VES
+Provides: yaml
+Requires:
+Version: 0.3.0
+Libs: /libpath:"${libdir}" libyaml-cppmd.lib
+Cflags: /I"${includedir}"
+Arch: noarch
