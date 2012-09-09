@@ -1,0 +1,4 @@
+/stuff/data/VE_Suite_Deps/astyle/install/bin/astyle --options=/stuff/data/ves_trunk/dist/astyle/ve-suite.astylerc -R *.cpp
+/stuff/data/VE_Suite_Deps/astyle/install/bin/astyle --options=/stuff/data/ves_trunk/dist/astyle/ve-suite.astylerc -R *.hpp
+/stuff/data/VE_Suite_Deps/astyle/astyle-clean.sh . astyle_out
+
