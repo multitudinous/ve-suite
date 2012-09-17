@@ -3,7 +3,7 @@ BASE_DIR="${DEV_BASE_DIR}/poco"
 
 SOURCE_RETRIEVAL_METHOD=svn
 SOURCE_URL=https://poco.svn.sourceforge.net/svnroot/poco/poco/trunk
-SOURCE_REVISION=1885
+SOURCE_REVISION=2039
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
@@ -21,9 +21,13 @@ case $PLATFORM in
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
       #PLATFORM_SUFFIX=
+      INSTALL_DIR_BIN=bin
+      INSTALL_DIR_LIB=lib
     else
       MSVC_PLATFORM=x64
       PLATFORM_SUFFIX=_x64
+      INSTALL_DIR_BIN=bin64
+      INSTALL_DIR_LIB=lib64
     fi
 
     #CppUnit
@@ -52,6 +56,22 @@ case $PLATFORM in
     #MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/MySQL/MySQL${PLATFORM_SUFFIX}_vs90.sln" )
     #Zip
     MSVC_SOLUTION+=( "${SOURCE_DIR}/Zip/Zip${PLATFORM_SUFFIX}_vs90.sln" )
+
+    POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && \
+      cp -R ../Foundation/include ${INSTALL_DIR}/. && \
+      cp -R ../XML/include ${INSTALL_DIR}/. && \
+      cp -R ../JSON/include ${INSTALL_DIR}/. && \
+      cp -R ../Util/include ${INSTALL_DIR}/. && \
+      cp -R ../Net/include ${INSTALL_DIR}/. && \
+      cp -R ../Data/include ${INSTALL_DIR}/. && \
+      cp -R ../Data/SQLite/include ${INSTALL_DIR}/. && \
+      cp -R ../Data/ODBC/include ${INSTALL_DIR}/. && \
+      cp -R ../Zip/include ${INSTALL_DIR}/. && \
+      cp -R -T ../${INSTALL_DIR_BIN} ${INSTALL_DIR}/bin && \
+      cp -R -T ../${INSTALL_DIR_LIB} ${INSTALL_DIR}/lib"
+
+    SKIP_FPC_INSTALL="no"
+    FPC_FILE=POCO.fpc
     ;;
   Darwin)
     PREBUILD_METHOD=configure
