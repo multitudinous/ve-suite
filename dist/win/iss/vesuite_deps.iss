@@ -63,6 +63,10 @@ Name: bdfx; Description: backdropFX; Types: full
 Name: bullet; Description: Bullet; Types: full
 Name: osgbullet; Description: osgBullet; Types: full
 Name: osgephemeris; Description: osgEphemeris; Types: full
+Name: switchwire; Description: switchwire; Types: full
+Name: propertystore; Description: propertystore; Types: full
+Name: crunchstore; Description: crunchstore; Types: full
+Name: storyteller; Description: storyteller; Types: full
 Name: depsbuildenv; Description: Headers and Libs
 
 [Files]
@@ -125,9 +129,9 @@ Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\lib\*.plug; DestDir: {app}\lib; Fla
 Source: {#DEPENDSINSTALLHOME}\{#MINERVAHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion skipifsourcedoesntexist; Components: minerva
 
 ; POCO Files
-Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
-Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist; Components: poco; Languages: 
+Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#POCOHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: poco; Languages: 
 
 ; osgWorks Files
 Source: {#DEPENDSINSTALLHOME}\{#OSGWORKSHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
@@ -163,6 +167,34 @@ Source: {#DEPENDSINSTALLHOME}\{#OSGEPHEMERISHOME}\lib\*.lib; DestDir: {app}\lib;
 Source: {#DEPENDSINSTALLHOME}\{#OSGEPHEMERISHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#OSGEPHEMERISHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: osgephemeris
 Source: {#DEPENDSINSTALLHOME}\{#OSGEPHEMERISHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs; Components: osgephemeris; Languages: 
+
+; switchwire Files
+Source: {#DEPENDSINSTALLHOME}\{#SWITCHWIREHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#SWITCHWIREHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#SWITCHWIREHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#SWITCHWIREHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: switchwire
+Source: {#DEPENDSINSTALLHOME}\{#SWITCHWIREHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs; Components: switchwire; Languages: 
+
+; crunchstore Files
+Source: {#DEPENDSINSTALLHOME}\{#CRUNCHSTOREHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#CRUNCHSTOREHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#CRUNCHSTOREHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#CRUNCHSTOREHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: crunchstore
+Source: {#DEPENDSINSTALLHOME}\{#CRUNCHSTOREHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs; Components: crunchstore; Languages: 
+
+; propertystore Files
+Source: {#DEPENDSINSTALLHOME}\{#PROPERTYSTOREHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#PROPERTYSTOREHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#PROPERTYSTOREHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#PROPERTYSTOREHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: propertystore
+Source: {#DEPENDSINSTALLHOME}\{#PROPERTYSTOREHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs; Components: propertystore; Languages: 
+
+; storyteller Files
+Source: {#DEPENDSINSTALLHOME}\{#STORYTELLERHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#STORYTELLERHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#STORYTELLERHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#STORYTELLERHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: storyteller
+Source: {#DEPENDSINSTALLHOME}\{#STORYTELLERHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs; Components: storyteller; Languages: 
 
 ; Qt Files
 ;Source: {#QTHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
