@@ -639,7 +639,7 @@ std::cout << computerLocalName << std::endl;
         vpr::McastReq data = vpr::McastReq( remote_addr, vpr::InetAddr::AnyAddr);
         sock.addMcastMember( data );
         
-        const vpr::Uint32 bufferSize = 1200;
+        const vpr::Uint32 bufferSize = 66560;
         char* recv_buf = new char[bufferSize];
         memset(recv_buf, '\0', bufferSize );//sizeof(recv_buf));
 
