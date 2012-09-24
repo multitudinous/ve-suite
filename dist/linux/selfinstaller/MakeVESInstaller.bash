@@ -74,9 +74,9 @@ function postinstall()
     var_assign_string=\"\$SETENV_COMMAND LD_LIBRARY_PATH\$SETENV_DELIMITER\"
     if [ -n \"\$LD_LIBRARY_PATH\" ]
     then
-        var_value_string='\$VES_PREFIX/lib:\$VES_PREFIX/lib/vtk-5.8:\$VES_PREFIX/lib64:\$LD_LIBRARY_PATH'
+        var_value_string='\$VES_PREFIX/lib:\$VES_PREFIX/lib/vtk-5.10:\$VES_PREFIX/lib64:\$LD_LIBRARY_PATH'
     else
-        var_value_string='\$VES_PREFIX/lib:\$VES_PREFIX/lib/vtk-5.8:\$VES_PREFIX/lib64'
+        var_value_string='\$VES_PREFIX/lib:\$VES_PREFIX/lib/vtk-5.10:\$VES_PREFIX/lib64'
     fi
 
     echo \$var_assign_string\$var_value_string >> \$env_file_path
