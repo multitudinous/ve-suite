@@ -23,6 +23,7 @@ CameraTab::CameraTab(QWidget *parent) :
     ui(new Ui::CameraTab),
     m_monotonicCount( 0 ),
     m_notifyCameraChange( true ),
+    m_cameraWindowEnabled( false ),
     m_logger( Poco::Logger::get( "conductor.CameraTab" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
@@ -33,7 +34,7 @@ CameraTab::CameraTab(QWidget *parent) :
     {
         m_overallSet->EnableLiveProperties( true );
         m_overallSet->SetPropertyValue( "DisableCameraTools", false );
-        m_overallSet->SetPropertyValue( "CameraWindow", true );
+        m_overallSet->SetPropertyValue( "CameraWindow", false );
 
         ui->m_overallSettings->ParsePropertySet( m_overallSet );
         ui->m_overallSettings->show();
