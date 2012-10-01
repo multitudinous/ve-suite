@@ -20,7 +20,7 @@ CMAKE_PARAMS+=( -DLIBXML2_INCLUDE_DIR="${VTK_INSTALL_DIR}/include/${VTK_VERSION_
 CMAKE_PARAMS+=( -DFREETYPE_INCLUDE_DIR_ft2build="${VTK_INSTALL_DIR}/include/${VTK_VERSION_DIR}/vtkfreetype/include;${VTK_INSTALL_DIR}/include/${VTK_VERSION_DIR}" )
 CMAKE_PARAMS+=( -DFREETYPE_INCLUDE_DIR_freetype2="${VTK_INSTALL_DIR}/include/${VTK_VERSION_DIR}/vtkfreetype/include;${VTK_INSTALL_DIR}/include/${VTK_VERSION_DIR}" )
 
-CMAKE_PARAMS+=( -DINVENTOR_INCLUDE_DIR="${COIN3D_INSTALL_DIR}/include" )
+#CMAKE_PARAMS+=( -DINVENTOR_INCLUDE_DIR="${COIN3D_INSTALL_DIR}/include" )
 
 case $PLATFORM in
   Windows)
@@ -68,7 +68,7 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DZLIB_LIBRARY="/usr/lib/libz.dylib" )
     #CMAKE_PARAMS+=( -DPNG_PNG_INCLUDE_DIR="${PNG_INSTALL_DIR}/include" )
     #CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng.a" )
-    CMAKE_PARAMS+=( -DINVENTOR_LIBRARY_RELEASE="${COIN3D_INSTALL_DIR}/lib/libCoin.dylib" )
+    #CMAKE_PARAMS+=( -DINVENTOR_LIBRARY_RELEASE="${COIN3D_INSTALL_DIR}/lib/libCoin.dylib" )
     if [ -d "/Applications/Autodesk/FBXSDK20102" ]; then
         CMAKE_PARAMS+=( -DFBX_ROOT="/Applications/Autodesk/FBXSDK20102" )
         CMAKE_PARAMS+=( -DFBX_LIBRARY="/Applications/Autodesk/FBXSDK20102/lib/libfbxsdk_gcc4_ub.a" )

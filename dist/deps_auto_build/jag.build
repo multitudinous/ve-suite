@@ -20,7 +20,7 @@ CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )
 CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG30_INSTALL_DIR}" )
 
 CMAKE_PARAMS+=( -DGGTInstallType="Alternate Install Location" )
-CMAKE_PARAMS+=( -DGGTInstallLocation="${GMTL_INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DGGTInstallLocation="${GMTL_TRUNK_INSTALL_DIR}" )
 
 CMAKE_PARAMS+=( -DBoost_LIBRARY_DIRS="${BOOST_INSTALL_DIR}/lib" )
 CMAKE_PARAMS+=( -DBOOST_LIBRARYDIR="${BOOST_INSTALL_DIR}/lib" )
@@ -28,8 +28,14 @@ CMAKE_PARAMS+=( -DBOOST_ROOT="${BOOST_INSTALL_DIR}" )
 CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
 
 CMAKE_PARAMS+=( -DDESIRED_QT_VERSION="4" )
-CMAKE_PARAMS+=( -DJAG3D_USE_GL3W=ON )
 CMAKE_PARAMS+=( -DJAG3D_USE_BOOST_POINTERS=ON )
+
+CMAKE_PARAMS+=( -DJAG3D_USE_VRJ=ON )
+CMAKE_PARAMS+=( -DGGTInstallType="Alternate Install Location" )
+CMAKE_PARAMS+=( -DCppDOMInstallType="Alternate Install Location" )
+CMAKE_PARAMS+=( -DCppDOMInstallLocation="${CPPDOM_INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DVrjInstallType="Alternate Install Location" )
+CMAKE_PARAMS+=( -DCppDOMInstallLocation="${CPPDOM_INSTALL_DIR}" )
 
 case $PLATFORM in
   Windows)
@@ -52,6 +58,7 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DPOCO_Util_LIBRARY="${POCO_INSTALL_DIR}/../${POCO_LIBDIR}/PocoUtil.lib" )
     CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.0/bin/qmake.exe" )
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/${BOOST_VERSION_DIR}" )
+    CMAKE_PARAMS+=( -DJAG3D_USE_GL3W=ON )
 
     MSVC_SOLUTION="Jag3D.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
@@ -59,14 +66,18 @@ case $PLATFORM in
   Darwin)
     CMAKE_PARAMS+=( -DPOCOInstallType="Alternate Install Location" )
     CMAKE_PARAMS+=( -DPOCOInstallLocation="${POCO_INSTALL_DIR}" )
-    CMAKE_PARAMS+=( -DGGT_INCLUDE_DIR="${GMTL_INSTALL_DIR}/include/gmtl-0.6.1" )
+    CMAKE_PARAMS+=( -DGGT_DIR="${GMTL_TRUNK_INSTALL_DIR}/include/gmtl-0.7.0" )
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
+    CMAKE_PARAMS+=( -DPOCO_Util_LIBRARY="${POCO_INSTALL_DIR}/lib/libPocoUtil.dylib" )
+    CMAKE_PARAMS+=( -DJAG3D_USE_GL3W=OFF )
+    
     ;;
   Linux)
     CMAKE_PARAMS+=( -DPOCOInstallType="Alternate Install Location" )
     CMAKE_PARAMS+=( -DPOCOInstallLocation="${POCO_INSTALL_DIR}" )
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
-    CMAKE_PARAMS+=( -DGGT_INCLUDE_DIR="${GMTL_INSTALL_DIR}/include/gmtl-0.6.1" )
+    CMAKE_PARAMS+=( -DGGT_DIR="${GMTL_TRUNK_INSTALL_DIR}/include/gmtl-0.7.0" )
+    CMAKE_PARAMS+=( -DJAG3D_USE_GL3W=OFF)
 
     CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
     CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
