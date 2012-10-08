@@ -1,12 +1,12 @@
 Model {
-  Name			  "test"
+  Name			  "ves_test"
   Version		  7.8
   MdlSubVersion		  0
   GraphicalInterface {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.4"
+    ComputedModelVersion    "1.5"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -27,9 +27,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "steve"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Sun Nov 20 18:53:14 2011"
-  RTWModifiedTimeStamp	  243713472
-  ModelVersionFormat	  "1.%<AutoIncrement:4>"
+  LastModifiedDate	  "Sun Oct 07 23:14:34 2012"
+  RTWModifiedTimeStamp	  271552105
+  ModelVersionFormat	  "1.%<AutoIncrement:5>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -67,6 +67,7 @@ Model {
     $ObjectID		    1
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
     model_		    "test"
+    signals_		    []
     overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
@@ -696,7 +697,7 @@ Model {
     }
   }
   System {
-    Name		    "test"
+    Name		    "ves_test"
     Location		    [1081, 188, 1422, 349]
     Open		    on
     ModelBrowserVisibility  off
@@ -718,7 +719,7 @@ Model {
       SID		      "7"
       Position		      [140, 60, 170, 90]
       ZOrder		      -11
-      Gain		      "4"
+      Gain		      "2"
       ParamDataTypeStr	      "Inherit: Inherit via internal rule"
       OutDataTypeStr	      "Inherit: Inherit via internal rule"
       SaturateOnIntegerOverflow	off
@@ -732,7 +733,7 @@ Model {
       ZOrder		      -3
       Floating		      off
       Location		      [775, 424, 1425, 698]
-      Open		      on
+      Open		      off
       NumInputPorts	      "1"
       List {
 	ListType		AxesTitles

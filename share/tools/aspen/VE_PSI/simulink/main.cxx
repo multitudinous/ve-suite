@@ -89,12 +89,22 @@ int main( int argc, char** argv )
     for( int block=0; block< model->GetNumBlocks(); block++ )
     {
         std::cout << model->GetBlockName( block ) << std::endl;
+        
         std::vector<std::string> parameterNames = model->GetParameterNames( block );
+        /*
+        std::cout << "parameterNames = " << &parameterNames << std::endl;
+        
         int numParameters = parameterNames.size();
+        if( numParameters == 0 )
+        {
+            continue;
+        }
+
         for( int i=1; i<= numParameters; i++ )
         {
             std::cout << "   " << parameterNames[ i ] << std::endl;
         }
+        */
     }
 
     // Test of setting existing parameter...

@@ -198,7 +198,7 @@ std::string simulinkModel::GetBlockName( unsigned int blockNumber )
     }
 }
 
-std::vector<std::string> simulinkModel::GetParameterNames( int blockNumber )
+std::vector<std::string> simulinkModel::GetParameterNames( unsigned int blockNumber )
 {
     std::vector<std::string> parameterNameList;
 
@@ -224,10 +224,8 @@ std::vector<std::string> simulinkModel::GetParameterNames( int blockNumber )
             jj << j;
 
             std::string parameterName = GetStringFromMatlabCommand( "parameters{" + jj.str() + "};" );
-
             parameterNameList.push_back( parameterName );
  
-/* 
             // Something wierd about Scope block. Parameters are not accessed in the way other blocks are.
             // Workaround: For Scope block, just list parameters without trying to get parameter values.
             if( blockName.substr(blockName.size()-5,5) == "Scope")
@@ -239,7 +237,6 @@ std::vector<std::string> simulinkModel::GetParameterNames( int blockNumber )
                 std::string parameterValue = GetStringFromMatlabCommand( "get_param('" + blockName + "','" + parameterName + "');" );
                 std::cout << "   " << parameterName << " = " << parameterValue << std::endl;
             }
-*/
         }
     }
     else

@@ -67,7 +67,7 @@ public:
 
     std::string GetBlockName( unsigned int );
 
-    std::vector<std::string> GetParameterNames( int blockNumber );
+    std::vector<std::string> GetParameterNames( unsigned int blockNumber );
 
 private:
     std::string modelName;
@@ -85,7 +85,6 @@ private:
     std::string GetStringFromMatlabCommand( std::string matlabCommand );
 
     std::string GetSimulinkString( std::string paramString );
-
 };
 #endif
 
