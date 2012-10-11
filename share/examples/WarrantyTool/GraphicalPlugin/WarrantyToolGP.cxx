@@ -1872,9 +1872,12 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
         m_groupedTextTextures->AddTextTexture( partNumber, tempText );
         
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-        highlight( m_cadRootNode, partNumber, true, true, 
-                  nullGlowColor );
-        
+            highlight( m_cadRootNode, partNumber, true, true, nullGlowColor );
+
+        if( highlight.GetFoundNodes().size() == 0 )
+        {
+            std::cout << "Did not find any instances of " << partNumber << std::end;
+        }
         more = rs.moveNext();
     }
     if( m_currentStatement )
