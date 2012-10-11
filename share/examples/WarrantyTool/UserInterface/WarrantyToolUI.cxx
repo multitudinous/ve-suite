@@ -47,6 +47,7 @@ WarrantyToolUI::WarrantyToolUI()
     mPluginName = wxT( "DeereAnalytics" );
 
     wxImage my_img( _("Icons/TractorIcon.png") );
+    iconFilename = "Icons/TractorIcon.png";
     SetImage( my_img );
     mDescription = wxT( "The generic tool to display product data." );
 }
