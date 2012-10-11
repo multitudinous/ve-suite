@@ -607,9 +607,11 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
             _loadedCAD[fileName] = newAssembly;
             try
             {   
-                CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( _rootNode );
-                tempAssembly->GetNumberOfChildren();
-                SetRootCADNode( newAssembly );
+                //CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( _rootNode );
+                //tempAssembly->GetNumberOfChildren();
+                CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( _activeCADNode );
+                tempAssembly->AddChild( newAssembly );
+                SetRootCADNode( _rootNode );
             }
             catch( ... )
             {
