@@ -1876,7 +1876,7 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
 
         if( highlight.GetFoundNodes().size() == 0 )
         {
-            std::cout << "Did not find any instances of " << partNumber << std::end;
+            std::cout << "Did not find any instances of " << partNumber << std::endl;
         }
         more = rs.moveNext();
     }
