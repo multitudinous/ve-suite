@@ -39,6 +39,9 @@
 #include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/CommandPtr.h>
 
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+
 #include <Poco/Tuple.h>
 #include <Poco/Data/Statement.h>
 #include <Poco/Data/RecordSet.h>
@@ -119,6 +122,10 @@ private:
     ///Write out the current query to a file
     void SaveCurrentQuery( const std::string& filename );
 
+    void SetMouseSelection( bool const& checked );
+    
+    void ToggleUnselected( bool const& checked );
+    
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
     std::vector< std::string > mLoadedPartNumbers;
@@ -164,6 +171,9 @@ private:
     ///The current select statement
     Poco::Data::Statement* m_currentStatement;
     //Poco::Data::RecordSet m_currentStatement;
+    
+    /// Required to be able to connect up to signals.
+    switchwire::ScopedConnectionList m_connections;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

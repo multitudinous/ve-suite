@@ -48,6 +48,9 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/find.hpp>
 
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+
 #include <Poco/Data/SQLite/SQLite.h>
 #include <Poco/Data/SQLite/Connector.h>
 #include <Poco/Data/Session.h>
@@ -89,7 +92,23 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
     connect( ui->m_textInput03, SIGNAL(textChanged(QString)),
              this, SLOT(InputTextChanged(QString)));
 
+    switchwire::EventManager* evm =
+        switchwire::EventManager::instance();
 
+    {
+        std::string signalName = "WarrantyToolPlugin_UIDialog" +
+            boost::lexical_cast<std::string>( this ) + ".ToggleUnselected";
+        evm->RegisterSignal( ( &m_connectToggleUnselectedSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
+    }
+
+    {
+        std::string signalName = "WarrantyToolPlugin_UIDialog" +
+        boost::lexical_cast<std::string>( this ) + ".MouseSelection";
+        evm->RegisterSignal( ( &m_connectMouseSelectionSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
+    }
+    
 }
 
 void WarrantyToolPlugin_UIDialog::on_m_fileBrowseButton_clicked()
@@ -1253,9 +1272,23 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
         {
             recordData.append( QString::fromStdString( rs[col].convert<std::string>() ) );
         }
+        //This is not a memory leak because it is being add to the queryResults
+        //QTreeWidget above.
         QTreeWidgetItem* item = new QTreeWidgetItem( queryResults, recordData );
+        item = 0;
 
         more = rs.moveNext();
     }
     queryResults->setSortingEnabled( true );
 }
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolPlugin_UIDialog::on_m_mouseSelection_clicked( bool checked )
+{
+    m_connectMouseSelectionSignal.signal( checked );
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolPlugin_UIDialog::on_m_toggleUnselected_clicked( bool checked )
+{
+    m_connectToggleUnselectedSignal.signal( checked );
+}
+////////////////////////////////////////////////////////////////////////////////

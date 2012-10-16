@@ -16,6 +16,7 @@ srcDir = os.path.abspath( pj(RootDir, 'share', 'examples', 'WarrantyTool', 'User
 buildSrcDir = pj('#',buildDir,'share', 'examples', 'WarrantyTool', 'UserInterface','qtVersion')
 
 lib_env = ves_pkg.getEnv().Clone()
+#tools=['qt']
 
 ##### Moc section must come before uic section to prevent issues with undefined
 ##### symbols and vtables
@@ -24,6 +25,7 @@ lib_env = ves_pkg.getEnv().Clone()
 
 source = [pj(buildSrcDir,'WarrantyToolPlugin_UIDialog.h')]
 cppSources = lib_env.qt_moc(source)
+#cppSources = lib_env.Moc(pj(buildSrcDir,'WarrantyToolPlugin_UIDialog.h'))
 
 source = [pj(buildSrcDir,'WarrantyToolPlugin.h')]
 cppSources += lib_env.qt_moc(source)
@@ -41,6 +43,10 @@ cppSources += lib_env.qt_rcc(source)
 
 ### uic files
 source = [pj(buildSrcDir,'WarrantyToolPlugin_UIDialog.ui')]
+#cppHeaders = lib_env.Uic(
+#        target = Split('ui_WarrantyToolPlugin_UIDialog.h ui_WarrantyToolPlugin_UIDialog.cc ui_moc_WarrantyToolPlugin_UIDialog.cc'),
+#        source = pj(buildSrcDir,'WarrantyToolPlugin_UIDialog.ui') )
+
 cppHeaders = lib_env.qt_uic(source)
 ####
 
@@ -51,7 +57,7 @@ cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), cppSources)
 cppHeaders1 = map(lambda s: pj(openDir, '%s' ) %(s), cppHeaders)
     
 headers = cppHeaders1
-#eaders += sca_util.getHeadersRecursive( srcDir )
+#headers += sca_util.getHeadersRecursive( srcDir )
 sources = cppSources1
 sources += sca_util.getSourcesRecursive( srcDir )
 

@@ -131,7 +131,19 @@ void WarrantyToolGP::InitializeNode(
     osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
+
+    //Connect signals here so that only specific plugins are connected to the
+    //the ui plugin. This is sort of safe...
+    CONNECTSIGNAL_1( "%ToggleUnselected",
+                    void( const bool& ),
+                    &WarrantyToolGP::ToggleUnselected,
+                    m_connections, normal_Priority );
     
+    CONNECTSIGNAL_1( "%MouseSelection",
+                    void( const bool& ),
+                    &WarrantyToolGP::SetMouseSelection,
+                    m_connections, normal_Priority );
+
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 }
@@ -263,56 +275,15 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         }
         else if( dvpName == "TOGGLE_PARTS" )
         {
-            std::vector< std::string > lowerCasePartNumbers;
-            std::string partNum;
-            if( m_joinedPartNumbers.size() == 0)
-            {
-                for( size_t i = 0; i < m_assemblyPartNumbers.size(); ++i )
-                {
-                    partNum = m_assemblyPartNumbers.at( i );
-                    boost::algorithm::to_lower( partNum );
-                    lowerCasePartNumbers.push_back( partNum );
-                }
-            }
-            else
-            {
-                for( size_t i = 0; i < m_joinedPartNumbers.size(); ++i )
-                {
-                    partNum = m_joinedPartNumbers.at( i );
-                    boost::algorithm::to_lower( partNum );
-                    lowerCasePartNumbers.push_back( partNum );
-                }
-            }
             unsigned int checkBox;
             dvp->GetData( checkBox );
-            size_t numChildren = m_cadRootNode->getNumChildren();
-            for( size_t i = 0; i < numChildren; ++i )
-            {
-                osg::Group* childNode = m_cadRootNode->getChild( i )->asGroup();
-                unsigned int nodeMask = childNode->getNodeMask();
-                if( nodeMask )
-                {
-                    //We know there is only 1 child because we are dealing 
-                    //with CADEntity
-                    osg::Node* tempChild = childNode->getChild( 0 );
-                    if( checkBox )
-                    {                
-                        ves::xplorer::scenegraph::util::ToggleNodesVisitor
-                            toggleNodes( tempChild, false, lowerCasePartNumbers );
-                    }
-                    else
-                    {
-                        ves::xplorer::scenegraph::util::ToggleNodesVisitor
-                            toggleNodes( tempChild, true, lowerCasePartNumbers );
-                    }
-                }
-            }
+            ToggleUnselected( checkBox );
         }
         else if( dvpName == "MOUSE_SELECTION" )
         {
             unsigned int checkBox;
             dvp->GetData( checkBox );
-            m_mouseSelection = checkBox;
+            SetMouseSelection( checkBox );
         }
         else if( dvpName == "WARRANTY_FILE" )
         {
@@ -1832,5 +1803,65 @@ void WarrantyToolGP::SaveCurrentQuery( const std::string& filename )
         statementExport << std::endl;
     }
     statementExport.close();
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::SetMouseSelection( bool const& checked )
+{
+    m_mouseSelection = checked;
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::ToggleUnselected( bool const& checked )
+{
+    m_cadRootNode = mModel->GetModelCADHandler()->
+        GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
+    if( !m_cadRootNode )
+    {
+        std::cout << "m_cadRootNode is invalid" << std::endl << std::flush;
+        return;
+    }
+
+    std::vector< std::string > lowerCasePartNumbers;
+    std::string partNum;
+    if( m_joinedPartNumbers.size() == 0)
+    {
+        for( size_t i = 0; i < m_assemblyPartNumbers.size(); ++i )
+        {
+            partNum = m_assemblyPartNumbers.at( i );
+            boost::algorithm::to_lower( partNum );
+            lowerCasePartNumbers.push_back( partNum );
+        }
+    }
+    else
+    {
+        for( size_t i = 0; i < m_joinedPartNumbers.size(); ++i )
+        {
+            partNum = m_joinedPartNumbers.at( i );
+            boost::algorithm::to_lower( partNum );
+            lowerCasePartNumbers.push_back( partNum );
+        }
+    }
+
+    size_t numChildren = m_cadRootNode->getNumChildren();
+    for( size_t i = 0; i < numChildren; ++i )
+    {
+        osg::Group* childNode = m_cadRootNode->getChild( i )->asGroup();
+        unsigned int nodeMask = childNode->getNodeMask();
+        if( nodeMask )
+        {
+            //We know there is only 1 child because we are dealing 
+            //with CADEntity
+            osg::Node* tempChild = childNode->getChild( 0 );
+            if( checked )
+            {                
+                ves::xplorer::scenegraph::util::ToggleNodesVisitor
+                    toggleNodes( tempChild, false, lowerCasePartNumbers );
+            }
+            else
+            {
+                ves::xplorer::scenegraph::util::ToggleNodesVisitor
+                    toggleNodes( tempChild, true, lowerCasePartNumbers );
+            }
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

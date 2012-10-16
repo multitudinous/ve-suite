@@ -43,6 +43,8 @@
 #include <vector>
 #include <map>
 
+#include <ves/util/SimpleDataTypeSignalSignatures.h>
+
 namespace Ui {
     class WarrantyToolPlugin_UIDialog;
 }
@@ -69,6 +71,11 @@ protected slots:
     /// Submits user-entered query. (Autoconnected)
     void on_m_queryTextCommandCtrl_returnPressed(  );
     void on_m_applyButton_clicked( );
+    ///Autoconnect the state change call for the mouse selection toggle
+    void on_m_mouseSelection_clicked( bool checked );
+    ///Autoconnect the state change call for the toggle unselected
+    void on_m_toggleUnselected_clicked( bool checked );
+
     /// Called whenever a checkbox is toggled in the "Text Display Selection"
     /// widget. (Autoconnected)
     void on_m_displayTextChkList_itemClicked( QListWidgetItem* item );
@@ -108,6 +115,10 @@ private:
     std::string m_filename;
 
     QFileDialog* m_fileDialog;
+    ///The connect signal for toggle options
+    ves::util::BoolSignal_type m_connectToggleUnselectedSignal;
+    ///The connect signal for toggle options
+    ves::util::BoolSignal_type m_connectMouseSelectionSignal;
 };
 
 #endif // WarrantyToolPlugin_UIDIALOG_H
