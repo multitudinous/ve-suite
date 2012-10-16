@@ -69,7 +69,6 @@ CameraTab::CameraTab(QWidget *parent) :
         ( &m_loopFlythroughSignal ),
         "CameraTab.LoopFlythrough" );
 
-
     CONNECTSIGNALS_1( "%PictureModeOn",
                     void( bool ),
                     &ves::conductor::CameraTab::PictureModeOn,
