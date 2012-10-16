@@ -79,24 +79,6 @@ SensorDemoPlugin_UIDialog::SensorDemoPlugin_UIDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Connect all the logic operators to a single slot which toggle sub-blocks
-    // of the Query Composition group on and off.
-    /*connect( ui->m_logicOperator00, SIGNAL(currentIndexChanged(QString)),
-             this, SLOT(m_logicOperatorS_currentIndexChanged(QString)) );
-    connect( ui->m_logicOperator01, SIGNAL(currentIndexChanged(QString)),
-             this, SLOT(m_logicOperatorS_currentIndexChanged(QString)) );
-    connect( ui->m_logicOperator02, SIGNAL(currentIndexChanged(QString)),
-             this, SLOT(m_logicOperatorS_currentIndexChanged(QString)) );
-
-    connect( ui->m_textInput00, SIGNAL(textChanged(QString)),
-             this, SLOT(InputTextChanged(QString)));
-    connect( ui->m_textInput01, SIGNAL(textChanged(QString)),
-             this, SLOT(InputTextChanged(QString)));
-    connect( ui->m_textInput02, SIGNAL(textChanged(QString)),
-             this, SLOT(InputTextChanged(QString)));
-    connect( ui->m_textInput03, SIGNAL(textChanged(QString)),
-             this, SLOT(InputTextChanged(QString)));*/
-
     switchwire::EventManager* evm =
         switchwire::EventManager::instance();
 
