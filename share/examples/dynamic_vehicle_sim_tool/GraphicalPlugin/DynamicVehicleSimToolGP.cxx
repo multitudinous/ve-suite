@@ -354,6 +354,8 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
                     npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
                 
                 const osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( tempPath );
+                //osgwTools::computeLocalToWorldWithNodeMask( tempPath, 1 );
+
                 gmtl::Matrix44d tempMat;
                 tempMat.set( localToWorldMatrix.ptr() );
                 gmtl::Vec3d scaleXVec( tempMat[ 0 ][ 0 ], tempMat[ 1 ][ 0 ], tempMat[ 2 ][ 0 ] );
