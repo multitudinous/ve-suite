@@ -513,6 +513,8 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     //iss.close();
     m_csvDataMap = csvDataMap;
     mLoadedPartNumbers = csvDataMap[ m_partNumberColumn ];
+    //Erase the previous map before we create the new one
+    m_dataMap.clear();
     for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
     {
         std::vector< std::pair< std::string, std::string > > partData;
