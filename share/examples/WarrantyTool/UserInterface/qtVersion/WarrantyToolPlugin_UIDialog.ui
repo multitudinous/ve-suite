@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>501</width>
+    <width>542</width>
     <height>823</height>
    </rect>
   </property>
@@ -23,9 +23,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-56</y>
-        <width>510</width>
-        <height>796</height>
+        <y>0</y>
+        <width>522</width>
+        <height>768</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -62,9 +62,16 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,1,0">
             <item>
-             <widget class="QComboBox" name="m_variableChoice00"/>
+             <widget class="QComboBox" name="m_variableChoice00">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QComboBox" name="m_variableLogicOperator00">
@@ -150,9 +157,16 @@
               <number>0</number>
              </property>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,1,0">
                <item>
-                <widget class="QComboBox" name="m_variableChoice01"/>
+                <widget class="QComboBox" name="m_variableChoice01">
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </widget>
                </item>
                <item>
                 <widget class="QComboBox" name="m_variableLogicOperator01">
@@ -238,9 +252,16 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,1,0">
                   <item>
-                   <widget class="QComboBox" name="m_variableChoice02"/>
+                   <widget class="QComboBox" name="m_variableChoice02">
+                    <property name="minimumSize">
+                     <size>
+                      <width>200</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </widget>
                   </item>
                   <item>
                    <widget class="QComboBox" name="m_variableLogicOperator02">
@@ -326,9 +347,16 @@
                     <number>0</number>
                    </property>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_5">
+                    <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,1,0">
                      <item>
-                      <widget class="QComboBox" name="m_variableChoice03"/>
+                      <widget class="QComboBox" name="m_variableChoice03">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                      </widget>
                      </item>
                      <item>
                       <widget class="QComboBox" name="m_variableLogicOperator03">
@@ -442,7 +470,14 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
-           <widget class="QComboBox" name="m_manualPartSelectionChoice"/>
+           <widget class="QComboBox" name="m_manualPartSelectionChoice">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLineEdit" name="lineEdit_7"/>
