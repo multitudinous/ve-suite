@@ -111,13 +111,10 @@ function postinstall()
         echo \$var_assign_string\$ves_prefix_string\$wxpython_base_dir\$var_value_string >> \$env_file_path
     fi
 
-    # unset VJ_BASE_DIR
-    if [ \$SHELL = \"/bin/tcsh\" ]
-    then
-        echo 'if ( \$?VJ_BASE_DIR ) unsetenv VJ_BASE_DIR' >> \$env_file_path
-    else
-        echo 'if [ \$(env | grep VJ_BASE_DIR) ]; then unset VJ_BASE_DIR; fi' >> \$env_file_path
-    fi 
+    # always set VJ_BASE_DIR
+    var_assign_string=\"\$SETENV_COMMAND VJ_BASE_DIR\$SETENV_DELIMITER\"
+    var_value_string='\$VES_PREFIX'
+    echo \$var_assign_string\$var_value_string >> \$env_file_path 
 
     cd \$current_working_dir
 
