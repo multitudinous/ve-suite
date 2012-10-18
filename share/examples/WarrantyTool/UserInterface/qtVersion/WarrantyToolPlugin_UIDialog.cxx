@@ -38,6 +38,7 @@
 #include <ves/open/xml/OneDStringArray.h>
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/conductor/qt/UITabs.h>
+#include <ves/conductor/qt/NaturalSortQTreeWidgetItem.h>
 
 #include "csvparser.h"
 
@@ -110,7 +111,7 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
     }
     
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::on_m_fileBrowseButton_clicked()
 {
     ves::conductor::UITabs* tabs = ves::conductor::UITabs::instance();
@@ -137,7 +138,7 @@ void WarrantyToolPlugin_UIDialog::on_m_fileBrowseButton_clicked()
 
     tabs->ActivateTab( tabs->AddTab( m_fileDialog, "Select File" ) );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::onFileSelected( const QString& filePath )
 {
 
@@ -153,7 +154,7 @@ void WarrantyToolPlugin_UIDialog::onFileSelected( const QString& filePath )
         m_fileDialog = 0;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::onFileCancelled()
 {
     ves::conductor::UITabs::instance()->RemoveTab( m_fileDialog );
@@ -164,7 +165,7 @@ void WarrantyToolPlugin_UIDialog::onFileCancelled()
         m_fileDialog = 0;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::on_m_dataLoadButton_clicked()
 {
     QString path = ui->m_dataPath->text();
@@ -175,14 +176,13 @@ void WarrantyToolPlugin_UIDialog::on_m_dataLoadButton_clicked()
             OnDataLoad( path.toStdString() );
         }
     }
-    //OnDataLoad( "7460 WRTY.db" );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 WarrantyToolPlugin_UIDialog::~WarrantyToolPlugin_UIDialog()
 {
     delete ui;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::changeEvent(QEvent *e)
 {
     QWidget::changeEvent(e);
@@ -194,7 +194,7 @@ void WarrantyToolPlugin_UIDialog::changeEvent(QEvent *e)
         break;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::m_logicOperatorS_currentIndexChanged ( QString const& text )
 {
     QObject* caller = sender();
@@ -1274,7 +1274,7 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
         }
         //This is not a memory leak because it is being add to the queryResults
         //QTreeWidget above.
-        QTreeWidgetItem* item = new QTreeWidgetItem( queryResults, recordData );
+        QTreeWidgetItem* item = new ves::conductor::NaturalSortQTreeWidgetItem( queryResults, recordData );
         item = 0;
 
         more = rs.moveNext();
