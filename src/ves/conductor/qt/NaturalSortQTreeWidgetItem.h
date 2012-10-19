@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
+#include <ves/VEConfig.h>
 
 #include <QtGui/QTreeWidgetItem>
 
@@ -38,7 +39,7 @@ namespace ves
 {
 namespace conductor
 {
-class NaturalSortQTreeWidgetItem : public QTreeWidgetItem
+class VE_CONDUCTOR_QTUI_EXPORTS NaturalSortQTreeWidgetItem : public QTreeWidgetItem
 {
 public:
     explicit NaturalSortQTreeWidgetItem( QTreeWidget* parent,
