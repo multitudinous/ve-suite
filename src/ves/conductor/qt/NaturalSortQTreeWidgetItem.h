@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-#include <QTreeWidgetItem>
+#include <QtGui/QTreeWidgetItem>
 
 namespace ves
 {
