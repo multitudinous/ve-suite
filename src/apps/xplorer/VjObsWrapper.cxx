@@ -190,11 +190,13 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         
         std::vector<std::string> toks;
         std::string tempHostname;
+        bool hostnameResolved = false;
         for( size_t i = 0; i < tempAddrVec.size(); ++i )
         {
             try
             {
                 tempHostname = tempAddrVec.at( i ).getHostname();
+                hostnameResolved = true;
             }
             catch( std::exception& e )
             {
@@ -219,6 +221,13 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
             }
         }
         
+        if( !hostnameResolved )
+        {
+            std::cout << "Unable to resolve the hostname for this computer." 
+                << std::endl;
+            exit(1);
+        }
+
         if( !isMaster )
         {
             std::cout << "*** This is a remote graphics node. *** " 
