@@ -174,6 +174,11 @@ int main( int argc, char* argv[] )
         return 0;
     }
 
+#ifndef WIN32
+    //Do not do anything on linux for the SIGPIPE signal
+    ::signal(SIGPIPE, SIG_IGN);
+#endif
+
     try
     {
         //std::string Advanced_Resource_Factory( "static Advanced_Resource_Factory \"-ORBReactorType select_st -ORBInputCDRAllocator null -ORBConnectionCacheLock null -ORBFlushingStrategy blocking\"" );
