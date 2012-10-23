@@ -273,6 +273,11 @@ int main( int argc, char* argv[] )
         return 0;
     }
 
+#ifndef WIN32
+    //Do not do anything on linux for the SIGPIPE signal
+    ::signal(SIGPIPE, SIG_IGN);
+#endif
+    
     try
     {
         VjObsWrapper* vjobsWrapper = 0;
