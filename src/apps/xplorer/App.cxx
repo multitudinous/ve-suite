@@ -356,11 +356,11 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     // calling osgUtil::SceneView::init().
     newSceneViewer->setFrameStamp( mFrameStamp.get() );
 
-    newSceneViewer->init();
-    newSceneViewer->setClearColor( osg::Vec4( 1.0, 0.0, 0.0, 0.0 ) );
 
     {
         vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+        newSceneViewer->init();
+        newSceneViewer->setClearColor( osg::Vec4( 1.0, 0.0, 0.0, 0.0 ) );
         // Needed for stereo to work.
 #if ( ( OPENSCENEGRAPH_MAJOR_VERSION >= 2 ) && \
     ( OPENSCENEGRAPH_MINOR_VERSION >= 9 ) && \
