@@ -52,6 +52,7 @@
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
+#include <LinearMath/btTransform.h>
 
 ///Disable bullet profiling
 #define BT_NO_PROFILE 1

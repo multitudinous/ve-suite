@@ -57,9 +57,6 @@ class Node;
 class Group;
 }
 
-// --- Bullet Includes --- //
-#include <LinearMath/btTransform.h>
-
 class btDynamicsWorld;
 class btDefaultCollisionConfiguration;
 class btCollisionDispatcher;
@@ -67,6 +64,7 @@ class btBroadphaseInterface;
 class btSequentialImpulseConstraintSolver;
 class btRigidBody;
 class btCollisionShape;
+class btTransform;
 
 // --- osgBullet Includes --- //
 namespace osgbDynamics
