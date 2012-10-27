@@ -282,9 +282,9 @@ osg::Group* App::getScene()
 void App::contextInit()
 {
     //vrj::OsgApp::contextInit();
-    std::cout << "|\tContext initialized" << std::endl;
     const unsigned int unique_context_id =
         vrj::opengl::DrawManager::instance()->getCurrentContext();
+    std::cout << "|\tContext initialized " << unique_context_id << std::endl;
 
     //Create new context specific scene viewer
     osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView() );
