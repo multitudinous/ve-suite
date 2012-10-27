@@ -288,12 +288,12 @@ void App::contextInit()
 
     //Create new context specific scene viewer
     osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView() );
+    //Set the unique id for this particular context
+    new_sv->getState()->setContextID( unique_context_id );
     //Configure the new viewer
     configSceneView( new_sv.get() );
     //Hard code the LOD setting to be something high for the time being
     new_sv->setLODScale( 0.01 );
-    //Set the unique id for this particular context
-    new_sv->getState()->setContextID( unique_context_id );
     //Add the tree to the scene viewer and set properties
     {
         vpr::Guard< vpr::Mutex > sv_guard( mValueLock );
