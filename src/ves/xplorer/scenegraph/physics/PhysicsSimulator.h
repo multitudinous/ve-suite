@@ -44,8 +44,11 @@
 #include <osg/ref_ptr>
 #include <osg/Vec3>
 
+// --- STL Includes --- //
+#include <vector>
+#include <set>
+
 #include <osgbDynamics/TripleBuffer.h>
-#include <osgbDynamics/MotionState.h>
 
 namespace osg
 {
@@ -69,15 +72,14 @@ class btCollisionShape;
 namespace osgbDynamics
 {
 class PhysicsThread;
+class MotionState;
+typedef std::set< osgbDynamics::MotionState* > MotionStateList;
 }
 
 namespace osgbCollision
 {
 class GLDebugDrawer;
 }
-
-// --- STL Includes --- //
-#include <vector>
 
 namespace ves
 {

@@ -43,11 +43,15 @@
 #include <LinearMath/btDefaultMotionState.h>
 
 #include <BulletDynamics/Dynamics/btDynamicsWorld.h>
-#include <BulletCollision/CollisionDispatch/btGhostObject.h>
-#include <BulletCollision/CollisionShapes/btMultiSphereShape.h>
+
 #include <BulletCollision/BroadphaseCollision/btOverlappingPairCache.h>
 #include <BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h>
+
 #include <BulletCollision/CollisionDispatch/btCollisionWorld.h>
+#include <BulletCollision/CollisionDispatch/btGhostObject.h>
+
+#include <BulletCollision/CollisionShapes/btMultiSphereShape.h>
+#include <BulletCollision/CollisionShapes/btCapsuleShape.h>
 
 // --- OSG Includes --- //
 #include <osg/Group>

@@ -46,6 +46,10 @@
 #include <BulletCollision/CollisionDispatch/btCollisionWorld.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 
+#include <BulletCollision/CollisionShapes/btCollisionShape.h>
+#include <BulletCollision/CollisionShapes/btCompoundShape.h>
+#include <BulletCollision/CollisionShapes/btConvexShape.h>
+
 #include <BulletCollision/BroadphaseCollision/btOverlappingPairCache.h>
 #include <BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h>
 

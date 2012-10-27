@@ -70,6 +70,7 @@
 
 #include <osgbDynamics/RigidBody.h>
 #include <osgbDynamics/PhysicsThread.h>
+#include <osgbDynamics/MotionState.h>
 
 // --- STL Includes --- //
 #include <sstream>
