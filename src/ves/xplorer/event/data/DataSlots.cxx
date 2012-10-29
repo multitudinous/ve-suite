@@ -159,6 +159,15 @@ void ToggleCADNode( const std::string& nodeID, bool const& visible )
     dataSet->GetDCS()->ToggleDisplay( visible );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void DeleteDataSet( const std::string& dataFilename )
+{
+    ves::xplorer::Model* activeModel =
+        ModelHandler::instance()->GetActiveModel();
+
+    activeModel->DeleteDataSet( dataFilename );
+    activeModel->SetActiveDataSet( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
 }
 }
 }

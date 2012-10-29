@@ -471,20 +471,30 @@ void TreeTab::on_m_deleteButton_clicked()
     }
 
     QModelIndex modelIndex = ui->mTreeView->currentIndex();
-    QModelIndex parentIndex = mModel->parent( modelIndex );
-    osgQtTree::osgTreeItem* parentItem = static_cast< osgQtTree::osgTreeItem* >( parentIndex.internalPointer() );
-    osg::Node* node = parentItem->GetNode();
-    // See if this node has a VE_XML_ID
-    bool found = false;
-    if( node )
+    osg::Node* node = 
+        static_cast< osgQtTree::osgTreeItem* >( modelIndex.internalPointer() )->GetNode();
+    if( !node )
     {
-        osg::Node::DescriptionList descList = node->getDescriptions();
-        for( size_t i = 0; i < descList.size(); ++i )
+        std::cout << "Selected node does not have a parent node." << std::endl;
+        return;
+    }
+
+    bool found = false;
+    osg::Node::DescriptionList descList = node->getDescriptions();
+    for( size_t i = 0; i < descList.size(); ++i )
+    {
+        // See if this node has a VE_XML_ID
+        if( descList.at( i ) == "VE_XML_ID" )
         {
-            if( descList.at( i ) == "VE_XML_ID" )
-            {
-                found = true;
-            }
+            found = true;
+            DeleteCADNode( node );
+            break;
+        }
+        else if( descList.at( i ) == "VE_DATA_NODE" )
+        {
+            found = true;
+            DeleteDataNode( node );
+            break;
         }
     }
 
@@ -493,28 +503,6 @@ void TreeTab::on_m_deleteButton_clicked()
         std::cout << "Trying to delete node but couldn't find parent" << std::endl << std::flush;
         return;
     }
-
-    ves::xplorer::scenegraph::DCS* newSelectedDCS = static_cast< ves::xplorer::scenegraph::DCS* >( node );
-
-    std::string parentID = newSelectedDCS->GetCADPart()->GetID();
-
-    std::string nodeID = mActiveSet->GetUUIDAsString();
-    std::string type;
-    if( mch->PartExists( nodeID ) )
-    {
-        std::cout << "Part exists...removing..." << std::endl << std::flush;
-        type = "Part";
-    }
-    else if( mch->AssemblyExists( nodeID ) )
-    {
-        std::cout << "Assembly exists...removing..." << std::endl << std::flush;
-        type = "Assembly";
-    }
-
-    using namespace ves::xplorer;
-    reinterpret_cast< ves::util::ThreeStringSignal_type* >
-    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "DeleteCADNode" ) )
-    ->signal( parentID, nodeID, type );
 
     RefreshTree();
 }
@@ -569,6 +557,51 @@ std::string TreeTab::CreateSubNodePropertySet( osg::Node* node, osg::NodePath& p
 
     newSet.Save();
     return uuid;
+}
+////////////////////////////////////////////////////////////////////////////////
+void TreeTab::DeleteCADNode( osg::Node* node )
+{
+    QModelIndex modelIndex = ui->mTreeView->currentIndex();
+    QModelIndex parentIndex = mModel->parent( modelIndex );
+    //We have to get the parent item so that we can get the parent uuid
+    osgQtTree::osgTreeItem* parentItem = 
+        static_cast< osgQtTree::osgTreeItem* >( parentIndex.internalPointer() );
+    osg::Node* parentNode = parentItem->GetNode();
+    
+    ves::xplorer::scenegraph::DCS* newSelectedDCS = 
+        static_cast< ves::xplorer::scenegraph::DCS* >( parentNode );
+    
+    const std::string parentID = newSelectedDCS->GetCADPart()->GetID();
+    //This the actual node we selected
+    const std::string nodeID = mActiveSet->GetUUIDAsString();
+    std::string type;
+    ves::xplorer::ModelCADHandler* mch = 
+        ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelCADHandler();
+    if( mch->PartExists( nodeID ) )
+    {
+        std::cout << "Part exists...removing..." << std::endl << std::flush;
+        type = "Part";
+    }
+    else if( mch->AssemblyExists( nodeID ) )
+    {
+        std::cout << "Assembly exists...removing..." << std::endl << std::flush;
+        type = "Assembly";
+    }
+    
+    using namespace ves::xplorer;
+    reinterpret_cast< ves::util::ThreeStringSignal_type* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "DeleteCADNode" ) )
+    ->signal( parentID, nodeID, type );
+}
+////////////////////////////////////////////////////////////////////////////////
+void TreeTab::DeleteDataNode( osg::Node* node )
+{ 
+    const std::string& datasetName =
+        boost::any_cast< std::string >( mActiveSet->GetPropertyValue( "Filename" ) );
+    using namespace ves::xplorer;
+    reinterpret_cast< ves::util::StringSignal_type* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "DeleteDataSet" ) )
+    ->signal( datasetName );
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor

@@ -71,6 +71,10 @@ void AddTextureDataset( std::string const& uuid, std::string const& dirName );
 ///\param visible Whether the CAD should be visible
 void ToggleCADNode( const std::string& nodeID, bool const& visible );
 
+///Delete a DataSet from a model given its filename
+///\param dataFilename The filename of the DataSet
+void DeleteDataSet( const std::string& dataFilename );
+
 } //end data
 } //end event
 } //end xplorer

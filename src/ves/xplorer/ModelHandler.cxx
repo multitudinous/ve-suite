@@ -221,6 +221,11 @@ ModelHandler::ModelHandler()
                            &ves::xplorer::event::data::ToggleCADNode,
                            m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_STATIC( "%DeleteDataSet",
+                          void( std::string const& ),
+                          &ves::xplorer::event::data::DeleteDataSet,
+                          m_connections, any_SignalType, normal_Priority );
+    
     CONNECTSIGNAL_1( "ChangeActiveModel",
                      void( std::string const& ),
                      &ModelHandler::SetActiveModel,

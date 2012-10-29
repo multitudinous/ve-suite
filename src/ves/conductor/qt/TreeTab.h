@@ -115,6 +115,14 @@ protected:
 
     std::string CreateSubNodePropertySet( osg::Node* node, osg::NodePath& path );
 
+    ///Once we have picked a node on the layers tab this will delete it if
+    ///it is a CAD node.
+    void DeleteCADNode( osg::Node* node );
+
+    ///Once we have picked a node on the layers tab this will delete it if
+    ///it is a Data node.
+    void DeleteDataNode( osg::Node* node );
+    
 protected Q_SLOTS:
     /// Called when user changes selection in tree.
     /// This function looks up the scenegraph to find a valid DCS and then

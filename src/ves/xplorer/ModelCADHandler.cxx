@@ -349,7 +349,7 @@ void ModelCADHandler::UpdateOpacity( const std::string& nodeID, float opacity )
     }
     else
     {
-        vprDEBUG( vesDBG, 1 ) << "|\t CADNode not found : " << nodeID
+        vprDEBUG( vesDBG, 1 ) << "|\tCADNode not found : " << nodeID
                               << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::UpdateOpacity()---"
                               << std::endl << vprDEBUG_FLUSH;

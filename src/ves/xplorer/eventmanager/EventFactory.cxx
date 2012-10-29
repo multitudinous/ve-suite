@@ -107,6 +107,11 @@ EventFactory::EventFactory():
                          switchwire::EventManager::unspecified_SignalType );
     m_signals[ "DatasetPropertySet.TBETAddScalarSignal" ] = &m_addTBETScalarSignal;
 
+    // Delete a dataset
+    evm->RegisterSignal( &m_deleteDataSetSignal, "DeleteDataSet",
+                        switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "DeleteDataSet" ] = &m_deleteDataSetSignal;
+    
 
     // Scenegraph has changed
     evm->RegisterSignal( &m_scenegraphChangedSignal, "ScenegraphChanged",
