@@ -592,6 +592,8 @@ void TreeTab::DeleteCADNode( osg::Node* node )
     reinterpret_cast< ves::util::ThreeStringSignal_type* >
     ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "DeleteCADNode" ) )
     ->signal( parentID, nodeID, type );
+    mActiveSet->Remove();
+    mActiveSet = propertystore::PropertySetPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::DeleteDataNode( osg::Node* node )
@@ -602,6 +604,8 @@ void TreeTab::DeleteDataNode( osg::Node* node )
     reinterpret_cast< ves::util::StringSignal_type* >
     ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "DeleteDataSet" ) )
     ->signal( datasetName );
+    mActiveSet->Remove();
+    mActiveSet = propertystore::PropertySetPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor
