@@ -359,6 +359,12 @@ void CADPropertySet::EnableLiveProperties( bool live )
                              GetProperty( "Culling" ),
                              "SetCADCulling" ) );
         m_liveObjects.push_back( p );
+        
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<const bool&>( m_UUIDString,
+                                 GetProperty( "TransparencyFlag" ),
+                                 "SetVizTransparencyFlag" ) );
+        m_liveObjects.push_back( p );
+        
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

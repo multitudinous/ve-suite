@@ -71,7 +71,7 @@ CADNode::CADNode( const std::string& name )
     mPhysicsMesh( "Bounding Box" ),
     m_decimationValue( "Exact" ),
     mOpacity( 1.f ),
-    mMakeTransparentOnVis( true ),
+    mMakeTransparentOnVis( false ),
     m_longitude( 0.0 ),
     m_latitude( 0.0 )
 {

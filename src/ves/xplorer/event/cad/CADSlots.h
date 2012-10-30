@@ -607,7 +607,22 @@ static void SetPhysicsOnCADNode( std::string const& nodeID,
     ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
     ->signal();
 }
-
+////////////////////////////////////////////////////////////////////////////////
+///Sets mass of node
+///@param nodeID UUID of the node
+///@param flag True/false to set whether to be transparent or not
+static void SetVizTransparencyFlag( std::string const& nodeID, bool const& flag )
+{
+    ModelCADHandler* m_cadHandler = GetModelCADHandler();
+    
+    if( !m_cadHandler->PartExists( nodeID ) )
+    {
+        return;
+    }
+    
+    ves::xplorer::scenegraph::CADEntity* part = m_cadHandler->GetPart( nodeID );
+    part->SetTransparencyFlag( flag );
+}
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace cad
 } // namespace event

@@ -104,6 +104,11 @@ CADSlotInitializer::CADSlotInitializer()
                            void( const std::string&, const double& ),
                            &SetRestitutionOnCADNode,
                            m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SetVizTransparencyFlag",
+                          void( const std::string&, const bool& ),
+                          &SetVizTransparencyFlag,
+                          m_connections, any_SignalType, normal_Priority );
 }
 
 } // namespace cad
