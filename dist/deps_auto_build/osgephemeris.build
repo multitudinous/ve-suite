@@ -17,6 +17,8 @@ CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )
 CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG_INSTALL_DIR}" )
 CMAKE_PARAMS+=( -DCMAKE_RELWITHDEBINFO_POSTFIX="" )
 
+VES_INSTALL_PARAMS+=( lib )
+
 case $PLATFORM in
   Windows)
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )

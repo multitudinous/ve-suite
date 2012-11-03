@@ -27,6 +27,8 @@ BJAM_PARAMS+=( --without-python )
 BJAM_PARAMS+=( --without-wave )
 BJAM_PARAMS+=( --without-graph_parallel )
 
+VES_INSTALL_PARAMS+=( lib )
+
 case $PLATFORM in
   Windows)
     SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.50.0/boost_1_50_0.zip

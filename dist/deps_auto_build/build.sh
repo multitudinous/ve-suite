@@ -4,6 +4,36 @@ if [ -z "${VES_SRC_DIR}" ]; then
   export VES_SRC_DIR=$PWD/../../
 fi
 
+VES_22_PACKAGES+=("osg")
+VES_22_PACKAGES+=("VTK")
+VES_22_PACKAGES+=("boost.1.44")
+VES_22_PACKAGES+=("juggler.3.0")
+VES_22_PACKAGES+=("osgbullet")
+VES_22_PACKAGES+=("bullet")
+VES_22_PACKAGES+=("ace+tao")
+VES_22_PACKAGES+=("cppdom")
+VES_22_PACKAGES+=("gmtl")
+VES_22_PACKAGES+=("osgworks")
+VES_22_PACKAGES+=("poco")
+
+VES_30_PACKAGES+=("osg")
+VES_30_PACKAGES+=("vtk")
+VES_30_PACKAGES+=("boost")
+VES_30_PACKAGES+=("juggler")
+VES_30_PACKAGES+=("osgbullet")
+VES_30_PACKAGES+=("bullet")
+VES_30_PACKAGES+=("ace+tao")
+VES_30_PACKAGES+=("cppdom")
+VES_30_PACKAGES+=("sdl")
+VES_30_PACKAGES+=("osgworks")
+VES_30_PACKAGES+=("poco")
+VES_30_PACKAGES+=("switchwire")
+VES_30_PACKAGES+=("storyteller")
+VES_30_PACKAGES+=("crunchstore")
+VES_30_PACKAGES+=("propertystore")
+VES_30_PACKAGES+=("osgephemeris")
+VES_30_PACKAGES+=("bdfx")
+
 #
 # Define the platform
 #
@@ -228,6 +258,7 @@ function unsetvars()
   unset GIT_BRANCH_VERSION
   unset PREBUILD_METHOD
   unset FPC_FILE
+  unset VES_INSTALL_PARAMS
 }
 
 #
@@ -690,8 +721,8 @@ function e()
   # Build the installer file
   #
   if [ "${build_installer}" = "yes" ]; then
-    if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
-    if [ ! -d "${BUILD_DIR}" ]; then echo "${BUILD_DIR} non existent."; return; fi
+    #if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
+    #if [ ! -d "${BUILD_DIR}" ]; then echo "${BUILD_DIR} non existent."; return; fi
     if [ -z "${INSTALL_DIR}" ]; then echo "INSTALL_DIR undefined in package $package"; return; fi
     if [ ! -d "${INSTALL_DIR}" ]; then echo "${INSTALL_DIR} non existent."; return; fi
     if [ ! -d "${DEPS_INSTALL_DIR}" ]; then mkdir -p "${DEPS_INSTALL_DIR}"; fi
@@ -702,10 +733,21 @@ function e()
         innosetup;
         ;;
       Darwin | Linux )
-      #  ;;
-      #Linux )
-        echo "Installing ${INSTALL_DIR}/. to ${DEPS_INSTALL_DIR}"
-        cp -R "${INSTALL_DIR}"/. "${DEPS_INSTALL_DIR}"
+          for p in "${VES_30_PACKAGES[@]}"; do
+              unsetvars
+              #echo "${DEVENV} ${sln} /build $MSVC_CONFIG|$MSVC_PLATFORM"
+              #"${DEVENV}" "${sln}" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" \
+              #  $( [ -z "${PROJ_STR}" ] && echo "${PROJ_STR}" )
+              cd "${PRESENT_DIR}"
+              . "${p}".build;
+              if [ ! -z "${VES_INSTALL_PARAMS}" ]; then
+                  echo "Installing ${INSTALL_DIR}/. to ${DEPS_INSTALL_DIR}"
+                  cd "${INSTALL_DIR}"
+                  cp -R "${VES_INSTALL_PARAMS[@]}" "${DEPS_INSTALL_DIR}"/.
+                  #cp -R "${INSTALL_DIR}"/. "${DEPS_INSTALL_DIR}"
+              fi
+              cd "${PRESENT_DIR}"
+          done
         ;;
     esac
   fi
@@ -776,6 +818,7 @@ done
 shift $(($OPTIND - 1))
 
 [ -d "${DEV_BASE_DIR}" ] || mkdir -p "${DEV_BASE_DIR}"
+#[ $# -lt 1 ] && [ "${build_installer}" = "no" ] && bye
 [ $# -lt 1 ] && bye
 
 echo -e "\n          Kernel: $PLATFORM $ARCH"

@@ -11,6 +11,9 @@ SOURCE_FORMAT=bz2
 
 SOURCE_DIR="${BASE_DIR}"
 
+VES_INSTALL_PARAMS+=( bin/Naming_Service )
+VES_INSTALL_PARAMS+=( lib )
+
 case $PLATFORM in
   Windows)
     BUILD_DIR="${BASE_DIR}"
