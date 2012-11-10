@@ -161,7 +161,7 @@ void ModelCADHandler::SetRootCADNodeID( const std::string& rootNodeId )
     m_rootCADNodeID = rootNodeId;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-const std::string& ModelCADHandler::GetRootCADNodeID( )
+const std::string& ModelCADHandler::GetRootCADNodeID() const
 {
     return m_rootCADNodeID;
 }
@@ -583,7 +583,7 @@ void ModelCADHandler::UpdateMaterialComponent( const std::string& nodeID,
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::CADEntity* ModelCADHandler::GetPart( const std::string& partID )
+ves::xplorer::scenegraph::CADEntity* ModelCADHandler::GetPart( const std::string& partID ) const
 {
     std::map< std::string, ves::xplorer::scenegraph::CADEntity* >::const_iterator iter =
         m_partList.find( partID );
@@ -601,7 +601,7 @@ ves::xplorer::scenegraph::CADEntity* ModelCADHandler::GetPart( const std::string
     return iter->second;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* ModelCADHandler::GetAssembly( const std::string& assemblyID )
+ves::xplorer::scenegraph::DCS* ModelCADHandler::GetAssembly( const std::string& assemblyID ) const
 {
     std::map< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > >::const_iterator
     foundAssembly = m_assemblyList.find( assemblyID ) ;
@@ -627,7 +627,7 @@ ves::xplorer::scenegraph::Clone* ModelCADHandler::GetClone( const std::string& c
     return iter->second;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-bool ModelCADHandler::PartExists( const std::string& partID )
+bool ModelCADHandler::PartExists( const std::string& partID ) const
 {
     std::map<std::string, ves::xplorer::scenegraph::CADEntity*>::const_iterator foundPart =
         m_partList.find( partID );
@@ -639,7 +639,7 @@ bool ModelCADHandler::PartExists( const std::string& partID )
     return false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-bool ModelCADHandler::AssemblyExists( const std::string& assemblyID )
+bool ModelCADHandler::AssemblyExists( const std::string& assemblyID ) const
 {
     std::map< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > >::const_iterator
     foundAssembly = m_assemblyList.find( assemblyID ) ;
@@ -663,9 +663,9 @@ bool ModelCADHandler::CloneExists( const std::string& cloneID )
     return false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-std::vector< std::string > ModelCADHandler::GetCADFilenames()
+std::vector< std::string > ModelCADHandler::GetCADFilenames() const
 {
-    std::map< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
+    std::map< std::string, ves::xplorer::scenegraph::CADEntity* >::const_iterator iter;
     std::vector< std::string > filenames;
 
     for( iter = m_partList.begin(); iter != m_partList.end(); ++iter )

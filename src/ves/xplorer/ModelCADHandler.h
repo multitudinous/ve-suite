@@ -174,11 +174,11 @@ public:
 
     ///Get a specific part.
     ///\param partID The ID of the part to search form
-    ves::xplorer::scenegraph::CADEntity* GetPart( const std::string& partID );
+    ves::xplorer::scenegraph::CADEntity* GetPart( const std::string& partID ) const;
 
     ///Get a specific assembly.
     ///\param assemblyID The ID of the assembly to search form
-    ves::xplorer::scenegraph::DCS* GetAssembly( const std::string& assemblyID );
+    ves::xplorer::scenegraph::DCS* GetAssembly( const std::string& assemblyID ) const;
 
     ///Get a specific assembly.
     ///\param assemblyID The ID of the assembly to search form
@@ -188,17 +188,17 @@ public:
     bool CloneExists( const std::string& clone );
 
     ///\param partID The part ID to search for.
-    bool PartExists( const std::string& partID );
+    bool PartExists( const std::string& partID ) const;
 
     ///Check to see if the assembly already exists and is loaded
     ///\param assemblyID The assembly ID to search for.
-    bool AssemblyExists( const std::string& assemblyID );
+    bool AssemblyExists( const std::string& assemblyID ) const;
 
     ///The current graph
-    const std::string& GetRootCADNodeID();
+    const std::string& GetRootCADNodeID() const;
 
     ///Return the list of CAD file names associated with this model
-    std::vector< std::string > GetCADFilenames();
+    std::vector< std::string > GetCADFilenames() const;
 
     ///Set the clip plane equation
     ///\param a X coefficient
