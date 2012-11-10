@@ -554,6 +554,14 @@ void VTKDataToTexture::createTextures()
       //build the octree
       bbLocator->BuildLocator();*/
       
+      /*
+       vtkNew<vtkCellTreeLocator> locator;
+       locator->SetDataSet(sphere2->GetOutput());
+       locator->SetCacheCellBounds(cachedCellBounds);
+       locator->AutomaticOn();
+       locator->BuildLocator();
+       */
+      
       vectorCellLocators.resize( numThreads );
      for ( int i=0;i<numThreads;i++  )
      {
