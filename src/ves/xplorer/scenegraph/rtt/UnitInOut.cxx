@@ -66,7 +66,7 @@ public:
             texture.getSourceType() ? texture.getSourceType() : GL_UNSIGNED_BYTE );
 
         //Fill the image with 0 values
-        memset( image->data(), 0, image->getTotalSizeInBytesIncludingMipmaps() * sizeof( unsigned char ) );
+        std::memset( image->data(), 0, image->getTotalSizeInBytesIncludingMipmaps() * sizeof( unsigned char ) );
 
         //Create the texture in usual OpenGL way
         glTexImage2D( GL_TEXTURE_2D, 0, texture.getInternalFormat(),
