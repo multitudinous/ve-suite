@@ -104,8 +104,6 @@ void HyperLabICEGP::InitializeNode( osg::Group* veworldDCS )
 ////////////////////////////////////////////////////////////////////////////////
 int HyperLabICEGP::InitializeLabModels()
 {    
-    //btDiscreteDynamicsWorld* bulletWorld = 
-    //    dynamic_cast< btDiscreteDynamicsWorld* >( mPhysicsSimulator->GetDynamicsWorld() );
     osg::Group* root = new osg::Group();
 
     mDCS->addChild( root );
@@ -128,7 +126,7 @@ int HyperLabICEGP::InitializeLabModels()
     }
     renderRoot->addChild( models.get() );
 
-    models = osgDB::readNodeFile( "Models/HyperSystem_v5.osg", options.get() );
+    models = osgDB::readNodeFile( "Models/HyperSystem_v6.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
@@ -162,7 +160,27 @@ int HyperLabICEGP::InitializeLabModels()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
-{    
+{
+    //Update the Pressure Indicators
+    {
+        //Traverse to find the node
+        //PI019, 411, 413
+        //Get the first child
+        //Rotate the gauge accordingly
+    }
+    //Update the HV gauges
+    {
+        //Traverse to find the nodes
+        //HV408,414,430
+        //Rotate the child
+        //Spin it with a given velocity
+    }
+    //Update the FI015 gauges
+    {
+        //Traverse to find the nodes
+        //Move the ball gauge accordingly
+    }
+    
     return;
 }
 ////////////////////////////////////////////////////////////////////////////////
