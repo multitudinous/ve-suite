@@ -733,6 +733,29 @@ function e()
         innosetup;
         ;;
       Darwin | Linux )
+        cd "${INSTALL_DIR}"
+        cp -R "${INSTALL_DIR}"/. "${DEPS_INSTALL_DIR}"
+        cd "${PRESENT_DIR}"
+        ;;
+    esac
+  fi
+
+  #
+  # Build the installer file
+  #
+  if [ "${build_auto_installer}" = "yes" ]; then
+    #if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
+    #if [ ! -d "${BUILD_DIR}" ]; then echo "${BUILD_DIR} non existent."; return; fi
+    if [ -z "${INSTALL_DIR}" ]; then echo "INSTALL_DIR undefined in package $package"; return; fi
+    if [ ! -d "${INSTALL_DIR}" ]; then echo "${INSTALL_DIR} non existent."; return; fi
+    if [ ! -d "${DEPS_INSTALL_DIR}" ]; then mkdir -p "${DEPS_INSTALL_DIR}"; fi
+    
+    case $PLATFORM in
+      Windows )
+        if [ -z "${ISS_FILENAME}" ]; then echo "ISS_FILENAME undefined in package $package"; return; fi
+        innosetup;
+        ;;
+      Darwin | Linux )
           for p in "${VES_30_PACKAGES[@]}"; do
               unsetvars
               #echo "${DEVENV} ${sln} /build $MSVC_CONFIG|$MSVC_PLATFORM"
@@ -744,7 +767,6 @@ function e()
                   echo "Installing ${INSTALL_DIR}/. to ${DEPS_INSTALL_DIR}"
                   cd "${INSTALL_DIR}"
                   cp -R "${VES_INSTALL_PARAMS[@]}" "${DEPS_INSTALL_DIR}"/.
-                  #cp -R "${INSTALL_DIR}"/. "${DEPS_INSTALL_DIR}"
               fi
               cd "${PRESENT_DIR}"
           done
@@ -794,6 +816,7 @@ case $opts in
   U)export SVN_USERNAME=$OPTARG;;
   t)export build_ctag_files="yes";;
   d)export build_installer="yes";;
+  g)export build_auto_installer="yes";;
   a)
     platform 32
     arch
