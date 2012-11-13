@@ -291,7 +291,7 @@ void ModelHandler::SetActiveModel( std::string const& modelNumber )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-Model* ModelHandler::GetModel( int i )
+Model* ModelHandler::GetModel( int i ) const
 {
     if( _modelList.empty() )
     {
@@ -329,12 +329,12 @@ void ModelHandler::RemoveModel( Model* const modelToBeRemoved )
                           << " Model Removal Failed" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Model* ModelHandler::GetActiveModel()
+Model* ModelHandler::GetActiveModel() const
 {
     return _activeModel;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int ModelHandler::GetNumberOfModels()
+int ModelHandler::GetNumberOfModels() const
 {
     return static_cast< int >( _modelList.size() );
 }

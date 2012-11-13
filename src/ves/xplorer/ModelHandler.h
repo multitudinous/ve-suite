@@ -109,15 +109,15 @@ public:
     void ContextPreDrawUpdate();
 
     vtkPolyData* GetArrow();
-    Model* GetModel( int );
+    Model* GetModel( int ) const;
     ///Add a new model
     void AddModel( Model* const );
     ///Remove a model
     void RemoveModel( Model* const );
-    Model* GetActiveModel();
+    Model* GetActiveModel() const;
     ///Set the active model via uuid
     void SetActiveModel( std::string const& modelNumber );
-    int GetNumberOfModels();
+    int GetNumberOfModels() const;
 
     void ReadNNumberOfDataSets( std::string, std::string );
 
