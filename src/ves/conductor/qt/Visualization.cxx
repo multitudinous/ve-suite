@@ -241,10 +241,7 @@ void Visualization::on_FeatureIDSelector_currentIndexChanged( int index )
     {
         mTempSet->SetUUID( m_ids.at( index ) );
         mTempSet->Load();
-
         m_ui->vfpb->ParsePropertySet( mTempSet );
-        m_ui->vfpb->show();
-
         mTempSet->EnableLiveProperties( true );
     }
 

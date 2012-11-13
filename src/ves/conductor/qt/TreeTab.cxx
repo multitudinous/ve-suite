@@ -284,12 +284,8 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
             mActiveSet =
                 propertystore::PropertySetPtr( new ves::xplorer::data::CADSubNodePropertySet() );
             mActiveSet->SetUUID( uuid );
-
-            ui->cadPropertyBrowser->ParsePropertySet( mActiveSet, false );
-            ui->cadPropertyBrowser->show();
-
-            // Load properties from db
             mActiveSet->Load();
+            ui->cadPropertyBrowser->ParsePropertySet( mActiveSet, false );
 
             m_highlightNode.signal( nodePath );
         }
@@ -320,11 +316,8 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
         mActiveSet->SetUUID( node->getDescriptions().at( 1 ) );
     }
 
-    ui->cadPropertyBrowser->ParsePropertySet( mActiveSet, false );
-    ui->cadPropertyBrowser->show();
-
-    // Load properties from db
     mActiveSet->Load();
+    ui->cadPropertyBrowser->ParsePropertySet( mActiveSet, false );
 
     SyncTransformFromDCS( newSelectedDCS );
     // Turn on live updates
