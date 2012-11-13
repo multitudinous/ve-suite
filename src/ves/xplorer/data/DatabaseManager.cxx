@@ -111,14 +111,21 @@ DatabaseManager::~DatabaseManager()
 ////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::Shutdown()
 {
-    m_dataManager->DetachStore( m_workingStore );
+    if( m_dataManager && m_workingStore )
+    {
+        m_dataManager->DetachStore( m_workingStore );
+    }
     //Remove working db file
     boost::filesystem::remove( m_path );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::SetDatabasePath( const std::string& path )
 {
-    std::cout << "DatabaseManager::SetDatabasePath " << path << std::endl << std::flush;
+    //std::cout << "DatabaseManager::SetDatabasePath " << path << std::endl << std::flush;
+    if( !(m_dataManager && m_workingStore) )
+    {
+        return;
+    }
 
     m_dataManager->DetachStore( m_workingStore );
     m_workingStore->SetStorePath( path );
@@ -153,6 +160,11 @@ std::vector< std::string > DatabaseManager::GetStringVector(
 ////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::TableExists( const std::string& tableName )
 {
+    if( !m_workingStore )
+    {
+        return false;
+    }
+
     return m_workingStore->HasTypeName( tableName );
 }
 ////////////////////////////////////////////////////////////////////////////////
