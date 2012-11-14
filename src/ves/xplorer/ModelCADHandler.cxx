@@ -382,6 +382,10 @@ void ModelCADHandler::MakeCADRootTransparent()
         {
             transparentEnable( tempNode, 0.3f );
         }
+        else
+        {
+            transparentDisable( tempNode );
+        }
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
