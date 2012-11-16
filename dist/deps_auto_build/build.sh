@@ -766,7 +766,7 @@ function e()
               if [ ! -z "${VES_INSTALL_PARAMS}" ]; then
                   echo "Installing ${INSTALL_DIR}/. to ${DEPS_INSTALL_DIR}"
                   cd "${INSTALL_DIR}"
-                  cp -R "${VES_INSTALL_PARAMS[@]}" "${DEPS_INSTALL_DIR}"/.
+                  rsync -a -R "${VES_INSTALL_PARAMS[@]}" "${DEPS_INSTALL_DIR}"/.
               fi
               cd "${PRESENT_DIR}"
           done
@@ -792,7 +792,7 @@ wget
 #
 # execute the script
 #
-while getopts "hkucpbj:U:dtaF" opts
+while getopts "hkucpbj:U:tdgaF" opts
 do
 case $opts in
   h)
