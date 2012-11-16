@@ -16,7 +16,12 @@ CMAKE_PARAMS+=( -DBOOST_ROOT="${BOOST_INSTALL_DIR}" )
 
 SKIP_FPC_INSTALL="yes"
 
-VES_INSTALL_PARAMS+=( lib )
+if [ -d "${INSTALL_DIR}"/lib64 ]
+then
+    VES_INSTALL_PARAMS+=( lib64 )
+else
+    VES_INSTALL_PARAMS+=( lib )
+fi
 
 case $PLATFORM in
   Windows)
