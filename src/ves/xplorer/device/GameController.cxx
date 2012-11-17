@@ -138,7 +138,7 @@ GameController::GameController()
     m_buttonMap->configure( osgwMx::MxGamePad::Button13, osgwMx::FunctionalMap::MoveDownAtRate );
     ///Initialize the gamepad class
     m_mxGamePadStyle->setFunctionalMap( m_buttonMap.get() );
-    m_mxGamePadStyle->setStickRate( 10.0 );
+    m_mxGamePadStyle->setStickRate( 5.0 );
     m_mxGamePadStyle->setStickDeadZone( 0.05f );
     m_mxGamePadStyle->setMxCore( &m_viewMatrix );
     //MoveModeLiteral - moves in opengl / eye space
@@ -226,7 +226,7 @@ void GameController::SetCharacterState( bool const& enable )
     }
     else
     {
-        m_mxGamePadStyle->setStickRate( 10.0 );
+        m_mxGamePadStyle->setStickRate( 5.0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -491,7 +491,7 @@ void GameController::OnButton0Event( gadget::DigitalState::State event )
     case gadget::DigitalState::TOGGLE_ON:
     {
         osg::Vec3d scale = m_viewMatrix.getMoveScale();
-        scale -= osg::Vec3d( 1., 1., 1. );
+        scale -= osg::Vec3d( 0.1, 0.1, 0.1 );
         if( scale[ 0 ] < 0. )
         {
             scale = osg::Vec3d( 1., 1., 1. );
@@ -529,7 +529,7 @@ void GameController::OnButton2Event( gadget::DigitalState::State event )
     case gadget::DigitalState::TOGGLE_ON:
     {
         osg::Vec3d scale = m_viewMatrix.getMoveScale();
-        scale += osg::Vec3d( 1., 1., 1. );
+        scale += osg::Vec3d( 0.1, 0.1, 0.1 );
         m_viewMatrix.setMoveScale( scale );
         break;
     }
@@ -694,7 +694,7 @@ void GameController::OnButton10Event( gadget::DigitalState::State event )
         if( m_mxGamePadStyle->getMoveMode() == osgwMx::FunctionalMap::MoveModeOrbit )
         {
             m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeLocal );
-            m_mxGamePadStyle->setStickRate( 10.0 );
+            m_mxGamePadStyle->setStickRate( 5.0 );
         }
         ///Orbit mode
         else
