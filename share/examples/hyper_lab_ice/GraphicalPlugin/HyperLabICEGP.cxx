@@ -42,6 +42,7 @@
 #include <ves/open/xml/OneDStringArray.h>
 
 #include <ves/xplorer/scenegraph/util/MaterialPresent.h>
+#include <ves/xplorer/scenegraph/util/FindChildWithNameVisitor.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -56,6 +57,8 @@
 #include <osgUtil/Optimizer>
 
 #include <osg/Depth>
+#include <osg/MatrixTransform>
+#include <osg/Matrix>
 
 #include <sstream>
 #include <iostream>
@@ -68,7 +71,7 @@ extern osg::ref_ptr<osg::Texture2D> RTTtex;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-//#define NETL_DEMO
+#define NETL_DEMO
 
 #include "HyperLabICEGP.h"
 #ifdef NETL_DEMO
@@ -100,6 +103,8 @@ void HyperLabICEGP::InitializeNode( osg::Group* veworldDCS )
     PluginBase::InitializeNode( veworldDCS );
     
     InitializeLabModels();
+    
+    InitializeLiveSensorObjects();
 }
 ////////////////////////////////////////////////////////////////////////////////
 int HyperLabICEGP::InitializeLabModels()
@@ -117,16 +122,16 @@ int HyperLabICEGP::InitializeLabModels()
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
     }
-    renderRoot->addChild( models.get() );
+    //renderRoot->addChild( models.get() );
 
     models = osgDB::readNodeFile( "Models/HyperLab_Facility_v6.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
     }
-    renderRoot->addChild( models.get() );
+    //renderRoot->addChild( models.get() );
 
-    models = osgDB::readNodeFile( "Models/HyperSystem_v6.osg", options.get() );
+    models = osgDB::readNodeFile( "Models/HyperSystem_v7.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
@@ -143,23 +148,49 @@ int HyperLabICEGP::InitializeLabModels()
     }
 
     // Scale to feet.
-    {
+    //{
         osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform(
             osg::Matrix::scale( osg::Vec3( CM2FEET, CM2FEET, CM2FEET ) ) );
         mt->setDataVariance( osg::Object::STATIC );
         mt->addChild( renderRoot.get() );
         
-        osgUtil::Optimizer optimizer;
-        optimizer.optimize( mt.get(), osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS );
-    }
+        //osgUtil::Optimizer optimizer;
+        //optimizer.optimize( mt.get(), osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS );
+    //}
     
-    root->addChild( renderRoot.get() );
+    root->addChild( mt.get() );
 
-    std::cout << "Loaded all of the models and physics for the Gate." << std::endl;
+    std::cout << "Loaded all of the models for the HYPER plant." << std::endl;
     return( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
+{
+    static double counter = 0;
+    
+    for( SensorGaugeContainer::const_iterator iter = m_pressureIndicators.begin(); iter != m_pressureIndicators.end(); ++iter )
+    {
+        osg::Matrix tempMat = iter->second->getMatrix();
+        tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( counter ), osg::Vec3( 0, 1, 0 ) ).getRotate() );
+        iter->second->setMatrix( tempMat );
+    }
+
+    for( SensorGaugeContainer::const_iterator iter = m_hvIndicators.begin(); iter != m_hvIndicators.end(); ++iter )
+    {
+        osg::Vec3 rotAxis( 0, 1, 0 );
+        if( iter->first == "HV430" )
+        {
+            rotAxis.set( 0, 0, 1 );
+        }
+        osg::Matrix tempMat = iter->second->getMatrix();
+        tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( counter ), rotAxis ).getRotate() );
+        iter->second->setMatrix( tempMat );
+    }
+    
+    counter += 1;
+}
+////////////////////////////////////////////////////////////////////////////////
+void HyperLabICEGP::InitializeLiveSensorObjects()
 {
     //Update the Pressure Indicators
     {
@@ -167,6 +198,33 @@ void HyperLabICEGP::PreFrameUpdate()
         //PI019, 411, 413
         //Get the first child
         //Rotate the gauge accordingly
+        std::vector< std::string > loadedPartNumbers;
+        loadedPartNumbers.push_back( "PI019" );
+        loadedPartNumbers.push_back( "PI411" );
+        loadedPartNumbers.push_back( "PI413" );
+        
+        for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
+        {
+            ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
+                childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
+            if( childVisitor.FoundChild() )
+            {
+                std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
+                osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
+                osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
+                //tempGroup->removeChild( child.get() );
+                
+                //osg::ref_ptr< osg::PositionAttitudeTransform > pat = new osg::PositionAttitudeTransform();
+                m_pressureIndicators[ loadedPartNumbers.at( i ) ] = child.get();
+                
+                //pat->addChild( child.get() );
+                //tempGroup->addChild( pat.get() );
+            }
+            else
+            {
+                std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
+            }
+        }
     }
     //Update the HV gauges
     {
@@ -174,14 +232,39 @@ void HyperLabICEGP::PreFrameUpdate()
         //HV408,414,430
         //Rotate the child
         //Spin it with a given velocity
+        std::vector< std::string > loadedPartNumbers;
+        loadedPartNumbers.push_back( "HV408" );
+        loadedPartNumbers.push_back( "HV414" );
+        loadedPartNumbers.push_back( "HV430" );
+        
+        for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
+        {
+            ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
+            childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
+            if( childVisitor.FoundChild() )
+            {
+                std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
+                osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
+                osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
+                //tempGroup->removeChild( child.get() );
+                
+                //m_hvIndicators[ loadedPartNumbers.at( i ) ] = new osg::PositionAttitudeTransform();
+                m_hvIndicators[ loadedPartNumbers.at( i ) ] = child.get();
+                
+                //pat->addChild( child.get() );
+                //tempGroup->addChild( pat.get() );
+            }
+            else
+            {
+                std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
+            }
+        }
     }
     //Update the FI015 gauges
     {
         //Traverse to find the nodes
         //Move the ball gauge accordingly
     }
-    
-    return;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::SetCurrentCommand( ves::open::xml::CommandPtr command )

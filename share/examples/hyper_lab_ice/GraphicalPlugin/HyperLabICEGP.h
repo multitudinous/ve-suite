@@ -54,11 +54,7 @@
 #include <Poco/Data/Statement.h>
 #include <Poco/Data/RecordSet.h>
 
-class btDiscreteDynamicsWorld;
-namespace osgbInteraction
-{
-    class SaveRestoreHandler;
-}
+#include <osg/MatrixTransform>
 
 namespace ves
 {
@@ -96,6 +92,9 @@ private:
     ///Initialize the vpaint demo graph
     int InitializeLabModels();
 
+    ///Setup all of the scenegraph pointers for all of the guages
+    void InitializeLiveSensorObjects();
+
     ves::xplorer::device::KeyboardMouse* m_keyboard;
 
     ///Column number for the promise date
@@ -117,7 +116,10 @@ private:
     ///A mutex to protect variables accesses
     vpr::Mutex mValueLock;
     
-    btRigidBody* gateBody;
+    ///The container for pressure indicators
+    typedef std::map< std::string, osg::ref_ptr< osg::MatrixTransform > > SensorGaugeContainer;
+    SensorGaugeContainer m_pressureIndicators;
+    SensorGaugeContainer m_hvIndicators;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( HyperLabICEGP )
