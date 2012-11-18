@@ -198,11 +198,35 @@ void HyperLabICEGP::PreFrameUpdate()
         //for( SensorGaugeContainer::const_iterator iter = m_pressureIndicators.begin(); iter != m_pressureIndicators.end(); ++iter )
         {
             osg::Matrix tempMat = iter->second->getMatrix();
-            tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( counter ), osg::Vec3( 0, 1, 0 ) ).getRotate() );
+            osg::Quat tempQuat = tempMat.getRotate();
+            tempQuat *= osg::Matrix::rotate( osg::DegreesToRadians( double( coinFlip ) ), osg::Vec3( 0, 1, 0 ) ).getRotate();
+            tempMat.setRotate( tempQuat );
             iter->second->setMatrix( tempMat );
         }
     }
 
+    {
+        //double ballHeight = m_ballHeight;
+        int coinFlip = std::rand() % 3 - 1;
+
+        for( SensorGaugeContainer::const_iterator iter = m_fiIndicators.begin(); iter != m_fiIndicators.end(); ++iter )
+        {
+            osg::Matrix tempMat = iter->second->getMatrix();
+            osg::Vec3 currentTrans = tempMat.getTrans();
+            currentTrans[ 2 ] += (coinFlip * 0.25);
+            if( currentTrans[ 2 ] < m_ballHeight )
+            {
+                currentTrans[ 2 ] = m_ballHeight;
+            }
+            if( currentTrans[ 2 ] > m_ballHeight + 12.0 )
+            {
+                currentTrans[ 2 ] = m_ballHeight + 12.0;
+            }
+            tempMat.setTrans( currentTrans );
+            iter->second->setMatrix( tempMat );
+        }
+    }
+    
     //Updates for the valve
     {
         static bool updateValve = false;
@@ -262,13 +286,12 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
                 std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
                 osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
                 osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
-                //tempGroup->removeChild( child.get() );
                 
-                //osg::ref_ptr< osg::PositionAttitudeTransform > pat = new osg::PositionAttitudeTransform();
+                osg::Matrix tempMat = child->getMatrix();
+                tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( 90.0 ), osg::Vec3( 0, 1, 0 ) ).getRotate() );
+                child->setMatrix( tempMat );
+                
                 m_pressureIndicators[ loadedPartNumbers.at( i ) ] = child.get();
-                
-                //pat->addChild( child.get() );
-                //tempGroup->addChild( pat.get() );
             }
             else
             {
@@ -314,6 +337,31 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
     {
         //Traverse to find the nodes
         //Move the ball gauge accordingly
+        std::vector< std::string > loadedPartNumbers;
+        loadedPartNumbers.push_back( "FI015" );
+
+        for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
+        {
+            ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
+            childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
+            if( childVisitor.FoundChild() )
+            {
+                std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
+                osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
+                osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();                
+                m_fiIndicators[ loadedPartNumbers.at( i ) ] = child.get();
+                osg::Matrix tempMat = child->getMatrix();
+                osg::Vec3 currentTrans = tempMat.getTrans();
+                m_ballHeight = currentTrans[ 2 ];
+                currentTrans[ 2 ] += 6.0;
+                tempMat.setTrans( currentTrans );
+                child->setMatrix( tempMat );
+            }
+            else
+            {
+                std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
+            }
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

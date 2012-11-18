@@ -124,7 +124,9 @@ private:
     typedef std::map< std::string, osg::ref_ptr< osg::MatrixTransform > > SensorGaugeContainer;
     SensorGaugeContainer m_pressureIndicators;
     SensorGaugeContainer m_hvIndicators;
-    
+    SensorGaugeContainer m_fiIndicators;
+
+    double m_ballHeight;
     ///The timer used for determining when to update graphics
     boost::posix_time::ptime m_threeSecond;
     ///The timer used for determining when to update graphics
