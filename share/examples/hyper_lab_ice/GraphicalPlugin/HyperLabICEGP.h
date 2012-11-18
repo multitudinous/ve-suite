@@ -54,6 +54,8 @@
 #include <Poco/Data/Statement.h>
 #include <Poco/Data/RecordSet.h>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include <osg/MatrixTransform>
 
 namespace ves
@@ -95,7 +97,9 @@ private:
     ///Setup all of the scenegraph pointers for all of the guages
     void InitializeLiveSensorObjects();
 
-    ves::xplorer::device::KeyboardMouse* m_keyboard;
+    ///Check and see if one second has elapsed
+    ///\param last_send The base time to compare against
+    bool OneSecondCheck( boost::posix_time::ptime& last_send, const int timeDelta );
 
     ///Column number for the promise date
     size_t m_promiseDateColumn;
@@ -120,6 +124,11 @@ private:
     typedef std::map< std::string, osg::ref_ptr< osg::MatrixTransform > > SensorGaugeContainer;
     SensorGaugeContainer m_pressureIndicators;
     SensorGaugeContainer m_hvIndicators;
+    
+    ///The timer used for determining when to update graphics
+    boost::posix_time::ptime m_threeSecond;
+    ///The timer used for determining when to update graphics
+    boost::posix_time::ptime m_lastSend;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( HyperLabICEGP )

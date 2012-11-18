@@ -64,6 +64,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <cstdlib>
 
 // pick this up from RTTScene for now
 extern osg::ref_ptr<osg::Texture2D> RTTtex;
@@ -87,10 +88,14 @@ using namespace warrantytool;
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabICEGP::HyperLabICEGP()
     :
-    PluginBase()
+    PluginBase(),
+    m_threeSecond( boost::posix_time::microsec_clock::local_time() ),
+    m_lastSend( boost::posix_time::microsec_clock::local_time() )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "HyperLabICEPlugin";
+    
+    std::srand( 111978 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabICEGP::~HyperLabICEGP()
@@ -105,6 +110,8 @@ void HyperLabICEGP::InitializeNode( osg::Group* veworldDCS )
     InitializeLabModels();
     
     InitializeLiveSensorObjects();
+    
+    m_threeSecond = boost::posix_time::microsec_clock::local_time();
 }
 ////////////////////////////////////////////////////////////////////////////////
 int HyperLabICEGP::InitializeLabModels()
@@ -166,28 +173,71 @@ int HyperLabICEGP::InitializeLabModels()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
 {
-    static double counter = 0;
-    
-    for( SensorGaugeContainer::const_iterator iter = m_pressureIndicators.begin(); iter != m_pressureIndicators.end(); ++iter )
+    if( !OneSecondCheck( m_lastSend, 500000 ) )
     {
-        osg::Matrix tempMat = iter->second->getMatrix();
-        tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( counter ), osg::Vec3( 0, 1, 0 ) ).getRotate() );
-        iter->second->setMatrix( tempMat );
+        return;
     }
 
-    for( SensorGaugeContainer::const_iterator iter = m_hvIndicators.begin(); iter != m_hvIndicators.end(); ++iter )
     {
-        osg::Vec3 rotAxis( 0, 1, 0 );
-        if( iter->first == "HV430" )
+        static double counter = 90;
+        int coinFlip = std::rand() % 11 - 5;
+        counter += coinFlip;
+
+        if( counter > 180 )
         {
-            rotAxis.set( 0, 0, 1 );
+            counter = 180;
         }
-        osg::Matrix tempMat = iter->second->getMatrix();
-        tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( counter ), rotAxis ).getRotate() );
-        iter->second->setMatrix( tempMat );
+        if( counter < 0 )
+        {
+            counter = 0;
+        }
+        size_t gaugeIndex = std::rand() % 3;
+        SensorGaugeContainer::iterator iter = m_pressureIndicators.begin();
+        std::advance( iter, gaugeIndex );
+        //iter = iter + gaugeIndex;
+        //for( SensorGaugeContainer::const_iterator iter = m_pressureIndicators.begin(); iter != m_pressureIndicators.end(); ++iter )
+        {
+            osg::Matrix tempMat = iter->second->getMatrix();
+            tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( counter ), osg::Vec3( 0, 1, 0 ) ).getRotate() );
+            iter->second->setMatrix( tempMat );
+        }
     }
-    
-    counter += 1;
+
+    //Updates for the valve
+    {
+        static bool updateValve = false;
+        static double valveCounter = 0;
+        bool timeStatus = OneSecondCheck( m_threeSecond, 20000000 );
+
+        if( !timeStatus && !updateValve )
+        {
+            //std::cout << " here " << std::endl;
+            return;
+        }
+        updateValve = true;
+        valveCounter+=5;
+        
+        for( SensorGaugeContainer::const_iterator iter = m_hvIndicators.begin(); iter != m_hvIndicators.end(); ++iter )
+        {
+            osg::Vec3 rotAxis( 0, 1, 0 );
+            if( iter->first == "HV430" )
+            {
+                rotAxis.set( 0, 0, 1 );
+            }
+            osg::Matrix tempMat = iter->second->getMatrix();
+            //tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( 90.0 ), rotAxis ).getRotate() );
+            //tempMat.preMultRotate( osg::Matrix::rotate( osg::DegreesToRadians( valveCounter ), rotAxis ).getRotate() );
+            tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( valveCounter ), rotAxis ).getRotate() );
+           iter->second->setMatrix( tempMat );
+        }
+        m_threeSecond = boost::posix_time::microsec_clock::local_time();
+
+        if( ( valveCounter == 90 ) || ( valveCounter == 0 ) )
+        {
+            valveCounter *= -1;
+            updateValve = false;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::InitializeLiveSensorObjects()
@@ -279,5 +329,19 @@ void HyperLabICEGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 void HyperLabICEGP::RemoveSelfFromSG()
 {
     PluginBase::RemoveSelfFromSG();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool HyperLabICEGP::OneSecondCheck( boost::posix_time::ptime& last_send, const int timeDelta )
+{
+    bool second_elapsed = false;
+    //const int microsecs_in_second = 1000000;
+    boost::posix_time::ptime current_time( boost::posix_time::microsec_clock::local_time() );
+    boost::posix_time::time_duration diff = current_time - last_send;
+    if( diff.total_microseconds() > timeDelta )
+    {
+        last_send = current_time;
+        second_elapsed = true;
+    }
+    return second_elapsed;
 }
 ////////////////////////////////////////////////////////////////////////////////
