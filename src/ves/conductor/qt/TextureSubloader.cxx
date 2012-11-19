@@ -9,7 +9,8 @@ namespace conductor
 ////////////////////////////////////////////////////////////////////////////////
 TextureSubloader::TextureSubloader()
     :
-    doSubload( false )
+    doSubload( false ),
+    m_enabled( true )
 {
     ;
 }
@@ -19,9 +20,19 @@ TextureSubloader::~TextureSubloader()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void TextureSubloader::SetEnabled( bool enabled )
+{
+    m_enabled = enabled;
+}
+////////////////////////////////////////////////////////////////////////////////
 // create the OpenGL texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
 void TextureSubloader::load( const osg::Texture2D& texture, osg::State& ) const
 {
+    if( !m_enabled )
+    {
+        return;
+    }
+
     const osg::Image* image = texture.getImage();
     if( image )
     {
@@ -33,6 +44,11 @@ void TextureSubloader::load( const osg::Texture2D& texture, osg::State& ) const
 // overlay the image onto the texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
 void TextureSubloader::subload( const osg::Texture2D&, osg::State& ) const
 {
+    if( !m_enabled )
+    {
+        return;
+    }
+
     if( subImgs.empty() )
     {
         return;

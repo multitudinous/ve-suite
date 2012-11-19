@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/qt/ExtendedTabWidget.h>
 #include <QtGui/QTabBar>
+#include <iostream>
 
 namespace ves
 {
@@ -42,11 +43,15 @@ ExtendedTabWidget::ExtendedTabWidget( QWidget* parent ) :
     QTabWidget( parent )
 {
 }
-
+////////////////////////////////////////////////////////////////////////////////
+ExtendedTabWidget::~ExtendedTabWidget()
+{
+}
+////////////////////////////////////////////////////////////////////////////////
 void ExtendedTabWidget::SetTabButton( int tabIndex, QWidget* widget )
 {
     tabBar()->setTabButton( tabIndex, QTabBar::RightSide, widget );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 }
 }

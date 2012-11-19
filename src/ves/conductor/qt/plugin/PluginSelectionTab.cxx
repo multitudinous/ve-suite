@@ -262,6 +262,7 @@ void PluginSelectionTab::DiscoverPlugins( std::string const& dir )
 ////////////////////////////////////////////////////////////////////////////////
 PluginSelectionTab::~PluginSelectionTab()
 {
+    ui->m_instantiatedPlugins->removeEventFilter( this );
     ClearActivePlugins();
     delete ui;
 }

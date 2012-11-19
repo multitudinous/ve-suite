@@ -34,6 +34,7 @@
 // --- VES Includes --- //
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElement.h>
+#include <ves/conductor/qt/UIElementQt.h>
 #include <ves/conductor/qt/UIUpdateCallback.h>
 
 #include <switchwire/InteractionEvent.h>
@@ -45,6 +46,10 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 #include <ves/xplorer/scenegraph/HeadPositionCallback.h>
+
+
+#include <vrj/Kernel/Kernel.h>
+#include <vpr/Perf/ProfileManager.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>
@@ -123,6 +128,8 @@ UIManager::UIManager() :
     m_isDesktopMode( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() ),
     m_isWandIntersection( false ),
     m_useRegionDamaging( false ),
+    m_kill( false ),
+    m_killFrameCount( 0 ),
     m_logger( Poco::Logger::get( "conductor.EventDebug" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
@@ -207,25 +214,33 @@ UIManager::UIManager() :
 ////////////////////////////////////////////////////////////////////////////////
 UIManager::~UIManager()
 {
+    mInitialized = false;
     if( mUIGroup.valid() )
     {
         mUIGroup->removeUpdateCallback( mUIUpdateCallback.get() );
     }
 
     //std::cout << this->referenceCount() << std::endl;
-    // Delete all UIElements of which we've taken charge
-    // Note that these were not allocated inside this class, but the class
-    // interface specifies that it takes ownership of these objects
-    ElementMap_type::const_iterator map_iterator;
-    for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-            ++map_iterator )
-    {
-        //delete ( *map_iterator ).second;
-    }
-    mElements.clear();
+
+    // Ideally we would call RemoveAllElements, but this causes a crash,
+    // I think because this detructor is called from the wrong thread to
+    // allow touching Qt widgets. Instead, we use DestroyUI to set a flag which
+    // can be discovered at the correct time (in Update) to ensure elements are
+    // destroyed safely. Unfortunately, this path is only taken if the user
+    // chooses Quit from the UI menu. If the user presses the escape key,
+    // vrj just stops the kernel and destroys all the singletons, which results
+    // in all the Qt widget, plugin, etc. memory's leaking.
+    //RemoveAllElements();
+
     // All other memory allocated on the heap by this class should be attached
     // to an osg::ref_ptr and so should automatically manage its lifetime
     //std::cout << " UI manager destructor" << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIManager::DestroyUI()
+{
+    m_kill = true;
+    m_killFrameCount = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Geode* UIManager::AddElement( UIElement* element )
@@ -287,6 +302,43 @@ void UIManager::RemoveAllElements()
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::Update()
 {
+    if( m_kill )
+    {
+        if( m_killFrameCount == 0 )
+        {
+            mInitialized = false;
+
+            std::map< UIElement*, osg::ref_ptr< TextureSubloader > >::iterator it;
+            it = m_subloaders.begin();
+            while( it != m_subloaders.end() )
+            {
+                it->second->SetEnabled( false );
+                ++it;
+            }
+
+            RemoveAllElements();
+
+            ++m_killFrameCount;
+        }
+        else if( m_killFrameCount == 2 )
+        {
+            if( mUIGroup.valid() )
+            {
+                mUIGroup->removeUpdateCallback( mUIUpdateCallback.get() );
+            }
+            // We wait for 2 updates after we've receive the notice to die
+            // before we stop the vrj kernel to ensure all the Qt event
+            // pumps have a chance to clear out and destruct.
+            VPR_PROFILE_RESULTS();
+            // Stopping kernel
+            vrj::Kernel::instance()->stop();
+        }
+        else
+        {
+            ++m_killFrameCount;
+        }
+    }
+
     // Ensure that initialization has already happened
     if( !mInitialized )
     {

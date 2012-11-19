@@ -49,6 +49,8 @@ public:
 
     void SetTabButton( int tabIndex, QWidget* widget );
 
+    virtual ~ExtendedTabWidget();
+
 Q_SIGNALS:
 
 public Q_SLOTS:

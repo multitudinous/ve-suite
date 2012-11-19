@@ -77,6 +77,8 @@ RecentFiles::RecentFiles( QWidget* parent ) :
 ////////////////////////////////////////////////////////////////////////////////
 RecentFiles::~RecentFiles()
 {
+//    disconnect( ui->m_recentFilesList, SIGNAL(	itemClicked( QListWidgetItem* ) ),
+//             this, SLOT( onFileListItemAccepted( QListWidgetItem* ) ) );
     delete ui;
 }
 ////////////////////////////////////////////////////////////////////////////////

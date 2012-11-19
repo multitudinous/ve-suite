@@ -149,6 +149,10 @@ public:
     /// at the wrong time and result in loss of geometry.
     void Update();
 
+    /// Destroys all UIElements being managed by this object and then initiates
+    /// the shutdown sequence for vrJuggler
+    void DestroyUI();
+
     ///Hide all UI elements
     void HideAllElements();
 
@@ -425,6 +429,9 @@ private:
     bool m_isWandIntersection;
 
     bool m_useRegionDamaging;
+
+    bool m_kill;
+    int m_killFrameCount;
     ///Logger reference
     Poco::Logger& m_logger;
     ///Actual stream for this class

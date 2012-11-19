@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/qt/NonScrollGraphicsView.h>
+#include <iostream>
 
 namespace ves
 {
@@ -41,17 +42,21 @@ NonScrollGraphicsView::NonScrollGraphicsView( QWidget* parent ) :
     QGraphicsView( parent )
 {
 }
-
+////////////////////////////////////////////////////////////////////////////////
 NonScrollGraphicsView::NonScrollGraphicsView( QGraphicsScene* scene,
         QWidget* parent ) :
     QGraphicsView( scene, parent )
 {
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void NonScrollGraphicsView::scrollContentsBy( int, int )
 {
     // do nothing
 }
-
+////////////////////////////////////////////////////////////////////////////////
+NonScrollGraphicsView::~NonScrollGraphicsView()
+{
+}
+////////////////////////////////////////////////////////////////////////////////
 } // namespace conductor
 } // namespace ves

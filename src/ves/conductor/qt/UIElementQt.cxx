@@ -126,6 +126,8 @@ UIElementQt::UIElementQt( QWidget* parent )
 {
     _debug( "ctor" );
 
+    this->setAttribute( Qt::WA_DeleteOnClose );
+
     SetMinimized( false );
 
     this->setCacheMode( QGraphicsView::CacheNone );
@@ -167,6 +169,11 @@ UIElementQt::UIElementQt( QWidget* parent )
 UIElementQt::~UIElementQt()
 {
     _debug( "dtor" );
+
+    QList<QWidget*> widgets = mTitlebar->findChildren<QWidget*>();
+    Q_FOREACH( QWidget * widget, widgets )
+    widget->removeEventFilter( this );
+
     FreeOldWidgets();
     delete mTimer;
     delete mImageMutex;
@@ -856,31 +863,21 @@ void UIElementQt::UpdateSize()
 void UIElementQt::FreeOldWidgets()
 {
     _debug( "FreeOldWidgets" );
-    // ?? Should we manage deletion of the owned widget? What if
-    // something else also owns it? Don't delete it. Embedding should be
-    // different from ownership.
 
-    //delete mWidget;
+    // Remove this object as the event filter
+    QList<QWidget*> widgets = mWidget->findChildren<QWidget*>();
+    Q_FOREACH( QWidget * widget, widgets )
+    {
+        widget->removeEventFilter( this );
+    }
+
     if( mGraphicsScene )
     {
         delete mGraphicsScene;
         mGraphicsScene = 0;
     }
 
-    if( mGraphicsView )
-    {
-        delete mGraphicsView;
-        mGraphicsView = 0;
-    }
-
-    if( mGraphicsProxyWidget )
-    {
-        delete mGraphicsProxyWidget;
-        mGraphicsProxyWidget = 0;
-    }
-
-    {
-        // Enter critical section
+    {// Enter critical section
         QMutexLocker locker( mImageMutex );
         if( mImage )
         {

@@ -56,6 +56,7 @@
 #include <ves/conductor/qt/extendedWidgets/ExtendedToolBar.h>
 #include <ves/conductor/qt/UITabs.h>
 #include <ves/conductor/qt/RecentFiles.h>
+#include <ves/conductor/qt/UIManager.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 
@@ -138,6 +139,7 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
     m_logger( Poco::Logger::get( "conductor.MainWindow" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
+    this->setAccessibleName( "MainWindow" );
     setMouseTracking( true );
     ui->setupUi( this );
     //m_messageBox = new QMessageBox(this);
@@ -545,9 +547,15 @@ void MainWindow::on_actionPhysicsStack_triggered()
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionQuit_triggered()
 {
-    VPR_PROFILE_RESULTS();
-    // Stopping kernel
-    vrj::Kernel::instance()->stop();
+//    switchwire::Event< void() > destroyUISignal;
+//    switchwire::EventManager::instance()->RegisterSignal(
+//        ( &destroyUISignal ),
+//        "MainWindow.DestroyUI" );
+//    destroyUISignal.signal();
+    UIManager::instance()->DestroyUI();
+//    VPR_PROFILE_RESULTS();
+//    // Stopping kernel
+//    vrj::Kernel::instance()->stop();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::on_actionOpen_triggered()
@@ -1658,6 +1666,7 @@ void MainWindow::onRecentFileRejected()
     {
         m_recentTab->close();
     }
+    delete m_recentTab;
     m_recentTab = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1672,6 +1681,7 @@ void MainWindow::on_actionConstraints_triggered()
 void MainWindow::on_tabWidget_tabCloseRequested( int index )
 {
     RemoveTab( ui->tabWidget->tabText( index ).toStdString() );
+    onRecentFileRejected();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::SetLogSplitter( Poco::SplitterChannel* splitter )

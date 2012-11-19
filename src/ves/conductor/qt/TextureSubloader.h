@@ -54,6 +54,8 @@ public:
     ///overlay the image onto the texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
     virtual void subload( const osg::Texture2D& texture, osg::State& state ) const;
 
+    void SetEnabled( bool enabled );
+
     ///tell the next subload callback to copy the input image to the specified offsets
     ///in the texture for this.
     void AddUpdate( osg::Image* img, int xOff, int yOff );
@@ -69,6 +71,7 @@ protected:
 
     typedef std::set< unsigned int > ContextSet;
     mutable ContextSet _contexts;
+    bool m_enabled;
 };
 
 }
