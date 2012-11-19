@@ -15,6 +15,7 @@ VES_22_PACKAGES+=("cppdom")
 VES_22_PACKAGES+=("gmtl")
 VES_22_PACKAGES+=("osgworks")
 VES_22_PACKAGES+=("poco")
+VES_22_PACKAGES+=("xerces")
 
 VES_30_PACKAGES+=("osg")
 VES_30_PACKAGES+=("vtk")
@@ -33,6 +34,7 @@ VES_30_PACKAGES+=("crunchstore")
 VES_30_PACKAGES+=("propertystore")
 VES_30_PACKAGES+=("osgephemeris")
 VES_30_PACKAGES+=("bdfx")
+VES_30_PACKAGES+=("xerces")
 
 #
 # Define the platform
