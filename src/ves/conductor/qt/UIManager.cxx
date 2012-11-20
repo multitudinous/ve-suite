@@ -306,17 +306,17 @@ void UIManager::Update()
     {
         if( m_killFrameCount == 0 )
         {
-            mInitialized = false;
+//            mInitialized = false;
 
-            std::map< UIElement*, osg::ref_ptr< TextureSubloader > >::iterator it;
-            it = m_subloaders.begin();
-            while( it != m_subloaders.end() )
-            {
-                it->second->SetEnabled( false );
-                ++it;
-            }
+//            std::map< UIElement*, osg::ref_ptr< TextureSubloader > >::iterator it;
+//            it = m_subloaders.begin();
+//            while( it != m_subloaders.end() )
+//            {
+//                it->second->SetEnabled( false );
+//                ++it;
+//            }
 
-            RemoveAllElements();
+//            RemoveAllElements();
 
             ++m_killFrameCount;
         }
