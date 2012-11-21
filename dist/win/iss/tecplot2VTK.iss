@@ -8,7 +8,7 @@
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define VEVERSION "0.6.1"
-#define SVNVERSION "16576"
+#define SVNVERSION "17255"
 #define VesIcon "ves_icon.ico"
 #ifdef x64
 #define TECLIBDIR "x64"
@@ -83,22 +83,25 @@ Filename: {tmp}\vcredist_x64.exe; Description: Install Microsoft Runtime Redistr
 Filename: {tmp}\vcredist_x86.exe; Description: Install Microsoft Runtime Redistributable; StatusMsg: Installing Microsoft Runtime Redistributable...; Flags: postinstall unchecked; Tasks: 
 #endif
 [Files]
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkzlib.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtktiff.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtksys.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkpng.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkNetCDF.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkNetCDF_cxx.dll; DestDir: {app}\bin; Components:
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkmetaio.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkjpeg.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkIO.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkFiltering.dll; DestDir: {app}\bin; Components: 
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkexpat.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkDICOMParser.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
-Source: {#DEPENDSINSTALLHOME}\{#BUILDDIR}\{#VTKHOME}\lib\vtkCommon.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkzlib.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtktiff.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtksys.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkpng.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkNetCDF.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkNetCDF_cxx.dll; DestDir: {app}\bin; Components:
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkmetaio.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkjpeg.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkIO.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkFiltering.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkhdf5.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkhdf5_hl.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\LSDyna.dll; DestDir: {app}\bin; Components: 
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkexpat.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkDICOMParser.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\vtkCommon.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
 
-Source: {#VESAUTODEPSDIR}\{#VRJUGGLERDIRNAME}\{#VESINSTALLDIR}-deps\lib\boost_system-vc90-mt-1_46_1.dll; DestDir: {app}\bin; Components: 
-Source: {#VESAUTODEPSDIR}\{#VRJUGGLERDIRNAME}\{#VESINSTALLDIR}-deps\lib\boost_filesystem-vc90-mt-1_46_1.dll; DestDir: {app}\bin; Components: 
+Source: {#VESAUTODEPSDIR}\{#VRJUGGLERDIRNAME}\{#VESINSTALLDIR}-deps\lib\boost_system-vc90-mt-1_50.dll; DestDir: {app}\bin; Components: 
+Source: {#VESAUTODEPSDIR}\{#VRJUGGLERDIRNAME}\{#VESINSTALLDIR}-deps\lib\boost_filesystem-vc90-mt-1_50.dll; DestDir: {app}\bin; Components: 
 
 Source: {#TECPLOTSDKHOME}\bin\{#TECLIBDIR}\tptoolbox.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#TECPLOTSDKHOME}\bin\{#TECLIBDIR}\tpsdkintegrationmanager.dll; DestDir: {app}\bin; Components: ; Flags: overwritereadonly ignoreversion
