@@ -1666,7 +1666,6 @@ void MainWindow::onRecentFileRejected()
     {
         m_recentTab->close();
     }
-    delete m_recentTab;
     m_recentTab = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
