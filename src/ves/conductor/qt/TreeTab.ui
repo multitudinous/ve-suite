@@ -94,7 +94,7 @@
          </property>
          <property name="icon">
           <iconset resource="icons.qrc">
-           <normaloff>:/images/remove.png</normaloff>:/images/remove.png</iconset>
+           <normaloff>:/xpm/remove.png</normaloff>:/xpm/remove.png</iconset>
          </property>
         </widget>
        </item>
@@ -105,7 +105,7 @@
          </property>
          <property name="icon">
           <iconset resource="icons.qrc">
-           <normaloff>:/images/refresh-32.png</normaloff>:/images/refresh-32.png</iconset>
+           <normaloff>:/xpm/refresh-32.png</normaloff>:/xpm/refresh-32.png</iconset>
          </property>
         </widget>
        </item>
@@ -116,7 +116,7 @@
          </property>
          <property name="icon">
           <iconset resource="icons.qrc">
-           <normaloff>:/images/ok.png</normaloff>:/images/ok.png</iconset>
+           <normaloff>:/xpm/ok.png</normaloff>:/xpm/ok.png</iconset>
          </property>
         </widget>
        </item>

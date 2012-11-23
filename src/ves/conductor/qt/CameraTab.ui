@@ -78,7 +78,7 @@
          </property>
          <property name="icon">
           <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
-           <normaloff>:/images/camera.png</normaloff>:/images/camera.png</iconset>
+           <normaloff>:/xpm/camera.png</normaloff>:/xpm/camera.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -98,7 +98,7 @@
          </property>
          <property name="icon">
           <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
-           <normaloff>:/images/cameras.png</normaloff>:/images/cameras.png</iconset>
+           <normaloff>:/xpm/cameras.png</normaloff>:/xpm/cameras.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -118,7 +118,7 @@
          </property>
          <property name="icon">
           <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
-           <normaloff>:/images/slideshow.png</normaloff>:/images/slideshow.png</iconset>
+           <normaloff>:/xpm/slideshow.png</normaloff>:/xpm/slideshow.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -138,7 +138,7 @@
          </property>
          <property name="icon">
           <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
-           <normaloff>:/images/flythrough.png</normaloff>:/images/flythrough.png</iconset>
+           <normaloff>:/xpm/flythrough.png</normaloff>:/xpm/flythrough.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -158,7 +158,7 @@
          </property>
          <property name="icon">
           <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
-           <normaloff>:/images/flythroughLoop.png</normaloff>:/images/flythroughLoop.png</iconset>
+           <normaloff>:/xpm/flythroughLoop.png</normaloff>:/xpm/flythroughLoop.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -198,7 +198,7 @@
          </property>
          <property name="icon">
           <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
-           <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
+           <normaloff>:/xpm/add.png</normaloff>:/xpm/add.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -215,7 +215,7 @@
          </property>
          <property name="icon">
           <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
-           <normaloff>:/images/remove.png</normaloff>:/images/remove.png</iconset>
+           <normaloff>:/xpm/remove.png</normaloff>:/xpm/remove.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -232,7 +232,7 @@
          </property>
          <property name="icon">
           <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
-           <normaloff>:/images/up.png</normaloff>:/images/up.png</iconset>
+           <normaloff>:/xpm/up.png</normaloff>:/xpm/up.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -249,7 +249,7 @@
          </property>
          <property name="icon">
           <iconset resource="../../../../../../../../../trunk/src/ves/conductor/qt/icons.qrc">
-           <normaloff>:/images/down.png</normaloff>:/images/down.png</iconset>
+           <normaloff>:/xpm/down.png</normaloff>:/xpm/down.png</iconset>
          </property>
          <property name="iconSize">
           <size>

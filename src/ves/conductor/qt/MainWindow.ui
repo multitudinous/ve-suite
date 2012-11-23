@@ -563,7 +563,7 @@ QToolButton:hover
   <action name="actionShowCameraTab">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/images/camera.png</normaloff>:/images/camera.png</iconset>
+     <normaloff>:/xpm/camera.png</normaloff>:/xpm/camera.png</iconset>
    </property>
    <property name="text">
     <string>Cameras</string>

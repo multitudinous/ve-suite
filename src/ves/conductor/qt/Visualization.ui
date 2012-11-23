@@ -100,7 +100,7 @@ QListWidget::item:selected
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
-          <normaloff>:/images/contour.xpm</normaloff>:/images/contour.xpm</iconset>
+          <normaloff>:/xpm/contour.xpm</normaloff>:/xpm/contour.xpm</iconset>
         </property>
        </item>
        <item>
@@ -109,7 +109,7 @@ QListWidget::item:selected
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
-          <normaloff>:/images/new_vector.xpm</normaloff>:/images/new_vector.xpm</iconset>
+          <normaloff>:/xpm/new_vector.xpm</normaloff>:/xpm/new_vector.xpm</iconset>
         </property>
        </item>
        <item>
@@ -118,7 +118,7 @@ QListWidget::item:selected
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
-          <normaloff>:/images/streamlines.xpm</normaloff>:/images/streamlines.xpm</iconset>
+          <normaloff>:/xpm/streamlines.xpm</normaloff>:/xpm/streamlines.xpm</iconset>
         </property>
        </item>
        <item>
@@ -127,7 +127,7 @@ QListWidget::item:selected
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
-          <normaloff>:/images/isosurface.xpm</normaloff>:/images/isosurface.xpm</iconset>
+          <normaloff>:/xpm/isosurface.xpm</normaloff>:/xpm/isosurface.xpm</iconset>
         </property>
        </item>
        <item>
@@ -136,7 +136,7 @@ QListWidget::item:selected
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
-          <normaloff>:/images/scalartb.xpm</normaloff>:/images/scalartb.xpm</iconset>
+          <normaloff>:/xpm/scalartb.xpm</normaloff>:/xpm/scalartb.xpm</iconset>
         </property>
        </item>
        <item>
@@ -145,7 +145,7 @@ QListWidget::item:selected
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
-          <normaloff>:/images/isosurface.xpm</normaloff>:/images/isosurface.xpm</iconset>
+          <normaloff>:/xpm/isosurface.xpm</normaloff>:/xpm/isosurface.xpm</iconset>
         </property>
        </item>
       </widget>
@@ -187,7 +187,7 @@ QListWidget::item:selected
               </property>
               <property name="icon">
                <iconset resource="icons.qrc">
-                <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
+                <normaloff>:/xpm/add.png</normaloff>:/xpm/add.png</iconset>
               </property>
              </widget>
             </item>
@@ -198,7 +198,7 @@ QListWidget::item:selected
               </property>
               <property name="icon">
                <iconset resource="icons.qrc">
-                <normaloff>:/images/remove.png</normaloff>:/images/remove.png</iconset>
+                <normaloff>:/xpm/remove.png</normaloff>:/xpm/remove.png</iconset>
               </property>
              </widget>
             </item>
@@ -209,7 +209,7 @@ QListWidget::item:selected
               </property>
               <property name="icon">
                <iconset resource="icons.qrc">
-                <normaloff>:/images/refresh-32.png</normaloff>:/images/refresh-32.png</iconset>
+                <normaloff>:/xpm/refresh-32.png</normaloff>:/xpm/refresh-32.png</iconset>
               </property>
              </widget>
             </item>
@@ -220,7 +220,7 @@ QListWidget::item:selected
               </property>
               <property name="icon">
                <iconset resource="icons.qrc">
-                <normaloff>:/images/ok.png</normaloff>:/images/ok.png</iconset>
+                <normaloff>:/xpm/ok.png</normaloff>:/xpm/ok.png</iconset>
               </property>
              </widget>
             </item>

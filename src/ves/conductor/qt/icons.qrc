@@ -1,12 +1,12 @@
 <RCC>
   <qresource>
-    <file>images/flythrough.png</file>
-    <file>images/flythroughLoop.png</file>
-    <file>images/camera.png</file>
-    <file>images/cameras.png</file>
-    <file>images/slideshow.png</file>
-    <file>images/down.png</file>
-    <file>images/up.png</file>
+    <file>../xpm/flythrough.png</file>
+    <file>../xpm/flythroughLoop.png</file>
+    <file>../xpm/camera.png</file>
+    <file>../xpm/cameras.png</file>
+    <file>../xpm/slideshow.png</file>
+    <file>../xpm/down.png</file>
+    <file>../xpm/up.png</file>
     <file>../xpm/ToolBar/GIS/GIS_Control_Earth.png</file>
     <file>../xpm/ToolBar/GIS/GIS_Control_Earth2.png</file>
     <file>../xpm/ToolBar/GIS/GIS_Control_Layers.png</file>
@@ -16,16 +16,16 @@
     <file>../xpm/CPT/PrevCameraButton.xpm</file>
     <file>../xpm/CPT/PrevMarkerButton.xpm</file>
     <file>../xpm/ToolBar/BBCenterPointJumpButton.xpm</file>
-    <file>images/add.png</file>
-    <file>images/configure.png</file>
-    <file>images/ok.png</file>
-    <file>images/refresh-32.png</file>
-    <file>images/remove.png</file>
-    <file>images/contour.xpm</file>
-    <file>images/isosurface.xpm</file>
-    <file>images/new_vector.xpm</file>
-    <file>images/scalartb.xpm</file>
-    <file>images/streamlines.xpm</file>
+    <file>../xpm/add.png</file>
+    <file>../xpm/configure.png</file>
+    <file>../xpm/ok.png</file>
+    <file>../xpm/refresh-32.png</file>
+    <file>../xpm/remove.png</file>
+    <file>../xpm/contour.xpm</file>
+    <file>../xpm/isosurface.xpm</file>
+    <file>../xpm/new_vector.xpm</file>
+    <file>../xpm/scalartb.xpm</file>
+    <file>../xpm/streamlines.xpm</file>
     <file>../xpm/ToolBar/NewDocumentButton.xpm</file>
     <file>../xpm/ToolBar/OpenButton.xpm</file>
     <file>../xpm/ToolBar/SaveButton.xpm</file>
