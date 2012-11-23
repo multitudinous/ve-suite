@@ -170,6 +170,23 @@ UIElementQt::~UIElementQt()
 {
     _debug( "dtor" );
 
+//    QList<QWidget*> widgets = mTitlebar->findChildren<QWidget*>();
+//    Q_FOREACH( QWidget * widget, widgets )
+//    widget->removeEventFilter( this );
+
+//    FreeOldWidgets();
+//    delete mTimer;
+//    delete mImageMutex;
+//    delete mQTitlebar;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElementQt::Cleanup()
+{
+    m_cleanupSignal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElementQt::CleanupSlot()
+{
     QList<QWidget*> widgets = mTitlebar->findChildren<QWidget*>();
     Q_FOREACH( QWidget * widget, widgets )
     widget->removeEventFilter( this );
@@ -192,6 +209,9 @@ void UIElementQt::Initialize()
         //QObject::connect( this, SIGNAL( RequestRender() ), this, SLOT( _render() ), Qt::QueuedConnection );
         //QObject::connect( this, SIGNAL( PutSendEvent( switchwire::InteractionEvent* ) ),
         //                  this, SLOT( _sendEvent( switchwire::InteractionEvent* ) ), Qt::QueuedConnection );
+
+        QObject::connect( this, SIGNAL( m_cleanupSignal() ),
+                          this, SLOT( CleanupSlot() ), Qt::QueuedConnection );
 
         QObject::connect( this, SIGNAL( PutResizeCanvas( int, int ) ),
                           this, SLOT( _resizeCanvas( int, int ) ), Qt::QueuedConnection );

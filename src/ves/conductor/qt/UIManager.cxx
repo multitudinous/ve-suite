@@ -306,17 +306,25 @@ void UIManager::Update()
     {
         if( m_killFrameCount == 0 )
         {
-//            mInitialized = false;
+            mInitialized = false;
 
-//            std::map< UIElement*, osg::ref_ptr< TextureSubloader > >::iterator it;
-//            it = m_subloaders.begin();
-//            while( it != m_subloaders.end() )
-//            {
-//                it->second->SetEnabled( false );
-//                ++it;
-//            }
+            std::map< UIElement*, osg::ref_ptr< TextureSubloader > >::iterator it;
+            it = m_subloaders.begin();
+            while( it != m_subloaders.end() )
+            {
+                it->second->SetEnabled( false );
+                ++it;
+            }
 
-//            RemoveAllElements();
+            ElementMap_type::iterator map_iterator;
+            for( map_iterator = mElements.begin(); map_iterator != mElements.end();
+                    ++map_iterator )
+            {
+                map_iterator->second->Cleanup();
+            }
+
+
+            //RemoveAllElements();
 
             ++m_killFrameCount;
         }
@@ -326,6 +334,9 @@ void UIManager::Update()
             {
                 mUIGroup->removeUpdateCallback( mUIUpdateCallback.get() );
             }
+
+            RemoveAllElements();
+
             // We wait for 2 updates after we've receive the notice to die
             // before we stop the vrj kernel to ensure all the Qt event
             // pumps have a chance to clear out and destruct.

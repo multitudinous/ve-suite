@@ -136,6 +136,10 @@ public:
 
     virtual bool SizeDirty();
 
+    /// This is called prior to deleting the element to allow for any special
+    /// cleanup to be done that may be sensitive to thread context.
+    virtual void Cleanup();
+
 protected:
     bool eventFilter( QObject* object, QEvent* event );
 
@@ -205,6 +209,7 @@ protected Q_SLOTS:
     void RefreshWidgetFilterList();
     void _raise();
     void _lower();
+    void CleanupSlot();
 
 Q_SIGNALS:
     void RequestRender();
@@ -219,6 +224,7 @@ Q_SIGNALS:
     void PutScrollEvent( int deltaX, int deltaY, int x, int y, int state );
     void PutRaise();
     void PutLower();
+    void m_cleanupSignal();
 
 protected:
     ///Logger reference

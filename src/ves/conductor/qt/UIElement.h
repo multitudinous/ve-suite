@@ -247,6 +247,10 @@ public:
     /// Toggle whether titlebar is displayed
     virtual void ToggleTitlebar() {}
 
+    /// This is called prior to deleting the element to allow for any special
+    /// cleanup to be done that may be sensitive to thread context.
+    virtual void Cleanup() {}
+
     ///
     void SetScreenDimensions( int width, int height );
 
