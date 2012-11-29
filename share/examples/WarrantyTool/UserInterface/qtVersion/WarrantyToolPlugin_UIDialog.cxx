@@ -109,7 +109,13 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
         evm->RegisterSignal( ( &m_connectMouseSelectionSignal ),
                             signalName, switchwire::EventManager::unspecified_SignalType );
     }
-    
+
+    {
+        std::string signalName = "WarrantyToolPlugin_UIDialog" +
+        boost::lexical_cast<std::string>( this ) + ".HighlightPart";
+        evm->RegisterSignal( ( &m_highlightPartSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::on_m_fileBrowseButton_clicked()
@@ -472,7 +478,7 @@ void WarrantyToolPlugin_UIDialog::OnDataLoad( std::string const& fileName )
             delete partNums.at( 0 );
         }
 
-        ui->m_manualPartSelectionChoice->addItems( m_partNumberStrings );
+        //ui->m_manualPartSelectionChoice->addItems( m_partNumberStrings );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1280,6 +1286,17 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
         more = rs.moveNext();
     }
     queryResults->setSortingEnabled( true );
+
+    connect( queryResults, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this,
+             SLOT(QueryItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolPlugin_UIDialog::QueryItemChanged( QTreeWidgetItem* current,
+                                                    QTreeWidgetItem* previous )
+{
+    std::string partNumber = current->text( current->columnCount() - 1 ).
+            toStdString();
+    m_highlightPartSignal.signal( partNumber );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::on_m_mouseSelection_clicked( bool checked )

@@ -115,6 +115,7 @@ WarrantyToolGP::WarrantyToolGP()
     m_mouseSelection( false ),
     m_currentStatement( 0 )
 {
+    std::cout << "WarrantyToolGP ctor " << this << std::endl << std::flush;
     //Needs to match inherited UIPluginBase class name
     mObjectName = "WarrantyToolUI";
     m_dbFilename = "sample.db";
@@ -125,6 +126,7 @@ WarrantyToolGP::WarrantyToolGP()
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolGP::~WarrantyToolGP()
 {
+    //std::cout << "~WarrantyToolGP " << this << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::InitializeNode(
@@ -134,15 +136,20 @@ void WarrantyToolGP::InitializeNode(
 
     //Connect signals here so that only specific plugins are connected to the
     //the ui plugin. This is sort of safe...
-    CONNECTSIGNAL_1( "%ToggleUnselected",
+    CONNECTSIGNALS_1( "%ToggleUnselected",
                     void( const bool& ),
                     &WarrantyToolGP::ToggleUnselected,
-                    m_connections, normal_Priority );
+                    m_connections, any_SignalType, normal_Priority );
     
-    CONNECTSIGNAL_1( "%MouseSelection",
+    CONNECTSIGNALS_1( "%MouseSelection",
                     void( const bool& ),
                     &WarrantyToolGP::SetMouseSelection,
-                    m_connections, normal_Priority );
+                    m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_1( "%HighlightPart",
+                     void( const std::string& ),
+                     &WarrantyToolGP::HighlightPart,
+                     m_connections, any_SignalType, normal_Priority );
 
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
@@ -1865,5 +1872,23 @@ void WarrantyToolGP::ToggleUnselected( bool const& checked )
             }
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::HighlightPart( const std::string& partNumber )
+{
+    m_assemblyPartNumbers.clear();
+    m_joinedPartNumbers.clear();
+    //Highlight the respective node
+    //Make a user specified part glow
+    transparentEnable( m_cadRootNode, 0.3f );
+
+    mAddingParts = false;
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        highlight2( m_cadRootNode, "", false, true );
+    //Highlight part
+    m_lastPartNumber = partNumber;
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        highlight( m_cadRootNode, m_lastPartNumber, true, true );
+    //RenderTextualDisplay( true );
 }
 ////////////////////////////////////////////////////////////////////////////////

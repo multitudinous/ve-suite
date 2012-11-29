@@ -38,6 +38,7 @@
 #include <QtCore/QStringList>
 #include <QtGui/QListWidgetItem>
 #include <QtGui/QFileDialog>
+#include <QtGui/QTreeWidgetItem>
 
 #include <string>
 #include <vector>
@@ -86,6 +87,7 @@ protected slots:
     void on_m_fileBrowseButton_clicked();
     void onFileSelected( const QString& filePath );
     void onFileCancelled();
+    void QueryItemChanged( QTreeWidgetItem* current, QTreeWidgetItem* previous );
 
 private:
     void StripCharacters( std::string& data, const std::string& character );
@@ -119,6 +121,8 @@ private:
     ves::util::BoolSignal_type m_connectToggleUnselectedSignal;
     ///The connect signal for toggle options
     ves::util::BoolSignal_type m_connectMouseSelectionSignal;
+
+    ves::util::StringSignal_type m_highlightPartSignal;
 };
 
 #endif // WarrantyToolPlugin_UIDIALOG_H

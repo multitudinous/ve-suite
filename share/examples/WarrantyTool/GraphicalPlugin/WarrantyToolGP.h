@@ -125,6 +125,8 @@ private:
     void SetMouseSelection( bool const& checked );
     
     void ToggleUnselected( bool const& checked );
+
+    void HighlightPart( const std::string& partNumber );
     
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
