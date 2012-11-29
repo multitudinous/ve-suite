@@ -110,6 +110,40 @@
 
 using namespace ves::xplorer;
 
+//Helper class for filling the generated texture with default pixel values
+class Subload2DCallback : public osg::Texture2D::SubloadCallback
+{
+public:
+    //Fill texture with default pixel values
+    void load( const osg::Texture2D& texture, osg::State& ) const
+    {
+        //Create temporary image which is initialized with 0 values
+        osg::ref_ptr< osg::Image > image = new osg::Image();
+        image->allocateImage(
+                             texture.getTextureWidth() ? texture.getTextureWidth() : 1,
+                             texture.getTextureHeight() ? texture.getTextureHeight() : 1,
+                             1,
+                             texture.getSourceFormat() ? texture.getSourceFormat() : texture.getInternalFormat(),
+                             texture.getSourceType() ? texture.getSourceType() : GL_UNSIGNED_BYTE );
+        
+        //Fill the image with 0 values
+        std::memset( image->data(), 0, image->getTotalSizeInBytesIncludingMipmaps() * sizeof( unsigned char ) );
+
+        //Create the texture in usual OpenGL way
+        glTexImage2D( GL_TEXTURE_2D, 0, texture.getInternalFormat(),
+                     texture.getTextureWidth(), texture.getTextureHeight(), texture.getBorderWidth(),
+                     texture.getSourceFormat() ? texture.getSourceFormat() : texture.getInternalFormat(),
+                     texture.getSourceType() ? texture.getSourceType() : GL_UNSIGNED_BYTE,
+                     image->data() );
+    }
+    
+    //No subload because while we want to subload the texture should be already valid
+    void subload( const osg::Texture2D&, osg::State& ) const
+    {
+        ;
+    }
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
     :
@@ -440,12 +474,14 @@ void SceneRenderToTexture::InitRTTCamera(
                     GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
                     osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
                     viewportDimensions );
+        //colorMap->setSubloadCallback( new Subload2DCallback() );
 
         //Set up the glow map
         osg::ref_ptr< osg::Texture2D > glowMap = CreateViewportTexture(
                     GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
                     osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
                     viewportDimensions );
+        //glowMap->setSubloadCallback( new Subload2DCallback() );
 
         //Attach a texture and use it as the render target
         //If you set one buffer to multisample, they all get set to multisample
