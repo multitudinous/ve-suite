@@ -187,6 +187,8 @@ void UIElementQt::Cleanup()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::CleanupSlot()
 {
+    LOG_INFO( "CleanupSlot begin" );
+    mTimer->stop();
     QList<QWidget*> widgets = mTitlebar->findChildren<QWidget*>();
     Q_FOREACH( QWidget * widget, widgets )
     widget->removeEventFilter( this );
@@ -195,6 +197,7 @@ void UIElementQt::CleanupSlot()
     delete mTimer;
     delete mImageMutex;
     delete mQTitlebar;
+    LOG_INFO( "CleanupSlot end" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::Initialize()
