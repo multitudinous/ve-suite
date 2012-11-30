@@ -316,20 +316,20 @@ void UIManager::Update()
                 ++it;
             }
 
-//            LOG_INFO( "Calling Cleanup on elements" );
-//            ElementMap_type::iterator map_iterator;
-//            for( map_iterator = mElements.begin(); map_iterator != mElements.end();
-//                    ++map_iterator )
-//            {
-//                map_iterator->second->Cleanup();
-//            }
+            LOG_INFO( "Calling Cleanup on elements" );
+            ElementMap_type::iterator map_iterator;
+            for( map_iterator = mElements.begin(); map_iterator != mElements.end();
+                    ++map_iterator )
+            {
+                map_iterator->second->Cleanup();
+            }
 
             // Temporary hack to get plugins to die without trying to destroy
             // all other Qt stuff
-            switchwire::Event< void() > killPlugins;
-            switchwire::EventManager* evm = switchwire::EventManager::instance();
-            evm->RegisterSignal( &killPlugins, "UIManager.KillPlugins" );
-            killPlugins.signal();
+//            switchwire::Event< void() > killPlugins;
+//            switchwire::EventManager* evm = switchwire::EventManager::instance();
+//            evm->RegisterSignal( &killPlugins, "UIManager.KillPlugins" );
+//            killPlugins.signal();
 
             ++m_killFrameCount;
         }
@@ -340,8 +340,8 @@ void UIManager::Update()
                 mUIGroup->removeUpdateCallback( mUIUpdateCallback.get() );
             }
 
-//            LOG_INFO( "Removing Elements" );
-//            RemoveAllElements();
+            LOG_INFO( "Removing Elements" );
+            RemoveAllElements();
 
             // We wait for 2 updates after we've receive the notice to die
             // before we stop the vrj kernel to ensure all the Qt event
