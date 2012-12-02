@@ -187,7 +187,7 @@ int HyperLabICEGP::InitializeLabModels()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
 {
-    if( !OneSecondCheck( m_lastSend, 500000 ) )
+    if( !OneSecondCheck( m_lastSend, 250000 ) )
     {
         return;
     }
