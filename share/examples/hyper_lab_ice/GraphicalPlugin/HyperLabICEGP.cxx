@@ -60,6 +60,10 @@
 #include <osg/MatrixTransform>
 #include <osg/Matrix>
 
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/classification.hpp>
+
 #include <sstream>
 #include <iostream>
 #include <fstream>
@@ -72,7 +76,8 @@ extern osg::ref_ptr<osg::Texture2D> RTTtex;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-//#define NETL_DEMO
+#define NETL_DEMO
+//#define TEST_GAUGES
 
 #include "HyperLabICEGP.h"
 #ifdef NETL_DEMO
@@ -124,26 +129,35 @@ int HyperLabICEGP::InitializeLabModels()
     options->setOptionString( "dds_flip" );
     
     osg::ref_ptr< osg::Group > renderRoot = new osg::Group;
+#ifndef TEST_GAUGES
     osg::ref_ptr< osg::Node > models = osgDB::readNodeFile( "Models/ControlRoom_v9.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
     }
-    //renderRoot->addChild( models.get() );
+    renderRoot->addChild( models.get() );
 
     models = osgDB::readNodeFile( "Models/HyperLab_Facility_v6.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
     }
-    //renderRoot->addChild( models.get() );
+    renderRoot->addChild( models.get() );
 
-    models = osgDB::readNodeFile( "Models/HyperSystem_v7.osg", options.get() );
+    models = osgDB::readNodeFile( "Models/HyperSystem_v8.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
     }
     renderRoot->addChild( models.get() );
+#else
+    osg::ref_ptr< osg::Node > models = osgDB::readNodeFile( "Models/Hyper_StandardizedIndicatorTest.osg", options.get() );
+    if( !( models.valid() ) )
+    {
+        osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
+    }
+    renderRoot->addChild( models.get() );
+#endif
 
     {
         // Main prep work for rendering.
@@ -153,7 +167,7 @@ int HyperLabICEGP::InitializeLabModels()
         RenderPrep renderPrep( renderRoot.get(), textSize, parallaxMap );
 #endif
     }
-
+    
     // Scale to feet.
     //{
         osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform(
@@ -191,7 +205,7 @@ void HyperLabICEGP::PreFrameUpdate()
         {
             counter = 0;
         }
-        size_t gaugeIndex = std::rand() % 3;
+        size_t gaugeIndex = std::rand() % m_pressureIndicators.size();
         SensorGaugeContainer::iterator iter = m_pressureIndicators.begin();
         std::advance( iter, gaugeIndex );
         //iter = iter + gaugeIndex;
@@ -244,10 +258,10 @@ void HyperLabICEGP::PreFrameUpdate()
         for( SensorGaugeContainer::const_iterator iter = m_hvIndicators.begin(); iter != m_hvIndicators.end(); ++iter )
         {
             osg::Vec3 rotAxis( 0, 1, 0 );
-            if( iter->first == "HV430" )
+            /*if( iter->first == "HV430" )
             {
                 rotAxis.set( 0, 0, 1 );
-            }
+            }*/
             osg::Matrix tempMat = iter->second->getMatrix();
             //tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( 90.0 ), rotAxis ).getRotate() );
             //tempMat.preMultRotate( osg::Matrix::rotate( osg::DegreesToRadians( valveCounter ), rotAxis ).getRotate() );
@@ -273,10 +287,21 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
         //Get the first child
         //Rotate the gauge accordingly
         std::vector< std::string > loadedPartNumbers;
+#ifndef TEST_GAUGES
         loadedPartNumbers.push_back( "PI019" );
+        loadedPartNumbers.push_back( "PI026" );
+        loadedPartNumbers.push_back( "PI403" );
+        loadedPartNumbers.push_back( "PI406B" );
+        loadedPartNumbers.push_back( "PI407" );
         loadedPartNumbers.push_back( "PI411" );
         loadedPartNumbers.push_back( "PI413" );
-        
+        loadedPartNumbers.push_back( "PI013" );
+#else
+        loadedPartNumbers.push_back( "PI000" );
+        loadedPartNumbers.push_back( "PI001" );
+        loadedPartNumbers.push_back( "PI002" );
+        loadedPartNumbers.push_back( "PI003" );
+#endif
         for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
         {
             ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
@@ -287,11 +312,29 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
                 osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
                 osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
                 
-                osg::Matrix tempMat = child->getMatrix();
-                tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( 90.0 ), osg::Vec3( 0, 1, 0 ) ).getRotate() );
-                child->setMatrix( tempMat );
+                osg::ref_ptr< osg::MatrixTransform > newTrans = new osg::MatrixTransform();
+                osg::ref_ptr< osg::Node > dofNode = child->getChild( 0 );//->asGroup()->getChild( 0 );
+                std::string nodeName = dofNode->getName();
+
+                std::vector<std::string> strs;
+                boost::split(strs,nodeName,boost::is_any_of("_"));
+                //for( size_t j = 0; j < strs.size(); ++j )
+                //{
+                //    std::cout << strs.at( j ) << std::endl;
+                //}
+                unsigned int childNum = 0;
+                child->removeChild( childNum );
+                child->addChild( newTrans.get() );
+                newTrans->addChild( dofNode.get() );
                 
-                m_pressureIndicators[ loadedPartNumbers.at( i ) ] = child.get();
+                //osg::Matrix tempMat = child->getMatrix();
+                osg::Matrix tempMat = newTrans->getMatrix();
+                tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( 90.0 ), osg::Vec3( 0, 1, 0 ) ).getRotate() );
+                //child->setMatrix( tempMat );
+                newTrans->setMatrix( tempMat );
+
+                //m_pressureIndicators[ loadedPartNumbers.at( i ) ] = child.get();
+                m_pressureIndicators[ loadedPartNumbers.at( i ) ] = newTrans.get();
             }
             else
             {
@@ -306,10 +349,14 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
         //Rotate the child
         //Spin it with a given velocity
         std::vector< std::string > loadedPartNumbers;
+#ifndef TEST_GAUGES
         loadedPartNumbers.push_back( "HV408" );
         loadedPartNumbers.push_back( "HV414" );
         loadedPartNumbers.push_back( "HV430" );
-        
+#else
+        loadedPartNumbers.push_back( "HV000" );
+        loadedPartNumbers.push_back( "HV001" );
+#endif        
         for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
         {
             ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
@@ -319,13 +366,22 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
                 std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
                 osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
                 osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
-                //tempGroup->removeChild( child.get() );
+                osg::ref_ptr< osg::MatrixTransform > newTrans = new osg::MatrixTransform();
+                osg::ref_ptr< osg::Node > dofNode = child->getChild( 0 );//->asGroup()->getChild( 0 );
+                std::string nodeName = dofNode->getName();
                 
-                //m_hvIndicators[ loadedPartNumbers.at( i ) ] = new osg::PositionAttitudeTransform();
-                m_hvIndicators[ loadedPartNumbers.at( i ) ] = child.get();
+                std::vector<std::string> strs;
+                boost::split(strs,nodeName,boost::is_any_of("_"));
+                //for( size_t j = 0; j < strs.size(); ++j )
+                //{
+                //    std::cout << strs.at( j ) << std::endl;
+                //}
+                unsigned int childNum = 0;
+                child->removeChild( childNum );
+                child->addChild( newTrans.get() );
+                newTrans->addChild( dofNode.get() );
                 
-                //pat->addChild( child.get() );
-                //tempGroup->addChild( pat.get() );
+                m_hvIndicators[ loadedPartNumbers.at( i ) ] = newTrans;
             }
             else
             {
@@ -347,7 +403,7 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
             if( childVisitor.FoundChild() )
             {
                 std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
-                osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
+                /*osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
                 osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();                
                 m_fiIndicators[ loadedPartNumbers.at( i ) ] = child.get();
                 osg::Matrix tempMat = child->getMatrix();
@@ -355,7 +411,29 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
                 m_ballHeight = currentTrans[ 2 ];
                 currentTrans[ 2 ] += 6.0;
                 tempMat.setTrans( currentTrans );
-                child->setMatrix( tempMat );
+                child->setMatrix( tempMat );*/
+                
+                osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
+                osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
+                osg::ref_ptr< osg::MatrixTransform > newTrans = new osg::MatrixTransform();
+                osg::ref_ptr< osg::Node > dofNode = child->getChild( 0 );
+                std::string nodeName = dofNode->getName();
+                
+                std::vector<std::string> strs;
+                boost::split(strs,nodeName,boost::is_any_of("_"));
+                
+                unsigned int childNum = 0;
+                child->removeChild( childNum );
+                child->addChild( newTrans.get() );
+                newTrans->addChild( dofNode.get() );
+                
+                m_fiIndicators[ loadedPartNumbers.at( i ) ] = newTrans.get();
+              
+                osg::Matrix tempMat = newTrans->getMatrix();
+                osg::Vec3 currentTrans = tempMat.getTrans();                
+                currentTrans[ 2 ] += 6.0;
+                tempMat.setTrans( currentTrans );
+                newTrans->setMatrix( tempMat );
             }
             else
             {
