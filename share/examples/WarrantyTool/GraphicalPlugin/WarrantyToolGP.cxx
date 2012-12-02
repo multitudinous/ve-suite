@@ -883,6 +883,9 @@ void WarrantyToolGP::RemoveSelfFromSG()
 {
     PluginBase::RemoveSelfFromSG();
     //m_keyboard->SetProcessSelection( true );
+    //See if this is needed in plugins.
+    m_connections.DropConnections();
+
     try
     {
         Poco::Data::SQLite::Connector::unregisterConnector();
