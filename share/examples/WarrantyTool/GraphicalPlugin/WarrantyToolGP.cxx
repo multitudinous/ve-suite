@@ -116,7 +116,7 @@ WarrantyToolGP::WarrantyToolGP()
     m_mouseSelection( false ),
     m_currentStatement( 0 )
 {
-    std::cout << "WarrantyToolGP ctor " << this << std::endl << std::flush;
+    //std::cout << "WarrantyToolGP ctor " << this << std::endl << std::flush;
     //Needs to match inherited UIPluginBase class name
     mObjectName = "WarrantyToolUI";
     m_dbFilename = "sample.db";
