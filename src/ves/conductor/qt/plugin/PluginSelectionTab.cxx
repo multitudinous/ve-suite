@@ -119,9 +119,9 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget* parent 
                       &PluginSelectionTab::ReDiscoverPlugins,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_0( "%KillPlugins%",
-                      void(), &PluginSelectionTab::ClearActivePlugins,
-                      m_connections, any_SignalType, normal_Priority );
+    //CONNECTSIGNALS_0( "%KillPlugins%",
+    //                  void(), &PluginSelectionTab::ClearActivePlugins,
+    //                  m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::ReDiscoverPlugins( std::string const& dir )
