@@ -175,7 +175,7 @@ private:
     //Poco::Data::RecordSet m_currentStatement;
     
     /// Required to be able to connect up to signals.
-    switchwire::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList* m_connections;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

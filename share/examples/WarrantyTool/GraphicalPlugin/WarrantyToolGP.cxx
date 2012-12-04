@@ -136,22 +136,23 @@ void WarrantyToolGP::InitializeNode(
 {
     PluginBase::InitializeNode( veworldDCS );
 
+    m_connections = new switchwire::ScopedConnectionList();
     //Connect signals here so that only specific plugins are connected to the
     //the ui plugin. This is sort of safe...
     CONNECTSIGNALS_1( "%ToggleUnselected",
                     void( const bool& ),
                     &WarrantyToolGP::ToggleUnselected,
-                    m_connections, any_SignalType, normal_Priority );
+                    *m_connections, any_SignalType, normal_Priority );
     
     CONNECTSIGNALS_1( "%MouseSelection",
                     void( const bool& ),
                     &WarrantyToolGP::SetMouseSelection,
-                    m_connections, any_SignalType, normal_Priority );
+                    *m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_1( "%HighlightPart",
                      void( const std::string& ),
                      &WarrantyToolGP::HighlightPart,
-                     m_connections, any_SignalType, normal_Priority );
+                     *m_connections, any_SignalType, normal_Priority );
 
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
@@ -885,7 +886,8 @@ void WarrantyToolGP::RemoveSelfFromSG()
     PluginBase::RemoveSelfFromSG();
     //m_keyboard->SetProcessSelection( true );
     //See if this is needed in plugins.
-    m_connections.DropConnections();
+    m_connections->DropConnections();
+    delete m_connections;
     switchwire::EventManager::instance()->CleanupSlotMemory();
 
     try
