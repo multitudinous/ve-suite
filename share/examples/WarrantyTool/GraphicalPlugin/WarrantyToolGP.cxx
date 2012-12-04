@@ -127,6 +127,7 @@ WarrantyToolGP::WarrantyToolGP()
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolGP::~WarrantyToolGP()
 {
+
     //std::cout << "~WarrantyToolGP " << this << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -885,6 +886,7 @@ void WarrantyToolGP::RemoveSelfFromSG()
     //m_keyboard->SetProcessSelection( true );
     //See if this is needed in plugins.
     m_connections.DropConnections();
+    switchwire::EventManager::instance()->CleanupSlotMemory();
 
     try
     {
