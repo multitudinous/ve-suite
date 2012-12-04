@@ -202,7 +202,7 @@ osgTreeItem* addTreeItem( TreeItem* parent,
             else if( descList.at( i ) == "VE_XPLORER_PLUGIN_ID" )
             {
                 child->SetIcon(QIcon(
-                ":/tree/pluginicon.jpg"));
+                ":/tree/pluginicon.png"));
             }
         }
     }
