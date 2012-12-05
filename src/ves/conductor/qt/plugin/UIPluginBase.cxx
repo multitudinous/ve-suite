@@ -49,8 +49,11 @@ using namespace ves::open::xml;
 using namespace ves::open::xml::model;
 
 UIPluginBase::UIPluginBase()
+    :
+    m_veModel( ModelPtr() ),
+    m_xplorerPlugin( 0 )
 {
-    m_veModel = ModelPtr();
+    ;
 }
 
 UIPluginBase::~UIPluginBase()
