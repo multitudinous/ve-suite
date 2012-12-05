@@ -216,10 +216,12 @@
          <translation_coordinate_system>1</translation_coordinate_system>
          <rotation_coordinate_system>1</rotation_coordinate_system>
       </simulated_positional_device>
+      <!--
       <digital_proxy name="VJSystemStopKernelProxy" version="1">
          <device>DigitalSystemControls</device>
          <unit>0</unit>
       </digital_proxy>
+      -->
       <digital_proxy name="VJAppExitProxy" version="1">
          <device>AppDigitalSim</device>
          <unit>0</unit>

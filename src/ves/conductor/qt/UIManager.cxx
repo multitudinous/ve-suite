@@ -1365,6 +1365,14 @@ bool UIManager::KeyPressEvent( gadget::Keys key, int modifiers, char unicode )
         return true;
     }
 
+    // Intercept the escape key
+    if( key == gadget::KEY_ESC )
+    {
+        // We're just sinking it here so it doesn't propagate. Remaining
+        // logic is in KeyReleaseEvent
+        return true;
+    }
+
     // Don't pass on key events if mouse pointer is not inside the UI
     if( !mMouseInsideUI )
     {
@@ -1400,6 +1408,13 @@ bool UIManager::KeyReleaseEvent( gadget::Keys key, int modifiers, char unicode )
     if( key == gadget::KEY_F1 )
     {
         ToggleVisibility();
+        return true;
+    }
+
+    // Intercept the escape key
+    if( key == gadget::KEY_ESC )
+    {
+        DestroyUI();
         return true;
     }
 
