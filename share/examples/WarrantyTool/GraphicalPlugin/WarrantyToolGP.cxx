@@ -1118,7 +1118,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
         float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
         std::string partNumber;
         std::string partNumberHeader;
-        std::set< std::string > setOfPartNumbers;
+        std::vector< std::string > setOfPartNumbers;
         for( size_t i = 0; i < m_assemblyPartNumbers.size(); ++i )
         {
             ves::xplorer::scenegraph::TextTexture* tempText = 0;
@@ -1185,7 +1185,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
             
             m_groupedTextTextures->AddTextTexture( partNumber, tempText );
             
-           setOfPartNumbers.insert( partNumber );
+           setOfPartNumbers.push_back( partNumber );
             //ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
             //    m_cadRootNode, partNumber, true, true, 
             //    osg::Vec3( 0.57255, 0.34118, 1.0 ) );
@@ -1208,10 +1208,10 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
     {
         if( !pickedPartNumbers.empty() )
         {
-            std::set< std::string > setOfPartNumbers;
+            std::vector< std::string > setOfPartNumbers;
             for( size_t i = 0; i < m_assemblyPartNumbers.size(); ++i )
             {
-                setOfPartNumbers.insert( m_assemblyPartNumbers.at( i ) );
+                setOfPartNumbers.push_back( m_assemblyPartNumbers.at( i ) );
 
                 //ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
                 //    m_cadRootNode, m_assemblyPartNumbers.at( i ), true, true, 
@@ -1315,12 +1315,12 @@ void WarrantyToolGP::PickTextTextures()
         ves::xplorer::scenegraph::DCS* tempModelNodes = 
             mModel->GetModelCADHandler()->
             GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
-        std::set< std::string > setOfParts;
+        std::vector< std::string > setOfParts;
         for( std::vector< std::string >::const_iterator 
             it = m_assemblyPartNumbers.begin(); 
             it != m_assemblyPartNumbers.end(); ++it)
         {
-            setOfParts.insert( *it );
+            setOfParts.push_back( *it );
         }
         ves::xplorer::scenegraph::HighlightNodesByNameVisitor
             highlightNodes( tempModelNodes, setOfParts, true, true, osg::Vec3( 0.57255, 0.34118, 1.0 ) );
@@ -1466,7 +1466,7 @@ void WarrantyToolGP::QueryTableAndHighlightParts(
     
     std::string partNumber;
     std::string partNumberHeader;
-    std::set< std::string > setOfParts;
+    std::vector< std::string > setOfParts;
     while (more)
     {
         for (std::size_t col = 0; col < cols; ++col)
@@ -1481,7 +1481,7 @@ void WarrantyToolGP::QueryTableAndHighlightParts(
             }
         }
 
-        setOfParts.insert( partNumber );
+        setOfParts.push_back( partNumber );
         more = rs.moveNext();
     }
     ves::xplorer::scenegraph::HighlightNodesByNameVisitor 
@@ -1552,7 +1552,7 @@ void WarrantyToolGP::QueryInnerJoinAndHighlightParts( const std::string& querySt
     
     std::string partNumber;
     std::string partNumberHeader;
-    std::set< std::string > setOfParts;
+    std::vector< std::string > setOfParts;
     while (more)
     {
         for (std::size_t col = 0; col < cols; ++col)
@@ -1567,7 +1567,7 @@ void WarrantyToolGP::QueryInnerJoinAndHighlightParts( const std::string& querySt
                 m_joinedPartNumbers.push_back( partNumber );
             }
         }
-        setOfParts.insert( partNumber );
+        setOfParts.push_back( partNumber );
         more = rs.moveNext();
     }
     ves::xplorer::scenegraph::HighlightNodesByNameVisitor 
@@ -1656,7 +1656,7 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
     std::string partNumberHeader;
     std::string partText;
     osg::Vec3 nullGlowColor( 0.57255, 0.34118, 1.0 );
-    std::set< std::string > setOfParts;
+    std::vector< std::string > setOfParts;
     while (more)
     {
         for (std::size_t col = 0; col < cols; ++col)
@@ -1670,7 +1670,7 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
                 m_assemblyPartNumbers.push_back( partNumber );
             }
         }
-        setOfParts.insert( partNumber );
+        setOfParts.push_back( partNumber );
         more = rs.moveNext();
     }
     ves::xplorer::scenegraph::HighlightNodesByNameVisitor 

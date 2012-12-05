@@ -43,7 +43,7 @@ using namespace ves::xplorer::scenegraph;
 //using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-HighlightNodesByNameVisitor::HighlightNodesByNameVisitor( osg::Node* node, std::set< std::string > nodeNames, bool addGlow, bool ignoreCase, osg::Vec3 glowColor )
+HighlightNodesByNameVisitor::HighlightNodesByNameVisitor( osg::Node* node, std::vector< std::string >& nodeNames, bool addGlow, bool ignoreCase, osg::Vec3 glowColor )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
     m_nodeNames( nodeNames ),
@@ -54,11 +54,11 @@ HighlightNodesByNameVisitor::HighlightNodesByNameVisitor( osg::Node* node, std::
     if( m_ignoreCase )
     {
         m_nodeNames.clear();
-        for( std::set< std::string >::const_iterator iter = nodeNames.begin(); iter != nodeNames.end(); ++iter )
+        for( std::vector< std::string >::const_iterator iter = nodeNames.begin(); iter != nodeNames.end(); ++iter )
         {
             //std::string nodeName = *iter;
             //boost::algorithm::to_lower_copy( *iter );
-            m_nodeNames.insert( boost::algorithm::to_lower_copy( *iter ) );
+            m_nodeNames.push_back( boost::algorithm::to_lower_copy( *iter ) );
         }
         //std::transform( mNodeName.begin(), mNodeName.end(),
         //    mNodeName.begin(), std::tolower);
@@ -85,14 +85,22 @@ void HighlightNodesByNameVisitor::apply( osg::Node& node )
 
     if( mAddGlow )
     {
-        std::set< std::string >::const_iterator iter = m_nodeNames.find( name );
+        for( std::vector< std::string >::const_iterator iter = m_nodeNames.begin(); iter != m_nodeNames.end(); ++iter )
+        {
+            size_t found = name.find( *iter );
+            if( found != std::string::npos )
+            {
+                foundNode = true;
+                break;
+            }
+        }
         
-        if( iter != m_nodeNames.end() )
+        if( foundNode )
         {
             //size_t found = name.find( mNodeName );
             //if( found != std::string::npos )
             {
-                foundNode = true;
+                //foundNode = true;
                 osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
                 //I think we need to check and see if the stateset has any parents
                 if( geode_stateset->getNumParents() > 1 )

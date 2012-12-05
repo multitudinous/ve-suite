@@ -60,7 +60,7 @@ public:
     ///\param node The node to be traversed
     ///\param nodeName The name of the node to highlight
     ///\param opaqueParent The hack to get around osg transparency issues
-    HighlightNodesByNameVisitor( osg::Node* node, std::set< std::string > nodeNames,
+    HighlightNodesByNameVisitor( osg::Node* node, std::vector< std::string >& nodeNames,
                                 bool addGlow = true, bool ignoreCase = false,
                                 osg::Vec3 glowColor = osg::Vec3( 1.0, 0.0, 0.0 ) );
 
@@ -83,7 +83,7 @@ public:
 
 private:
     ///The name of the node to highlight
-    std::set< std::string > m_nodeNames;
+    std::vector< std::string > m_nodeNames;
     ///Fond node
     std::vector< osg::ref_ptr< osg::Node > > m_foundNodes;
     ///Add the glow to parts, if false then remove all glow
