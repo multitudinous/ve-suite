@@ -141,13 +141,6 @@ public:
     ///Returns vector of output ports
     virtual PORT GetOutPorts();
 
-
-    /// ???
-    //virtual void Lock( bool lock );
-
-    /// ???
-    //virtual bool Has3Ddata();
-
 public Q_SLOTS:
     void SetNumInputPorts( int num );
     void SetNumOutputPorts( int num );
@@ -161,12 +154,6 @@ protected:
     void RegistVar( std::string vname, std::vector< double >* var );
     void RegistVar( std::string vname, std::vector< std::string >* var );
     void RegistVar( std::string vname, std::vector< std::vector<std::string> >* var );
-
-    //    ///Check the active id against the plugin id
-    //    bool CheckID();
-
-    ///Remove all the dialogs that were opened for this plugin
-    //void RemovePluginDialogsFromCanvas();
 
     ///id for the plugin
     unsigned int m_id;

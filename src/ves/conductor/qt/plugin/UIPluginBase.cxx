@@ -50,6 +50,7 @@ using namespace ves::open::xml::model;
 
 UIPluginBase::UIPluginBase()
     :
+    m_id( 0 ),
     m_veModel( ModelPtr() ),
     m_xplorerPlugin( 0 )
 {
@@ -580,28 +581,6 @@ void UIPluginBase::OnOptimizeCAD( )
     ves::xplorer::command::CommandManager::instance()->AddXMLCommand( veCommand );
 }
 
-//void UIPluginBase::SetNetwork( Network* network )
-//{
-//    m_network = network;
-//}
-
-// ?? Need to understand better what this does
-//void UIPluginBase::SendActiveId()
-//{
-//    //send the active id so that each plugin knows what to do
-//    wxUpdateUIEvent setActivePluginId( UIPLUGINBASE_SET_ACTIVE_PLUGIN );
-//    setActivePluginId.SetClientData( &id );
-//    setActivePluginId.SetId( UIPLUGINBASE_SET_ACTIVE_PLUGIN );
-//    m_canvas->GetEventHandler()->ProcessEvent( setActivePluginId );
-//}
-
-// This used to simply disable the "Make Hierarchy" entry in the plugin popup
-// menu
-//void UIPluginBase::SetAsHierarchy()
-//{
-
-//}
-
 
 void UIPluginBase::RegistVar( std::string vname, long* var )
 {
@@ -715,16 +694,6 @@ void UIPluginBase::SetNumOutputPorts( int num )
         DeletePort( *iter );
     }
 }
-
-
-//    bool UIPluginBase::CheckID();
-
-// This used to close down and delete any dialogs associated with this pluign
-//void UIPluginBase::RemovePluginDialogsFromCanvas()
-//{
-
-//}
-
 
 } // namespace conductor
 } // namespace ves
