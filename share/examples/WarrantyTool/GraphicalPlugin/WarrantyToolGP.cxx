@@ -114,7 +114,8 @@ WarrantyToolGP::WarrantyToolGP()
     m_cadRootNode( 0 ),
     m_hasPromiseDate( false ),
     m_mouseSelection( false ),
-    m_currentStatement( 0 )
+    m_currentStatement( 0 ),
+    m_connections( 0 )
 {
     //std::cout << "WarrantyToolGP ctor " << this << std::endl << std::flush;
     //Needs to match inherited UIPluginBase class name
@@ -127,7 +128,6 @@ WarrantyToolGP::WarrantyToolGP()
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolGP::~WarrantyToolGP()
 {
-
     //std::cout << "~WarrantyToolGP " << this << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -885,9 +885,10 @@ void WarrantyToolGP::RemoveSelfFromSG()
 {
     PluginBase::RemoveSelfFromSG();
     //m_keyboard->SetProcessSelection( true );
-    //See if this is needed in plugins.
+
     m_connections->DropConnections();
     delete m_connections;
+    m_connections = 0;
     switchwire::EventManager::instance()->CleanupSlotMemory();
 
     try
