@@ -34,6 +34,15 @@ case $PLATFORM in
 
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     CONFIGURE_PARAMS+=( --disable-video-x11-xrandr )
+
+    # check for GCC 4.1.x, and if found enable gnu99
+    # fixes build failure on RHEL5
+    gcc_version_index=$(gcc --version | awk 'NR==1 {print index($0, "4.1")}')
+    if [ ${gcc_version_index} -ne 0 ]
+    then
+        CONFIGURE_PARAMS+=( CFLAGS=-std=gnu99 )
+    fi
+
     POST_BUILD_METHOD="cd ${INSTALL_DIR}/include && ln -s SDL2 SDL && cd ${INSTALL_DIR}/lib && ln -s libSDL2.dylib libSDL.dylib && cd ${BUILD_DIR}"
     ;;
 esac
