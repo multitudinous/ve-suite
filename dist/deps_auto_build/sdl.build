@@ -33,6 +33,7 @@ case $PLATFORM in
     CONFIGURE=../configure
 
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    CONFIGURE_PARAMS+=( --disable-video-x11-xrandr )
     POST_BUILD_METHOD="cd ${INSTALL_DIR}/include && ln -s SDL2 SDL && cd ${INSTALL_DIR}/lib && ln -s libSDL2.dylib libSDL.dylib && cd ${BUILD_DIR}"
     ;;
 esac
