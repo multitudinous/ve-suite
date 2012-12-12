@@ -1,4 +1,5 @@
 ##Builds WarrantyTool UserInterface Plugin
+SConscript('qtVersion/SConscript')
 import os, sys, string
 import SConsAddons.Util as sca_util
 import distutils.util

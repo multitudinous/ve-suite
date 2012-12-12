@@ -69,6 +69,9 @@
 #include <osgUtil/LineSegmentIntersector>
 #include <osg/Depth>
 
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+
 #include <sstream>
 #include <iostream>
 #include <fstream>
@@ -124,9 +127,48 @@ DynamicVehicleSimToolGP::DynamicVehicleSimToolGP()
     m_needInitialized( false ),
     m_frameCount( 0 )
 {
-    //Needs to match inherited UIPluginBase class name
+    //Needs to match inherited UIPluginBase class name -- for Qt version, this
+    // is the value of m_pluginName in DynamicVehicleSimTool.cxx
     mObjectName = "DynamicVehicleSimToolUI";
-    
+
+    CONNECTSIGNALS_2( "%DynSim.SetComputerDetails",
+                      void( const std::string&, const std::string& ),
+                      &DynamicVehicleSimToolGP::SetComputerData,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_1( "%DynSim.SetSimState",
+                      void( const std::string& ),
+                      &DynamicVehicleSimToolGP::SetSimState,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_1( "%DynSim.SetSimScale",
+                      void( const double& ),
+                      &DynamicVehicleSimToolGP::SetSimScale,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_1( "%DynSim.SetGeometryMap",
+                      void( const std::vector< std::string >& ),
+                      &DynamicVehicleSimToolGP::SetupGeometryDataMaps,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_1( "%DynSim.SetGeometryConstraint",
+                      void( const std::string& ),
+                      &DynamicVehicleSimToolGP::SetGeometryConstraint,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_5( "%DynSim.RegistrationUpdate",
+                      void( const std::string&, const std::string&,
+                            const std::vector< double >&, const std::string&,
+                            const std::string& ),
+                      &DynamicVehicleSimToolGP::RegistrationUpdate,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_0( "%DynSim.SimReset",
+                      void( ),
+                      &DynamicVehicleSimToolGP::ResetScene,
+                      m_connections, any_SignalType, normal_Priority );
+
+
     mEventHandlerMap[ "Tool Info" ] = this;
     mEventHandlerMap[ "Geometry Data Map" ] = this;
     mEventHandlerMap[ "Geometry Map Update" ] = this;
@@ -257,18 +299,18 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
 
     if( commandName == "Tool Info" )
     {
-        ves::open::xml::DataValuePairPtr dvp1 = 
+        ves::open::xml::DataValuePairPtr dvp1 =
             m_currentCommand->GetDataValuePair( "ComputerName" );
         std::string computerName;
         dvp1->GetData( computerName );
         
-        ves::open::xml::DataValuePairPtr dvp2 = 
+        ves::open::xml::DataValuePairPtr dvp2 =
             m_currentCommand->GetDataValuePair( "ComputerPort" );
         std::string computerPort;
         dvp2->GetData( computerPort );
         SetComputerData( computerName, computerPort );
         
-        ves::open::xml::DataValuePairPtr dvp3 = 
+        ves::open::xml::DataValuePairPtr dvp3 =
             m_currentCommand->GetDataValuePair( "Constrained Geometry" );
         std::string constrainedGeom;
         dvp3->GetData( constrainedGeom );
@@ -278,14 +320,14 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             if( mModelHandler->GetActiveModel()->
                 GetModelCADHandler()->PartExists( constrainedGeom ) )
             {
-                m_constrainedGeom = 
+                m_constrainedGeom =
                     mModelHandler->GetActiveModel()->
                     GetModelCADHandler()->GetPart( constrainedGeom )->GetDCS();
             }
             else if( mModelHandler->GetActiveModel()->
                 GetModelCADHandler()->AssemblyExists( constrainedGeom ) )
             {
-                m_constrainedGeom = 
+                m_constrainedGeom =
                     mModelHandler->GetActiveModel()->
                     GetModelCADHandler()->GetAssembly( constrainedGeom );
             }
@@ -301,9 +343,9 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         
         if( m_constrainedGeom.valid() )
         {
-            ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor( 
+            ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor(
                 m_constrainedGeom.get(), mSceneManager->GetModelRoot() );
-            m_constrainedGeomPath = 
+            m_constrainedGeomPath =
                 npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
         }
         return;
@@ -320,7 +362,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         //bool noGeom = false;
         for( size_t i = 0; i < numDVPs; ++i )
         {
-            ves::open::xml::DataValuePairPtr geomDVP = 
+            ves::open::xml::DataValuePairPtr geomDVP =
                 m_currentCommand->GetDataValuePair( i );
             geomDVP->GetData( nodeName );
             //std::cout << nodeName << std::endl;
@@ -333,24 +375,24 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             if( mModelHandler->GetActiveModel()->
                 GetModelCADHandler()->PartExists( nodeName ) )
             {
-                tempNode = 
+                tempNode =
                     mModelHandler->GetActiveModel()->
                     GetModelCADHandler()->GetPart( nodeName )->GetDCS();
             }
             else if( mModelHandler->GetActiveModel()->
                 GetModelCADHandler()->AssemblyExists( nodeName ) )
             {
-                tempNode = 
+                tempNode =
                     mModelHandler->GetActiveModel()->
                     GetModelCADHandler()->GetAssembly( nodeName );
             }
 
             if( tempNode.valid() )
             {
-                ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor( 
+                ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor(
                     tempNode.get(), mSceneManager->GetModelRoot() );
                 
-                const osg::NodePath tempPath = 
+                const osg::NodePath tempPath =
                     npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
                 
                 const osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( tempPath );
@@ -362,7 +404,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
                 const double scaleFactor = gmtl::length( scaleXVec );
 
 
-                m_animationedNodes.push_back( std::make_pair< double, 
+                m_animationedNodes.push_back( std::make_pair< double,
                     osg::ref_ptr< ves::xplorer::scenegraph::DCS > >( scaleFactor, tempNode.get() ) );
                 
                 m_initialPositionAccumulatedStack.push_back( tempMat );
@@ -376,7 +418,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
 
     if( commandName == "Geometry Map Update" )
     {
-        ves::open::xml::DataValuePairPtr dvp = 
+        ves::open::xml::DataValuePairPtr dvp =
             m_currentCommand->GetDataValuePair( "Constrained Geometry" );
         std::string constrainedGeom;
         dvp->GetData( constrainedGeom );
@@ -386,14 +428,14 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             if( mModelHandler->GetActiveModel()->
                 GetModelCADHandler()->PartExists( constrainedGeom ) )
             {
-                m_constrainedGeom = 
+                m_constrainedGeom =
                     mModelHandler->GetActiveModel()->
                     GetModelCADHandler()->GetPart( constrainedGeom )->GetDCS();
             }
             else if( mModelHandler->GetActiveModel()->
                 GetModelCADHandler()->AssemblyExists( constrainedGeom ) )
             {
-                m_constrainedGeom = 
+                m_constrainedGeom =
                     mModelHandler->GetActiveModel()->
                     GetModelCADHandler()->GetAssembly( constrainedGeom );
             }
@@ -409,9 +451,9 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
 
         if( m_constrainedGeom.valid() )
         {
-            ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor( 
+            ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor(
                 m_constrainedGeom.get(), mSceneManager->GetModelRoot() );
-            m_constrainedGeomPath = 
+            m_constrainedGeomPath =
                 npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
         }
         return;
@@ -419,7 +461,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
 
     if( commandName == "Simulator Update" )
     {
-        ves::open::xml::DataValuePairPtr dvp = 
+        ves::open::xml::DataValuePairPtr dvp =
             m_currentCommand->GetDataValuePair( "Simulator State" );
         std::string simState;
         dvp->GetData( simState );
@@ -434,7 +476,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
             ResetScene();
         }
 
-        dvp = 
+        dvp =
             m_currentCommand->GetDataValuePair( "Simulator Scale" );
         if( dvp )
         {
@@ -445,10 +487,10 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
 
     if( commandName == "DVST Registration Update" )
     {
-        ves::open::xml::DataValuePairPtr dvp1 = 
+        ves::open::xml::DataValuePairPtr dvp1 =
             m_currentCommand->GetDataValuePair( "SIP X" );
         if( dvp1 )
-        {   
+        {
             double sipX, sipY, sipZ;
             dvp1->GetData( sipX );
             dvp1 = m_currentCommand->GetDataValuePair( "SIP Y" );
@@ -461,22 +503,22 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
         {
             m_sip.set( 0.0, 0.0, 0.0 );
         }
-        ves::open::xml::DataValuePairPtr dvp = 
+        ves::open::xml::DataValuePairPtr dvp =
             m_currentCommand->GetDataValuePair( "Mode" );
         std::string simState;
         dvp->GetData( simState );
         
         if( simState == "Manual" )
         {
-            gmtl::Matrix44d sipLoc = 
+            gmtl::Matrix44d sipLoc =
                 gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
-            m_initialNavMatrix = 
+            m_initialNavMatrix =
                 gmtl::invert( sipLoc ) * mSceneManager->GetNavDCS()->GetMat();
             mSceneManager->GetNavDCS()->SetMat( m_initialNavMatrix );
         }
         else
         {
-            dvp1 = 
+            dvp1 =
                 m_currentCommand->GetDataValuePair( "Filename" );
             dvp1->GetData( m_birdFilename );
 
@@ -514,7 +556,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
                 }
                 else if( forwardAxis == "Z" )
                 {
-                    m_forwardVector.set( 0, 0, 1 );                
+                    m_forwardVector.set( 0, 0, 1 );
                 }
             
                 if( isNegative )
@@ -540,7 +582,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
                 }
                 else if( upAxis == "Z" )
                 {
-                    m_upVector.set( 0, 0, 1 );                
+                    m_upVector.set( 0, 0, 1 );
                 }
             
                 if( isNegative )
@@ -557,18 +599,148 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
 
     if( commandName == "Computer Info Update" )
     {
-        ves::open::xml::DataValuePairPtr dvp1 = 
+        ves::open::xml::DataValuePairPtr dvp1 =
             m_currentCommand->GetDataValuePair( "ComputerName" );
         std::string computerName;
         dvp1->GetData( computerName );
         
-        ves::open::xml::DataValuePairPtr dvp2 = 
+        ves::open::xml::DataValuePairPtr dvp2 =
             m_currentCommand->GetDataValuePair( "ComputerPort" );
         std::string computerPort;
         dvp2->GetData( computerPort );
         SetComputerData( computerName, computerPort );
         return;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolGP::SetGeometryConstraint( const std::string& constrainedGeom )
+{
+    if( !constrainedGeom.empty() && (constrainedGeom != "None") )
+    {
+        if( mModelHandler->GetActiveModel()->
+            GetModelCADHandler()->PartExists( constrainedGeom ) )
+        {
+            m_constrainedGeom =
+                mModelHandler->GetActiveModel()->
+                GetModelCADHandler()->GetPart( constrainedGeom )->GetDCS();
+        }
+        else if( mModelHandler->GetActiveModel()->
+            GetModelCADHandler()->AssemblyExists( constrainedGeom ) )
+        {
+            m_constrainedGeom =
+                mModelHandler->GetActiveModel()->
+                GetModelCADHandler()->GetAssembly( constrainedGeom );
+        }
+        else
+        {
+            m_constrainedGeom = 0;
+        }
+    }
+    else
+    {
+        m_constrainedGeom = 0;
+    }
+
+    // TODO: ? This block might have to be moved elsewhere to ensure it only
+    // runs during SG-update. ? --RPT
+    if( m_constrainedGeom.valid() )
+    {
+        ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor(
+            m_constrainedGeom.get(), mSceneManager->GetModelRoot() );
+        m_constrainedGeomPath =
+            npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolGP::RegistrationUpdate( const std::string& mode,
+                                                  const std::string& filename,
+                                                  const std::vector< double >& locations ,
+                                                  const std::string& forwardVector,
+                                                  const std::string& upVector )
+{
+    m_sip.set( -locations.at( 0 ), -locations.at( 1 ), -locations.at( 2 ) );
+
+    if( mode == "Manual" )
+    {
+        gmtl::Matrix44d sipLoc =
+            gmtl::makeTrans< gmtl::Matrix44d >( m_sip );
+        m_initialNavMatrix =
+            gmtl::invert( sipLoc ) * mSceneManager->GetNavDCS()->GetMat();
+        mSceneManager->GetNavDCS()->SetMat( m_initialNavMatrix );
+    }
+    else
+    {
+        m_birdFilename = filename;
+
+        ReadBirdRegistrationFile();
+
+        ///Set default values for the forward and up vector in case we are
+        ///not defining a forward and up vector from older dvst ves files.
+        m_forwardVector.set( 0, 1, 0 );
+        m_upVector.set( 0, 0, 1 );
+
+        std::string forwardAxis = forwardVector;
+        std::string upAxis = upVector;
+
+        bool isNegative = false;
+        if( forwardAxis[ 0 ] == '-' )
+        {
+            isNegative = true;
+            //remove the first character if it is negative
+            forwardAxis.erase( 0, 1 );
+        }
+
+        if( forwardAxis == "X" )
+        {
+            m_forwardVector.set( 1, 0, 0 );
+        }
+        else if( forwardAxis == "Y" )
+        {
+            m_forwardVector.set( 0, 1, 0 );
+        }
+        else if( forwardAxis == "Z" )
+        {
+            m_forwardVector.set( 0, 0, 1 );
+        }
+
+        if( isNegative )
+        {
+            m_forwardVector *= -1.0f;
+        }
+
+        isNegative = false;
+        if( upAxis[ 0 ] == '-' )
+        {
+            isNegative = true;
+            //remove the first character if it is negative
+            upAxis.erase( 0, 1 );
+        }
+
+        if( upAxis == "X" )
+        {
+            m_upVector.set( 1, 0, 0 );
+        }
+        else if( upAxis == "Y" )
+        {
+            m_upVector.set( 0, 1, 0 );
+        }
+        else if( upAxis == "Z" )
+        {
+            m_upVector.set( 0, 0, 1 );
+        }
+
+        if( isNegative )
+        {
+            m_upVector *= -1.0f;
+        }
+
+        CalculateRegistrationVariables();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DynamicVehicleSimToolGP::SetSimScale(double scale)
+{
+    m_simScale = scale;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::SimulatorCaptureThread()
@@ -580,7 +752,7 @@ void DynamicVehicleSimToolGP::SimulatorCaptureThread()
     while( simState != "Start" )
     {
         GetSimState( simState );
-        vpr::System::msleep( 100 );  // thenth-second delay
+        vpr::System::msleep( 100 );  // tenth-second delay
         if( simState == "Exit" )
         {
             return;
@@ -826,9 +998,63 @@ void DynamicVehicleSimToolGP::UpdateSelectedGeometryPositions()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicVehicleSimToolGP::SetupGeometryDataMaps()
+void DynamicVehicleSimToolGP::SetupGeometryDataMaps( const std::vector< std::string >& geomVector )
 {
-    ;
+    ResetScene();
+    m_animationedNodes.clear();
+    m_initialPositionStack.clear();
+    m_initialPositionAccumulatedStack.clear();
+
+    std::string nodeName;
+    for( size_t i = 0; i < geomVector.size(); ++i )
+    {
+        nodeName = geomVector.at( i );
+        if( nodeName == "No Geom" )
+        {
+            break;
+        }
+
+        osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempNode;
+        if( mModelHandler->GetActiveModel()->
+            GetModelCADHandler()->PartExists( nodeName ) )
+        {
+            tempNode =
+                mModelHandler->GetActiveModel()->
+                GetModelCADHandler()->GetPart( nodeName )->GetDCS();
+        }
+        else if( mModelHandler->GetActiveModel()->
+            GetModelCADHandler()->AssemblyExists( nodeName ) )
+        {
+            tempNode =
+                mModelHandler->GetActiveModel()->
+                GetModelCADHandler()->GetAssembly( nodeName );
+        }
+
+        if( tempNode.valid() )
+        {
+            ves::xplorer::scenegraph::LocalToWorldNodePath npVisitor(
+                tempNode.get(), mSceneManager->GetModelRoot() );
+
+            const osg::NodePath tempPath =
+                npVisitor.GetLocalToWorldNodePath( true ).at( 0 ).second;
+
+            const osg::Matrixd localToWorldMatrix = osg::computeLocalToWorld( tempPath );
+            //osgwTools::computeLocalToWorldWithNodeMask( tempPath, 1 );
+
+            gmtl::Matrix44d tempMat;
+            tempMat.set( localToWorldMatrix.ptr() );
+            gmtl::Vec3d scaleXVec( tempMat[ 0 ][ 0 ], tempMat[ 1 ][ 0 ], tempMat[ 2 ][ 0 ] );
+            const double scaleFactor = gmtl::length( scaleXVec );
+
+
+            m_animationedNodes.push_back( std::make_pair< double,
+                osg::ref_ptr< ves::xplorer::scenegraph::DCS > >( scaleFactor, tempNode.get() ) );
+
+            m_initialPositionAccumulatedStack.push_back( tempMat );
+
+            m_initialPositionStack.push_back( tempNode->GetMat() );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicVehicleSimToolGP::SimulatorControlUpdate()
@@ -848,7 +1074,7 @@ void DynamicVehicleSimToolGP::GetPositionData( std::vector< double >& temp )
     temp = m_positionBuffer;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicVehicleSimToolGP::SetSimState( std::string& temp )
+void DynamicVehicleSimToolGP::SetSimState( const std::string& temp )
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
     m_simState = temp;
@@ -860,7 +1086,8 @@ void DynamicVehicleSimToolGP::GetSimState( std::string& temp )
     temp = m_simState;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicVehicleSimToolGP::SetComputerData( std::string& computerName, std::string& computerPort )
+void DynamicVehicleSimToolGP::SetComputerData( const std::string& computerName,
+                                               const std::string& computerPort )
 {
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
     m_computerName = computerName;

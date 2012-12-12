@@ -50,6 +50,8 @@
 #include <gmtl/Point.h>
 #include <gmtl/Vec.h>
 
+#include <switchwire/ScopedConnectionList.h>
+
 namespace ves
 {
 namespace xplorer
@@ -98,7 +100,7 @@ private:
     ///
     void UpdateSelectedGeometryPositions();
     ///
-    void SetupGeometryDataMaps();
+    void SetupGeometryDataMaps( const std::vector< std::string >& geomVector );
     ///
     void SimulatorControlUpdate();
     ///Set the position data
@@ -106,17 +108,30 @@ private:
     ///Get the position data
     void GetPositionData( std::vector< double >& temp );
     ///
-    void SetSimState( std::string& temp );
+    void SetSimState( const std::string& temp );
     ///
     void GetSimState( std::string& temp );
     ///
-    void SetComputerData( std::string& computerName, std::string& computerPort );
+    void SetComputerData( const std::string& computerName,
+                          const std::string& computerPort );
     ///
     void GetComputerData( std::string& computerName, std::string& computerPort );
     ///Registration code
     void CalculateRegistrationVariables();
     ///Read bird file
     void ReadBirdRegistrationFile();
+
+    /// Set the geometry constraint to the passed ID
+    void SetGeometryConstraint( const std::string& constrainedGeom );
+
+    /// Update all the SIP stuff.
+    void RegistrationUpdate( const std::string& mode,
+                             const std::string& filename,
+                             const std::vector< double >& locations,
+                             const std::string& forwardVector,
+                             const std::string& upVector );
+
+    void SetSimScale( double scale );
 
     ///Sample thread
     vpr::Thread* m_sampleThread;
@@ -175,6 +190,8 @@ private:
     gmtl::Vec3d m_forwardVector;
     ///The up vector for the cad
     gmtl::Vec3d m_upVector;
+
+    switchwire::ScopedConnectionList m_connections;
     
 };
 
