@@ -69,9 +69,6 @@
 #include <osgUtil/LineSegmentIntersector>
 #include <osg/Depth>
 
-#include <switchwire/EventManager.h>
-#include <switchwire/OptionalMacros.h>
-
 #include <sstream>
 #include <iostream>
 #include <fstream>
@@ -106,6 +103,8 @@ using namespace warrantytool;
 #include <gmtl/Point.h>
 #include <gmtl/Misc/MatrixConvert.h>
 
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <ves/xplorer/device/KeyboardMouse.h>
 
