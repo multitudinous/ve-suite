@@ -103,7 +103,7 @@ Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; 
 
 [Run]
 Filename: {tmp}\{#MSREDISTRIBUTABLEFILENAME}; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Tasks: 
-Filename: {tmp}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVERSION}; Flags: postinstall runascurrentuser; Description: VE-Suite Dependency Installer; StatusMsg: Installing VE-Suite dependencies; Parameters: /SILENT /SP- /DIR={app}; 
+Filename: {tmp}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVERSION}; Flags: runascurrentuser; Description: VE-Suite Dependency Installer; StatusMsg: Installing VE-Suite dependencies; Parameters: /SILENT /SP- /DIR={app}; 
 Filename: {tmp}\{#OPCVESINSTALLERFILENAME}; Description: Install OPC for use with VE-PSI; StatusMsg: Installing OPC for use with VE-PSI...; Flags: postinstall unchecked skipifdoesntexist; Tasks: 
 
 [UninstallDelete]
