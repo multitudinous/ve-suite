@@ -80,6 +80,7 @@ void CameraModePropertySet::CreateSkeleton()
 
     AddProperty( "CameraImageSavePath", std::string("."), "Image/Presentation save location" );
     SetPropertyAttribute( "CameraImageSavePath", "isFilePath", true );
+    SetPropertyAttribute( "CameraImageSavePath", "chooserType", std::string("dir") );
 
     AddProperty( "CameraManager", false, "Camera Manager" );
     AddProperty( "PictureMode", false, "Picture Mode" );

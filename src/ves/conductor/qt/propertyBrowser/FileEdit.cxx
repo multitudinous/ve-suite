@@ -72,12 +72,27 @@ void FileEdit::buttonClicked()
     m_fileDialog = new QFileDialog( 0 );
     m_fileDialog->setOptions( QFileDialog::DontUseNativeDialog );
     m_fileDialog->setAttribute( Qt::WA_DeleteOnClose );
-    m_fileDialog->setFileMode( QFileDialog::ExistingFile );
+
+    std::string chooserType = m_attributes.value( "chooserType", "file" );
+    if( chooserType == "dir" )
+    {
+        m_fileDialog->setFileMode( QFileDialog::DirectoryOnly );
+    }
+    else
+    {
+        m_fileDialog->setFileMode( QFileDialog::ExistingFile );
+    }
 
     connect( m_fileDialog, SIGNAL(fileSelected(const QString &)),
                       this, SLOT(onFileSelected(const QString&)) );
     connect( m_fileDialog, SIGNAL(rejected()), this,
                       SLOT( onFileCancelled() ) );
+
+    std::string path = m_attributes.value( "fileChooserPath", "" );
+    if( !path.empty() )
+    {
+        m_fileDialog->setDirectory( QString::fromStdString(path) );
+    }
 
     //m_fileDialog->show();
 
