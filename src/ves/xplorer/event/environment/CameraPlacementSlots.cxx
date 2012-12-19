@@ -353,7 +353,8 @@ std::string ResolveSaveImagePath( std::string path )
     imagePath.setFileName( "" );
     imagePath.makeAbsolute();
 
-    return imagePath.toString(Poco::Path::PATH_UNIX);
+    //This returns the path in the native OS format
+    return imagePath.toString();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SaveCameraImage( const std::string& uuid, const std::string& path )
