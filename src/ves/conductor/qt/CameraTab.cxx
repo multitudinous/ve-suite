@@ -30,7 +30,9 @@ CameraTab::CameraTab(QWidget *parent) :
     ui->setupUi(this);
 
     m_overallSet = propertystore::PropertySetPtr( new ves::xplorer::data::CameraModePropertySet );
-    if( m_overallSet )
+    //Set by default in the propertyset
+    //m_overallSet->LoadByKey( "uuid", std::string( "00000000-0101-1010-1111-000011110000" ) );
+    //if( m_overallSet )
     {
         m_overallSet->EnableLiveProperties( true );
         m_overallSet->SetPropertyValue( "DisableCameraTools", false );
@@ -191,8 +193,10 @@ void CameraTab::on_m_cameraDownButton_clicked()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_snapshotButton_clicked()
 {
+    //If we are in non-picture mode
     if( !ui->m_pictureModeToggler->isChecked() )
     {
+        //Grab the active camera if there is one.
         QListWidgetItem* item = ui->m_cameraListWidget->currentItem();
         if( item )
         {
@@ -232,48 +236,74 @@ void CameraTab::on_m_presentationButton_clicked()
     // CameraModePropertySet, with ves_tmp appended.
     std::string savePathBase = boost::any_cast<std::string>( m_overallSet->GetPropertyValue( "CameraImageSavePath" ) );
 
-    Poco::Path imagePath( savePathBase );
-    imagePath.setFileName( "" );
-    imagePath.makeAbsolute();
-    imagePath.pushDirectory( "ves_tmp" );
-    Poco::File tmpFile( imagePath );
-    if( tmpFile.exists() )
+    if( !ui->m_pictureModeToggler->isChecked() )
     {
-        tmpFile.remove( true );
+        Poco::Path imagePath( savePathBase );
+        imagePath.setFileName( "" );
+        imagePath.makeAbsolute();
+        imagePath.pushDirectory( "ves_tmp" );
+        Poco::File tmpFile( imagePath );
+        if( tmpFile.exists() )
+        {
+            tmpFile.remove( true );
+        }
+        tmpFile.createDirectory();
+
+        m_presentationImageDir = imagePath.toString();
+
+        m_saveAllCameraImagesSignal.signal( m_presentationImageDir );
+        // Connect to the "done" signal for this process so we will know when the
+        // images have been written. This doesn't happen synchronously, so we can't
+        // assume the images exist until we get this signal.
+        CONNECTSIGNALS_0( "CameraManager.CameraImagesSaved",
+                        void( ),
+                        &ves::conductor::CameraTab::MakePresentation,
+                        m_presentationConnections, any_SignalType, normal_Priority );
     }
-    tmpFile.createDirectory();
+    else
+    {
+        m_presentationImageDir = savePathBase;
 
-    m_presentationImageDir = imagePath.toString(Poco::Path::PATH_UNIX);
-    m_saveAllCameraImagesSignal.signal( m_presentationImageDir );
-
-    // Connect to the "done" signal for this process so we will know when the
-    // images have been written. This doesn't happen synchronously, so we can't
-    // assume the images exist until we get this signal.
-    CONNECTSIGNALS_0( "CameraManager.CameraImagesSaved",
-                    void( ),
-                    &ves::conductor::CameraTab::MakePresentation,
-                    m_presentationConnections, any_SignalType, normal_Priority );
+        MakePresentation();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraTab::MakePresentation()
 {
+    if( !ui->m_pictureModeToggler->isChecked() )
+    {
+        if( ui->m_cameraListWidget->count() == 0 )
+        {
+            return;
+        }
+    }
+    
     m_presentationConnections.DropConnections();
+
+    Poco::Path presPath( m_presentationImageDir );
+    presPath.makeAbsolute();
+    m_presentationImageDir = presPath.toString();
 
     storyteller::PresentationMaker pm;
     pm.AddDirectory( m_presentationImageDir, false );
-
-    Poco::Path presPath( m_presentationImageDir );
-    presPath.popDirectory();
+    
+    if( !ui->m_pictureModeToggler->isChecked() )
+    {
+        presPath.popDirectory();
+    }
     presPath.setFileName( "presentation.odp" );
 
-    pm.MakePresentation( presPath.toString(Poco::Path::PATH_UNIX) );
+    pm.MakePresentation( presPath.toString() );
 
     // Remove the temporary image directory
-    Poco::Path remPath( m_presentationImageDir );
-    Poco::File tmpFile( remPath );
-    if( tmpFile.exists() )
+    if( !ui->m_pictureModeToggler->isChecked() )
     {
-        tmpFile.remove( true );
+        Poco::Path remPath( m_presentationImageDir );
+        Poco::File tmpFile( remPath );
+        if( tmpFile.exists() )
+        {
+            tmpFile.remove( true );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -415,22 +415,6 @@
   <connection>
    <sender>m_pictureModeToggler</sender>
    <signal>toggled(bool)</signal>
-   <receiver>m_presentationButton</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>234</x>
-     <y>14</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>30</x>
-     <y>241</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pictureModeToggler</sender>
-   <signal>toggled(bool)</signal>
    <receiver>m_flythroughButton</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
