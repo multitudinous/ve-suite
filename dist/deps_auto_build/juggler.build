@@ -32,6 +32,24 @@ case $PLATFORM in
     CONFIGURE_PARAMS+=( --with-boost-includes="${BOOST_INSTALL_DIR}/include" )
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     CONFIGURE_PARAMS+=( --with-sdl="${SDL_INSTALL_DIR}" )
+
+    # NOTE: for SDL support, need to create
+    # a symlink: libSDL.so -> libSDL2.so
+
+    # suppress compiler errors (i.e. invalid conversion
+    # from int to SDL_Joystick* )
+    #
+    # FIXME: get this corrected upstream!
+    CONFIGURE_PARAMS+=( CXXFLAGS=-fpermissive )
+
+    # VR Juggler's build system assumes that SDL libraries
+    # are in ${SDL_ROOT}/lib, but not all distros put them there
+    if [ -d "${SDL_INSTALL_DIR}"/lib64 ]
+    then
+        CONFIGURE_PARAMS+=( LDFLAGS="-L${SDL_INSTALL_DIR}/lib64" )
+        LD_LIBRARY_PATH="${SDL_INSTALL_DIR}"/lib64
+    fi
+
     export LD_LIBRARY_PATH=${BUILD_DIR}/instlinks/lib64:${LD_LIBRARY_PATH}
     export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${CPPDOM_INSTALL_DIR}/lib64
     export FLAGPOLL_PATH=${FLAGPOLL_PATH}:${GMTL_INSTALL_DIR}/share/flagpoll
