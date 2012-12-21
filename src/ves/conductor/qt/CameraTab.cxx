@@ -130,6 +130,11 @@ void CameraTab::on_m_addCameraButton_clicked()
     tempSet->Save();
     cameraItem->setData( Qt::UserRole, QString::fromStdString( uuid ) );
 
+    if( m_overallSet->IsDirty() )
+    {
+        m_overallSet->Save();
+    }
+
     m_addCameraSignal.signal( uuid, name.toStdString() );
 
     ui->m_cameraListWidget->addItem( cameraItem );
@@ -193,6 +198,11 @@ void CameraTab::on_m_cameraDownButton_clicked()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraTab::on_m_snapshotButton_clicked()
 {
+    if( m_overallSet->IsDirty() )
+    {
+        m_overallSet->Save();
+    }
+
     //If we are in non-picture mode
     if( !ui->m_pictureModeToggler->isChecked() )
     {
@@ -220,6 +230,11 @@ void CameraTab::on_m_allSnapshotButton_clicked()
         return;
     }
 
+    if( m_overallSet->IsDirty() )
+    {
+        m_overallSet->Save();
+    }
+
     // Empty path forces default to value of CameraImageSavePath in
     // CameraModePropertySet
     m_saveAllCameraImagesSignal.signal( "" );
@@ -230,6 +245,11 @@ void CameraTab::on_m_presentationButton_clicked()
     if( !m_overallSet )
     {
         return;
+    }
+
+    if( m_overallSet->IsDirty() )
+    {
+        m_overallSet->Save();
     }
 
     // Build up a temporary directory based on CameraImageSavePath value of
@@ -329,6 +349,8 @@ void CameraTab::on_m_flythroughButton_clicked()
         // Hide the camera window, but remember what its setting was beforehand
         m_cameraWindowEnabled = boost::any_cast< bool >( m_overallSet->GetPropertyValue( "CameraWindow" ) );
         m_overallSet->SetPropertyValue( "CameraWindow", false );
+
+        m_overallSet->Save();
     }
 
     // Request notification when flythrough is done so we can undo hiding camera
@@ -366,6 +388,7 @@ void CameraTab::FlythroughHasEnded()
         m_overallSet->SetPropertyValue( "DisableCameraTools", false );
         m_overallSet->SetPropertyValue( "CameraWindow",
                                         m_cameraWindowEnabled );
+        m_overallSet->Save();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
