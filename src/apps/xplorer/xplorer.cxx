@@ -62,11 +62,13 @@
 #endif
 
 //// --- Poco includes --- //
-//#include <Poco/SimpleFileChannel.h>
+#include <Poco/SimpleFileChannel.h>
 #include <Poco/FormattingChannel.h>
 #include <Poco/PatternFormatter.h>
 #include <Poco/FileChannel.h>
 #include <Poco/SplitterChannel.h>
+
+#include <switchwire/EventManager.h>
 
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
@@ -76,6 +78,7 @@ using namespace ves::xplorer;
 Poco::SplitterChannel* m_splitterChannel;
 
 void SetupLogger( const std::string& logFile );
+void SetupSignalRegistryLog( const std::string& logFile );
 
 //#define VES_QT_RENDER_DEBUG 1
 #ifndef VES_QT_RENDER_DEBUG
@@ -168,6 +171,9 @@ int main( int argc, char* argv[] )
     xplorer_desc.add_options()( "RegionDamaging", po::bool_switch(),
                                 "Use region damaging with the UI" );
 
+    xplorer_desc.add_options()( "SignalLogPath", po::value< std::string >(),
+                                "Full path to log file for signal registry, including filename" );
+
     // jconf files can be given as positional arguments.
     //po::positional_options_description pos_desc;
     //pos_desc.add("jconf", -1);
@@ -253,6 +259,12 @@ int main( int argc, char* argv[] )
         // Need to set the level explicitly on m_logger since it was init'd
         // before root's level was changed.
         m_logger.setLevel( priority );
+    }
+
+    if( vm.count( "SignalLogPath" ) )
+    {
+        std::string logPath = vm["SignalLogPath"].as< std::string >();
+        SetupSignalRegistryLog( logPath );
     }
 
     ///Bool options evidently cannot be counted because they always return true
@@ -531,5 +543,11 @@ void SetupLogger( const std::string& logFile )
         << SVN_VES_REVISION << std::endl
         << "|-----------------------------------------------------------------|"
         << std::endl );
+}
 
+void SetupSignalRegistryLog( const std::string& logFile )
+{
+    Poco::SimpleFileChannel* sigLog = new Poco::SimpleFileChannel( logFile );
+    Poco::Logger::get( "SignalRegistryLog" ).setChannel( sigLog );
+    switchwire::EventManager::instance()->LogAllRegistrations( Poco::Logger::get( "SignalRegistryLog" ) );
 }
