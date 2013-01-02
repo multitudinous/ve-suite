@@ -1350,11 +1350,12 @@ void App::LoadUI()
 
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware( true );
-
+#if defined( VES_QT_APP )
+    QApplication::setAttribute( Qt::AA_MacPluginApplication );
+#endif
 //#if !defined( VES_QT_APP )
     m_qtApp = new QApplication( argc, argv, 1 );
 //#else
-//    QApplication::setAttribute( Qt::AA_MacPluginApplication );
 //    m_qtApp = new ves::xplorer::VESQtApplication( argc, argv, this );
 //#endif
 
