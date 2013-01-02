@@ -8,7 +8,6 @@ exampleSubdirs = Split("""
     CameraPlacementTool
     CoinFunnel
     ConstructionBots
-    Fermentor
     HyperLab
     InteractiveStove
     nurbs
@@ -31,6 +30,7 @@ exampleSubdirs = Split("""
 #sensor_overlay
 #VirtualLab
 #painting
+#Fermentor
 
 if poco_options.isAvailable():
     exampleSubdirs.append( 'WarrantyTool' )
