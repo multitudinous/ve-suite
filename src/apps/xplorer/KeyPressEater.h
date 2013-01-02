@@ -79,14 +79,14 @@ protected:
 
     bool ProcessEvent( QObject* obj, QEvent* event )
     {
-#if defined( _DARWIN )
+#if defined( VES_QT_APP )
         m_app->AcquireQtLock();
 #endif
         bool temp = QObject::eventFilter( obj, event );
         //bool temp = obj->eventFilter( obj, event);
         //bool consumed = obj->event(event);
         //event->spont = false;
-#if defined( _DARWIN )
+#if defined( VES_QT_APP )
         m_app->ReleaseQtLock();
 #endif
         std::cout << " consumed " << temp << std::endl << std::flush;

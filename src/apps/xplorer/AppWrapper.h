@@ -34,9 +34,9 @@
 #define CFD_APPWRAPPER_H
 
 #include <ves/util/GNUCompilerGuards.h>
-GCC_DIAG_OFF(unused-parameter)
+DIAG_OFF(unused-parameter)
     #include <boost/program_options.hpp>
-GCC_DIAG_ON(unused-parameter)
+DIAG_ON(unused-parameter)
 
 
 // --- VR Juggler Includes --- //

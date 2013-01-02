@@ -44,7 +44,7 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
-#if defined _DARWIN
+#if defined VES_QT_APP
 #include "CocoaHelper.h"
 #endif
 
@@ -120,7 +120,7 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::pro
     m_cfdApp->SetWrapper( m_vjObsWrapper );
 
     vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
-#if defined _DARWIN
+#if defined VES_QT_APP
     CocoaInit( m_cfdApp );
 #endif
     kernel->start();                          // Start the kernel thread

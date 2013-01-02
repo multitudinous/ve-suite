@@ -49,9 +49,9 @@
 #include <vpr/Sync/CondVar.h>
 
 #include <ves/util/GNUCompilerGuards.h>
-GCC_DIAG_OFF(unused-parameter)
+DIAG_OFF(unused-parameter)
     #include <vrj/Draw/OSG/App.h>
-GCC_DIAG_ON(unused-parameter)
+DIAG_ON(unused-parameter)
 
 #include <vrj/Draw/OpenGL/ContextData.h>
 
@@ -66,13 +66,15 @@ GCC_DIAG_ON(unused-parameter)
 // --- Boost Includes --- //
 #include <switchwire/Event.h>
 
-GCC_DIAG_OFF(unused-parameter)
+DIAG_OFF(unused-parameter)
     #include <boost/program_options.hpp>
-GCC_DIAG_ON(unused-parameter)
+DIAG_ON(unused-parameter)
 
 // --- Poco Includes --- //
 #include <Poco/Logger.h>
 #include <Poco/SplitterChannel.h>
+
+#define VES_QT_APP 1
 
 class QApplication;
 
@@ -212,7 +214,7 @@ public:
     ///Calls the Qt event loop
     void runLoop();
 
-#if defined( _DARWIN )
+#if defined( VES_QT_APP )
     ///Acquire qt lock
     bool AcquireQtLock();
 
@@ -296,7 +298,7 @@ private:
 
     ///A mutex to protect variables accesses
     vpr::Mutex mValueLock;
-#if defined( _DARWIN )
+#if defined( VES_QT_APP )
     ///A mutex to protect variables accesses
     vpr::Mutex m_signalLock;
     ///A mutex to sync loading the UI

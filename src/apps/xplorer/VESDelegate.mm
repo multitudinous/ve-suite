@@ -86,7 +86,7 @@
         //http://qt.gitorious.org/qt/qt/blobs/4.8/src/gui/kernel/qapplication_mac.mm#line2611
         //qcocoaaplication_mac.mm
         //If it is not a qt event...send it normally
-        if( ![NSApp qt_sendEvent:event] )
+        //if( ![NSApp qt_sendEvent:event] )
         {
             [NSApp sendEvent:event];
         }

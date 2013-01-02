@@ -34,7 +34,7 @@
 #include "VjObsWrapper.h"
 #include "SceneRenderToTexture.h"
 #include "SceneGLTransformInfo.h"
-#include "KeyPressEater.h"
+//#include "KeyPressEater.h"
 #include "VESQtApplication.h"
 
 #include <ves/xplorer/TextureBasedVizHandler.h>
@@ -226,7 +226,7 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     _pbuffer = 0;
 #endif
     _frameNumber = 0;
-#if defined( _DARWIN )
+#if defined( VES_QT_APP )
     m_loadingUILock.acquire();
 #endif
 
@@ -321,7 +321,7 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
 App::~App()
 {
     LOG_INFO( "Quitting App" );
-#if defined( _DARWIN )
+#if defined( VES_QT_APP )
     if( m_signalLock.test() )
     {
         m_signalLock.release();
@@ -339,7 +339,7 @@ void App::exit()
     m_exitApp = true;
     m_exitSignal.signal( m_exitApp );
 
-#if defined( _DARWIN )
+#if defined( VES_QT_APP )
     if( m_signalLock.test() )
     {
         m_signalLock.release();
@@ -643,7 +643,7 @@ void App::preFrame()
         //Sets the worldDCS before it is synced
         EnvironmentHandler::instance()->PreFrameUpdate();
     }
-#ifndef _DARWIN
+#ifndef VES_QT_APP
     if( !m_uiInitialized )
     {
         if( jccl::ConfigManager::instance()->isPendingStale() && m_windowIsOpen )
@@ -899,7 +899,7 @@ void App::latePreFrame()
     ///////////////////////
 
 
-#if !defined( _DARWIN )
+#if !defined( VES_QT_APP )
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame update", 20 );
         ///Because we do our event processing here for Qt we get automagical
@@ -1351,12 +1351,12 @@ void App::LoadUI()
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware( true );
 
-#if !defined( _DARWIN )
+//#if !defined( VES_QT_APP )
     m_qtApp = new QApplication( argc, argv, 1 );
-#else
-    QApplication::setAttribute( Qt::AA_MacPluginApplication );
-    m_qtApp = new ves::xplorer::VESQtApplication( argc, argv, this );
-#endif
+//#else
+//    QApplication::setAttribute( Qt::AA_MacPluginApplication );
+//    m_qtApp = new ves::xplorer::VESQtApplication( argc, argv, this );
+//#endif
 
 #ifdef VES_QT_RENDER_DEBUG
     QPushButton*  button = new QPushButton( "Test" );
@@ -1443,7 +1443,7 @@ void App::UIEnterLeave( bool entered )
 ////////////////////////////////////////////////////////////////////////////////
 void App::preRun()
 {
-#if defined( _DARWIN )
+#if defined( VES_QT_APP )
     while( !jccl::ConfigManager::instance()->isPendingStale() )
     {
         vpr::System::msleep( 200 );
@@ -1451,7 +1451,7 @@ void App::preRun()
     m_loadingUILock.acquire();
 #endif
     LoadUI();
-#if defined( _DARWIN )
+#if defined( VES_QT_APP )
     m_loadingUILock.release();
 #endif
 }
@@ -1472,7 +1472,7 @@ void App::runLoop()
             //m_qtApp->sendPostedEvents(0, QEvent::DeferredDelete);
             //m_qtApp->sendPostedEvents(0, 0);
         }
-#if defined( _DARWIN )
+#if defined( VES_QT_APP )
         else
         {
             vpr::Thread::yield();
@@ -1501,7 +1501,7 @@ void App::SetDesktopInfo( bool mode, int screenWidth, int screenHeight )
     m_screenWidth = screenWidth;
     m_screenHeight = screenHeight;
 }
-#if defined( _DARWIN )
+#if defined( VES_QT_APP )
 ////////////////////////////////////////////////////////////////////////////////
 bool App::AcquireQtLock()
 {

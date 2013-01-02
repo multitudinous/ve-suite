@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#if defined( _DARWIN )
 #include "VESQtApplication.h"
+#if defined( VES_QT_APP )
 #include <iostream>
 #include <QtCore/QEvent>
 #include <QtGui/QKeyEvent>

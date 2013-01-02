@@ -31,10 +31,11 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
-#if defined( _DARWIN )
 
 #define QT_NO_KEYWORDS
 #include "App.h"
+
+#if defined( VES_QT_APP )
 
 #include <QtGui/QApplication>
 #include <queue>
