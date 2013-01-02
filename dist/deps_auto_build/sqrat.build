@@ -1,0 +1,32 @@
+PACKAGE_NAME=sqrat
+BASE_DIR="${DEV_BASE_DIR}/sqrat-0.8.2"
+
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_FORMAT=tgz
+SOURCE_URL=http://downloads.sourceforge.net/project/scrat/Sqrat/Sqrat%200.8/sqrat-0.8.2.tar.gz
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}"
+#INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+#PREBUILD_METHOD=cmake
+#FPC_FILE=bullet.fpc
+#SKIP_FPC_INSTALL="no"
+SKIP_PREBUILD="yes"
+
+case $PLATFORM in
+  Windows)
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    MSVC_CONFIG=RelWithDebInfo
+    if [ ${ARCH} = "32-bit" ]; then
+      MSVC_PLATFORM=Win32
+    else
+      MSVC_PLATFORM=x64
+    fi
+    MSVC_SOLUTION="BULLET_PHYSICS.sln"
+    #MSVC_PROJECT_NAMES+=( INSTALL )
+    POST_BUILD_METHOD="find . -name \*.pdb -exec cp {} ${INSTALL_DIR}/lib/. \; -print"
+    ;;
+  Darwin | Linux)
+    unset BUILD_METHOD
+    ;;
+esac
