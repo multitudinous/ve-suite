@@ -40,18 +40,38 @@
 #define GCC_DIAG_STR(s) #s
 #define GCC_DIAG_JOINSTR(x,y) GCC_DIAG_STR(x ## y)
 # define GCC_DIAG_DO_PRAGMA(x) _Pragma (#x)
-# define GCC_DIAG_PRAGMA(x) GCC_DIAG_DO_PRAGMA(GCC diagnostic x)
+# define DIAG_PRAGMA(x) GCC_DIAG_DO_PRAGMA(GCC diagnostic x)
 # if ((__GNUC__ * 100) + __GNUC_MINOR__) >= 406
-#  define GCC_DIAG_OFF(x) GCC_DIAG_PRAGMA(push) \
-GCC_DIAG_PRAGMA(ignored GCC_DIAG_JOINSTR(-W,x))
-#  define GCC_DIAG_ON(x) GCC_DIAG_PRAGMA(pop)
+#  define DIAG_OFF(x) DIAG_PRAGMA(push) \
+DIAG_PRAGMA(ignored GCC_DIAG_JOINSTR(-W,x))
+#  define DIAG_ON(x) DIAG_PRAGMA(pop)
 # else
-#  define GCC_DIAG_OFF(x) GCC_DIAG_PRAGMA(ignored GCC_DIAG_JOINSTR(-W,x))
-#  define GCC_DIAG_ON(x)  GCC_DIAG_PRAGMA(warning GCC_DIAG_JOINSTR(-W,x))
+#  define DIAG_OFF(x) DIAG_PRAGMA(ignored GCC_DIAG_JOINSTR(-W,x))
+#  define DIAG_ON(x)  DIAG_PRAGMA(warning GCC_DIAG_JOINSTR(-W,x))
 # endif
-#else
-# define GCC_DIAG_OFF(x)
-# define GCC_DIAG_ON(x)
+#elif defined( __clang__ )
+#  define CLANG_DIAG_STR(s) # s
+// stringize s to "no-unused-variable"
+#  define CLANG_DIAG_JOINSTR(x,y) CLANG_DIAG_STR(x ## y)
+//  join -W with no-unused-variable to "-Wno-unused-variable"
+#  define CLANG_DIAG_DO_PRAGMA(x) _Pragma (#x)
+// _Pragma is unary operator  #pragma ("")
+#  define DIAG_PRAGMA(x) CLANG_DIAG_DO_PRAGMA(clang diagnostic x)
+#    define DIAG_OFF(x) DIAG_PRAGMA(push) \
+DIAG_PRAGMA(ignored CLANG_DIAG_JOINSTR(-W,x))
+// For example: #pragma clang diagnostic ignored "-Wno-unused-variable"
+#   define DIAG_ON(x) DIAG_PRAGMA(pop)
+// For example: #pragma clang diagnostic warning "-Wno-unused-variable"
+#else // Ensure these macros so nothing for other compilers.
+# define DIAG_OFF(x)
+# define DIAG_ON(x)
+# define DIAG_PRAGMA(x)
 #endif
+
+/* Usage:
+ DIAG_OFF(unused-variable)
+ DIAG_OFF(unused-parameter)
+ DIAG_OFF(uninitialized)
+ */
 
 #endif //VES_UTIL_GNUCOMPILER_GUARDS_H
