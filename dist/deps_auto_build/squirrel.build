@@ -1,0 +1,33 @@
+PACKAGE_NAME=squirrel
+BASE_DIR="${DEV_BASE_DIR}/SQUIRREL3"
+
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_FORMAT=tgz
+SOURCE_URL=http://squirrel.googlecode.com/files/squirrel_3_0_4_stable.tar.gz
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}"
+#INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+#PREBUILD_METHOD=cmake
+#FPC_FILE=bullet.fpc
+#SKIP_FPC_INSTALL="no"
+SKIP_PREBUILD="yes"
+
+case $PLATFORM in
+  Windows)
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    MSVC_CONFIG=RelWithDebInfo
+    if [ ${ARCH} = "32-bit" ]; then
+      MSVC_PLATFORM=Win32
+    else
+      MSVC_PLATFORM=x64
+    fi
+    MSVC_SOLUTION="BULLET_PHYSICS.sln"
+    #MSVC_PROJECT_NAMES+=( INSTALL )
+    POST_BUILD_METHOD="find . -name \*.pdb -exec cp {} ${INSTALL_DIR}/lib/. \; -print"
+    ;;
+  Darwin | Linux)
+    BUILD_METHOD=make
+    BUILD_TARGET=sq64
+    ;;
+esac
