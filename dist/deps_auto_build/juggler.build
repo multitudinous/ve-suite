@@ -21,8 +21,24 @@ VES_INSTALL_PARAMS+=( share )
 
 case $PLATFORM in
   Windows)
-    unset PROJ_STR
-    unset BUILD_TARGET
+    #unset PROJ_STR
+    #unset BUILD_TARGET
+
+    PREBUILD_METHOD=custom
+
+    # generate an options file for use with build_windows.py
+    OPTIONS_FILE="./ves-vrj-build-options"
+
+    unset CUSTOM_PREBUILD
+    CUSTOM_PREBUILD+=( eval )
+    CUSTOM_PREBUILD+=( "if [ -f ${OPTIONS_FILE} ]; then rm ${OPTIONS_FILE}; fi;" )
+    CUSTOM_PREBUILD+=( "echo \"options['BOOST_ROOT'] = r'\$(cygpath -w ${BOOST_INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
+    CUSTOM_PREBUILD+=( "echo \"options['BOOST_VERSION'] = r'1_50'\" >> ${OPTIONS_FILE};" )
+    CUSTOM_PREBUILD+=( "echo \"options['CPPDOM_ROOT'] = r'\$(cygpath -w ${CPPDOM_INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
+    CUSTOM_PREBUILD+=( "echo \"options['GMTL_ROOT'] = r'\$(cygpath -w ${GMTL_INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
+    CUSTOM_PREBUILD+=( "echo \"options['SDL_ROOT'] = r'\$(cygpath -w ${SDL_INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
+    CUSTOM_PREBUILD+=( "echo \"options['prefix'] = r'\$(cygpath -w ${INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
+    CUSTOM_PREBUILD+=( "echo \"options['deps-prefix'] = r'\$(cygpath -w ${INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
     ;;
   Darwin | Linux)
     BUILD_TARGET="build install"
