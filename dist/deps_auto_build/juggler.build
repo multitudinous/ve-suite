@@ -39,6 +39,24 @@ case $PLATFORM in
     CUSTOM_PREBUILD+=( "echo \"options['SDL_ROOT'] = r'\$(cygpath -w ${SDL_INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
     CUSTOM_PREBUILD+=( "echo \"options['prefix'] = r'\$(cygpath -w ${INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
     CUSTOM_PREBUILD+=( "echo \"options['deps-prefix'] = r'\$(cygpath -w ${INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
+
+    BUILD_METHOD=custom
+
+    # Just assume that we have Python 2.7 installed in the default location
+    PYTHON_EXE=/cygdrive/c/Python27/python.exe
+
+    CUSTOM_BUILD+=( ${PYTHON_EXE} )
+    CUSTOM_BUILD+=( ./build_windows.py )
+    CUSTOM_BUILD+=( --build=ReleaseDLL )
+    CUSTOM_BUILD+=( --options-file=./ves-vrj-build-options )
+    CUSTOM_BUILD+=( -c )
+    CUSTOM_BUILD+=( -a )
+    CUSTOM_BUILD+=( --install )
+    CUSTOM_BUILD+=( --install-deps )
+
+    if [ ${ARCH} = "64-bit" ]; then
+      CUSTOM_BUILD+=( --64 )
+    fi
     ;;
   Darwin | Linux)
     BUILD_TARGET="build install"
