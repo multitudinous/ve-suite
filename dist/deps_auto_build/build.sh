@@ -261,6 +261,7 @@ function unsetvars()
   unset PREBUILD_METHOD
   unset FPC_FILE
   unset VES_INSTALL_PARAMS
+  unset CUSTOM_BUILD
 }
 
 #
@@ -644,6 +645,10 @@ function e()
         cd "${SOURCE_DIR}";
         echo "Build Comand: ${BJAM_PARAMS[@]} ${BUILD_TARGET} ${JCMD}"
         ${BJAM} "${BJAM_PARAMS[@]}" ${BUILD_TARGET} ${JCMD};
+        ;;
+      custom)
+        cd "${SOURCE_DIR}";
+        "${CUSTOM_BUILD[@]}";
         ;;
       *)
         echo "Build method ${BUILD_METHOD} unsupported"
