@@ -35,9 +35,6 @@
 
 #include <ves/xplorer/GlobalBase.h>
 
-#include <ves/open/xml/cad/CADNodePtr.h>
-#include <ves/open/xml/cad/CADAttributePtr.h>
-
 #include <osg/StateSet>
 
 #include <map>
