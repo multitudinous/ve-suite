@@ -43,14 +43,14 @@
 #include <utility>
 #include <string>
 
-#include <vpr/Thread/Thread.h>
-#include <vpr/Sync/Mutex.h>
-
 #include <gmtl/Matrix.h>
 #include <gmtl/Point.h>
 #include <gmtl/Vec.h>
 
 #include <switchwire/ScopedConnectionList.h>
+
+#include <vpr/Thread/Thread.h>
+#include <vpr/Sync/Mutex.h>
 
 namespace ves
 {

@@ -31,10 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#include <ves/xplorer/communication/CommunicationHandler.h>
-
-// --- My Includes --- //
 #include "DynamicVehicleSimToolGP.h"
+
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/model/Model.h>
@@ -42,45 +40,31 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/OneDStringArray.h>
 
-#include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
-#include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
-#include <ves/xplorer/scenegraph/util/FindChildWithNameVisitor.h>
-#include <ves/xplorer/scenegraph/util/ToggleNodesVisitor.h>
-
-#include <ves/xplorer/scenegraph/HighlightNodeByNameVisitor.h>
-#include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
-#include <ves/xplorer/scenegraph/SceneManager.h>
-
 #include <ves/xplorer/scenegraph/CADEntity.h>
-#include <ves/xplorer/scenegraph/TextTexture.h>
-#include <ves/xplorer/scenegraph/GroupedTextTextures.h>
-#include <ves/xplorer/scenegraph/HeadPositionCallback.h>
-#include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
 #include <ves/xplorer/scenegraph/LocalToWorldNodePath.h>
-
-#include <ves/xplorer/environment/TextTextureCallback.h>
 
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/Debug.h>
-
-#include <osgUtil/LineSegmentIntersector>
-#include <osg/Depth>
 
 #include <sstream>
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <vector>
+
+#include <gmtl/VecOps.h>
+#include <gmtl/gmtl.h>
+#include <gmtl/Point.h>
+#include <gmtl/Misc/MatrixConvert.h>
+
+// --- My Includes --- //
 
 using namespace ves::xplorer::scenegraph;
 using namespace warrantytool;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-
-#include <vector>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/concept_check.hpp>
@@ -98,15 +82,14 @@ using namespace warrantytool;
 #include <vpr/IO/Socket/SocketDatagram.h>
 #include <vpr/IO/Socket/InetAddr.h>
 
-#include <gmtl/VecOps.h>
-#include <gmtl/gmtl.h>
-#include <gmtl/Point.h>
-#include <gmtl/Misc/MatrixConvert.h>
-
+//Most of our switchwire stuff needs to be below the VPR (Boost ASIO) headers
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 
-#include <ves/xplorer/device/KeyboardMouse.h>
+#include <ves/xplorer/Debug.h>
+
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 //Define to test any of the dvst code
 //#define DVST_TEST 1

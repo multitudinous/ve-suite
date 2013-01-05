@@ -48,7 +48,6 @@
 
 #include <ves/xplorer/scenegraph/HighlightNodeByNameVisitor.h>
 #include <ves/xplorer/scenegraph/FindParentWithNameVisitor.h>
-#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
@@ -57,7 +56,6 @@
 #include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
 #include <ves/xplorer/scenegraph/Geode.h>
 
-#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/environment/TextTextureCallback.h>
 
@@ -118,6 +116,10 @@
 #include <Poco/Data/RecordSet.h>
 #include <Poco/Data/SQLite/Connector.h>
 
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
+#include <ves/xplorer/Debug.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
 using namespace Poco::Data;
