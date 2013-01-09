@@ -66,7 +66,7 @@ public:
     virtual QWidget* GetUIWidget( QWidget* parent = 0 );
 
     ///Returns the Result dialog of the module
-    virtual QWidget* GetResultWidget( QWidget* parent = 0 ) { return 0;}
+    virtual QWidget* GetResultWidget( QWidget* ) { return 0;}
 
     ///Returns the PortData dialog of the module
     //virtual QWidget* PortData(wxWindow* parent,  Interface *intf);
@@ -75,8 +75,8 @@ public:
     virtual QWidget* GetFinancialDataWidget() { return 0; }
 
     /// Launch custom input dialogs
-    virtual QWidget* ViewInputVariables( QWidget* parent = 0 ) { return 0; }
-    virtual QWidget* ViewResultsVariables( QWidget* parent = 0 ) { return 0; }
+    virtual QWidget* ViewInputVariables( QWidget* ) { return 0; }
+    virtual QWidget* ViewResultsVariables( QWidget* ) { return 0; }
 
     virtual void DeleteWidgets();
 
