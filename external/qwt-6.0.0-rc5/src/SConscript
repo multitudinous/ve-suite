@@ -46,6 +46,8 @@ headers = map( lambda s: pj( '.', s ), headers )
 sources = map( lambda s: pj( '.', s ), sources )
 sources += mocced
 
+lib_env.AppendUnique( CPPPATH = [ buildSrcDir ] )
+
 if GetPlatform() == 'linux':
     lib_env.Append( CCFLAGS=[ '-fPIC' ] )
 

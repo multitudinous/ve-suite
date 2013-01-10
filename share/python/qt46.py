@@ -87,7 +87,7 @@ def generate(env,**kw):
 
     #moc ='moc'
     # setup moc
-    mocCmd = '%s ${SOURCES} -o ${TARGET}' %(moc)
+    mocCmd = '%s ${SOURCES} -o ${TARGET} -p ./' %(moc)
     bld = Builder(action = mocCmd, prefix = "moc_", suffix = ".cpp", single_source = True)
     env.Append(BUILDERS = {'qt_moc': bld})
     # cxx->moc variant
