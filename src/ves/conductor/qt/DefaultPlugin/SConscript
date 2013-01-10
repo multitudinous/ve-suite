@@ -99,7 +99,7 @@ if GetPlatform() == 'win32':
     lib_env.AppendUnique( CPPDEFINES = ['QT_NO_DEBUG'] )
 
 lib_env.Append( CPPDEFINES = ['VE_CONDUCTOR_DEFAULTPLUGIN_LIBRARY'])
-lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external') ] )
+lib_env.AppendUnique( CPPPATH = [ pj(RootDir,'external'), buildSrcDir ] )
 
 #create a bundle instead of a shared library
 if GetPlatform() == 'darwin':

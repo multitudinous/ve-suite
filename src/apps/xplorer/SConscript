@@ -18,12 +18,12 @@ headers = sca_util.getHeadersRecursive( srcDir )
 env = ves_pkg.getEnv().Clone()
 
 #moc the key eater class
-source = [pj(buildSrcDir,'KeyPressEater.h')]
-srcs1 = env.qt_moc(source)
+#source = [pj(buildSrcDir,'KeyPressEater.h')]
+#srcs1 = env.qt_moc(source)
 #now link it into the xplorer dependency chain
-openDir = os.path.abspath( pj(RootDir,buildDir,'src', 'apps', 'xplorer') )
-cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), srcs1)
-srcs += cppSources1
+#openDir = os.path.abspath( pj(RootDir,buildDir,'src', 'apps', 'xplorer') )
+#cppSources1 = map(lambda s: pj(openDir, '%s' ) %(s), srcs1)
+#srcs += cppSources1
 
 # now continue on with all of the normal stuff
 env.Append( LIBS = [ 'ves_open_xml',
