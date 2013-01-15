@@ -9,6 +9,12 @@
 #include <boost/program_options.hpp>
 #endif
 
+// --- ZMQ Includes --- //
+#include "zmq.hpp"
+
+#include <string>
+
+
 namespace po = boost::program_options;
 
 int main( int argc, char** argv )
@@ -33,6 +39,30 @@ int main( int argc, char** argv )
     {
         std::cout << desc << std::endl;
         return 0;
+    }
+
+    //Init zeromq context
+    zmq::context_t context( 1 );
+
+    //Socket for worker control
+    zmq::socket_t controller( context, ZMQ_PUB );
+    controller.bind( "tcp://*:3098" );
+
+    bool kill_msg( false );
+    while( !kill_msg )
+    {
+        //Get OPC data here
+        bool valid_msg = true;
+
+        //If our message is formatted correctly, send
+        if( valid_msg )
+        {
+            std::string str( "test message" );
+            zmq::message_t zmq_msg;
+            zmq_msg.rebuild( str.size() );
+            memcpy( zmq_msg.data(), str.data(), str.size() );
+            assert( controller.send( zmq_msg ) );
+        }
     }
 
     return 0;
