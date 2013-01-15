@@ -1,12 +1,21 @@
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
-#ifdef WIN32
-#pragma warning(push)
-#pragma warning(disable: 4275) //non-dll interface
-#include <boost/program_options.hpp>
-#pragma warning(pop)
+#include <boost/config.hpp>
+#ifdef BOOST_WINDOWS
+# pragma warning(disable: 4275)
 #else
+#include <kibitz/GNUCompilerGuards.hpp>
+GCC_DIAG_OFF( unused-parameter )
+#endif
+
 #include <boost/program_options.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
+#ifdef BOOST_WINDOWS
+# pragma warning(default: 4275)
+#else
+GCC_DIAG_ON( unused-parameter )
 #endif
 
 // --- ZMQ Includes --- //
@@ -16,6 +25,22 @@
 
 
 namespace po = boost::program_options;
+namespace pt = boost::property_tree;
+
+std::string to_json()
+{
+    std::stringstream stm;
+    pt::ptree tree;
+    tree.put( "message_type", "data" );
+    tree.put( "version", 1.0 );
+    tree.put( "notification_type", "new data" );
+    tree.put( "worker_type", "opc client" );
+    tree.put( "worker_id", 1 );
+    tree.put( "host_name", "localhost" );
+    tree.put( "port", 3098 );
+    boost::property_tree::json_parser::write_json( stm, tree );
+    return stm.str();
+}
 
 int main( int argc, char** argv )
 {
@@ -57,7 +82,7 @@ int main( int argc, char** argv )
         //If our message is formatted correctly, send
         if( valid_msg )
         {
-            std::string str( "test message" );
+            std::string str = to_json();
             zmq::message_t zmq_msg;
             zmq_msg.rebuild( str.size() );
             //zmq_msg.rebuild( str.size() );

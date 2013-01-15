@@ -80,6 +80,26 @@ extern osg::ref_ptr<osg::Texture2D> RTTtex;
 #include "zmq.hpp"
 #endif
 
+#include <boost/config.hpp>
+#ifdef BOOST_WINDOWS
+# pragma warning(disable: 4275)
+#else
+#include <kibitz/GNUCompilerGuards.hpp>
+GCC_DIAG_OFF( unused-parameter )
+#endif
+
+#include <boost/program_options.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
+#ifdef BOOST_WINDOWS
+# pragma warning(default: 4275)
+#else
+GCC_DIAG_ON( unused-parameter )
+#endif
+
+namespace pt = boost::property_tree;
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 //#define NETL_DEMO
@@ -513,10 +533,16 @@ void HyperLabICEGP::SetupOPCClient()
         {
             zmq::message_t zmq_msg;
             controller.recv( &zmq_msg );
-            std::string str(
-                            static_cast< char* >( zmq_msg.data() ), zmq_msg.size() );
+            std::string str( static_cast< char* >( zmq_msg.data() ), zmq_msg.size() );
             
-            std::cout << str << std::endl;
+            std::stringstream sstm;
+            sstm << str;
+            pt::ptree tree;
+            boost::property_tree::json_parser::read_json( sstm, tree );
+            const std::string message_type = tree.get<std::string>( "message_type" );
+
+            
+            std::cout << message_type << std::endl;
         }
         
         //Any waiting controller command acts as 'KILL'
