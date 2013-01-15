@@ -59,6 +59,7 @@ int main( int argc, char** argv )
         {
             std::string str( "test message" );
             zmq::message_t zmq_msg;
+            zmq_msg.rebuild( str.size() );
             //zmq_msg.rebuild( str.size() );
             memcpy( zmq_msg.data(), str.data(), str.size() );
             assert( controller.send( zmq_msg ) );
