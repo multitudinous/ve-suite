@@ -58,6 +58,7 @@
 
 #include <osg/MatrixTransform>
 
+
 namespace ves
 {
 namespace xplorer
@@ -100,6 +101,10 @@ private:
     ///Check and see if one second has elapsed
     ///\param last_send The base time to compare against
     bool OneSecondCheck( boost::posix_time::ptime& last_send, const int timeDelta );
+
+#ifdef OPC_CLIENT_CONNECT
+    void SetupOPCClient();
+#endif
 
     ///Column number for the promise date
     size_t m_promiseDateColumn;

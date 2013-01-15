@@ -73,6 +73,9 @@
 // pick this up from RTTScene for now
 extern osg::ref_ptr<osg::Texture2D> RTTtex;
 
+#ifdef OPC_CLIENT_CONNECT
+#include "zmq.hpp"
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -470,4 +473,59 @@ bool HyperLabICEGP::OneSecondCheck( boost::posix_time::ptime& last_send, const i
     }
     return second_elapsed;
 }
+#ifdef OPC_CLIENT_CONNECT
 ////////////////////////////////////////////////////////////////////////////////
+void HyperLabICEGP::SetupOPCClient()
+{
+    //Init zeromq context
+    zmq::context_t context( 1 );
+    
+    //Socket to receive messages on
+    //zmq::socket_t receiver( context, ZMQ_PULL );
+    //receiver.bind( "tcp://*:3097" );
+    
+    //Socket for control input
+    zmq::socket_t controller( context, ZMQ_SUB );
+    controller.connect( "tcp://localhost:3098" );
+    controller.setsockopt( ZMQ_SUBSCRIBE, "", 0 );
+    
+    //Process messages from receiver and controller
+    //zmq::pollitem_t items [] = {
+    //    { receiver, 0, ZMQ_POLLIN, 0 },
+    //    { controller, 0, ZMQ_POLLIN, 0 } };
+    zmq::pollitem_t items [] = {
+        { controller, 0, ZMQ_POLLIN, 0 } };
+    
+    //
+    for( ; ; )
+    {
+        zmq::poll( &items [ 0 ], 1, -1 );
+        
+        /*if( items [ 0 ].revents & ZMQ_POLLIN )
+        {
+            zmq::message_t zmq_msg;
+            receiver.recv( &zmq_msg );
+            std::string str(
+                            static_cast< char* >( zmq_msg.data() ), zmq_msg.size() );
+            
+            //If a new day, create new log file
+            oTime = pTime; pTime = pt::second_clock::local_time();
+            if( pTime.date().day().as_number() != oTime.date().day().as_number() )
+            {
+                if( outputFile.is_open() ) outputFile.close();
+                dateSS.str( std::string() ); dateSS.clear();
+                dateSS << "web1" << pTime << ".log";
+                outputFile.open( ( outPath/dateSS.str() ).string().c_str(),
+                                std::ios::out | std::ios::trunc | std::ios::binary );
+            }
+            
+            std::cout << str;
+            outputFile << str; outputFile.flush();
+        }*/
+        
+        //Any waiting controller command acts as 'KILL'
+        if( items[ 0 ].revents & ZMQ_POLLIN ) break;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+#endif
