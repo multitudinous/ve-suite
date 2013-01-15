@@ -1,0 +1,29 @@
+##Builds BaffleUnit program
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import('ves_pkg buildDir RootDir xerces_options GetPlatform boost_program_options')
+Import('boost_header_options kibitz_options')
+
+lib_env = ves_pkg.getEnv().Clone()
+
+fileBundle = ves_pkg.createFileBundle( pj( 'share','vesuite','examples','hyper_lab_ice','opc_client' ) )
+#fileBundle.addFiles( [ 'test_data_out6.txt' ] )
+
+boost_program_options.apply( lib_env )
+boost_header_options.apply( lib_env )
+kibitz_options.apply( lib_env )
+
+srcs = Split("""
+	main.cpp
+""")
+
+prog1 = ves_pkg.createProgram('opc_client' + lib_env["PROGSUFFIX"], lib_env,
+          installPrefix = pj( 'share', 'vesuite', 'examples', 'hyper_lab_ice', 'opc_client' ))
+
+prog1.addSources(srcs)
+prog1.build()

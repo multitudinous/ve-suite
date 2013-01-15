@@ -420,6 +420,12 @@ storyteller_options = fp_option.FlagPollBasedOption("storyteller",
                                                   compileTest=True, headerToCheck="storyteller/Exports.h")
 AppendOptions( opts, options, storyteller_options )
 
+kibitz_options = fp_option.FlagPollBasedOption("kibitz",
+                                                  "kibitz", "0.1.0", False, True,
+                                                  None,
+                                                  compileTest=True, headerToCheck="kibitz/kibitz.hpp")
+AppendOptions( opts, options, kibitz_options )
+
 #Setup qt on linux
 if GetPlatform() != 'darwin':
    qt_options = fp_option.FlagPollBasedOption("Qt libraries",
@@ -444,10 +450,10 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'poco_options', 'osgworks_options',
 	    'minerva_options',
         'osgbullet_options', 
-        #'osgbulletplus_options',
         'bdfx_options', 'lemon_options',
         'switchwire_options','crunchstore_options',
-        'storyteller_options','propertystore_options'
+        'storyteller_options','propertystore_options',
+        'kibitz_options'
         #, 'mongo_options'
 	)
 
