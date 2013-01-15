@@ -64,6 +64,9 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
+#include <vpr/vpr.h>
+#include <vpr/Thread/Thread.h>
+
 #include <sstream>
 #include <iostream>
 #include <fstream>
@@ -120,6 +123,11 @@ void HyperLabICEGP::InitializeNode( osg::Group* veworldDCS )
     InitializeLiveSensorObjects();
     
     m_threeSecond = boost::posix_time::microsec_clock::local_time();
+    
+    //Start thread for sampling OPC data
+#ifdef OPC_CLIENT_CONNECT
+    m_sampleThread = new vpr::Thread( boost::bind( &HyperLabICEGP::SetupOPCClient, this ) );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int HyperLabICEGP::InitializeLabModels()
@@ -501,30 +509,18 @@ void HyperLabICEGP::SetupOPCClient()
     {
         zmq::poll( &items [ 0 ], 1, -1 );
         
-        /*if( items [ 0 ].revents & ZMQ_POLLIN )
+        if( items [ 0 ].revents & ZMQ_POLLIN )
         {
             zmq::message_t zmq_msg;
-            receiver.recv( &zmq_msg );
+            controller.recv( &zmq_msg );
             std::string str(
                             static_cast< char* >( zmq_msg.data() ), zmq_msg.size() );
             
-            //If a new day, create new log file
-            oTime = pTime; pTime = pt::second_clock::local_time();
-            if( pTime.date().day().as_number() != oTime.date().day().as_number() )
-            {
-                if( outputFile.is_open() ) outputFile.close();
-                dateSS.str( std::string() ); dateSS.clear();
-                dateSS << "web1" << pTime << ".log";
-                outputFile.open( ( outPath/dateSS.str() ).string().c_str(),
-                                std::ios::out | std::ios::trunc | std::ios::binary );
-            }
-            
-            std::cout << str;
-            outputFile << str; outputFile.flush();
-        }*/
+            std::cout << str << std::endl;
+        }
         
         //Any waiting controller command acts as 'KILL'
-        if( items[ 0 ].revents & ZMQ_POLLIN ) break;
+        //if( items[ 0 ].revents & ZMQ_POLLIN ) break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

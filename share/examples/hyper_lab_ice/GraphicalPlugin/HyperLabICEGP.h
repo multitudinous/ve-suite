@@ -39,7 +39,7 @@
 #include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/CommandPtr.h>
 
-#include <vpr/Thread/Thread.h>
+//#include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>
 
 #include <map>
@@ -58,6 +58,10 @@
 
 #include <osg/MatrixTransform>
 
+/*namespace vpr
+{
+    class Thread;
+}*/
 
 namespace ves
 {
@@ -136,6 +140,9 @@ private:
     boost::posix_time::ptime m_threeSecond;
     ///The timer used for determining when to update graphics
     boost::posix_time::ptime m_lastSend;
+    
+    ///Thread for opc sampling
+    vpr::Thread* m_sampleThread;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( HyperLabICEGP )
