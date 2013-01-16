@@ -36,9 +36,9 @@
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/Command.h>
 #include <ves/open/xml/model/Point.h>
 #include <ves/open/xml/model/Port.h>
-#include <ves/open/xml/Command.h>
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/XMLCreator.h>
 #include <ves/open/xml/shader/ShaderCreator.h>
@@ -63,29 +63,19 @@
 VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog, 
                          CorbaUnitManager* parent, std::string dir )
     :
+    UnitWrapper( parent->GetExecutive(), name ),
     AspenLog( 0 ),
     theParent( parent ),
     theDialog( dialog ),
     return_state( 0 ),
-    cur_id_( 0 ),
-    UnitName_( name ),
+    //cur_id_( 0 ),
+    //UnitName_( name ),
     mWorkingDir( dir ),
     dyn(NULL),
     bkp(NULL),
     dynSim(NULL),
     mQuerying(false)
 {
-    /*ves::open::xml::XMLObjectFactory::Instance()->
-        RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->
-        RegisterObjectCreator(
-        "Shader",new ves::open::xml::shader::ShaderCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->
-        RegisterObjectCreator(
-        "Model",new ves::open::xml::model::ModelCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->
-        RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
-*/
     AspenLog = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
 
     mQueryCommandNames.insert( "getNetwork");
@@ -123,7 +113,10 @@ VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog,
     //DWSIM
     mQueryCommandNames.insert( "readInputs");
     mQueryCommandNames.insert( "readOutputs");
+    mQueryCommandNames.insert( "readInputFileOutputs");
     mQueryCommandNames.insert( "setInputs");
+    mQueryCommandNames.insert( "setOutputPort");
+    mQueryCommandNames.insert( "setInputPort");
 
     dynFlag = false;
     bkpFlag = false;
@@ -241,6 +234,23 @@ void VEPSI_i::StartCalc (
 {
     if( bkpFlag )
     {
+        //grab the value from one output variable
+        /*std::string value;
+        ves::open::xml::CommandPtr tempCmd =
+           boost::dynamic_pointer_cast<ves::open::xml::Command>
+           ( xmlModelMap[ strm.str() ]->GetInput( "Upstream Model Results" )->
+           GetDataValuePair( "DWSim Output" )->GetDataXMLObject() );
+        tempCmd->GetDataValuePair( 0 )->GetData( value );
+        
+        //SetParam()
+        CASI::CASIObj cur_block = bkp->aspendoc->getBlockByName(modname.c_str());
+        CASI::Variable tempvar = cur_block.getInputVarByName(paramName.c_str());
+        CASI::Variable cur_var = bkp->aspendoc->getVarByNodePath(tempvar.getNodePath());
+        CString newValue;
+        newValue = paramValue.c_str();
+        bool success = cur_var.setValue(newValue);
+*/
+        //run simulation
         bkp->aspendoc->runSolver( false );
     }
     else if( dynFlag )
@@ -249,24 +259,111 @@ void VEPSI_i::StartCalc (
     }
     else if( dwFlag )
     {
-        //execute the dwsim from the command line
-        //temporary solution
-        //std::string dwFile = "\"C:\\Documents and Settings\\tjordan\\Desktop\\DWSIM_examples\\test.dwsim\"";//mWorkingDir + filename + ".dwsim";
-        //std::string inFile = "\"C:\\Documents and Settings\\tjordan\\Desktop\\DWSIM_examples\\test.input.xml\"";//mWorkingDir + filename + ".input.xml";
-        //std::string outFile = "\"C:\\Documents and Settings\\tjordan\\Desktop\\DWSIM_examples\\test.output.xml\"";//mWorkingDir + filename + ".output.xml";
-        
+        std::string inFile = mWorkingDir + mFileName + ".input.xml";
+        std::string outFile = mWorkingDir + mFileName + ".output.xml";
+
+        std::ostringstream strm;
+        strm << activeId;
+
+        //check for inputs
+        //const std::vector< ves::open::xml::CommandPtr > inputsVec = xmlModelMap[ strm.str() ]->GetInputs();
+        //if (inputsVec.size() != 0)
+        if( !mPortInput.first.empty() )
+        {
+            //grab the value from one output variable
+            std::string value;
+            ves::open::xml::CommandPtr tempCmd =
+                boost::dynamic_pointer_cast<ves::open::xml::Command>
+                ( xmlModelMap[ strm.str() ]->GetInput( "Upstream Model Results" )->
+                    GetDataValuePair( "DWSim Output" )->GetDataXMLObject() );
+            tempCmd->GetDataValuePair( 0 )->GetData( value );
+
+            //write to xml file
+            ves::open::xml::DOMDocumentManager* mDomDocManager = new ves::open::xml::DOMDocumentManager();
+            mDomDocManager->SetParseXMLFileOn();
+            mDomDocManager->Load( inFile );
+
+            ///get input parameter entry
+            XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mDomDocManager->GetCommandDocument();
+            DOMElement* root_elem = mCommandDocument->getDocumentElement();
+            DOMNodeList* inputList = 
+                root_elem->getElementsByTagName (
+                XMLString::transcode("InputParameters")
+                );
+            DOMNode* node = inputList->item( 0 );
+            DOMElement* input_element = dynamic_cast< DOMElement* > ( node );
+            
+            ves::open::xml::DataValuePairPtr
+                dvp( new ves::open::xml::DataValuePair() );
+
+            //get object entries
+            DOMNodeList*objList = 
+                input_element->getElementsByTagName (
+                XMLString::transcode("Object")
+                );
+
+            int objCount = objList->getLength();
+            for( int i = 0; i < objCount; i++)
+            {
+                //get object name
+                DOMNode* objNode = objList->item( i );
+                DOMElement* element =
+                    dynamic_cast<DOMElement*> ( objNode );
+                std::string objName;
+                dvp->GetAttribute( element, "Name", objName );
+
+                //loop over names name
+                if( objName.compare(mPortInput.first) == 0 )
+                {
+                    //get properties
+                    DOMElement* obj_element = dynamic_cast< DOMElement* > ( objNode );
+                    DOMNodeList* propList = 
+                        obj_element->getElementsByTagName (
+                        XMLString::transcode("Property")
+                        );
+                    int propCount = propList->getLength();
+
+                    //loop over properties and change those requested
+                    for( int j = 0; j < propCount; j++)
+                    {
+                        DOMNode* propNode = propList->item( j );
+                        DOMElement* prop_element =
+                            dynamic_cast<DOMElement*> ( propNode );
+
+                        //prop id
+                        std::string id;
+                        dvp->GetAttribute( prop_element, "ID", id );
+                        
+                        if( id.compare(mPortInput.second.first)==0)
+                        {                   
+                            //set input
+                            dvp->SetAttribute( "Value", value, prop_element );
+                            
+                            //save inputs file
+                            mDomDocManager->SetOuputXMLFile( inFile );
+                            mDomDocManager->SetWriteXMLFileOn();
+                            mDomDocManager->WriteAndReleaseRootElement();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        //create the sys call
         std::string dwExe = "C:\\Program Files (x86)\\DWSIM\\DWSIM.EXE";
         std::string dwFile = "\"" + mWorkingDir + mFileName + ".dwsim\"";
-        std::string inFile = "\"" + mWorkingDir + mFileName + ".input.xml\"";
-        std::string outFile = "\"" + mWorkingDir + mFileName + ".output.xml\"";
-                
-        std::string command = "\"" + dwExe + "\"" + " -commandline " +
+        std::string outFileSys = "\"" + outFile + "\"";
+        std::string inFileSys = "\"" + inFile + "\"";
+          
+        std::string syscall = "\"" + dwExe + "\"" + " -commandline " +
             " -nosplash " + " -show 1 " + " -locale \"en-US\" " +
             " -simfile " + dwFile + " -input " + inFile + " -output " + outFile;
-        
-        LPSTR cmd = strdup( command.c_str() );
+
+        LPSTR cmd = strdup( syscall.c_str() );
         LPSTR exe = strdup( dwExe.c_str() );
 
+        //execute the dwsim from the command line  
         BOOL bRet ;
         STARTUPINFO sui ;
         PROCESS_INFORMATION pi ;
@@ -276,178 +373,95 @@ void VEPSI_i::StartCalc (
         sui.wShowWindow = SW_SHOW ;
         bRet = CreateProcess( exe, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &sui, &pi );
         WaitForSingleObject(pi.hProcess, INFINITE);
+
+        if( !mPortOutput.first.empty() )
+        {
+            std::string value;
+            //read the results xml file
+            //grab the results you want
+            ves::open::xml::DOMDocumentManager* mDomDocManager = new ves::open::xml::DOMDocumentManager();
+            mDomDocManager->SetParseXMLFileOn();
+            mDomDocManager->Load( outFile );
+
+            ///get input parameter entry
+            XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mDomDocManager->GetCommandDocument();
+            DOMElement* root_elem = mCommandDocument->getDocumentElement();
+            DOMNodeList* inputList = 
+                root_elem->getElementsByTagName (
+                XMLString::transcode("OutputParameters")
+                );
+            DOMNode* node = inputList->item( 0 );
+            DOMElement* input_element = dynamic_cast< DOMElement* > ( node );
+            
+            ves::open::xml::DataValuePairPtr
+                dvp( new ves::open::xml::DataValuePair() );
+
+            //get object entries
+            DOMNodeList*objList = 
+                input_element->getElementsByTagName (
+                XMLString::transcode("Object")
+                );
+
+            int objCount = objList->getLength();
+            for( int i = 0; i < objCount; i++)
+            {
+                //get object name
+                DOMNode* objNode = objList->item( i );
+                DOMElement* element =
+                    dynamic_cast<DOMElement*> ( objNode );
+                std::string objName;
+                dvp->GetAttribute( element, "Name", objName );
+
+                //loop over names name
+                if( objName.compare(mPortOutput.first) == 0 )
+                {
+                    //get properties
+                    DOMElement* obj_element = dynamic_cast< DOMElement* > ( objNode );
+                    DOMNodeList* propList = 
+                        obj_element->getElementsByTagName (
+                        XMLString::transcode("Property")
+                        );
+                    int propCount = propList->getLength();
+
+                    //loop over properties and change those requested
+                    for( int j = 0; j < propCount; j++)
+                    {
+                        DOMNode* propNode = propList->item( j );
+                        DOMElement* prop_element =
+                            dynamic_cast<DOMElement*> ( propNode );
+
+                        //prop id
+                        std::string id;
+                        dvp->GetAttribute( prop_element, "ID", id );
+                        
+                        if( id.compare(mPortOutput.second.first) == 0 )
+                        {                   
+                            //set input
+                            //dvp->SetAttribute( "Value", value, prop_element );
+                            dvp->GetAttribute( prop_element, "Value", value);
+                            
+                            //save inputs file
+                            //mDomDocManager->SetOuputXMLFile( inFile );
+                            //mDomDocManager->SetWriteXMLFileOn();
+                            //mDomDocManager->WriteAndReleaseCommandDocumentRoot();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            //write them as dvps to the command to the currentmodel
+            ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+            command->SetCommandName( "DWSim Output" );
+            ves::open::xml::DataValuePairPtr outputDVP( new ves::open::xml::DataValuePair() );
+            outputDVP->SetData( mPortOutput.first, value );
+            command->AddDataValuePair( outputDVP );
+            xmlModelMap[ strm.str() ]->SetResult( command );      
+        }
     }
-    
     AspenLog->SetSel( -1, -1 );
     AspenLog->ReplaceSel( "Simulation Complete\r\n" );
-    //executive_->SetModuleMessage(cur_id_,"Simulation completed.\n");
     return_state=0;
-}
-////////////////////////////////////////////////////////////////////////////////
-void VEPSI_i::StopCalc (
-    
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-  // Add your implementation here
-    std::string msg;
-    msg = UnitName_+" : Instant calculation, already finished\n";
-    //executive_->SetModuleMessage(cur_id_,msg.c_str());
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void VEPSI_i::PauseCalc (
-    
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-  // Add your implementation here
-    std::string msg;
-    msg = UnitName_+" : Instant calculation, already finished\n";
-    //executive_->SetModuleMessage(cur_id_,msg.c_str());
-}
-////////////////////////////////////////////////////////////////////////////////
-void VEPSI_i::Resume (
-    
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-  // Add your implementation here
-    std::string msg;
-    msg = UnitName_+" : Instant calculation, already finished\n";
-    //executive_->SetModuleMessage(cur_id_,msg.c_str());
-}
-////////////////////////////////////////////////////////////////////////////////
-char * VEPSI_i::GetStatusMessage (
-    
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-  // Add your implementation here
-    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
-
-    returnState->SetCommandName( "statusmessage" );
-    ves::open::xml::DataValuePairPtr
-        data( new ves::open::xml::DataValuePair() );
-    data->SetDataName( "RETURN_STATE" );
-    data->SetDataType( "UNSIGNED INT" );
-    data->SetDataValue( return_state );
-    returnState->AddDataValuePair( data );
-    
-    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
-        nodes;
-
-    nodes.push_back( 
-        std::pair< ves::open::xml::XMLObjectPtr, std::string >( 
-        returnState, "vecommand" ) );
-    ves::open::xml::XMLReaderWriter commandWriter;
-    std::string status = "returnString";
-    commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-    return CORBA::string_dup( status.c_str() );
-}
-////////////////////////////////////////////////////////////////////////////////
-char * VEPSI_i::GetUserData (
-    
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-  // Add your implementation here
-    char * result = 0;
-    return result;
-}
-////////////////////////////////////////////////////////////////////////////////
-void VEPSI_i::SetID (
-    ::CORBA::Long id
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-  // Add your implementation here
-  // no need to implement this
-  std::cout << "This not implemented for the Aspen Unit" << std::endl;
-}
-////////////////////////////////////////////////////////////////////////////////
-void VEPSI_i::SetCurID (
-    ::CORBA::Long id
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-    cur_id_ = id;
-}
-////////////////////////////////////////////////////////////////////////////////
-::Types::ArrayLong* VEPSI_i::GetID (
-    
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-    return &ids_;
-}
-////////////////////////////////////////////////////////////////////////////////
-CORBA::Long VEPSI_i::GetCurID (
-    
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-    return cur_id_;
-}
-////////////////////////////////////////////////////////////////////////////////
-void VEPSI_i::DeleteModuleInstance(CORBA::Long id) 
-ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-    return; //do nothing;
-}
-////////////////////////////////////////////////////////////////////////////////
-void VEPSI_i::SetName (
-    const char * name
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-  // Add your implementation here
-    UnitName_ = std::string(name);
-}
-////////////////////////////////////////////////////////////////////////////////
-char * VEPSI_i::GetName (
-    
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
-{
-    return CORBA::string_dup(UnitName_.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * VEPSI_i::Query ( const char * query_str
@@ -462,306 +476,339 @@ char * VEPSI_i::Query ( const char * query_str
     AspenLog->SetSel( -1, -1 );
     AspenLog->ReplaceSel( "Query\r\n" );
     _mutex.acquire();
-    ves::open::xml::XMLReaderWriter networkWriter;
-    networkWriter.UseStandaloneDOMDocumentManager();
-    networkWriter.ReadFromString();
-    networkWriter.ReadXMLData( query_str, "Command", "vecommand" );
 
-    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
-        networkWriter.GetLoadedXMLObjects();
-
-    ves::open::xml::CommandPtr cmd;    
-    std::string cmdname;
-    
-    cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>
-        ( objectVector.at( 0 ) );
-    cmdname = cmd->GetCommandName();
-    
-    std::set< std::string >::const_iterator commandItr
-        = mQueryCommandNames.find( cmdname );
-    
-    //If the command is not processed here - do not bother doing anything more
-    if( commandItr == mQueryCommandNames.end() )
+    char * tempResult = UnitWrapper::Query( query_str );
+    if( strcmp(tempResult, "NULL") )
     {
+        //return CORBA::string_dup( tempResult.c_str() );
         _mutex.release();
         mQuerying = false;
-        return CORBA::string_dup("NULL");
+        return tempResult;
     }
-    
-    AspenLog->SetSel( -1, -1 );
-    AspenLog->ReplaceSel( ("Command: "+cmdname+"\r\n").c_str() );
-    char* returnValue = "empty";
-
-    if ( cmdname == "getNetwork" )
-    {
-        returnValue = handleGetNetwork( cmd );
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-    else if( cmdname == "openSimulation" )
-    {
-        returnValue = handleOpenSimulation( cmd );
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-    else if ( cmdname == "runNetwork" )
-    {
-        StartCalc();
-        mQuerying = false;
-        _mutex.release();
-        return CORBA::string_dup( "networkRun" );
-    }
-    else if ( cmdname == "stepNetwork" )
-    {
-        StepSim();
-        mQuerying = false;
-        _mutex.release();
-        return CORBA::string_dup( "networkRun" );
-    }
-    else if ( cmdname == "showSimulation" )
-    {
-        ShowAspen();
-        mQuerying = false;
-        _mutex.release();
-        return CORBA::string_dup( "Simulation Shown." );
-    }
-    else if ( cmdname == "hideSimulation" )
-    {
-        HideAspen();
-        mQuerying = false;
-        _mutex.release();
-        return CORBA::string_dup( "Simulation hidden." );
-    }
-    else if ( cmdname == "closeSimulation" )
-    {
-        AspenLog->SetSel( -1, -1 );
-        AspenLog->ReplaceSel( "closing...\r\n" );
-        CloseAspen();
-        AspenLog->SetSel( -1, -1 );
-        AspenLog->ReplaceSel( "closed.\r\n" );
-        mQuerying = false;
-        _mutex.release();
-        return CORBA::string_dup( "Simulation closed." );
-    }
-    else if ( cmdname == "saveSimulation" )
-    {
-        AspenLog->SetSel(-1, -1);
-        AspenLog->ReplaceSel( "saving...\r\n" );
-        try
-        {
-            SaveAspen( mFileName );
-            AspenLog->SetSel( -1, -1 );
-            AspenLog->ReplaceSel( "saved.\r\n" );
-        }
-        catch(...)
-        {
-            AspenLog->SetSel(-1, -1);
-            AspenLog->ReplaceSel( "messed up save.\r\n" );
-            mQuerying = false;
-            _mutex.release();
-        }
-        mQuerying = false;
-        _mutex.release();
-        return CORBA::string_dup( "Simulation Saved." );
-    }
-    else if ( cmdname == "saveAsSimulation" )
-    {
-        returnValue = handleSaveAs( cmd );
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-    else if( cmdname == "reinitNetwork" )
-    {
-        ReinitializeAspen();
-        mQuerying = false;
-        _mutex.release();
-        return CORBA::string_dup( "Simulation reinitialized." );
-    }
-    else if( cmdname == "reinitBlock" )
-    {
-        ReinitializeBlock( cmd );
-        mQuerying = false;
-        _mutex.release();
-        return CORBA::string_dup( "Block reinitialized." );
-    }
-
-    //Blocks
-    else if ( cmdname == "getModuleParamList" )
-    {
-        //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
-        returnValue = handleGetModuleParamList( cmd );
-        //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-    else if ( cmdname == "getInputModuleParamList" )
-    {
-        //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
-        returnValue = handleGetInputModuleParamList( cmd );
-        //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-    else if ( cmdname == "getInputModuleProperties" )
-    {
-        returnValue = handleGetInputModuleProperties( cmd );
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-    else if ( cmdname == "getOutputModuleParamList" )
-    {
-        //executive_->SetModuleMessage(cur_id_,"Querying outputs...\n");
-        returnValue = handleGetOutputModuleParamList( cmd );
-        //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-    else if ( cmdname == "getOutputModuleProperties" )
-    {
-        returnValue = handleGetOutputModuleProperties( cmd );
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-
-    //Streams
-    else if ( cmdname == "getStreamModuleParamList" )
-    {
-        //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
-        returnValue = handleGetStreamModuleParamList( cmd );
-        //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-    else if ( cmdname == "getStreamInputModuleParamList" )
-    {
-        //executive_->SetModuleMessage(cur_id_,"Querying link inputs...\n");
-        returnValue = handleGetStreamInputModuleParamList( cmd );
-        //executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-    else if ( cmdname == "getStreamInputModuleProperties" )
-    {
-        returnValue = handleGetStreamInputModuleProperties( cmd );
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-    else if ( cmdname == "getStreamOutputModuleParamList" )
-    {
-        //executive_->SetModuleMessage(cur_id_,"Querying link outputs...\n");
-        returnValue = handleGetStreamOutputModuleParamList( cmd );
-        //executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-    else if ( cmdname == "getStreamOutputModuleProperties" )
-    {
-        returnValue = handleGetStreamOutputModuleProperties( cmd );
-        mQuerying = false;
-        _mutex.release();
-        return returnValue;
-    }
-
-    //Params
-    else if ( cmdname == "setParam" )
-    {
-        SetParam( cmd );
-        mQuerying = false;
-        _mutex.release();
-        return CORBA::string_dup( "Param Set" );
-    }
-    else if ( cmdname == "setLinkParam" )
-    {
-        SetLinkParam( cmd );
-        mQuerying = false;
-        _mutex.release();
-        return CORBA::string_dup( "Param Set" );
-    }
-    else if ( cmdname == "addVariable" )
-    {
-        addVariable( cmd );
-        mQuerying = false;
-        _mutex.release();
-        return( "NULL" );
-    }
-
-    //DynSim
-    else if ( cmdname == "getOPCValues" )
-    {
-        returnValue = getOPCValues( cmd );
-        _mutex.release();
-        mQuerying = false;
-        return returnValue;
-    }
-    else if ( cmdname == "setOPCValues" )
-    {
-        returnValue = setOPCValues( cmd );
-        _mutex.release();
-        mQuerying = false;
-        return returnValue;
-    }
-    else if ( cmdname == "connectToOPC" )
-    {
-        connectToOPC( cmd );
-        _mutex.release();
-        mQuerying = false;
-        return( "NULL" );
-    }
-    else if ( cmdname == "addVariable" )
-    {
-        addVariable( cmd );
-        _mutex.release();
-        mQuerying = false;
-        return( "NULL" );
-    }
-    else if ( cmdname == "getAllOPCVariables" )
-    {
-        returnValue = getAllOPCVariables( cmd );
-        _mutex.release();
-        mQuerying = false;
-        return returnValue;
-    }
-
-    //DWSIM
-    else if ( cmdname == "readInputs" )
-    {
-        returnValue = readInputFile( cmd );
-        _mutex.release();
-        mQuerying = false;
-        return returnValue;
-    }
-    else if ( cmdname == "readOutputs" )
-    {
-        returnValue = readOutputFile( cmd );
-        _mutex.release();
-        mQuerying = false;
-        return returnValue;
-    }
-    else if ( cmdname == "setInputs" )
-    {
-        returnValue = setInputs( cmd );
-        _mutex.release();
-        mQuerying = false;
-        return returnValue;
-    }
-
     else
     {
-        mQuerying = false;
-        _mutex.release();
-        return CORBA::string_dup( "NULL" );
+        ves::open::xml::XMLReaderWriter networkWriter;
+        networkWriter.UseStandaloneDOMDocumentManager();
+        networkWriter.ReadFromString();
+        networkWriter.ReadXMLData( query_str, "Command", "vecommand" );
+
+        std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+            networkWriter.GetLoadedXMLObjects();
+
+        ves::open::xml::CommandPtr cmd;    
+        std::string cmdname;
+        
+        cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>
+            ( objectVector.at( 0 ) );
+        cmdname = cmd->GetCommandName();
+        
+        std::set< std::string >::const_iterator commandItr
+            = mQueryCommandNames.find( cmdname );
+        
+        //If the command is not processed here - do not bother doing anything more
+        if( commandItr == mQueryCommandNames.end() )
+        {
+            _mutex.release();
+            mQuerying = false;
+            return CORBA::string_dup("NULL");
+        }
+        
+        AspenLog->SetSel( -1, -1 );
+        AspenLog->ReplaceSel( ("Command: "+cmdname+"\r\n").c_str() );
+        char* returnValue = "empty";
+
+        if ( cmdname == "getNetwork" )
+        {
+            returnValue = handleGetNetwork( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if( cmdname == "openSimulation" )
+        {
+            returnValue = handleOpenSimulation( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if ( cmdname == "runNetwork" )
+        {
+            StartCalc();
+            mQuerying = false;
+            _mutex.release();
+            return CORBA::string_dup( "networkRun" );
+        }
+        else if ( cmdname == "stepNetwork" )
+        {
+            StepSim();
+            mQuerying = false;
+            _mutex.release();
+            return CORBA::string_dup( "networkRun" );
+        }
+        else if ( cmdname == "showSimulation" )
+        {
+            ShowAspen();
+            mQuerying = false;
+            _mutex.release();
+            return CORBA::string_dup( "Simulation Shown." );
+        }
+        else if ( cmdname == "hideSimulation" )
+        {
+            HideAspen();
+            mQuerying = false;
+            _mutex.release();
+            return CORBA::string_dup( "Simulation hidden." );
+        }
+        else if ( cmdname == "closeSimulation" )
+        {
+            AspenLog->SetSel( -1, -1 );
+            AspenLog->ReplaceSel( "closing...\r\n" );
+            CloseAspen();
+            AspenLog->SetSel( -1, -1 );
+            AspenLog->ReplaceSel( "closed.\r\n" );
+            mQuerying = false;
+            _mutex.release();
+            return CORBA::string_dup( "Simulation closed." );
+        }
+        else if ( cmdname == "saveSimulation" )
+        {
+            AspenLog->SetSel(-1, -1);
+            AspenLog->ReplaceSel( "saving...\r\n" );
+            try
+            {
+                SaveAspen( mFileName );
+                AspenLog->SetSel( -1, -1 );
+                AspenLog->ReplaceSel( "saved.\r\n" );
+            }
+            catch(...)
+            {
+                AspenLog->SetSel(-1, -1);
+                AspenLog->ReplaceSel( "messed up save.\r\n" );
+                mQuerying = false;
+                _mutex.release();
+            }
+            mQuerying = false;
+            _mutex.release();
+            return CORBA::string_dup( "Simulation Saved." );
+        }
+        else if ( cmdname == "saveAsSimulation" )
+        {
+            returnValue = handleSaveAs( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if( cmdname == "reinitNetwork" )
+        {
+            ReinitializeAspen();
+            mQuerying = false;
+            _mutex.release();
+            return CORBA::string_dup( "Simulation reinitialized." );
+        }
+        else if( cmdname == "reinitBlock" )
+        {
+            ReinitializeBlock( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return CORBA::string_dup( "Block reinitialized." );
+        }
+
+        //Blocks
+        else if ( cmdname == "getModuleParamList" )
+        {
+            //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
+            returnValue = handleGetModuleParamList( cmd );
+            //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if ( cmdname == "getInputModuleParamList" )
+        {
+            //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
+            returnValue = handleGetInputModuleParamList( cmd );
+            //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if ( cmdname == "getInputModuleProperties" )
+        {
+            returnValue = handleGetInputModuleProperties( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if ( cmdname == "getOutputModuleParamList" )
+        {
+            //executive_->SetModuleMessage(cur_id_,"Querying outputs...\n");
+            returnValue = handleGetOutputModuleParamList( cmd );
+            //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if ( cmdname == "getOutputModuleProperties" )
+        {
+            returnValue = handleGetOutputModuleProperties( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+
+        //Streams
+        else if ( cmdname == "getStreamModuleParamList" )
+        {
+            //executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
+            returnValue = handleGetStreamModuleParamList( cmd );
+            //executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if ( cmdname == "getStreamInputModuleParamList" )
+        {
+            //executive_->SetModuleMessage(cur_id_,"Querying link inputs...\n");
+            returnValue = handleGetStreamInputModuleParamList( cmd );
+            //executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if ( cmdname == "getStreamInputModuleProperties" )
+        {
+            returnValue = handleGetStreamInputModuleProperties( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if ( cmdname == "getStreamOutputModuleParamList" )
+        {
+            //executive_->SetModuleMessage(cur_id_,"Querying link outputs...\n");
+            returnValue = handleGetStreamOutputModuleParamList( cmd );
+            //executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+        else if ( cmdname == "getStreamOutputModuleProperties" )
+        {
+            returnValue = handleGetStreamOutputModuleProperties( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return returnValue;
+        }
+
+        //Params
+        else if ( cmdname == "setParam" )
+        {
+            SetParam( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return CORBA::string_dup( "Param Set" );
+        }
+        else if ( cmdname == "setLinkParam" )
+        {
+            SetLinkParam( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return CORBA::string_dup( "Param Set" );
+        }
+        else if ( cmdname == "addVariable" )
+        {
+            addVariable( cmd );
+            mQuerying = false;
+            _mutex.release();
+            return( "NULL" );
+        }
+
+        //DynSim
+        else if ( cmdname == "getOPCValues" )
+        {
+            returnValue = getOPCValues( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return returnValue;
+        }
+        else if ( cmdname == "setOPCValues" )
+        {
+            returnValue = setOPCValues( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return returnValue;
+        }
+        else if ( cmdname == "connectToOPC" )
+        {
+            connectToOPC( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return( "NULL" );
+        }
+        else if ( cmdname == "addVariable" )
+        {
+            addVariable( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return( "NULL" );
+        }
+        else if ( cmdname == "getAllOPCVariables" )
+        {
+            returnValue = getAllOPCVariables( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return returnValue;
+        }
+
+        //DWSIM
+        else if ( cmdname == "readInputs" )
+        {
+            returnValue = readInputFile( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return returnValue;
+        }
+        else if ( cmdname == "readOutputs" )
+        {
+            returnValue = readOutputFile( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return returnValue;
+        }
+        else if ( cmdname == "readInputFileOutputs" )
+        {
+            returnValue = readInputFileOutputs( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return returnValue;
+        }
+        else if ( cmdname == "setInputs" )
+        {
+            returnValue = setInputs( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return returnValue;
+        }
+        else if ( cmdname == "setInputPort" )
+        {
+            setInputPort( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return( "NULL" );
+        }
+        else if ( cmdname == "setOutputPort" )
+        {
+            setOutputPort( cmd );
+            _mutex.release();
+            mQuerying = false;
+            return( "NULL" );
+        }
+
+        else
+        {
+            mQuerying = false;
+            _mutex.release();
+            return CORBA::string_dup( "NULL" );
+        }
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -1346,7 +1393,7 @@ char* VEPSI_i::handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr 
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VEPSI_i::SetParams (CORBA::Long id,
+/*void VEPSI_i::SetParams (CORBA::Long id,
     const char * param)
   ACE_THROW_SPEC ((
     ::CORBA::SystemException,
@@ -1389,7 +1436,7 @@ void VEPSI_i::SetParams (CORBA::Long id,
             SetParam( tempCmd );
         }
     }
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void VEPSI_i::SetParam( ves::open::xml::CommandPtr cmd )
 {
@@ -1468,7 +1515,7 @@ void VEPSI_i::addVariable( ves::open::xml::CommandPtr cmd )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void VEPSI_i::Monitor(  )
+void VEPSI_i::Monitor()
 {
     HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
     while (true)
@@ -1494,7 +1541,7 @@ void VEPSI_i::Monitor(  )
             {
                 _mutex.acquire();
                 //dynsim->AddOPCVariable( "MY_SWITCH" );
-                std::string netPak = dynSim->GetOPCValues( );
+                std::string netPak = dynSim->GetOPCValues();
                 theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );            
                 _mutex.release();
             }
@@ -1876,9 +1923,153 @@ char* VEPSI_i::readOutputFile( ves::open::xml::CommandPtr cmd )
     return CORBA::string_dup( status.c_str( ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
-char* VEPSI_i::setInputs( ves::open::xml::CommandPtr cmd )
+char* VEPSI_i::readInputFileOutputs( ves::open::xml::CommandPtr cmd )
 {
     ///Parse Output XML File
+    std::string filename = mWorkingDir + mFileName + ".input.xml";
+    
+    ves::open::xml::DOMDocumentManager* mDomDocManager = new ves::open::xml::DOMDocumentManager();
+    mDomDocManager->SetParseXMLFileOn();
+    mDomDocManager->Load( filename );
+
+    ///get output parameter entry
+    std::map< std::string, std::vector< std::string > > outList;
+
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument = mDomDocManager->GetCommandDocument();
+    DOMElement* root_elem = mCommandDocument->getDocumentElement();
+    DOMNodeList* outputList = 
+        root_elem->getElementsByTagName (
+        XMLString::transcode("OutputParameters")
+        );
+    DOMNode* node = outputList->item( 0 );
+    DOMElement* output_element = dynamic_cast< DOMElement* > ( node );
+    
+    ves::open::xml::DataValuePairPtr
+        dvp( new ves::open::xml::DataValuePair() );
+    
+    ///may need simulationobjects tag first
+
+    //get object entries
+    DOMNodeList*objList = 
+        output_element->getElementsByTagName (
+        XMLString::transcode("Object")
+        );
+
+    int objCount = objList->getLength();
+    //ves::open::xml::XMLObject* convert = new ves::open::xml::XMLObject();
+    for( int i = 0; i < objCount; i++)
+    {
+        //get object name
+        DOMNode* objNode = objList->item( i );
+        DOMElement* element =
+            dynamic_cast<DOMElement*> ( objNode );
+        std::string objName;
+        //ves::open::xml::XMLObject::GetAttribute( element, "Name", objName );
+        dvp->GetAttribute( element, "Name", objName );
+
+        //get properties
+        //THIS GETS ALL THE PROPERTIES NOT OBJECT SPECIFIC
+        //NEED TO GET ONLY THE PROPERTIES OF THE CURRENT OBJECT
+        DOMElement* obj_element = dynamic_cast< DOMElement* > ( objNode );
+        DOMNodeList* propList = 
+            obj_element->getElementsByTagName (
+            XMLString::transcode("Property")
+            );
+        int propCount = propList->getLength();
+        for( int j = 0; j < propCount; j++)
+        {
+            DOMNode* propNode = propList->item( j );
+            DOMElement* prop_element =
+                dynamic_cast<DOMElement*> ( propNode );
+            //prop tempProp;
+            std::vector< std::string > tempProp;
+
+            //prop id
+            std::string id;
+            dvp->GetAttribute( prop_element, "ID", id );
+            if( id.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.id = id;
+                tempProp.push_back( id );
+            }
+            
+            //prop name
+            std::string name;
+            dvp->GetAttribute( prop_element, "Name", name );
+            if( name.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.name = name;
+                tempProp.push_back( name );
+            }
+
+            //prop value
+            //double value;
+            std::string value;
+            dvp->GetAttribute( prop_element, "Value", value );
+            if( value.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.value = value;
+                tempProp.push_back( value );
+            }
+            
+            //prop unit
+            std::string unit;
+            dvp->GetAttribute( prop_element, "Unit", unit );
+            if( unit.compare("") == 0 )
+            {
+                tempProp.push_back( "N/A" );
+            }
+            else
+            {
+                //tempProp.unit = unit;
+                tempProp.push_back( unit );
+            }
+                        
+            outList[objName+"."+id] =( tempProp );
+        }
+    }
+    
+    //Construct return packet
+    ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
+    varsAndValues->SetCommandName("DWSIM_Data");
+    //std::map< std::string, std::vector< std::vector< std::string > > >::iterator inIter;
+    std::map< std::string, std::vector< std::string > >::iterator inIter;
+    for( inIter = outList.begin(); inIter != outList.end(); ++inIter)
+    {
+        //for( int j = 0; j < inIter->second.size(); j++ )
+        //{
+            ves::open::xml::DataValuePairPtr
+                entry( new ves::open::xml::DataValuePair() );
+            entry->SetData( inIter->first, inIter->second );
+            varsAndValues->AddDataValuePair( entry );
+        //}
+    }
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
+        ( varsAndValues, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    return CORBA::string_dup( status.c_str( ) );
+}
+///////////////////////////////////////////////////////////////////////////////
+char* VEPSI_i::setInputs( ves::open::xml::CommandPtr cmd )
+{
     std::string filename = mWorkingDir + mFileName + ".input.xml";
     
     ves::open::xml::DOMDocumentManager* mDomDocManager = new ves::open::xml::DOMDocumentManager();
@@ -1963,4 +2154,33 @@ char* VEPSI_i::setInputs( ves::open::xml::CommandPtr cmd )
         }
     }
     return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void VEPSI_i::setInputPort( ves::open::xml::CommandPtr cmd )
+{
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+        std::vector< std::string > temp_vector;
+        pair->GetData( temp_vector );
+        mPortInput.first = temp_vector[0];
+        mPortInput.second.first = temp_vector[1];
+        mPortInput.second.second = temp_vector[2];
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void VEPSI_i::setOutputPort( ves::open::xml::CommandPtr cmd )
+{
+    size_t num = cmd->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < num; i++)
+    {
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+        std::vector< std::string > temp_vector;
+        pair->GetData( temp_vector );
+        mPortOutput.first = temp_vector[0];
+        mPortOutput.second.first = temp_vector[1];
+        mPortOutput.second.second = temp_vector[2];
+    }
 }

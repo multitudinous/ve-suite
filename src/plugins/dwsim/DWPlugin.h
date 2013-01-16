@@ -115,6 +115,12 @@ private:
     void SetInputs( wxCommandEvent& event );
 
     ///???
+    void SetOutputPortData( wxCommandEvent& event );
+
+    ///???
+    void SetInputPortData( wxCommandEvent& event );
+    
+    ///???
     void GetOutputs( wxCommandEvent& event );
 
     ///???

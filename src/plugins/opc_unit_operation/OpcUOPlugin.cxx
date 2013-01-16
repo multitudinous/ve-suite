@@ -391,7 +391,8 @@ void OpcUOPlugin::QueryForAllVariables( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )
 {
-    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent() );
+    UIPLUGIN_CHECKID( event )
+    OpcUOVarDialog* params = new OpcUOVarDialog( GetPluginParent(), this, m_unitName );
     params->SetComponentName( mPluginName );
     //params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
     params->SetServiceList( serviceList );
@@ -408,6 +409,11 @@ void OpcUOPlugin::OnShowAllVar( wxCommandEvent& event )
     //params->UpdateSizes();
     params->ShowModal();
     params->Destroy();
+}
+void OpcUOPlugin::OnMonitorVariable ( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    m_monitoring = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool OpcUOPlugin::ShowAvailable()
