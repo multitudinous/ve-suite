@@ -188,6 +188,16 @@ enum
     OPCUOPLUGIN_START_TIMER,
     OPCUOPLUGIN_STOP_TIMER,
     OPCUOPLUGIN_ALL_VAR,
+    
+    //
+    //OPCUOPlugin.h
+    //
+    OPCPLUGIN_SET_UNIT,
+    OPCPLUGIN_MENU,
+    OPCPLUGIN_SHOW_VALUE,
+    OPCPLUGIN_ALL_VAR,
+    OPCPLUGIN_CONNECT,
+
     //
     //PSPlugin.h
     //

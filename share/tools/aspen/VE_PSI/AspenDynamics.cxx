@@ -1400,10 +1400,10 @@ std::string AspenDynamics::GetModuleParams( std::string modname, bool block )
     //input variables;
     params->SetCommandName((modname+"InputParams").c_str());
 
-    //std::vector< std::vector < std::string > > variables =
-    //    dyndoc->GetVariableList( modname.c_str(), block );
     std::vector< std::vector < std::string > > variables =
-        dyndoc->GetVariable( modname.c_str(), "PosA", block );
+        dyndoc->GetVariableList( modname.c_str(), block );
+    //std::vector< std::vector < std::string > > variables =
+    //    dyndoc->GetVariable( modname.c_str(), "PosA", block );
 
     for(int i = 0; i < variables.size(); i++)
     //for(int i = 0; i < 2; i++)

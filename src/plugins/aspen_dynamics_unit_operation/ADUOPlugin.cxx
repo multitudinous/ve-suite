@@ -125,7 +125,8 @@ void ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
 
     if( parentTraverser != NULL )
     {
-        while( parentTraverser->GetParentModel() != NULL )
+        while( parentTraverser->GetParentModel() != NULL &&
+            parentTraverser->GetParentModel()->GetPluginType().compare( "ADPlugin" ) != 0 )
         {
             //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
             parentTraverser = parentTraverser->GetParentModel();

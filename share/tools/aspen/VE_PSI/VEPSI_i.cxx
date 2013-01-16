@@ -74,6 +74,7 @@ VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog,
     dyn(NULL),
     bkp(NULL),
     dynSim(NULL),
+    opc(NULL),
     mQuerying(false)
 {
     AspenLog = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
@@ -123,6 +124,7 @@ VEPSI_i::VEPSI_i( std::string name, VE_PSIDlg * dialog,
     dynFlag = false;
     bkpFlag = false;
     dwFlag = false;
+    opcFlag = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation skeleton destructor
@@ -1602,6 +1604,10 @@ void VEPSI_i::addVariable( ves::open::xml::CommandPtr cmd )
     {
         dynSim->AddOPCVariable( var.c_str() );
     }
+    else //assuming anything else is OPC
+    {
+        opc->AddOPCVariable( var.c_str() );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void VEPSI_i::Monitor()
@@ -1635,6 +1641,19 @@ void VEPSI_i::Monitor()
                 _mutex.release();
             }
         }
+
+        //OPC
+        if( opcFlag )
+        {   
+            if( connected && !opc->IsOPCVarsEmpty()&& !mQuerying && opc )
+            {
+                _mutex.acquire();
+                std::string netPak = opc->GetOPCValues();
+                theParent->GetExecutive()->SetParams(0, 0, CORBA::string_dup( netPak.c_str( ) ) );            
+                _mutex.release();
+            }
+        }
+
         vpr::System::msleep( 5 );
     }
     CoUninitialize();
@@ -1647,8 +1666,6 @@ void VEPSI_i::UpdateVars( )
     {
         std::vector< std::pair< std::string, std::string > > vars =
             dynSim->ReadVars();
-        //std::map< std::string, std::pair< std::string, VARTYPE > > vars =
-        //    dynsim->ReadVars();
 
         if( !vars.empty() )
         {
@@ -1659,22 +1676,22 @@ void VEPSI_i::UpdateVars( )
                 AspenLog->SetSel(-1, -1);
                 AspenLog->ReplaceSel( temp.c_str() );
             }
-
-            //dump results to aspen log
-            //std::map< std::string, std::pair< std::string, VARTYPE > >::iterator iter;
-            //for( iter = vars.begin(); iter != vars.end(); ++iter)
-            //{
-            //    std::string temp = iter->first + " " + iter->second.first +"\n";
-            //    AspenLog->SetSel(-1, -1);
-            //    AspenLog->ReplaceSel( temp.c_str() );
-            //}
         }
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
 char* VEPSI_i::getOPCValues( ves::open::xml::CommandPtr cmd )
 {
-    std::string netPak = dynSim->GetOPCValues( );
+    std::string netPak ;
+
+    if( dynSimFlag )
+    {
+        netPak = dynSim->GetOPCValues( );
+    }
+    else if( opcFlag )
+    {
+        netPak = opc->GetOPCValues( );
+    }
     return CORBA::string_dup( netPak.c_str( ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -1691,7 +1708,16 @@ char* VEPSI_i::setOPCValues( ves::open::xml::CommandPtr cmd )
         temp.second = curPair->GetDataString();
         varsAndValues.push_back( temp );
     }
-    dynSim->SetOPCValues( varsAndValues );
+    
+    if( dynSimFlag )
+    {
+        dynSim->SetOPCValues( varsAndValues );
+    }
+    else if( opcFlag )
+    {
+        opc->SetOPCValues( varsAndValues );
+    }
+
     return CORBA::string_dup( "NULL" );
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -1706,17 +1732,36 @@ void VEPSI_i::connectWithList( ves::open::xml::CommandPtr cmd )
 ///////////////////////////////////////////////////////////////////////////////
 void VEPSI_i::connectToOPC( ves::open::xml::CommandPtr cmd )
 {
-    connected = dynSim->ConnectToOPCServer();
+    if( dynSimFlag )
+    {
+        connected = dynSim->ConnectToOPCServer();
+    }
+    else
+    {
+        opc = new OPC( UnitName_ );
+        opcFlag = true;
+        connected = opc->ConnectToOPCServer();
+    }
+
     m_thread = new vpr::Thread( boost::bind( &VEPSI_i::Monitor,
             this ) );
-    //m_Thread = AfxBeginThread( ThreadFunc, this);
 }
 ///////////////////////////////////////////////////////////////////////////////
 char* VEPSI_i::getAllOPCVariables( ves::open::xml::CommandPtr cmd )
 {
     ves::open::xml::DataValuePairPtr curPair = cmd->GetDataValuePair( 0 );
     std::string modname = curPair->GetDataString( );
-    std::string netPak = dynSim->GetAllOPCVariables( modname.c_str() );
+    std::string netPak;
+
+    if( dynSimFlag )
+    {
+        netPak = dynSim->GetAllOPCVariables( modname.c_str() );
+    }
+    else if( opcFlag )
+    {
+        netPak = opc->GetAllOPCVariables( modname.c_str() );
+    }
+    
     return CORBA::string_dup( netPak.c_str( ) );
 }
 
