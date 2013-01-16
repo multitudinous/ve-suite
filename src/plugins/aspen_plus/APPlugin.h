@@ -118,6 +118,9 @@ protected:
     ///???
     void SetUnitName( std::string name );
 
+    void SetInputPortData( wxCommandEvent& event );
+    void SetOutputPortData( wxCommandEvent& event );
+
     ///???
     bool IsBKPOpen();
 

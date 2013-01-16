@@ -54,6 +54,7 @@
 #include <wx/window.h>
 #include <wx/filedlg.h>
 #include <wx/filename.h>
+#include <wx/tokenzr.h>
 
 using namespace ves::open::xml::model;
 using namespace ves::open::xml;
@@ -72,6 +73,8 @@ BEGIN_EVENT_TABLE( APPlugin, ves::conductor::UIPluginBase )
     EVT_MENU( APPLUGIN_STEP_ASPEN_NETWORK, APPlugin::StepAspenNetwork )
     EVT_MENU( APPLUGIN_SAVE_SIMULATION, APPlugin::SaveSimulation )
     EVT_MENU( APPLUGIN_SAVEAS_SIMULATION, APPlugin::SaveAsSimulation )
+    EVT_MENU( APPLUGIN_INPUT_PORT, APPlugin::SetInputPortData )
+    EVT_MENU( APPLUGIN_OUTPUT_PORT, APPlugin::SetOutputPortData )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( APPlugin, ves::conductor::UIPluginBase )
@@ -325,7 +328,9 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     mAspenMenu->Enable( APPLUGIN_STEP_ASPEN_NETWORK, true );
     mAspenMenu->Enable( APPLUGIN_SAVE_SIMULATION, true );
     mAspenMenu->Enable( APPLUGIN_SAVEAS_SIMULATION, true );
-}
+    mAspenMenu->Enable( APPLUGIN_INPUT_PORT, false );
+    mAspenMenu->Enable( APPLUGIN_OUTPUT_PORT, false );
+ }
 ////////////////////////////////////////////////////////////////////////////////
 void APPlugin::ShowAspenSimulation( wxCommandEvent& event )
 {
@@ -413,6 +418,8 @@ void APPlugin::CloseAspenSimulation( void )
         mAspenMenu->Enable( APPLUGIN_STEP_ASPEN_NETWORK, false );
         mAspenMenu->Enable( APPLUGIN_SAVE_SIMULATION, false );
         mAspenMenu->Enable( APPLUGIN_SAVEAS_SIMULATION, false );
+        mAspenMenu->Enable( APPLUGIN_INPUT_PORT, false );
+        mAspenMenu->Enable( APPLUGIN_OUTPUT_PORT, false );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -575,7 +582,24 @@ void APPlugin::SaveAsSimulation( wxCommandEvent& event )
 wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 {
     if( mAspenMenu )
-    {
+    {    
+        if(inputPort.size() == 0)
+        {
+            mAspenMenu->Enable( APPLUGIN_INPUT_PORT, false );
+        }
+        else
+        {
+            mAspenMenu->Enable( APPLUGIN_INPUT_PORT, true );
+        }
+
+        if(outputPort.size() == 0)
+        {
+            mAspenMenu->Enable( APPLUGIN_OUTPUT_PORT, false );
+        }
+        else
+        {
+            mAspenMenu->Enable( APPLUGIN_OUTPUT_PORT, true );
+        }
         return baseMenu;
     }
 
@@ -601,6 +625,10 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
     mAspenMenu->Append( APPLUGIN_STEP_ASPEN_NETWORK, _( "Step" ) );
     mAspenMenu->Append( APPLUGIN_SAVE_SIMULATION, _( "Save" ) );
     mAspenMenu->Append( APPLUGIN_SAVEAS_SIMULATION, _( "SaveAs" ) );
+    mAspenMenu->Append( APPLUGIN_INPUT_PORT, _( "Input Port" ) );
+    mAspenMenu->Enable( APPLUGIN_INPUT_PORT, false );
+    mAspenMenu->Append( APPLUGIN_OUTPUT_PORT, _( "Output Port" ) );
+    mAspenMenu->Enable( APPLUGIN_OUTPUT_PORT, false );
 
     baseMenu->Insert( 0, APPLUGIN_ASPEN_MENU,   _( "Aspen" ), mAspenMenu,
                       _( "Used in conjunction with Aspen" ) );
@@ -636,4 +664,167 @@ wxMenu* APPlugin::GetPluginPopupMenu( wxMenu* baseMenu )
 void APPlugin::SetUnitName( std::string name )
 {
     m_unitName = name;
+}
+void APPlugin::SetOutputPortData( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    //read outputs.xml
+    CommandPtr returnState( new Command() );
+    returnState->SetCommandName( "getAllBlockOutputs" );
+    returnState->AddDataValuePair( vendorData );
+    returnState->AddDataValuePair( vendorData );
+    DataValuePairPtr data( new DataValuePair() );
+    data->SetData( "NetworkQuery", "getAllBlockOutputs" );
+    returnState->AddDataValuePair( data );
+
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+
+    XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    std::string nw_str = serviceList->Query( status ) + "\n";
+
+    //create a dialog
+    ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+        networkReader.GetLoadedXMLObjects();
+    ves::open::xml::CommandPtr cmd =
+        boost::dynamic_pointer_cast<ves::open::xml::Command>
+        ( objectVector.at( 0 ) );
+
+    std::vector< std::string > temp_vector;
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
+    pair->GetData( temp_vector );
+    wxArrayString choices;
+    for( size_t i = 0; i < temp_vector.size(); i++ )
+    {
+        choices.Add(wxString(temp_vector[i].c_str(), wxConvUTF8 ));
+    }
+    //create the dialog and get the selection
+    wxSingleChoiceDialog scd(0,wxT("Available Outputs"),
+        wxT("Select an output"),choices);
+    if( scd.ShowModal() == wxID_OK )
+    {
+        ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
+        params->SetCommandName( "setOutputPort" );
+        params->AddDataValuePair( vendorData );
+
+        std::vector<std::string> paramList;
+
+        wxString varName = scd.GetStringSelection();
+        wxStringTokenizer tkz( varName, wxT("."));
+
+        ///component name
+        paramList.push_back( ConvertUnicode( tkz.GetNextToken().c_str() ) );
+
+        //variable name
+        //reinsert the prefix
+        paramList.push_back( ConvertUnicode( tkz.GetNextToken().c_str() ) );
+
+        //add list to DVP
+        ves::open::xml::DataValuePairPtr
+            inpParams( new ves::open::xml::DataValuePair() );
+        inpParams->SetData("params",paramList);
+        params->AddDataValuePair( inpParams );
+
+        std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+            nodes;
+        nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, 
+        std::string >( params, "vecommand" ) );
+
+        ves::open::xml::XMLReaderWriter commandWriter;
+        std::string status="returnString";
+        commandWriter.UseStandaloneDOMDocumentManager();
+        commandWriter.WriteXMLDocument( nodes, status, "Command" );
+        serviceList->Query( status );
+
+        wxMessageDialog popup( 0, _("Output port variable has been set") );
+    }
+}
+void APPlugin::SetInputPortData( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    //read inputs.xml
+    CommandPtr returnState( new Command() );
+    returnState->SetCommandName( "getAllBlockInputs" );
+    returnState->AddDataValuePair( vendorData );
+    DataValuePairPtr data( new DataValuePair() );
+    data->SetData( "NetworkQuery", "getAllBlockInputs" );
+    returnState->AddDataValuePair( data );
+
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+
+    XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    std::string nw_str = serviceList->Query( status ) + "\n";
+
+    //create a dialog - can be editted
+    ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+        networkReader.GetLoadedXMLObjects();
+    ves::open::xml::CommandPtr cmd =
+        boost::dynamic_pointer_cast<ves::open::xml::Command>
+        ( objectVector.at( 0 ) );
+    
+    std::vector< std::string > temp_vector;
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
+    pair->GetData( temp_vector );
+    wxArrayString choices;
+    for( size_t i = 0; i < temp_vector.size(); i++ )
+    {
+        choices.Add(wxString(temp_vector[i].c_str(), wxConvUTF8 ));
+    }
+    //create the dialog and get the selection
+    wxSingleChoiceDialog scd(0,wxT("Available Inputs"),
+        wxT("Select an input"),choices);
+    if( scd.ShowModal() == wxID_OK )
+    {
+        ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
+        params->SetCommandName( "setInputPort" );
+        params->AddDataValuePair( vendorData );
+
+        std::vector<std::string> paramList;
+
+        wxString varName = scd.GetStringSelection();
+        wxStringTokenizer tkz( varName, wxT("."));
+
+        ///component name
+        paramList.push_back( ConvertUnicode( tkz.GetNextToken().c_str() ) );
+
+        //variable name
+        //reinsert the prefix
+        paramList.push_back( ConvertUnicode( tkz.GetNextToken().c_str() ) );
+
+        //add list to DVP
+        ves::open::xml::DataValuePairPtr
+            inpParams( new ves::open::xml::DataValuePair() );
+        inpParams->SetData("params",paramList);
+        params->AddDataValuePair( inpParams );
+
+        std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+            nodes;
+        nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, 
+        std::string >( params, "vecommand" ) );
+
+        ves::open::xml::XMLReaderWriter commandWriter;
+        std::string status="returnString";
+        commandWriter.UseStandaloneDOMDocumentManager();
+        commandWriter.WriteXMLDocument( nodes, status, "Command" );
+        serviceList->Query( status );
+
+        wxMessageDialog popup( 0, _("Input port variable has been set") );
+    }
 }

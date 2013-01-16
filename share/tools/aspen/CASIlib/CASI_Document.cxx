@@ -310,10 +310,11 @@ namespace CASI
     {
         CString blocknodepath;
 
-        int slength = nodePath.GetLength();
-        blocknodepath=nodePath;
+        //int slength = nodePath.GetLength();
+        //blocknodepath=nodePath;
 
-        blocknodepath.Insert(slength,".Blocks");
+        //blocknodepath.Insert(slength,".Blocks");
+        blocknodepath.Insert( 0, "Data.Blocks" );
         Variable blocks(ihRoot, blocknodepath);
 
         Variable blocki=blocks.getChild(index);

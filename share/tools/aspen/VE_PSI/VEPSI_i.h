@@ -107,8 +107,10 @@ public:
   char* handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd);
   char* handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd);
   char* handleGetStreamModuleParamList(ves::open::xml::CommandPtr cmd);
+  char* handleGetAllBlockInputs( ves::open::xml::CommandPtr cmd );
   char* handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd);
   char* handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd);
+  char* handleGetAllBlockOutputs( ves::open::xml::CommandPtr cmd );
   char* handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd);
   char* handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd);
   void SetParam(ves::open::xml::CommandPtr cmd);
@@ -138,8 +140,10 @@ private:
   bool dwFlag;
   bool dynSimFlag;
   vpr::Thread* m_thread;
-  std::pair< std::string, std::pair< std::string, std::string > >  mPortInput;
-  std::pair< std::string, std::pair< std::string, std::string > > mPortOutput;
+  //std::pair< std::string, std::pair< std::string, std::string > >  mPortInput;
+  //std::pair< std::string, std::pair< std::string, std::string > > mPortOutput;
+  std::pair< std::string, std::string >  mPortInput;
+  std::pair< std::string, std::string > mPortOutput;
 };
 
 
