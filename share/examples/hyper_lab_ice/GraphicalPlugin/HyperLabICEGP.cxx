@@ -84,7 +84,7 @@ extern osg::ref_ptr<osg::Texture2D> RTTtex;
 #ifdef BOOST_WINDOWS
 # pragma warning(disable: 4275)
 #else
-#include <kibitz/GNUCompilerGuards.hpp>
+#include <ves/util/GNUCompilerGuards.hpp>
 GCC_DIAG_OFF( unused-parameter )
 #endif
 
