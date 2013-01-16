@@ -46,11 +46,6 @@
 #include <comdef.h>
 #include <fstream>
 
-//#include "C:\Program Files (x86)\Common Files\OPC Foundation\Include\opcda.h"
-//#import "gbda_aut.tlb"
-//using namespace GBDAAutomation;
-
-//#import "opcda.idl"
 #import "opcproxy.dll"
 using namespace OPCDA;
 typedef DWORD OPCHANDLE;
@@ -58,6 +53,7 @@ typedef tagOPCITEMDEF OPCITEMDEF;
 typedef tagOPCITEMRESULT OPCITEMRESULT;
 typedef tagOPCITEMSTATE OPCITEMSTATE;
 typedef tagOPCBROWSEELEMENT OPCBROWSEELEMENT;
+typedef tagOPCITEMVQT OPCITEMVQT;
 
 class OPC
 {
@@ -66,18 +62,15 @@ public:
     ///Open the supplied file name in dynsim
     ///\param filename This must be a fully qualified path reference to a file.
     std::vector< std::pair< std::string, std::string > > ReadVars();
-    //std::map< std::string, std::pair< std::string, VARTYPE > > ReadVars();
-    //std::string GetOPCValue( const std::string& );
-//    std::string GetOPCValues();
-//    void SetOPCValues( std::vector< std::pair < std::string, std::string > > );
-    //void ConnectWithList( std::vector< std::string > list );
+    std::string GetOPCValues();
+    void SetOPCValues( std::vector< std::pair < std::string, std::string > > );
     bool ConnectToOPCServer();
     std::string GetAllOPCVariables( const std::string& );
-//    void AddOPCVariable( const std::string& );
-//    bool IsOPCVarsEmpty();
+    void AddOPCVariable( const std::string& );
+    bool IsOPCVarsEmpty();
 
 private:
-    void UpdateOPCList( );
+    //void UpdateOPCList( );
     
     std::string m_fileName;
     XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *mCommandDocument;
@@ -135,44 +128,37 @@ private:
     std::map< std::string, stream > streams;
     std::map< std::string, block > others;
     std::map< std::string, flowsheet > flowsheets;
-    std::vector< std::pair< std::string, std::string > > nameAndValues;
-    //std::map< std::string, std::pair < std::string, VARTYPE> > nameValVar;
+    std::vector< std::pair< std::string, std::string > > m_MonitorVarsAndVals;
     std::string m_opcFlowsheetName;
     std::vector< std::string > m_opcBlocks;
     std::vector< std::string > m_opcVariables;
     std::string m_unitName;
-    std::vector< std::pair< std::string, std::string > > varsAndVals;
+    std::vector< std::pair< std::string, std::string > > m_AllVarsAndVals;
 
     
     CComSafeArray<long> * serverID;
     CComSafeArray<BSTR> * itemIDs;
     CComSafeArray<long> * clientID;
-    //IOPCAutoServerPtr m_server;
     IOPCServer* m_Server;
     IOPCBrowse* browse;  
-    //OPCItemsPtr items;
-    IOPCItemMgt* m_IOPCItemMgt;
-    //IOPCGroupPtr group;
-    //IOPCGroupsPtr groups;
-    //OPCBrowserPtr browser;
     IOPCBrowse* browser;
     std::vector< std::string > tempVars;
     std::vector< BSTR > bItemIDs;
     std::ofstream logFile;
     std::vector< LPWSTR > m_szItemID;
-
+        
+	IOPCItemMgt* m_AllItemMgt;
+	OPCHANDLE m_AllGroup;
+	IOPCItemMgt* m_SetItemMgt;
+	OPCHANDLE m_SetGroup;
+	IOPCItemMgt* m_MonitorItemMgt;
+	OPCHANDLE m_MonitorGroup;
+    std::vector<OPCHANDLE> m_MonitorServerItem;
+    
     void ParseBranch(  _bstr_t name, std::string prefix );
 
     IOPCServer* InstantiateServer(wchar_t ServerName[]);
-    void AddTheGroup(IOPCServer* pIOPCServer, IOPCItemMgt* &pIOPCItemMgt, OPCHANDLE& hServerGroup);
-    void AddTheItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE& hServerItem);
-    void ReadItem(IUnknown* pGroupIUnknown, OPCHANDLE hServerItem, VARIANT& varValue);
-    void RemoveItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE hServerItem);
-    void RemoveGroup (IOPCServer* pIOPCServer, OPCHANDLE hServerGroup);
+    void AddGroup(IOPCServer* pIOPCServer, IOPCItemMgt* &pIOPCItemMgt, OPCHANDLE& hServerGroup, char* name);
     void Parse ( std::string name );
-    
-    //void ParseBranch(  _bstr_t name );
-    //bool ParseBranch( );
-
 };
 #endif
