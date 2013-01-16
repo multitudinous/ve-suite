@@ -4,7 +4,7 @@
 #ifdef BOOST_WINDOWS
 # pragma warning(disable: 4275)
 #else
-#include <ves/util/GNUCompilerGuards.hpp>
+#include <ves/util/GNUCompilerGuards.h>
 GCC_DIAG_OFF( unused-parameter )
 #endif
 
