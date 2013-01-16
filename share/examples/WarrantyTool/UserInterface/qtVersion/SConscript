@@ -33,6 +33,9 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'WarrantyToolPluginFactory.h')]
 cppSources += lib_env.qt_moc(source)
 
+source = [pj(buildSrcDir,'QueryResults.h')]
+cppSources += lib_env.qt_moc(source)
+
 
 ###
 
@@ -43,11 +46,10 @@ cppSources += lib_env.qt_rcc(source)
 
 ### uic files
 source = [pj(buildSrcDir,'WarrantyToolPlugin_UIDialog.ui')]
-#cppHeaders = lib_env.Uic(
-#        target = Split('ui_WarrantyToolPlugin_UIDialog.h ui_WarrantyToolPlugin_UIDialog.cc ui_moc_WarrantyToolPlugin_UIDialog.cc'),
-#        source = pj(buildSrcDir,'WarrantyToolPlugin_UIDialog.ui') )
-
 cppHeaders = lib_env.qt_uic(source)
+
+source = [pj(buildSrcDir,'QueryResults.ui')]
+cppHeaders += lib_env.qt_uic(source)
 ####
 
 lib_env.Depends( cppSources, cppHeaders)

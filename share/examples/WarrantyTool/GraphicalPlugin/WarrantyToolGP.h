@@ -126,7 +126,12 @@ private:
     
     void ToggleUnselected( bool const& checked );
 
+    /// Highlights a single part
     void HighlightPart( const std::string& partNumber );
+
+    /// Highlights multiple parts; connects to signal name
+    /// "%WarrantyToolHighlightParts"
+    void HighlightParts( std::vector< std::string >& partNumbers );
     
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files

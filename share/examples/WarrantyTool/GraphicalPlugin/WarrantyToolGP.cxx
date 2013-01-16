@@ -154,6 +154,11 @@ void WarrantyToolGP::InitializeNode(
                      &WarrantyToolGP::HighlightPart,
                      *m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_1( "%WarrantyToolHighlightParts",
+                      void( std::vector<std::string>&),
+                      &WarrantyToolGP::HighlightParts,
+                      *m_connections, any_SignalType, normal_Priority );
+
     m_keyboard = 
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 }
@@ -1824,5 +1829,12 @@ void WarrantyToolGP::HighlightPart( const std::string& partNumber )
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor
         highlight( m_cadRootNode, m_lastPartNumber, true, true );
     //RenderTextualDisplay( true );
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::HighlightParts(std::vector<std::string>& partNumbers)
+{
+    osg::Vec3 nullGlowColor( 0.57255, 0.34118, 1.0 );
+    ves::xplorer::scenegraph::HighlightNodesByNameVisitor
+        highlightNodes( m_cadRootNode, partNumbers, true, true, nullGlowColor );
 }
 ////////////////////////////////////////////////////////////////////////////////

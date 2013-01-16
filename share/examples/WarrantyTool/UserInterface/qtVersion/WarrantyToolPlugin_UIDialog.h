@@ -72,6 +72,8 @@ protected slots:
     /// Submits user-entered query. (Autoconnected)
     void on_m_queryTextCommandCtrl_returnPressed(  );
     void on_m_applyButton_clicked( );
+    void m_variableChoiceS_changed( QString const& text );
+    void m_variableLogicOperatorS_changed( QString const& text );
     ///Autoconnect the state change call for the mouse selection toggle
     void on_m_mouseSelection_clicked( bool checked );
     ///Autoconnect the state change call for the toggle unselected
@@ -123,6 +125,8 @@ private:
     ves::util::BoolSignal_type m_connectMouseSelectionSignal;
 
     ves::util::StringSignal_type m_highlightPartSignal;
+
+    switchwire::Event< void(std::vector<std::string>&) > m_highlightPartsSignal;
 };
 
 #endif // WarrantyToolPlugin_UIDIALOG_H
