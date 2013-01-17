@@ -5,7 +5,7 @@
 # pragma warning(disable: 4275)
 #else
 #include <ves/util/GNUCompilerGuards.h>
-GCC_DIAG_OFF( unused-parameter )
+DIAG_OFF( unused-parameter )
 #endif
 
 #include <boost/program_options.hpp>
@@ -15,7 +15,7 @@ GCC_DIAG_OFF( unused-parameter )
 #ifdef BOOST_WINDOWS
 # pragma warning(default: 4275)
 #else
-GCC_DIAG_ON( unused-parameter )
+DIAG_ON( unused-parameter )
 #endif
 
 // --- ZMQ Includes --- //
