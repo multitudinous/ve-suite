@@ -69,6 +69,10 @@ public:
     void AddOPCVariable( const std::string& );
     bool IsOPCVarsEmpty();
 
+    ///Return the vector m_AllVarsAndVals to enable looking at all of the raw
+    ///OPC data. This should be called after GetAllOPCVariables.
+    std::vector< std::pair< std::string, std::string > > GetAllRawOPCData() const;
+    
 private:
     //void UpdateOPCList( );
     

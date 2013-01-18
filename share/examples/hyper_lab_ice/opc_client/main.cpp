@@ -29,16 +29,28 @@ namespace pt = boost::property_tree;
 
 std::string to_json()
 {
+    std::map< std::string, double > testMap;
+    testMap[ "test1" ] = 1.0;
+    testMap[ "test2" ] = 1.0;
+    testMap[ "test3" ] = 1.0;
+    testMap[ "test4" ] = 1.0;
     std::stringstream stm;
     pt::ptree tree;
     tree.put( "message_type", "data" );
     tree.put( "version", 1.0 );
-    tree.put( "notification_type", "new data" );
-    tree.put( "worker_type", "opc client" );
-    tree.put( "worker_id", 1 );
-    tree.put( "host_name", "localhost" );
-    tree.put( "port", 3098 );
-    boost::property_tree::json_parser::write_json( stm, tree );
+    tree.put( "message.notification_type", "new data" );
+    tree.put( "message.worker_type", "opc client" );
+    tree.put( "message.worker_id", 1 );
+    tree.put( "message.host_name", "localhost" );
+    tree.put( "message.port", 3098 );
+    pt::ptree maptree;
+    for( std::map< std::string, double >::const_iterator iter = testMap.begin(); iter != testMap.end(); ++iter )
+    {
+        maptree.put( iter->first, iter->second );
+    }
+    tree.add_child( "message.payload", maptree );
+
+    boost::property_tree::json_parser::write_json( stm, tree, true );
     return stm.str();
 }
 
@@ -65,7 +77,12 @@ int main( int argc, char** argv )
         std::cout << desc << std::endl;
         return 0;
     }
-
+    
+    //First connect to the opc server with the appropriate server name
+    //bool connectedToServer = ConnectToOPCServer();
+    //Now get all of the current variables
+    //std::string xmlData = GetAllOPCVariables( "" );
+    
     //Init zeromq context
     zmq::context_t context( 1 );
 
@@ -74,7 +91,7 @@ int main( int argc, char** argv )
     controller.bind( "tcp://*:3098" );
 
     bool kill_msg( false );
-    while( !kill_msg )
+    //while( !kill_msg )
     {
         //Get OPC data here
         bool valid_msg = true;
@@ -83,6 +100,7 @@ int main( int argc, char** argv )
         if( valid_msg )
         {
             std::string str = to_json();
+            std::cout << str << std::endl;
             zmq::message_t zmq_msg;
             zmq_msg.rebuild( str.size() );
             //zmq_msg.rebuild( str.size() );
