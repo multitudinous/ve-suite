@@ -153,7 +153,7 @@ void simulinkModel::ReadBlockNames()
     {
         std::stringstream out;
         out << i;
-        //data is stored in cells rather than directly as strings
+        //block name data is stored in cells rather than directly as strings
         //thus can't access as blks(i). Instead use blks{i,1}.
         std::string blockName = GetStringFromMatlabCommand( "blks{" + out.str() + ",1};" );
         this->blockNameList.push_back( blockName );
@@ -226,17 +226,8 @@ std::vector<std::string> simulinkModel::GetParameterNames( unsigned int blockNum
             std::string parameterName = GetStringFromMatlabCommand( "parameters{" + jj.str() + "};" );
             parameterNameList.push_back( parameterName );
  
-            // Something wierd about Scope block. Parameters are not accessed in the way other blocks are.
-            // Workaround: For Scope block, just list parameters without trying to get parameter values.
-            if( blockName.substr(blockName.size()-5,5) == "Scope")
-            {
-                std::cout << "   " << parameterName << std::endl;
-            }
-            else
-            {
-                std::string parameterValue = GetStringFromMatlabCommand( "get_param('" + blockName + "','" + parameterName + "');" );
-                std::cout << "   " << parameterName << " = " << parameterValue << std::endl;
-            }
+            std::string parameterValue = GetStringFromMatlabCommand( "get_param('" + blockName + "','" + parameterName + "');" );
+            //std::cout << "   " << parameterName << " = " << parameterValue << std::endl;
         }
     }
     else
@@ -275,11 +266,66 @@ double simulinkModel::GetSimulinkParameter( std::string paramString )
 
 std::string simulinkModel::GetStringFromMatlabCommand( std::string matlabCommand )
 {
+    // Evaluate the MATLAB command and store answer in tempMxArray:
     engEvalString( this->ep, matlabCommand.c_str() );
     mxArray *tempMxArray = engGetVariable( this->ep,"ans" );
-    char * resultString = mxArrayToString( tempMxArray );
-    mxDestroyArray( tempMxArray );
-    return( std::string(resultString) );
+
+    // Most parameters seem to be returned as text (char array). 
+    // However a few are stored in double arrays, structs, or other data classes.
+    // For now we will convert any non-text data into text.
+
+    //std::cout << mxGetClassName( tempMxArray ) << std::endl;
+
+    if( mxIsChar( tempMxArray ) )
+    {
+        char * resultString = mxArrayToString( tempMxArray );
+        mxDestroyArray( tempMxArray );
+        return( std::string(resultString) );
+    }
+    else if( mxIsDouble( tempMxArray ) )
+    {
+        int numRows = mxGetM( tempMxArray );                  
+        int numCols = mxGetN( tempMxArray );
+        //std::cout << "numRows = " << numRows << ", numCols = " << numCols << std::endl;
+
+        if( numRows > 1 )
+        {
+            return( "TBD 2D double data" );
+        }
+        else    // single row vector...
+        {
+            double *doubleArray = mxGetPr( tempMxArray );        
+            mxDestroyArray( tempMxArray );
+
+            std::string returnString = "[ ";
+
+            for (int i=0; i<numCols; i++)
+            {
+                //std::cout << doubleArray[ i ] << std::endl;
+                std::stringstream tempString;
+                tempString << doubleArray[ i ];
+                returnString = returnString + tempString.str() + " ";
+            }
+            returnString = returnString + "]";
+            return( returnString );
+        }
+    }
+    else if( mxIsStruct( tempMxArray ) )
+    {
+        //int numRows = mxGetM( tempMxArray );                  
+        //int numCols = mxGetN( tempMxArray );
+        //std::cout << "numRows = " << numRows << ", numCols = " << numCols << std::endl;
+        //void *Ar = mxGetData(tempMxArray);
+        return( "TBD struct data" );
+    }
+    else if( mxIsCell( tempMxArray ) )
+    {
+        return( "TBD cell data" );
+    }
+    else
+    {
+        return( "TBD class data" );
+    }
 }
 
 std::string simulinkModel::GetSimulinkString( std::string paramString )
@@ -288,47 +334,6 @@ std::string simulinkModel::GetSimulinkString( std::string paramString )
     return( GetStringFromMatlabCommand( matlabCommand ) );
 }
 
-
-
-/*
-    //listblks = get_param(blks, 'BlockType') 
-    mxArray * blocks[ numrows ];
-    blocks[0] = engGetVariable(ep,"blks");
-    std::cout << "blocks[0] = " << blocks[0] << std::endl;
-
-    if ( ! mxIsChar( blocks[0] ) || mxGetNumberOfDimensions( blocks[0] ) > 2)
-    {
-        std::cout << "expecting char matrix" << std::endl;
-    }
-
-    mxChar *pi;
-    //mxChar *po;
-    pi = mxGetChars( blocks[0] );
-    std::cout << "pi[0] = " << pi[0] << std::endl;
-
-    mwSize m, n;
-    m = mxGetM( blocks[0] );
-    n = mxGetN( blocks[0] );
-    //mxArray * blocks2[];
-    //blocks2[0] = mxCreateNumericMatrix (m, n, mxCHAR_CLASS, mxREAL);
-    
-    //char * blocksString = mxArrayToString( blocks );
-    //std::cout << "blocksString = " << blocksString << std::endl;
-
-    char *str[100];
-    int nrhs = 3;
-    for (int i=0; i<nrhs; i++)
-    {
-        // Check input to be sure it is of type char.
-        if( !mxIsChar( blocks[i] ) )
-        {
-            std::cout << "expecting char matrix" << std::endl;
-        }
-        // Copy the string data from prhs and place it into str.
-        str[i] = mxArrayToString( blocks[i] );
-        std::cout << "blocksString = " << str[i] << std::endl;
-    }
-*/
 
 /*
 %callback for the stop simulation button

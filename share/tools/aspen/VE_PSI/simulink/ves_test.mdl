@@ -733,7 +733,7 @@ Model {
       ZOrder		      -3
       Floating		      off
       Location		      [775, 424, 1425, 698]
-      Open		      off
+      Open		      on
       NumInputPorts	      "1"
       List {
 	ListType		AxesTitles

@@ -88,35 +88,39 @@ int main( int argc, char** argv )
     
     for( int block=0; block< model->GetNumBlocks(); block++ )
     {
-        std::cout << model->GetBlockName( block ) << std::endl;
-        
         std::vector<std::string> parameterNames = model->GetParameterNames( block );
-        /*
-        std::cout << "parameterNames = " << &parameterNames << std::endl;
         
         int numParameters = parameterNames.size();
+
+        std::cout << "block[" << block << "] is " << model->GetBlockName( block ) 
+                  << " and contains " << numParameters << " parameters" << std::endl;
+        
         if( numParameters == 0 )
         {
             continue;
         }
 
-        for( int i=1; i<= numParameters; i++ )
+        for( int i=0; i< numParameters; i++ )
         {
-            std::cout << "   " << parameterNames[ i ] << std::endl;
+            std::string parameterValue = model->GetParameter( model->GetBlockName( block ), parameterNames[ i ] );
+            std::cout << "   " << parameterNames[ i ] << " = " << parameterValue << std::endl;
         }
-        */
     }
 
     // Test of setting existing parameter...
+    std::cout << "\nDemonstration of setting a parameter:" << std::endl;
     std::string blockName = "ves_test/Gain";
     std::string parameterName = "Gain";
-    std::string newValue = "2";
+    std::string parameterValue = model->GetParameter( blockName, parameterName );
+    std::cout << "existing " << parameterName <<  " = " << parameterValue << std::endl;
+
+    std::string newValue = "4";
     model->SetParameter( blockName, parameterName, newValue );
 
-    std::string parameterValue = model->GetParameter( blockName, parameterName );
-    std::cout << "\n   new parameterValue  = " << parameterValue << std::endl;
+    parameterValue = model->GetParameter( blockName, parameterName );
+    std::cout << "     new " << parameterName <<  " = " << parameterValue << std::endl;
 
-    // use fgetc() to pause
+    // use fgetc() to pause until return is hit
     std::cout << "\nHit return to continue" << std::endl;
     fgetc(stdin);
    
