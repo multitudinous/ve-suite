@@ -23,6 +23,7 @@ DIAG_ON( unused-parameter )
 
 #include <string>
 
+#include "OPC.h"
 
 namespace po = boost::program_options;
 namespace pt = boost::property_tree;
@@ -79,9 +80,11 @@ int main( int argc, char** argv )
     }
     
     //First connect to the opc server with the appropriate server name
-    //bool connectedToServer = ConnectToOPCServer();
+    OPC opcInterface("");
+    bool connectedToServer = opcInterface.ConnectToOPCServer();
     //Now get all of the current variables
-    //std::string xmlData = GetAllOPCVariables( "" );
+    std::string xmlData = opcInterface.GetAllOPCVariables( "" );
+    std::vector< std::pair< std::string, std::string > > rawDataVector = opcInterface.GetAllRawOPCData();
     
     //Init zeromq context
     zmq::context_t context( 1 );

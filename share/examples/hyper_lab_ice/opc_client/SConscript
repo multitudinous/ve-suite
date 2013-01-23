@@ -17,9 +17,11 @@ fileBundle = ves_pkg.createFileBundle( pj( 'share','vesuite','examples','hyper_l
 boost_program_options.apply( lib_env )
 boost_header_options.apply( lib_env )
 kibitz_options.apply( lib_env )
+xerces_options.apply( lib_env )
 
 srcs = Split("""
 	main.cpp
+    OPC.cxx
 """)
 
 prog1 = ves_pkg.createProgram('opc_client' + lib_env["PROGSUFFIX"], lib_env,

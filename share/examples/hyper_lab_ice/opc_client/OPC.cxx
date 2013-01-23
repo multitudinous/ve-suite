@@ -192,7 +192,7 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     pIOPCSyncIO = NULL;
     
     //compose return packet
-    ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
+    /*ves::open::xml::CommandPtr varsAndValues( new ves::open::xml::Command() );
     varsAndValues->SetCommandName("AllOPCData");
 
     //loop over the variables and add as dvps
@@ -212,8 +212,8 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-    return status;
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );*/
+    return std::string();
 }
 ///////////////////////////////////////////////////////////////////////////////
 void OPC::AddOPCVariable( const std::string& var )
@@ -330,7 +330,7 @@ std::string OPC::GetOPCValues( )
     }
 
     //append the flowsheet name
-    ves::open::xml::CommandPtr varAndValues( new ves::open::xml::Command() );
+    /*ves::open::xml::CommandPtr varAndValues( new ves::open::xml::Command() );
     varAndValues->SetCommandName("OPCData");
 
     //loop over the variables and add as dvps
@@ -352,9 +352,9 @@ std::string OPC::GetOPCValues( )
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
-    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );*/
 
-    return status;
+    return std::string();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -561,7 +561,7 @@ void OPC::Parse( std::string name )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::vector< std::pair< std::string, std::string > > GetAllRawOPCData() const
+std::vector< std::pair< std::string, std::string > > OPC::GetAllRawOPCData() const
 {
     return m_AllVarsAndVals;
 }
