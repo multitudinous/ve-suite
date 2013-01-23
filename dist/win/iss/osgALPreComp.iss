@@ -1,5 +1,5 @@
 ; osgAL iss installer
-#include <vesenv.iss>
+#include "vesenv.iss"
 #define MyAppVer "2.0.0"
 #define MyAppName "osgAudio Pre-Compile"
 #define MyAppVerName "osgAudio"
@@ -60,6 +60,8 @@ Source: {#LIBOGGHOME}\win32\VS2008\{#OGGBUILDDIR}\Release\*.lib; DestDir: {app}\
 Source: {#LIBVORBISHOME}\win32\VS2008\{#OGGBUILDDIR}\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
 Source: {#OPENALHOME}\libs\{#DISTDIR}\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OSGALSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#OSGALSRCHOME}\lib\*.cmake; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#OSGALSRCHOME}\lib\*.pdb; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#ALUTSRCINSTALL}\{#LIBDIR}\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 ;Source: {#ALUTSRCINSTALL}\admin\VisualStudioDotNET\alut\x64\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 ; dlls

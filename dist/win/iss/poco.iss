@@ -1,7 +1,7 @@
 ; POCO iss installer
 ; Utility library for db's and other good stuff
 #ifndef vesAutoBuild
-  #include <vesenv.iss>
+  #include "vesenv.iss"
 #endif
 
 #define MyAppVer "1.4.3"
