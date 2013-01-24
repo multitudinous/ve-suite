@@ -55,17 +55,19 @@
 #include <fstream>
 #include <cctype>
 
-#define OPC_SERVER_NAME L"Softing.OPCToolboxDemo_ServerDA.1"
-//#define OPC_SERVER_NAME L"Woodward.ServLinkOpcDa.1"
+//#define OPC_SERVER_NAME L"Softing.OPCToolboxDemo_ServerDA.1"
+#define OPC_SERVER_NAME L"Woodward.ServLinkOpcDa.1"
 #define ITEM_ID L"maths.sin"
 #define VT VT_R4
 #define XVAL fltVal
+
+#define LOG_OPC_VARS 0
 
 XERCES_CPP_NAMESPACE_USE
 
 ///////////////////////////////////////////////////////////////////////////////
 OPC::OPC( std::string unitName )
-{
+{   
     try
     {
        XMLPlatformUtils::Initialize();
@@ -92,8 +94,17 @@ OPC::OPC( std::string unitName )
 ///////////////////////////////////////////////////////////////////////////////
 bool OPC::ConnectToOPCServer()
 {   
+    m_AllItemMgt = 0;
+    m_SetItemMgt = 0;
+    m_MonitorItemMgt = 0;
+
+    if( m_serverName.empty() )
+    {
+        return false;
+    }
+ 
 	// Instantiante the IOPCServer
-	m_Server = InstantiateServer(OPC_SERVER_NAME);
+	m_Server = InstantiateServer(NULL);//OPC_SERVER_NAME);
     //add a group that contains all branches and leaves
 	AddGroup(m_Server, m_AllItemMgt, m_AllGroup, "All");
     //add the set group
@@ -108,7 +119,7 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
 {
     //clear previous requests
     m_AllVarsAndVals.clear();
-    
+
     //attach the browser to the server
     m_Server->QueryInterface(&browse);
 
@@ -140,7 +151,7 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
 
     //add that array of items to the group
     m_AllItemMgt->AddItems( count, pItemArray, &pResults, &pErrors );
-        
+
     //create an array of the server's id for the items
     OPCHANDLE *hServerItem =
         (OPCHANDLE *) CoTaskMemAlloc ( count * sizeof (OPCHANDLE) );
@@ -148,24 +159,28 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     {
         hServerItem[i] = pResults[i].hServer;
     }
-    
 	//get a pointer to the IOPCSyncIOInterface:
 	OPCITEMSTATE* pValue = NULL;
 	IOPCSyncIO* pIOPCSyncIO;
 	m_AllItemMgt->QueryInterface(__uuidof(pIOPCSyncIO), (void**) &pIOPCSyncIO);
 
-    //device - slower but more up to date
-	HRESULT hr =
-        pIOPCSyncIO->Read(OPC_DS_DEVICE, count, hServerItem, &pValue, &pErrors);
-    //cache - faster but older data
-	//HRESULT hr =
-        //pIOPCSyncIO->read(OPC_DS_CACHE, m_AllVarsAndVals.size(),
-        //hServerItem, &pValue, &pErrors);
+    if( m_opcReadIO == "device" )
+    {
+        //device - slower but more up to date
+        HRESULT hr =
+            pIOPCSyncIO->Read(OPC_DS_DEVICE, count, hServerItem, &pValue, &pErrors);
+    }
+    else if( m_opcReadIO == "cache" )
+    {
+        //cache - faster but older data
+	    HRESULT hr =
+            pIOPCSyncIO->Read(OPC_DS_CACHE, count, hServerItem, &pValue, &pErrors);
+    }
 	
     //Error handling
     _ASSERT(!hr);
 	_ASSERT(pValue!=NULL);
-    
+
     //loop through all the values and add them to the data to be sent to VES
     for( int i = 0; i < m_AllVarsAndVals.size(); i++ )
     {
@@ -454,11 +469,10 @@ void OPC::SetOPCValues(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-bool OPC::IsOPCVarsEmpty()
+bool OPC::IsOPCVarsEmpty() const
 {
     return m_opcVariables.empty();
 }
-
 ///////////////////////////////////////////////////////////////////////////////
 IOPCServer* OPC::InstantiateServer(wchar_t ServerName[])
 {
@@ -466,7 +480,9 @@ IOPCServer* OPC::InstantiateServer(wchar_t ServerName[])
 	HRESULT hr;
 
 	// get the CLSID from the OPC Server Name:
-	hr = CLSIDFromString(ServerName, &CLSID_OPCServer);
+	//std::wstring serverName = L(m_serverName.c_str());
+	wchar_t* wServerName = CA2W(m_serverName.c_str());
+	hr = CLSIDFromString(wServerName, &CLSID_OPCServer);
 	_ASSERT(!FAILED(hr));
 
 
@@ -520,12 +536,15 @@ void OPC::Parse( std::string name )
         &pdwPropertyIDs, &moreElements, &count, &pBrowseElements ); 
  
 	if( SUCCEEDED(hr) ) { 
+#if LOG_OPC_VARS
     std::ofstream output ( (name+".log").c_str() );
         output<<count<<std::endl;
-
+#endif
         for( DWORD i=0; i < count; ++i )
         { 
+#if LOG_OPC_VARS
             output << "Name: " << CW2A(pBrowseElements[i].szName) << std::endl;
+#endif
             //std::wstring wtemp(pBrowseElements[i].szName);
             std::string temp( CW2A(pBrowseElements[i].szItemID) );
             
@@ -557,7 +576,9 @@ void OPC::Parse( std::string name )
             }
 
 		} 
+#if LOG_OPC_VARS
         output.close();
+#endif
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -566,3 +587,14 @@ std::vector< std::pair< std::string, std::string > > OPC::GetAllRawOPCData() con
     return m_AllVarsAndVals;
 }
 ///////////////////////////////////////////////////////////////////////////////
+void OPC::SetOPCServerName( std::string const& opcServer )
+{
+    m_serverName = opcServer;
+}
+///////////////////////////////////////////////////////////////////////////////
+void OPC::SetDeviceOrHardwareFlag( std::string const& opcDevice )
+{
+    m_opcReadIO = opcDevice;
+}
+///////////////////////////////////////////////////////////////////////////////
+    

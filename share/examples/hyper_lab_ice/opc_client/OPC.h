@@ -58,25 +58,45 @@ typedef tagOPCITEMVQT OPCITEMVQT;
 class OPC
 {
 public:
+    ///Constructor
     OPC( std::string unitName );
     ///Open the supplied file name in dynsim
     ///\param filename This must be a fully qualified path reference to a file.
     std::vector< std::pair< std::string, std::string > > ReadVars();
     std::string GetOPCValues();
     void SetOPCValues( std::vector< std::pair < std::string, std::string > > );
-    bool ConnectToOPCServer();
-    std::string GetAllOPCVariables( const std::string& );
-    void AddOPCVariable( const std::string& );
-    bool IsOPCVarsEmpty();
 
+    ///Connect to the opc server
+    bool ConnectToOPCServer();
+
+    ///Get all of the OPC vars
+    std::string GetAllOPCVariables( const std::string& );
+
+    ///Add the monitoring vars fully qualified names
+    void AddOPCVariable( const std::string& );
+ 
     ///Return the vector m_AllVarsAndVals to enable looking at all of the raw
     ///OPC data. This should be called after GetAllOPCVariables.
     std::vector< std::pair< std::string, std::string > > GetAllRawOPCData() const;
     
+    ///Set the OPC server name
+    void SetOPCServerName( std::string const& opcServer );
+ 
+    ///Set whether to use the opc CACHE or DEVICE data
+    void SetDeviceOrHardwareFlag( std::string const& opcDevice );
+ 
+    ///Is the OPC variable map empty
+    bool IsOPCVarsEmpty() const;
+ 
 private:
     //void UpdateOPCList( );
     
     std::string m_fileName;
+    ///The OPC server name
+    std::string m_serverName;
+    ///OPC device or cache query
+    std::string m_opcReadIO;
+    
     XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *mCommandDocument;
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* root_elem;
     XERCES_CPP_NAMESPACE_QUALIFIER XercesDOMParser* mParser;
@@ -135,6 +155,7 @@ private:
     std::vector< std::pair< std::string, std::string > > m_MonitorVarsAndVals;
     std::string m_opcFlowsheetName;
     std::vector< std::string > m_opcBlocks;
+    ///The variable map to use to monitor opc
     std::vector< std::string > m_opcVariables;
     std::string m_unitName;
     std::vector< std::pair< std::string, std::string > > m_AllVarsAndVals;
