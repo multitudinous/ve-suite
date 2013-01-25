@@ -73,7 +73,7 @@ public:
     std::string GetAllOPCVariables( const std::string& );
 
     ///Add the monitoring vars fully qualified names
-    void AddOPCVariable( const std::string& );
+    bool AddOPCVariable( const std::string& );
  
     ///Return the vector m_AllVarsAndVals to enable looking at all of the raw
     ///OPC data. This should be called after GetAllOPCVariables.

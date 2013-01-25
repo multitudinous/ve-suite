@@ -152,6 +152,10 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     //add that array of items to the group
     m_AllItemMgt->AddItems( count, pItemArray, &pResults, &pErrors );
 
+    //cleanup
+	CoTaskMemFree(pErrors);
+	pErrors = NULL;
+
     //create an array of the server's id for the items
     OPCHANDLE *hServerItem =
         (OPCHANDLE *) CoTaskMemAlloc ( count * sizeof (OPCHANDLE) );
@@ -163,23 +167,38 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
 	OPCITEMSTATE* pValue = NULL;
 	IOPCSyncIO* pIOPCSyncIO;
 	m_AllItemMgt->QueryInterface(__uuidof(pIOPCSyncIO), (void**) &pIOPCSyncIO);
-
+    HRESULT hr;
     if( m_opcReadIO == "device" )
     {
         //device - slower but more up to date
-        HRESULT hr =
-            pIOPCSyncIO->Read(OPC_DS_DEVICE, count, hServerItem, &pValue, &pErrors);
+        hr = pIOPCSyncIO->Read(OPC_DS_DEVICE, count, hServerItem, &pValue, &pErrors);
     }
     else if( m_opcReadIO == "cache" )
     {
         //cache - faster but older data
-	    HRESULT hr =
-            pIOPCSyncIO->Read(OPC_DS_CACHE, count, hServerItem, &pValue, &pErrors);
+	    hr = pIOPCSyncIO->Read(OPC_DS_CACHE, count, hServerItem, &pValue, &pErrors);
     }
 	
-    //Error handling
-    _ASSERT(!hr);
-	_ASSERT(pValue!=NULL);
+    /*if( hr == S_OK )
+    {
+        if( pErrors[ 0 ] != S_OK )
+        {
+            std::cout << "Read all variables operation failed because OPC " 
+                << _com_error( pErrors[ 0 ] ).ErrorMessage() << std::endl;
+            //return std::string();
+        }
+    }
+    else
+    {
+        std::cout << "Read all variables operation failed because " 
+            << _com_error( hr ).ErrorMessage() << std::endl;
+        //return std::string();
+    }*/
+
+	if( pValue == NULL )
+	{
+	    std::cout << "No data returned from Read all variables." << std::endl;
+	}
 
     //loop through all the values and add them to the data to be sent to VES
     for( int i = 0; i < m_AllVarsAndVals.size(); i++ )
@@ -231,7 +250,7 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     return std::string();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void OPC::AddOPCVariable( const std::string& var )
+bool OPC::AddOPCVariable( const std::string& var )
 {
     //std::vector<std::string>::const_iterator pos = 
     //    lower_bound( m_opcVariables.begin(), m_opcVariables.end(), var );
@@ -241,12 +260,11 @@ void OPC::AddOPCVariable( const std::string& var )
     //if( pos != m_opcVariables.end() || m_opcVariables.empty() )
     if( !found || m_opcVariables.empty() )
     {
-        m_opcVariables.push_back( var );
         //UpdateOPCList();
 
         //define local variales
-        OPCITEMRESULT *pResults = NULL;
-        HRESULT *pErrors = NULL;
+        OPCITEMRESULT* pResults = NULL;
+        HRESULT* pErrors = NULL;
         //create the required OPCITEMDEF array
         OPCITEMDEF pItemArray;
         pItemArray.szAccessPath = NULL;
@@ -257,9 +275,32 @@ void OPC::AddOPCVariable( const std::string& var )
         pItemArray.pBlob = NULL;
         pItemArray.vtRequestedDataType = VT_BSTR;
         //add that array of items to the group
-        m_MonitorItemMgt->AddItems( 1, &pItemArray, &pResults, &pErrors );
-        m_MonitorServerItem.push_back( pResults[0].hServer );
+        HRESULT hr = m_MonitorItemMgt->AddItems( 1, &pItemArray, &pResults, &pErrors );
+        if( hr == S_OK )
+        {
+            //Now lets check and see if the variable could be added
+            if( pErrors[ 0 ] == S_OK )
+            {
+                m_opcVariables.push_back( var );
+                m_MonitorServerItem.push_back( pResults[0].hServer );
+            }
+            else
+            {
+                std::cout << "Variable " << var << " add operation is " 
+                    << _com_error( pErrors[ 0 ] ).ErrorMessage() << std::endl;
+                return false;
+            }
+        }
+        else
+        {
+            std::cout << "Variable " << var << " add operation is " 
+                << _com_error( hr ).ErrorMessage() << std::endl;
+            return false;
+        } 
+        return true;
     }
+    
+    return false;
 }
 ///////////////////////////////////////////////////////////////////////////////
 /*void OPC::UpdateOPCList( )
@@ -283,7 +324,6 @@ std::vector< std::pair< std::string, std::string > > OPC::ReadVars()
 	m_MonitorItemMgt->
         QueryInterface(__uuidof(pIOPCSyncIO), (void**) &pIOPCSyncIO);
 
-    
     //create an array of the server's id for the items
     int count = m_MonitorServerItem.size();
     OPCHANDLE *hServerItem =
@@ -294,11 +334,38 @@ std::vector< std::pair< std::string, std::string > > OPC::ReadVars()
     }
 
 	// read the item value from the device:
-	HRESULT hr = pIOPCSyncIO->Read(OPC_DS_DEVICE, m_opcVariables.size(),
-        hServerItem, &pValue, &pErrors);
+	HRESULT hr;
+	// = pIOPCSyncIO->Read(OPC_DS_DEVICE, m_opcVariables.size(),
+    //    hServerItem, &pValue, &pErrors);
+    if( m_opcReadIO == "device" )
+    {
+        //device - slower but more up to date
+        hr = pIOPCSyncIO->Read(OPC_DS_DEVICE, m_opcVariables.size(),
+            hServerItem, &pValue, &pErrors);
+    }
+    else if( m_opcReadIO == "cache" )
+    {
+        //cache - faster but older data
+	    hr = pIOPCSyncIO->Read(OPC_DS_CACHE, m_opcVariables.size(),
+            hServerItem, &pValue, &pErrors);
+    }
     
-    //Error handling
-    _ASSERT(!hr);
+    if( hr == S_OK )
+    {
+        if( pErrors[ 0 ] != S_OK )
+        {
+            std::cout << "Read operation failed because " 
+                << _com_error( pErrors[ 0 ] ).ErrorMessage() << std::endl;
+            return m_MonitorVarsAndVals;
+        }
+    }
+    else
+    {
+        std::cout << "Read operation failed because " 
+            << _com_error( hr ).ErrorMessage() << std::endl;
+        return m_MonitorVarsAndVals;
+    } 
+
 	_ASSERT(pValue!=NULL);
     
     m_MonitorVarsAndVals.clear();
@@ -483,7 +550,12 @@ IOPCServer* OPC::InstantiateServer(wchar_t ServerName[])
 	//std::wstring serverName = L(m_serverName.c_str());
 	wchar_t* wServerName = CA2W(m_serverName.c_str());
 	hr = CLSIDFromString(wServerName, &CLSID_OPCServer);
-	_ASSERT(!FAILED(hr));
+	if( hr != S_OK )
+	{
+	    std::cout << "Could not find the class ID of the OPC server instance because " 
+	        << _com_error( hr ).ErrorMessage() << std::endl;
+	    exit( 1 );
+	}
 
 
 	//queue of the class instances to create
@@ -497,7 +569,12 @@ IOPCServer* OPC::InstantiateServer(wchar_t ServerName[])
 	// create an instance of the IOPCServer
 	hr = CoCreateInstanceEx(CLSID_OPCServer, NULL, CLSCTX_SERVER,
 		/*&CoServerInfo*/NULL, cmq, queue);
-	_ASSERT(!hr);
+	if( hr != S_OK )
+	{
+	    std::cout << "Could not get an OPC server instance because " 
+	        << _com_error( hr ).ErrorMessage() << std::endl;
+	    exit( 1 );
+	}
 
 	// return a pointer to the IOPCServer interface:
 	return(IOPCServer*) queue[0].pItf;

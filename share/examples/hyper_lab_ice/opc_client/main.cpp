@@ -14,6 +14,9 @@ DIAG_OFF( unused-parameter )
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/foreach.hpp>
 
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+
 #ifdef BOOST_WINDOWS
 # pragma warning(default: 4275)
 #else
@@ -29,6 +32,7 @@ DIAG_ON( unused-parameter )
 
 namespace po = boost::program_options;
 namespace pt = boost::property_tree;
+namespace fs = boost::filesystem;
 
 std::string to_json()
 {
@@ -63,26 +67,34 @@ int main( int argc, char** argv )
     
     /*{
         pt::ptree tree;
-        tree.add( "variables", "var.file" );
-        tree.add( "variables", "test.second" );
-        tree.add( "variables", "test.file" );
+        {
+        pt::ptree maptree;
+        maptree.put( "opc", "VXM00012827.A1_A13_DI.ZSC_408.BI" );
+        maptree.put( "id", "HV408" );
+        tree.add_child( "variables", maptree );
+        }
+        {
+        pt::ptree maptree;
+        maptree.put( "opc", "VXM00012827.A1_A07_AIO.PT_406.AI_COMBO" );
+        maptree.put( "id", "PT406" );
+        tree.add_child( "variables", maptree );
+        }
+
         std::stringstream stm;
-        //boost::property_tree::json_parser::write_json( stm, tree, true );
-        boost::property_tree::ini_parser::write_ini( stm, tree, 0 );
-        std::cout << " data" << stm.str() << std::endl;
-        std::ofstream variablesFile( "variable.conf" );
+        boost::property_tree::json_parser::write_json( stm, tree, true );
+        //boost::property_tree::ini_parser::write_ini( stm, tree, 0 );
+        std::cout << stm.str() << std::endl;
+        std::ofstream variablesFile( "variable1.conf" );
         variablesFile << stm.str() << std::endl;
         variablesFile.close();
     }*/
     po::options_description desc( "Allowed options" );
     desc.add_options()
-        ( "help", "Produce help message" )
+        ( "help,h", "OPC bridge tool command line help" )
         ( "serverName,s", po::value<std::string>()->default_value( "Softing.OPCToolboxDemo_ServerDA.1" ), "The OPC server name to connect to" )
         ( "variables,v", po::value< std::vector< std::string > >(), "The fully qualified variable names to monitor" )
         ( "broadcast,b", po::bool_switch(), "Broadcast the data to port 3098" )
-        //( "calibrateControls,c", po::bool_switch(), "Calibrate gun trigger and fan limits" )
-        //( "calibratePosition,p", po::bool_switch(), "Calibrate gun position relative to screen" )
-        //( "mode,d", po::value<std::string>()->default_value( "Practice" ), "Set application mode -- Practice, Competition, Kiosk, or Evaluation" )
+        ( "configFile,f", po::value<std::string>()->default_value( "variable.conf" ), "A config file with variable pairs to monitor" )
         ( "logServerVars,l", po::bool_switch(), "Log all of the variables from the OPC server to a file - vesOpc.log" )
         ( "dataSource,d", po::value<std::string>()->default_value( "device" ), "The OPC hardware data source - device or cache" );
     
@@ -129,10 +141,21 @@ int main( int argc, char** argv )
             opcInterface.AddOPCVariable( opcVars[ i ] );
         }
     }
-    
+
+    std::map< std::string, std::string > variableMap;
+    if( vm.count( "configFile" ) )
     {
-        pt::ptree tree;
-        boost::property_tree::json_parser::read_json( "variable.conf", tree );
+        fs::path file_name( vm[ "configFile" ].as< std::string >() );
+        if( !fs::exists( file_name ) )
+        {
+            std::cout << "The config file " << vm[ "configFile" ].as< std::string >() 
+                << " does not exist." << std::endl;
+            exit( 1 );
+        }
+    
+        pt::ptree variableMapTree;
+        boost::property_tree::json_parser::read_json( vm[ "configFile" ].as< std::string >(), variableMapTree );
+        
         //boost::program_options::parse_config_file(ifs, desc);
         //po::store( po::parse_config_file( ifs, desc ), vm );
         //po::notify( vm );
@@ -141,10 +164,16 @@ int main( int argc, char** argv )
             std::cout << it->first << ": " << it->second.get_value<std::string>() << std::endl;
             print(it->second);
         }*/
-        BOOST_FOREACH(boost::property_tree::ptree::value_type& v, tree)
+        BOOST_FOREACH(boost::property_tree::ptree::value_type& v, variableMapTree )
         {
-            opcInterface.AddOPCVariable( v.second.get_value<std::string>() );
-            //std::cout << v.first << " " << v.second.get_value<std::string>() << std::endl;
+            
+            //opcInterface.AddOPCVariable( v.second.get_value<std::string>() );
+            //std::cout << v.first << " " << v.second.get<std::string>( "opc" ) << std::endl;
+            //std::cout << v.first << " " << v.second.get<std::string>( "id" ) << std::endl;
+            if( opcInterface.AddOPCVariable( v.second.get<std::string>( "opc" ) ) )
+            {
+                variableMap[ v.second.get<std::string>( "opc" ) ] = v.second.get<std::string>( "id" );
+            }
         }
     }
     
@@ -187,12 +216,14 @@ int main( int argc, char** argv )
                 valVector = opcInterface.ReadVars();
                 for( std::vector< std::pair< std::string, std::string > >::const_iterator iter = valVector.begin(); iter != valVector.end(); ++iter)
                 {
-                    std::cout << iter->first << " " << iter->second<< std::endl;
+                    std::cout << variableMap[ iter->first ] << " " << iter->first << " " << iter->second<< std::endl;
                 }
                 counter += 1;
             }
         }
     }
     
+    CoUninitialize();
+
     return 0;
 }
