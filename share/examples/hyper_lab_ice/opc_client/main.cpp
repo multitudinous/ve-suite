@@ -64,7 +64,7 @@ std::string to_json()
 int main( int argc, char** argv )
 {
     HRESULT hr = CoInitialize(NULL);//, COINIT_MULTITHREADED);
-    
+
     /*{
         pt::ptree tree;
         {
@@ -84,7 +84,7 @@ int main( int argc, char** argv )
         boost::property_tree::json_parser::write_json( stm, tree, true );
         //boost::property_tree::ini_parser::write_ini( stm, tree, 0 );
         std::cout << stm.str() << std::endl;
-        std::ofstream variablesFile( "variable1.conf" );
+        std::ofstream variablesFile( "variable2.conf" );
         variablesFile << stm.str() << std::endl;
         variablesFile.close();
     }*/
@@ -112,17 +112,17 @@ int main( int argc, char** argv )
     const std::string dataSource = vm["dataSource"].as<std::string>();
 
     //First connect to the opc server with the appropriate server name
-    OPC opcInterface("");
-    opcInterface.SetOPCServerName( serverName );
-    opcInterface.SetDeviceOrHardwareFlag( dataSource );
+    OPC* opcInterface = new OPC("");
+    opcInterface->SetOPCServerName( serverName );
+    opcInterface->SetDeviceOrHardwareFlag( dataSource );
     
-    bool connectedToServer = opcInterface.ConnectToOPCServer();
+    bool connectedToServer = opcInterface->ConnectToOPCServer();
     
     //Now get all of the current variables
-    std::string xmlData = opcInterface.GetAllOPCVariables( "" );
     if( vm[ "logServerVars" ].as<bool>() )
     {
-        std::vector< std::pair< std::string, std::string > > rawDataVector = opcInterface.GetAllRawOPCData();
+        std::string xmlData = opcInterface->GetAllOPCVariables( "" );
+        std::vector< std::pair< std::string, std::string > > rawDataVector = opcInterface->GetAllRawOPCData();
         std::ofstream opcLog( "vesOpc.log" );
         for( std::vector< std::pair< std::string, std::string > >::const_iterator iter = rawDataVector.begin(); 
             iter != rawDataVector.end(); ++iter)
@@ -138,7 +138,7 @@ int main( int argc, char** argv )
         std::cout << opcVars.size() << std::endl;
         for( size_t i = 0; i < opcVars.size(); ++i )
         {
-            opcInterface.AddOPCVariable( opcVars[ i ] );
+            opcInterface->AddOPCVariable( opcVars[ i ] );
         }
     }
 
@@ -154,7 +154,7 @@ int main( int argc, char** argv )
         }
     
         pt::ptree variableMapTree;
-        boost::property_tree::json_parser::read_json( vm[ "configFile" ].as< std::string >(), variableMapTree );
+        boost::property_tree::json_parser::read_json( file_name.string(), variableMapTree );
         
         //boost::program_options::parse_config_file(ifs, desc);
         //po::store( po::parse_config_file( ifs, desc ), vm );
@@ -170,9 +170,10 @@ int main( int argc, char** argv )
             //opcInterface.AddOPCVariable( v.second.get_value<std::string>() );
             //std::cout << v.first << " " << v.second.get<std::string>( "opc" ) << std::endl;
             //std::cout << v.first << " " << v.second.get<std::string>( "id" ) << std::endl;
-            if( opcInterface.AddOPCVariable( v.second.get<std::string>( "opc" ) ) )
+            const std::string varName = v.second.get<std::string>( "opc" );
+            if( opcInterface->AddOPCVariable( varName ) )
             {
-                variableMap[ v.second.get<std::string>( "opc" ) ] = v.second.get<std::string>( "id" );
+                variableMap[ varName ] = v.second.get<std::string>( "id" );
             }
         }
     }
@@ -207,13 +208,13 @@ int main( int argc, char** argv )
     }
     else
     {
-        if( !opcInterface.IsOPCVarsEmpty() )
+        if( !opcInterface->IsOPCVarsEmpty() )
         {
             int counter = 0;
             std::vector< std::pair< std::string, std::string > > valVector;
             while( counter < 100 )
             {
-                valVector = opcInterface.ReadVars();
+                valVector = opcInterface->ReadVars();
                 for( std::vector< std::pair< std::string, std::string > >::const_iterator iter = valVector.begin(); iter != valVector.end(); ++iter)
                 {
                     std::cout << variableMap[ iter->first ] << " " << iter->first << " " << iter->second<< std::endl;
@@ -222,6 +223,7 @@ int main( int argc, char** argv )
             }
         }
     }
+    delete opcInterface;
     
     CoUninitialize();
 

@@ -46,8 +46,14 @@
 #include <comdef.h>
 #include <fstream>
 
-#import "opcproxy.dll"
-using namespace OPCDA;
+#ifdef WIN64
+#include <x64/Include/opcda.h>
+#else
+#include <Include/opcda.h>
+#endif
+
+//#import "opcproxy.dll"
+//using namespace OPCDA;
 typedef DWORD OPCHANDLE;
 typedef tagOPCITEMDEF OPCITEMDEF;
 typedef tagOPCITEMRESULT OPCITEMRESULT;
@@ -59,11 +65,17 @@ class OPC
 {
 public:
     ///Constructor
+    ///\note CoInitialize should be called before the OPC class is created.
     OPC( std::string unitName );
+    ///Destructor
+    ///\note CoUninitialize should be called after the OPC class is destroyed.
+    ~OPC();
     ///Open the supplied file name in dynsim
     ///\param filename This must be a fully qualified path reference to a file.
     std::vector< std::pair< std::string, std::string > > ReadVars();
+    ///Wraps around ReadVars
     std::string GetOPCValues();
+    ///Write a list of variables to the associated OPC server
     void SetOPCValues( std::vector< std::pair < std::string, std::string > > );
 
     ///Connect to the opc server

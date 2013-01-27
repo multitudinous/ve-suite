@@ -24,6 +24,8 @@ srcs = Split("""
     OPC.cxx
 """)
 
+lib_env.AppendUnique( CPPPATH = ['C:/Program Files (x86)/Common Files/OPC Foundation'])
+
 prog1 = ves_pkg.createProgram('opc_client' + lib_env["PROGSUFFIX"], lib_env,
           installPrefix = pj( 'share', 'vesuite', 'examples', 'hyper_lab_ice', 'opc_client' ))
 

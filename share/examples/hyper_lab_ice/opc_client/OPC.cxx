@@ -55,6 +55,12 @@
 #include <fstream>
 #include <cctype>
 
+#ifdef WIN64 
+#include <x64/Include/opcda_i.c>
+#else
+#include <Include/opcda_i.c>
+#endif
+
 //#define OPC_SERVER_NAME L"Softing.OPCToolboxDemo_ServerDA.1"
 #define OPC_SERVER_NAME L"Woodward.ServLinkOpcDa.1"
 #define ITEM_ID L"maths.sin"
@@ -83,14 +89,27 @@ OPC::OPC( std::string unitName )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-//OPC::~OPC( std::string unitName )
-//{
+OPC::~OPC()
+{
 	// Remove the groups
     //for
 	//HRESULT hr = m_Server->RemoveGroup(hServerGroup, FALSE);
 	//_ASSERT(!hr);
-//}
-
+	if( m_MonitorItemMgt )
+	{
+	    m_MonitorItemMgt->Release();
+	}
+	
+	if( m_AllItemMgt )
+	{
+	    m_AllItemMgt->Release();
+	}
+	
+	if( m_SetItemMgt )
+	{
+	    m_SetItemMgt->Release();
+	}
+}
 ///////////////////////////////////////////////////////////////////////////////
 bool OPC::ConnectToOPCServer()
 {   
@@ -211,14 +230,15 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
        
 	// release the reference to the IOPCSyncIO interface:
 	//pIOPCSyncIO->Release();
-    m_AllItemMgt->Release();
+    //m_AllItemMgt->Release();
 	
     //cleanup
 	CoTaskMemFree(pErrors);
 	CoTaskMemFree(pValue);
 	CoTaskMemFree(pItemArray);
     CoTaskMemFree(hServerItem);
-    CoTaskMemFree(pIOPCSyncIO);
+    //CoTaskMemFree(pIOPCSyncIO);
+    pIOPCSyncIO->Release();
 	pErrors = NULL;
 	pValue = NULL;
 	pValue = NULL;
@@ -379,13 +399,14 @@ std::vector< std::pair< std::string, std::string > > OPC::ReadVars()
 
 	// release the reference to the IOPCSyncIO interface:
 	//pIOPCSyncIO->Release();
-    m_MonitorItemMgt->Release();
+    //m_MonitorItemMgt->Release();
 
 	//cleanup
 	CoTaskMemFree(pErrors);
 	CoTaskMemFree(pValue);
-    CoTaskMemFree(pIOPCSyncIO);
+    //CoTaskMemFree(pIOPCSyncIO);
     CoTaskMemFree(hServerItem);
+    pIOPCSyncIO->Release();
 	pErrors = NULL;
 	pValue = NULL;
     pIOPCSyncIO = NULL;
@@ -516,7 +537,7 @@ void OPC::SetOPCValues(
     
     //Remove the items
     m_SetItemMgt->RemoveItems( count, hServerItem, &pErrors );
-    m_SetItemMgt->Release();
+    //m_SetItemMgt->Release();
 
     //cleanup
 	CoTaskMemFree(pErrors);
@@ -524,7 +545,8 @@ void OPC::SetOPCValues(
     CoTaskMemFree(pItemArray);
     CoTaskMemFree(hServerItem);
     CoTaskMemFree(pValue);
-    CoTaskMemFree(pIOPCSyncIO);
+    //CoTaskMemFree(pIOPCSyncIO);
+    pIOPCSyncIO->Release();
 	pErrors = NULL;
 	pResults = NULL;
     pItemArray = NULL;
@@ -561,8 +583,8 @@ IOPCServer* OPC::InstantiateServer(wchar_t ServerName[])
 	//queue of the class instances to create
 	LONG cmq = 1; // nbr of class instance to create.
 	MULTI_QI queue[1] =
-		//{{&IID_IOPCServer,
-        {{&__uuidof(IOPCServer),
+		{{&IID_IOPCServer,
+        //{{&__uuidof(IOPCServer),
 		NULL,
 		0}};
 
@@ -590,7 +612,8 @@ void OPC::AddGroup(IOPCServer* pIOPCServer, IOPCItemMgt* &pIOPCItemMgt,
 	// Add an OPC group and get a pointer to the IUnknown I/F:
     HRESULT hr = pIOPCServer->AddGroup( CA2W(name),FALSE, dwUpdateRate,
         hClientGroup, 0, 0, 0, &hServerGroup, &dwUpdateRate,
-        &GUID(__uuidof(IOPCItemMgt)),(IUnknown**) &pIOPCItemMgt);
+        //&GUID(__uuidof(IOPCItemMgt)),(IUnknown**) &pIOPCItemMgt);
+        IID_IOPCItemMgt,(IUnknown**) &pIOPCItemMgt);
 
 	_ASSERT(!FAILED(hr));
 }
@@ -603,13 +626,14 @@ void OPC::Parse( std::string name )
     //read the available vars
     LPWSTR pszContinuationPoint = NULL; 
     OPCBROWSEELEMENT *pBrowseElements = NULL;  
-    long moreElements = 0; 
-    //BOOL moreElements = false; 
+    //long moreElements = 0; 
+    BOOL moreElements = false; 
     DWORD count = 0; 
     DWORD pdwPropertyIDs = 2; 
 
     HRESULT hr = browse->Browse( CA2W(name.c_str()), &pszContinuationPoint,
         0, OPC_BROWSE_FILTER_ALL, CA2W(""), CA2W(""), TRUE, TRUE, 1,
+        //&pdwPropertyIDs, &moreElements, &count, &pBrowseElements ); 
         &pdwPropertyIDs, &moreElements, &count, &pBrowseElements ); 
  
 	if( SUCCEEDED(hr) ) { 
