@@ -18,7 +18,7 @@ hyper_lab_subdirs = Split("""
     GraphicalPlugin
 """)
 
-if kibitz_options.isAvailable():
+if kibitz_options.isAvailable() and GetPlatform() == 'win32':
     hyper_lab_subdirs.append( 'opc_client' )
 
 ##Run SConscript files in all of these folders.
