@@ -78,9 +78,7 @@ case $PLATFORM in
     CONFIGURE=../configure
     CONFIGURE_PARAMS+=( --no-tests )
     CONFIGURE_PARAMS+=( --no-samples )
-    CONFIGURE_PARAMS+=( --omit=Data/MySQL )
-    CONFIGURE_PARAMS+=( --omit=NetSSL_OpenSSL )
-    #CONFIGURE_PARAMS+=( --config=Darwin )
+    CONFIGURE_PARAMS+=( --omit=NetSSL_OpenSSL,Data/MySQL,Data/ODBC )
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     ;;
   Linux)
