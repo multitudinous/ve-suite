@@ -219,11 +219,12 @@ int HyperLabICEGP::InitializeLabModels()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
 {
-    //if( !OneSecondCheck( m_lastSend, 250000 ) )
+    if( !OneSecondCheck( m_lastSend, 250000 ) )
     {
         return;
     }
 
+    //Update the pressure indicators
     {
         static double counter = 90;
         int coinFlip = std::rand() % 11 - 5;
@@ -254,6 +255,26 @@ void HyperLabICEGP::PreFrameUpdate()
         }
     }
 
+    //Update the pressure transducers
+    {
+        if( !m_pressureTransducers.empty() )
+        {
+            size_t indicatorIndex = std::rand() % m_pressureTransducers.size();
+            GuageTextContainer::iterator iter = m_pressureTransducers.begin();
+            std::advance( iter, indicatorIndex );
+            //iter = iter + gaugeIndex;
+            //for( GuageTextContainer::const_iterator iter = m_pressureTransducers.begin(); iter != m_pressureTransducers.end(); ++iter )
+            {
+                //double testValue = ( std::rand() % 1000 ) * 0.01;
+                double testValue = 10.0 * sin( 2. * 3.14 * m_lastSend.time_of_day().total_milliseconds() * 0.001 + 0.0 ) + 10.0;
+                std::ostringstream streamData;
+                streamData << std::fixed << std::setprecision( 3 ) << testValue;
+                iter->second->setText( streamData.str() );
+            }
+        }
+    }
+    
+    //Update the flow indicators
     {
         //double ballHeight = m_ballHeight;
         int coinFlip = std::rand() % 3 - 1;
@@ -428,6 +449,24 @@ void HyperLabICEGP::ConfigurePressureTransducers()
 {
     std::vector< std::string > loadedPartNumbers;
 #ifndef TEST_GAUGES
+    loadedPartNumbers.push_back( "PT003" );
+    loadedPartNumbers.push_back( "PT012" );
+    loadedPartNumbers.push_back( "PT104" );
+    loadedPartNumbers.push_back( "PT116" );
+    loadedPartNumbers.push_back( "PT140" );
+    loadedPartNumbers.push_back( "PT148" );
+    loadedPartNumbers.push_back( "PT151" );
+    loadedPartNumbers.push_back( "PT180" );
+    loadedPartNumbers.push_back( "PT200" );
+    loadedPartNumbers.push_back( "PT236" );
+    loadedPartNumbers.push_back( "PT305" );
+    loadedPartNumbers.push_back( "PT342" );
+    
+    loadedPartNumbers.push_back( "PT406" );
+    loadedPartNumbers.push_back( "PT411" );
+    loadedPartNumbers.push_back( "PT420" );
+    loadedPartNumbers.push_back( "PT436" );
+    loadedPartNumbers.push_back( "PT610" );
     loadedPartNumbers.push_back( "Screen_Locator_PT003" );
 #else
     loadedPartNumbers.push_back( "Screen_Locator_PT003" );
