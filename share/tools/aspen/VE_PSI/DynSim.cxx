@@ -92,7 +92,7 @@ void DynSim::ParseTreeFile( std::string treeFilename )
     {
         std::cerr << "Could not open file : " << treeFilename.c_str() << std::endl;
         return;
-}
+    }
     
     std::string temp;
     std::string name;
