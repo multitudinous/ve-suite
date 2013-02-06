@@ -58,10 +58,8 @@
 
 #include <osg/MatrixTransform>
 
-/*namespace vpr
-{
-    class Thread;
-}*/
+#include <osgText/Font>
+#include <osgText/Text>
 
 namespace ves
 {
@@ -134,6 +132,9 @@ private:
     SensorGaugeContainer m_pressureIndicators;
     SensorGaugeContainer m_hvIndicators;
     SensorGaugeContainer m_fiIndicators;
+
+    typedef std::map< std::string, osg::ref_ptr< osgText::Text > > GuageTextContainer;
+    GuageTextContainer m_pressureTransducers;
 
     double m_ballHeight;
     ///The timer used for determining when to update graphics

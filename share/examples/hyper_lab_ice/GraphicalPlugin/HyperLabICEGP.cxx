@@ -182,7 +182,8 @@ int HyperLabICEGP::InitializeLabModels()
     }
     renderRoot->addChild( models.get() );
 #else
-    osg::ref_ptr< osg::Node > models = osgDB::readNodeFile( "Models/Hyper_StandardizedIndicatorTest.osg", options.get() );
+    //osg::ref_ptr< osg::Node > models = osgDB::readNodeFile( "Models/Hyper_StandardizedIndicatorTest.osg", options.get() );
+    osg::ref_ptr< osg::Node > models = osgDB::readNodeFile( "Models/Hyper_DigitalReadoutTest_v1.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
@@ -218,7 +219,7 @@ int HyperLabICEGP::InitializeLabModels()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
 {
-    if( !OneSecondCheck( m_lastSend, 250000 ) )
+    //if( !OneSecondCheck( m_lastSend, 250000 ) )
     {
         return;
     }
@@ -236,17 +237,20 @@ void HyperLabICEGP::PreFrameUpdate()
         {
             counter = 0;
         }
-        size_t gaugeIndex = std::rand() % m_pressureIndicators.size();
-        SensorGaugeContainer::iterator iter = m_pressureIndicators.begin();
-        std::advance( iter, gaugeIndex );
-        //iter = iter + gaugeIndex;
-        //for( SensorGaugeContainer::const_iterator iter = m_pressureIndicators.begin(); iter != m_pressureIndicators.end(); ++iter )
+        if( !m_pressureIndicators.empty() )
         {
-            osg::Matrix tempMat = iter->second->getMatrix();
-            osg::Quat tempQuat = tempMat.getRotate();
-            tempQuat *= osg::Matrix::rotate( osg::DegreesToRadians( double( coinFlip ) ), osg::Vec3( 0, 1, 0 ) ).getRotate();
-            tempMat.setRotate( tempQuat );
-            iter->second->setMatrix( tempMat );
+            size_t gaugeIndex = std::rand() % m_pressureIndicators.size();
+            SensorGaugeContainer::iterator iter = m_pressureIndicators.begin();
+            std::advance( iter, gaugeIndex );
+            //iter = iter + gaugeIndex;
+            //for( SensorGaugeContainer::const_iterator iter = m_pressureIndicators.begin(); iter != m_pressureIndicators.end(); ++iter )
+            {
+                osg::Matrix tempMat = iter->second->getMatrix();
+                osg::Quat tempQuat = tempMat.getRotate();
+                tempQuat *= osg::Matrix::rotate( osg::DegreesToRadians( double( coinFlip ) ), osg::Vec3( 0, 1, 0 ) ).getRotate();
+                tempMat.setRotate( tempQuat );
+                iter->second->setMatrix( tempMat );
+            }
         }
     }
 
@@ -328,10 +332,10 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
         loadedPartNumbers.push_back( "PI413" );
         loadedPartNumbers.push_back( "PI013" );
 #else
-        loadedPartNumbers.push_back( "PI000" );
+        /*loadedPartNumbers.push_back( "PI000" );
         loadedPartNumbers.push_back( "PI001" );
         loadedPartNumbers.push_back( "PI002" );
-        loadedPartNumbers.push_back( "PI003" );
+        loadedPartNumbers.push_back( "PI003" );*/
 #endif
         for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
         {
@@ -385,8 +389,8 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
         loadedPartNumbers.push_back( "HV414" );
         loadedPartNumbers.push_back( "HV430" );
 #else
-        loadedPartNumbers.push_back( "HV000" );
-        loadedPartNumbers.push_back( "HV001" );
+        //loadedPartNumbers.push_back( "HV000" );
+        //loadedPartNumbers.push_back( "HV001" );
 #endif        
         for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
         {
@@ -425,7 +429,7 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
         //Traverse to find the nodes
         //Move the ball gauge accordingly
         std::vector< std::string > loadedPartNumbers;
-        loadedPartNumbers.push_back( "FI015" );
+        //loadedPartNumbers.push_back( "FI015" );
 
         for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
         {
@@ -465,6 +469,46 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
                 currentTrans[ 2 ] += 6.0;
                 tempMat.setTrans( currentTrans );
                 newTrans->setMatrix( tempMat );
+            }
+            else
+            {
+                std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
+            }
+        }
+    }
+    //Update the Pressure Transducers
+    {
+        std::vector< std::string > loadedPartNumbers;
+#ifndef TEST_GAUGES
+        loadedPartNumbers.push_back( "Screen_Locator_PT003" );
+#else
+        loadedPartNumbers.push_back( "Screen_Locator_PT003" );
+#endif
+        for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
+        {
+            ves::xplorer::scenegraph::util::FindChildWithNameVisitor
+                childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
+            if( childVisitor.FoundChild() )
+            {
+                std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
+                osg::ref_ptr< osg::Geode > tempGroup = childVisitor.GetFoundNode()->asGroup()->getChild( 0 )->asGeode();
+                
+                osg::ref_ptr<osgText::Font> font = osgText::readFontFile( "fonts/arial.ttf" );
+                osg::ref_ptr<osgText::Text> text = new osgText::Text;
+                text->setDataVariance( osg::Object::DYNAMIC );
+                text->setFont( font.get() );
+                text->setCharacterSize( 0.90 );
+                text->setPosition( osg::Vec3d( 0.0, -0.3, 0.0 ) );
+                text->setAlignment( osgText::TextBase::LEFT_BOTTOM ); //osgText::TextBase::BASE_LINE );
+                text->setAxisAlignment( osgText::TextBase::YZ_PLANE );
+                text->setColor( osg::Vec4( 0, 0, 0, 1.0f ) );
+                text->setText( "12.5" );
+                
+                tempGroup->addDrawable( text.get() );
+                
+                text->getOrCreateStateSet()->addUniform( new osg::Uniform( "isOsgText", true ) );
+
+                m_pressureTransducers[ loadedPartNumbers.at( i ) ] = text.get();
             }
             else
             {
