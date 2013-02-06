@@ -105,8 +105,21 @@ private:
     bool OneSecondCheck( boost::posix_time::ptime& last_send, const int timeDelta );
 
 #ifdef OPC_CLIENT_CONNECT
+    ///Connect to the opc client
     void SetupOPCClient();
 #endif
+
+    ///Setup the Pressure Indicators
+    void ConfigurePressureIndicators();
+    
+    ///Setup the Pressure Transducer
+    void ConfigurePressureTransducers();
+    
+    ///Setup the Hand Valves
+    void ConfigureHandValves();
+    
+    ///Setup the Flow Indicator
+    void ConfigureFlowIndicators();
 
     ///Column number for the promise date
     size_t m_promiseDateColumn;

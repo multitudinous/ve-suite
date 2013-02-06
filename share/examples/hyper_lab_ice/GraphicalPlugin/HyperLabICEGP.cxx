@@ -317,204 +317,19 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
 {
     //Update the Pressure Indicators
     {
-        //Traverse to find the node
-        //PI019, 411, 413
-        //Get the first child
-        //Rotate the gauge accordingly
-        std::vector< std::string > loadedPartNumbers;
-#ifndef TEST_GAUGES
-        loadedPartNumbers.push_back( "PI019" );
-        loadedPartNumbers.push_back( "PI026" );
-        loadedPartNumbers.push_back( "PI403" );
-        loadedPartNumbers.push_back( "PI406B" );
-        loadedPartNumbers.push_back( "PI407" );
-        loadedPartNumbers.push_back( "PI411" );
-        loadedPartNumbers.push_back( "PI413" );
-        loadedPartNumbers.push_back( "PI013" );
-#else
-        /*loadedPartNumbers.push_back( "PI000" );
-        loadedPartNumbers.push_back( "PI001" );
-        loadedPartNumbers.push_back( "PI002" );
-        loadedPartNumbers.push_back( "PI003" );*/
-#endif
-        for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
-        {
-            ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
-                childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
-            if( childVisitor.FoundChild() )
-            {
-                std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
-                osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
-                osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
-                
-                osg::ref_ptr< osg::MatrixTransform > newTrans = new osg::MatrixTransform();
-                osg::ref_ptr< osg::Node > dofNode = child->getChild( 0 );//->asGroup()->getChild( 0 );
-                std::string nodeName = dofNode->getName();
-
-                std::vector<std::string> strs;
-                boost::split(strs,nodeName,boost::is_any_of("_"));
-                //for( size_t j = 0; j < strs.size(); ++j )
-                //{
-                //    std::cout << strs.at( j ) << std::endl;
-                //}
-                unsigned int childNum = 0;
-                child->removeChild( childNum );
-                child->addChild( newTrans.get() );
-                newTrans->addChild( dofNode.get() );
-                
-                //osg::Matrix tempMat = child->getMatrix();
-                osg::Matrix tempMat = newTrans->getMatrix();
-                tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( 90.0 ), osg::Vec3( 0, 1, 0 ) ).getRotate() );
-                //child->setMatrix( tempMat );
-                newTrans->setMatrix( tempMat );
-
-                //m_pressureIndicators[ loadedPartNumbers.at( i ) ] = child.get();
-                m_pressureIndicators[ loadedPartNumbers.at( i ) ] = newTrans.get();
-            }
-            else
-            {
-                std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
-            }
-        }
+        ConfigurePressureIndicators();
     }
     //Update the HV gauges
     {
-        //Traverse to find the nodes
-        //HV408,414,430
-        //Rotate the child
-        //Spin it with a given velocity
-        std::vector< std::string > loadedPartNumbers;
-#ifndef TEST_GAUGES
-        loadedPartNumbers.push_back( "HV408" );
-        loadedPartNumbers.push_back( "HV414" );
-        loadedPartNumbers.push_back( "HV430" );
-#else
-        //loadedPartNumbers.push_back( "HV000" );
-        //loadedPartNumbers.push_back( "HV001" );
-#endif        
-        for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
-        {
-            ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
-            childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
-            if( childVisitor.FoundChild() )
-            {
-                std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
-                osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
-                osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
-                osg::ref_ptr< osg::MatrixTransform > newTrans = new osg::MatrixTransform();
-                osg::ref_ptr< osg::Node > dofNode = child->getChild( 0 );//->asGroup()->getChild( 0 );
-                std::string nodeName = dofNode->getName();
-                
-                std::vector<std::string> strs;
-                boost::split(strs,nodeName,boost::is_any_of("_"));
-                //for( size_t j = 0; j < strs.size(); ++j )
-                //{
-                //    std::cout << strs.at( j ) << std::endl;
-                //}
-                unsigned int childNum = 0;
-                child->removeChild( childNum );
-                child->addChild( newTrans.get() );
-                newTrans->addChild( dofNode.get() );
-                
-                m_hvIndicators[ loadedPartNumbers.at( i ) ] = newTrans;
-            }
-            else
-            {
-                std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
-            }
-        }
+        ConfigureHandValves();
     }
     //Update the FI015 gauges
     {
-        //Traverse to find the nodes
-        //Move the ball gauge accordingly
-        std::vector< std::string > loadedPartNumbers;
-        //loadedPartNumbers.push_back( "FI015" );
-
-        for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
-        {
-            ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
-            childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
-            if( childVisitor.FoundChild() )
-            {
-                std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
-                /*osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
-                osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();                
-                m_fiIndicators[ loadedPartNumbers.at( i ) ] = child.get();
-                osg::Matrix tempMat = child->getMatrix();
-                osg::Vec3 currentTrans = tempMat.getTrans();
-                m_ballHeight = currentTrans[ 2 ];
-                currentTrans[ 2 ] += 6.0;
-                tempMat.setTrans( currentTrans );
-                child->setMatrix( tempMat );*/
-                
-                osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
-                osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
-                osg::ref_ptr< osg::MatrixTransform > newTrans = new osg::MatrixTransform();
-                osg::ref_ptr< osg::Node > dofNode = child->getChild( 0 );
-                std::string nodeName = dofNode->getName();
-                
-                std::vector<std::string> strs;
-                boost::split(strs,nodeName,boost::is_any_of("_"));
-                
-                unsigned int childNum = 0;
-                child->removeChild( childNum );
-                child->addChild( newTrans.get() );
-                newTrans->addChild( dofNode.get() );
-                
-                m_fiIndicators[ loadedPartNumbers.at( i ) ] = newTrans.get();
-              
-                osg::Matrix tempMat = newTrans->getMatrix();
-                osg::Vec3 currentTrans = tempMat.getTrans();                
-                currentTrans[ 2 ] += 6.0;
-                tempMat.setTrans( currentTrans );
-                newTrans->setMatrix( tempMat );
-            }
-            else
-            {
-                std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
-            }
-        }
+        ConfigureFlowIndicators();
     }
     //Update the Pressure Transducers
     {
-        std::vector< std::string > loadedPartNumbers;
-#ifndef TEST_GAUGES
-        loadedPartNumbers.push_back( "Screen_Locator_PT003" );
-#else
-        loadedPartNumbers.push_back( "Screen_Locator_PT003" );
-#endif
-        for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
-        {
-            ves::xplorer::scenegraph::util::FindChildWithNameVisitor
-                childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
-            if( childVisitor.FoundChild() )
-            {
-                std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
-                osg::ref_ptr< osg::Geode > tempGroup = childVisitor.GetFoundNode()->asGroup()->getChild( 0 )->asGeode();
-                
-                osg::ref_ptr<osgText::Font> font = osgText::readFontFile( "fonts/arial.ttf" );
-                osg::ref_ptr<osgText::Text> text = new osgText::Text;
-                text->setDataVariance( osg::Object::DYNAMIC );
-                text->setFont( font.get() );
-                text->setCharacterSize( 0.90 );
-                text->setPosition( osg::Vec3d( 0.0, -0.3, 0.0 ) );
-                text->setAlignment( osgText::TextBase::LEFT_BOTTOM ); //osgText::TextBase::BASE_LINE );
-                text->setAxisAlignment( osgText::TextBase::YZ_PLANE );
-                text->setColor( osg::Vec4( 0, 0, 0, 1.0f ) );
-                text->setText( "12.5" );
-                
-                tempGroup->addDrawable( text.get() );
-                
-                text->getOrCreateStateSet()->addUniform( new osg::Uniform( "isOsgText", true ) );
-
-                m_pressureTransducers[ loadedPartNumbers.at( i ) ] = text.get();
-            }
-            else
-            {
-                std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
-            }
-        }
+        ConfigurePressureTransducers();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -544,6 +359,211 @@ bool HyperLabICEGP::OneSecondCheck( boost::posix_time::ptime& last_send, const i
         second_elapsed = true;
     }
     return second_elapsed;
+}
+////////////////////////////////////////////////////////////////////////////////
+void HyperLabICEGP::ConfigurePressureIndicators()
+{
+    //Traverse to find the node
+    //PI019, 411, 413
+    //Get the first child
+    //Rotate the gauge accordingly
+    std::vector< std::string > loadedPartNumbers;
+#ifndef TEST_GAUGES
+    loadedPartNumbers.push_back( "PI019" );
+    loadedPartNumbers.push_back( "PI026" );
+    loadedPartNumbers.push_back( "PI403" );
+    loadedPartNumbers.push_back( "PI406B" );
+    loadedPartNumbers.push_back( "PI407" );
+    loadedPartNumbers.push_back( "PI411" );
+    loadedPartNumbers.push_back( "PI413" );
+    loadedPartNumbers.push_back( "PI013" );
+#else
+    loadedPartNumbers.push_back( "PI000" );
+    loadedPartNumbers.push_back( "PI001" );
+    loadedPartNumbers.push_back( "PI002" );
+    loadedPartNumbers.push_back( "PI003" );
+#endif
+    for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
+    {
+        ves::xplorer::scenegraph::util::FindChildWithNameVisitor
+        childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
+        if( childVisitor.FoundChild() )
+        {
+            std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
+            osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
+            osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
+            
+            osg::ref_ptr< osg::MatrixTransform > newTrans = new osg::MatrixTransform();
+            osg::ref_ptr< osg::Node > dofNode = child->getChild( 0 );//->asGroup()->getChild( 0 );
+            std::string nodeName = dofNode->getName();
+            
+            std::vector<std::string> strs;
+            boost::split(strs,nodeName,boost::is_any_of("_"));
+            //for( size_t j = 0; j < strs.size(); ++j )
+            //{
+            //    std::cout << strs.at( j ) << std::endl;
+            //}
+            unsigned int childNum = 0;
+            child->removeChild( childNum );
+            child->addChild( newTrans.get() );
+            newTrans->addChild( dofNode.get() );
+            
+            //osg::Matrix tempMat = child->getMatrix();
+            osg::Matrix tempMat = newTrans->getMatrix();
+            tempMat.setRotate( osg::Matrix::rotate( osg::DegreesToRadians( 90.0 ), osg::Vec3( 0, 1, 0 ) ).getRotate() );
+            //child->setMatrix( tempMat );
+            newTrans->setMatrix( tempMat );
+            
+            //m_pressureIndicators[ loadedPartNumbers.at( i ) ] = child.get();
+            m_pressureIndicators[ loadedPartNumbers.at( i ) ] = newTrans.get();
+        }
+        else
+        {
+            std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void HyperLabICEGP::ConfigurePressureTransducers()
+{
+    std::vector< std::string > loadedPartNumbers;
+#ifndef TEST_GAUGES
+    loadedPartNumbers.push_back( "Screen_Locator_PT003" );
+#else
+    loadedPartNumbers.push_back( "Screen_Locator_PT003" );
+#endif
+    for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
+    {
+        ves::xplorer::scenegraph::util::FindChildWithNameVisitor
+        childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
+        if( childVisitor.FoundChild() )
+        {
+            std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
+            osg::ref_ptr< osg::Geode > tempGroup = childVisitor.GetFoundNode()->asGroup()->getChild( 0 )->asGeode();
+            
+            osg::ref_ptr<osgText::Font> font = osgText::readFontFile( "fonts/arial.ttf" );
+            osg::ref_ptr<osgText::Text> text = new osgText::Text;
+            text->setDataVariance( osg::Object::DYNAMIC );
+            text->setFont( font.get() );
+            text->setCharacterSize( 0.90 );
+            text->setPosition( osg::Vec3d( 0.0, -0.3, 0.0 ) );
+            text->setAlignment( osgText::TextBase::LEFT_BOTTOM ); //osgText::TextBase::BASE_LINE );
+            text->setAxisAlignment( osgText::TextBase::YZ_PLANE );
+            text->setColor( osg::Vec4( 0, 0, 0, 1.0f ) );
+            text->setText( "12.5" );
+            
+            tempGroup->addDrawable( text.get() );
+            
+            text->getOrCreateStateSet()->addUniform( new osg::Uniform( "isOsgText", true ) );
+            
+            m_pressureTransducers[ loadedPartNumbers.at( i ) ] = text.get();
+        }
+        else
+        {
+            std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void HyperLabICEGP::ConfigureHandValves()
+{
+    //Traverse to find the nodes
+    //HV408,414,430
+    //Rotate the child
+    //Spin it with a given velocity
+    std::vector< std::string > loadedPartNumbers;
+#ifndef TEST_GAUGES
+    loadedPartNumbers.push_back( "HV408" );
+    loadedPartNumbers.push_back( "HV414" );
+    loadedPartNumbers.push_back( "HV430" );
+#else
+    loadedPartNumbers.push_back( "HV000" );
+    loadedPartNumbers.push_back( "HV001" );
+#endif
+    for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
+    {
+        ves::xplorer::scenegraph::util::FindChildWithNameVisitor
+        childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
+        if( childVisitor.FoundChild() )
+        {
+            std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
+            osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
+            osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
+            osg::ref_ptr< osg::MatrixTransform > newTrans = new osg::MatrixTransform();
+            osg::ref_ptr< osg::Node > dofNode = child->getChild( 0 );//->asGroup()->getChild( 0 );
+            std::string nodeName = dofNode->getName();
+            
+            std::vector<std::string> strs;
+            boost::split(strs,nodeName,boost::is_any_of("_"));
+            //for( size_t j = 0; j < strs.size(); ++j )
+            //{
+            //    std::cout << strs.at( j ) << std::endl;
+            //}
+            unsigned int childNum = 0;
+            child->removeChild( childNum );
+            child->addChild( newTrans.get() );
+            newTrans->addChild( dofNode.get() );
+            
+            m_hvIndicators[ loadedPartNumbers.at( i ) ] = newTrans;
+        }
+        else
+        {
+            std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void HyperLabICEGP::ConfigureFlowIndicators()
+{
+    //Traverse to find the nodes
+    //Move the ball gauge accordingly
+    std::vector< std::string > loadedPartNumbers;
+    loadedPartNumbers.push_back( "FI015" );
+    
+    for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
+    {
+        ves::xplorer::scenegraph::util::FindChildWithNameVisitor
+        childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
+        if( childVisitor.FoundChild() )
+        {
+            std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
+            /*osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
+             osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
+             m_fiIndicators[ loadedPartNumbers.at( i ) ] = child.get();
+             osg::Matrix tempMat = child->getMatrix();
+             osg::Vec3 currentTrans = tempMat.getTrans();
+             m_ballHeight = currentTrans[ 2 ];
+             currentTrans[ 2 ] += 6.0;
+             tempMat.setTrans( currentTrans );
+             child->setMatrix( tempMat );*/
+            
+            osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
+            osg::ref_ptr< osg::MatrixTransform > child = tempGroup->getChild( 0 )->asTransform()->asMatrixTransform();
+            osg::ref_ptr< osg::MatrixTransform > newTrans = new osg::MatrixTransform();
+            osg::ref_ptr< osg::Node > dofNode = child->getChild( 0 );
+            std::string nodeName = dofNode->getName();
+            
+            std::vector<std::string> strs;
+            boost::split(strs,nodeName,boost::is_any_of("_"));
+            
+            unsigned int childNum = 0;
+            child->removeChild( childNum );
+            child->addChild( newTrans.get() );
+            newTrans->addChild( dofNode.get() );
+            
+            m_fiIndicators[ loadedPartNumbers.at( i ) ] = newTrans.get();
+            
+            osg::Matrix tempMat = newTrans->getMatrix();
+            osg::Vec3 currentTrans = tempMat.getTrans();
+            currentTrans[ 2 ] += 6.0;
+            tempMat.setTrans( currentTrans );
+            newTrans->setMatrix( tempMat );
+        }
+        else
+        {
+            std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
+        }
+    }
 }
 #ifdef OPC_CLIENT_CONNECT
 ////////////////////////////////////////////////////////////////////////////////
