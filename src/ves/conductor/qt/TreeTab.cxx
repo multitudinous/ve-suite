@@ -66,6 +66,12 @@
 
 #include <iostream>
 
+#include <boost/algorithm/string/replace.hpp>
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/string_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/lexical_cast.hpp>
+
 Q_DECLARE_METATYPE( osg::NodePath )
 Q_DECLARE_METATYPE( std::string )
 
@@ -280,13 +286,13 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
             LOG_DEBUG( "Trying to select " << node->getName() );
             osg::NodePath nodePath = parentVisitor.GetParentNodePath();
 
-            std::string uuid = CreateSubNodePropertySet( node, nodePath );
+            const std::string uuid = CreateSubNodePropertySet( node, nodePath );
             mActiveSet =
                 propertystore::PropertySetPtr( new ves::xplorer::data::CADSubNodePropertySet() );
             mActiveSet->SetUUID( uuid );
             mActiveSet->Load();
+            mActiveSet->EnableLiveProperties( true );
             ui->cadPropertyBrowser->ParsePropertySet( mActiveSet, false );
-
             m_highlightNode.signal( nodePath );
         }
         else
@@ -517,7 +523,10 @@ void TreeTab::on_m_expandAllButton_clicked()
 std::string TreeTab::CreateSubNodePropertySet( osg::Node* node, osg::NodePath& path )
 {
     ves::xplorer::data::CADSubNodePropertySet newSet;
-    std::string uuid = QUuid::createUuid().toString().toStdString();
+    //std::string uuid = QUuid::createUuid().toString().toStdString();
+    //boost::algorithm::replace_all( uuid, "{", "" );
+    //boost::algorithm::replace_all( uuid, "}", "" );
+    std::string uuid = boost::lexical_cast< std::string >( boost::uuids::random_generator()() );
     newSet.SetUUID( uuid );
     newSet.SetPropertyValue( "NameTag", node->getName() );
     /*
@@ -545,14 +554,13 @@ std::string TreeTab::CreateSubNodePropertySet( osg::Node* node, osg::NodePath& p
     // Calculate and store the NodePath
     std::string pathString = osgwTools::nodePathToString( path );
     newSet.SetPropertyValue( "NodePath", pathString );
-
     //newSet.SetPropertyValue( "Visibile", newPart->GetVisibility() );
 
     newSet.Save();
     return uuid;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TreeTab::DeleteCADNode( osg::Node* node )
+void TreeTab::DeleteCADNode( osg::Node* )
 {
     QModelIndex modelIndex = ui->mTreeView->currentIndex();
     QModelIndex parentIndex = mModel->parent( modelIndex );
@@ -572,12 +580,12 @@ void TreeTab::DeleteCADNode( osg::Node* node )
         ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelCADHandler();
     if( mch->PartExists( nodeID ) )
     {
-        std::cout << "Part exists...removing..." << std::endl << std::flush;
+        //std::cout << "Part exists...removing..." << std::endl << std::flush;
         type = "Part";
     }
     else if( mch->AssemblyExists( nodeID ) )
     {
-        std::cout << "Assembly exists...removing..." << std::endl << std::flush;
+        //std::cout << "Assembly exists...removing..." << std::endl << std::flush;
         type = "Assembly";
     }
     
@@ -589,7 +597,7 @@ void TreeTab::DeleteCADNode( osg::Node* node )
     mActiveSet = propertystore::PropertySetPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TreeTab::DeleteDataNode( osg::Node* node )
+void TreeTab::DeleteDataNode( osg::Node* )
 { 
     const std::string& datasetName =
         boost::any_cast< std::string >( mActiveSet->GetPropertyValue( "Filename" ) );
