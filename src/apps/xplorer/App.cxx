@@ -301,6 +301,7 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
 #endif // _MSC_VER
     dbPath.append( "/ves.db" );
 #endif // BOOST_VERSION
+    std::cout << "DB Path : " << dbPath << std::endl;
     ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( dbPath );
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
 
