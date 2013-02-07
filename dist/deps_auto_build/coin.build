@@ -2,7 +2,7 @@ PACKAGE_NAME=COIN3D
 BASE_DIR="${DEV_BASE_DIR}/Coin-3.1.3"
 
 SOURCE_RETRIEVAL_METHOD=wget
-SOURCE_URL=http://ftp.coin3d.org/coin/src/all/Coin-3.1.3.tar.gz
+SOURCE_URL=http://bitbucket.org/Coin3D/coin/downloads/Coin-3.1.3.tar.gz
 SOURCE_FORMAT=tgz
 
 SOURCE_DIR="${BASE_DIR}"
