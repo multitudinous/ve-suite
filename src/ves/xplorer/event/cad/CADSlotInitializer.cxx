@@ -67,6 +67,10 @@ CADSlotInitializer::CADSlotInitializer()
                            &ToggleCADNode,
                            m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_STATIC( "%ToggleSubCADNode",
+                          void( const std::string&, bool const& ),
+                          &ToggleSubCADNode,
+                          m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%SetCADPhysicsMesh",
                            void( const std::string&,

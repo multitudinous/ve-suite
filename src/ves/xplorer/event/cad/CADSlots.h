@@ -36,12 +36,14 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/util/ToggleNodeVisitor.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+#include <ves/xplorer/data/CADSubNodePropertySet.h>
 #include <ves/xplorer/data/CADPropertySet.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 
@@ -57,6 +59,8 @@
  #endif*/
 #include <osgwQuery/QueryUtils.h>
 #include <osgwQuery/QueryComputation.h>
+
+#include <osgwTools/NodePathUtils.h>
 
 namespace ves
 {
@@ -185,6 +189,28 @@ static void ToggleCADNode( const std::string& nodeID,
 
             // ^^^ There was no code following the above comment in CADToggleEH.cxx
         }
+    }
+}
+//////////////////////////////////////////////////////////////////////////
+/**
+ * Turns a sub cad part node on or off in the scenegraph.
+ * @param nodeID The UUID of the propertyset
+ * @param visible Whether the CAD should be visible
+ */
+static void ToggleSubCADNode( const std::string& nodeID,
+                          bool const& visible )
+{
+    ves::xplorer::data::CADSubNodePropertySet set;
+    set.SetUUID( nodeID );
+    set.Load();
+
+    const std::string nodePathStr =
+        boost::any_cast<std::string>( set.GetPropertyValue( "NodePath" ) );
+    osg::NodePath nodePath = osgwTools::stringToNodePath( nodePathStr,
+        ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
+    if( nodePath.size() > 0 )
+    {
+        nodePath.back()->setNodeMask( visible );
     }
 }
 //////////////////////////////////////////////////////////////////////////
