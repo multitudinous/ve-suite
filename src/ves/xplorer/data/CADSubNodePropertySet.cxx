@@ -242,6 +242,32 @@ propertystore::PropertySetPtr CADSubNodePropertySet::CreateNew()
     return propertystore::PropertySetPtr( new CADSubNodePropertySet() );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CADSubNodePropertySet::EnableLiveProperties( bool live )
+{
+    PropertySet::EnableLiveProperties( true );
+    
+    if( !live )
+    {
+        // Clearing list will allow live objs to go out of scope and autodelete
+        m_liveObjects.clear();
+        return;
+    }
+    else if( !m_liveObjects.empty() )
+    {
+        // Properties are already live
+        return;
+    }
+    else
+    {
+        propertystore::MakeLiveBasePtr p;
+
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool const&>( m_UUIDString,
+                                                                                     GetProperty( "Visible" ),
+                                                                                     "ToggleSubCADNode" ) );
+        m_liveObjects.push_back( p );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 } // namespace data
 } // namespace xplorer
 } // namespace ves

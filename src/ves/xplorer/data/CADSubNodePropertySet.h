@@ -62,6 +62,10 @@ public:
     /// Factory ctor
     virtual propertystore::PropertySetPtr CreateNew();
 
+    /// Toggles whether this set's live properties are actually enabled as
+    /// live properties.
+    virtual void EnableLiveProperties( bool live );
+
 private:
     ///Create the skeleton
     void DisableSkeleton();
