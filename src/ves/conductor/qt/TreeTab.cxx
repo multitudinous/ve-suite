@@ -240,12 +240,12 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
 
     // Get the node associated with this QModelIndex
     osg::Node* node = 0;
-    std::string nodepath;
+    std::string nodePathStr;
     if( index != QModelIndex() )
     {
         osgQtTree::osgTreeItem* item = static_cast< osgQtTree::osgTreeItem* >( index.internalPointer() );
         node = item->GetNode();
-        nodepath = item->GetNodePath();
+        nodePathStr = item->GetNodePath();
     }
 
     // See if this node has a VE_XML_ID
@@ -335,15 +335,15 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     if( highlight && type == "CAD" )
     {
         //Set the selected DCS
-        osg::NodePath nodePath = osgwTools::stringToNodePath( nodepath,
-                                 ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
+        osg::NodePath nodePath = osgwTools::stringToNodePath( nodePathStr,
+            ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
         m_highlightAndSetManipulators.signal( nodePath );
     }
 
     if( type == "CAD" )
     {
         LOG_DEBUG( "Firing CADNodeSelected signal" );
-        m_CADNodeSelected.signal( nodepath );
+        m_CADNodeSelected.signal( nodePathStr );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
