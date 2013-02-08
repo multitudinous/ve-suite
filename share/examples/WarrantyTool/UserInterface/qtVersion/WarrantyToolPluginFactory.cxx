@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include "WarrantyToolPluginFactory.h"
 #include "WarrantyToolPlugin.h"
+#include <QtCore/qplugin.h>
 
 namespace ves
 {

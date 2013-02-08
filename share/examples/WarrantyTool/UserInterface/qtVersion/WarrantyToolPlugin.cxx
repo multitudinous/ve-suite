@@ -52,7 +52,7 @@ WarrantyToolPlugin::WarrantyToolPlugin():
     m_name("Deere Analytics")
 {
     m_UIWidget = new WarrantyToolPlugin_UIDialog( 0 );
-    m_pluginName = "WarrantyToolUI";
+    m_base.SetPluginType(/*m_pluginName = */"WarrantyToolUI");
 }
 
 void WarrantyToolPlugin::SetName( const std::string& pluginName )

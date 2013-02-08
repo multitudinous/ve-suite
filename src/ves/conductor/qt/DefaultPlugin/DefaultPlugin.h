@@ -34,7 +34,7 @@
 
 //QT_NO_KEYWORDS
 
-#include <QtCore/QObject>
+//#include <QtCore/QObject>
 //#include <ves/conductor/qt/UIPluginInterface.h>
 #include "UIPluginInterface.h"
 #include <QtCore/qplugin.h>
@@ -46,10 +46,9 @@ namespace conductor
 {
 
 
-class DefaultPlugin : public ves::conductor::UIPluginBase,
-    public ves::conductor::UIPluginInterface
+class DefaultPlugin : public ves::conductor::UIPluginInterface
 {
-    Q_OBJECT
+    //Q_OBJECT
 
 public:
     DefaultPlugin();

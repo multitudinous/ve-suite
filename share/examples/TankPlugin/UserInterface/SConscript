@@ -24,9 +24,6 @@ lib_env = ves_pkg.getEnv().Clone()
 source = [pj(buildSrcDir,'TankPlugin_UIDialog.h')]
 cppSources = lib_env.qt_moc(source)
 
-source = [pj(buildSrcDir,'TankPlugin.h')]
-cppSources += lib_env.qt_moc(source)
-
 source = [pj(buildSrcDir,'TankPluginFactory.h')]
 cppSources += lib_env.qt_moc(source)
 

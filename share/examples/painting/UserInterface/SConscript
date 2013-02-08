@@ -24,9 +24,6 @@ lib_env = ves_pkg.getEnv().Clone()
 source = [pj(buildSrcDir,'PaintingPlugin_UIDialog.h')]
 cppSources = lib_env.qt_moc(source)
 
-source = [pj(buildSrcDir,'PaintingPlugin.h')]
-cppSources += lib_env.qt_moc(source)
-
 source = [pj(buildSrcDir,'PaintingPluginFactory.h')]
 cppSources += lib_env.qt_moc(source)
 

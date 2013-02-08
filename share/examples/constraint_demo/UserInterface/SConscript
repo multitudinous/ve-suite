@@ -25,9 +25,6 @@ lib_env = ves_pkg.getEnv().Clone()
 source = [pj(buildSrcDir,'ConstraintPlugin_UIDialog.h')]
 cppSources = lib_env.qt_moc(source)
 
-source = [pj(buildSrcDir,'ConstraintPlugin.h')]
-cppSources += lib_env.qt_moc(source)
-
 source = [pj(buildSrcDir,'ConstraintPluginFactory.h')]
 cppSources += lib_env.qt_moc(source)
 

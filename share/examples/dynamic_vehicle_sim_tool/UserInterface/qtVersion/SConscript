@@ -27,9 +27,6 @@ source = [pj(buildSrcDir,'DynamicVehicleSimTool_UIDialog.h')]
 cppSources = lib_env.qt_moc(source)
 #cppSources = lib_env.Moc(pj(buildSrcDir,'DynamicVehicleSimTool_UIDialog.h'))
 
-source = [pj(buildSrcDir,'DynamicVehicleSimTool.h')]
-cppSources += lib_env.qt_moc(source)
-
 source = [pj(buildSrcDir,'DynamicVehicleSimToolFactory.h')]
 cppSources += lib_env.qt_moc(source)
 

@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include "TankPluginFactory.h"
 #include "TankPlugin.h"
+#include <QtCore/qplugin.h>
 
 namespace ves
 {

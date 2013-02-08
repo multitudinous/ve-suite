@@ -25,9 +25,6 @@ lib_env = ves_pkg.getEnv().Clone()
 source = [pj(buildSrcDir,'Multiscale2_UIDialog.h')]
 cppSources = lib_env.qt_moc(source)
 
-source = [pj(buildSrcDir,'Multiscale2.h')]
-cppSources += lib_env.qt_moc(source)
-
 source = [pj(buildSrcDir,'Multiscale2Factory.h')]
 cppSources += lib_env.qt_moc(source)
 

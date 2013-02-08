@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date$
- * Version:       $Rev$
- * Author:        $Author$
- * Id:            $Id$
+ * Date modified: $Date: 2012-05-28 16:50:47 -0500 (Mon, 28 May 2012) $
+ * Version:       $Rev: 17049 $
+ * Author:        $Author: karlsvec $
+ * Id:            $Id: UIPluginInterface.h 17049 2012-05-28 21:50:47Z karlsvec $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
@@ -34,6 +34,7 @@
 /*!\file UIPluginInterface.h
 UIPlugin API
 */
+#include <ves/conductor/qt/plugin/UIPluginBase.h>
 
 
 #include <vector>
@@ -46,7 +47,7 @@ UIPlugin API
 
 namespace osg
 {
-    class Geode;
+class Geode;
 }
 
 namespace ves
@@ -61,7 +62,7 @@ class UIPluginInterface
 {
 public:
     ///Default destructor for plugins
-    virtual ~UIPluginInterface(){};
+    virtual ~UIPluginInterface() {};
 
     ///Sets the name of the module
     virtual void SetName( const std::string& pluginName ) = 0;
@@ -88,6 +89,7 @@ public:
     ///Deletes all widgets associated with this plugin (eg. UIWidget, ResultWidget)
     virtual void DeleteWidgets() = 0;
 
+    UIPluginBase m_base;
 };
 
 }

@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include "Multiscale2Factory.h"
 #include "Multiscale2.h"
+#include <QtCore/qplugin.h>
 
 namespace ves
 {

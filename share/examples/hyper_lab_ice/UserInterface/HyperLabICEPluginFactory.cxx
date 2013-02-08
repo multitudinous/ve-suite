@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include "HyperLabICEPluginFactory.h"
 #include "HyperLabICEPlugin.h"
+#include <QtCore/qplugin.h>
 
 namespace ves
 {

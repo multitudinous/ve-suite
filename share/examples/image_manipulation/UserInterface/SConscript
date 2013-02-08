@@ -25,9 +25,6 @@ lib_env = ves_pkg.getEnv().Clone()
 source = [pj(buildSrcDir,'ImageManipulationPlugin_UIDialog.h')]
 cppSources = lib_env.qt_moc(source)
 
-source = [pj(buildSrcDir,'ImageManipulationPlugin.h')]
-cppSources += lib_env.qt_moc(source)
-
 source = [pj(buildSrcDir,'ImageManipulationPluginFactory.h')]
 cppSources += lib_env.qt_moc(source)
 

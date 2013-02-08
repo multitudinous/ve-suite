@@ -27,9 +27,6 @@ source = [pj(buildSrcDir,'WarrantyToolPlugin_UIDialog.h')]
 cppSources = lib_env.qt_moc(source)
 #cppSources = lib_env.Moc(pj(buildSrcDir,'WarrantyToolPlugin_UIDialog.h'))
 
-source = [pj(buildSrcDir,'WarrantyToolPlugin.h')]
-cppSources += lib_env.qt_moc(source)
-
 source = [pj(buildSrcDir,'WarrantyToolPluginFactory.h')]
 cppSources += lib_env.qt_moc(source)
 

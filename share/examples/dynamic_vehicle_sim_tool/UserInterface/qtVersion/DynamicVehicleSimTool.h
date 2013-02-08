@@ -32,13 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #pragma once
 
-//QT_NO_KEYWORDS
-
-#include <QtCore/QObject>
-//#include <ves/conductor/qt/UIPluginInterface.h>
 #include "UIPluginInterface.h"
-#include <QtCore/qplugin.h>
-#include <ves/conductor/qt/plugin/UIPluginBase.h>
 
 namespace ves
 {
@@ -46,10 +40,9 @@ namespace conductor
 {
 
 
-class DynamicVehicleSimTool : public ves::conductor::UIPluginBase,
-                      public ves::conductor::UIPluginInterface
+class DynamicVehicleSimTool : public ves::conductor::UIPluginInterface
 {
-    Q_OBJECT
+
 
 public:
     DynamicVehicleSimTool();

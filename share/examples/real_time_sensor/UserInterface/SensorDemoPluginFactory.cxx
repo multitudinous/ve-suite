@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include "SensorDemoPluginFactory.h"
 #include "SensorDemoPlugin.h"
+#include <QtCore/qplugin.h>
 
 namespace ves
 {

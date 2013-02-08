@@ -479,9 +479,10 @@ void PluginSelectionTab::on_m_instantiatedPlugins_currentItemChanged
             m_itemInterfaceMap.find( current );
         if( iter != m_itemInterfaceMap.end() )
         {
-            UIPluginBase* plugin = dynamic_cast< UIPluginBase* >( iter->second );
+            //UIPluginBase* plugin = dynamic_cast< UIPluginBase* >( iter->second );
             ves::xplorer::ModelHandler::instance()->SetActiveModel(
-                plugin->GetVEModel()->GetID() );
+                        iter->second->m_base.GetVEModel()->GetID() );
+                //plugin->GetVEModel()->GetID() );
         }
     }
 }
@@ -508,6 +509,7 @@ void PluginSelectionTab::FileLoadedSlot( const std::string& fileName )
 void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassName,
         ves::xplorer::plugin::PluginBase* xplorerPlugin )
 {
+    std::cout << "PluginSelectionTab: Looking for " << pluginFactoryClassName << std::endl << std::flush;
     QString pluginName = QString::fromStdString( pluginFactoryClassName );
 
     // See if this plugin exists in the available UI plugins list
@@ -576,8 +578,9 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
 
         // Give the UI plugin a pointer to the xplorer plugin. This
         // will give the UI plugin access to things like the correct model.
-        UIPluginBase* base = dynamic_cast<UIPluginBase*>( interface );
-        base->SetXplorerPlugin( xplorerPlugin );
+        //UIPluginBase* base = dynamic_cast<UIPluginBase*>( interface );
+        //base->SetXplorerPlugin( xplorerPlugin );
+        interface->m_base.SetXplorerPlugin( xplorerPlugin );
 
         // Use the plugin info to create a new item for the instantiated
         // plugins list. Notice here we use the name of the instance,
@@ -644,8 +647,9 @@ bool PluginSelectionTab::eventFilter( QObject* obj, QEvent* event )
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::RemovePlugin( UIPluginInterface* plugin )
 {
-    UIPluginBase* pb = dynamic_cast<UIPluginBase*>( plugin );
-    ves::open::xml::model::ModelPtr modelPtr = pb->GetVEModel();
+    //UIPluginBase* pb = dynamic_cast<UIPluginBase*>( plugin );
+    //ves::open::xml::model::ModelPtr modelPtr = pb->GetVEModel();
+    ves::open::xml::model::ModelPtr modelPtr = plugin->m_base.GetVEModel();
     if( modelPtr )
     {
         ///Remove the data from the ui xml representation

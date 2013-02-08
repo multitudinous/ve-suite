@@ -47,8 +47,8 @@ DynamicVehicleSimTool::DynamicVehicleSimTool():
     m_UIWidget(0),
     m_name("DynamicVehicleSimToolUI")
 {
-    m_UIWidget = new DynamicVehicleSimTool_UIDialog( 0, this );
-    m_pluginName = "DynamicVehicleSimToolUI";
+    m_UIWidget = new DynamicVehicleSimTool_UIDialog( 0, &m_base );
+    //m_pluginName = "DynamicVehicleSimToolUI";
 }
 
 void DynamicVehicleSimTool::SetName( const std::string& pluginName )

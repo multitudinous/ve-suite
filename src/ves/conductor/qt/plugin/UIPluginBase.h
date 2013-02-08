@@ -36,7 +36,7 @@
  * \class UIPluginBase
  *
  */
-#define QT_NO_KEYWORDS
+//#define QT_NO_KEYWORDS
 
 #include <ves/VEConfig.h>
 #include <ves/open/xml/model/PortPtr.h>
@@ -50,7 +50,7 @@
 #include <string>
 #include <utility>
 
-#include <QtCore/QObject>
+//#include <QtCore/QObject>
 
 typedef std::vector< ves::open::xml::model::PortPtr > PORT;
 
@@ -58,9 +58,9 @@ namespace ves
 {
 namespace conductor
 {
-class VE_GUIPLUGINS_EXPORTS UIPluginBase: public QObject
+class VE_GUIPLUGINS_EXPORTS UIPluginBase//: public QObject
 {
-    Q_OBJECT
+    //Q_OBJECT
 public:
 
     enum port_type
@@ -141,7 +141,7 @@ public:
     ///Returns vector of output ports
     virtual PORT GetOutPorts();
 
-public Q_SLOTS:
+//public Q_SLOTS:
     void SetNumInputPorts( int num );
     void SetNumOutputPorts( int num );
 

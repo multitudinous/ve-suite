@@ -223,7 +223,13 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="m_userConstrainedGeometrySelector"/>
+         <widget class="QComboBox" name="m_userConstrainedGeometrySelector">
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+         </widget>
         </item>
         <item>
          <spacer name="horizontalSpacer_4">

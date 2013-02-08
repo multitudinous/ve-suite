@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include "ConstraintPluginFactory.h"
 #include "ConstraintPlugin.h"
+#include <QtCore/qplugin.h>
 
 namespace ves
 {
