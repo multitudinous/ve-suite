@@ -21,7 +21,7 @@ case $PLATFORM in
     fi
     ;;
   Darwin | Linux )
-    FMOD_ROOT=/Developer/FMOD_Programmers_API_Mac/api
+    FMOD_ROOT=/stuff/data/VE_Suite_Deps/FMOD\ Programmers\ API/api
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
     CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
     CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )

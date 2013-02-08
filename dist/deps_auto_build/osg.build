@@ -3,6 +3,7 @@ BASE_DIR="${DEV_BASE_DIR}/osg_2.8.5"
 
 SOURCE_RETRIEVAL_METHOD=svn
 SOURCE_URL=http://www.openscenegraph.org/svn/osg/OpenSceneGraph/branches/OpenSceneGraph-2.8/
+SOURCE_URL=http://osg-285.googlecode.com/svn/trunk
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
@@ -79,7 +80,7 @@ case $PLATFORM in
         CMAKE_PARAMS+=( -DFBX_INCLUDE_DIR="/Applications/Autodesk/FBXSDK20102/include" )
     fi
     #apply the patch for mac specifically for 10.7
-    POST_RETRIEVAL_METHOD="patch -p0 -i ${VES_SRC_DIR}/share/patches/osg/macos10.7.patch"
+    #POST_RETRIEVAL_METHOD="patch -p0 -i ${VES_SRC_DIR}/share/patches/osg/macos10.7.patch"
     ;;
   Linux)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
