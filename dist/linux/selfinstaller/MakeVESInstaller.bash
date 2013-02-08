@@ -138,7 +138,7 @@ then
     if [ -e "payload.tar.bz2" ]
     then
         echo "Creating the self-extracting installer..."
-        cat ${SCRIPT_DIR}/decompress.bash payload.tar.bz2 > ${CURRENT_WORKING_DIR}/${installer_file_name}
+        cat ${CURRENT_WORKING_DIR}/${SCRIPT_DIR}/decompress.bash payload.tar.bz2 > ${CURRENT_WORKING_DIR}/${installer_file_name}
         chmod +x ${CURRENT_WORKING_DIR}/${installer_file_name}
     else
         echo "payload.tar.bz2 does not exist!"
