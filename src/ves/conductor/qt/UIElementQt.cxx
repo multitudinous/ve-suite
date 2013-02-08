@@ -110,7 +110,6 @@ UIElementQt::UIElementQt( QWidget* parent )
     mTextureRight( 1.0f ),
     mTextureBottom( 1.0f ),
     mTextureTop( 0.0f ),
-    mInitialized( false ),
     mImageDirty( true ),
     mTimer( 0 ),
     mImageMutex( 0 ),
@@ -169,19 +168,21 @@ UIElementQt::UIElementQt( QWidget* parent )
 UIElementQt::~UIElementQt()
 {
     _debug( "dtor" );
+    /*
+    QList<QWidget*> widgets = mTitlebar->findChildren<QWidget*>();
+    Q_FOREACH( QWidget * widget, widgets )
+    widget->removeEventFilter( this );
 
-//    QList<QWidget*> widgets = mTitlebar->findChildren<QWidget*>();
-//    Q_FOREACH( QWidget * widget, widgets )
-//    widget->removeEventFilter( this );
-
-//    FreeOldWidgets();
-//    delete mTimer;
-//    delete mImageMutex;
-//    delete mQTitlebar;
+    FreeOldWidgets();
+    delete mTimer;
+    delete mImageMutex;
+    delete mQTitlebar;
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::Cleanup()
 {
+    mTimer->stop();
     m_cleanupSignal();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -198,6 +199,7 @@ void UIElementQt::CleanupSlot()
     delete mImageMutex;
     delete mQTitlebar;
     LOG_INFO( "CleanupSlot end" );
+    mInitialized = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::Initialize()
@@ -670,6 +672,11 @@ void UIElementQt::SetWidget( QWidget* widget )
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::RefreshWidgetFilterList()
 {
+    if( !mWidget )
+    {
+        return;
+    }
+
     QMutexLocker locker( mImageMutex );
 
     //timespec ts, te;
@@ -887,19 +894,6 @@ void UIElementQt::FreeOldWidgets()
 {
     _debug( "FreeOldWidgets" );
 
-    // Remove this object as the event filter
-    QList<QWidget*> widgets = mWidget->findChildren<QWidget*>();
-    Q_FOREACH( QWidget * widget, widgets )
-    {
-        widget->removeEventFilter( this );
-    }
-
-    if( mGraphicsScene )
-    {
-        delete mGraphicsScene;
-        mGraphicsScene = 0;
-    }
-
     {// Enter critical section
         QMutexLocker locker( mImageMutex );
         if( mImage )
@@ -907,13 +901,32 @@ void UIElementQt::FreeOldWidgets()
             delete mImage;
             mImage = 0;
         }
-
+        
         if( mImageFlipped )
         {
             delete mImageFlipped;
             mImageFlipped = 0;
         }
     } // Leave critical section
+
+    if( !mWidget )
+    {
+        return;
+    }
+    
+    // Remove this object as the event filter
+    QList<QWidget*> widgets = mWidget->findChildren<QWidget*>();
+    Q_FOREACH( QWidget * widget, widgets )
+    {
+        widget->removeEventFilter( this );
+    }
+    mWidget = 0;
+    
+    if( mGraphicsScene )
+    {
+        delete mGraphicsScene;
+        mGraphicsScene = 0;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_render()

@@ -292,6 +292,11 @@ void UIManager::RemoveAllElements()
     for( map_iterator = mElements.begin(); map_iterator != mElements.end();
             ++map_iterator )
     {
+        while( map_iterator->second->IsInitialized() )
+        {
+            //block until the cleanup signal has finished processing
+            ;
+        }
         delete map_iterator->second;
     }
 
@@ -340,15 +345,18 @@ void UIManager::Update()
                 mUIGroup->removeUpdateCallback( mUIUpdateCallback.get() );
             }
 
-            LOG_INFO( "Removing Elements" );
-            RemoveAllElements();
-
             // We wait for 2 updates after we've receive the notice to die
             // before we stop the vrj kernel to ensure all the Qt event
             // pumps have a chance to clear out and destruct.
             VPR_PROFILE_RESULTS();
             // Stopping kernel
             vrj::Kernel::instance()->stop();
+
+            //We do not remove elements completely until we tell the qt event
+            //engine to stop processing which will happen a frame from now because
+            //of the lag with the vrj::Kernel class.
+            LOG_INFO( "Removing Elements" );
+            RemoveAllElements();
         }
         else
         {

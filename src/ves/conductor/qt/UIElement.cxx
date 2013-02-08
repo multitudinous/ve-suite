@@ -64,7 +64,9 @@ namespace ves
 namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
-UIElement::UIElement():
+UIElement::UIElement()
+    :
+    mInitialized( false ),
     mIsMinimized( false ),
     mUIMatrixDirty( false ),
     //mUITransform( 0 ),
@@ -550,6 +552,11 @@ osg::Vec2d& UIElement::GetTextureCoords( int x, int y )
 std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > const& UIElement::GetDamagedAreas()
 {
     return m_damagedAreas;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool UIElement::IsInitialized() const
+{
+    return mInitialized;
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namepsace conductor

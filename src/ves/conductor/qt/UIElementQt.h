@@ -159,7 +159,6 @@ private:
     float mTextureRight; ///< Right-most texture coordinate, on interval [0,1]
     float mTextureBottom; ///< Bottom-most texture coordinate, on interval [0,1]
     float mTextureTop; ///< Top-most texture coordinate, on interval [0,1]
-    bool mInitialized; ///< Flag telling whether this element has been initialized
     bool mImageDirty; ///< Flag telling whether the rendered image has changed
     QTimer* mTimer; ///< Timer that causes UI to render at set intervals
     QMutex* mImageMutex; ///< Mutex that is used to avoid access collisions on rendered image

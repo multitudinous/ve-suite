@@ -269,6 +269,9 @@ public:
     ///Convert pixel coords to texture coords
     osg::Vec2d& GetTextureCoords( int x, int y );
 
+    ///Is the element initialized
+    bool IsInitialized() const;
+
 protected:
     ///Tell whether the mouse is over the UI
     void UIEnterLeave( bool uiEnter );
@@ -276,6 +279,9 @@ protected:
     /// Sets up the sub-branch for the scenegraph. Derived classes must call this
     /// at the very end of their constructor.
     void PostConstructor();
+
+    /// Flag telling whether this element has been initialized
+    bool mInitialized;
 
     bool mIsMinimized;
     bool mUIMatrixDirty;
@@ -309,6 +315,9 @@ protected:
 
     osg::ref_ptr< osg::Image > m_osgImage;
     std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > m_damagedAreas;
+    
+    ///Is this UIElement initialized
+    
 };
 
 } // namepsace conductor

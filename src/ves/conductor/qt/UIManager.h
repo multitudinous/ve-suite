@@ -127,10 +127,6 @@ public:
     /// and calls delete on the associated UIElement.
     bool RemoveElement( osg::ref_ptr<osg::Geode> geode );
 
-    // TODO document RemoveAllElements
-    ///
-    void RemoveAllElements();
-
     /// Do all needed updates on the scenegraph.
     /// Any UIElements added to the manager since the last call to update will
     /// be added to the scenegraph, and all UIElements that are currently enabled
@@ -264,6 +260,7 @@ public:
 
     ///Update the UI quad with new position information
     void UpdateUIQuadPosition();
+ 
 private:
     // Set this class up as a singleton
     ///Constructor
@@ -274,6 +271,10 @@ private:
 
     /// Singleton declarations
     vprSingletonHeader( UIManager );
+
+    // TODO document RemoveAllElements
+    ///
+    void RemoveAllElements();
 
     // NodeCallback as a member object rather than via inheritance so as not to
     // break singleton pattern.
