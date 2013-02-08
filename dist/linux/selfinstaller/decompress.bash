@@ -62,9 +62,9 @@ CURRENT_WORKING_DIR=$(pwd)
 cd ${DECOMPRESS_DIR}
 if [ ${place_env_file_at_install_root} = 1 ]
 then
-    ./install -p ${INSTALL_PREFIX} -r
+    ./install.bash -p ${INSTALL_PREFIX} -r
 else
-    ./install -p ${INSTALL_PREFIX}
+    ./install.bash -p ${INSTALL_PREFIX}
 fi
 
 cd ${CURRENT_WORKING_DIR}
