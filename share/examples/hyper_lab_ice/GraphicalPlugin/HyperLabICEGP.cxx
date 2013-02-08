@@ -103,7 +103,7 @@ namespace pt = boost::property_tree;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 //#define NETL_DEMO
-//#define TEST_GAUGES
+#define TEST_GAUGES
 
 #include "HyperLabICEGP.h"
 #ifdef NETL_DEMO
@@ -338,15 +338,15 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
 {
     //Update the Pressure Indicators
     {
-        ConfigurePressureIndicators();
+        //ConfigurePressureIndicators();
     }
     //Update the HV gauges
     {
-        ConfigureHandValves();
+        //ConfigureHandValves();
     }
     //Update the FI015 gauges
     {
-        ConfigureFlowIndicators();
+        //ConfigureFlowIndicators();
     }
     //Update the Pressure Transducers
     {
@@ -449,6 +449,7 @@ void HyperLabICEGP::ConfigurePressureTransducers()
 {
     std::vector< std::string > loadedPartNumbers;
 #ifndef TEST_GAUGES
+    /*
     loadedPartNumbers.push_back( "PT003" );
     loadedPartNumbers.push_back( "PT012" );
     loadedPartNumbers.push_back( "PT104" );
@@ -467,14 +468,25 @@ void HyperLabICEGP::ConfigurePressureTransducers()
     loadedPartNumbers.push_back( "PT420" );
     loadedPartNumbers.push_back( "PT436" );
     loadedPartNumbers.push_back( "PT610" );
-    loadedPartNumbers.push_back( "Screen_Locator_PT003" );
+    */
+    
+    loadedPartNumbers.push_back( "PT003" );
+    loadedPartNumbers.push_back( "PT116" );
+    loadedPartNumbers.push_back( "AT001" );
+    loadedPartNumbers.push_back( "AT002" );
+    loadedPartNumbers.push_back( "FT110" );
+    loadedPartNumbers.push_back( "FT162" );
+    loadedPartNumbers.push_back( "FT380" );
+    loadedPartNumbers.push_back( "FT432" );
+    loadedPartNumbers.push_back( "PDT172" );
 #else
-    loadedPartNumbers.push_back( "Screen_Locator_PT003" );
+    loadedPartNumbers.push_back( "PT003" );
 #endif
     for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
     {
+        const std::string childName = "Screen_Locator_" + loadedPartNumbers.at( i );
         ves::xplorer::scenegraph::util::FindChildWithNameVisitor
-        childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
+        childVisitor( mDCS.get(), childName, true, false );
         if( childVisitor.FoundChild() )
         {
             std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
