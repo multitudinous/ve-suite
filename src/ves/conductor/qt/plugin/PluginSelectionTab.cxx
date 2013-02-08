@@ -509,7 +509,7 @@ void PluginSelectionTab::FileLoadedSlot( const std::string& fileName )
 void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassName,
         ves::xplorer::plugin::PluginBase* xplorerPlugin )
 {
-    std::cout << "PluginSelectionTab: Looking for " << pluginFactoryClassName << std::endl << std::flush;
+    //std::cout << "PluginSelectionTab: Looking for " << pluginFactoryClassName << std::endl << std::flush;
     QString pluginName = QString::fromStdString( pluginFactoryClassName );
 
     // See if this plugin exists in the available UI plugins list
