@@ -208,7 +208,10 @@ static void ToggleSubCADNode( const std::string& nodeID,
         boost::any_cast<std::string>( set.GetPropertyValue( "NodePath" ) );
     osg::NodePath nodePath = osgwTools::stringToNodePath( nodePathStr,
         ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
-    if( nodePath.size() > 0 )
+    
+    //The nodepath always has the root node attached. If it is the last one then clearly
+    //the path for the described sub node was not found.
+    if( nodePath.back() != ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() )
     {
         nodePath.back()->setNodeMask( visible );
     }
