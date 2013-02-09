@@ -3,6 +3,7 @@ BASE_DIR="${DEV_BASE_DIR}/bdfx"
 
 SOURCE_RETRIEVAL_METHOD=private-svn
 SOURCE_URL=https://subversion.vesuite.org/skewmatrix/skewmatrix/backdropFX/trunk
+SOURCE_URL=http://backdropfx.googlecode.com/svn/trunk
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
