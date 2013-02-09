@@ -42,6 +42,8 @@ FindParentsVisitor::FindParentsVisitor( osg::Node* node, osg::Node* rootNode )
     parentNode( 0 ),
     m_rootNode( rootNode )
 {
+    //This enables the visitor to traverse "off" nodes
+    setNodeMaskOverride( 1 );
     node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////

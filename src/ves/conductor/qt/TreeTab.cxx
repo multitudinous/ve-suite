@@ -30,10 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#define VES_DEBUG
 #include <ves/conductor/qt/TreeTab.h>
-
-
 
 #include <osgQtTree/osgQtTree.h>
 #include <osgQtTree/treemodel.h>
@@ -46,15 +43,21 @@
 
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/scenegraph/DCS.h>
+
 #include <ves/xplorer/data/CADPropertySet.h>
 #include <ves/xplorer/data/CADSubNodePropertySet.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
+#include <ves/xplorer/data/DatabaseManager.h>
+
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
+
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
+
 #include <ves/xplorer/eventmanager/EventFactory.h>
+
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
@@ -65,6 +68,8 @@
 #include <osgwTools/NodePathUtils.h>
 
 #include <iostream>
+
+#include <crunchstore/SearchCriterion.h>
 
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/uuid/random_generator.hpp>
@@ -522,10 +527,22 @@ void TreeTab::on_m_expandAllButton_clicked()
 ////////////////////////////////////////////////////////////////////////////////
 std::string TreeTab::CreateSubNodePropertySet( osg::Node* node, osg::NodePath& path )
 {
+    std::string pathString = osgwTools::nodePathToString( path );
+
+    //First check to see if the current node path is in the db
+    crunchstore::SearchCriterion critNodePath( "NodePath", "=", pathString );
+    std::vector< crunchstore::SearchCriterion > criteria;
+    criteria.push_back( critNodePath );
+    std::vector< std::string > results;
+    ves::xplorer::data::DatabaseManager::instance()->GetDataManager()->
+        Search( "CADSubNodePropertySet", criteria, "uuid", results );
+
+    if( !results.empty() )
+    {
+        return( results.back() );
+    }
+    
     ves::xplorer::data::CADSubNodePropertySet newSet;
-    //std::string uuid = QUuid::createUuid().toString().toStdString();
-    //boost::algorithm::replace_all( uuid, "{", "" );
-    //boost::algorithm::replace_all( uuid, "}", "" );
     std::string uuid = boost::lexical_cast< std::string >( boost::uuids::random_generator()() );
     newSet.SetUUID( uuid );
     newSet.SetPropertyValue( "NameTag", node->getName() );
@@ -552,11 +569,10 @@ std::string TreeTab::CreateSubNodePropertySet( osg::Node* node, osg::NodePath& p
     */
 
     // Calculate and store the NodePath
-    std::string pathString = osgwTools::nodePathToString( path );
     newSet.SetPropertyValue( "NodePath", pathString );
     //newSet.SetPropertyValue( "Visibile", newPart->GetVisibility() );
-
     newSet.Save();
+
     return uuid;
 }
 ////////////////////////////////////////////////////////////////////////////////
