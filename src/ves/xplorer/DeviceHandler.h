@@ -58,6 +58,10 @@
 
 #include <gmtl/Point.h>
 
+#include <gadget/Type/PositionInterface.h>
+#include <gadget/Event/AnalogEventInterface.h>
+#include <gadget/Event/DigitalEventInterface.h>
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Quat>
@@ -76,6 +80,7 @@ namespace device
 class Device;
 class Wand;
 class KeyboardMouse;
+class GameController;
 }
 
 namespace event
@@ -175,6 +180,9 @@ public:
 protected:
 
 private:
+    ///Configure the game controller interfaces
+    void ConfigureGameControllerDevices();
+
     ///Triggers a center point jump after this distance has been breached
     double mCenterPointThreshold;
 
@@ -224,6 +232,118 @@ private:
     ves::xplorer::behavior::SelectionPtr m_selectionSlot;
 
     switchwire::ScopedConnectionList m_connections;
+    
+    ///The enum to set the control state
+    enum UserControlState
+    {
+        OpenControlState = (1u << 0),
+        ClosedControlState = (1u << 1)
+    };
+    
+    ///Determine whether a game controller can take over nav controlls
+    UserControlState m_controlledState;
+    
+    enum GameControllerMask
+    {
+        GameController0 = 0,
+        GameController1 = 1,
+        GameController2 = 2,
+        GameController3 = 3
+    };
+
+    GameControllerMask m_activeController;
+
+    ///Try to grab controll
+    void GrabControlState( GameControllerMask controllerMask );
+
+    ///Check to see if we should open up the control state
+    void CheckControlState();
+
+    ///A vector holding the base names for gadgeteer analog and digital interfaces
+    std::vector< std::string > m_gameControllerBaseNames;
+    
+    typedef gadget::AnalogEventInterface < gadget::event::all_events_tag,
+        gadget::event::synchronized_tag > AnalogAxisInterface;
+    
+    typedef gadget::DigitalEventInterface < gadget::event::all_events_tag,
+        gadget::event::synchronized_tag > GamePadClickInterface;
+    struct GameControllerProxy
+    {
+        ///Track the position of the game controller so that we can tell what the
+        ///current orientation of the controller is for updating the
+        ///up and forward vectors of the controller.
+        gadget::PositionInterface m_gamecontroller;
+        
+        typedef gadget::AnalogEventInterface < gadget::event::all_events_tag,
+            gadget::event::synchronized_tag > AnalogAxisInterface;
+        AnalogAxisInterface m_analogAxis0EventInterface;
+        AnalogAxisInterface m_analogAxis1EventInterface;
+        AnalogAxisInterface m_analogAxis2EventInterface;
+        AnalogAxisInterface m_analogAxis3EventInterface;
+        
+        typedef gadget::DigitalEventInterface < gadget::event::all_events_tag,
+            gadget::event::synchronized_tag > GamePadClickInterface;
+        GamePadClickInterface m_button0EventInterface;
+        GamePadClickInterface m_button1EventInterface;
+        GamePadClickInterface m_button2EventInterface;
+        GamePadClickInterface m_button3EventInterface;
+        GamePadClickInterface m_button4EventInterface;
+        GamePadClickInterface m_button5EventInterface;
+        GamePadClickInterface m_button6EventInterface;
+        GamePadClickInterface m_button7EventInterface;
+        GamePadClickInterface m_button8EventInterface;
+        GamePadClickInterface m_button9EventInterface;
+        GamePadClickInterface m_button10EventInterface;
+        GamePadClickInterface m_button11EventInterface;
+        GamePadClickInterface m_button12EventInterface;
+        GamePadClickInterface m_button13EventInterface;
+        GamePadClickInterface m_button14EventInterface;
+        
+        ///The id of this controller which maps to the m_gameControllerBaseNames
+        //list of names.
+        GameControllerMask m_controllerMask;
+
+        ///Call init on all of the event interfaces listed above
+        ///\param deviceName The VR Juggler name given for the PositionInterface
+        void InitInterfaces( const std::string deviceName );
+        ///Connect the event interfaces to the GameController class callbacks
+        ///\param controller The GameController pointer
+        void ConnectInterfaces( device::GameController* const controller );
+        ///Dicsonnect the event interfaces from the GameController class
+        void DisconnectInterfaces();
+
+        /// All GameController events get delivered here
+        void OnAxis0Event( const float event );
+        /// All GameController events get delivered here
+        void OnAxis1Event( const float event );
+        /// All GameController events get delivered here
+        void OnAxis2Event( const float event );
+        /// All GameController events get delivered here
+        void OnAxis3Event( const float event );
+        /// All GameController events get delivered here
+        void OnAxis4Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnAxis5Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnButton0Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnButton2Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnButton4Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnButton5Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnButton6Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnButton7Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnButton10Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnButton11Event( gadget::DigitalState::State event );
+    };
+    
+    ///A map holding gadgeteer device interfaces for game controllers
+    std::map< std::string, GameControllerProxy* > m_gamControllerEvents;
 };
 } //end xplorer
 } //end ves

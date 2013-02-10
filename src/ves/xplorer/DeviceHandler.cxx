@@ -97,7 +97,10 @@ DeviceHandler::DeviceHandler()
     m_constraintSlot( new ves::xplorer::behavior::ConstraintSelection() ),
     m_manipulatorSlot( new ves::xplorer::behavior::ManipulatorEvents() ),
     m_navSlot( new ves::xplorer::behavior::Navigation() ),
-    m_selectionSlot( new ves::xplorer::behavior::Selection() )
+    m_selectionSlot( new ves::xplorer::behavior::Selection() ),
+
+    m_controlledState( OpenControlState ),
+    m_activeController( GameController0 )
 {
     //Initialize the group that holds all of the devices
     m_deviceGroup = new osg::Group();
@@ -124,6 +127,11 @@ DeviceHandler::DeviceHandler()
                            void( /*unsigned int const&, */ bool const & enable ),
                            &ves::xplorer::event::device::EnableDevice,
                            m_connections, any_SignalType, normal_Priority );
+    
+    m_gameControllerBaseNames.push_back( "VESJoystick0" );
+    m_gameControllerBaseNames.push_back( "VESJoystick1" );
+    m_gameControllerBaseNames.push_back( "VESJoystick2" );
+    m_gameControllerBaseNames.push_back( "VESJoystick3" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()
@@ -394,5 +402,234 @@ void DeviceHandler::UnselectObjects()
 osg::Group* DeviceHandler::GetDeviceGroup()
 {
     return m_deviceGroup.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::ConfigureGameControllerDevices()
+{
+    std::string deviceName;
+    for( size_t i = 0; i < m_gameControllerBaseNames.size(); ++i )
+    {
+        deviceName = m_gameControllerBaseNames[ i ] + "_";
+        m_gamControllerEvents[ m_gameControllerBaseNames[ i ] ] = new GameControllerProxy;
+        m_gamControllerEvents[ m_gameControllerBaseNames[ i ] ]->InitInterfaces( deviceName );
+        m_gamControllerEvents[ m_gameControllerBaseNames[ i ] ]->m_controllerMask = GameControllerMask( i );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GrabControlState( GameControllerMask controllerMask )
+{
+    if( m_controlledState & ClosedControlState )
+    {
+        if( controllerMask == m_activeController )
+        {
+            //Reset the timer
+        }
+        return;
+    }
+
+    if( m_controlledState & OpenControlState )
+    {
+        m_gamControllerEvents[ m_gameControllerBaseNames[ controllerMask ]  ]->
+            ConnectInterfaces( static_cast< device::GameController* >( m_deviceMap[ device::Device::GAME_CONTROLLER ] ) );
+        m_activeController = controllerMask;
+        m_controlledState = ClosedControlState;
+        //Reset the timer
+        return;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::CheckControlState()
+{
+    if( m_controlledState & OpenControlState )
+    {
+        return;
+    }
+
+    ///If timer is greater than time out
+    if( 1 )
+    {
+        m_controlledState = OpenControlState;
+        m_gamControllerEvents[ m_gameControllerBaseNames[ m_activeController ]  ]->DisconnectInterfaces();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::InitInterfaces( const std::string deviceName )
+{
+    //Left stick - X
+    m_analogAxis0EventInterface.init( deviceName + "VJAxis0" );
+    
+    //Left stick - Y
+    m_analogAxis1EventInterface.init( deviceName + "VJAxis1" );
+    
+    //Right stick - X
+    m_analogAxis2EventInterface.init( deviceName + "VJAxis2" );
+    
+    //Right stick - Y
+    m_analogAxis3EventInterface.init( deviceName + "VJAxis3" );
+    
+    //All the buttons
+    m_button0EventInterface.init( deviceName + "Digital0" );
+    
+    m_button1EventInterface.init( deviceName + "Digital1" );
+    
+    m_button2EventInterface.init( deviceName + "Digital2" );
+    
+    m_button3EventInterface.init( deviceName + "Digital3" );
+    
+    m_button4EventInterface.init( deviceName + "Digital4" );
+    
+    m_button5EventInterface.init( deviceName + "Digital5" );
+    
+    m_button6EventInterface.init( deviceName + "Digital6" );
+    
+    m_button7EventInterface.init( deviceName + "Digital7" );
+    
+    m_button10EventInterface.init( deviceName + "Digital10" );
+    
+    m_button11EventInterface.init( deviceName + "Digital11" );
+
+    //Left stick - X
+    m_analogAxis0EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &DeviceHandler::GameControllerProxy::OnAxis0Event, this, _1 ) );
+    
+    //Left stick - Y
+    m_analogAxis1EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &DeviceHandler::GameControllerProxy::OnAxis1Event, this, _1 ) );
+    
+    //Right stick - X
+    m_analogAxis2EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &DeviceHandler::GameControllerProxy::OnAxis2Event, this, _1 ) );
+    
+    //Right stick - Y
+    m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &DeviceHandler::GameControllerProxy::OnAxis3Event, this, _1 ) );
+    
+    //All the buttons
+    m_button0EventInterface.addCallback( boost::bind( &DeviceHandler::GameControllerProxy::OnButton0Event, this, _1 ) );
+    
+    m_button1EventInterface.addCallback( boost::bind( &DeviceHandler::GameControllerProxy::OnAxis5Event, this, _1 ) );
+    
+    m_button2EventInterface.addCallback( boost::bind( &DeviceHandler::GameControllerProxy::OnButton2Event, this, _1 ) );
+    
+    m_button3EventInterface.addCallback( boost::bind( &DeviceHandler::GameControllerProxy::OnAxis4Event, this, _1 ) );
+    
+    m_button4EventInterface.addCallback( boost::bind( &DeviceHandler::GameControllerProxy::OnButton4Event, this, _1 ) );
+    
+    m_button5EventInterface.addCallback( boost::bind( &DeviceHandler::GameControllerProxy::OnButton5Event, this, _1 ) );
+    
+    m_button6EventInterface.addCallback( boost::bind( &DeviceHandler::GameControllerProxy::OnButton6Event, this, _1 ) );
+    
+    m_button7EventInterface.addCallback( boost::bind( &DeviceHandler::GameControllerProxy::OnButton7Event, this, _1 ) );
+    
+    m_button10EventInterface.addCallback( boost::bind( &DeviceHandler::GameControllerProxy::OnButton10Event, this, _1 ) );
+    
+    m_button11EventInterface.addCallback( boost::bind( &DeviceHandler::GameControllerProxy::OnButton11Event, this, _1 ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::ConnectInterfaces( device::GameController* const controller )
+{
+    //Left stick - X
+    m_analogAxis0EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &device::GameController::OnAxis0Event, controller, _1 ) );
+    
+    //Left stick - Y
+    m_analogAxis1EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &device::GameController::OnAxis1Event, controller, _1 ) );
+    
+    //Right stick - X
+    m_analogAxis2EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &device::GameController::OnAxis2Event, controller, _1 ) );
+    
+    //Right stick - Y
+    m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &device::GameController::OnAxis3Event, controller, _1 ) );
+    
+    //All the buttons
+    m_button0EventInterface.addCallback( boost::bind( &device::GameController::OnButton0Event, controller, _1 ) );
+    
+    m_button1EventInterface.addCallback( boost::bind( &device::GameController::OnAxis5Event, controller, _1 ) );
+    
+    m_button2EventInterface.addCallback( boost::bind( &device::GameController::OnButton2Event, controller, _1 ) );
+    
+    m_button3EventInterface.addCallback( boost::bind( &device::GameController::OnAxis4Event, controller, _1 ) );
+    
+    m_button4EventInterface.addCallback( boost::bind( &device::GameController::OnButton4Event, controller, _1 ) );
+    
+    m_button5EventInterface.addCallback( boost::bind( &device::GameController::OnButton5Event, controller, _1 ) );
+    
+    m_button6EventInterface.addCallback( boost::bind( &device::GameController::OnButton6Event, controller, _1 ) );
+    
+    m_button7EventInterface.addCallback( boost::bind( &device::GameController::OnButton7Event, controller, _1 ) );
+    
+    m_button10EventInterface.addCallback( boost::bind( &device::GameController::OnButton10Event, controller, _1 ) );
+    
+    m_button11EventInterface.addCallback( boost::bind( &device::GameController::OnButton11Event, controller, _1 ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::DisconnectInterfaces()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnAxis0Event( const float )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnAxis1Event( const float )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnAxis2Event( const float )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnAxis3Event( const float )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnAxis4Event( gadget::DigitalState::State )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnAxis5Event( gadget::DigitalState::State )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnButton0Event( gadget::DigitalState::State )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnButton2Event( gadget::DigitalState::State )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnButton4Event( gadget::DigitalState::State )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnButton5Event( gadget::DigitalState::State )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnButton6Event( gadget::DigitalState::State )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnButton7Event( gadget::DigitalState::State )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnButton10Event( gadget::DigitalState::State )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GameControllerProxy::OnButton11Event( gadget::DigitalState::State )
+{
+    DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
