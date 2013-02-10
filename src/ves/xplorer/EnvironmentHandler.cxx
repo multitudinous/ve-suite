@@ -513,6 +513,8 @@ void EnvironmentHandler::LatePreFrameUpdate()
     // Update Navigation variables
     vprDEBUG( vesDBG, 3 ) << "|\tEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 
+    ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
+    
     const ves::open::xml::CommandPtr tempCommand = CommandManager::instance()->GetXMLCommand();
     if( tempCommand )
     {

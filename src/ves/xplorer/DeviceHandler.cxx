@@ -132,6 +132,8 @@ DeviceHandler::DeviceHandler()
     m_gameControllerBaseNames.push_back( "VESJoystick1" );
     m_gameControllerBaseNames.push_back( "VESJoystick2" );
     m_gameControllerBaseNames.push_back( "VESJoystick3" );
+    
+    //ConfigureGameControllerDevices();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()
@@ -272,8 +274,10 @@ scenegraph::DCS* DeviceHandler::GetSelectedDCS() const
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
 {
+    CheckControlState();
+    
     //Update device properties
-    ExecuteCommands();
+    /*ExecuteCommands();
 
     //Process device events
     for( DeviceMap::const_iterator itr = m_deviceMap.begin();
@@ -287,7 +291,7 @@ void DeviceHandler::ProcessDeviceEvents()
         }
     }
 
-    m_deviceBeingProcessed = NULL;
+    m_deviceBeingProcessed = NULL;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ResetCenterPoint()
@@ -423,6 +427,7 @@ void DeviceHandler::GrabControlState( GameControllerMask controllerMask )
         if( controllerMask == m_activeController )
         {
             //Reset the timer
+            m_lastActiveTime = boost::posix_time::microsec_clock::local_time();
         }
         return;
     }
@@ -434,6 +439,7 @@ void DeviceHandler::GrabControlState( GameControllerMask controllerMask )
         m_activeController = controllerMask;
         m_controlledState = ClosedControlState;
         //Reset the timer
+        m_lastActiveTime = boost::posix_time::microsec_clock::local_time();
         return;
     }
 }
@@ -446,10 +452,14 @@ void DeviceHandler::CheckControlState()
     }
 
     ///If timer is greater than time out
-    if( 1 )
+    boost::posix_time::ptime current_time( boost::posix_time::microsec_clock::local_time() );
+    boost::posix_time::time_duration diff = current_time - m_lastActiveTime;
+    double frameTime = diff.total_milliseconds() * 0.001;
+    if( frameTime > 3.0 )
     {
         m_controlledState = OpenControlState;
-        m_gamControllerEvents[ m_gameControllerBaseNames[ m_activeController ]  ]->DisconnectInterfaces();
+        m_gamControllerEvents[ m_gameControllerBaseNames[ m_activeController ]  ]->
+            DisconnectInterfaces( static_cast< device::GameController* >( m_deviceMap[ device::Device::GAME_CONTROLLER ] ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -558,9 +568,40 @@ void DeviceHandler::GameControllerProxy::ConnectInterfaces( device::GameControll
     m_button11EventInterface.addCallback( boost::bind( &device::GameController::OnButton11Event, controller, _1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GameControllerProxy::DisconnectInterfaces()
+void DeviceHandler::GameControllerProxy::DisconnectInterfaces( device::GameController* const controller )
 {
-    ;
+    //Left stick - X
+    m_analogAxis0EventInterface.removeCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &device::GameController::OnAxis0Event, controller, _1 ) );
+    
+    //Left stick - Y
+    m_analogAxis1EventInterface.removeCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &device::GameController::OnAxis1Event, controller, _1 ) );
+    
+    //Right stick - X
+    m_analogAxis2EventInterface.removeCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &device::GameController::OnAxis2Event, controller, _1 ) );
+    
+    //Right stick - Y
+    m_analogAxis3EventInterface.removeCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &device::GameController::OnAxis3Event, controller, _1 ) );
+    
+    //All the buttons
+    m_button0EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &device::GameController::OnButton0Event, controller, _1 ) );
+    
+    m_button1EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &device::GameController::OnAxis5Event, controller, _1 ) );
+    
+    m_button2EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &device::GameController::OnButton2Event, controller, _1 ) );
+    
+    m_button3EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &device::GameController::OnAxis4Event, controller, _1 ) );
+    
+    m_button4EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &device::GameController::OnButton4Event, controller, _1 ) );
+    
+    m_button5EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &device::GameController::OnButton5Event, controller, _1 ) );
+    
+    m_button6EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &device::GameController::OnButton6Event, controller, _1 ) );
+    
+    m_button7EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &device::GameController::OnButton7Event, controller, _1 ) );
+    
+    m_button10EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &device::GameController::OnButton10Event, controller, _1 ) );
+    
+    m_button11EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &device::GameController::OnButton11Event, controller, _1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::GameControllerProxy::OnAxis0Event( const float )
@@ -583,53 +624,93 @@ void DeviceHandler::GameControllerProxy::OnAxis3Event( const float )
     DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GameControllerProxy::OnAxis4Event( gadget::DigitalState::State )
+void DeviceHandler::GameControllerProxy::OnAxis4Event( gadget::DigitalState::State event )
 {
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
     DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GameControllerProxy::OnAxis5Event( gadget::DigitalState::State )
+void DeviceHandler::GameControllerProxy::OnAxis5Event( gadget::DigitalState::State event )
 {
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
     DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GameControllerProxy::OnButton0Event( gadget::DigitalState::State )
+void DeviceHandler::GameControllerProxy::OnButton0Event( gadget::DigitalState::State event )
 {
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
     DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GameControllerProxy::OnButton2Event( gadget::DigitalState::State )
+void DeviceHandler::GameControllerProxy::OnButton2Event( gadget::DigitalState::State event )
 {
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
     DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GameControllerProxy::OnButton4Event( gadget::DigitalState::State )
+void DeviceHandler::GameControllerProxy::OnButton4Event( gadget::DigitalState::State event )
 {
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
     DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GameControllerProxy::OnButton5Event( gadget::DigitalState::State )
+void DeviceHandler::GameControllerProxy::OnButton5Event( gadget::DigitalState::State event )
 {
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
     DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GameControllerProxy::OnButton6Event( gadget::DigitalState::State )
+void DeviceHandler::GameControllerProxy::OnButton6Event( gadget::DigitalState::State event )
 {
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
     DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GameControllerProxy::OnButton7Event( gadget::DigitalState::State )
+void DeviceHandler::GameControllerProxy::OnButton7Event( gadget::DigitalState::State event )
 {
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
     DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GameControllerProxy::OnButton10Event( gadget::DigitalState::State )
+void DeviceHandler::GameControllerProxy::OnButton10Event( gadget::DigitalState::State event )
 {
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
     DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GameControllerProxy::OnButton11Event( gadget::DigitalState::State )
+void DeviceHandler::GameControllerProxy::OnButton11Event( gadget::DigitalState::State event )
 {
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
     DeviceHandler::instance()->GrabControlState( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////

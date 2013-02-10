@@ -70,6 +70,11 @@
 #include <string>
 #include <map>
 
+#include <ves/util/GNUCompilerGuards.h>
+DIAG_OFF(unused-parameter)
+#include <boost/date_time/posix_time/posix_time.hpp>
+DIAG_ON(unused-parameter)
+
 namespace ves
 {
 namespace xplorer
@@ -310,7 +315,7 @@ private:
         ///\param controller The GameController pointer
         void ConnectInterfaces( device::GameController* const controller );
         ///Dicsonnect the event interfaces from the GameController class
-        void DisconnectInterfaces();
+        void DisconnectInterfaces( device::GameController* const controller );
 
         /// All GameController events get delivered here
         void OnAxis0Event( const float event );
@@ -344,6 +349,9 @@ private:
     
     ///A map holding gadgeteer device interfaces for game controllers
     std::map< std::string, GameControllerProxy* > m_gamControllerEvents;
+
+    ///The start of the controller ownership
+    boost::posix_time::ptime m_lastActiveTime;
 };
 } //end xplorer
 } //end ves
