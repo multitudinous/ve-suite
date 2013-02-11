@@ -144,7 +144,20 @@ GameController::GameController()
     //MoveModeLiteral - moves in opengl / eye space
     //MoveModeWorld - moves in rotate object space
     //MoveModeLocal - moves in global coordinates
-    m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeLocal );
+    //MoveModeOriented - moves in the global coordinate system defined by the orientation of the game controller
+    
+    //MoveModeLiteral - Move in literal coordinates
+    //MoveModeLocal - Move in eye local coordinates
+    //MoveModeConstrained - Move in the ground plane (defined by the initial up vector)
+    //MoveModeOriented - Move in the oriented coordinate system
+    //MoveModeWorld - Move in world coordinates
+    //MoveModeOrbit - Move along a vector between the eye and the orbit center, slowing when near the center and speeding up when further away
+
+    //m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeLocal );
+    //In MoveModeOriented when in desktop mode when the position data from VESJoystick
+    //is not defined the nav is just like MoveModeLocal. In a tracked environment when
+    //VESJoystick is defined the nav will be affected by the orientation of the controller.
+    m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeOriented );
 
     // Connect to Juggler's new event handling interface
     //Left stick - X
@@ -693,7 +706,7 @@ void GameController::OnButton10Event( gadget::DigitalState::State event )
     {
         if( m_mxGamePadStyle->getMoveMode() == osgwMx::FunctionalMap::MoveModeOrbit )
         {
-            m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeLocal );
+            m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeOriented );
             m_mxGamePadStyle->setStickRate( 5.0 );
         }
         ///Orbit mode
@@ -802,12 +815,15 @@ void GameController::UpdateForwardAndUp()
     gmtl::xform( vjVec, vrjWandMat, vjVec );
     gmtl::normalize( vjVec );
     osg::Vec3d upVec( vjVec.mData[ 0 ], vjVec.mData[ 1 ], vjVec.mData[ 2 ] );
-    m_viewMatrix.setUp( upVec );
-
+    //m_viewMatrix.setUp( upVec );
+    
     vjVec.set( 0.0f, 1.0f, 0.0f );
     gmtl::xform( vjVec, vrjWandMat, vjVec );
     gmtl::normalize( vjVec );
     osg::Vec3d dirVec( vjVec.mData[ 0 ], vjVec.mData[ 1 ], vjVec.mData[ 2 ] );
-    m_viewMatrix.setDir( dirVec );
+    //m_viewMatrix.setDir( dirVec );
+    
+    //This matters in 
+    m_viewMatrix.setOriented( upVec, dirVec );
 }
 ////////////////////////////////////////////////////////////////////////////////
