@@ -492,7 +492,7 @@ void HyperLabICEGP::ConfigurePressureTransducers()
             std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
             osg::ref_ptr< osg::Geode > tempGroup = childVisitor.GetFoundNode()->asGroup()->getChild( 0 )->asGeode();
             
-            osg::ref_ptr<osgText::Font> font = osgText::readFontFile( "fonts/arial.ttf" );
+            osg::ref_ptr<osgText::Font> font = osgText::readFontFile( "fonts/digital-7.ttf" );
             osg::ref_ptr<osgText::Text> text = new osgText::Text;
             text->setDataVariance( osg::Object::DYNAMIC );
             text->setFont( font.get() );
