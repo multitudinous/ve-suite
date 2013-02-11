@@ -141,6 +141,7 @@ GameController::GameController()
     m_mxGamePadStyle->setStickRate( 5.0 );
     m_mxGamePadStyle->setStickDeadZone( 0.05f );
     m_mxGamePadStyle->setMxCore( &m_viewMatrix );
+
     //MoveModeLiteral - moves in opengl / eye space
     //MoveModeWorld - moves in rotate object space
     //MoveModeLocal - moves in global coordinates
@@ -153,11 +154,11 @@ GameController::GameController()
     //MoveModeWorld - Move in world coordinates
     //MoveModeOrbit - Move along a vector between the eye and the orbit center, slowing when near the center and speeding up when further away
 
-    //m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeLocal );
+    m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeLocal );
     //In MoveModeOriented when in desktop mode when the position data from VESJoystick
     //is not defined the nav is just like MoveModeLocal. In a tracked environment when
     //VESJoystick is defined the nav will be affected by the orientation of the controller.
-    m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeOriented );
+    //m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeOriented );
 
     // Connect to Juggler's new event handling interface
     //Left stick - X
