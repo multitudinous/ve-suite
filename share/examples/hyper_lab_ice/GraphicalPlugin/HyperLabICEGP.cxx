@@ -239,14 +239,14 @@ void HyperLabICEGP::ProcessOPCData()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
 {
+#ifdef TEST_GAUGES
+    ProcessOPCData();
+#else
     if( !OneSecondCheck( m_lastSend, 250000 ) )
     {
         return;
     }
 
-#ifndef TEST_GAUGES
-    ProcessOPCData();
-#else
     //Update the pressure indicators
     {
         static double counter = 90;
@@ -693,11 +693,9 @@ void HyperLabICEGP::SetupOPCClient()
             boost::property_tree::json_parser::read_json( sstm, tree );
             SetOPCData( tree );
             //const std::string message_type = tree.get<std::string>( "message_type" );
-
-            
-            //std::cout << message_type << std::endl;
+            //std::cout << str << std::endl;
         }
-        else
+        //else
         {
             boost::this_thread::sleep_for( boost::chrono::milliseconds(2) );
         }

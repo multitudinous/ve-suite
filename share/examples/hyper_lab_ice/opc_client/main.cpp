@@ -34,6 +34,8 @@ namespace po = boost::program_options;
 namespace pt = boost::property_tree;
 namespace fs = boost::filesystem;
 
+std::map< std::string, std::string > variableMap;
+    
 std::string to_json()
 {
     std::map< std::string, double > testMap;
@@ -67,7 +69,7 @@ std::string to_json( std::vector< std::pair< std::string, std::string > >& valVe
     pt::ptree maptree;
     for( std::vector< std::pair< std::string, std::string > >::const_iterator iter = valVector.begin(); iter != valVector.end(); ++iter )
     {
-        maptree.put( iter->first, iter->second );
+        maptree.put( variableMap[ iter->first ], iter->second );
     }
     
     boost::property_tree::json_parser::write_json( stm, maptree, true );
@@ -155,7 +157,7 @@ int main( int argc, char** argv )
         }
     }
 
-    std::map< std::string, std::string > variableMap;
+
     if( vm.count( "configFile" ) )
     {
         fs::path file_name( vm[ "configFile" ].as< std::string >() );
@@ -209,13 +211,29 @@ int main( int argc, char** argv )
             //If our message is formatted correctly, send
             if( valid_msg )
             {
-                std::string str = to_json();
-                std::cout << str << std::endl;
-                zmq::message_t zmq_msg;
-                zmq_msg.rebuild( str.size() );
-                //zmq_msg.rebuild( str.size() );
-                memcpy( zmq_msg.data(), str.data(), str.size() );
-                assert( controller.send( zmq_msg ) );
+                //std::string str = to_json();
+                //std::cout << str << std::endl;
+                if( !opcInterface->IsOPCVarsEmpty() )
+                {
+                    //int counter = 0;
+                    std::vector< std::pair< std::string, std::string > > valVector;
+                    //while( counter < 100 )
+                    {
+                        valVector = opcInterface->ReadVars();
+                        /*for( std::vector< std::pair< std::string, std::string > >::const_iterator iter = valVector.begin(); iter != valVector.end(); ++iter)
+                        {
+                            std::cout << variableMap[ iter->first ] << " " << iter->first << " " << iter->second<< std::endl;
+                        }*/
+                        std::string jsonData = to_json( valVector );
+                        //std::cout << std::endl << jsonData << std::endl << std::endl;
+                        //counter += 1;
+                        zmq::message_t zmq_msg;
+                        zmq_msg.rebuild( jsonData.size() );
+                        //zmq_msg.rebuild( str.size() );
+                        memcpy( zmq_msg.data(), jsonData.data(), jsonData.size() );
+                        assert( controller.send( zmq_msg ) );
+                    }
+                }
             }
         }
     }
