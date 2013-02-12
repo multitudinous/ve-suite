@@ -4,19 +4,19 @@ VES_INSTALL_PREFIX=""
 
 function usage()
 {
-    echo "usage: $0 -p <prefix> [ -r ]"
+    echo "usage: $0 -p <prefix> [ -h ]"
 }
 
-place_env_file_at_install_root=0
+place_env_file_at_install_root=1
 
-while getopts "p:r" SCRIPT_ARGS
+while getopts "p:h" SCRIPT_ARGS
 do
     case ${SCRIPT_ARGS} in
     p)
         VES_INSTALL_PREFIX=${OPTARG}
         ;;
-    r)
-        place_env_file_at_install_root=1
+    h)
+        place_env_file_at_install_root=0
         ;;
     ?)
         usage

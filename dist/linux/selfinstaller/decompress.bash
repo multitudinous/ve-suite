@@ -3,27 +3,27 @@
 function usage()
 {
 echo "
-  Usage: $0 -p <prefix> [ -r ]
+  Usage: $0 -p <prefix> [ -h ]
 
   OPTIONS:
    -p <prefix> : the full path to the VE-Suite install directory (REQUIRED)
-   -r          : if this flag is specified, place the environment file
-                 at the root of the VE-Suite install instead of your
-                 home directory (OPTIONAL)
+   -h          : if this flag is specified, place the environment file
+                 in your home directory instead of at the root of the
+                 VE-Suite install (OPTIONAL)
 "
 }
 
 INSTALL_PREFIX=""
-place_env_file_at_install_root=0
+place_env_file_at_install_root=1
 
-while getopts "p:r" SCRIPT_ARGS
+while getopts "p:h" SCRIPT_ARGS
 do
     case ${SCRIPT_ARGS} in
     p)
         INSTALL_PREFIX=${OPTARG}
         ;;
-    r)
-        place_env_file_at_install_root=1
+    h)
+        place_env_file_at_install_root=0
         ;;
     ?)
         usage
@@ -62,9 +62,9 @@ CURRENT_WORKING_DIR=$(pwd)
 cd ${DECOMPRESS_DIR}
 if [ ${place_env_file_at_install_root} = 1 ]
 then
-    ./install.bash -p ${INSTALL_PREFIX} -r
-else
     ./install.bash -p ${INSTALL_PREFIX}
+else
+    ./install.bash -p ${INSTALL_PREFIX} -h
 fi
 
 cd ${CURRENT_WORKING_DIR}
