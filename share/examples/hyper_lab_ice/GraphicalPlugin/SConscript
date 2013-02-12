@@ -43,6 +43,8 @@ if osgal_options.isAvailable():
 switchwire_options.apply( lib_env )
 kibitz_options.apply( lib_env )
 
+lib_env.Append( LIBS = [ 'boost_thread' ])
+
 if GetPlatform() == 'win32':
    lib_env['no_import_lib'] = 1
    lib_env['WINDOWS_INSERT_MANIFEST'] = False

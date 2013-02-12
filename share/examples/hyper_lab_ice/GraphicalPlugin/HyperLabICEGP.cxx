@@ -98,6 +98,7 @@ DIAG_ON( unused-parameter )
 #endif
 
 #include <boost/foreach.hpp>
+#include <boost/thread/thread.hpp>
 
 namespace pt = boost::property_tree;
 
@@ -696,7 +697,10 @@ void HyperLabICEGP::SetupOPCClient()
             
             //std::cout << message_type << std::endl;
         }
-        
+        else
+        {
+            boost::this_thread::sleep_for( boost::chrono::milliseconds(2) );
+        }
         //Any waiting controller command acts as 'KILL'
         //if( items[ 0 ].revents & ZMQ_POLLIN ) break;
     }
