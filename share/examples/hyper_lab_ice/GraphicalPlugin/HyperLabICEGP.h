@@ -61,6 +61,22 @@
 #include <osgText/Font>
 #include <osgText/Text>
 
+#include <boost/config.hpp>
+#ifdef BOOST_WINDOWS
+# pragma warning(disable: 4275)
+#else
+#include <ves/util/GNUCompilerGuards.h>
+DIAG_OFF( unused-parameter )
+#endif
+
+#include <boost/property_tree/ptree.hpp>
+
+#ifdef BOOST_WINDOWS
+# pragma warning(default: 4275)
+#else
+DIAG_ON( unused-parameter )
+#endif
+
 namespace ves
 {
 namespace xplorer
@@ -120,6 +136,17 @@ private:
     
     ///Setup the Flow Indicator
     void ConfigureFlowIndicators();
+
+    ///Process the data from the opc client
+    void ProcessOPCData();
+    
+    ///Set the OPC property tree
+    void SetOPCData( boost::property_tree::ptree& temp );
+    ///Get the OPC property tree
+    void GetOPCData( boost::property_tree::ptree& temp );
+
+    ///The json structure for the opc data
+    boost::property_tree::ptree m_opcData;
 
     ///Column number for the promise date
     size_t m_promiseDateColumn;

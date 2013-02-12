@@ -89,7 +89,6 @@ DIAG_OFF( unused-parameter )
 #endif
 
 #include <boost/program_options.hpp>
-#include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
 #ifdef BOOST_WINDOWS
@@ -97,6 +96,8 @@ DIAG_OFF( unused-parameter )
 #else
 DIAG_ON( unused-parameter )
 #endif
+
+#include <boost/foreach.hpp>
 
 namespace pt = boost::property_tree;
 
@@ -217,6 +218,24 @@ int HyperLabICEGP::InitializeLabModels()
     return( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void HyperLabICEGP::ProcessOPCData()
+{
+    pt::ptree tree;
+    GetOPCData( tree );
+    
+    //for( GuageTextContainer::const_iterator iter = m_pressureTransducers.begin(); iter != m_pressureTransducers.end(); ++iter )
+    BOOST_FOREACH( const GuageTextContainer::value_type& gaugePair, m_pressureTransducers )
+    {
+        boost::optional<std::string> val = tree.get_optional< std::string >( gaugePair.first );
+        if( val )
+        {
+            std::ostringstream streamData;
+            streamData << std::fixed << std::setprecision( 3 ) << boost::lexical_cast< double >( *val );
+            gaugePair.second->setText( streamData.str() );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
 {
     if( !OneSecondCheck( m_lastSend, 250000 ) )
@@ -224,6 +243,9 @@ void HyperLabICEGP::PreFrameUpdate()
         return;
     }
 
+#ifndef TEST_GAUGES
+    ProcessOPCData();
+#else
     //Update the pressure indicators
     {
         static double counter = 90;
@@ -332,6 +354,7 @@ void HyperLabICEGP::PreFrameUpdate()
             updateValve = false;
         }
     }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::InitializeLiveSensorObjects()
@@ -616,6 +639,18 @@ void HyperLabICEGP::ConfigureFlowIndicators()
         }
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void HyperLabICEGP::SetOPCData( boost::property_tree::ptree& temp )
+{
+    vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+    m_opcData = temp;
+}
+////////////////////////////////////////////////////////////////////////////////
+void HyperLabICEGP::GetOPCData( boost::property_tree::ptree& temp )
+{
+    vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+    temp = m_opcData;
+}
 #ifdef OPC_CLIENT_CONNECT
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::SetupOPCClient()
@@ -638,8 +673,10 @@ void HyperLabICEGP::SetupOPCClient()
     //    { controller, 0, ZMQ_POLLIN, 0 } };
     zmq::pollitem_t items [] = {
         { controller, 0, ZMQ_POLLIN, 0 } };
+        //
+
+    pt::ptree tree;
     
-    //
     for( ; ; )
     {
         zmq::poll( &items [ 0 ], 1, -1 );
@@ -652,12 +689,12 @@ void HyperLabICEGP::SetupOPCClient()
             
             std::stringstream sstm;
             sstm << str;
-            pt::ptree tree;
             boost::property_tree::json_parser::read_json( sstm, tree );
-            const std::string message_type = tree.get<std::string>( "message_type" );
+            SetOPCData( tree );
+            //const std::string message_type = tree.get<std::string>( "message_type" );
 
             
-            std::cout << message_type << std::endl;
+            //std::cout << message_type << std::endl;
         }
         
         //Any waiting controller command acts as 'KILL'

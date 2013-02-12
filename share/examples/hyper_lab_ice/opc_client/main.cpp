@@ -61,6 +61,19 @@ std::string to_json()
     return stm.str();
 }
 
+std::string to_json( std::vector< std::pair< std::string, std::string > >& valVector )
+{
+    std::stringstream stm;
+    pt::ptree maptree;
+    for( std::vector< std::pair< std::string, std::string > >::const_iterator iter = valVector.begin(); iter != valVector.end(); ++iter )
+    {
+        maptree.put( iter->first, iter->second );
+    }
+    
+    boost::property_tree::json_parser::write_json( stm, maptree, true );
+    return stm.str();
+}
+
 int main( int argc, char** argv )
 {
     HRESULT hr = CoInitialize(NULL);//, COINIT_MULTITHREADED);
@@ -215,10 +228,12 @@ int main( int argc, char** argv )
             while( counter < 100 )
             {
                 valVector = opcInterface->ReadVars();
-                for( std::vector< std::pair< std::string, std::string > >::const_iterator iter = valVector.begin(); iter != valVector.end(); ++iter)
+                /*for( std::vector< std::pair< std::string, std::string > >::const_iterator iter = valVector.begin(); iter != valVector.end(); ++iter)
                 {
                     std::cout << variableMap[ iter->first ] << " " << iter->first << " " << iter->second<< std::endl;
-                }
+                }*/
+                std::string jsonData = to_json( valVector );
+                std::cout << std::endl << jsonData << std::endl << std::endl;
                 counter += 1;
             }
         }
