@@ -106,6 +106,11 @@ mkdir -p ${INSTALLER_EXTRA_PAYLOAD_DIR}
 
 CURRENT_WORKING_DIR=$(pwd)
 
+echo "Adding version information..."
+echo ${ves_major_version} >> "${INSTALLER_PAYLOAD_DIR}/ves_version"
+echo ${ves_minor_version} >> "${INSTALLER_PAYLOAD_DIR}/ves_version"
+echo ${ves_patch_version} >> "${INSTALLER_PAYLOAD_DIR}/ves_version"
+
 echo "Adding install script..."
 cp ${SCRIPT_DIR}/install.bash ${INSTALLER_PAYLOAD_DIR}
 
