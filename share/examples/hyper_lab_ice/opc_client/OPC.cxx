@@ -610,7 +610,7 @@ void OPC::AddGroup(IOPCServer* pIOPCServer, IOPCItemMgt* &pIOPCItemMgt,
 	OPCHANDLE hClientGroup = 0;
 
 	// Add an OPC group and get a pointer to the IUnknown I/F:
-    HRESULT hr = pIOPCServer->AddGroup( CA2W(name),FALSE, dwUpdateRate,
+    HRESULT hr = pIOPCServer->AddGroup( CA2W(name),TRUE, dwUpdateRate,
         hClientGroup, 0, 0, 0, &hServerGroup, &dwUpdateRate,
         //&GUID(__uuidof(IOPCItemMgt)),(IUnknown**) &pIOPCItemMgt);
         IID_IOPCItemMgt,(IUnknown**) &pIOPCItemMgt);
