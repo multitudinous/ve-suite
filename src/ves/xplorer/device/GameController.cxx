@@ -121,6 +121,16 @@ GameController::GameController()
     m_success( false ),
     m_uiMode( false )
 {
+    {
+        gadget::DigitalProxyPtr joystick = gadget::DigitalProxy::create( "Joystick0", 0 );
+        joystick->refresh();
+        if( !joystick->isStupefied() )
+        {
+            std::cout << "The game controller is a ";
+            std::string joystickType = joystick->getProxiedInputDevice()->getHardwareName();
+            std::cout << joystickType << std::endl;
+        }
+    }
     m_gamecontroller.init( "VESJoystick" );
 
     // Create a default functional map.
