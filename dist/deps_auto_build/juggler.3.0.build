@@ -11,6 +11,16 @@ SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
 INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
 
+if [ -d "${INSTALL_DIR}"/lib64 ]
+then
+    VES_INSTALL_PARAMS+=( lib64 )
+else
+    VES_INSTALL_PARAMS+=( lib )
+fi
+
+VES_INSTALL_PARAMS+=( bin )
+VES_INSTALL_PARAMS+=( share )
+
 case $PLATFORM in
   Windows)
     unset PROJ_STR
