@@ -222,7 +222,10 @@ int main( int argc, char** argv )
                         valVector = opcInterface->ReadVars();
                         /*for( std::vector< std::pair< std::string, std::string > >::const_iterator iter = valVector.begin(); iter != valVector.end(); ++iter)
                         {
+                            if( variableMap[ iter->first ] == "PT003" )
+                            {
                             std::cout << variableMap[ iter->first ] << " " << iter->first << " " << iter->second<< std::endl;
+                            }
                         }*/
                         std::string jsonData = to_json( valVector );
                         //std::cout << std::endl << jsonData << std::endl << std::endl;

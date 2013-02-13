@@ -233,6 +233,7 @@ void HyperLabICEGP::ProcessOPCData()
             std::ostringstream streamData;
             streamData << std::fixed << std::setprecision( 3 ) << boost::lexical_cast< double >( *val );
             gaugePair.second->setText( streamData.str() );
+            //std::cout << "data " << streamData.str() << std::endl;
         }
     }
 }
@@ -694,6 +695,14 @@ void HyperLabICEGP::SetupOPCClient()
             SetOPCData( tree );
             //const std::string message_type = tree.get<std::string>( "message_type" );
             //std::cout << str << std::endl;
+                    boost::optional<std::string> val = tree.get_optional< std::string >( "PT003" );
+        /*if( val )
+        {
+            std::ostringstream streamData;
+            streamData << std::fixed << std::setprecision( 3 ) << boost::lexical_cast< double >( *val );
+            //std::cout << "input " << streamData.str() << std::endl;
+        }*/
+
         }
         //else
         {
