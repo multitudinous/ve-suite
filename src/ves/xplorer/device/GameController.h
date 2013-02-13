@@ -146,6 +146,12 @@ private:
     GamePadClickInterface m_button13EventInterface;
     GamePadClickInterface m_button14EventInterface;
 
+    /*gadget::RumbleInterface _rumble;
+    gadget::HatInterface _hats[1];
+	gadget::RumbleEffectPtr _speed;
+	gadget::RumbleEffectPtr _objectHit[4];
+    gadget::HatState::State _oldHatState;*/
+
 public:
     /// All GameController events get delivered here
     void OnAxis0Event( const float event );

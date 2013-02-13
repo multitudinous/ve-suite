@@ -219,6 +219,64 @@ GameController::GameController()
     m_button11EventInterface.init( "Joystick0_d11" );
     m_button11EventInterface.addCallback( boost::bind( &GameController::OnButton11Event, this, _1 ) );
 
+    //Setup rumble
+    /*
+     void RumbleApp::initRumble()
+     {
+     _rumble.init("Rumble0");
+     
+     _speed = _rumble->createEffect(RumbleEffect::SINE);
+     if (_speed) {
+     _speed->load();
+     }
+     else
+     {
+     std::cout << "RumbleEffect::SINE not supported" << std::endl;
+     }
+     
+     _objectHit[0] = _rumble->createEffect(RumbleEffect::SQUARE);
+     if (_objectHit[0]) {
+     _objectHit[0]->setMagnitude(1);
+     _objectHit[0]->setLength(5000);
+     _objectHit[0]->load();
+     }
+     
+     _objectHit[1] = _rumble->createEffect(RumbleEffect::SINE);
+     if (_objectHit[1]) {
+     _objectHit[1]->setMagnitude(0.25);
+     _objectHit[1]->setLength(2000);
+     _objectHit[1]->load();
+     }
+     
+     _objectHit[2] = _rumble->createEffect(RumbleEffect::SINE);
+     if (_objectHit[2]) {
+     _objectHit[2]->setMagnitude(0.5);
+     _objectHit[2]->setLength(500);
+     _objectHit[2]->load();
+     }
+     
+     _objectHit[3] = _rumble->createEffect(RumbleEffect::SINE);
+     if (_objectHit[3]) {
+     _objectHit[3]->setMagnitude(0.75);
+     _objectHit[3]->setLength(2000);
+     _objectHit[3]->load();
+     }
+     }
+     if (_speed) {
+     _speed->setMagnitude(1.0-_axes[1]->getData());
+     _speed->update();
+     _speed->play(-1);
+     }
+     
+     for (int i = 0 ; i < 4 ; ++i)
+     {
+     if (_button[i]->getData() == gadget::Digital::TOGGLE_ON && _objectHit[i])
+     {
+     _objectHit[i]->play(1);
+     std::cout << "\tButton " << i << " pressed" << std::endl;
+     }
+     }
+     */
     CONNECTSIGNALS_1( "%NavigationRotationMode", void( std::string ),
                       &GameController::SetRotationMode,
                       m_connections, any_SignalType, normal_Priority );
