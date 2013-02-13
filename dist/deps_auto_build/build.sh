@@ -5,8 +5,8 @@ if [ -z "${VES_SRC_DIR}" ]; then
 fi
 
 VES_22_PACKAGES+=("osg")
-VES_22_PACKAGES+=("VTK")
-VES_22_PACKAGES+=("boost.1.44")
+VES_22_PACKAGES+=("vtk")
+VES_22_PACKAGES+=("boost.1.44.0")
 VES_22_PACKAGES+=("juggler.3.0")
 VES_22_PACKAGES+=("osgbullet")
 VES_22_PACKAGES+=("bullet")
