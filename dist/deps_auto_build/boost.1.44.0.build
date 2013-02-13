@@ -26,6 +26,8 @@ fi
 BJAM_PARAMS+=( --prefix="${INSTALL_DIR}" )
 BJAM_PARAMS+=( --build-dir="${BUILD_DIR}" )
 
+VES_INSTALL_PARAMS+=( lib )
+
 case $PLATFORM in
   Windows)
     SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.44.0/boost_1_44_0.zip
