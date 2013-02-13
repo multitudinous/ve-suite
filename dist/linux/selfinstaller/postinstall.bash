@@ -78,7 +78,7 @@ function generateEnvironmentFile()
         else
             var_value_string='/site-packages/wx-2.8-gtk2-unicode'
         fi
-        ves_prefix_string='$VES_PREFIX'
+        ves_prefix_string='$VES_PREFIX/'
 
         echo ${var_assign_string}${ves_prefix_string}${wxpython_base_dir}${var_value_string} >> ${env_file_path}
     fi
