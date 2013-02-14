@@ -127,6 +127,8 @@ private:
     AnalogAxisInterface m_analogAxis1EventInterface;
     AnalogAxisInterface m_analogAxis2EventInterface;
     AnalogAxisInterface m_analogAxis3EventInterface;
+    AnalogAxisInterface m_analogAxis4EventInterface;
+    AnalogAxisInterface m_analogAxis5EventInterface;
 
     typedef gadget::DigitalEventInterface < gadget::event::all_events_tag,
             gadget::event::synchronized_tag > GamePadClickInterface;
@@ -162,13 +164,18 @@ public:
     /// All GameController events get delivered here
     void OnAxis3Event( const float event );
     /// All GameController events get delivered here
-    void OnAxis4Event( gadget::DigitalState::State event );
+    void OnAxis4Event( const float event );
     /// All GameController events get delivered here
-    void OnAxis5Event( gadget::DigitalState::State event );
+    void OnAxis5Event( const float event );
+
     /// All GameController events get delivered here
     void OnButton0Event( gadget::DigitalState::State event );
     /// All GameController events get delivered here
+    void OnButton1Event( gadget::DigitalState::State event );
+    /// All GameController events get delivered here
     void OnButton2Event( gadget::DigitalState::State event );
+    /// All GameController events get delivered here
+    void OnButton3Event( gadget::DigitalState::State event );
     /// All GameController events get delivered here
     void OnButton4Event( gadget::DigitalState::State event );
     /// All GameController events get delivered here
@@ -177,6 +184,10 @@ public:
     void OnButton6Event( gadget::DigitalState::State event );
     /// All GameController events get delivered here
     void OnButton7Event( gadget::DigitalState::State event );
+    /// All GameController events get delivered here
+    void OnButton8Event( gadget::DigitalState::State event );
+    /// All GameController events get delivered here
+    void OnButton9Event( gadget::DigitalState::State event );
     /// All GameController events get delivered here
     void OnButton10Event( gadget::DigitalState::State event );
     /// All GameController events get delivered here

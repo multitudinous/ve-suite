@@ -82,6 +82,10 @@
 // --- vrJuggler Includes --- //
 #include <vrj/vrjParam.h>
 
+#include <jccl/RTRC/ConfigManager.h>
+
+#include <vpr/System.h>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/AxisAngle.h>
 #include <gmtl/Generate.h>
@@ -121,16 +125,41 @@ GameController::GameController()
     m_success( false ),
     m_uiMode( false )
 {
+    std::string joystickType;
     {
         gadget::DigitalProxyPtr joystick = gadget::DigitalProxy::create( "Joystick0", 0 );
         joystick->refresh();
         if( !joystick->isStupefied() )
         {
             std::cout << "The game controller is a ";
-            std::string joystickType = joystick->getProxiedInputDevice()->getHardwareName();
+            joystickType = joystick->getProxiedInputDevice()->getHardwareName();
             std::cout << joystickType << std::endl;
         }
     }
+    
+    if( !joystickType.empty() )
+    {
+        std::string xplorerBaseDir;
+        vpr::System::getenv( "XPLORER_BASE_DIR", xplorerBaseDir );
+        xplorerBaseDir += "/share/vesuite/vrj_configs/";
+        jccl::Configuration* configuration = new jccl::Configuration();
+        if( joystickType == "Wireless 360 Controller" )
+        {
+            configuration->load( xplorerBaseDir + "xbox_360.jconf" );
+        }
+        else if( joystickType == "Logitech Cordless RumblePad 2" )
+        {
+            configuration->load( xplorerBaseDir + "rumble_pad.jconf" );
+            std::cout << xplorerBaseDir << std::endl;
+        }
+        else
+        {
+            std::cout << "game controller not supported" << std::endl;
+        }
+        jccl::ConfigManager::instance()->addConfigurationAdditions( configuration );
+        delete configuration;
+    }
+
     m_gamecontroller.init( "VESJoystick" );
 
     // Create a default functional map.
@@ -188,18 +217,26 @@ GameController::GameController()
     m_analogAxis3EventInterface.init( "VJAxis3" );
     m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis3Event, this, _1 ) );
 
+    //Lower triggers
+    m_analogAxis4EventInterface.init( "VJAxis4" );
+    m_analogAxis4EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis4Event, this, _1 ) );
+    
+    //Lower triggers
+    m_analogAxis5EventInterface.init( "VJAxis5" );
+    m_analogAxis5EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis5Event, this, _1 ) );
+
     //All the buttons
     m_button0EventInterface.init( "Joystick0_d0" );
     m_button0EventInterface.addCallback( boost::bind( &GameController::OnButton0Event, this, _1 ) );
 
     m_button1EventInterface.init( "Joystick0_d1" );
-    m_button1EventInterface.addCallback( boost::bind( &GameController::OnAxis5Event, this, _1 ) );
+    m_button1EventInterface.addCallback( boost::bind( &GameController::OnButton1Event, this, _1 ) );
 
     m_button2EventInterface.init( "Joystick0_d2" );
     m_button2EventInterface.addCallback( boost::bind( &GameController::OnButton2Event, this, _1 ) );
 
     m_button3EventInterface.init( "Joystick0_d3" );
-    m_button3EventInterface.addCallback( boost::bind( &GameController::OnAxis4Event, this, _1 ) );
+    m_button3EventInterface.addCallback( boost::bind( &GameController::OnButton3Event, this, _1 ) );
 
     m_button4EventInterface.init( "Joystick0_d4" );
     m_button4EventInterface.addCallback( boost::bind( &GameController::OnButton4Event, this, _1 ) );
@@ -212,6 +249,12 @@ GameController::GameController()
 
     m_button7EventInterface.init( "Joystick0_d7" );
     m_button7EventInterface.addCallback( boost::bind( &GameController::OnButton7Event, this, _1 ) );
+
+    m_button8EventInterface.init( "Joystick0_d8" );
+    m_button8EventInterface.addCallback( boost::bind( &GameController::OnButton8Event, this, _1 ) );
+    
+    m_button9EventInterface.init( "Joystick0_d9" );
+    m_button9EventInterface.addCallback( boost::bind( &GameController::OnButton9Event, this, _1 ) );
 
     m_button10EventInterface.init( "Joystick0_d10" );
     m_button10EventInterface.addCallback( boost::bind( &GameController::OnButton10Event, this, _1 ) );
@@ -484,7 +527,129 @@ void GameController::OnAxis3Event( const float event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis4Event( gadget::DigitalState::State event )
+void GameController::OnAxis4Event( const float event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnAxis5Event( const float event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton0Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    switch( event )
+    {
+        case gadget::DigitalState::ON:
+        {
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_ON:
+        {
+            osg::Vec3d scale = m_viewMatrix.getMoveScale();
+            scale -= osg::Vec3d( 0.1, 0.1, 0.1 );
+            if( scale[ 0 ] < 0. )
+            {
+                scale = osg::Vec3d( 1., 1., 1. );
+            }
+            m_viewMatrix.setMoveScale( scale );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_OFF:
+        {
+            break;
+        }
+        default:
+            break;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton1Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    switch( event )
+    {
+        case gadget::DigitalState::ON:
+        {
+            UpdateForwardAndUp();
+            m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button12,
+                                         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_ON:
+        {
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_OFF:
+        {
+            break;
+        }
+        default:
+            break;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton2Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
+    switch( event )
+    {
+        case gadget::DigitalState::ON:
+        {
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_ON:
+        {
+            osg::Vec3d scale = m_viewMatrix.getMoveScale();
+            scale += osg::Vec3d( 0.1, 0.1, 0.1 );
+            m_viewMatrix.setMoveScale( scale );
+            break;
+        }
+        case gadget::DigitalState::TOGGLE_OFF:
+        {
+            break;
+        }
+        default:
+            break;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton3Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -507,112 +672,6 @@ void GameController::OnAxis4Event( gadget::DigitalState::State event )
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_OFF:
-    {
-        break;
-    }
-    default:
-        break;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis5Event( gadget::DigitalState::State event )
-{
-    if( m_exit )
-    {
-        return;
-    }
-
-    if( event == gadget::DigitalState::OFF )
-    {
-        return;
-    }
-
-    switch( event )
-    {
-    case gadget::DigitalState::ON:
-    {
-        UpdateForwardAndUp();
-        m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button12,
-                                      ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_ON:
-    {
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_OFF:
-    {
-        break;
-    }
-    default:
-        break;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton0Event( gadget::DigitalState::State event )
-{
-    if( m_exit )
-    {
-        return;
-    }
-
-    if( event == gadget::DigitalState::OFF )
-    {
-        return;
-    }
-
-    switch( event )
-    {
-    case gadget::DigitalState::ON:
-    {
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_ON:
-    {
-        osg::Vec3d scale = m_viewMatrix.getMoveScale();
-        scale -= osg::Vec3d( 0.1, 0.1, 0.1 );
-        if( scale[ 0 ] < 0. )
-        {
-            scale = osg::Vec3d( 1., 1., 1. );
-        }
-        m_viewMatrix.setMoveScale( scale );
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_OFF:
-    {
-        break;
-    }
-    default:
-        break;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton2Event( gadget::DigitalState::State event )
-{
-    if( m_exit )
-    {
-        return;
-    }
-
-    if( event == gadget::DigitalState::OFF )
-    {
-        return;
-    }
-
-    switch( event )
-    {
-    case gadget::DigitalState::ON:
-    {
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_ON:
-    {
-        osg::Vec3d scale = m_viewMatrix.getMoveScale();
-        scale += osg::Vec3d( 0.1, 0.1, 0.1 );
-        m_viewMatrix.setMoveScale( scale );
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
@@ -710,7 +769,6 @@ void GameController::OnButton6Event( gadget::DigitalState::State event )
     }
     case gadget::DigitalState::TOGGLE_ON:
     {
-        m_hideShowUI.signal();
         break;
     }
     case gadget::DigitalState::TOGGLE_OFF:
@@ -734,6 +792,69 @@ void GameController::OnButton7Event( gadget::DigitalState::State event )
         return;
     }
 
+    switch( event )
+    {
+    case gadget::DigitalState::ON:
+    {
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        break;
+    }
+    default:
+        break;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton8Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+
+    switch( event )
+    {
+    case gadget::DigitalState::ON:
+    {
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_ON:
+    {
+        m_hideShowUI.signal();
+        break;
+    }
+    case gadget::DigitalState::TOGGLE_OFF:
+    {
+        break;
+    }
+    default:
+        break;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnButton9Event( gadget::DigitalState::State event )
+{
+    if( m_exit )
+    {
+        return;
+    }
+    
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    
     switch( event )
     {
     case gadget::DigitalState::ON:

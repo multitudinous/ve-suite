@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <rumble_proxy name="Rumble0" version="1">
+         <device>Joystick0</device>
+      </rumble_proxy>
+      <digital_proxy name="Joystick0_d0" version="1">
+         <device>Joystick0</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d1" version="1">
+         <device>Joystick0</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d2" version="1">
+         <device>Joystick0</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d3" version="1">
+         <device>Joystick0</device>
+         <unit>3</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d4" version="1">
+         <device>Joystick0</device>
+         <unit>4</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d5" version="1">
+         <device>Joystick0</device>
+         <unit>5</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d6" version="1">
+         <device>Joystick0</device>
+         <unit>6</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d7" version="1">
+         <device>Joystick0</device>
+         <unit>7</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d8" version="1">
+         <device>Joystick0</device>
+         <unit>9</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d9" version="1">
+         <device>Joystick0</device>
+         <unit>8</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d10" version="1">
+         <device>Joystick0</device>
+         <unit>10</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d11" version="1">
+         <device>Joystick0</device>
+         <unit>11</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d12" version="1">
+         <device>Joystick0</device>
+         <unit>12</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d13" version="1">
+         <device>Joystick0</device>
+         <unit>13</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d14" version="1">
+         <device>Joystick0</device>
+         <unit>14</unit>
+      </digital_proxy>
+      <digital_proxy name="Joystick0_d15" version="1">
+         <device>Joystick0</device>
+         <unit>15</unit>
+      </digital_proxy>
+      <analog_proxy name="VJAxis0" version="1">
+         <device>Joystick0</device>
+         <unit>0</unit>
+      </analog_proxy>
+      <analog_proxy name="VJAxis1" version="1">
+         <device>Joystick0</device>
+         <unit>1</unit>
+      </analog_proxy>
+      <analog_proxy name="VJAxis2" version="1">
+         <device>Joystick0</device>
+         <unit>3</unit>
+      </analog_proxy>
+      <analog_proxy name="VJAxis3" version="1">
+         <device>Joystick0</device>
+         <unit>4</unit>
+      </analog_proxy>
+       <analog_proxy name="VJAxis4" version="1">
+           <device>Joystick0</device>
+           <unit>2</unit>
+       </analog_proxy>
+       <analog_proxy name="VJAxis5" version="1">
+           <device>Joystick0</device>
+           <unit>5</unit>
+       </analog_proxy>
+  </elements>
+</configuration>
