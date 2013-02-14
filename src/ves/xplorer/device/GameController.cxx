@@ -125,40 +125,7 @@ GameController::GameController()
     m_success( false ),
     m_uiMode( false )
 {
-    std::string joystickType;
-    {
-        gadget::DigitalProxyPtr joystick = gadget::DigitalProxy::create( "Joystick0", 0 );
-        joystick->refresh();
-        if( !joystick->isStupefied() )
-        {
-            std::cout << "The game controller is a ";
-            joystickType = joystick->getProxiedInputDevice()->getHardwareName();
-            std::cout << joystickType << std::endl;
-        }
-    }
-    
-    if( !joystickType.empty() )
-    {
-        std::string xplorerBaseDir;
-        vpr::System::getenv( "XPLORER_BASE_DIR", xplorerBaseDir );
-        xplorerBaseDir += "/share/vesuite/vrj_configs/";
-        jccl::Configuration* configuration = new jccl::Configuration();
-        if( joystickType == "Wireless 360 Controller" )
-        {
-            configuration->load( xplorerBaseDir + "xbox_360.jconf" );
-        }
-        else if( joystickType == "Logitech Cordless RumblePad 2" )
-        {
-            configuration->load( xplorerBaseDir + "rumble_pad.jconf" );
-            std::cout << xplorerBaseDir << std::endl;
-        }
-        else
-        {
-            std::cout << "game controller not supported" << std::endl;
-        }
-        jccl::ConfigManager::instance()->addConfigurationAdditions( configuration );
-        delete configuration;
-    }
+    Configure();
 
     m_gamecontroller.init( "VESJoystick" );
 
@@ -1015,5 +982,43 @@ void GameController::UpdateForwardAndUp()
     
     //This matters in 
     m_viewMatrix.setOriented( upVec, dirVec );
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::Configure()
+{
+    std::string joystickType;
+    {
+        gadget::DigitalProxyPtr joystick = gadget::DigitalProxy::create( "Joystick0", 0 );
+        joystick->refresh();
+        if( !joystick->isStupefied() )
+        {
+            std::cout << "The game controller is a ";
+            joystickType = joystick->getProxiedInputDevice()->getHardwareName();
+            std::cout << joystickType << std::endl;
+        }
+    }
+    
+    if( !joystickType.empty() )
+    {
+        std::string xplorerBaseDir;
+        vpr::System::getenv( "XPLORER_BASE_DIR", xplorerBaseDir );
+        xplorerBaseDir += "/share/vesuite/vrj_configs/";
+        jccl::Configuration* configuration = new jccl::Configuration();
+        if( joystickType == "Wireless 360 Controller" )
+        {
+            configuration->load( xplorerBaseDir + "xbox_360.jconf" );
+        }
+        else if( joystickType == "Logitech Cordless RumblePad 2" )
+        {
+            configuration->load( xplorerBaseDir + "rumble_pad.jconf" );
+            std::cout << xplorerBaseDir << std::endl;
+        }
+        else
+        {
+            std::cout << "This " << joystickType << " game controller is not supported." << std::endl;
+        }
+        jccl::ConfigManager::instance()->addConfigurationAdditions( configuration );
+        delete configuration;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

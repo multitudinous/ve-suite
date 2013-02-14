@@ -200,6 +200,9 @@ private:
     ///Set the character state to enable controlling the nav step size
     void SetCharacterState( bool const& enable );
 
+    ///Configure the game controllers
+    void Configure();
+
     ///The current X mouse position
     int m_currX;
 
