@@ -5,10 +5,25 @@
        <input_manager name="IM SDL Joystick" version="2">
            <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
            <driver>SdlJoystick_drv</driver>
-           <driver>DirectXJoystick_drv</driver>
+           <!--driver>DirectXJoystick_drv</driver-->
        </input_manager>
        <sdl_joystick name="Joystick0" version="1">
            <device>0</device>
+           <min>0.0</min>
+           <max>255.0</max>
+       </sdl_joystick>
+       <sdl_joystick name="Joystick1" version="1">
+           <device>1</device>
+           <min>0.0</min>
+           <max>255.0</max>
+       </sdl_joystick>
+       <sdl_joystick name="Joystick2" version="1">
+           <device>2</device>
+           <min>0.0</min>
+           <max>255.0</max>
+       </sdl_joystick>
+       <sdl_joystick name="Joystick3" version="1">
+           <device>3</device>
            <min>0.0</min>
            <max>255.0</max>
        </sdl_joystick>
@@ -110,63 +125,6 @@
             </key_modifier_pair>
          </key_pair>
       </simulated_digital_device>
-       <simulated_digital_device name="SimJoystickControls" version="2">
-               <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
-               <key_pair>
-                   <key_modifier_pair name="KeyPresses 0" version="1">
-                       <modifier_key>NONE</modifier_key>
-                       <key>KEY_0</key>
-                   </key_modifier_pair>
-               </key_pair>
-               <key_pair>
-                   <key_modifier_pair name="KeyPresses 1" version="1">
-                       <modifier_key>NONE</modifier_key>
-                       <key>KEY_1</key>
-                   </key_modifier_pair>
-               </key_pair>
-               <key_pair>
-                   <key_modifier_pair name="KeyPresses 2" version="1">
-                       <modifier_key>NONE</modifier_key>
-                       <key>KEY_2</key>
-                   </key_modifier_pair>
-               </key_pair>
-               <key_pair>
-                   <key_modifier_pair name="KeyPresses 3" version="1">
-                       <modifier_key>NONE</modifier_key>
-                       <key>KEY_3</key>
-                   </key_modifier_pair>
-               </key_pair>
-               <key_pair>
-                   <key_modifier_pair name="KeyPresses 4" version="1">
-                       <modifier_key>NONE</modifier_key>
-                       <key>KEY_4</key>
-                   </key_modifier_pair>
-               </key_pair>
-               <key_pair>
-                   <key_modifier_pair name="KeyPresses 5" version="1">
-                       <modifier_key>NONE</modifier_key>
-                       <key>KEY_5</key>
-                   </key_modifier_pair>
-               </key_pair>
-               <key_pair>
-                   <key_modifier_pair name="KeyPresses 6" version="1">
-                       <modifier_key>NONE</modifier_key>
-                       <key>KEY_6</key>
-                   </key_modifier_pair>
-               </key_pair>
-               <key_pair>
-                   <key_modifier_pair name="KeyPresses 7" version="1">
-                       <modifier_key>NONE</modifier_key>
-                       <key>KEY_7</key>
-                   </key_modifier_pair>
-               </key_pair>
-               <key_pair>
-                   <key_modifier_pair name="KeyPresses 8" version="1">
-                       <modifier_key>NONE</modifier_key>
-                       <key>KEY_8</key>
-                   </key_modifier_pair>
-               </key_pair>
-           </simulated_digital_device>
       <simulated_relative_position name="SimRelativePosition1" version="1">
          <base_frame_proxy>Head Proxy</base_frame_proxy>
          <relative_proxy>Wand Proxy</relative_proxy>
@@ -304,9 +262,9 @@
       <!--alias name="VJWand" version="1">
          <proxy>RelativeWand Proxy</proxy>
       </alias-->
-      <alias name="VJSystemStopKernel" version="1">
+      <!--alias name="VJSystemStopKernel" version="1">
          <proxy>VJSystemStopKernelProxy</proxy>
-      </alias>
+      </alias-->
       <alias name="VJKeyboard" version="1">
          <proxy>SimKeyboard Proxy</proxy>
       </alias>
@@ -545,30 +503,6 @@
          <base_frame_proxy />
          <relative_proxy />
       </simulated_relative_position>
-      <simulated_analog_device name="SimulatedVJAxis0" version="3">
-         <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
-         <increment_keypress>
-            <key_modifier_pair name="VJAxis0 Increase" version="1">
-               <modifier_key>NONE</modifier_key>
-               <key>KEY_M</key>
-            </key_modifier_pair>
-         </increment_keypress>
-         <decrement_keypress>
-            <key_modifier_pair name="VJAxis0 Decrease" version="1">
-               <modifier_key>NONE</modifier_key>
-               <key>KEY_N</key>
-            </key_modifier_pair>
-         </decrement_keypress>
-         <delta>1.0</delta>
-         <min>0.0</min>
-         <max>255.0</max>
-         <initial_value>0.0</initial_value>
-         <auto_return>false</auto_return>
-      </simulated_analog_device>
-      <analog_proxy name="VJAxis0Proxy" version="1">
-         <device>SimulatedVJAxis0</device>
-         <unit>0</unit>
-      </analog_proxy>
       <simulated_positional_device name="SimCamera" version="3">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
@@ -654,14 +588,6 @@
          <translation_coordinate_system>0</translation_coordinate_system>
          <rotation_coordinate_system>0</rotation_coordinate_system>
       </simulated_positional_device>
-       <digital_proxy name="VESJoystick0_Digital0" version="1">
-           <device>SimJoystickControls</device>
-           <unit>0</unit>
-       </digital_proxy>
-       <digital_proxy name="VESJoystick1_Digital0" version="1">
-           <device>SimJoystickControls</device>
-           <unit>1</unit>
-       </digital_proxy>
   </elements>
 </configuration>
 
