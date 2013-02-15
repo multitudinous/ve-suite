@@ -63,6 +63,9 @@ typedef switchwire::Event< void ( double const&, double const&, double const& ) 
 ///Signal for int
 typedef switchwire::Event< void ( int const& ) > IntSignal_type;
 
+///Signal for int
+typedef switchwire::Event< void ( unsigned int const& ) > UnsignedIntSignal_type;
+
 ///Signal for bools and vectors
 typedef switchwire::Event< void ( const bool, const std::vector< double >& ) > BoolAndDoubleVectorSignal_type;
 

@@ -123,9 +123,11 @@ GameControllerCallbacks::GameControllerCallbacks()
     m_buttonMap( new osgwMx::FunctionalMap() ),
     m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() ),
     m_success( false ),
-    m_uiMode( false )
+    m_uiMode( false ),
+    m_activeController( 0 ),
+    m_controlledState( OpenControlState )
 {
-    Configure();
+    ConfigureGameControllerDevices();
 
     m_gamecontroller.init( "VESJoystick" );
 
@@ -165,69 +167,6 @@ GameControllerCallbacks::GameControllerCallbacks()
     //is not defined the nav is just like MoveModeLocal. In a tracked environment when
     //VESJoystick is defined the nav will be affected by the orientation of the controller.
     m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeOriented );
-
-    // Connect to Juggler's new event handling interface
-    //Left stick - X
-    m_analogAxis0EventInterface.init( "VJAxis0" );
-    m_analogAxis0EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis0Event, this, _1 ) );
-    //m_analogAxis0EventInterface.addCallback<raw_analog_event_tag>(boost::bind(&GameControllerCallbacks::OnAxis0Event, this, _1));
-
-    //Left stick - Y
-    m_analogAxis1EventInterface.init( "VJAxis1" );
-    m_analogAxis1EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis1Event, this, _1 ) );
-
-    //Right stick - X
-    m_analogAxis2EventInterface.init( "VJAxis2" );
-    m_analogAxis2EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis2Event, this, _1 ) );
-
-    //Right stick - Y
-    m_analogAxis3EventInterface.init( "VJAxis3" );
-    m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis3Event, this, _1 ) );
-
-    //Lower triggers
-    m_analogAxis4EventInterface.init( "VJAxis4" );
-    m_analogAxis4EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis4Event, this, _1 ) );
-    
-    //Lower triggers
-    m_analogAxis5EventInterface.init( "VJAxis5" );
-    m_analogAxis5EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis5Event, this, _1 ) );
-
-    //All the buttons
-    m_button0EventInterface.init( "Joystick0_d0" );
-    m_button0EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton0Event, this, _1 ) );
-
-    m_button1EventInterface.init( "Joystick0_d1" );
-    m_button1EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton1Event, this, _1 ) );
-
-    m_button2EventInterface.init( "Joystick0_d2" );
-    m_button2EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton2Event, this, _1 ) );
-
-    m_button3EventInterface.init( "Joystick0_d3" );
-    m_button3EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton3Event, this, _1 ) );
-
-    m_button4EventInterface.init( "Joystick0_d4" );
-    m_button4EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton4Event, this, _1 ) );
-
-    m_button5EventInterface.init( "Joystick0_d5" );
-    m_button5EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton5Event, this, _1 ) );
-
-    m_button6EventInterface.init( "Joystick0_d6" );
-    m_button6EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton6Event, this, _1 ) );
-
-    m_button7EventInterface.init( "Joystick0_d7" );
-    m_button7EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton7Event, this, _1 ) );
-
-    m_button8EventInterface.init( "Joystick0_d8" );
-    m_button8EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton8Event, this, _1 ) );
-    
-    m_button9EventInterface.init( "Joystick0_d9" );
-    m_button9EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton9Event, this, _1 ) );
-
-    m_button10EventInterface.init( "Joystick0_d10" );
-    m_button10EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton10Event, this, _1 ) );
-
-    m_button11EventInterface.init( "Joystick0_d11" );
-    m_button11EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton11Event, this, _1 ) );
 
     //Setup rumble
     /*
@@ -295,6 +234,10 @@ GameControllerCallbacks::GameControllerCallbacks()
                       &GameControllerCallbacks::SetCharacterState,
                       m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_1( "%GrabControllerState", void( unsigned int const& ),
+                     &GameControllerCallbacks::GrabControlState,
+                     m_connections, any_SignalType, normal_Priority );
+    
     // Register signal(s) with EventManager
     switchwire::EventManager::instance()->RegisterSignal(
         ( &m_updateData ),
@@ -984,41 +927,99 @@ void GameControllerCallbacks::UpdateForwardAndUp()
     m_viewMatrix.setOriented( upVec, dirVec );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameControllerCallbacks::Configure()
+void GameControllerCallbacks::ConfigureGameControllerDevices()
 {
-    std::string joystickType;
+    m_gameControllerBaseNames.push_back( "VESJoystick0" );
+    m_gameControllerBaseNames.push_back( "VESJoystick1" );
+    m_gameControllerBaseNames.push_back( "VESJoystick2" );
+    m_gameControllerBaseNames.push_back( "VESJoystick3" );
+    
+    m_lastActiveTime = boost::posix_time::microsec_clock::local_time();
+
+    std::string deviceName;
+    for( size_t i = 0; i < m_gameControllerBaseNames.size(); ++i )
     {
-        gadget::DigitalProxyPtr joystick = gadget::DigitalProxy::create( "Joystick0", 0 );
-        joystick->refresh();
-        if( !joystick->isStupefied() )
+        std::string joystickType;
         {
-            std::cout << "The game controller is a ";
-            joystickType = joystick->getProxiedInputDevice()->getHardwareName();
-            std::cout << joystickType << std::endl;
+            gadget::DigitalProxyPtr joystick = gadget::DigitalProxy::create( "Joystick" + boost::lexical_cast< std::string >( i ), i );
+            joystick->refresh();
+            if( !joystick->isStupefied() )
+            {
+                std::cout << "The game controller is a ";
+                joystickType = joystick->getProxiedInputDevice()->getHardwareName();
+                std::cout << joystickType << std::endl;
+            }
+        }
+        
+        if( !joystickType.empty() )
+        {
+            std::string xplorerBaseDir;
+            vpr::System::getenv( "XPLORER_BASE_DIR", xplorerBaseDir );
+            xplorerBaseDir += "/share/vesuite/vrj_configs/";
+            jccl::Configuration* configuration = new jccl::Configuration();
+            if( joystickType == "Wireless 360 Controller" )
+            {
+                configuration->load( xplorerBaseDir + "xbox_360_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
+            }
+            else if( joystickType == "Logitech Cordless RumblePad 2" )
+            {
+                configuration->load( xplorerBaseDir + "rumble_pad_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
+                std::cout << xplorerBaseDir << std::endl;
+            }
+            else
+            {
+                std::cout << "This " << joystickType << " game controller is not supported." << std::endl;
+            }
+            jccl::ConfigManager::instance()->addConfigurationAdditions( configuration );
+            delete configuration;
+
+            deviceName = m_gameControllerBaseNames[ i ];
+            m_gamControllerEvents[ m_gameControllerBaseNames[ i ] ] = new GameController( i );
+            m_gamControllerEvents[ m_gameControllerBaseNames[ i ] ]->InitInterfaces( deviceName );
         }
     }
-    
-    if( !joystickType.empty() )
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameControllerCallbacks::GrabControlState( unsigned int const& controllerMask )
+{
+    if( m_controlledState & ClosedControlState )
     {
-        std::string xplorerBaseDir;
-        vpr::System::getenv( "XPLORER_BASE_DIR", xplorerBaseDir );
-        xplorerBaseDir += "/share/vesuite/vrj_configs/";
-        jccl::Configuration* configuration = new jccl::Configuration();
-        if( joystickType == "Wireless 360 Controller" )
+        if( controllerMask == m_activeController )
         {
-            configuration->load( xplorerBaseDir + "xbox_360_js0.jconf" );
+            //Reset the timer
+            m_lastActiveTime = boost::posix_time::microsec_clock::local_time();
         }
-        else if( joystickType == "Logitech Cordless RumblePad 2" )
-        {
-            configuration->load( xplorerBaseDir + "rumble_pad_js0.jconf" );
-            std::cout << xplorerBaseDir << std::endl;
-        }
-        else
-        {
-            std::cout << "This " << joystickType << " game controller is not supported." << std::endl;
-        }
-        jccl::ConfigManager::instance()->addConfigurationAdditions( configuration );
-        delete configuration;
+        return;
+    }
+
+    if( m_controlledState & OpenControlState )
+    {
+        m_gamControllerEvents[ m_gameControllerBaseNames[ controllerMask ]  ]->
+            ConnectInterfaces( this );
+        m_activeController = controllerMask;
+        m_controlledState = ClosedControlState;
+        //Reset the timer
+        m_lastActiveTime = boost::posix_time::microsec_clock::local_time();
+        return;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameControllerCallbacks::CheckControlState()
+{
+    if( m_controlledState & OpenControlState )
+    {
+        return;
+    }
+
+    ///If timer is greater than time out
+    boost::posix_time::ptime current_time( boost::posix_time::microsec_clock::local_time() );
+    boost::posix_time::time_duration diff = current_time - m_lastActiveTime;
+    double frameTime = diff.total_milliseconds() * 0.001;
+    if( frameTime > 3.0 )
+    {
+        m_controlledState = OpenControlState;
+        m_gamControllerEvents[ m_gameControllerBaseNames[ m_activeController ]  ]->
+            DisconnectInterfaces( this );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

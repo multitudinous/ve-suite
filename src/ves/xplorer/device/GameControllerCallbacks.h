@@ -57,6 +57,8 @@
 
 #include <gadget/Event/EventPtr.h>
 
+#include <ves/xplorer/device/GameController.h>
+
 namespace gadget
 {
 class InputArea;
@@ -83,6 +85,11 @@ class btTypedConstraint;
 
 // --- STL Includes --- //
 #include <bitset>
+
+#include <ves/util/GNUCompilerGuards.h>
+DIAG_OFF(unused-parameter)
+#include <boost/date_time/posix_time/posix_time.hpp>
+DIAG_ON(unused-parameter)
 
 namespace ves
 {
@@ -112,7 +119,13 @@ public:
     ///Processes keyboard events
     virtual void ProcessEvents( ves::open::xml::CommandPtr command );
 
+    ///Check to see if we should open up the control state
+    void CheckControlState();
+
 private:
+    ///Configure the game controller interfaces
+    void ConfigureGameControllerDevices();
+    
     ///Update the forward and up vector for the game controller
     void UpdateForwardAndUp();// const osg::Vec3d&, const osg::Vec3d& );
 
@@ -120,33 +133,6 @@ private:
     ///current orientation of the controller is for updating the
     ///up and forward vectors of the controller.
     gadget::PositionInterface m_gamecontroller;
-
-    typedef gadget::AnalogEventInterface < gadget::event::all_events_tag,
-            gadget::event::synchronized_tag > AnalogAxisInterface;
-    AnalogAxisInterface m_analogAxis0EventInterface;
-    AnalogAxisInterface m_analogAxis1EventInterface;
-    AnalogAxisInterface m_analogAxis2EventInterface;
-    AnalogAxisInterface m_analogAxis3EventInterface;
-    AnalogAxisInterface m_analogAxis4EventInterface;
-    AnalogAxisInterface m_analogAxis5EventInterface;
-
-    typedef gadget::DigitalEventInterface < gadget::event::all_events_tag,
-            gadget::event::synchronized_tag > GamePadClickInterface;
-    GamePadClickInterface m_button0EventInterface;
-    GamePadClickInterface m_button1EventInterface;
-    GamePadClickInterface m_button2EventInterface;
-    GamePadClickInterface m_button3EventInterface;
-    GamePadClickInterface m_button4EventInterface;
-    GamePadClickInterface m_button5EventInterface;
-    GamePadClickInterface m_button6EventInterface;
-    GamePadClickInterface m_button7EventInterface;
-    GamePadClickInterface m_button8EventInterface;
-    GamePadClickInterface m_button9EventInterface;
-    GamePadClickInterface m_button10EventInterface;
-    GamePadClickInterface m_button11EventInterface;
-    GamePadClickInterface m_button12EventInterface;
-    GamePadClickInterface m_button13EventInterface;
-    GamePadClickInterface m_button14EventInterface;
 
     ///The enum to set the control state
     enum UserControlState
@@ -158,22 +144,11 @@ private:
     ///Determine whether a game controller can take over nav controlls
     UserControlState m_controlledState;
     
-    enum GameControllerMask
-    {
-        GameController0 = 0,
-        GameController1 = 1,
-        GameController2 = 2,
-        GameController3 = 3
-    };
-    
-    GameControllerMask m_activeController;
+    unsigned int m_activeController;
     
     ///Try to grab controll
-    void GrabControlState( GameControllerMask controllerMask );
-    
-    ///Check to see if we should open up the control state
-    void CheckControlState();
-    
+    void GrabControlState( unsigned int const& controllerMask );
+        
     ///A vector holding the base names for gadgeteer analog and digital interfaces
     std::vector< std::string > m_gameControllerBaseNames;
 
@@ -182,6 +157,13 @@ private:
 	gadget::RumbleEffectPtr _speed;
 	gadget::RumbleEffectPtr _objectHit[4];
     gadget::HatState::State _oldHatState;*/
+
+    
+    ///A map holding gadgeteer device interfaces for game controllers
+    std::map< std::string, GameController* > m_gamControllerEvents;
+    
+    ///The start of the controller ownership
+    boost::posix_time::ptime m_lastActiveTime;
 
 public:
     /// All GameController events get delivered here
@@ -228,9 +210,6 @@ private:
 
     ///Set the character state to enable controlling the nav step size
     void SetCharacterState( bool const& enable );
-
-    ///Configure the game controllers
-    void Configure();
 
     ///The current X mouse position
     int m_currX;

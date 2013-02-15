@@ -70,11 +70,6 @@
 #include <string>
 #include <map>
 
-#include <ves/util/GNUCompilerGuards.h>
-DIAG_OFF(unused-parameter)
-#include <boost/date_time/posix_time/posix_time.hpp>
-DIAG_ON(unused-parameter)
-
 namespace ves
 {
 namespace xplorer
@@ -185,9 +180,6 @@ public:
 protected:
 
 private:
-    ///Configure the game controller interfaces
-    void ConfigureGameControllerDevices();
-
     ///Triggers a center point jump after this distance has been breached
     double mCenterPointThreshold;
 
@@ -237,103 +229,6 @@ private:
     ves::xplorer::behavior::SelectionPtr m_selectionSlot;
 
     switchwire::ScopedConnectionList m_connections;
-    
-    
-    typedef gadget::AnalogEventInterface < gadget::event::all_events_tag,
-        gadget::event::synchronized_tag > AnalogAxisInterface;
-    
-    typedef gadget::DigitalEventInterface < gadget::event::all_events_tag,
-        gadget::event::synchronized_tag > GamePadClickInterface;
-    struct GameControllerProxy
-    {
-        ///Track the position of the game controller so that we can tell what the
-        ///current orientation of the controller is for updating the
-        ///up and forward vectors of the controller.
-        gadget::PositionInterface m_gamecontroller;
-        
-        typedef gadget::AnalogEventInterface < gadget::event::all_events_tag,
-            gadget::event::synchronized_tag > AnalogAxisInterface;
-        AnalogAxisInterface m_analogAxis0EventInterface;
-        AnalogAxisInterface m_analogAxis1EventInterface;
-        AnalogAxisInterface m_analogAxis2EventInterface;
-        AnalogAxisInterface m_analogAxis3EventInterface;
-        AnalogAxisInterface m_analogAxis4EventInterface;
-        AnalogAxisInterface m_analogAxis5EventInterface;
-        
-        typedef gadget::DigitalEventInterface < gadget::event::all_events_tag,
-            gadget::event::synchronized_tag > GamePadClickInterface;
-        GamePadClickInterface m_button0EventInterface;
-        GamePadClickInterface m_button1EventInterface;
-        GamePadClickInterface m_button2EventInterface;
-        GamePadClickInterface m_button3EventInterface;
-        GamePadClickInterface m_button4EventInterface;
-        GamePadClickInterface m_button5EventInterface;
-        GamePadClickInterface m_button6EventInterface;
-        GamePadClickInterface m_button7EventInterface;
-        GamePadClickInterface m_button8EventInterface;
-        GamePadClickInterface m_button9EventInterface;
-        GamePadClickInterface m_button10EventInterface;
-        GamePadClickInterface m_button11EventInterface;
-        GamePadClickInterface m_button12EventInterface;
-        GamePadClickInterface m_button13EventInterface;
-        GamePadClickInterface m_button14EventInterface;
-        
-        ///The id of this controller which maps to the m_gameControllerBaseNames
-        //list of names.
-        GameControllerMask m_controllerMask;
-
-        ///Call init on all of the event interfaces listed above
-        ///\param deviceName The VR Juggler name given for the PositionInterface
-        void InitInterfaces( const std::string deviceName );
-        ///Connect the event interfaces to the GameController class callbacks
-        ///\param controller The GameController pointer
-        void ConnectInterfaces( device::GameControllerCallbacks* const controller );
-        ///Dicsonnect the event interfaces from the GameController class
-        void DisconnectInterfaces( device::GameControllerCallbacks* const controller );
-
-        /// All GameController events get delivered here
-        void OnAxis0Event( const float event );
-        /// All GameController events get delivered here
-        void OnAxis1Event( const float event );
-        /// All GameController events get delivered here
-        void OnAxis2Event( const float event );
-        /// All GameController events get delivered here
-        void OnAxis3Event( const float event );
-        /// All GameController events get delivered here
-        void OnAxis4Event( const float event );
-        /// All GameController events get delivered here
-        void OnAxis5Event( const float event );
-        /// All GameController events get delivered here
-        void OnButton0Event( gadget::DigitalState::State event );
-        /// All GameController events get delivered here
-        void OnButton1Event( gadget::DigitalState::State event );
-        /// All GameController events get delivered here
-        void OnButton2Event( gadget::DigitalState::State event );
-        /// All GameController events get delivered here
-        void OnButton3Event( gadget::DigitalState::State event );
-        /// All GameController events get delivered here
-        void OnButton4Event( gadget::DigitalState::State event );
-        /// All GameController events get delivered here
-        void OnButton5Event( gadget::DigitalState::State event );
-        /// All GameController events get delivered here
-        void OnButton6Event( gadget::DigitalState::State event );
-        /// All GameController events get delivered here
-        void OnButton7Event( gadget::DigitalState::State event );
-        /// All GameController events get delivered here
-        void OnButton8Event( gadget::DigitalState::State event );
-        /// All GameController events get delivered here
-        void OnButton9Event( gadget::DigitalState::State event );
-        /// All GameController events get delivered here
-        void OnButton10Event( gadget::DigitalState::State event );
-        /// All GameController events get delivered here
-        void OnButton11Event( gadget::DigitalState::State event );
-    };
-    
-    ///A map holding gadgeteer device interfaces for game controllers
-    std::map< std::string, GameControllerProxy* > m_gamControllerEvents;
-
-    ///The start of the controller ownership
-    boost::posix_time::ptime m_lastActiveTime;
 };
 } //end xplorer
 } //end ves

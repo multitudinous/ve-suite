@@ -97,10 +97,7 @@ DeviceHandler::DeviceHandler()
     m_constraintSlot( new ves::xplorer::behavior::ConstraintSelection() ),
     m_manipulatorSlot( new ves::xplorer::behavior::ManipulatorEvents() ),
     m_navSlot( new ves::xplorer::behavior::Navigation() ),
-    m_selectionSlot( new ves::xplorer::behavior::Selection() ),
-
-    m_controlledState( OpenControlState ),
-    m_activeController( GameController0 )
+    m_selectionSlot( new ves::xplorer::behavior::Selection() )
 {
     //Initialize the group that holds all of the devices
     m_deviceGroup = new osg::Group();
@@ -127,13 +124,6 @@ DeviceHandler::DeviceHandler()
                            void( /*unsigned int const&, */ bool const & enable ),
                            &ves::xplorer::event::device::EnableDevice,
                            m_connections, any_SignalType, normal_Priority );
-    
-    m_gameControllerBaseNames.push_back( "VESJoystick0" );
-    m_gameControllerBaseNames.push_back( "VESJoystick1" );
-    m_gameControllerBaseNames.push_back( "VESJoystick2" );
-    m_gameControllerBaseNames.push_back( "VESJoystick3" );
-    
-    //ConfigureGameControllerDevices();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()
@@ -274,7 +264,7 @@ scenegraph::DCS* DeviceHandler::GetSelectedDCS() const
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
 {
-    CheckControlState();
+    static_cast< device::GameControllerCallbacks* >( m_deviceMap[ device::Device::GAME_CONTROLLER ] )->CheckControlState();
     
     //Update device properties
     /*ExecuteCommands();
@@ -406,60 +396,5 @@ void DeviceHandler::UnselectObjects()
 osg::Group* DeviceHandler::GetDeviceGroup()
 {
     return m_deviceGroup.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::ConfigureGameControllerDevices()
-{
-    std::string deviceName;
-    for( size_t i = 0; i < m_gameControllerBaseNames.size(); ++i )
-    {
-        deviceName = m_gameControllerBaseNames[ i ];
-        m_gamControllerEvents[ m_gameControllerBaseNames[ i ] ] = new GameControllerProxy;
-        m_gamControllerEvents[ m_gameControllerBaseNames[ i ] ]->InitInterfaces( deviceName );
-        m_gamControllerEvents[ m_gameControllerBaseNames[ i ] ]->m_controllerMask = GameControllerMask( i );
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GrabControlState( GameControllerMask controllerMask )
-{
-    if( m_controlledState & ClosedControlState )
-    {
-        if( controllerMask == m_activeController )
-        {
-            //Reset the timer
-            m_lastActiveTime = boost::posix_time::microsec_clock::local_time();
-        }
-        return;
-    }
-
-    if( m_controlledState & OpenControlState )
-    {
-        m_gamControllerEvents[ m_gameControllerBaseNames[ controllerMask ]  ]->
-            ConnectInterfaces( static_cast< device::GameControllerCallbacks* >( m_deviceMap[ device::Device::GAME_CONTROLLER ] ) );
-        m_activeController = controllerMask;
-        m_controlledState = ClosedControlState;
-        //Reset the timer
-        m_lastActiveTime = boost::posix_time::microsec_clock::local_time();
-        return;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::CheckControlState()
-{
-    if( m_controlledState & OpenControlState )
-    {
-        return;
-    }
-
-    ///If timer is greater than time out
-    boost::posix_time::ptime current_time( boost::posix_time::microsec_clock::local_time() );
-    boost::posix_time::time_duration diff = current_time - m_lastActiveTime;
-    double frameTime = diff.total_milliseconds() * 0.001;
-    if( frameTime > 3.0 )
-    {
-        m_controlledState = OpenControlState;
-        m_gamControllerEvents[ m_gameControllerBaseNames[ m_activeController ]  ]->
-            DisconnectInterfaces( static_cast< device::GameControllerCallbacks* >( m_deviceMap[ device::Device::GAME_CONTROLLER ] ) );
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
