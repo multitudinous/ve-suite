@@ -89,16 +89,22 @@ private:
     unsigned int m_controllerMask;
         
     /// All GameController events get delivered here
+    ///\note This is the left stick
     void OnAxis0Event( const float event );
     /// All GameController events get delivered here
+    ///\note This is the left stick
     void OnAxis1Event( const float event );
     /// All GameController events get delivered here
+    ///\note This is the right stick
     void OnAxis2Event( const float event );
     /// All GameController events get delivered here
+    ///\note This is the right stick
     void OnAxis3Event( const float event );
     /// All GameController events get delivered here
+    ///\note This is the left trigger if it is analog
     void OnAxis4Event( const float event );
     /// All GameController events get delivered here
+    ///\note This is the right trigger if it is analog
     void OnAxis5Event( const float event );
 
     /// All GameController events get delivered here
