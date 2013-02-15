@@ -91,23 +91,23 @@ namespace xplorer
 namespace device
 {
 
-/*!\file GameController.h
- * \class ves::xplorer::device::GameController
+/*!\file GameControllerCallbacks.h
+ * \class ves::xplorer::device::GameControllerCallbacks
  * \namespace ves::xplorer::device
  *
  */
-class VE_XPLORER_EXPORTS GameController : public Device
+class VE_XPLORER_EXPORTS GameControllerCallbacks : public Device
 {
 public:
     ///Constructor
-    GameController();
+    GameControllerCallbacks();
 
     ///Destructor
-    virtual ~GameController();
+    virtual ~GameControllerCallbacks();
 
     ///
     ///\return
-    virtual GameController* AsGameController();
+    virtual GameControllerCallbacks* AsGameController();
 
     ///Processes keyboard events
     virtual void ProcessEvents( ves::open::xml::CommandPtr command );
@@ -147,6 +147,35 @@ private:
     GamePadClickInterface m_button12EventInterface;
     GamePadClickInterface m_button13EventInterface;
     GamePadClickInterface m_button14EventInterface;
+
+    ///The enum to set the control state
+    enum UserControlState
+    {
+        OpenControlState = (1u << 0),
+        ClosedControlState = (1u << 1)
+    };
+    
+    ///Determine whether a game controller can take over nav controlls
+    UserControlState m_controlledState;
+    
+    enum GameControllerMask
+    {
+        GameController0 = 0,
+        GameController1 = 1,
+        GameController2 = 2,
+        GameController3 = 3
+    };
+    
+    GameControllerMask m_activeController;
+    
+    ///Try to grab controll
+    void GrabControlState( GameControllerMask controllerMask );
+    
+    ///Check to see if we should open up the control state
+    void CheckControlState();
+    
+    ///A vector holding the base names for gadgeteer analog and digital interfaces
+    std::vector< std::string > m_gameControllerBaseNames;
 
     /*gadget::RumbleInterface _rumble;
     gadget::HatInterface _hats[1];

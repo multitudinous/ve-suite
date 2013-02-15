@@ -142,7 +142,7 @@ Pointer* Device::AsPointer()
     return NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
-GameController* Device::AsGameController()
+GameControllerCallbacks* Device::AsGameController()
 {
     return NULL;
 }

@@ -85,7 +85,7 @@ namespace device
 class Device;
 class Wand;
 class KeyboardMouse;
-class GameController;
+class GameControllerCallbacks;
 }
 
 namespace event
@@ -238,34 +238,6 @@ private:
 
     switchwire::ScopedConnectionList m_connections;
     
-    ///The enum to set the control state
-    enum UserControlState
-    {
-        OpenControlState = (1u << 0),
-        ClosedControlState = (1u << 1)
-    };
-    
-    ///Determine whether a game controller can take over nav controlls
-    UserControlState m_controlledState;
-    
-    enum GameControllerMask
-    {
-        GameController0 = 0,
-        GameController1 = 1,
-        GameController2 = 2,
-        GameController3 = 3
-    };
-
-    GameControllerMask m_activeController;
-
-    ///Try to grab controll
-    void GrabControlState( GameControllerMask controllerMask );
-
-    ///Check to see if we should open up the control state
-    void CheckControlState();
-
-    ///A vector holding the base names for gadgeteer analog and digital interfaces
-    std::vector< std::string > m_gameControllerBaseNames;
     
     typedef gadget::AnalogEventInterface < gadget::event::all_events_tag,
         gadget::event::synchronized_tag > AnalogAxisInterface;
@@ -285,6 +257,8 @@ private:
         AnalogAxisInterface m_analogAxis1EventInterface;
         AnalogAxisInterface m_analogAxis2EventInterface;
         AnalogAxisInterface m_analogAxis3EventInterface;
+        AnalogAxisInterface m_analogAxis4EventInterface;
+        AnalogAxisInterface m_analogAxis5EventInterface;
         
         typedef gadget::DigitalEventInterface < gadget::event::all_events_tag,
             gadget::event::synchronized_tag > GamePadClickInterface;
@@ -313,9 +287,9 @@ private:
         void InitInterfaces( const std::string deviceName );
         ///Connect the event interfaces to the GameController class callbacks
         ///\param controller The GameController pointer
-        void ConnectInterfaces( device::GameController* const controller );
+        void ConnectInterfaces( device::GameControllerCallbacks* const controller );
         ///Dicsonnect the event interfaces from the GameController class
-        void DisconnectInterfaces( device::GameController* const controller );
+        void DisconnectInterfaces( device::GameControllerCallbacks* const controller );
 
         /// All GameController events get delivered here
         void OnAxis0Event( const float event );
@@ -326,13 +300,17 @@ private:
         /// All GameController events get delivered here
         void OnAxis3Event( const float event );
         /// All GameController events get delivered here
-        void OnAxis4Event( gadget::DigitalState::State event );
+        void OnAxis4Event( const float event );
         /// All GameController events get delivered here
-        void OnAxis5Event( gadget::DigitalState::State event );
+        void OnAxis5Event( const float event );
         /// All GameController events get delivered here
         void OnButton0Event( gadget::DigitalState::State event );
         /// All GameController events get delivered here
+        void OnButton1Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
         void OnButton2Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnButton3Event( gadget::DigitalState::State event );
         /// All GameController events get delivered here
         void OnButton4Event( gadget::DigitalState::State event );
         /// All GameController events get delivered here
@@ -341,6 +319,10 @@ private:
         void OnButton6Event( gadget::DigitalState::State event );
         /// All GameController events get delivered here
         void OnButton7Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnButton8Event( gadget::DigitalState::State event );
+        /// All GameController events get delivered here
+        void OnButton9Event( gadget::DigitalState::State event );
         /// All GameController events get delivered here
         void OnButton10Event( gadget::DigitalState::State event );
         /// All GameController events get delivered here

@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/device/GameController.h>
+#include <ves/xplorer/device/GameControllerCallbacks.h>
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
@@ -108,7 +108,7 @@ using namespace ves::xplorer::device;
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-GameController::GameController()
+GameControllerCallbacks::GameControllerCallbacks()
     :
     Device( KEYBOARD_MOUSE ),
     m_exit( false ),
@@ -169,65 +169,65 @@ GameController::GameController()
     // Connect to Juggler's new event handling interface
     //Left stick - X
     m_analogAxis0EventInterface.init( "VJAxis0" );
-    m_analogAxis0EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis0Event, this, _1 ) );
-    //m_analogAxis0EventInterface.addCallback<raw_analog_event_tag>(boost::bind(&GameController::OnAxis0Event, this, _1));
+    m_analogAxis0EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis0Event, this, _1 ) );
+    //m_analogAxis0EventInterface.addCallback<raw_analog_event_tag>(boost::bind(&GameControllerCallbacks::OnAxis0Event, this, _1));
 
     //Left stick - Y
     m_analogAxis1EventInterface.init( "VJAxis1" );
-    m_analogAxis1EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis1Event, this, _1 ) );
+    m_analogAxis1EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis1Event, this, _1 ) );
 
     //Right stick - X
     m_analogAxis2EventInterface.init( "VJAxis2" );
-    m_analogAxis2EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis2Event, this, _1 ) );
+    m_analogAxis2EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis2Event, this, _1 ) );
 
     //Right stick - Y
     m_analogAxis3EventInterface.init( "VJAxis3" );
-    m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis3Event, this, _1 ) );
+    m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis3Event, this, _1 ) );
 
     //Lower triggers
     m_analogAxis4EventInterface.init( "VJAxis4" );
-    m_analogAxis4EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis4Event, this, _1 ) );
+    m_analogAxis4EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis4Event, this, _1 ) );
     
     //Lower triggers
     m_analogAxis5EventInterface.init( "VJAxis5" );
-    m_analogAxis5EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis5Event, this, _1 ) );
+    m_analogAxis5EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis5Event, this, _1 ) );
 
     //All the buttons
     m_button0EventInterface.init( "Joystick0_d0" );
-    m_button0EventInterface.addCallback( boost::bind( &GameController::OnButton0Event, this, _1 ) );
+    m_button0EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton0Event, this, _1 ) );
 
     m_button1EventInterface.init( "Joystick0_d1" );
-    m_button1EventInterface.addCallback( boost::bind( &GameController::OnButton1Event, this, _1 ) );
+    m_button1EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton1Event, this, _1 ) );
 
     m_button2EventInterface.init( "Joystick0_d2" );
-    m_button2EventInterface.addCallback( boost::bind( &GameController::OnButton2Event, this, _1 ) );
+    m_button2EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton2Event, this, _1 ) );
 
     m_button3EventInterface.init( "Joystick0_d3" );
-    m_button3EventInterface.addCallback( boost::bind( &GameController::OnButton3Event, this, _1 ) );
+    m_button3EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton3Event, this, _1 ) );
 
     m_button4EventInterface.init( "Joystick0_d4" );
-    m_button4EventInterface.addCallback( boost::bind( &GameController::OnButton4Event, this, _1 ) );
+    m_button4EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton4Event, this, _1 ) );
 
     m_button5EventInterface.init( "Joystick0_d5" );
-    m_button5EventInterface.addCallback( boost::bind( &GameController::OnButton5Event, this, _1 ) );
+    m_button5EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton5Event, this, _1 ) );
 
     m_button6EventInterface.init( "Joystick0_d6" );
-    m_button6EventInterface.addCallback( boost::bind( &GameController::OnButton6Event, this, _1 ) );
+    m_button6EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton6Event, this, _1 ) );
 
     m_button7EventInterface.init( "Joystick0_d7" );
-    m_button7EventInterface.addCallback( boost::bind( &GameController::OnButton7Event, this, _1 ) );
+    m_button7EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton7Event, this, _1 ) );
 
     m_button8EventInterface.init( "Joystick0_d8" );
-    m_button8EventInterface.addCallback( boost::bind( &GameController::OnButton8Event, this, _1 ) );
+    m_button8EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton8Event, this, _1 ) );
     
     m_button9EventInterface.init( "Joystick0_d9" );
-    m_button9EventInterface.addCallback( boost::bind( &GameController::OnButton9Event, this, _1 ) );
+    m_button9EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton9Event, this, _1 ) );
 
     m_button10EventInterface.init( "Joystick0_d10" );
-    m_button10EventInterface.addCallback( boost::bind( &GameController::OnButton10Event, this, _1 ) );
+    m_button10EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton10Event, this, _1 ) );
 
     m_button11EventInterface.init( "Joystick0_d11" );
-    m_button11EventInterface.addCallback( boost::bind( &GameController::OnButton11Event, this, _1 ) );
+    m_button11EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton11Event, this, _1 ) );
 
     //Setup rumble
     /*
@@ -288,11 +288,11 @@ GameController::GameController()
      }
      */
     CONNECTSIGNALS_1( "%NavigationRotationMode", void( std::string ),
-                      &GameController::SetRotationMode,
+                      &GameControllerCallbacks::SetRotationMode,
                       m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_1( "%CharacterUpdate", void( bool const& ),
-                      &GameController::SetCharacterState,
+                      &GameControllerCallbacks::SetCharacterState,
                       m_connections, any_SignalType, normal_Priority );
 
     // Register signal(s) with EventManager
@@ -305,12 +305,12 @@ GameController::GameController()
         "GameController.HideShowUI" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-GameController::~GameController()
+GameControllerCallbacks::~GameControllerCallbacks()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::SetCharacterState( bool const& enable )
+void GameControllerCallbacks::SetCharacterState( bool const& enable )
 {
     if( enable )
     {
@@ -322,17 +322,17 @@ void GameController::SetCharacterState( bool const& enable )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-GameController* GameController::AsGameController()
+GameControllerCallbacks* GameControllerCallbacks::AsGameController()
 {
     return this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::ProcessEvents( ves::open::xml::CommandPtr )
+void GameControllerCallbacks::ProcessEvents( ves::open::xml::CommandPtr )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis0Event( const float event )
+void GameControllerCallbacks::OnAxis0Event( const float event )
 {
     if( m_exit )
     {
@@ -369,7 +369,7 @@ void GameController::OnAxis0Event( const float event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis1Event( const float event )
+void GameControllerCallbacks::OnAxis1Event( const float event )
 {
     if( m_exit )
     {
@@ -406,7 +406,7 @@ void GameController::OnAxis1Event( const float event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis2Event( const float event )
+void GameControllerCallbacks::OnAxis2Event( const float event )
 {
     if( m_exit )
     {
@@ -450,7 +450,7 @@ void GameController::OnAxis2Event( const float event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis3Event( const float event )
+void GameControllerCallbacks::OnAxis3Event( const float event )
 {
     if( m_exit )
     {
@@ -494,7 +494,7 @@ void GameController::OnAxis3Event( const float event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis4Event( const float event )
+void GameControllerCallbacks::OnAxis4Event( const float )
 {
     if( m_exit )
     {
@@ -502,7 +502,7 @@ void GameController::OnAxis4Event( const float event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnAxis5Event( const float event )
+void GameControllerCallbacks::OnAxis5Event( const float )
 {
     if( m_exit )
     {
@@ -510,7 +510,7 @@ void GameController::OnAxis5Event( const float event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton0Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton0Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -548,7 +548,7 @@ void GameController::OnButton0Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton1Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton1Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -582,7 +582,7 @@ void GameController::OnButton1Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton2Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton2Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -616,7 +616,7 @@ void GameController::OnButton2Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton3Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton3Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -650,7 +650,7 @@ void GameController::OnButton3Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton4Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton4Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -684,7 +684,7 @@ void GameController::OnButton4Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton5Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton5Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -716,7 +716,7 @@ void GameController::OnButton5Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton6Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton6Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -747,7 +747,7 @@ void GameController::OnButton6Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton7Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton7Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -778,7 +778,7 @@ void GameController::OnButton7Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton8Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton8Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -810,7 +810,7 @@ void GameController::OnButton8Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton9Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton9Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -841,7 +841,7 @@ void GameController::OnButton9Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton10Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton10Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -884,7 +884,7 @@ void GameController::OnButton10Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::OnButton11Event( gadget::DigitalState::State event )
+void GameControllerCallbacks::OnButton11Event( gadget::DigitalState::State event )
 {
     if( m_exit )
     {
@@ -927,7 +927,7 @@ void GameController::OnButton11Event( gadget::DigitalState::State event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
+void GameControllerCallbacks::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
     ///In quad buffered stereo this call returns a VPW matrix from a centered
     ///view rather than from one of the eye positions.
@@ -937,7 +937,7 @@ void GameController::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPo
     endPoint = osg::Vec3d( m_currX, m_currY, 1.0f ) * inverseVPW;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::SetRotationMode( std::string rotationMode )
+void GameControllerCallbacks::SetRotationMode( std::string rotationMode )
 {
     m_navMode = rotationMode;
     if( m_navMode == "User" )
@@ -951,7 +951,7 @@ void GameController::SetRotationMode( std::string rotationMode )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::UpdateForwardAndUp()
+void GameControllerCallbacks::UpdateForwardAndUp()
 {
     if( m_gamecontroller->isStupefied() )
     {
@@ -984,7 +984,7 @@ void GameController::UpdateForwardAndUp()
     m_viewMatrix.setOriented( upVec, dirVec );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameController::Configure()
+void GameControllerCallbacks::Configure()
 {
     std::string joystickType;
     {
@@ -1006,11 +1006,11 @@ void GameController::Configure()
         jccl::Configuration* configuration = new jccl::Configuration();
         if( joystickType == "Wireless 360 Controller" )
         {
-            configuration->load( xplorerBaseDir + "xbox_360.jconf" );
+            configuration->load( xplorerBaseDir + "xbox_360_js0.jconf" );
         }
         else if( joystickType == "Logitech Cordless RumblePad 2" )
         {
-            configuration->load( xplorerBaseDir + "rumble_pad.jconf" );
+            configuration->load( xplorerBaseDir + "rumble_pad_js0.jconf" );
             std::cout << xplorerBaseDir << std::endl;
         }
         else

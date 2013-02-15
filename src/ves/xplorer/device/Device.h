@@ -98,7 +98,7 @@ class KeyboardMouse;
 class Tablet;
 class Wand;
 class Pointer;
-class GameController;
+class GameControllerCallbacks;
 
 /*!\file Device.h
  * Device API
@@ -151,7 +151,7 @@ public:
 
     ///
     ///\return
-    virtual GameController* AsGameController();
+    virtual GameControllerCallbacks* AsGameController();
 
     ///
     ///\return
