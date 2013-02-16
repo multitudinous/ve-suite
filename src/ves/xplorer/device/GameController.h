@@ -9,6 +9,7 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Event/AnalogEventInterface.h>
 #include <gadget/Event/DigitalEventInterface.h>
+#include <gadget/Event/PositionEventInterface.h>
 
 namespace ves
 {
@@ -43,9 +44,11 @@ public:
     void DisconnectInterfaces( GameControllerCallbacks* const controller );
 
 private:
-    ///Check deadzone
+    ///Check deadzone for joysticks
     bool CheckDeadZone( const float& val ) const;
-    
+    ///Check deadzone for triggers
+    bool CheckTriggerDeadZone( const float& val ) const;
+
     ///Switchwire init list
     switchwire::ScopedConnectionList m_connections;
 
@@ -55,8 +58,10 @@ private:
     ///Track the position of the game controller so that we can tell what the
     ///current orientation of the controller is for updating the
     ///up and forward vectors of the controller.
-    gadget::PositionInterface m_gamecontroller;
-    
+    typedef gadget::PositionEventInterface < gadget::event::all_events_tag,
+        gadget::event::synchronized_tag > PositionInterface;
+    PositionInterface m_controllerPosition;
+
     typedef gadget::AnalogEventInterface < gadget::event::all_events_tag,
         gadget::event::synchronized_tag > AnalogAxisInterface;
     AnalogAxisInterface m_analogAxis0EventInterface;
@@ -87,7 +92,10 @@ private:
     ///The id of this controller which maps to the m_gameControllerBaseNames
     //list of names.
     unsigned int m_controllerMask;
-        
+    
+    ///Callback for the position data from the controller
+    void OnPositionEvent( gmtl::Matrix44f mat );
+    
     /// All GameController events get delivered here
     ///\note This is the left stick
     void OnAxis0Event( const float event );

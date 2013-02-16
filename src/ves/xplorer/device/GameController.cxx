@@ -67,6 +67,11 @@ void GameController::InitInterfaces( const std::string deviceName )
     
     m_button11EventInterface.init( deviceName + "Digital11" );
     
+    //Setup the position events
+    m_controllerPosition.init( deviceName + "Position" );
+    
+    m_controllerPosition.addCallback( boost::bind( &GameController::OnPositionEvent, this, _1 ) );
+    
     //Left stick - X
     m_analogAxis0EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis0Event, this, _1 ) );
     
@@ -151,6 +156,9 @@ void GameController::ConnectInterfaces( device::GameControllerCallbacks* const c
     m_button10EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton10Event, controller, _1 ) );
     
     m_button11EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton11Event, controller, _1 ) );
+    
+    //Position events
+    m_controllerPosition.addCallback( boost::bind( &GameControllerCallbacks::OnPositionEvent, controller, _1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::DisconnectInterfaces( device::GameControllerCallbacks* const controller )
@@ -195,6 +203,14 @@ void GameController::DisconnectInterfaces( device::GameControllerCallbacks* cons
     m_button10EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &GameControllerCallbacks::OnButton10Event, controller, _1 ) );
     
     m_button11EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &GameControllerCallbacks::OnButton11Event, controller, _1 ) );
+
+    //Position events
+    m_controllerPosition.addCallback( boost::bind( &GameControllerCallbacks::OnPositionEvent, controller, _1 ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnPositionEvent( gmtl::Matrix44f )
+{
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis0Event( const float val )
@@ -203,7 +219,7 @@ void GameController::OnAxis0Event( const float val )
     {
         return;
     }
-    //std::cout << m_controllerMask << " axis 0 " << val << std::endl;
+
     m_grabControllSignal.signal( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +229,7 @@ void GameController::OnAxis1Event( const float val )
     {
         return;
     }
-    //std::cout << m_controllerMask << " axis 1 " << val << std::endl;
+
     m_grabControllSignal.signal( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -223,7 +239,7 @@ void GameController::OnAxis2Event( const float val )
     {
         return;
     }
-    //std::cout << m_controllerMask << " axis 2 " << val << std::endl;
+
     m_grabControllSignal.signal( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -233,27 +249,27 @@ void GameController::OnAxis3Event( const float val )
     {
         return;
     }
-    //std::cout << m_controllerMask << " axis 3 " << val << std::endl;
+
     m_grabControllSignal.signal( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis4Event( const float val )
 {
-    //if( CheckDeadZone( val ) )
+    if( CheckTriggerDeadZone( val ) )
     {
         return;
     }
-    //std::cout << m_controllerMask << " axis 4 " << val << std::endl;
+
     m_grabControllSignal.signal( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnAxis5Event( const float val )
 {
-    //if( CheckDeadZone( val ) )
+    if( CheckTriggerDeadZone( val ) )
     {
         return;
     }
-    //std::cout << m_controllerMask << " axis 5 " << val << std::endl;
+
     m_grabControllSignal.signal( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -375,6 +391,16 @@ bool GameController::CheckDeadZone( const float& val ) const
         }
     }
 
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool GameController::CheckTriggerDeadZone( const float& val ) const
+{
+    if( val < 0.01f )
+    {
+        return true;
+    }
+    
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////

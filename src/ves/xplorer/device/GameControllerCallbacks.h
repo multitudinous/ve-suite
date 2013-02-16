@@ -129,11 +129,6 @@ private:
     ///Update the forward and up vector for the game controller
     void UpdateForwardAndUp();// const osg::Vec3d&, const osg::Vec3d& );
 
-    ///Track the position of the game controller so that we can tell what the
-    ///current orientation of the controller is for updating the
-    ///up and forward vectors of the controller.
-    gadget::PositionInterface m_gamecontroller;
-
     ///The enum to set the control state
     enum UserControlState
     {
@@ -166,6 +161,9 @@ private:
     boost::posix_time::ptime m_lastActiveTime;
 
 public:
+    ///Callback for the position data from the controller
+    void OnPositionEvent( gmtl::Matrix44f mat );
+
     /// All GameController events get delivered here
     ///\note This is the left stick
     void OnAxis0Event( const float event );
@@ -230,6 +228,9 @@ private:
     osg::Vec3d m_startPoint;
     ///Selection ray end point
     osg::Vec3d m_endPoint;
+
+    ///THe position of the controller
+    gmtl::Matrix44f m_controllerPosition;
 
     //The signal handler to hand off to VR Juggler
     //vrj::Kernel::signal_callback_t m_signalHandler;

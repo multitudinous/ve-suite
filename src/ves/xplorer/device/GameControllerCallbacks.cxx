@@ -111,6 +111,10 @@ using namespace ves::xplorer::scenegraph;
 GameControllerCallbacks::GameControllerCallbacks()
     :
     Device( KEYBOARD_MOUSE ),
+    m_controlledState( OpenControlState ),
+    m_activeController( 0 ),
+    m_currX( 0 ),
+    m_currY( 0 ),
     m_exit( false ),
     // create a game pad input handler and data interpreter to control the view.
     //m_gadgetInputAdapter( new osgwMx::MxInputAdapterGadgeteerGamePad() ),
@@ -123,13 +127,9 @@ GameControllerCallbacks::GameControllerCallbacks()
     m_buttonMap( new osgwMx::FunctionalMap() ),
     m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() ),
     m_success( false ),
-    m_uiMode( false ),
-    m_activeController( 0 ),
-    m_controlledState( OpenControlState )
+    m_uiMode( false )
 {
     ConfigureGameControllerDevices();
-
-    m_gamecontroller.init( "VESJoystick" );
 
     // Create a default functional map.
     m_buttonMap->configure( osgwMx::MxGamePad::Button0, osgwMx::FunctionalMap::JumpToWorldOrigin );
@@ -896,12 +896,12 @@ void GameControllerCallbacks::SetRotationMode( std::string rotationMode )
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::UpdateForwardAndUp()
 {
-    if( m_gamecontroller->isStupefied() )
+    /*if( (*m_gamecontroller)->isStupefied() )
     {
         return;
-    }
+    }*/
 
-    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_gamecontroller->getData() );
+    gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_controllerPosition );
     const gmtl::AxisAngled myAxisAngle( osg::DegreesToRadians( double( 90 ) ), 1, 0, 0 );
     const gmtl::Matrix44d myMat = gmtl::make< gmtl::Matrix44d >( myAxisAngle );
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
@@ -1021,5 +1021,10 @@ void GameControllerCallbacks::CheckControlState()
         m_gamControllerEvents[ m_gameControllerBaseNames[ m_activeController ]  ]->
             DisconnectInterfaces( this );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameControllerCallbacks::OnPositionEvent( gmtl::Matrix44f mat )
+{
+    m_controllerPosition = mat;
 }
 ////////////////////////////////////////////////////////////////////////////////
