@@ -162,6 +162,7 @@ private:
 
 public:
     ///Callback for the position data from the controller
+    ///\note Proxy name VESJoystick0Position, VESJoystick1Position, VESJoystick2Position, VESJoystick3Position
     void OnPositionEvent( gmtl::Matrix44f mat );
 
     /// All GameController events get delivered here
