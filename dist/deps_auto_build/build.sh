@@ -224,6 +224,7 @@ echo "
                 On windows this should run the respective iss file
     -t      Create tag file with exuberant ctags
     -a      Specify if we want to build 32 bit on 64 bit
+    -g      Install the deps for ves 2.2 or 3.0 - 22 or 30 are valid options
     -F      Install all of the valid deps that have been built " >&2
 }
 
@@ -763,7 +764,7 @@ function e()
         innosetup;
         ;;
       Darwin | Linux )
-          for p in "${VES_30_PACKAGES[@]}"; do
+          for p in "${VES_PACKAGES[@]}"; do
               unsetvars
               #echo "${DEVENV} ${sln} /build $MSVC_CONFIG|$MSVC_PLATFORM"
               #"${DEVENV}" "${sln}" /build "$MSVC_CONFIG"'|'"$MSVC_PLATFORM" \
@@ -799,7 +800,7 @@ wget
 #
 # execute the script
 #
-while getopts "hkucpbj:U:tdgaF" opts
+while getopts "hkucpbj:U:tdg:aF" opts
 do
 case $opts in
   h)
@@ -823,7 +824,14 @@ case $opts in
   U)export SVN_USERNAME=$OPTARG;;
   t)export build_ctag_files="yes";;
   d)export build_installer="yes";;
-  g)export build_auto_installer="yes";;
+  g)
+    export build_auto_installer="yes"
+    if [[ "$OPTARG" -eq 30 ]] ; then
+        export VES_PACKAGES=( "${VES_30_PACKAGES[@]}" )
+    else
+        export VES_PACKAGES=( "${VES_22_PACKAGES[@]}" )
+    fi
+    ;;
   a)
     platform 32
     arch
