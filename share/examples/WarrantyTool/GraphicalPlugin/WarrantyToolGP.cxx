@@ -155,6 +155,11 @@ void WarrantyToolGP::InitializeNode(
                      &WarrantyToolGP::HighlightPart,
                      *m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_1( "%WarrantyTool.CustomQuery",
+                     void( const std::string& ),
+                     &WarrantyToolGP::CreateDBQuery,
+                     *m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_1( "%WarrantyToolHighlightParts",
                       void( std::vector<std::string>&),
                       &WarrantyToolGP::HighlightParts,
@@ -328,7 +333,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             SaveCurrentQuery( saveFile );
         }
     }
-    else if( commandName == "WARRANTY_TOOL_DB_TOOLS" )
+    /*else if( commandName == "WARRANTY_TOOL_DB_TOOLS" )
     {
         m_cadRootNode = mModel->GetModelCADHandler()->
             GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
@@ -340,7 +345,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         
         dvp = command->GetDataValuePair( "QUERY_STRING" );
         CreateDBQuery( dvp );
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::StripCharacters( std::string& data, const std::string& character )
@@ -833,10 +838,12 @@ void WarrantyToolGP::CreateTextTextures()
     viewCameraGroup->addChild( m_textTrans.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
+void WarrantyToolGP::CreateDBQuery( const std::string& queryString )
 {
     std::cout << "WarrantyToolGP::CreateDBQuery" << std::endl << std::flush;
     mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
+    m_cadRootNode = mModel->GetModelCADHandler()->
+        GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
 
     //Clear and reset the data containers for the user defined queries
     m_assemblyPartNumbers.clear();
@@ -854,7 +861,7 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
     //m_groupedTextTextures = 0;
 
     //Now lets query things
-    const std::string queryString = dvp->GetDataString();
+    //const std::string queryString = dvp->GetDataString();
 
     if( !boost::find_first( queryString, "INNER JOIN" ) )
     {
@@ -1357,7 +1364,7 @@ void WarrantyToolGP::ClearDatabaseUserTables()
         session << tableName, now;
         more = tableRS.moveNext();
     }
-    
+
     if( m_currentStatement )
     {
         delete m_currentStatement;
@@ -1394,7 +1401,7 @@ void WarrantyToolGP::HighlightPartsInJoinedTabled( const std::string& queryStrin
     mCommunicationHandler->SendConductorMessage( "Finished DB query..." );    
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::QueryTableAndHighlightParts( 
+void WarrantyToolGP::QueryTableAndHighlightParts(
     const std::string& tableName, osg::Vec3& glowColor )
 {
     //ves::open::xml::DataValuePairPtr stringDvp = 
@@ -1640,7 +1647,6 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
         return;
     }
     
-    bool failedLoad = false;
     std::string partNumber;
     std::string partNumberHeader;
     std::string partText;
@@ -1671,12 +1677,9 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
     }
     m_currentStatement = new Statement( select );
     
-    if( !failedLoad )
-    {
-        ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-            highlight( m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );//,
-            //osg::Vec3( 0.34118, 1.0, 0.57255 ) );
-    }
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        highlight( m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );//,
+        //osg::Vec3( 0.34118, 1.0, 0.57255 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::SaveCurrentQuery( const std::string& filename )
@@ -1810,7 +1813,10 @@ void WarrantyToolGP::ToggleUnselected( bool const& checked )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::HighlightPart( const std::string& partNumber )
 {
-    m_assemblyPartNumbers.clear();
+    m_cadRootNode = mModel->GetModelCADHandler()->
+        GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
+
+    /*m_assemblyPartNumbers.clear();
     m_joinedPartNumbers.clear();
     //Highlight the respective node
     //Make a user specified part glow
@@ -1818,7 +1824,11 @@ void WarrantyToolGP::HighlightPart( const std::string& partNumber )
 
     mAddingParts = false;
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-        highlight2( m_cadRootNode, "", false, true );
+        highlight2( m_cadRootNode, "", false, true );*/
+    osg::Vec3 nullGlowColor( 0.57255, 0.34118, 1.0 );
+    ves::xplorer::scenegraph::HighlightNodesByNameVisitor
+        highlightNodes( m_cadRootNode, m_assemblyPartNumbers, true, true, nullGlowColor );
+
     //Highlight part
     m_lastPartNumber = partNumber;
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor
@@ -1834,6 +1844,10 @@ void WarrantyToolGP::HighlightParts(std::vector<std::string>& partNumbers)
     osg::Vec3 nullGlowColor( 0.57255, 0.34118, 1.0 );
     ves::xplorer::scenegraph::HighlightNodesByNameVisitor
         highlightNodes( m_cadRootNode, partNumbers, true, true, nullGlowColor );
+
+    m_lastPartNumber = partNumbers.back();
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        highlight( m_cadRootNode, m_lastPartNumber, true, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::UpdateSelectionLine()

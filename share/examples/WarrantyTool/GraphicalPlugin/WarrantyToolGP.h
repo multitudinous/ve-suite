@@ -98,7 +98,7 @@ private:
     ///Render the displays
     void RenderTextualDisplay( bool onOff );
     ///Create a db query from the ui
-    void CreateDBQuery( ves::open::xml::DataValuePairPtr dvp );
+    void CreateDBQuery( const std::string& queryString );
     ///Strip dollar signs from a string
     void StripDollarCharacters( std::string& data );
     ///Replace spaces in a string with under scores

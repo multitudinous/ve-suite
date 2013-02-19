@@ -152,6 +152,13 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
         evm->RegisterSignal( ( &m_clearSignal ),
                             signalName, switchwire::EventManager::unspecified_SignalType );
     }
+
+    {
+        std::string signalName = "WarrantyToolPlugin_UIDialog" +
+            boost::lexical_cast<std::string>( this ) + ".WarrantyTool.CustomQuery";
+        evm->RegisterSignal( ( &m_querySignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::on_m_fileBrowseButton_clicked()
@@ -482,12 +489,12 @@ void WarrantyToolPlugin_UIDialog::on_m_applyButton_clicked( )
     //Once we submit a query we can reset the table creation check box
     ui->m_createTableFromQuery->setChecked( false );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::m_variableChoiceS_changed(const QString &text)
 {
     UpdateQueryDisplay();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::m_variableLogicOperatorS_changed(const QString &text)
 {
     UpdateQueryDisplay();
@@ -601,11 +608,12 @@ void WarrantyToolPlugin_UIDialog::SubmitQueryCommand()
     // uncomment the last line of QueryUserDefinedAndHighlightParts? Just
     // need to make sure the query code in GP isn't doing something extra
     // that we're not doing QueryUserDefinedAndHighlightParts.
-    ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
-        new ves::open::xml::DataValuePair() );
-    cameraGeometryOnOffDVP->SetData( "QUERY_STRING", queryString );
+    //ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
+    //    new ves::open::xml::DataValuePair() );
+    //cameraGeometryOnOffDVP->SetData( "QUERY_STRING", queryString );
+    m_querySignal.signal( queryString );
 
-    unsigned int numStrings = ui->m_displayTextChkList->count();
+    //unsigned int numStrings = ui->m_displayTextChkList->count();
     //wxArrayInt selections;
     //numStrings = m_displayTextChkList->GetSelections( selections );
 
@@ -624,7 +632,7 @@ void WarrantyToolPlugin_UIDialog::SubmitQueryCommand()
         ui->m_tableChoice4->addItem( tempTableName );
     }
 
-    ves::open::xml::OneDStringArrayPtr textFields(
+    /*ves::open::xml::OneDStringArrayPtr textFields(
         new ves::open::xml::OneDStringArray() );
     for( unsigned int i = 0; i < numStrings; ++i )
     {
@@ -633,8 +641,8 @@ void WarrantyToolPlugin_UIDialog::SubmitQueryCommand()
             textFields->AddElementToArray(
                 ui->m_displayTextChkList->item( i )->text().toStdString() );
         }
-    }
-    ves::open::xml::DataValuePairPtr displayText(
+    }*/
+    /*ves::open::xml::DataValuePairPtr displayText(
         new ves::open::xml::DataValuePair() );
     displayText->SetData( "DISPLAY_TEXT_FIELDS", textFields );
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
@@ -642,7 +650,7 @@ void WarrantyToolPlugin_UIDialog::SubmitQueryCommand()
     command->AddDataValuePair( displayText );
     std::string mCommandName = "WARRANTY_TOOL_DB_TOOLS";
     command->SetCommandName( mCommandName );
-    ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
+    ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::UpdateQueryDisplay()

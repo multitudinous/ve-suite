@@ -128,8 +128,10 @@ private:
     ves::util::BoolSignal_type m_connectMouseSelectionSignal;
     ///The connect signal for toggle options
     ves::util::VoidSignal_type m_clearSignal;
-
+    ///Highlight parts via part number
     ves::util::StringSignal_type m_highlightPartSignal;
+    ///Submit custom query
+    ves::util::StringSignal_type m_querySignal;
 
     switchwire::Event< void(std::vector<std::string>&) > m_highlightPartsSignal;
 };
