@@ -109,7 +109,6 @@ WarrantyToolGP::WarrantyToolGP()
     :
     PluginBase(),
     mAddingParts( false ),
-    m_keyboard( 0 ),
     m_groupedTextTextures( 0 ),
     m_cadRootNode( 0 ),
     m_hasPromiseDate( false ),
@@ -161,50 +160,27 @@ void WarrantyToolGP::InitializeNode(
                       &WarrantyToolGP::HighlightParts,
                       *m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_0( "%WarrantyTool.Clear",
+                     void( ),
+                     &WarrantyToolGP::Clear,
+                     *m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_2( "%.StartEndPoint",
                      void( osg::Vec3d, osg::Vec3d ),
                      &WarrantyToolGP::SetStartEndPoint,
                      *m_connections, any_SignalType, normal_Priority );
 
-    m_keyboard =
-        dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
+    CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.ButtonRelease1%", bool( gadget::Keys, int, int, int ),
+                              switchwire::BooleanPropagationCombiner, &WarrantyToolGP::ProcessSelection,
+                              *m_connections, any_SignalType, highest_Priority );
+
+    m_selectionSignal = m_connections->GetLastConnection();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::PreFrameUpdate()
 {
-    if( !m_keyboard )
-    {
-        return;
-    }
-        
-    if( m_groupedTextTextures.valid() )
-    {
-        if( !m_groupedTextTextures->AnimationComplete() )
-        {
-            m_groupedTextTextures->UpdateTexturePosition();
-            return;
-        }
-    }
-
-    //If the mouse made a pick event
-    /*if( !m_keyboard->GetMousePickEvent() )
-    {
-        return;
-    }*/
-
-
-    //If we had keyboard input then try and highlight the cad
-    bool pickedParts = false;
-    if( m_mouseSelection )
-    {
-        pickedParts = FindPartNodeAndHighlightNode();
-    }
-
-    //If we did not pick any parts and we have already queried for data
-    if( m_groupedTextTextures.valid() && !pickedParts )
-    {
-        PickTextTextures();
-    }
+    //Everything is event driven so there really is no need for per frame updates
+    return;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
@@ -257,7 +233,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             m_lastPartNumber = dvp->GetDataString();
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
                 highlight( m_cadRootNode, m_lastPartNumber, true, true );
-            RenderTextualDisplay( true );
+            //RenderTextualDisplay( true );
         }
         else if( dvpName == "SCROLL" )
         {
@@ -274,16 +250,16 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             m_lastPartNumber = dvp->GetDataString();
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
                 highlight( m_cadRootNode, m_lastPartNumber, true, true );
-            RenderTextualDisplay( true );
+            //RenderTextualDisplay( true );
         }
         else if( dvpName == "CLEAR" )
         {
             transparentEnable( m_cadRootNode, 0.3f );
             
-            bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
-            boost::ignore_unused_variable_warning( removed );
+            //bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+            //boost::ignore_unused_variable_warning( removed );
 
-            RenderTextualDisplay( false );
+            //RenderTextualDisplay( false );
 
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
                 highlight2( m_cadRootNode, "", false, true );
@@ -333,7 +309,6 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                     std::cout << "Did not find graphics node for " << mLoadedPartNumbers.at( i ) << std::endl;
                 }
             }*/
-            //m_keyboard->SetProcessSelection( false );
             CreateTextTextures();
         }
         else if( dvpName == "SET_ACTIVE_TABLES" )
@@ -355,7 +330,6 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
     }
     else if( commandName == "WARRANTY_TOOL_DB_TOOLS" )
     {
-        std::cout << " id nnumber " << mModel->GetModelCADHandler()->GetRootCADNodeID() << std::endl;
         m_cadRootNode = mModel->GetModelCADHandler()->
             GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
         if( !m_cadRootNode )
@@ -874,10 +848,10 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
         transparentEnable( m_cadRootNode, 0.3f );
     }
 
-    RenderTextualDisplay( false );
-    bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
-    boost::ignore_unused_variable_warning( removed );
-    m_groupedTextTextures = 0;
+    //RenderTextualDisplay( false );
+    //bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+    //boost::ignore_unused_variable_warning( removed );
+    //m_groupedTextTextures = 0;
 
     //Now lets query things
     const std::string queryString = dvp->GetDataString();
@@ -897,7 +871,6 @@ void WarrantyToolGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 void WarrantyToolGP::RemoveSelfFromSG()
 {
     PluginBase::RemoveSelfFromSG();
-    //m_keyboard->SetProcessSelection( true );
 
     m_connections->DropConnections();
     delete m_connections;
@@ -1004,11 +977,15 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
     
     ///Do we already have active parts
     bool activeQuery = true;
-    if( m_assemblyPartNumbers.size() == 0 )
+    if( !m_currentStatement )
     {
+        if( !m_mouseSelection )
+        {
+            return false;
+        }
         activeQuery = false;
     }
-    
+
     //Find the part numbers of the nodes we hit
     osg::Node* objectHit = 0;
     osg::Node* tempParent = 0;
@@ -1082,7 +1059,6 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
                         {
                             tempActiveName = m_assemblyPartNumbers.at( j );
                             boost::algorithm::to_lower( tempActiveName );
-
                             size_t found = tempNodeName.find( tempActiveName );
                             if( found != std::string::npos )
                             {
@@ -1099,6 +1075,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
             }
             else
             {
+                //pickedPartNumbers = nodeName;
                 if( iter == m_assemblyPartNumbers.end() )
                 {
                     m_assemblyPartNumbers.push_back( nodeName );
@@ -1116,11 +1093,11 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
     if( !activeQuery )
     {
         ///Now we will setup the textual displays for the list of part numbers found
-        RenderTextualDisplay( false );
-        bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
-        boost::ignore_unused_variable_warning( removed );
+        //RenderTextualDisplay( false );
+        //bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+        //boost::ignore_unused_variable_warning( removed );
         
-        m_groupedTextTextures = new ves::xplorer::scenegraph::GroupedTextTextures();
+        //m_groupedTextTextures = new ves::xplorer::scenegraph::GroupedTextTextures();
         
         std::ostringstream outString;
         outString << "Number of parts found " << m_assemblyPartNumbers.size();
@@ -1132,7 +1109,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
         std::vector< std::string > setOfPartNumbers;
         for( size_t i = 0; i < m_assemblyPartNumbers.size(); ++i )
         {
-            ves::xplorer::scenegraph::TextTexture* tempText = 0;
+            /*ves::xplorer::scenegraph::TextTexture* tempText = 0;
             try
             {
                 tempText = new ves::xplorer::scenegraph::TextTexture();
@@ -1142,14 +1119,14 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
                 m_groupedTextTextures = 0;
                 failedLoad = true;
                 break;
-            }
+            }*/
             partNumber = m_assemblyPartNumbers.at( i );
-            tempText->SetTextColor( textColor );
-            tempText->SetTitle( partNumber );
+            //tempText->SetTextColor( textColor );
+            //tempText->SetTitle( partNumber );
             
             //Now lets create the db query
             //SELECT * FROM Parts WHERE Part_Number = "AH116104"
-            Poco::Data::Session session("SQLite", m_dbFilename );
+            /*Poco::Data::Session session("SQLite", m_dbFilename );
             Statement select( session );
             std::ostringstream queryString;
             try
@@ -1190,13 +1167,13 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
                     }
                 }
                 
-                const std::string partText = tempTextData.str();
-                tempText->UpdateText( partText );
-            }
+                //const std::string partText = tempTextData.str();
+                //tempText->UpdateText( partText );
+            }*/
             
-            m_groupedTextTextures->AddTextTexture( partNumber, tempText );
+            //m_groupedTextTextures->AddTextTexture( partNumber, tempText );
             
-           setOfPartNumbers.push_back( partNumber );
+            setOfPartNumbers.push_back( partNumber );
             //ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
             //    m_cadRootNode, partNumber, true, true, 
             //    osg::Vec3( 0.57255, 0.34118, 1.0 ) );
@@ -1207,9 +1184,9 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
         
         if( !failedLoad && (m_assemblyPartNumbers.size() > 0) )
         {
-            m_groupedTextTextures->UpdateListPositions();
+            //m_groupedTextTextures->UpdateListPositions();
             
-            m_textTrans->addChild( m_groupedTextTextures.get() );
+            //m_textTrans->addChild( m_groupedTextTextures.get() );
             
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
                 m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );
@@ -1232,15 +1209,14 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
                m_cadRootNode, setOfPartNumbers, true, true, 
                osg::Vec3( 0.57255, 0.34118, 1.0 ) );
 
-            m_groupedTextTextures->SetTextureUpdateAnimationOn( false );
-            m_groupedTextTextures->MakeTextureActive( pickedPartNumbers );
-            m_groupedTextTextures->SetTextureUpdateAnimationOn( true );
+            //m_groupedTextTextures->SetTextureUpdateAnimationOn( false );
+            //m_groupedTextTextures->MakeTextureActive( pickedPartNumbers );
+            //m_groupedTextTextures->SetTextureUpdateAnimationOn( true );
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
                 m_cadRootNode, pickedPartNumbers, true, true );
         }
     }
     mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
-    
     return (m_assemblyPartNumbers.size() && !failedLoad);
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1380,6 +1356,12 @@ void WarrantyToolGP::ClearDatabaseUserTables()
         tableName = "DROP TABLE " + tableName;
         session << tableName, now;
         more = tableRS.moveNext();
+    }
+    
+    if( m_currentStatement )
+    {
+        delete m_currentStatement;
+        m_currentStatement = 0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1757,6 +1739,18 @@ void WarrantyToolGP::SaveCurrentQuery( const std::string& filename )
 void WarrantyToolGP::SetMouseSelection( bool const& checked )
 {
     m_mouseSelection = checked;
+    if( m_mouseSelection )
+    {
+        //Monopoloze
+        //m_selectionMonopoly = switchwire::EventManager::instance()->MonopolizeConnectionStrong( m_selectionSignal );
+        
+    }
+    else
+    {
+        //Release
+        //m_selectionMonopoly = boost::shared_ptr< switchwire::ConnectionMonopoly >();
+    }
+    Clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::ToggleUnselected( bool const& checked )
@@ -1834,6 +1828,9 @@ void WarrantyToolGP::HighlightPart( const std::string& partNumber )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::HighlightParts(std::vector<std::string>& partNumbers)
 {
+    m_cadRootNode = mModel->GetModelCADHandler()->
+        GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
+
     osg::Vec3 nullGlowColor( 0.57255, 0.34118, 1.0 );
     ves::xplorer::scenegraph::HighlightNodesByNameVisitor
         highlightNodes( m_cadRootNode, partNumbers, true, true, nullGlowColor );
@@ -1851,5 +1848,33 @@ void WarrantyToolGP::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoin
     m_startPoint = startPoint;
     m_endPoint = endPoint;
     UpdateSelectionLine();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool WarrantyToolGP::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
+{
+    m_cadRootNode = mModel->GetModelCADHandler()->
+        GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
+    bool pickedPart = FindPartNodeAndHighlightNode();
+    return pickedPart;
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::Clear()
+{
+    transparentEnable( m_cadRootNode, 0.3f );
+    
+    //bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
+    //boost::ignore_unused_variable_warning( removed );
+    
+    //RenderTextualDisplay( false );
+    
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+        highlight2( m_cadRootNode, "", false, true );
+    
+    //Clear the db of tables
+    ClearDatabaseUserTables();
+    
+    //Clear the list of active part numbers
+    m_assemblyPartNumbers.clear();
+    m_joinedPartNumbers.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -78,6 +78,8 @@ protected slots:
     void on_m_mouseSelection_clicked( bool checked );
     ///Autoconnect the state change call for the toggle unselected
     void on_m_toggleUnselected_clicked( bool checked );
+    ///Autoconnect the clear button
+    void on_m_clear_clicked();
 
     /// Called whenever a checkbox is toggled in the "Text Display Selection"
     /// widget. (Autoconnected)
@@ -85,6 +87,7 @@ protected slots:
     /// Called when Create Table checkbox is toggled. (Autoconnected)
     void on_m_createTableFromQuery_toggled();
     void InputTextChanged ( const QString& text );
+    ///Autoconnect the data load button
     void on_m_dataLoadButton_clicked();
     void on_m_fileBrowseButton_clicked();
     void onFileSelected( const QString& filePath );
@@ -123,6 +126,8 @@ private:
     ves::util::BoolSignal_type m_connectToggleUnselectedSignal;
     ///The connect signal for toggle options
     ves::util::BoolSignal_type m_connectMouseSelectionSignal;
+    ///The connect signal for toggle options
+    ves::util::VoidSignal_type m_clearSignal;
 
     ves::util::StringSignal_type m_highlightPartSignal;
 

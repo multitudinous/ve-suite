@@ -145,6 +145,13 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
         evm->RegisterSignal( ( &m_highlightPartsSignal ),
                             signalName, switchwire::EventManager::unspecified_SignalType );
     }
+    
+    {
+        std::string signalName = "WarrantyToolPlugin_UIDialog" +
+        boost::lexical_cast<std::string>( this ) + ".WarrantyTool.Clear";
+        evm->RegisterSignal( ( &m_clearSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::on_m_fileBrowseButton_clicked()
@@ -1033,3 +1040,9 @@ void WarrantyToolPlugin_UIDialog::on_m_toggleUnselected_clicked( bool checked )
     m_connectToggleUnselectedSignal.signal( checked );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolPlugin_UIDialog::on_m_clear_clicked()
+{
+    m_clearSignal.signal();
+}
+////////////////////////////////////////////////////////////////////////////////
+

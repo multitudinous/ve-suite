@@ -53,14 +53,13 @@
 
 #include <osgUtil/LineSegmentIntersector>
 
+#include <gadget/Type/KeyboardMouseInterface.h>
+
 namespace ves
 {
 namespace xplorer
 {
-namespace device
-{
-    class KeyboardMouse;
-}
+
 namespace scenegraph
 {
     class CADEntity;
@@ -137,10 +136,18 @@ private:
     
     ///Update the selection line
     void UpdateSelectionLine();
-    ///line segment for intersection tests
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
+    
+    ///Process selection events from the event callbacks
+    bool ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
+
     ///Set the start end point
     void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
+
+    ///Clear the current view
+    void Clear();
+
+    ///line segment for intersection tests
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
     ///The start end point
     osg::Vec3d m_startPoint;
     osg::Vec3d m_endPoint;
@@ -158,7 +165,6 @@ private:
     bool mAddingParts;
     std::map< std::string, std::vector< std::pair< std::string, std::string > > > m_dataMap;
     osg::ref_ptr< ves::xplorer::scenegraph::TextTexture > mModelText;
-    ves::xplorer::device::KeyboardMouse* m_keyboard;
     osg::ref_ptr< ves::xplorer::scenegraph::GroupedTextTextures > m_groupedTextTextures;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_textTrans;
 
@@ -194,6 +200,9 @@ private:
     
     /// Required to be able to connect up to signals.
     switchwire::ScopedConnectionList* m_connections;
+    
+    boost::shared_ptr< switchwire::ConnectionMonopoly > m_selectionMonopoly;
+    boost::shared_ptr< boost::signals2::scoped_connection > m_selectionSignal;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )
