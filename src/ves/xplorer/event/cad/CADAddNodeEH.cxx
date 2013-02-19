@@ -132,7 +132,7 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         }
 
         ///This is the root
-        if( node->GetParent().empty() )
+        if( node->GetParent().empty() || ( node->GetParent() == "rootNode" ) )
         {
             ///add the root to the VEBaseClass DCS
             node->SetParent( "rootNode" );
