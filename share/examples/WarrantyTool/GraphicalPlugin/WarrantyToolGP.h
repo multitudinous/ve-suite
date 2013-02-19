@@ -51,6 +51,8 @@
 #include <utility>
 #include <string>
 
+#include <osgUtil/LineSegmentIntersector>
+
 namespace ves
 {
 namespace xplorer
@@ -133,6 +135,17 @@ private:
     /// "%WarrantyToolHighlightParts"
     void HighlightParts( std::vector< std::string >& partNumbers );
     
+    ///Update the selection line
+    void UpdateSelectionLine();
+    ///line segment for intersection tests
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
+    ///Set the start end point
+    void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
+    ///The start end point
+    osg::Vec3d m_startPoint;
+    osg::Vec3d m_endPoint;
+
+        
     std::vector< std::string > mPartNumberList;
     ///PArt numbers loaded from the csv files
     std::vector< std::string > mLoadedPartNumbers;

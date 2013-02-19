@@ -124,6 +124,8 @@ WarrantyToolGP::WarrantyToolGP()
     
     mEventHandlerMap[ "WARRANTY_TOOL_PART_TOOLS" ] = this;
     mEventHandlerMap[ "WARRANTY_TOOL_DB_TOOLS" ] = this;
+    
+    m_lineSegmentIntersector = new osgUtil::LineSegmentIntersector( osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolGP::~WarrantyToolGP()
@@ -159,7 +161,12 @@ void WarrantyToolGP::InitializeNode(
                       &WarrantyToolGP::HighlightParts,
                       *m_connections, any_SignalType, normal_Priority );
 
-    m_keyboard = 
+    CONNECTSIGNALS_2( "%.StartEndPoint",
+                     void( osg::Vec3d, osg::Vec3d ),
+                     &WarrantyToolGP::SetStartEndPoint,
+                     *m_connections, any_SignalType, normal_Priority );
+
+    m_keyboard =
         dynamic_cast< ves::xplorer::device::KeyboardMouse* >( mDevice );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -220,7 +227,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
         if( !m_cadRootNode )
         {
-            std::cout << "m_cadRootNode is invalid" << std::endl << std::flush;
+            std::cout << "m_cadRootNode is invalid" << std::endl << mModel->GetModelCADHandler()->GetRootCADNodeID() << std::endl << std::flush;
             return;
         }
         
@@ -348,6 +355,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
     }
     else if( commandName == "WARRANTY_TOOL_DB_TOOLS" )
     {
+        std::cout << " id nnumber " << mModel->GetModelCADHandler()->GetRootCADNodeID() << std::endl;
         m_cadRootNode = mModel->GetModelCADHandler()->
             GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
         if( !m_cadRootNode )
@@ -981,17 +989,14 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
         return false;
     }
 
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment;// = 
-    //    m_keyboard->GetLineSegmentIntersector();
-
-    osgUtil::IntersectionVisitor intersectionVisitor( intersectorSegment.get() );
+    osgUtil::IntersectionVisitor intersectionVisitor( m_lineSegmentIntersector.get() );
 
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
     m_cadRootNode->accept( intersectionVisitor );
 
     osgUtil::LineSegmentIntersector::Intersections& intersections =
-        intersectorSegment->getIntersections();
+        m_lineSegmentIntersector->getIntersections();
     if( intersections.empty() )
     {
         return false;
@@ -1271,18 +1276,14 @@ void WarrantyToolGP::GetPartNumberFromNodeName( std::string& nodeName )
 void WarrantyToolGP::PickTextTextures()
 {
     //Get the intersection visitor from keyboard mouse or the wand
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > intersectorSegment;// = 
-    //    m_keyboard->GetLineSegmentIntersector();
-    
-    osgUtil::IntersectionVisitor intersectionVisitor(
-                                                     intersectorSegment.get() );
+    osgUtil::IntersectionVisitor intersectionVisitor( m_lineSegmentIntersector.get() );
     
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
     m_textTrans->accept( intersectionVisitor );
     
     osgUtil::LineSegmentIntersector::Intersections& intersections =
-    intersectorSegment->getIntersections();
+        m_lineSegmentIntersector->getIntersections();
     //figure out which text texutre we found
     osg::Node* objectHit = 0;
     bool foundMatch = false;
@@ -1836,5 +1837,19 @@ void WarrantyToolGP::HighlightParts(std::vector<std::string>& partNumbers)
     osg::Vec3 nullGlowColor( 0.57255, 0.34118, 1.0 );
     ves::xplorer::scenegraph::HighlightNodesByNameVisitor
         highlightNodes( m_cadRootNode, partNumbers, true, true, nullGlowColor );
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::UpdateSelectionLine()
+{
+    m_lineSegmentIntersector->reset();
+    m_lineSegmentIntersector->setStart( m_startPoint );
+    m_lineSegmentIntersector->setEnd( m_endPoint );
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint )
+{
+    m_startPoint = startPoint;
+    m_endPoint = endPoint;
+    UpdateSelectionLine();
 }
 ////////////////////////////////////////////////////////////////////////////////
