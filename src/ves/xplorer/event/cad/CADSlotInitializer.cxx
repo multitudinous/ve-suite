@@ -37,6 +37,8 @@
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 
+#include <osg/Node>
+
 namespace ves
 {
 namespace xplorer
@@ -112,6 +114,11 @@ CADSlotInitializer::CADSlotInitializer()
     CONNECTSIGNALS_STATIC( "%SetVizTransparencyFlag",
                           void( const std::string&, const bool& ),
                           &SetVizTransparencyFlag,
+                          m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%NavigateToNode",
+                          void( osg::NodePath const& ),
+                          &NavigateToNode,
                           m_connections, any_SignalType, normal_Priority );
 }
 

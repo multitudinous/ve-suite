@@ -79,7 +79,9 @@ class TreeTab : public QWidget
 {
     Q_OBJECT
 public:
+    ///Constructor
     TreeTab( QWidget* parent = 0 );
+    ///Destructor
     ~TreeTab();
 
     /// Clear the tree and underlying model
@@ -139,6 +141,9 @@ protected Q_SLOTS:
     /// Writes the current CADPropertySet to the DB.
     void on_OKButton_clicked();
 
+    ///Tells the graphics side to frame all on the selected node
+    void on_m_navToButton_clicked();
+
     /// Slot corresponding to ObjectPicked queued signal. The final destination
     /// of logic begun in slot OnObjectPicked.
     void QueuedOnObjectPicked( osg::NodePath nodePath );
@@ -164,16 +169,22 @@ Q_SIGNALS:
     void NodeAddedQSignal( std::string const& filename );
 
 private:
+    ///The underlying qt ui object
     Ui::TreeTab* ui;
-
+    ///The layers tree
     TreeModel* mModel;
-
+    ///Active pset
     propertystore::PropertySetPtr mActiveSet;
-
+    ///Switchwire list of signals for this class
     switchwire::ScopedConnectionList mConnections;
 
+    ///Highlight and add manipulators
     switchwire::Event< void( osg::NodePath& ) > m_highlightAndSetManipulators;
+    ///Add a glow to the selected  node
     switchwire::Event< void( osg::NodePath& ) > m_highlightNode;
+    ///Signal to trigger the nav to animation
+    switchwire::Event< void( osg::NodePath const& ) > m_navToNode;
+    ///Select a given node
     ves::util::StringSignal_type m_CADNodeSelected;
 
     ///Logger reference

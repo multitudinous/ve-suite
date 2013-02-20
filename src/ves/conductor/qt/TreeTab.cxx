@@ -133,6 +133,10 @@ TreeTab::TreeTab( QWidget* parent ) :
         ( &m_CADNodeSelected ),
         "TreeTab.CADNodeSelected" );
 
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_navToNode ),
+        "TreeTab.NavigateToNode" );
+    
     CONNECTSIGNALS_1( "%NodeAdded",
                       void ( std::string const& ),
                       &TreeTab::OnNodeAdded,
@@ -402,6 +406,19 @@ void TreeTab::on_OKButton_clicked()
         //        ves::xplorer::ModelHandler::instance()->GetActiveModel()->
         //                GetModelCADHandler()->
         //                UpdateCADNode( mActiveSet->GetUUIDAsString() );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void TreeTab::on_m_navToButton_clicked()
+{
+    QModelIndex modelIndex = ui->mTreeView->currentIndex();
+    if( modelIndex.isValid() )
+    {
+        osgQtTree::osgTreeItem* item = static_cast< osgQtTree::osgTreeItem* >( modelIndex.internalPointer() );
+        osg::NodePath nodePath =
+            osgwTools::stringToNodePath( item->GetNodePath(),
+            ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
+        m_navToNode.signal( nodePath );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
