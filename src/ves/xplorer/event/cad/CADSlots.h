@@ -69,6 +69,7 @@
 #include <osgwQuery/QueryComputation.h>
 
 #include <osgwTools/NodePathUtils.h>
+#include <osgwTools/Transform.h>
 
 #include <osg/io_utils>
 #include <osg/ComputeBoundsVisitor>
@@ -730,6 +731,9 @@ static void NavigateToNode( osg::NodePath const& nodePath )
     selectedNode->accept( cbbv );
     osg::BoundingBox bb = cbbv.getBoundingBox();
     
+    osg::Matrixd bsMat = osg::computeLocalToWorld( nodePath );
+    sbs = osgwTools::transform( bsMat, sbs );
+
     /*std::cout
     << "|\tBounding Box Info" << std::endl
     << "|\tCenter " << bb.center() << std::endl
