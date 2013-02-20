@@ -990,6 +990,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
         {
             return false;
         }
+        m_assemblyPartNumbers.clear();
         activeQuery = false;
     }
 
@@ -1045,7 +1046,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
         if( !nodeName.empty() )
         {
             std::vector< std::string >::const_iterator iter = 
-            std::find( m_assemblyPartNumbers.begin(), 
+                std::find( m_assemblyPartNumbers.begin(), 
                       m_assemblyPartNumbers.end(), nodeName );
             if( activeQuery )
             {
@@ -1082,7 +1083,6 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
             }
             else
             {
-                //pickedPartNumbers = nodeName;
                 if( iter == m_assemblyPartNumbers.end() )
                 {
                     m_assemblyPartNumbers.push_back( nodeName );
@@ -1096,107 +1096,23 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
         }*/
     }
 
-    bool failedLoad = false;
     if( !activeQuery )
-    {
-        ///Now we will setup the textual displays for the list of part numbers found
-        //RenderTextualDisplay( false );
-        //bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
-        //boost::ignore_unused_variable_warning( removed );
-        
-        //m_groupedTextTextures = new ves::xplorer::scenegraph::GroupedTextTextures();
-        
+    {        
         std::ostringstream outString;
         outString << "Number of parts found " << m_assemblyPartNumbers.size();
         mCommunicationHandler->SendConductorMessage( outString.str() );
-        
-        float textColor[ 4 ] = { 0.0, 0.0, 0.0, 1.0 };
-        std::string partNumber;
-        std::string partNumberHeader;
-        std::vector< std::string > setOfPartNumbers;
-        for( size_t i = 0; i < m_assemblyPartNumbers.size(); ++i )
-        {
-            /*ves::xplorer::scenegraph::TextTexture* tempText = 0;
-            try
-            {
-                tempText = new ves::xplorer::scenegraph::TextTexture();
-            }
-            catch(...)
-            {
-                m_groupedTextTextures = 0;
-                failedLoad = true;
-                break;
-            }*/
-            partNumber = m_assemblyPartNumbers.at( i );
-            //tempText->SetTextColor( textColor );
-            //tempText->SetTitle( partNumber );
-            
-            //Now lets create the db query
-            //SELECT * FROM Parts WHERE Part_Number = "AH116104"
-            /*Poco::Data::Session session("SQLite", m_dbFilename );
-            Statement select( session );
-            std::ostringstream queryString;
-            try
-            {
-                queryString << "SELECT * FROM Parts WHERE Part_Number = \"" << partNumber <<"\"";
-                select << queryString.str().c_str(),now;
-            }
-            catch( Poco::Data::DataException& ex )
-            {
-                std::cout << ex.displayText() << std::endl;
-                continue;
-            }
-            catch( ... )
-            {
-                mCommunicationHandler->SendConductorMessage( "Query is bad." );
-                continue;
-            }
-            
-            // create a RecordSet 
-            Poco::Data::RecordSet rs(select);
-            size_t numQueries = rs.rowCount();
-            if( numQueries > 0 )
-            {
-                std::size_t cols = rs.columnCount();
-                //iterate over all rows and columns
-                bool more = false;
-                more = rs.moveFirst();
-                
-                std::ostringstream tempTextData;
-                for (std::size_t col = 0; col < cols; ++col)
-                {
-                    partNumberHeader = rs.columnName(col);
-                    boost::algorithm::to_lower( partNumberHeader );
-                    if( partNumberHeader != "part_number" )
-                    {
-                        tempTextData << rs.columnName(col) << ": " 
-                            << rs[col].convert<std::string>() << "\n";
-                    }
-                }
-                
-                //const std::string partText = tempTextData.str();
-                //tempText->UpdateText( partText );
-            }*/
-            
-            //m_groupedTextTextures->AddTextTexture( partNumber, tempText );
-            
-            setOfPartNumbers.push_back( partNumber );
-            //ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
-            //    m_cadRootNode, partNumber, true, true, 
-            //    osg::Vec3( 0.57255, 0.34118, 1.0 ) );
-        }
-        ves::xplorer::scenegraph::HighlightNodesByNameVisitor highlightNodes( 
-            m_cadRootNode, setOfPartNumbers, true, true, 
+
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+            highlight2( m_cadRootNode, "", false, true );
+
+        ves::xplorer::scenegraph::HighlightNodesByNameVisitor highlightNodes(
+            m_cadRootNode, m_assemblyPartNumbers, true, true, 
             osg::Vec3( 0.57255, 0.34118, 1.0 ) );
         
-        if( !failedLoad && (m_assemblyPartNumbers.size() > 0) )
+        if( m_assemblyPartNumbers.size() > 0 )
         {
-            //m_groupedTextTextures->UpdateListPositions();
-            
-            //m_textTrans->addChild( m_groupedTextTextures.get() );
-            
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
-                m_cadRootNode, m_assemblyPartNumbers.at( 0 ), true, true );
+                m_cadRootNode, m_assemblyPartNumbers[ 0 ], true, true );
         }
     }
     else
@@ -1224,7 +1140,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
         }
     }
     mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
-    return (m_assemblyPartNumbers.size() && !failedLoad);
+    return( m_assemblyPartNumbers.size() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::GetPartNumberFromNodeName( std::string& nodeName )
