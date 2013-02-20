@@ -756,9 +756,13 @@ static void NavigateToNode( osg::NodePath const& nodePath )
     osgOrigPosition[ 1 ] = sbs.center().y();
     osgOrigPosition[ 2 ] = sbs.center().z();
     osgTransformedPosition2 = osgTransformedPosition * -1.0;
-    
+
+    double tempRotRad2 = osg::DegreesToRadians( -90.0 );
+    gmtl::AxisAngled axisAngle( tempRotRad2, 1, 0, 0 );
+    gmtl::Quatd quatAxisAngle = gmtl::make< gmtl::Quatd >( axisAngle );
+
     //Move the center point to the center of the selected object
-    osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
+    /*osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
         new ves::xplorer::scenegraph::CoordinateSystemTransform(
         ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
         selectedNode.get(), true );
@@ -778,7 +782,7 @@ static void NavigateToNode( osg::NodePath const& nodePath )
     gmtl::setRot( tempRot, quatAxisAngle );
     gmtl::Matrix44d combineMat = tempTrans;// * tempRot;
     ///Add our end rotation back into the mix
-    gmtl::Quatd quatAxisAngle2;
+    gmtl::Quatd quatAxisAngle2;*/
    
     //osgTransformedPosition2 = tempRot * osgTransformedPosition2;
     
