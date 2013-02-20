@@ -40,6 +40,7 @@
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/conductor/qt/UITabs.h>
 #include <ves/conductor/qt/NaturalSortQTreeWidgetItem.h>
+#include <ves/xplorer/scenegraph/Select.h>
 
 #include "csvparser.h"
 
@@ -159,6 +160,11 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
         evm->RegisterSignal( ( &m_querySignal ),
                             signalName, switchwire::EventManager::unspecified_SignalType );
     }
+
+    CONNECTSIGNALS_1( "%WarrantyTool.PartPicked",
+                      void( const std::string& ),
+                      &WarrantyToolPlugin_UIDialog::PartSelected,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::on_m_fileBrowseButton_clicked()
@@ -996,9 +1002,10 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
     int wIndex = title.indexOf( "WHERE" );
     title = title.right( title.size() - (wIndex + 6 ) );
 
-    ves::conductor::UITabs::instance()->
+    /*ves::conductor::UITabs::instance()->
             ActivateTab( ves::conductor::UITabs::instance()->
-                         AddTab( resultsTab, title.toStdString(), true ) );
+                         AddTab( resultsTab, title.toStdString(), true ) );*/
+    ui->m_tabWidget->addTab( resultsTab, title );
 
     std::vector<std::string> partNumbers;
     std::vector< QStringList > resultsData;
@@ -1053,4 +1060,18 @@ void WarrantyToolPlugin_UIDialog::on_m_clear_clicked()
     m_clearSignal.signal();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
+void WarrantyToolPlugin_UIDialog::on_m_tabWidget_tabCloseRequested ( int index )
+{
+    if( index > 0 ) // don't allow "New Query" tab to be closed
+    {
+        delete ui->m_tabWidget->widget( index );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolPlugin_UIDialog::PartSelected( const std::string& partNumber )
+{
+    if( !partNumber.empty() )
+    {
+        ui->m_selectedPartLabel->setText( QString::fromStdString( partNumber ) );
+    }
+}

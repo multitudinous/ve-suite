@@ -180,6 +180,10 @@ void WarrantyToolGP::InitializeNode(
                               *m_connections, any_SignalType, highest_Priority );
 
     m_selectionSignal = m_connections->GetLastConnection();
+
+    switchwire::EventManager::instance()->RegisterSignal(
+                ( &m_partPickedSignal ),
+                "WarrantyTool.PartPicked" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::PreFrameUpdate()
@@ -1095,6 +1099,7 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
             std::cout << itr->nodePath.at( i )->getName() << std::endl;
         }*/
     }
+    m_partPickedSignal.signal( pickedPartNumbers );
 
     if( !activeQuery )
     {        

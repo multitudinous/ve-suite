@@ -41,6 +41,7 @@
 
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
+#include <switchwire/Event.h>
 
 #include <Poco/Tuple.h>
 #include <Poco/Data/Statement.h>
@@ -203,6 +204,8 @@ private:
     
     boost::shared_ptr< switchwire::ConnectionMonopoly > m_selectionMonopoly;
     boost::shared_ptr< boost::signals2::scoped_connection > m_selectionSignal;
+
+    switchwire::Event< void( const std::string& ) > m_partPickedSignal;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

@@ -44,6 +44,10 @@
 #include <vector>
 #include <map>
 
+#include <osg/Node>
+
+#include <switchwire/ScopedConnectionList.h>
+
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
 namespace Ui {
@@ -80,6 +84,8 @@ protected slots:
     void on_m_toggleUnselected_clicked( bool checked );
     ///Autoconnect the clear button
     void on_m_clear_clicked();
+    ///Slot called when user tries to close one of this page's sub-tabs
+    void on_m_tabWidget_tabCloseRequested ( int index );
 
     /// Called whenever a checkbox is toggled in the "Text Display Selection"
     /// widget. (Autoconnected)
@@ -102,6 +108,7 @@ private:
     const std::string GetTextFromLogicOperator( QComboBox* logicOperator );
     void SubmitQueryCommand();
     void UpdateQueryDisplay();
+    void PartSelected( const std::string& partNumber );
 
     Ui::WarrantyToolPlugin_UIDialog *ui;
 
@@ -134,6 +141,9 @@ private:
     ves::util::StringSignal_type m_querySignal;
 
     switchwire::Event< void(std::vector<std::string>&) > m_highlightPartsSignal;
+
+    /// Required to connect to switchwire signals
+    switchwire::ScopedConnectionList m_connections;
 };
 
 #endif // WarrantyToolPlugin_UIDIALOG_H
