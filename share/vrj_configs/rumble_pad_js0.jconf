@@ -9,63 +9,63 @@
          <device>Joystick0</device>
          <unit>0</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital1" version="1">
          <device>Joystick0</device>
          <unit>1</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital2" version="1">
          <device>Joystick0</device>
          <unit>2</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital3" version="1">
          <device>Joystick0</device>
          <unit>3</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital4" version="1">
          <device>Joystick0</device>
          <unit>4</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital5" version="1">
          <device>Joystick0</device>
          <unit>5</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital6" version="1">
          <device>Joystick0</device>
          <unit>6</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital7" version="1">
          <device>Joystick0</device>
          <unit>7</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital8" version="1">
          <device>Joystick0</device>
          <unit>8</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital9" version="1">
          <device>Joystick0</device>
          <unit>9</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital10" version="1">
          <device>Joystick0</device>
          <unit>10</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital11" version="1">
          <device>Joystick0</device>
          <unit>11</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital12" version="1">
          <device>Joystick0</device>
          <unit>12</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital13" version="1">
          <device>Joystick0</device>
          <unit>13</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital14" version="1">
          <device>Joystick0</device>
          <unit>14</unit>
       </digital_proxy>
-      <digital_proxy name="VESJoystick0Digital0" version="1">
+      <digital_proxy name="VESJoystick0Digital15" version="1">
          <device>Joystick0</device>
          <unit>15</unit>
       </digital_proxy>
