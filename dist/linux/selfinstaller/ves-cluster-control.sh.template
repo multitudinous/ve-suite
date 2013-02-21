@@ -1,0 +1,136 @@
+#!/bin/bash
+
+source __VE_SUITE_ENV_FILE_PLACEHOLDER__
+
+unset CLUSTER_CONFIG_FILE
+unset RENDER_NODES
+unset NAMED_VRJ_CONFIG
+unset VRJ_CONFIG_FILE
+
+function usage()
+{
+    printf "Usage: %s -c <cluster config file> [ -a <action> [ -n <named vrj config> ]] [ -h ]\n" $0
+}
+
+function printAvailableActions()
+{
+    echo "Available actions are:"
+    echo ""
+    echo "  launch"
+    echo "  kill"
+}
+
+function getNamedVRJConfigFile()
+{
+    local named_vrj_config="${2}"
+
+    VRJ_CONFIG_FILE=$(awk -v CONFIG="${named_vrj_config}" '{
+        if( NF == 3 && $1 == "vrjconfig" )
+        {
+            if( $2 == CONFIG )
+            {
+                print $3
+            }
+        }
+    }' "${1}")
+
+    if [ -z "${VRJ_CONFIG_FILE}" ]
+    then
+        printf "Couldn't find named config '%s'\n" "${named_vrj_config}"
+        exit 1
+    fi
+}
+
+function getRenderNodes()
+{
+    RENDER_NODES=$(awk '{
+        if( NF == 2 && $1 == "rendernode" )
+        {
+            print $2
+        }
+    }' "${1}")
+
+    if [ -z "${RENDER_NODES}" ]
+    then
+        echo "No render nodes found"
+        exit 1
+    fi
+}
+
+while getopts "c:a:n:h" OPT
+do
+    case ${OPT} in
+        c)
+            CLUSTER_CONFIG_FILE="${OPTARG}"
+            ;;
+        a)
+            ACTION="${OPTARG}"
+            ;;
+        n)
+            NAMED_VRJ_CONFIG="${OPTARG}"
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        ?)
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+if [ -z "${CLUSTER_CONFIG_FILE}" ]
+then
+    if [ -z "${VES_CLUSTER_CONFIG_FILE}" ]
+    then
+        echo "No config file specified, and VES_CLUSTER_CONFIG_FILE is not set!"
+        exit 1
+    else
+        CLUSTER_CONFIG_FILE="${VES_CLUSTER_CONFIG_FILE}"
+        printf "Cluster configuration file found at %s\n" "${CLUSTER_CONFIG_FILE}"
+    fi
+fi
+
+if [ -z "${ACTION}" ]
+then
+    echo "No action specified"
+    printAvailableActions
+    exit 1
+fi
+
+case "${ACTION}" in
+    launch)
+        if [ -z "${NAMED_VRJ_CONFIG}" ]
+        then
+            echo "No named VRJ configuration specified"
+            exit 1
+        fi
+
+        getNamedVRJConfigFile "${CLUSTER_CONFIG_FILE}" "${NAMED_VRJ_CONFIG}"
+        
+        getRenderNodes "${CLUSTER_CONFIG_FILE}"
+
+        launch-ves_xplorer-master.sh -j "${VRJ_CONFIG_FILE}" &
+        
+        for node in ${RENDER_NODES}
+        do
+            ssh ${node} 'launch-ves_xplorer-rendernode.sh' &
+        done
+        ;;
+    kill)
+        killall -9 ves_xplorer
+        
+        getRenderNodes "${CLUSTER_CONFIG_FILE}"
+
+        for node in ${RENDER_NODES}
+        do
+            ssh ${node} 'killall -9 ves_xplorer'
+        done
+        ;;
+    *)
+        echo "Invalid action specified"
+        printAvailableActions
+        exit 1
+        ;;
+esac
