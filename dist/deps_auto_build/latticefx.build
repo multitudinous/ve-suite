@@ -1,0 +1,63 @@
+PACKAGE_NAME=latticeFX
+BASE_DIR="${DEV_BASE_DIR}/latticefx"
+
+SOURCE_RETRIEVAL_METHOD=private-svn
+SOURCE_URL=https://subversion.vesuite.org/skewmatrix/skewmatrix/backdropFX/trunk
+SOURCE_URL=http://latticefx.googlecode.com/svn/trunk
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+
+PREBUILD_METHOD=cmake
+
+SKIP_FPC_INSTALL="yes"
+
+CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DLFX_BUILD_APPS=ON )
+CMAKE_PARAMS+=( -DLFX_BUILD_EXAMPLES=ON )
+CMAKE_PARAMS+=( -DLFX_BUILD_TESTS=ON )
+CMAKE_PARAMS+=( -DBUILD_SHARED_LIBS=ON )
+CMAKE_PARAMS+=( -DOSGInstallType="Alternate Install Location" )
+CMAKE_PARAMS+=( -DOSGInstallLocation="${OSG_INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DPOCOInstallType="Alternate Install Location" )
+CMAKE_PARAMS+=( -DPOCOInstallLocation="${POCO_INSTALL_DIR}" )
+
+CMAKE_PARAMS+=( -DosgWorks_DIR="${OSGWORKS_INSTALL_DIR}/lib" )
+CMAKE_PARAMS+=( -Dcrunchstore_DIR="${crunchstore_INSTALL_DIR}/lib" )
+CMAKE_PARAMS+=( -DVTK_DIR="${VTK_INSTALL_DIR}/lib/${VTK_VERSION_DIR}" )
+
+#CMAKE_PARAMS+=( -DBoost_NO_BOOST_CMAKE=ON )
+#CMAKE_PARAMS+=( -DBOOST_ROOT="${BOOST_INSTALL_DIR}" )
+CMAKE_PARAMS+=( -DBoost_DIR="${BOOST_INSTALL_DIR}" )
+
+VES_INSTALL_PARAMS+=( lib )
+VES_INSTALL_PARAMS+=( bin )
+VES_INSTALL_PARAMS+=( share )
+
+case $PLATFORM in
+  Windows)
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/${BOOST_VERSION_DIR}" )
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+
+    MSVC_CONFIG=RelWithDebInfo
+    if [ ${ARCH} = "32-bit" ]; then
+      MSVC_PLATFORM=Win32
+    else
+      MSVC_PLATFORM=x64
+    fi
+    MSVC_SOLUTION="backdropFX.sln"
+    #MSVC_PROJECT_NAMES+=( INSTALL )
+    ;;
+  Darwin)
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    ;;
+  Linux)
+    CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+
+    CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
+    CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
+    ;;
+esac
