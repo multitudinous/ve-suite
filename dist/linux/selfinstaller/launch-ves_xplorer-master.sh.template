@@ -1,0 +1,30 @@
+#!/bin/bash
+
+source __VE_SUITE_ENV_FILE_PLACEHOLDER__ 
+
+function usage()
+{
+    echo "usage: $0 -j <path to jconf file>"
+    exit 1
+}
+
+while getopts "j:" OPT
+do
+    case ${OPT} in
+        j)
+            JCONF_FILE="${OPTARG}"
+            ;;
+        ?)
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+if [ -z "${JCONF_FILE}" ]
+then
+    usage
+    exit 1
+fi
+
+ves_xplorer --vrjmaster --jconf="${JCONF_FILE}" --VESLog=Debug --VESRTT
