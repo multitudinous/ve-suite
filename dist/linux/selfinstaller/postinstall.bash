@@ -95,32 +95,19 @@ function generateEnvironmentFile()
     echo "  Source this file in your shell's rc file."
 }
 
-function generateVES22LauncherScript()
-{
-    local install_prefix=$1
-
-    if [ -f "./ves_version" ]
-    then
-        local major_version=$(awk 'FNR==1 {print $1;}' ./ves_version)
-        local minor_version=$(awk 'FNR==2 {print $1;}' ./ves_version)
-
-        if [ ${major_version} == 2 ]
-        then
-            if [ ${minor_version} == 2 ]
-            then
-                # generate a launcher script
-                echo '#!/bin/sh' >> "${install_prefix}/bin/velauncher.sh"
-                echo '${SHELL} << eof' >> "${install_prefix}/bin/velauncher.sh"
-                echo "source ${env_file_path}" >> "${install_prefix}/bin/velauncher.sh"
-                echo 'velauncher.py' >> "${install_prefix}/bin/velauncher.sh"
-                echo 'eof' >> "${install_prefix}/bin/velauncher.sh"
-                echo 'exit' >> "${install_prefix}/bin/velauncher.sh"
-                chmod +x "${install_prefix}/bin/velauncher.sh"
-            fi
-        fi
-    fi
-}
-
 generateEnvironmentFile $1 $2
 
-generateVES22LauncherScript $1
+if [ -f "./ves_version" ]
+then
+    major_version=$(awk 'FNR==1 {print $1;}' ./ves_version)
+    minor_version=$(awk 'FNR==2 {print $1;}' ./ves_version)
+
+    if [ ${major_version} == 2 ]
+    then
+        if [ ${minor_version} == 2 ]
+        then
+            sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./velauncher.sh.template > "${1}/bin/velauncher.sh"
+            chmod +x "${1}/bin/velauncher.sh"
+        fi
+    fi
+fi
