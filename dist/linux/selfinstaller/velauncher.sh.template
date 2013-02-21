@@ -1,0 +1,6 @@
+#!/bin/sh
+${SHELL} << eof
+source __VE_SUITE_ENV_FILE_PLACEHOLDER__
+velauncher.py
+eof
+exit
