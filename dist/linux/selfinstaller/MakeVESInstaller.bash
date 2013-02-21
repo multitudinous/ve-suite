@@ -117,6 +117,9 @@ cp ${SCRIPT_DIR}/install.bash ${INSTALLER_PAYLOAD_DIR}
 echo "Adding post-install script..."
 cp ${SCRIPT_DIR}/postinstall.bash ${INSTALLER_PAYLOAD_DIR}
 
+echo "Adding script templates..."
+cp ${SCRIPT_DIR}/velauncher.sh.template ${INSTALLER_PAYLOAD_DIR}
+
 # tar up the VE-Suite install and add it to the payload directory
 echo "Archiving the VE-Suite install..."
 cd ${VES_INSTALL_PREFIX}
