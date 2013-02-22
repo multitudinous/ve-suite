@@ -386,12 +386,12 @@ void PluginSelectionTab::on_m_instantiatedPlugins_itemDoubleClicked( QListWidget
 
         // Compose a widget containing the PluginPorts ui in the top part and
         // the UIWidget associated with this plugin in the bottom part
-        Ui::Form* qtop = new Ui::Form;
+        /*Ui::Form* qtop = new Ui::Form;
         QWidget* top = new QWidget( 0 );
-        qtop->setupUi( top );
+        qtop->setupUi( top );*/
         QWidget* bottom = interface->GetUIWidget();
         QVBoxLayout* layout = new QVBoxLayout;
-        layout->addWidget( top );
+        //layout->addWidget( top );
         layout->addWidget( bottom );
         QWidget* tempWidget = new QWidget( 0 );
         tempWidget->setLayout( layout );
