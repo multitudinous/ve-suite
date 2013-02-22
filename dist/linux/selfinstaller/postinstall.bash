@@ -102,12 +102,18 @@ then
     major_version=$(awk 'FNR==1 {print $1;}' ./ves_version)
     minor_version=$(awk 'FNR==2 {print $1;}' ./ves_version)
 
-    if [ ${major_version} == 2 ]
+    if [[ ${major_version} == 2 && ${minor_version} == 2 ]]
     then
-        if [ ${minor_version} == 2 ]
-        then
-            sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./velauncher.sh.template > "${1}/bin/velauncher.sh"
-            chmod +x "${1}/bin/velauncher.sh"
-        fi
+        # this is a 2.2 install
+        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./velauncher.sh.template > "${1}/bin/velauncher.sh"
+        chmod +x "${1}/bin/velauncher.sh"
+    else
+        # this is a 3.x install
+        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./ves-cluster-control.sh.template > "${1}/bin/ves-cluster-control.sh"
+        chmod +x "${1}/bin/ves-cluster-control.sh"
+        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./launch-ves_xplorer-master.sh.template > "${1}/bin/launch-ves_xplorer-master.sh"
+        chmod +x "${1}/bin/launch-ves_xplorer-master.sh"
+        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./launch-ves_xplorer-rendernode.sh.template > "${1}/bin/launch-ves_xplorer-rendernode.sh"
+        chmod +x "${1}/bin/launch-ves_xplorer-rendernode.sh"
     fi
 fi
