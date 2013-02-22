@@ -1,0 +1,13 @@
+setenv VES_PREFIX __VES_INSTALL_PREFIX_PLACEHOLDER__
+setenv PATH ${VES_PREFIX}/bin:${PATH}
+setenv LD_LIBRARY_PATH ${VES_PREFIX}/lib:${VES_PREFIX}/lib/vtk-5.10:${VES_PREFIX}/lib64:${LD_LIBRARY_PATH}
+setenv OSG_FILE_PATH ${VES_PREFIX}/share/osgWorks/data:${VES_PREFIX}/share/osgBullet/data:${VES_PREFIX}/share/backdropFX/data
+setenv OSGNOTIFYLEVEL WARNING
+setenv VJ_BASE_DIR ${VES_PREFIX}
+
+# if necessary, set PYTHONPATH
+set WXPYTHON_BASE_DIR=(`find ${VES_PREFIX} -type d -name "python*"`)
+
+if ( "${%WXPYTHON_BASE_DIR}" != 0 ) then
+    setenv PYTHONPATH ${WXPYTHON_BASE_DIR}/site-packages/wx-2.8-gtk2-unicode:${PYTHONPATH}
+endif

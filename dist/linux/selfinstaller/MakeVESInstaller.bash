@@ -123,6 +123,10 @@ cp ${SCRIPT_DIR}/ves-cluster-control.sh.template ${INSTALLER_PAYLOAD_DIR}
 cp ${SCRIPT_DIR}/launch-ves_xplorer-master.sh.template ${INSTALLER_PAYLOAD_DIR}
 cp ${SCRIPT_DIR}/launch-ves_xplorer-rendernode.sh.template ${INSTALLER_PAYLOAD_DIR}
 
+echo "Adding environment templates..."
+cp ${SCRIPT_DIR}/ves-env.sh.template ${INSTALLER_PAYLOAD_DIR}
+cp ${SCRIPT_DIR}/ves-env.csh.template ${INSTALLER_PAYLOAD_DIR}
+
 # tar up the VE-Suite install and add it to the payload directory
 echo "Archiving the VE-Suite install..."
 cd ${VES_INSTALL_PREFIX}
