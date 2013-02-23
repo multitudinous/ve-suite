@@ -123,3 +123,14 @@ void QueryResults::on_m_queryResults_currentItemChanged(QTreeWidgetItem* current
     m_highlightPartSignal.signal( partNumber );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void QueryResults::SetSelectedPartNumber( const std::string& partNumber )
+{
+    QList< QTreeWidgetItem* > partNums = ui->m_queryResults->findItems( QString::fromStdString( partNumber ), Qt::MatchFixedString, 0 );
+    if( !partNums.empty() )
+    {
+        QTreeWidgetItem* item = partNums.at( 0 );
+        ui->m_queryResults->setCurrentItem( item );
+        //ui->m_queryResults->setCurrentIndex( );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

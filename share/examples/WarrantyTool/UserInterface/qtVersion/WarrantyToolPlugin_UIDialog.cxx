@@ -1073,5 +1073,10 @@ void WarrantyToolPlugin_UIDialog::PartSelected( const std::string& partNumber )
     if( !partNumber.empty() )
     {
         ui->m_selectedPartLabel->setText( QString::fromStdString( partNumber ) );
+        QueryResults* queryTab = dynamic_cast< QueryResults* >( ui->m_tabWidget->currentWidget() );
+        if( queryTab )
+        {
+            queryTab->SetSelectedPartNumber( partNumber );
+        }
     }
 }

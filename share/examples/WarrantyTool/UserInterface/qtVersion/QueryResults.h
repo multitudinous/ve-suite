@@ -60,6 +60,9 @@ public:
     /// Puts the query results into a tree widget
     void PopulateResults( std::vector< QStringList > const& results );
 
+    ///Set the partnumber of the current selected part number
+    void SetSelectedPartNumber( const std::string& partNumber );
+
 protected:
     void changeEvent(QEvent *e);
 
