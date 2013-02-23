@@ -1174,16 +1174,16 @@ void WarrantyToolPlugin_UIDialog::QueryPartNumber( const std::string& queryStrin
     QStringList headers;
     if( more )
     {
-        for (std::size_t col = 0; col < cols; ++col)
+        for( std::size_t col = 0; col < cols; ++col )
         {
-            headers.append( QString::fromStdString( rs.columnName( col ) ));
+            headers.append( QString::fromStdString( rs.columnName( col ) ) );
         }
     }
     m_mouseSelectionResults->SetHeaders( headers );
     
     //Now that we have the headers lets get the raw data for the part
     std::vector< QStringList > resultsData;
-    while (more)
+    while( more )
     {
         QStringList recordData;
         for( std::size_t col = 0; col < cols; ++col )
