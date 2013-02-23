@@ -54,6 +54,8 @@ namespace Ui {
     class WarrantyToolPlugin_UIDialog;
 }
 
+class QueryResults;
+
 class WarrantyToolPlugin_UIDialog : public QWidget
 {
     Q_OBJECT
@@ -67,7 +69,10 @@ public:
 
 protected:
     void changeEvent(QEvent *e);
+    ///Grab the data for a custom query and create the results tab
     void QueryUserDefinedAndHighlightParts( const std::string& queryString );
+    ///Grab that data for a specific part
+    void QueryPartNumber( const std::string& queryString );
 
 protected slots:
     /// Toggles succeeding logic blocks on and off depending on value of
@@ -126,8 +131,9 @@ private:
     size_t m_tableCounter;
     ///List of tables created by the user
     std::vector< std::string > m_tableList;
+    ///The filename with the data we are loading
     std::string m_filename;
-
+    ///File chooser dialog
     QFileDialog* m_fileDialog;
     ///The connect signal for toggle options
     ves::util::BoolSignal_type m_connectToggleUnselectedSignal;
@@ -139,11 +145,12 @@ private:
     ves::util::StringSignal_type m_highlightPartSignal;
     ///Submit custom query
     ves::util::StringSignal_type m_querySignal;
-
+    ///Send a list of part numbers to be highlighted
     switchwire::Event< void(std::vector<std::string>&) > m_highlightPartsSignal;
-
     /// Required to connect to switchwire signals
     switchwire::ScopedConnectionList m_connections;
+    ///The mouse slection results tab
+    QueryResults* m_mouseSelectionResults;
 };
 
 #endif // WarrantyToolPlugin_UIDIALOG_H

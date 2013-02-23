@@ -112,7 +112,10 @@ void QueryResults::on_m_highlightAllButton_clicked()
 {
     // Clear out previous highlight before doing new
     m_highlightPartSignal.signal( "" );
-    m_highlightPartsSignal.signal( m_partNumbers );
+    if( m_partNumbers.size() > 0 )
+    {
+        m_highlightPartsSignal.signal( m_partNumbers );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void QueryResults::on_m_queryResults_currentItemChanged(QTreeWidgetItem* current,

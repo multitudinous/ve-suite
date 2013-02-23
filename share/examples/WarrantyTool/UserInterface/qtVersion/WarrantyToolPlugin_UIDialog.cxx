@@ -73,7 +73,8 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::WarrantyToolPlugin_UIDialog),
     m_tableCounter(0),
-    m_fileDialog(0)
+    m_fileDialog(0),
+    m_mouseSelectionResults( 0 )
 {
     ui->setupUi(this);
 
@@ -466,6 +467,7 @@ void WarrantyToolPlugin_UIDialog::OnDataLoad( std::string const& fileName )
                 ui->m_displayTextChkList->findItems( "part_number", Qt::MatchFixedString );
         if( !partNums.empty() )
         {
+            ui->m_displayTextChkList->removeItemWidget( partNums.at( 0 ) );
             delete partNums.at( 0 );
         }
     }
@@ -496,12 +498,12 @@ void WarrantyToolPlugin_UIDialog::on_m_applyButton_clicked( )
     ui->m_createTableFromQuery->setChecked( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolPlugin_UIDialog::m_variableChoiceS_changed(const QString &text)
+void WarrantyToolPlugin_UIDialog::m_variableChoiceS_changed(const QString& )
 {
     UpdateQueryDisplay();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolPlugin_UIDialog::m_variableLogicOperatorS_changed(const QString &text)
+void WarrantyToolPlugin_UIDialog::m_variableLogicOperatorS_changed(const QString& )
 {
     UpdateQueryDisplay();
 }
@@ -993,7 +995,6 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
             headers.append( QString::fromStdString( partNumberHeader ));
         }
     }
-    //queryResults->setHeaderLabels( headers );
     resultsTab->SetHeaders( headers );
 
     // Keep everything to the right of "WHERE " in the query to use as the tab
@@ -1026,7 +1027,6 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
 
         more = rs.moveNext();
     }
-    //queryResults->setSortingEnabled( true );
     resultsTab->PopulateResults( resultsData );
 
 //    connect( queryResults, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this,
@@ -1048,6 +1048,20 @@ void WarrantyToolPlugin_UIDialog::QueryItemChanged( QTreeWidgetItem* current,
 void WarrantyToolPlugin_UIDialog::on_m_mouseSelection_clicked( bool checked )
 {
     m_connectMouseSelectionSignal.signal( checked );
+    if( checked )
+    {
+        m_mouseSelectionResults = new QueryResults( 0 );
+        QString title = QString::fromStdString( "Mouse selection" );
+        ui->m_tabWidget->addTab( m_mouseSelectionResults, title );
+        return;
+    }
+    
+    if( m_mouseSelectionResults )
+    {
+        ui->m_tabWidget->removeTab( ui->m_tabWidget->indexOf( m_mouseSelectionResults ) );
+        delete m_mouseSelectionResults;
+        m_mouseSelectionResults = 0;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::on_m_toggleUnselected_clicked( bool checked )
@@ -1070,13 +1084,116 @@ void WarrantyToolPlugin_UIDialog::on_m_tabWidget_tabCloseRequested ( int index )
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::PartSelected( const std::string& partNumber )
 {
-    if( !partNumber.empty() )
+    if( partNumber.empty() )
     {
-        ui->m_selectedPartLabel->setText( QString::fromStdString( partNumber ) );
-        QueryResults* queryTab = dynamic_cast< QueryResults* >( ui->m_tabWidget->currentWidget() );
-        if( queryTab )
+        return;
+    }
+
+    ui->m_selectedPartLabel->setText( QString::fromStdString( partNumber ) );
+
+    if( m_mouseSelectionResults )
+    {
+        QueryPartNumber( partNumber );
+        return;
+    }
+
+    QueryResults* queryTab = dynamic_cast< QueryResults* >( ui->m_tabWidget->currentWidget() );
+    if( !queryTab )
+    {
+        return;
+    }
+
+    queryTab->SetSelectedPartNumber( partNumber );
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolPlugin_UIDialog::QueryPartNumber( const std::string& queryString )
+{
+    std::string queryCommand = "SELECT ";
+    //Setup first variable
+    unsigned int numStrings = ui->m_displayTextChkList->count();
+    for( unsigned int i = 0; i < numStrings; ++i )
+    {
+        queryCommand += "\"" + ( ui->m_displayTextChkList->item( i )->text().toStdString() ) + "\"" + ", ";
+    }
+
+    queryCommand += "\"Part_Number\" ";
+    queryCommand += "FROM Parts WHERE ";
+
+    std::string variableString = "Part_Number";
+    std::string logicString = "LIKE";
+    std::string inputString = "'%" + queryString + "%'";
+
+    std::string queryPart = "\"" + variableString + "\" " + logicString + " " + inputString;
+    queryCommand += queryPart;
+
+    Poco::Data::Session session("SQLite", m_filename );
+    Poco::Data::Statement select( session );
+    try
+    {
+        select << queryCommand , Poco::Data::now;
+    }
+    catch( Poco::Data::DataException& ex )
+    {
+        std::cout << "WarrantyToolPlugin_UIDialog::QueryPartNumber "
+            << std::endl << queryCommand << std::endl << std::flush;
+        std::cout << ex.displayText() << std::endl;
+        return;
+    }
+    catch( ... )
+    {
+        return;
+    }
+
+    // create a RecordSet
+    Poco::Data::RecordSet rs(select);
+    std::size_t cols = rs.columnCount();
+    size_t numQueries = rs.rowCount();
+
+    if( numQueries == 0 )
+    {
+        /*std::vector< QStringList > resultsData;
+        QStringList recordData;
+        recordData.append( QString::fromStdString( queryString + " not found in the db." ) );
+        resultsData.push_back( recordData );
+        m_mouseSelectionResults->PopulateResults( resultsData );*/
+        ui->m_selectedPartLabel->setText( QString::fromStdString( queryString + " not found in the db." ) );
+        return;
+    }
+    // iterate over all rows and columns
+    bool more = false;
+    try
+    {
+        more = rs.moveFirst();
+    }
+    catch( ... )
+    {
+        return;
+    }
+    
+    // Get header names
+    QStringList headers;
+    if( more )
+    {
+        for (std::size_t col = 0; col < cols; ++col)
         {
-            queryTab->SetSelectedPartNumber( partNumber );
+            headers.append( QString::fromStdString( rs.columnName( col ) ));
         }
     }
+    m_mouseSelectionResults->SetHeaders( headers );
+    
+    //Now that we have the headers lets get the raw data for the part
+    std::vector< QStringList > resultsData;
+    while (more)
+    {
+        QStringList recordData;
+        for( std::size_t col = 0; col < cols; ++col )
+        {
+            recordData.append( QString::fromStdString( rs[col].convert<std::string>() ) );
+        }
+        resultsData.push_back( recordData );
+        
+        more = rs.moveNext();
+    }
+    m_mouseSelectionResults->PopulateResults( resultsData );
 }
+////////////////////////////////////////////////////////////////////////////////

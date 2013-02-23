@@ -1099,7 +1099,6 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
             std::cout << itr->nodePath.at( i )->getName() << std::endl;
         }*/
     }
-    m_partPickedSignal.signal( pickedPartNumbers );
 
     if( !activeQuery )
     {        
@@ -1118,12 +1117,14 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
         {
             ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlight( 
                 m_cadRootNode, m_assemblyPartNumbers[ 0 ], true, true );
+            m_partPickedSignal.signal( m_assemblyPartNumbers[ 0 ] );
         }
     }
     else
     {
         if( !pickedPartNumbers.empty() )
         {
+            m_partPickedSignal.signal( pickedPartNumbers );
             std::vector< std::string > setOfPartNumbers;
             for( size_t i = 0; i < m_assemblyPartNumbers.size(); ++i )
             {
