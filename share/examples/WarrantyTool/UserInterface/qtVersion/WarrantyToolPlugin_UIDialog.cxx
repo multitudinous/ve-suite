@@ -1110,14 +1110,15 @@ void WarrantyToolPlugin_UIDialog::QueryPartNumber( const std::string& queryStrin
 {
     std::string queryCommand = "SELECT ";
     //Setup first variable
-    unsigned int numStrings = ui->m_displayTextChkList->count();
+    /*unsigned int numStrings = ui->m_displayTextChkList->count();
     for( unsigned int i = 0; i < numStrings; ++i )
     {
         queryCommand += "\"" + ( ui->m_displayTextChkList->item( i )->text().toStdString() ) + "\"" + ", ";
     }
 
-    queryCommand += "\"Part_Number\" ";
-    queryCommand += "FROM Parts WHERE ";
+    queryCommand += "\"Part_Number\" ";*/
+    
+    queryCommand += "* FROM Parts WHERE ";
 
     std::string variableString = "Part_Number";
     std::string logicString = "LIKE";

@@ -388,7 +388,7 @@ std::vector< std::pair< std::string, std::string > > OPC::ReadVars()
 
 	_ASSERT(pValue!=NULL);
     
-    m_MonitorVarsAndVals.clear();
+    m_MonitorVarsAndVals.resize(0);
     for( int i = 0; i < m_opcVariables.size(); i++)
     {
         std::pair< std::string, std::string > nameNval;

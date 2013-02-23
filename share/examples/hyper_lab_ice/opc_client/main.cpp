@@ -203,6 +203,7 @@ int main( int argc, char** argv )
         controller.bind( "tcp://*:3098" );
 
         bool kill_msg( false );
+        std::vector< std::pair< std::string, std::string > > valVector;
         while( !kill_msg )
         {
             //Get OPC data here
@@ -216,7 +217,6 @@ int main( int argc, char** argv )
                 if( !opcInterface->IsOPCVarsEmpty() )
                 {
                     //int counter = 0;
-                    std::vector< std::pair< std::string, std::string > > valVector;
                     //while( counter < 100 )
                     {
                         valVector = opcInterface->ReadVars();
@@ -228,11 +228,11 @@ int main( int argc, char** argv )
                             }
                         }*/
                         std::string jsonData = to_json( valVector );
+                        valVector.resize(0);
                         //std::cout << std::endl << jsonData << std::endl << std::endl;
                         //counter += 1;
                         zmq::message_t zmq_msg;
                         zmq_msg.rebuild( jsonData.size() );
-                        //zmq_msg.rebuild( str.size() );
                         memcpy( zmq_msg.data(), jsonData.data(), jsonData.size() );
                         assert( controller.send( zmq_msg ) );
                     }
