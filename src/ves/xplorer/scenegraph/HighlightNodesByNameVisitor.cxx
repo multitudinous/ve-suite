@@ -108,8 +108,9 @@ void HighlightNodesByNameVisitor::apply( osg::Node& node )
                     //std::cout << drawable_stateset->getNumParents() << std::endl;
                     //std::cout << "StateSet is shared." << std::endl;
                     osg::ref_ptr< osg::StateSet > temp_stateset =
-                    new osg::StateSet( *( geode_stateset.get() ), osg::CopyOp::DEEP_COPY_ALL );
+                        new osg::StateSet( *( geode_stateset.get() ), osg::CopyOp::DEEP_COPY_ALL );
                     node.setStateSet( temp_stateset.get() );
+                    geode_stateset = temp_stateset;
                 }
                 
                 //Now highlight the node
