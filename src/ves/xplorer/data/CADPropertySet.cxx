@@ -201,6 +201,8 @@ void CADPropertySet::CreateSkeleton()
 
     AddProperty( "TransparencyFlag", false, "Make translucent when viz is active" );
 
+    AddProperty( "TwoSidedLighting", false, "Enable two-sided lighting" );
+
     AddProperty( "GPS", false, "Global Positioning" );
     AddProperty( "GPS_Longitude", 0.0 );
     AddProperty( "GPS_Latitude", 0.0 );
@@ -363,6 +365,11 @@ void CADPropertySet::EnableLiveProperties( bool live )
         p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<const bool&>( m_UUIDString,
                                  GetProperty( "TransparencyFlag" ),
                                  "SetVizTransparencyFlag" ) );
+        m_liveObjects.push_back( p );
+        
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<const bool&>(
+                            m_UUIDString, GetProperty( "TwoSidedLighting" ),
+                            "CAD.TwoSidedLightingChanged" ) );
         m_liveObjects.push_back( p );
         
     }

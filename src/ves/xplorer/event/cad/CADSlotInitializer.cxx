@@ -120,6 +120,11 @@ CADSlotInitializer::CADSlotInitializer()
                           void( osg::NodePath const& ),
                           &NavigateToNode,
                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%CAD.TwoSidedLightingChanged",
+                          void( const std::string&, const bool& ),
+                          &EnableTwoSidedLighting,
+                          m_connections, any_SignalType, normal_Priority );
 }
 
 } // namespace cad

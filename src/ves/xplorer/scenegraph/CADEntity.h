@@ -147,6 +147,10 @@ public:
     ///Turn physics off
     void DisablePhysics();
 
+    ///Set the two sided lighting on this cad file
+    ///\param flag The two sided lighting state
+    void SetTwoSidedLighting( bool flag );
+
 protected:
     ///The current state of physics for CADEntity
     bool mPhysicsFlag;

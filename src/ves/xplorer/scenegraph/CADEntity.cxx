@@ -46,6 +46,7 @@
 #include <osg/Node>
 #include <osg/Group>
 #include <osg/MatrixTransform>
+#include <osg/LightModel>
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
@@ -283,5 +284,12 @@ bool CADEntity::HavePhysics()
         return true;
     }
     return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::SetTwoSidedLighting( bool flag )
+{
+    osg::ref_ptr< osg::LightModel > lightModel0 = new osg::LightModel();
+    lightModel0->setTwoSided( flag );
+    mDCS->getOrCreateStateSet()->setAttributeAndModes( lightModel0, osg::StateAttribute::ON );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -683,44 +683,6 @@ static void NavigateToNode( osg::NodePath const& nodePath )
     //6. hand of to nav animation engine
     //7. reset the world dcs back to original state
     
-    //Unselect the previous selected DCS
-    /*vx::DeviceHandler::instance()->UnselectObjects();
-    vx::ModelCADHandler* mcadHandler = vx::ModelHandler::instance()->
-        GetActiveModel()->GetModelCADHandler();
-    osg::ref_ptr< vxs::DCS > selectedDCS;
-    if( viewData == vx::ModelHandler::instance()->GetActiveModel()->GetID() )
-    {
-        //get the selected plugins cad
-        //highlight it.
-        std::string rootID = mcadHandler->GetRootCADNodeID();
-        
-        selectedDCS = mcadHandler->GetAssembly( rootID );
-    }
-    else if( mcadHandler->GetAssembly( viewData ) )
-    {
-        selectedDCS = mcadHandler->GetAssembly( viewData );
-    }
-    else if( mcadHandler->GetPart( viewData ) )
-    {
-        selectedDCS = mcadHandler->GetPart( viewData )->GetDCS();
-    }
-    else
-    {
-        return;
-    }
-    
-    if( selectMethod == "Glow" )
-    {
-        if( vxs::SceneManager::instance()->IsRTTOn() )
-        {
-            selectedDCS->SetTechnique( "Glow" );
-        }
-        else
-        {
-            selectedDCS->SetTechnique( "Select" );
-        }
-    }*/
-    
     //Set the center point to the new node position
     //vx::DeviceHandler::instance()->SetSelectedDCS( selectedDCS.get() );
 
@@ -742,7 +704,7 @@ static void NavigateToNode( osg::NodePath const& nodePath )
     << "|\tMax " << bb._max << std::endl;*/
     
     //Calculate the offset distance
-    double distance = 2 * sbs.radius();
+    double distance = 1.5 * sbs.radius();
     
     ///Get the location of the selected model in local coordinates
     ///This value is always the same no matter where we are
@@ -761,47 +723,6 @@ static void NavigateToNode( osg::NodePath const& nodePath )
     gmtl::AxisAngled axisAngle( tempRotRad2, 1, 0, 0 );
     gmtl::Quatd quatAxisAngle = gmtl::make< gmtl::Quatd >( axisAngle );
 
-    //Move the center point to the center of the selected object
-    /*osg::ref_ptr< ves::xplorer::scenegraph::CoordinateSystemTransform > cst =
-        new ves::xplorer::scenegraph::CoordinateSystemTransform(
-        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
-        selectedNode.get(), true );
-    
-    gmtl::Matrix44d localToWorldMatrix = cst->GetTransformationMatrix( false );
-    
-    gmtl::Point3d tempTransPoint =
-        gmtl::makeTrans< gmtl::Point3d >( localToWorldMatrix );
-    
-    ///Remove the rotation from the transform matrix
-    gmtl::Matrix44d tempTrans;
-    tempTrans = gmtl::makeTrans< gmtl::Matrix44d >( tempTransPoint );
-    double tempRotRad2 = osg::DegreesToRadians( -90.0 );
-    gmtl::AxisAngled axisAngle( tempRotRad2, 1, 0, 0 );
-    gmtl::Quatd quatAxisAngle = gmtl::make< gmtl::Quatd >( axisAngle );
-    gmtl::Matrix44d tempRot;
-    gmtl::setRot( tempRot, quatAxisAngle );
-    gmtl::Matrix44d combineMat = tempTrans;// * tempRot;
-    ///Add our end rotation back into the mix
-    gmtl::Quatd quatAxisAngle2;*/
-   
-    //osgTransformedPosition2 = tempRot * osgTransformedPosition2;
-    
-    //std::cout << osgOrigPosition << " " << osgTransformedPosition << " " << osgTransformedPosition2 << std::endl;
-    //osgTransformedPosition2 *= -1.0;
-    //std::cout << osgOrigPosition << " " << osgTransformedPosition << " " << osgTransformedPosition2 << std::endl;
-
-    /*osgOrigPosition = combineMat * osgOrigPosition;
-    ///Since the math implies we are doing a delta translation
-    ///we need to go grab where we previously were
-    double* temp = ves::xplorer::scenegraph::SceneManager::instance()->
-        GetNavDCS()->GetVETranslationArray();
-    ///Add our distance and previous position back in and get our new end point
-    gmtl::Vec3d pos;
-    pos[ 0 ] = - osgOrigPosition[ 0 ] + temp[ 0 ];
-    pos[ 1 ] = - ( osgOrigPosition[ 1 ] - distance ) + temp[ 1 ];
-    pos[ 2 ] = - ( osgOrigPosition[ 2 ] ) + temp[ 2 ];
-
-    std::cout << osgTransformedPosition << " " << osgTransformedPosition2 << std::endl;*/
     ///Hand the node we are interested in off to the animation engine
     ves::xplorer::NavigationAnimationEngine::instance()->SetDCS(
         ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
@@ -809,6 +730,21 @@ static void NavigateToNode( osg::NodePath const& nodePath )
     ///Hand our created end points off to the animation engine
     ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
         osgTransformedPosition2, quatAxisAngle, true, NULL );
+}
+////////////////////////////////////////////////////////////////////////////////
+///Enable two sided lighting on the selected CAD file
+///\param enableTwoSidedLighting Turn two sided lighting off/on
+void EnableTwoSidedLighting( const std::string& nodeUUID, const bool& enableTwoSidedLighting )
+{
+    ModelCADHandler* m_cadHandler = GetModelCADHandler();
+    
+    if( !m_cadHandler->PartExists( nodeUUID ) )
+    {
+        return;
+    }
+
+    ves::xplorer::scenegraph::CADEntity* part = m_cadHandler->GetPart( nodeUUID );
+    part->SetTwoSidedLighting( enableTwoSidedLighting );
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace cad
