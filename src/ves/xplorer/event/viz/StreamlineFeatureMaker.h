@@ -39,16 +39,10 @@ namespace ves
 namespace conductor
 {
 /*!\file StreamlineFeatureMaker.h
+ * \class ves::conductor::StreamlineFeatureMaker
  *
  */
 
-/*!\class ves::conductor::StreamlineFeatureMaker
- *
- */
-
-/*!\namespace ves::conductor
- *
- */
 class StreamlineFeatureMaker : public VisFeatureMakerBase
 {
 public:

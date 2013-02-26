@@ -40,7 +40,6 @@ namespace conductor
 {
 /*!\file VectorFeatureMaker.h
  * \class ves::conductor::VectorFeatureMaker
- * \namespace ves::conductor
  *
  */
 class VectorFeatureMaker : public VisFeatureMakerBase
