@@ -37,14 +37,11 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/event/data/DataSetAxis.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
-#include <ves/open/xml/FloatArray.h>
-#include <ves/open/xml/Transform.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/ParameterBlock.h>
+
 #include <ves/open/xml/model/Model.h>
 
 #include <ves/xplorer/Debug.h>

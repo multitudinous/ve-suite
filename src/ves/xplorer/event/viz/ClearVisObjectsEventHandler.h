@@ -43,9 +43,8 @@ namespace xplorer
 namespace event
 {
 /*!\file ClearVisObjectsEventHandler.h
-  ClearVisObjectsEventHandler API
-  */
-/*!\class ClearVisObjectsEventHandler
+ * ClearVisObjectsEventHandler API
+ * \class ClearVisObjectsEventHandler
  * Class for clearing vis options.
  */
 class VE_XPLORER_EXPORTS ClearVisObjectsEventHandler: public EventHandler
