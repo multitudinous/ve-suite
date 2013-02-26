@@ -66,7 +66,6 @@
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
 #include <ves/xplorer/event/viz/ParticleAnimation.h>
 
-//#include <ves/xplorer/event/viz/CreateVisObjectEventHandler.h>
 #include <ves/xplorer/event/viz/ClearVisObjectsEventHandler.h>
 #include <ves/xplorer/event/viz/StreamLineEventHandler.h>
 #include <ves/xplorer/event/viz/PolydataSurfaceEventHandler.h>
@@ -132,8 +131,6 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
     prototype->Delete();
 
-    //_eventHandlers[ std::string( "VISUALIZATION_SETTINGS" )] =
-    //    new ves::xplorer::event::CreateVisObjectEventHandler();
     _eventHandlers[ std::string( "CLEAR_VIS_OBJECTS" )] =
         new ves::xplorer::event::ClearVisObjectsEventHandler();
     _eventHandlers[ std::string( "DELETE_OBJECT_FROM_NETWORK" )] =
