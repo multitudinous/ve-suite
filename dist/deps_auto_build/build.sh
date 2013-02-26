@@ -857,7 +857,7 @@ shift $(($OPTIND - 1))
 
 [ -d "${DEV_BASE_DIR}" ] || mkdir -p "${DEV_BASE_DIR}"
 #[ $# -lt 1 ] && [ "${build_installer}" = "no" ] && bye
-[ $# -lt 1 ] && bye
+[ $# -lt 1 ] && [ ! "${build_auto_installer}" = "yes" ] && bye
 
 echo -e "\n          Kernel: $PLATFORM $ARCH"
 if [ $PLATFORM = "Windows" ]; then
@@ -891,12 +891,17 @@ export_config_vars()
     . "${EXPORT_FILE}"
 }
 
-export_config_vars *.build
+if [ "${build_auto_installer}" = "yes" ] ; then
+  # just pass in an arbitrary package to make e() happy
+  e ace+tao.build
+else
+  export_config_vars *.build
 
-for p in $@; do
-  cd "${PRESENT_DIR}"
-  e "${p}";
-  cd "${PRESENT_DIR}"
-done
+  for p in $@; do
+    cd "${PRESENT_DIR}"
+    e "${p}";
+    cd "${PRESENT_DIR}"
+  done
+fi
 
 exit 0
