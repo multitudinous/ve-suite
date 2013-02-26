@@ -58,14 +58,8 @@ public:
 protected:
     ///Called by the update function
     void AddPlane( propertystore::PropertySetPtr& set );
-    ///Called by AddPlane
-    void UpdateContourInformation( propertystore::PropertySet& set );
-    ///Setup the advanced properties
-    virtual void UpdateAdvancedSettings( propertystore::PropertySet& set );
 
 private:
-    ///The countour setting data
-    std::vector<ves::open::xml::DataValuePairPtr> m_vectorInformation;
 
 };
 

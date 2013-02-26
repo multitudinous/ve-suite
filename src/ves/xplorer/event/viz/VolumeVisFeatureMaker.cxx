@@ -43,6 +43,8 @@ using namespace ves::conductor;
 using namespace ves;
 ////////////////////////////////////////////////////////////////////////////////
 VolumeVisFeatureMaker::VolumeVisFeatureMaker()
+    :
+    VisFeatureMakerBase()
 {
     ;
 }
@@ -70,11 +72,6 @@ void VolumeVisFeatureMaker::Update( const::std::string& recordUUID )
     //Execute( ptr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VolumeVisFeatureMaker::UpdateContourInformation( propertystore::PropertySet& )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
 void VolumeVisFeatureMaker::AddPlane( propertystore::PropertySetPtr& set )
 {
 
@@ -97,10 +94,5 @@ void VolumeVisFeatureMaker::AddPlane( propertystore::PropertySetPtr& set )
     UpdateTBSolution( currentScalar, "Scalar", minimumValue, maximumValue );
     //3. TB_SCALAR_RANGE
     UpdateScalarRange( minimumValue, maximumValue );
-}
-////////////////////////////////////////////////////////////////////////////////
-void VolumeVisFeatureMaker::UpdateAdvancedSettings( propertystore::PropertySet& )
-{
-    ;
 }
 ////////////////////////////////////////////////////////////////////////////////

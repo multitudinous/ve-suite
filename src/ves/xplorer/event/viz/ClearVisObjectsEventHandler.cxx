@@ -116,7 +116,7 @@ void ClearVisObjectsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     }
 
     ModelHandler::instance()->GetActiveModel()->
-    GetModelCADHandler()->MakeCADRootOpaque();
+        GetModelCADHandler()->MakeCADRootOpaque();
 
     unsigned int state = 0;
     DataSet* dataSet =

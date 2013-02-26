@@ -34,9 +34,6 @@
 
 #include <propertystore/PropertySet.h>
 
-#include <ves/open/xml/DataValuePairPtr.h>
-#include <ves/open/xml/CommandPtr.h>
-
 #include <ves/xplorer/event/viz/VisFeatureMakerBasePtr.h>
 
 #include <ves/xplorer/Logging.h>
@@ -58,33 +55,23 @@ public:
     VisFeatureMakerBase();
     ///Copy constructor
     VisFeatureMakerBase( const VisFeatureMakerBase& orig );
-    ///Destructor
-    virtual ~VisFeatureMakerBase();
     ///Update function
     virtual void Update( const std::string& recordUUID );
 
 protected:
-    ///Called by the update function
-    virtual void UpdateAdvancedSettings( propertystore::PropertySet& set );
-    ///Called by the update function
-    void UpdateBaseInformation( propertystore::PropertySet& set );
-    ///Called by the update function
-    void SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand, propertystore::PropertySet& set );
-
+    ///Destructor
+    virtual ~VisFeatureMakerBase();
+    ///Update the propertysets for a given feature
     void Execute( propertystore::PropertySetPtr set );
-
+    ///Set the active vector if needed
     void SetActiveVector( propertystore::PropertySetPtr set );
-
+    ///Set the active scalar range if needed
     void SetActiveScalarAndRange( propertystore::PropertySetPtr set );
-
+    ///Set the active dataset
     bool SetActiveDataSet( propertystore::PropertySetPtr set );
 
     ///The name of the command to send back
     std::string m_commandName;
-    ///The advanced settings.
-    std::vector<ves::open::xml::DataValuePairPtr> m_advancedSettings;
-    ///The basic information from the vistab
-    std::vector<ves::open::xml::DataValuePairPtr> m_vistabBaseInformation;
     ///Logger reference
     Poco::Logger& m_logger;
     ///Actual stream for this class
