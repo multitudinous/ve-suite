@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source __VE_SUITE_ENV_FILE_PLACEHOLDER__
+VES_ENV_FILE=__VE_SUITE_ENV_FILE_PLACEHOLDER__
+source ${VES_ENV_FILE}
 
 unset CLUSTER_CONFIG_FILE
 unset RENDER_NODES
@@ -115,7 +116,7 @@ case "${ACTION}" in
         
         for node in ${RENDER_NODES}
         do
-            ssh ${node} 'launch-ves_xplorer-rendernode.sh' &
+            ssh ${node} "/bin/bash -c 'source ${VES_ENV_FILE} && launch-ves_xplorer-rendernode.sh'" &
         done
         ;;
     kill)
