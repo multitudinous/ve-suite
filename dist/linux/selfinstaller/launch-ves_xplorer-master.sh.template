@@ -8,6 +8,8 @@ function usage()
     exit 1
 }
 
+JCONF_FILE=""
+
 while getopts "j:" OPT
 do
     case ${OPT} in
