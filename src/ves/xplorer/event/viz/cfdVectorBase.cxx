@@ -31,12 +31,11 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
 
-#include <ves/xplorer/util/ExtractGeometryCallback.h>
+#include <latticefx/utils/vtk/ExtractGeometryCallback.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -62,6 +61,8 @@
 #include <vtkPolyDataNormals.h>
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer;
 
@@ -408,7 +409,7 @@ int cfdVectors::GetVectorRatioFactor()
 void cfdVectorBase::UpdateThreshHoldValues()
 {
     //double currentScalarRange[ 2 ];
-    DataSet* temp = GetActiveDataSet();
+    lfx::core::vtk::DataSetPtr temp = GetActiveDataSet();
 
     if( temp != NULL )
     {
@@ -485,7 +486,7 @@ void cfdVectorBase::CreateArbSurface()
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
     // set the dataset as the appropriate dastaset type
     // (and the active dataset as well)
-    DataSet* surfDataset = activeModel->GetCfdDataSet(
+    lfx::core::vtk::DataSetPtr surfDataset = activeModel->GetCfdDataSet(
                                activeModel->GetIndexOfDataSet( m_surfDataset ) );
     vtkPolyData* pd = surfDataset->GetPolyData();
 
@@ -496,9 +497,9 @@ void cfdVectorBase::CreateArbSurface()
         return;
     }
 
-    ves::xplorer::util::ExtractGeometryCallback* extractGeomCbk =
-        new ves::xplorer::util::ExtractGeometryCallback();
-    ves::xplorer::util::DataObjectHandler handler;
+    lfx::vtk_utils::ExtractGeometryCallback* extractGeomCbk =
+        new lfx::vtk_utils::ExtractGeometryCallback();
+    lfx::vtk_utils::DataObjectHandler handler;
     handler.SetDatasetOperatorCallback( extractGeomCbk );
     extractGeomCbk->SetPolyDataSurface( pd );
     handler.OperateOnAllDatasetsInObject( GetActiveDataSet()->GetDataSet() );

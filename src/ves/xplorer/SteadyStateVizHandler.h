@@ -93,8 +93,6 @@ class cfdPresetVector;
 class cfdVectors;
 class cfdStreamers;
 class cfdPolyData;
-class cfdImage;
-class cfdAnimatedImage;
 class cfdAnimatedStreamlineCone;
 class cfdContour;
 class cfdObjects;

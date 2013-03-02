@@ -31,7 +31,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include "App.h"
-#include "VjObsWrapper.h"
 #include "SceneRenderToTexture.h"
 #include "SceneGLTransformInfo.h"
 //#include "KeyPressEater.h"
@@ -45,16 +44,12 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/Debug.h>
 
-
-#include <ves/xplorer/util/fileIO.h>
-
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/character/CharacterController.h>
 
-#include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
 #include <ves/xplorer/network/GraphicalPluginManager.h>
@@ -166,7 +161,6 @@
 using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::xplorer;
-using namespace ves::xplorer::util;
 using namespace ves::xplorer::volume;
 using namespace ves::xplorer::network;
 using namespace ves::xplorer::scenegraph;
@@ -197,7 +191,8 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_frameSetNearFarRatio( 0 ),
     m_exitApp( false ),
     m_vm( vm ),
-    m_logSplitter( splitter )
+    m_logSplitter( splitter ),
+    m_isMaster( true )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO( "Starting App" );
@@ -220,6 +215,8 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
         opt->setObjectCacheHint( osgDB::ReaderWriter::Options::CACHE_IMAGES );
         osgDB::Registry::instance()->setOptions( opt );
     }
+
+    m_isMaster = !vm["vrjslave"].as<bool>();
 
     _tbvHandler = 0;
 #ifdef _PBUFFER
@@ -356,7 +353,6 @@ void App::exit()
     ves::xplorer::data::DatabaseManager::instance()->Shutdown();
     std::cout << "|\tApp is now exiting." << std::endl;
     ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
-    m_vjobsWrapper->Cleanup();
     GraphicalPluginManager::instance()->UnloadPlugins();
 #ifdef MINERVA_GIS_SUPPORT
     ves::xplorer::minerva::MinervaManager::instance()->Clear();
@@ -535,11 +531,6 @@ void App::bufferPreDraw()
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void App::SetWrapper( VjObsWrapper* input )
-{
-    m_vjobsWrapper = input;
-}
-////////////////////////////////////////////////////////////////////////////////
 void App::initScene()
 {
     vprDEBUG( vesDBG, 0 ) << "|App::initScene" << std::endl << vprDEBUG_FLUSH;
@@ -569,7 +560,6 @@ void App::initScene()
 
     std::cout << std::endl;
     std::cout << "| ***************************************************************** |" << std::endl;
-    m_vjobsWrapper->InitCluster();
     //Need this loop here so manipulators know whether we are in desktop mode
     if( m_desktopMode )
     {
@@ -601,11 +591,9 @@ void App::initScene()
     }
 
     EnvironmentHandler::instance()->InitScene();
-    cfdQuatCamHandler::instance()->SetMasterNode( m_vjobsWrapper->IsMaster() );
 
     //Tell scenemanager if we are the master node
-    ves::xplorer::scenegraph::SceneManager::instance()->
-    SetMasterNode( m_vjobsWrapper->IsMaster() );
+    ves::xplorer::scenegraph::SceneManager::instance()->SetMasterNode( m_isMaster );
 
     // create steady state visualization objects
     SteadyStateVizHandler::instance()->InitScene();
@@ -613,13 +601,7 @@ void App::initScene()
     //create the volume viz handler
     _start_tick = _timer.tick();
     _tbvHandler = ves::xplorer::TextureBasedVizHandler::instance();
-    _tbvHandler->SetMasterNode( m_vjobsWrapper->IsMaster() );
-
-    GraphicalPluginManager::instance()->Initialize(
-        m_vjobsWrapper->naming_context, m_vjobsWrapper->child_poa );
-
-    //This may need to be fixed
-    m_vjobsWrapper->GetCfdStateVariables();
+    _tbvHandler->SetMasterNode( m_isMaster );
 
     //Get or create UIManager
     ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();
@@ -632,12 +614,6 @@ void App::preFrame()
 {
     VPR_PROFILE_GUARD_HISTORY( "App::preFrame", 20 );
     vprDEBUG( vesDBG, 3 ) << "|App::preFrame" << std::endl << vprDEBUG_FLUSH;
-
-    {
-        //Check and see if the orb has any work to do
-        //VPR_PROFILE_GUARD_HISTORY( "App::preFrame CheckORBWorkLoad", 20 );
-        //m_vjobsWrapper->CheckORBWorkLoad();
-    }
 
     {
         VPR_PROFILE_GUARD_HISTORY( "App::preFrame EnvironmentHandler", 20 );
@@ -661,15 +637,6 @@ void App::latePreFrame()
     VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame", 20 );
     vprDEBUG( vesDBG, 3 ) << "|App::latePreFrame" << std::endl << vprDEBUG_FLUSH;
     ///////////////////////
-    {
-        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame m_vjobsWrapper", 20 );
-        //The calls below are order dependent so do not move them around
-        //call the parent method
-        m_vjobsWrapper->GetUpdateClusterStateVariables();
-        //This should be called after the update so that
-        //all the singletons below get the updated command
-        m_vjobsWrapper->PreFrameUpdate();
-    }
     ves::xplorer::command::CommandManager::instance()->LatePreFrameUpdate();
 
     const ves::open::xml::CommandPtr tempCommandPtr =
@@ -714,7 +681,6 @@ void App::latePreFrame()
 
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame Framerate Calculations", 20 );
-        //float current_time = this->m_vjobsWrapper->GetSetAppTime( -1 );
         m_currentFrameInt = m_vrjHeadInterface->getTimeStamp();
         double current_time = m_currentFrameInt.secd() - m_startFrameInt.secd();
         m_lastFrameInt = m_currentFrameInt;
@@ -843,7 +809,7 @@ void App::latePreFrame()
     ///////////////////////
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame _tbvHandler", 20 );
-        _tbvHandler->SetCurrentTime( this->m_vjobsWrapper->GetSetAppTime( -1 ) );
+        _tbvHandler->SetCurrentTime( mLastFrameTime );
         _tbvHandler->PreFrameUpdate();
     }
     ///////////////////////
@@ -989,15 +955,11 @@ void App::postFrame()
 
     time_since_start = _timer.delta_s( _start_tick, _timer.tick() );
 
-    m_vjobsWrapper->GetSetAppTime( time_since_start );
     EnvironmentHandler::instance()->PostFrameUpdate();
-    //this->m_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
 
     ///update the transient frame number on the master
     _tbvHandler->UpdateTransientFrame();
     GraphicalPluginManager::instance()->PostFrameUpdate();
-
-    m_vjobsWrapper->GetCfdStateVariables();
 
     if( m_captureNextFrame )
     {
@@ -1284,21 +1246,6 @@ void App::update()
 {
     vprDEBUG( vesDBG, 3 ) <<  "|\tApp LatePreframe Update"
                           << std::endl << vprDEBUG_FLUSH;
-    /*const std::string tempCommandName =
-        m_vjobsWrapper->GetXMLCommand()->GetCommandName();
-    // This code came from osgViewer::Viewer::setSceneData
-    // The resize stuff is what is critical not sure how important it is
-    if( !tempCommandName.compare( "veNetwork Update" ) )
-    {
-        // make sure that existing scene graph objects are
-        // allocated with thread safe ref/unref
-        getScene()->setThreadSafeRefUnref(true);
-
-        // update the scene graph so that it has enough GL object buffer
-        // memory for the graphics contexts that will be using it.
-        getScene()->resizeGLObjectBuffers(
-            osg::DisplaySettings::instance()->getMaxNumberOfGraphicsContexts() );
-    }*/
     // Update the frame stamp with information from this frame
     //frameStamp->setFrameNumber( getFrameNumber() );
     //frameStamp->setReferenceTime( getFrameTime().secd() );

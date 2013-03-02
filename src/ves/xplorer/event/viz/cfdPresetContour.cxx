@@ -34,9 +34,7 @@
 #include <ves/xplorer/event/viz/cfdPresetContour.h>
 
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
-#include <ves/xplorer/util/readWriteVtkThings.h>
 
 #include <ves/xplorer/environment/cfdEnum.h>
 
@@ -51,6 +49,8 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -87,7 +87,7 @@ void cfdPresetContour::Update( void )
     vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetContour::Update, usePreCalcData = "
                           << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
 
-    if( this->usePreCalcData )
+    /*if( this->usePreCalcData )
     {
         cfdPlanes* precomputedPlanes =
             this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
@@ -123,7 +123,7 @@ void cfdPresetContour::Update( void )
 
         tempPipe->Delete();
     }
-    else
+    else*/
     {
         if( cuttingPlane )
         {
@@ -133,7 +133,10 @@ void cfdPresetContour::Update( void )
 
         if( GetObjectType() != BY_SURFACE )
         {
-            CreatePlane();
+            //CreatePlane();
+            CreateLFXPlane();
+            this->updateFlag = true;
+            return;
         }
         else
         {

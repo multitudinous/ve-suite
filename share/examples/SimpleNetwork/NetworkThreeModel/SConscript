@@ -17,10 +17,9 @@ headers = Split("""
 """)
 
 lib_env = ves_pkg.getEnv().Clone()
-lib_env. AppendUnique( LIBS = [ 'ves_xplorer', 'ves_open_xml', 'ves_xplorer_util', 'ves_xplorer_scenegraph' ] )
+lib_env. AppendUnique( LIBS = [ 'ves_xplorer', 'ves_open_xml', 'ves_xplorer_scenegraph' ] )
 lib_env.AppendUnique( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),
 		            	    pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
-		            	    pj('#', buildDir, 'src','ves','xplorer','util'),
                            	    pj('#', buildDir, 'src','ves','open','xml') ] )
 
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )

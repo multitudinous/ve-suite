@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdObjects.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
@@ -72,6 +71,8 @@
 #include <gmtl/AxisAngle.h>
 #include <gmtl/Output.h>
 #include <gmtl/AxisAngleOps.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace gmtl; //added by Gengxun
 using namespace ves::xplorer::device;
@@ -559,7 +560,7 @@ vtkCubeSource* cfdCursor::getBox()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::SetPlaneSize( float size )
 {
-    double* dataDCSScale = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS()->GetScaleArray();
+    /*double* dataDCSScale = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS()->GetScaleArray();
     double* worldDCSScale = this->worldDCS->GetScaleArray();
     double combineScale[ 3 ];
     combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
@@ -572,7 +573,7 @@ void cfdCursor::SetPlaneSize( float size )
     this->pSize = size;
 
     vprDEBUG( vesDBG, 1 ) << "Setting plane size : " << size
-                          << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::SetPlaneReso( int size )
@@ -712,7 +713,7 @@ void cfdCursor::SetTranslation( void )
     if( this->activeDataSetDCS.valid() )
     {
         // apparently unused ...Matrix44d cursorDCSMat = this->cursorDCS->GetMat();
-        double* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
+        /*double* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
         double* worldDCSScale = this->worldDCS->GetScaleArray();
 
         double combineScale[ 3 ];
@@ -723,7 +724,7 @@ void cfdCursor::SetTranslation( void )
         dynamic_cast< ves::xplorer::scenegraph::DCS* >( this->cursorDCS->GetChild( 0 ) )->SetScaleArray( combineScale );
         Matrix44d dataSetMatrix = this->activeDataSetDCS->GetMat();
 
-        totalMat = worldMat * dataSetMatrix;
+        totalMat = worldMat * dataSetMatrix;*/
     }
     else
     {
@@ -774,7 +775,7 @@ void cfdCursor::GetLocalLocationVector( void )
 
     // get juggler Matrix of activeDataSetDCS
     Matrix44d activeDataSetMat;
-    activeDataSetMat = this->activeDataSetDCS->GetMat();
+    //activeDataSetMat = this->activeDataSetDCS->GetMat();
 
     // invert activeDataSetDCS
     Matrix44d activeDataSetMatInv;
@@ -800,12 +801,12 @@ double* cfdCursor::ReturnLocalLocationVector( void )
     return this->localLocation;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdCursor::SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS )
+void cfdCursor::SetActiveDataSetDCS( osg::PositionAttitudeTransform* myDCS )
 {
     this->activeDataSetDCS = myDCS;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdCursor::SetActiveDataSet( ves::xplorer::DataSet* input )
+void cfdCursor::SetActiveDataSet( lfx::core::vtk::DataSetPtr input )
 {
     _activeDataSet = input;
     if( _activeDataSet != NULL )
@@ -918,7 +919,7 @@ void cfdCursor::ProcessCommand()
 
                 if( this->activeDataSetDCS.valid() )
                 {
-                    double* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
+                    /*double* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
                     double* worldDCSScale = this->worldDCS->GetScaleArray();
                     double combineScale[ 3 ];
                     combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
@@ -929,7 +930,7 @@ void cfdCursor::ProcessCommand()
 
                     //this controls the size of the sphere seed points
                     //when the GUI is from 1 to 100, this will take the seed points from approximately 0.1 foot to 3 feet
-                    sphereRadius = ( commandIds.at( 3 ) + 5 ) * 0.01f;
+                    sphereRadius = ( commandIds.at( 3 ) + 5 ) * 0.01f;*/
                 }
             }
         }

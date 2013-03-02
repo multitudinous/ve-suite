@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/data/AxesEventHandler.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
@@ -52,6 +51,8 @@
 #include <ves/xplorer/Debug.h>
 
 #include <iostream>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer::event;
 using namespace ves::xplorer;
@@ -126,7 +127,7 @@ void AxesEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
     activeModelDVP->GetData( state );
     if( _activeModel )
     {
-        DataSet* dataSet = _activeModel->GetCfdDataSet(
+        lfx::core::vtk::DataSetPtr dataSet = _activeModel->GetCfdDataSet(
                                _activeModel->GetIndexOfDataSet( datasetName ) );
         _activeModel->SetActiveDataSet( dataSet );
         dataSet->SetAxesState( state );
@@ -142,7 +143,7 @@ void AxesEventHandler::ShowAxes( const std::string& uuid, const bool& show )
     set.Load();
     std::string datasetName = boost::any_cast<std::string>( set.GetPropertyValue( "Filename" ) );
 
-    DataSet* dataSet = _activeModel->GetCfdDataSet(
+    lfx::core::vtk::DataSetPtr dataSet = _activeModel->GetCfdDataSet(
                            _activeModel->GetIndexOfDataSet( datasetName ) );
     if( dataSet )
     {

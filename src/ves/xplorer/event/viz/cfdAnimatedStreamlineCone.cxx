@@ -34,7 +34,6 @@
 
 #include <ves/xplorer/event/viz/cfdStreamers.h>
 
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/open/xml/Command.h>
@@ -53,6 +52,8 @@
 #include <vtkMath.h>
 
 #include <ves/xplorer/Debug.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;

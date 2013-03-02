@@ -34,14 +34,19 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/data/DataSlots.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/Debug.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/data/DatasetPropertySet.h>
 
 #include <string>
 #include <vector>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 namespace ves
 {
@@ -52,7 +57,7 @@ namespace event
 namespace data
 {
 ////////////////////////////////////////////////////////////////////////////////
-DataSet* GetSelectedDataset( std::string const& uuid )
+lfx::core::vtk::DataSetPtr GetSelectedDataset( std::string const& uuid )
 {
     ves::xplorer::Model* activeModel =
         ModelHandler::instance()->GetActiveModel();
@@ -63,7 +68,7 @@ DataSet* GetSelectedDataset( std::string const& uuid )
     const std::string& datasetName =
         boost::any_cast<std::string>( set.GetPropertyValue( "Filename" ) );
 
-    DataSet* dataSet = activeModel->GetCfdDataSet(
+    lfx::core::vtk::DataSetPtr dataSet = activeModel->GetCfdDataSet(
                            activeModel->GetIndexOfDataSet( datasetName ) );
     return dataSet;
 }
@@ -97,11 +102,11 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
         return;
     }
 
-    DataSet* dataSet = GetSelectedDataset( uuid );
+    lfx::core::vtk::DataSetPtr dataSet = GetSelectedDataset( uuid );
 
-    scenegraph::DCS* dcs = dataSet->GetDCS();
+    osg::ref_ptr< osg::PositionAttitudeTransform > dcs = dataSet->GetDCS();
 
-    if( dcs )
+    if( dcs.valid() )
     {
         // Entire transform is packed into a single vector. Unpack into
         // separate translation, rotation, and scale pieces.
@@ -111,9 +116,10 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
         std::vector<double> rotation( start + 3, stop + 3 );
         std::vector<double> scale( start + 6, stop + 6 );
 
-        dcs->SetTranslationArray( translation );
-        dcs->SetRotationArray( rotation );
-        dcs->SetScaleArray( scale );
+        //TODO: Must fix
+        //dcs->SetTranslationArray( translation );
+        //dcs->SetRotationArray( rotation );
+        //dcs->SetScaleArray( scale );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +129,7 @@ void SetDatasetSurfaceWrap( std::string const& uuid, bool const& surfaceWrap )
             << "|\tDataSlots::SetDatasetSurfaceWrap : uuid " << uuid
             << std::endl << vprDEBUG_FLUSH;
 
-    DataSet* dataSet = GetSelectedDataset( uuid );
+    lfx::core::vtk::DataSetPtr dataSet = GetSelectedDataset( uuid );
 
     if( !dataSet )
     {
@@ -149,14 +155,14 @@ void AddTextureDataset( std::string const&, std::string const& dirName )
 ////////////////////////////////////////////////////////////////////////////////
 void ToggleCADNode( const std::string& nodeID, bool const& visible )
 {
-    DataSet* dataSet = GetSelectedDataset( nodeID );
+    lfx::core::vtk::DataSetPtr dataSet = GetSelectedDataset( nodeID );
 
     if( !dataSet )
     {
         return;
     }
 
-    dataSet->GetDCS()->ToggleDisplay( visible );
+    dataSet->GetDCS()->setNodeMask( visible );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeleteDataSet( const std::string& dataFilename )
@@ -165,7 +171,81 @@ void DeleteDataSet( const std::string& dataFilename )
         ModelHandler::instance()->GetActiveModel();
 
     activeModel->DeleteDataSet( dataFilename );
-    activeModel->SetActiveDataSet( 0 );
+    activeModel->SetActiveDataSet( lfx::core::vtk::DataSetPtr() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ShowBBox( const std::string& uuid, const bool& show )
+{
+    lfx::core::vtk::DataSetPtr dataSet = GetSelectedDataset( uuid );;
+    if( dataSet )
+    {
+        dataSet->SetBoundingBoxState( show );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UpdateDimensions( const std::string& uuid, const std::vector< int >& allDimensions )
+{
+    boost::ignore_unused_variable_warning( uuid );
+    ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
+    SetDimensions( allDimensions[0],
+                  allDimensions[1],
+                  allDimensions[2] );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UpdateAllBounds( const std::vector< double >& bounds )
+{
+    double databounds[6] = {0, 0, 0, 0, 0, 0};
+    //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
+    ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetBounds( databounds );
+    double newValue[6] = {0, 0, 0, 0, 0, 0};
+    newValue[0] = databounds[0] + bounds.at( 0 ) * ( databounds[1] - databounds[0] );
+    newValue[1] = databounds[0] + bounds.at( 1 ) * ( databounds[1] - databounds[0] );
+    newValue[2] = databounds[2] + bounds.at( 2 ) * ( databounds[3] - databounds[2] );
+    newValue[3] = databounds[2] + bounds.at( 3 ) * ( databounds[3] - databounds[2] );
+    newValue[4] = databounds[4] + bounds.at( 4 ) * ( databounds[5] - databounds[4] );
+    newValue[5] = databounds[4] + bounds.at( 5 ) * ( databounds[5] - databounds[4] );
+    
+    ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->
+    SetBounds( newValue[0],
+              newValue[1],
+              newValue[2],
+              newValue[3],
+              newValue[4],
+              newValue[5] );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ActivateSeedPoints( const std::string& dataSetName, const bool seedPointDisplay )
+{
+    //make the CAD transparent
+    ves::xplorer::Model* tempModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+    tempModel->GetModelCADHandler()->MakeCADRootTransparent();
+    
+    //check to see if the seed points exist
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->containsNode( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() ) )
+    {
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->
+        addChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() );
+    }
+    
+    //this seems to be a bad sequence of calls but we need to set the
+    //active dataset otherwise this set of calls goes in every seed pointEH
+    //as well as all the commands have to lug this extra info.
+    tempModel->SetActiveDataSet( tempModel->GetCfdDataSet( tempModel->GetIndexOfDataSet( dataSetName ) ) );
+    osg::ref_ptr< osg::PositionAttitudeTransform > tempDCS = tempModel->GetActiveDataSet()->GetDCS();
+    ves::xplorer::scenegraph::DCS* seedPointDCS = ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS();
+    //TODO:Need to fix
+    //seedPointDCS->SetMat( tempDCS->GetMat() );
+    
+    ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->Toggle( seedPointDisplay );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ShowScalarBar( const std::string& uuid, const bool& show )
+{
+    lfx::core::vtk::DataSetPtr dataSet = GetSelectedDataset( uuid );;
+    if( dataSet )
+    {
+        dataSet->SetDataSetScalarState( show );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

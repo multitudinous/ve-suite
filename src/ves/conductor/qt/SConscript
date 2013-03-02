@@ -9,7 +9,7 @@ Import('minerva_options boost_options osgal_options' )
 Import('tao_options xerces_options osg_options')
 Import('bullet_options osgbullet_options storyteller_options')
 Import('switchwire_options')
-Import('propertystore_options')
+Import('propertystore_options latticefx_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor', 'qt') )
 buildSrcDir = pj('#',buildDir,'src','ves','conductor','qt')
@@ -176,7 +176,6 @@ for x in dpSources:
 
 lib_env.Append(LIBS = ['ves_open_xml',
                        'ves_xplorer',
-                       'ves_xplorer_util',
                        'ves_xplorer_data',
                        'ves_xplorer_command',
                        'ves_xplorer_eventmanager',
@@ -188,7 +187,6 @@ lib_env.Append(LIBS = ['ves_open_xml',
 lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'open', 'xml'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer'),
-                           pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'command'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager'),
@@ -232,6 +230,7 @@ boost_options.apply( lib_env )
 storyteller_options.apply( lib_env )
 switchwire_options.apply( lib_env )
 propertystore_options.apply( lib_env )
+latticefx_options.apply( lib_env )
 
 if minerva_options.isAvailable():
 	lib_env.AppendUnique( CPPDEFINES = ['MINERVA_GIS_SUPPORT'] )

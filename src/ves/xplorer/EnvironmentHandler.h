@@ -69,7 +69,6 @@ namespace xplorer
 {
 
 class cfdTeacher;
-class cfdQuatCamHandler;
 class cfdDisplaySettings;
 class SeedPoints;
 
@@ -187,7 +186,6 @@ private:
     osg::ref_ptr<ves::xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset
     osg::ref_ptr<ves::xplorer::scenegraph::DCS> _seedPointsDCS;///<The DCS for the seed points
     cfdTeacher* _teacher;///<Handle teacher functionality.
-    cfdQuatCamHandler* _camHandler;///<Handle quat cam functionality.
 
     ves::xplorer::scenegraph::HeadsUpDisplay* mHeadsUpDisplay;///<???
 

@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdIsosurface.h>
-#include <ves/xplorer/DataSet.h>
+
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
@@ -53,6 +53,11 @@
 #include <vtkDataArray.h>
 #include <vtkPolyData.h>
 #include <vtkCellDataToPointData.h>
+
+#include <latticefx/core/vtk/ChannelDatavtkDataObject.h>
+#include <latticefx/core/vtk/VTKSurfaceRenderer.h>
+#include <latticefx/core/vtk/VTKIsoSurfaceRTP.h>
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
@@ -124,6 +129,10 @@ cfdIsosurface::~cfdIsosurface()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdIsosurface::Update()
 {
+    CreateLFXPlane();
+    this->updateFlag = true;
+    return;
+
     //SetActiveVtkPipeline();
     vprDEBUG( vesDBG, 1 ) << "|\tcfdIsosurface::Update: FileName: "
                           << this->GetActiveDataSet()->GetFileName() << std::endl << vprDEBUG_FLUSH;
@@ -273,17 +282,17 @@ void cfdIsosurface::UpdateCommand()
     activeModelDVP = objectCommand->GetDataValuePair( "Maximum Scalar Value" );
     activeModelDVP->GetData( maxValue );
 
-    DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+    lfx::core::vtk::DataSetPtr dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
     if( !colorByScalar.empty() )
     {
-        unsigned int activeTempScalar = dataSet->GetActiveScalar();
+        //unsigned int activeTempScalar = dataSet->GetActiveScalar();
         dataSet->SetActiveScalar( colorByScalar );
-        DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
+        /*DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
         if( scalarBar )
         {
             scalarBar->AddScalarBarToGroup();
-        }
-        dataSet->SetActiveScalar( activeTempScalar );
+        }*/
+        //dataSet->SetActiveScalar( activeTempScalar );
     }
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -299,33 +308,57 @@ void cfdIsosurface::UpdatePropertySet()
 
     maxValue = boost::any_cast<double>( m_propertySet->GetPropertyValue( "ColorByScalar_ScalarRange_Max" ) );
 
-    DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+    lfx::core::vtk::DataSetPtr dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
     if( !colorByScalar.empty() )
     {
-        unsigned int activeTempScalar = dataSet->GetActiveScalar();
+        //unsigned int activeTempScalar = dataSet->GetActiveScalar();
         dataSet->SetActiveScalar( colorByScalar );
-        DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
+        /*DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
         if( scalarBar )
         {
             scalarBar->AddScalarBarToGroup();
         }
-        dataSet->SetActiveScalar( activeTempScalar );
+        dataSet->SetActiveScalar( activeTempScalar );*/
     }
 
     bool isoGreyscale = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Advanced_Greyscale" ) );
-    ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetGreyscaleFlag( isoGreyscale );
+    dataSet->SetGreyscaleFlag( isoGreyscale );
     vprDEBUG( vesDBG, 0 ) << "|\tIsosurface Greyscale set to : "
                           << isoGreyscale
                           << std::endl << vprDEBUG_FLUSH;
+}
+///////////////////////////////////////////////////////////////////////////
+void cfdIsosurface::CreateLFXPlane()
+{
+    m_dsp = lfx::core::DataSetPtr( new lfx::core::DataSet() );
+    
+    //1st Step
+    lfx::core::vtk::ChannelDatavtkDataObjectPtr dobjPtr( new lfx::core::vtk::ChannelDatavtkDataObject( GetActiveDataSet()->GetDataSet(), "vtkDataObject" ) );
+    m_dsp->addChannel( dobjPtr );
+    
+    lfx::core::vtk::VTKIsoSurfaceRTPPtr isosurfaceRTP( new lfx::core::vtk::VTKIsoSurfaceRTP() );
+    isosurfaceRTP->SetRequestedValue( convertPercentage( requestedValue ) );
+    double range[2];
+    GetActiveDataSet()->GetUserRange( range );
+    isosurfaceRTP->SetMinMaxScalarRangeValue( range[ 0 ], range[ 1 ] );
+    isosurfaceRTP->SetActiveScalar( GetActiveDataSet()->GetActiveScalarName() );
+    isosurfaceRTP->addInput( "vtkDataObject" );
+    m_dsp->addOperation( isosurfaceRTP );
 
-    /*ves::open::xml::DataValuePairPtr nearestPrecomputed( new ves::open::xml::DataValuePair() );
-    nearestPrecomputed->SetData( "Use Nearest Precomputed", static_cast<unsigned int>( 0 ) );
-    m_contourInformation.push_back( nearestPrecomputed );
-
-    ves::open::xml::DataValuePairPtr gpuTools( new ves::open::xml::DataValuePair() );
-    gpuTools->SetDataBool( "Use GPU Tools", boost::any_cast<bool>
-                          ( set.GetPropertyValue( "UseGPUTools" ) ) );
-    m_contourInformation.push_back( gpuTools );*/
-
+    //Try the vtkActor renderer
+    lfx::core::vtk::VTKSurfaceRendererPtr renderOp( new lfx::core::vtk::VTKSurfaceRenderer() );
+    renderOp->SetActiveVector( GetActiveDataSet()->GetActiveVectorName() );
+    renderOp->SetActiveScalar( GetActiveDataSet()->GetActiveScalarName() );
+    renderOp->SetColorByScalar( colorByScalar );
+    renderOp->addInput( "vtkPolyDataMapper" );
+    renderOp->addInput( "vtkDataObject" );
+    m_dsp->setRenderer( renderOp );
+    //Now force an update of the lfx pipeline
+    bool success = m_dsp->updateAll();
+    
+    if( !success )
+    {
+        std::cout << "Some sort of problem with lfx " << std::endl;
+    }
 }
 ///////////////////////////////////////////////////////////////////////////

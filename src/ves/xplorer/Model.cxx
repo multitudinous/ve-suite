@@ -44,7 +44,7 @@
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
 
-#include <ves/xplorer/util/cfdGrid2Surface.h>
+#include <latticefx/utils/vtk/Grid2Surface.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/XMLObjectFactory.h>
@@ -92,10 +92,11 @@
 
 ///This must be here due to boost header conflicts on windows
 #include <ves/xplorer/Debug.h>
-#include <ves/xplorer/DataSet.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer::scenegraph;
-using namespace ves::xplorer::util;
+using namespace lfx::vtk_utils;
 using namespace ves::xplorer::volume;
 
 namespace ves
@@ -108,7 +109,6 @@ Model::Model( ves::xplorer::scenegraph::DCS* worldDCS )
     mirrorDataFlag( false ),
     _activeTextureDataSet( 0 ),
     _worldDCS( worldDCS ),
-    activeDataSet( 0 ),
     mirrorNode( 0 ),
     m_cadHandler( new ves::xplorer::ModelCADHandler( _worldDCS.get() ) ),
     m_datasetHandler( 0 )
@@ -129,13 +129,15 @@ Model::~Model()
      }
      _eventHandlers.clear();*/
 
-    for( std::vector< DataSet* >::iterator iter = mVTKDataSets.begin();
+    mVTKDataSets.clear();
+    
+    /*for( std::vector< lfx::core::vtk::DataSetPtr >::iterator iter = mVTKDataSets.begin();
             iter != mVTKDataSets.end(); )
     {
         //std::cout << "Deleteing " << ( *iter )->GetFileName() << std::endl;
         delete *iter;
         iter = mVTKDataSets.erase( iter );
-    }
+    }*/
 
     //texture data cleanup
     /*TextureDataSetList::iterator tDataSet;
@@ -202,8 +204,8 @@ void Model::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 void Model::CreateCfdDataSet( void )
 {
-    mVTKDataSets.push_back( new DataSet() );
-    mVTKDataSets.back()->SetModel( this );
+    mVTKDataSets.push_back( lfx::core::vtk::DataSetPtr( new lfx::core::vtk::DataSet() ) );
+    //mVTKDataSets.back()->SetModel( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetMirrorNode( ves::xplorer::scenegraph::Group* )
@@ -233,13 +235,13 @@ void Model::SetMirrorNode( ves::xplorer::scenegraph::Group* )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-DataSet* Model::GetActiveDataSet( void )
+lfx::core::vtk::DataSetPtr Model::GetActiveDataSet( void )
 {
     return activeDataSet;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Model::SetActiveDataSet( DataSet* input )
+void Model::SetActiveDataSet( lfx::core::vtk::DataSetPtr input )
 {
     activeDataSet = input;
 }
@@ -301,14 +303,14 @@ void Model::SetID( const std::string& id )
     modelID = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
-DataSet* Model::GetCfdDataSet( int dataset )
+lfx::core::vtk::DataSetPtr Model::GetCfdDataSet( int dataset )
 {
     // Check and see if we have any datasets
     // if not return null
     // to get the last added dataset pass in -1
     if( mVTKDataSets.empty() )
     {
-        return NULL;
+        return lfx::core::vtk::DataSetPtr();
     }
     else if( dataset == -1 )
     {
@@ -361,7 +363,7 @@ unsigned int Model::GetNumberOfTextureDataSets()
     return mTextureDataSets.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Model::GetKeyForCfdDataSet( DataSet* input )
+int Model::GetKeyForCfdDataSet( lfx::core::vtk::DataSetPtr input )
 {
     int key = -1;
     for( unsigned int i = 0; i < mVTKDataSets.size(); ++i )
@@ -582,7 +584,7 @@ const std::string Model::MakeSurfaceFile( vtkDataSet* ugrid, int datasetindex )
     std::cout << "[DBG]... after readVtkThing" << std::endl;
     // Create a polydata surface file that completely envelopes the solution space
     float deciVal = 0.7;
-    surface = cfdGrid2Surface( ugrid , deciVal );
+    surface = Grid2Surface( ugrid , deciVal );
 
     vtkTriangleFilter* tFilter = vtkTriangleFilter::New();
     vtkGeometryFilter* gFilter = NULL;
@@ -615,14 +617,13 @@ const std::string Model::MakeSurfaceFile( vtkDataSet* ugrid, int datasetindex )
 ////////////////////////////////////////////////////////////////////////////////
 void Model::DeleteDataSet( std::string dataSetName )
 {
-    for( std::vector< DataSet* >::iterator iter = mVTKDataSets.begin();
+    for( std::vector< lfx::core::vtk::DataSetPtr >::iterator iter = mVTKDataSets.begin();
             iter != mVTKDataSets.end(); ++iter )
     {
         if( ( *iter )->GetFileName() == dataSetName )
         {
             vprDEBUG( vesDBG, 1 ) << "Deleting " << ( *iter )->GetFileName()
                                   << std::endl << vprDEBUG_FLUSH;
-            delete *iter;
             mVTKDataSets.erase( iter );
             break;
         }

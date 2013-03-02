@@ -3,9 +3,6 @@
 #pj = os.path.join
 
 builderSubdirs = Split("""
-    preprocessor
-    util
-    vtkto3dtexture
     hexgridgen
     part_tree
     csvclass

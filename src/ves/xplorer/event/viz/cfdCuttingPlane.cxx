@@ -31,8 +31,11 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
-#include <ves/xplorer/DataSet.h>
+
 #include <vtkPlane.h>
+
+#include <latticefx/core/vtk/DataSet.h>
+
 #include <ves/xplorer/Debug.h>
 
 using namespace ves::xplorer;

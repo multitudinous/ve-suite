@@ -45,8 +45,6 @@ namespace ves
 {
 namespace xplorer
 {
-   class DataSet;
-
 namespace scenegraph
 {
    class cfdModuleGeometry;
@@ -56,12 +54,7 @@ namespace scenegraph
 }
 }
 }
-/*
-namespace VE_Xplorer
-{
-   class DataSet;
-}
-*/
+
 class vtkDataSet;
 class vtkUnstructuredGrid;
 class vtkGlyph3D;

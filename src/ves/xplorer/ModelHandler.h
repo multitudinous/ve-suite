@@ -37,7 +37,6 @@
 #include <ves/xplorer/ModelHandlerPtr.h>
 
 #include <ves/xplorer/ModelPtr.h>
-#include <ves/xplorer/DataSetPtr.h>
 #include <ves/xplorer/event/EventHandlerPtr.h>
 
 #include <ves/xplorer/event/cad/CADSlotInitializerPtr.h>
@@ -154,8 +153,6 @@ public:
 private:
     ///Create the arrow polydata
     vtkPolyData* _GetArrowPolyData();
-    ///The current active dataset
-    DataSet* activeDataset;
     ///The current command
     ves::open::xml::CommandPtr activeCommand;
     ///THe active model

@@ -104,8 +104,6 @@ namespace ves
 {
 namespace xplorer
 {
-class VjObsWrapper;
-
 namespace volume
 {
 #ifdef _PBUFFER
@@ -200,9 +198,6 @@ public:
     ///std::vector< int > getFrameBufferAttrs();
     ///Push data to state info shoudl be removed
     void pushDataToStateInfo();
-
-    ///Set the wrapper for vjobs so that we can change things
-    void SetWrapper( VjObsWrapper* );
 
     ///Update the framestamp and traverse the scenegraph
     void update();
@@ -337,9 +332,6 @@ private:
     ///Sound listener position matrix
     osg::Matrixd m_listenerPosition;
 
-    ///The vjobs wrapper
-    VjObsWrapper* m_vjobsWrapper;
-
 #ifdef _PBUFFER
     //biv --may convert this to a singleton later
     ///Should be removed since this is a singleton
@@ -404,6 +396,8 @@ private:
     int m_screenWidth;
     ///Screen height
     int m_screenHeight;
+    ///Set whether we are the master or a slave
+    bool m_isMaster;
 };
 } //end xplorer
 } //end ves

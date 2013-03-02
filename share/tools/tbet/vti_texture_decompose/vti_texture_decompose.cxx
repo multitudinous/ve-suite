@@ -4,7 +4,7 @@
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
-#include <ves/xplorer/util/readWriteVtkThings.h>
+#include <latticefx/utils/vtk/readWriteVtkThings.h>
 
 #include <vtkXMLDataSetWriter.h>
 #include <vtkPolyData.h>
@@ -58,7 +58,7 @@ void writeFlowTexture( vtkImageData* currentFile, std::string const& fileName, s
         }
     }*/
     flowImage->GetPointData()->AddArray( flowData );
-    ves::xplorer::util::writeVtkThing( flowImage, fileName, 1 );
+    lfx::vtk_utils::writeVtkThing( flowImage, fileName, 1 );
 
     flowImage->Delete();
     flowData->Delete();
@@ -132,7 +132,7 @@ int main( int argc, char* argv[] )
     std::cout << "Decomposing vti file " << vtiFilename << std::endl;
  
     vtkImageData* flowImage = 
-        dynamic_cast< vtkImageData* >( ves::xplorer::util::readVtkThing( vtiFilename, 0 ) );
+    dynamic_cast< vtkImageData* >( lfx::vtk_utils::readVtkThing( vtiFilename, 0 ) );
     if( !flowImage )
     {
         std::cout << "File must be a vtk image file." << std::endl;

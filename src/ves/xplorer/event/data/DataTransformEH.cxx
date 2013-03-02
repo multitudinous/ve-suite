@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/data/DataTransformEH.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -49,7 +48,11 @@
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/FloatArray.h>
 #include <ves/open/xml/cad/CADNode.h>
+
 #include <iostream>
+
+#include <latticefx/core/vtk/DataSet.h>
+
 using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 
@@ -107,7 +110,8 @@ void DataTransformEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             return;
         }
 
-        DataValuePairPtr newTransform = command->GetDataValuePair( "Transform" );
+        //TODO: Must Fix
+        /*DataValuePairPtr newTransform = command->GetDataValuePair( "Transform" );
         ves::xplorer::scenegraph::DCS* transform = 0;
         transform = _activeModel->GetActiveDataSet()->GetDCS();
 
@@ -120,9 +124,9 @@ void DataTransformEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
             ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
             ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
-        }
+        }*/
         //Reset back to null after working with the dataset we are after.
-        _activeModel->SetActiveDataSet( 0 );
+        _activeModel->SetActiveDataSet( lfx::core::vtk::DataSetPtr() );
     }
     catch( ... )
     {

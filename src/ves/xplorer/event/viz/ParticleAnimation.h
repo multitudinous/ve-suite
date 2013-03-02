@@ -82,18 +82,21 @@ public:
     ///Gets particle scale.
     float GetParticleScale();
 
+    ///Grab the propery set data
     void UpdatePropertySet();
-
+    
 private:
+    ///Create the lfx data
+    void CreateLFXPlane();
     ///Sphere scaling.
     float GetSphereScaleFactor();
+
     ///String to hold color by scalar.
     std::string colorByScalar;
     ///Test for warped surface.
     bool warpSurface;
-    ///<warped contour scale value
+    ///warped contour scale value
     double warpedContourScale;
-
     ///point cloud or variably sized spheres.
     unsigned int _particleOption;
     ///particle scale.

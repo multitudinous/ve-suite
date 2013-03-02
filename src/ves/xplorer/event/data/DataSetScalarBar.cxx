@@ -34,7 +34,6 @@
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Model.h>
 
 #include <ves/open/xml/Command.h>
@@ -53,6 +52,8 @@
 #include <sstream>
 #include <iomanip>
 #include <string>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
@@ -119,7 +120,7 @@ ves::xplorer::scenegraph::DCS* DataSetScalarBar::GetScalarBar( void )
 //////////////////////////////////////////////////////////////////////////////////
 ScalarBar* DataSetScalarBar::CreateScalarBar( void )
 {
-    DataSet* activeDataSet = 0;
+    lfx::core::vtk::DataSetPtr activeDataSet;
     if( ModelHandler::instance()->GetActiveModel() )
     {
         if( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
@@ -128,7 +129,7 @@ ScalarBar* DataSetScalarBar::CreateScalarBar( void )
         }
     }
 
-    if( activeDataSet == 0 )
+    if( !activeDataSet )
     {
         return 0;
     }

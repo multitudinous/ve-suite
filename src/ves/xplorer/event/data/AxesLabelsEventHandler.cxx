@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/data/AxesLabelsEventHandler.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/data/DataSetAxis.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
@@ -50,6 +49,8 @@
 #include <ves/xplorer/Debug.h>
 
 #include <iostream>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer::event;
 using namespace ves::xplorer;
@@ -120,11 +121,11 @@ void AxesLabelsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObj
 
     if( _activeModel && !labels.empty() )
     {
-        DataSet* dataSet = _activeModel->GetCfdDataSet(
+        lfx::core::vtk::DataSetPtr dataSet = _activeModel->GetCfdDataSet(
                                _activeModel->GetIndexOfDataSet( datasetName ) );
         _activeModel->SetActiveDataSet( dataSet );
-        dataSet->GetDataSetAxes()->SetAxisLabels(
-            labels.at( 0 ), labels.at( 1 ), labels.at( 2 ) );
-        dataSet->GetDataSetAxes()->CreateAxis();
+        //dataSet->GetDataSetAxes()->SetAxisLabels(
+        //    labels.at( 0 ), labels.at( 1 ), labels.at( 2 ) );
+        //dataSet->GetDataSetAxes()->CreateAxis();
     }
 }

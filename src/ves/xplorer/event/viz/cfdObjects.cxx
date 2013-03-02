@@ -31,7 +31,6 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdObjects.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/open/xml/Command.h>
@@ -49,6 +48,9 @@
 #include <vtkPointData.h>
 #include <vtkDoubleArray.h>
 
+#include <latticefx/core/vtk/DataSet.h>
+
+using namespace lfx::core::vtk;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;
 
@@ -56,7 +58,6 @@ using namespace ves::xplorer;
 cfdObjects::cfdObjects( void )
     :
     GlobalBase(),
-    activeDataSet( 0 ),
     pointSource( 0 ),
     m_multiGroupGeomFilter( vtkCompositeDataGeometryFilter::New() ),
     m_geometryFilter( vtkGeometryFilter::New() ),
@@ -85,7 +86,6 @@ cfdObjects::cfdObjects( void )
 cfdObjects::cfdObjects( const cfdObjects& src )
     :
     GlobalBase( src ),
-    activeDataSet( 0 ),
     pointSource( src.pointSource ),
     m_multiGroupGeomFilter( vtkCompositeDataGeometryFilter::New() ),
     m_geometryFilter( vtkGeometryFilter::New() ),
@@ -203,17 +203,13 @@ vtkAlgorithmOutput* cfdObjects::ApplyGeometryFilterNew( vtkAlgorithmOutput* inpu
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-DataSet* cfdObjects::GetActiveDataSet()
+lfx::core::vtk::DataSetPtr cfdObjects::GetActiveDataSet()
 {
     return activeDataSet;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdObjects::SetActiveDataSet( DataSet* dataset )
+void cfdObjects::SetActiveDataSet( lfx::core::vtk::DataSetPtr dataset )
 {
-    /*vprDEBUG(vesDBG, 4)
-       << "cfdObjects::SetActiveDataSet: " << dataset
-       << std::endl << vprDEBUG_FLUSH;*/
-
     activeDataSet = dataset;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -298,3 +294,9 @@ void cfdObjects::SetDataMapSurfaceName( std::string const& surfName )
     m_surfDataset = surfName;
 }
 ////////////////////////////////////////////////////////////////////////////////
+lfx::core::DataSetPtr cfdObjects::GetLFXDataSet() const
+{
+    return m_dsp;
+}
+////////////////////////////////////////////////////////////////////////////////
+

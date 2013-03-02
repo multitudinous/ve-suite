@@ -33,7 +33,6 @@
 #ifndef DATASET_AXIS_H
 #define DATASET_AXIS_H
 
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/GlobalBase.h>
 
 #include <ves/xplorer/scenegraph/Group.h>

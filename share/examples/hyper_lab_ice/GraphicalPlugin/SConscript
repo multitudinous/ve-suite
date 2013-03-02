@@ -8,7 +8,7 @@ host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vrjuggler_options osg_options poco_options' )
 Import( 'osgal_options osgbullet_options xerces_options vtk_options GetPlatform tao_options osgworks_options' )
-Import('switchwire_options kibitz_options')
+Import('switchwire_options kibitz_options latticefx_options')
 
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'hyper_lab_ice', 'GraphicalPlugin' ) )
 sources = sca_util.getSourcesRecursive( openDir )
@@ -42,6 +42,7 @@ if osgal_options.isAvailable():
    lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
 switchwire_options.apply( lib_env )
 kibitz_options.apply( lib_env )
+latticefx_options.apply( lib_env )
 
 if GetPlatform() == 'win32':
     lib_env['no_import_lib'] = 1

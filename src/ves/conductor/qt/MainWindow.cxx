@@ -69,8 +69,7 @@
 
 // Req'd for dataset loads
 #include <ves/open/xml/ParameterBlock.h>
-#include <ves/xplorer/util/fileIO.h>
-#include <ves/xplorer/util/cfdVTKFileHandler.h>
+#include <latticefx/utils/vtk/VTKFileHandler.h>
 #include <ves/open/xml/OneDStringArray.h>
 
 #include <switchwire/EventManager.h>
@@ -928,7 +927,7 @@ void MainWindow::LoadDataFile( std::string filename )
         }
     }*/
 
-    ves::xplorer::util::cfdVTKFileHandler tempHandler;
+    lfx::vtk_utils::VTKFileHandler tempHandler;
     std::vector< std::string > dataArrayList =
         tempHandler.GetDataSetArraysFromFile( filename );
 

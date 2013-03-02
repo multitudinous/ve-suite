@@ -41,12 +41,12 @@
 #include <string>
 #include <vector>
 
+#include <latticefx/core/vtk/DataSetPtr.h>
+
 namespace ves
 {
 namespace xplorer
 {
-class DataSet;
-
 namespace scenegraph
 {
 class DCS;
@@ -103,7 +103,7 @@ public:
 
     ///Get a specific assembly.
     ///\param assemblyID The ID of the assembly to search form
-    ves::xplorer::DataSet* GetDataset( const std::string& assemblyID );
+    lfx::core::vtk::DataSetPtr GetDataset( const std::string& assemblyID );
 
     ///Check to see if the assembly already exists and is loaded
     ///\param assemblyID The assembly ID to search for.
@@ -122,7 +122,7 @@ public:
 
 protected:
     ///A list of the current datasets.
-    std::map< std::string, ves::xplorer::DataSet* > m_datasetList;
+    std::map< std::string, lfx::core::vtk::DataSetPtr > m_datasetList;
 };
 }
 }

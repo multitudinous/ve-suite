@@ -36,8 +36,6 @@
 #include <ves/xplorer/TextureBasedVizHandlerPtr.h>
 #include <ves/VEConfig.h>
 
-
-#include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
 #include <ves/xplorer/event/volume/VolumeVisSlotInitializerPtr.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -227,8 +225,6 @@ protected:
     float* _currentBBox;
     bool _cleared;
     bool _textureBaseSelected;
-
-    std::map<std::string, ves::xplorer::event::TextureBasedEventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
 
     ves::xplorer::event::volume::VolumeVisSlotInitializerPtr m_slotInitializer;
 private:

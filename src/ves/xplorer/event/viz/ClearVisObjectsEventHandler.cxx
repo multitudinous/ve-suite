@@ -36,7 +36,6 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/DataSet.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -47,6 +46,8 @@
 #include <ves/xplorer/Debug.h>
 
 #include <iostream>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer::event;
 using namespace ves::xplorer;
@@ -116,7 +117,7 @@ void ClearVisObjectsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
         GetModelCADHandler()->MakeCADRootOpaque();
 
     unsigned int state = 0;
-    DataSet* dataSet =
+    lfx::core::vtk::DataSetPtr dataSet =
         ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
     if( dataSet )
     {

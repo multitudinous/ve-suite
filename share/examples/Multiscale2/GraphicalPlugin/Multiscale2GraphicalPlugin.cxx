@@ -66,7 +66,7 @@
 #include <sys/stat.h>
 
 
-#include <ves/xplorer/util/readWriteVtkThings.h>
+#include <latticefx/utils/vtk/readWriteVtkThings.h>
 
 // --- OSG Includes --- //
 #include <osg/MatrixTransform>
@@ -407,7 +407,7 @@ ds->setNumMultiSamples(16);
 		std::string extension = ".vtp";
 		fn = fn + extension;
 		
-		vtkPolyData* pd = dynamic_cast< vtkPolyData* >( ves::xplorer::util::readVtkThing( fn, 0 ) );
+		vtkPolyData* pd = dynamic_cast< vtkPolyData* >( lfx::vtk_utils::readVtkThing( fn, 0 ) );
 		
 		vtkPolyDataMapper* mapper = vtkPolyDataMapper::New();
 		mapper->SetInput( pd );

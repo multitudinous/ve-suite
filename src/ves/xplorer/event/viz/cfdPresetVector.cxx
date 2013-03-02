@@ -30,9 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/communication/CommunicationHandler.h>
 #include <ves/xplorer/event/viz/cfdPresetVector.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
 
@@ -62,6 +60,8 @@
 #if WRITE_IMAGE_DATA
 #include <osgDB/WriteFile>
 #endif
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
@@ -109,7 +109,7 @@ void cfdPresetVector::Update( void )
                               << " : " << usePreCalcData
                               << std::endl << vprDEBUG_FLUSH;
 
-        if( this->usePreCalcData && ( xyz < 3 ) )
+        /*if( this->usePreCalcData && ( xyz < 3 ) )
         {
             cfdPlanes* precomputedPlanes =
                 this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
@@ -118,8 +118,6 @@ void cfdPresetVector::Update( void )
                 vprDEBUG( vesDBG, 0 )
                         << "|\tDataset contains no precomputed vector planes."
                         << std::endl << vprDEBUG_FLUSH;
-                ves::xplorer::communication::CommunicationHandler::instance()
-                ->SendConductorMessage( "Dataset contains no precomputed vector planes.\n" );
                 return;
             }
 
@@ -159,7 +157,7 @@ void cfdPresetVector::Update( void )
                                   << this->cursorType << " : " << usePreCalcData
                                   << std::endl << vprDEBUG_FLUSH;
         }
-        else
+        else*/
         {
             vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
             if( xyz < 3 )

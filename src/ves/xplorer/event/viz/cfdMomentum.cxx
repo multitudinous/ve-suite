@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #include <ves/xplorer/event/viz/cfdMomentum.h>
-#include <ves/xplorer/DataSet.h>
+
 #include <ves/xplorer/environment/cfdEnum.h>    // needed for cursorType
 
 #include <ves/open/xml/Command.h>
@@ -46,6 +46,8 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 #include <ves/xplorer/Debug.h>
 

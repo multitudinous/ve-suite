@@ -37,21 +37,6 @@
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/DataSet.h>
-
-#include <ves/xplorer/event/volume/TBTransientDurationUpdateEH.h>
-#include <ves/xplorer/event/volume/TBTransientModeUpdateEH.h>
-#include <ves/xplorer/event/volume/TBIsosurfaceUpdateEH.h>
-#include <ves/xplorer/event/volume/TBIsosurfaceEnableEH.h>
-#include <ves/xplorer/event/volume/TBClipPlaneEH.h>
-#include <ves/xplorer/event/volume/TBBBoxEH.h>
-#include <ves/xplorer/event/volume/TBUpdateScalarRangeEH.h>
-#include <ves/xplorer/event/volume/TBUpdateSolutionEH.h>
-#include <ves/xplorer/event/volume/TBActivateEH.h>
-#include <ves/xplorer/event/volume/TBSetActiveShaderManagerEH.h>
-#include <ves/xplorer/event/volume/TBSliceNumberUpdateEH.h>
-#include <ves/xplorer/event/volume/TBPhongShadingEnableEH.h>
-#include <ves/xplorer/event/volume/TBPreIntegrateEH.h>
 
 #include <ves/xplorer/event/volume/VolumeVisSlotInitializer.h>
 
@@ -77,6 +62,8 @@
 
 #include <ves/xplorer/volume/cfdVectorVolumeVisHandler.h>
 #include <ves/xplorer/volume/cfdOSGAdvectionShaderManager.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 vprSingletonImpLifetime( ves::xplorer::TextureBasedVizHandler, 1 );
 using namespace ves::xplorer::volume;
@@ -110,20 +97,6 @@ TextureBasedVizHandler::TextureBasedVizHandler()
     m_slotInitializer =
         ves::xplorer::event::volume::VolumeVisSlotInitializerPtr(
             new ves::xplorer::event::volume::VolumeVisSlotInitializer() );
-
-    _eventHandlers[std::string( "TB_SET_ACTIVE_SHADER_MANAGER" )] = new ves::xplorer::event::TextureBasedSetActiveShaderManagerEventHandler();
-    _eventHandlers[std::string( "TB_ACTIVATE" )] = new ves::xplorer::event::TextureBasedActivateEventHandler();
-    _eventHandlers[std::string( "TB_ACTIVE_SOLUTION" )] = new ves::xplorer::event::TextureBasedUpdateSolutionEventHandler();
-    _eventHandlers[std::string( "TB_SCALAR_RANGE" )] = new ves::xplorer::event::TextureBasedUpdateScalarRangeEventHandler();
-    _eventHandlers[std::string( "TB_BBOX_DISPLAY" )] = new ves::xplorer::event::TextureBasedBoundingBoxEventHandler();
-    _eventHandlers[std::string( "TB_ROI_UPDATE" )] = new ves::xplorer::event::TextureBasedClipPlaneEventHandler();
-    _eventHandlers[std::string( "TB_ISOSURFACE_ENABLE" )] = new ves::xplorer::event::TextureBasedIsosurfaceEnableEventHandler();
-    _eventHandlers[std::string( "TB_UPDATE_ISOSURFACE" )] = new ves::xplorer::event::TextureBasedIsosurfaceUpdateEventHandler();
-    _eventHandlers[std::string( "TB_TRANSIENT_MODE_UPDATE" )] = new ves::xplorer::event::TextureBasedTransientModeUpdateEventHandler();
-    _eventHandlers[std::string( "TB_TRANSIENT_DURATION_UPDATE" )] = new ves::xplorer::event::TextureBasedTransientDurationUpdateEventHandler();
-    _eventHandlers[std::string( "TB_UPDATE_NUMBER_SLICE_PLANES" )] = new ves::xplorer::event::TextureBasedSliceNumberUpdateEventHandler();
-    _eventHandlers[std::string( "TB_PHONG_SHADING_ENABLE" )] = new ves::xplorer::event::TextureBasedPhongShadingEnableEventHandler();
-    _eventHandlers[std::string( "TB_FULL_PREINTEGRATE_UPDATE" )] = new ves::xplorer::event::TextureBasedPreIntegrateEnableEventHandler();
 }
 ///////////////////////////////////////////////
 TextureBasedVizHandler::~TextureBasedVizHandler( void )
@@ -144,13 +117,6 @@ TextureBasedVizHandler::~TextureBasedVizHandler( void )
     {
         delete _svvh;
         _vvvh = 0;
-    }
-
-    std::map< std::string, ves::xplorer::event::TextureBasedEventHandler*>::iterator pos;
-    for( pos = _eventHandlers.begin(); pos != _eventHandlers.end(); )
-    {
-        delete pos->second;
-        _eventHandlers.erase( pos++ );
     }
 }
 //////////////////////////////////////////////////////////////
@@ -579,7 +545,7 @@ void TextureBasedVizHandler::UpdateGraph()
 
     SetParentNode( static_cast< ves::xplorer::scenegraph::Group* >(
                        ModelHandler::instance()->GetActiveModel()->
-                       GetActiveDataSet()->GetSwitchNode()->GetChild( 1 ) ) );
+                       GetActiveDataSet()->GetSwitchNode()->getChild( 1 ) ) );
     SetActiveTextureDataSet( ModelHandler::instance()->GetActiveTextureDataSet() );
 
     //place vv node on the graph
@@ -668,23 +634,6 @@ void TextureBasedVizHandler::UpdateActiveTextureManager()
 ////////////////////////////////////////////////
 void TextureBasedVizHandler::PreFrameUpdate()
 {
-    //if ( ModelHandler::instance()->GetActiveModel() )
-    /*{
-        if( CommandManager::instance()->GetXMLCommand() )
-        {
-            std::map<std::string, ves::xplorer::event::TextureBasedEventHandler*>::iterator currentEventHandler;
-            const ves::open::xml::CommandPtr tbvizCommand = CommandManager::instance()->GetXMLCommand();
-            currentEventHandler = _eventHandlers.find( tbvizCommand->GetCommandName() );
-            if( currentEventHandler != _eventHandlers.end() )
-            {
-                vprDEBUG( vesDBG, 2 ) << "|\tExecuting: " << tbvizCommand->GetCommandName()
-                << std::endl << vprDEBUG_FLUSH;
-                currentEventHandler->second->SetGlobalBaseObject();
-                currentEventHandler->second->Execute( tbvizCommand );
-                _updateGraph();
-            }
-        }
-    }*/
     _updateShaders();
 }
 ////////////////////////////////////////////////////////////////////////////////

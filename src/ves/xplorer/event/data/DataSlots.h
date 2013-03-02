@@ -37,12 +37,12 @@
 #include <string>
 #include <vector>
 
+#include <latticefx/core/vtk/DataSetPtr.h>
+
 namespace ves
 {
 namespace xplorer
 {
-class DataSet;
-
 namespace event
 {
 namespace data
@@ -52,7 +52,7 @@ namespace data
  * \namespace ves::xplorer::event::data
  */
 ///Get the dataset that is currently being changed via the UI
-DataSet* GetSelectedDataset( std::string const& uuid );
+lfx::core::vtk::DataSetPtr GetSelectedDataset( std::string const& uuid );
 
 /// Turns greyscaling for contour planes on or off.
 void SetContourPlaneGreyscale( std::string const& uuid, std::vector< bool > const& greyscaleflag );
@@ -74,6 +74,23 @@ void ToggleCADNode( const std::string& nodeID, bool const& visible );
 ///Delete a DataSet from a model given its filename
 ///\param dataFilename The filename of the DataSet
 void DeleteDataSet( const std::string& dataFilename );
+
+///Show the bounding box for the selected dataset
+///\param uuid The UUID of the node to alter
+///\param show Turn the box off or on
+void ShowBBox( const std::string& uuid, const bool& show );
+
+///Update the dimensions of the seed points
+void UpdateDimensions( const std::string& uuid, const std::vector< int >& allDimensions );
+
+///Update the bounding seed points
+void UpdateAllBounds( const std::vector< double >& bounds );
+
+///Activate the streamline points
+void ActivateSeedPoints( const std::string& dataSetName, const bool seedPointDisplay );
+
+///Show the scalar bar
+void ShowScalarBar( const std::string& uuid, const bool& show );
 
 } //end data
 } //end event

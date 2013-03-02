@@ -33,8 +33,8 @@
 #include <string>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
-#include <ves/xplorer/util/fileIO.h>
-#include <ves/xplorer/util/readWriteVtkThings.h>
+#include <latticefx/utils/vtk/fileIO.h>
+#include <latticefx/utils/vtk/readWriteVtkThings.h>
 
 #include <vtkCellArray.h>
 #include <vtkFloatArray.h>
@@ -50,7 +50,7 @@
 #include <sstream>
 
 using namespace ves::xplorer;
-using namespace ves::xplorer::util;
+using namespace lfx::vtk_utils;
 
 cfdPlanes::cfdPlanes( const int xyz, const char directory[],
                       const double* bounds )
@@ -114,7 +114,7 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
                         << this->typeLabel << "_Cont" << i << ".vtk";
         std::string dirString = dirStringStream.str();
 
-        vtkDataObject* tempobject = readVtkThing( dirString );
+        vtkDataObject* tempobject = lfx::vtk_utils::readVtkThing( dirString );
         vtkPolyData* tempPolyData = vtkPolyData::SafeDownCast( tempobject );
         if( tempPolyData->GetPoints()->GetNumberOfPoints() > 0 )
         {

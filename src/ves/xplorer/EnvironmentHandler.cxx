@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/EnvironmentHandler.h>
 
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/ModelHandler.h>
@@ -48,15 +47,11 @@
 
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
-#include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 #include <ves/xplorer/scenegraph/HeadsUpDisplay.h>
 
 #include <ves/xplorer/event/EventHandler.h>
-#include <ves/xplorer/event/data/SeedPointActivateEH.h>
-#include <ves/xplorer/event/data/SPBoundEH.h>
-#include <ves/xplorer/event/data/SPDimensionsEH.h>
 #include <ves/xplorer/event/data/SeedPoints.h>
 #include <ves/xplorer/event/device/ChangeCursorEventHandler.h>
 #include <ves/xplorer/event/environment/StoredSceneEH.h>
@@ -83,7 +78,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/Group.h>
 
-#include <ves/xplorer/util/fileIO.h>
+#include <latticefx/utils/vtk/fileIO.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -101,7 +96,7 @@
 vprSingletonImpLifetime( ves::xplorer::EnvironmentHandler, 1 );
 
 using namespace ves::xplorer::scenegraph;
-using namespace ves::xplorer::util;
+using namespace lfx::vtk_utils;
 using namespace ves::xplorer::command;
 
 namespace ves
@@ -156,12 +151,6 @@ EnvironmentHandler::EnvironmentHandler()
         new ves::xplorer::event::ChangeBackgroundColorEventHandler();
     _eventHandlers[ std::string( "DISPLAY_SELECTION" ) ] =
         new ves::xplorer::event::DisplayEventHandler();
-    _eventHandlers[ std::string( "Display Seed Points" ) ] =
-        new ves::xplorer::event::SeedPointActivateEventHandler();
-    _eventHandlers[ std::string( "Seed Points Bounds" ) ] =
-        new ves::xplorer::event::SeedPointBoundsEventHandler();
-    _eventHandlers[ std::string( "Seed Points Dimensions" ) ] =
-        new ves::xplorer::event::SeedPointDimensionsEventHandler();
     _eventHandlers[ std::string( "DOT_FILE" ) ] =
         new ves::xplorer::event::ExportDOTFileEventHandler();
     _eventHandlers[ std::string( "Ephemeris Data" ) ] =
@@ -406,11 +395,6 @@ cfdTeacher* EnvironmentHandler::GetTeacher()
     return _teacher;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*cfdQuatCamHandler* EnvironmentHandler::GetQuatCamHandler()
-{
-   return _camHandler;
-}*/
-////////////////////////////////////////////////////////////////////////////////
 cfdDisplaySettings* EnvironmentHandler::GetDisplaySettings()
 {
     return displaySettings;
@@ -443,12 +427,6 @@ void EnvironmentHandler::InitScene()
     std::cout <<
               "| ***************************************************************** |"
               << std::endl;
-
-    //
-    // Initiate quatcam
-    //
-    ves::xplorer::cfdQuatCamHandler::instance()->SetDCS(
-        ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
 
     //
     // Initiate the Performer Stored Binary objects.
@@ -504,7 +482,6 @@ void EnvironmentHandler::PreFrameUpdate()
         ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
     }*/
 
-    //ves::xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
     ves::xplorer::NavigationAnimationEngine::instance()->PreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////

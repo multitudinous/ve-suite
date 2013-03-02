@@ -1,11 +1,6 @@
 #include "H/stove.h"
 #include "starReaderBaff.h"
-#include <ves/xplorer/util/readWriteVtkThings.h>
-#include <ves/xplorer/util/cfdAccessoryFunctions.h>
-#include <ves/xplorer/util/cleanVtk.h>
-//#include <pthread.h>
-//#include <sys/types.h>
-//#include <unistd.h>
+
 #include <cstdlib>
 #include <vtkDataSet.h>
 #include <vtkPointData.h>

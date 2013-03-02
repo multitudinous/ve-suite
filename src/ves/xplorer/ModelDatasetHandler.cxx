@@ -38,7 +38,8 @@
 
 ///This must be here due to boost header conflicts on windows
 #include <ves/xplorer/Debug.h>
-#include <ves/xplorer/DataSet.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 namespace ves
 {
@@ -59,11 +60,6 @@ ModelDatasetHandler::ModelDatasetHandler( const ModelDatasetHandler& rhs )
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelDatasetHandler::~ModelDatasetHandler()
 {
-    std::map<std::string, ves::xplorer::DataSet*>::iterator iter;
-    for( iter = m_datasetList.begin(); iter != m_datasetList.end(); iter++ )
-    {
-        delete iter->second;
-    }
     m_datasetList.clear();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,27 +75,26 @@ ModelDatasetHandler::operator=( const ModelDatasetHandler& rhs )
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelDatasetHandler::CreateDataset( std::string assemblyID )
 {
-    m_datasetList[ assemblyID ] = new ves::xplorer::DataSet();
+    m_datasetList[ assemblyID ] = lfx::core::vtk::DataSetPtr( new lfx::core::vtk::DataSet() );
 }
-/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 void ModelDatasetHandler::RemoveDataset( std::string )
 {
-
+    ;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelDatasetHandler::SetActiveDataset( std::string, std::string, std::string )
 {
 }
-////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::DataSet* ModelDatasetHandler::GetDataset( const std::string& partID )
+lfx::core::vtk::DataSetPtr ModelDatasetHandler::GetDataset( const std::string& partID )
 {
     return m_datasetList[ partID ];
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 bool ModelDatasetHandler::DatasetExists( const std::string& partID )
 {
-    std::map<std::string, ves::xplorer::DataSet*>::iterator foundPart;
+    std::map<std::string, lfx::core::vtk::DataSetPtr >::iterator foundPart;
     foundPart = m_datasetList.find( partID );
 
     if( foundPart != m_datasetList.end() )

@@ -33,7 +33,6 @@
 #include <ves/xplorer/event/viz/cfdPolyData.h>
 #include <ves/xplorer/event/viz/OSGWarpedSurfaceStage.h>
 
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/open/xml/Command.h>
@@ -55,6 +54,8 @@
 #include <vtkSphereSource.h>
 #include <vtkPointData.h>
 #include <vtkPolyDataNormals.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 #include <ves/xplorer/Debug.h>
 

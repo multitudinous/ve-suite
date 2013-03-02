@@ -48,7 +48,6 @@
 #include <ves/open/xml/FloatArray.h>
 #include <ves/open/xml/cad/CADNode.h>
 
-#include <ves/xplorer/util/fileIO.h>
 #include <ves/xplorer/Debug.h>
 
 #include <switchwire/EventManager.h>

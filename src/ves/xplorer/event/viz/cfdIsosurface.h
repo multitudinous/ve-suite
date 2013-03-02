@@ -86,6 +86,9 @@ public:
     void UpdatePropertySet();
 
 private:
+    ///Use lfx to create the viz data
+    void CreateLFXPlane();
+    ///Convert the scalar precentage to an actual scalar value
     double convertPercentage( const int percentage );
 
     int totalId;///<Total number of steps through the isosurface range.

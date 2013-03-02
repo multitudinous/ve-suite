@@ -32,7 +32,6 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdContourBase.h>
-#include <ves/xplorer/DataSet.h>
 
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
@@ -44,7 +43,7 @@
 
 #include <propertystore/PropertySet.h>
 
-#include <ves/xplorer/util/ExtractGeometryCallback.h>
+#include <latticefx/utils/vtk/ExtractGeometryCallback.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -74,8 +73,15 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkPCellDataToPointData.h>
 
-#include <vtkXMLUnstructuredGridWriter.h>
+//#include <vtkXMLUnstructuredGridWriter.h>
 #include <vtkUnstructuredGrid.h>
+
+#include <latticefx/core/vtk/ChannelDatavtkDataObject.h>
+#include <latticefx/core/vtk/VTKActorRenderer.h>
+#include <latticefx/core/vtk/VTKContourSliceRTP.h>
+#include <latticefx/core/vtk/CuttingPlane.h>
+#include <latticefx/core/vtk/DataSet.h>
+
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
@@ -473,7 +479,7 @@ void cfdContourBase::CreateArbSurface()
     Model* activeModel = ModelHandler::instance()->GetActiveModel();
     // set the dataset as the appropriate dastaset type
     // (and the active dataset as well)
-    DataSet* surfDataset =
+    lfx::core::vtk::DataSetPtr surfDataset =
         activeModel->GetCfdDataSet(
             activeModel->GetIndexOfDataSet( m_surfDataset ) );
     vtkPolyData* pd = surfDataset->GetPolyData();
@@ -485,9 +491,9 @@ void cfdContourBase::CreateArbSurface()
         return;
     }
 
-    ves::xplorer::util::ExtractGeometryCallback* extractGeomCbk =
-        new ves::xplorer::util::ExtractGeometryCallback();
-    ves::xplorer::util::DataObjectHandler handler;
+    lfx::vtk_utils::ExtractGeometryCallback* extractGeomCbk =
+        new lfx::vtk_utils::ExtractGeometryCallback();
+    lfx::vtk_utils::DataObjectHandler handler;
     handler.SetDatasetOperatorCallback( extractGeomCbk );
     extractGeomCbk->SetPolyDataSurface( pd );
     handler.OperateOnAllDatasetsInObject( GetActiveDataSet()->GetDataSet() );
@@ -653,6 +659,49 @@ void cfdContourBase::UpdatePropertySet()
     if( m_propertySet->PropertyExists( "UseGPUTools" ) )
     {
         ;//unsigned int checkBox = boost::any_cast<bool>( set.GetPropertyValue( "UseGPUTools" ) );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdContourBase::CreateLFXPlane()
+{
+    m_dsp = lfx::core::DataSetPtr( new lfx::core::DataSet() );
+    
+    //1st Step
+    lfx::core::vtk::ChannelDatavtkDataObjectPtr dobjPtr( new lfx::core::vtk::ChannelDatavtkDataObject( GetActiveDataSet()->GetDataSet(), "vtkDataObject" ) );
+    m_dsp->addChannel( dobjPtr );
+    
+    lfx::core::vtk::VTKContourSliceRTPPtr contourRTP( new lfx::core::vtk::VTKContourSliceRTP() );
+    if( xyz == 0 )
+    {
+        contourRTP->SetPlaneDirection( lfx::core::vtk::CuttingPlane::X_PLANE );
+    }
+    else if( xyz == 1 )
+    {
+        contourRTP->SetPlaneDirection( lfx::core::vtk::CuttingPlane::Y_PLANE );
+    }
+    else if( xyz == 2 )
+    {
+        contourRTP->SetPlaneDirection( lfx::core::vtk::CuttingPlane::Z_PLANE );
+    }
+    contourRTP->SetRequestedValue( requestedValue );
+    double range[2];
+    GetActiveDataSet()->GetUserRange( range );
+    contourRTP->SetMinMaxScalarRangeValue( range[ 0 ], range[ 1 ] );
+    contourRTP->addInput( "vtkDataObject" );
+    m_dsp->addOperation( contourRTP );
+
+    //Try the vtkActor renderer
+    lfx::core::vtk::VTKActorRendererPtr renderOp( new lfx::core::vtk::VTKActorRenderer() );
+    renderOp->SetActiveVector( GetActiveDataSet()->GetActiveVectorName() );
+    renderOp->SetActiveScalar( GetActiveDataSet()->GetActiveScalarName() );
+    renderOp->addInput( "vtkPolyDataMapper" );
+    m_dsp->setRenderer( renderOp );
+    //Now force an update of the lfx pipeline
+    bool success = m_dsp->updateAll();
+    
+    if( !success )
+    {
+        std::cout << "Some sort of problem with lfx " << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

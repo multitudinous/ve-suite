@@ -51,8 +51,6 @@
 #include <ves/xplorer/event/cad/CADAddNodeEH.h>
 #include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
 
-#include <ves/xplorer/util/fileIO.h>
-
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/DataValuePair.h>

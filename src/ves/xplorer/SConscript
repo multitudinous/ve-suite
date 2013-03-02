@@ -9,12 +9,11 @@ Import('tao_options boost_options vrjuggler_options osgal_options GetPlatform os
 Import('poco_options minerva_options')
 Import('ApplyBulletVars bullet_options osgbullet_options')
 Import( 'switchwire_options' )
-Import( 'propertystore_options' )
+Import('propertystore_options','latticefx_options' )
 
 xplorerSubdirs = Split("""
     scenegraph
     volume
-    util
     DefaultGraphicalPlugin
     communication
     command
@@ -81,21 +80,15 @@ headers += map(lambda s: pj('behavior', s), behavior_header_srcs)
 lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append(LIBS = ['ves_open_xml',
                    'ves_xplorer_scenegraph',
-                   'ves_xplorer_util',
                    'ves_xplorer_volume',
                    'ves_xplorer_command',
                    'ves_open_module',
-                   'ves_builder_dataloader',
-                   'ves_builder_translator_base',
                    'ves_xplorer_communication'])
 
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph'),
-                        pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
                         pj('#', buildDir, 'src', 'ves', 'xplorer','communication'),
                         pj('#', buildDir, 'src', 'ves', 'xplorer','command'),
                         pj('#', buildDir, 'src', 'ves', 'xplorer','volume'),
-                        pj('#', buildDir, 'src', 'ves', 'builder','DataLoader'),
-                        pj('#', buildDir, 'src', 'ves', 'builder','cfdTranslatorToVTK'),
                         pj('#', buildDir, 'src', 'ves', 'open'),
                         pj('#', buildDir, 'src', 'ves', 'open','xml')])
 
@@ -115,7 +108,7 @@ osgbullet_options.apply( lib_env )
 bullet_options.apply( lib_env )
 switchwire_options.apply( lib_env )
 propertystore_options.apply( lib_env )
-
+latticefx_options.apply( lib_env )
 xerces_options.apply( lib_env )
 
 # Needed since Device and KeyboardMouse send events to new UI

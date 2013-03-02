@@ -33,8 +33,8 @@
 #include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/util/fileIO.h>
+
+#include <latticefx/utils/vtk/fileIO.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -59,6 +59,8 @@
 
 #include <iostream>
 #include <sstream>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer::event;
 using namespace ves::open;
@@ -182,7 +184,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             // get vtk data set name...
             std::string vtk_filein =
                 tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetDataString();
-            if( !ves::xplorer::util::fileIO::isFileReadable( vtk_filein ) )
+            if( !lfx::vtk_utils::fileIO::isFileReadable( vtk_filein ) )
             {
                 std::cerr << "ERROR: unreadable vtk file = " << vtk_filein
                           << ".  You may need to correct your ves file."
@@ -194,17 +196,17 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             //If not already there lets create a new dataset
             _activeModel->CreateCfdDataSet();
             // Pass in -1 to GetCfdDataSet to get the last dataset added
-            DataSet* lastDataAdded = _activeModel->GetCfdDataSet( -1 );
+            lfx::core::vtk::DataSetPtr lastDataAdded = _activeModel->GetCfdDataSet( -1 );
             vprDEBUG( vesDBG, 0 )
                     << "|\t*************Now starting to load new data************ "
                     << std::endl << vprDEBUG_FLUSH;
 
-            lastDataAdded->GetDCS()->SetScaleArray(
+            /*lastDataAdded->GetDCS()->SetScaleArray(
                 tempInfoPacket->GetTransform()->GetScaleArray()->GetArray() );
             lastDataAdded->GetDCS()->SetTranslationArray(
                 tempInfoPacket->GetTransform()->GetTranslationArray()->GetArray() );
             lastDataAdded->GetDCS()->SetRotationArray(
-                tempInfoPacket->GetTransform()->GetRotationArray()->GetArray() );
+                tempInfoPacket->GetTransform()->GetRotationArray()->GetArray() );*/
 
             vprDEBUG( vesDBG, 0 ) << "|\tvtk file = " << vtk_filein
                                   << ", dcs = "  << lastDataAdded->GetDCS()
@@ -308,8 +310,8 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                     if( lastDataAdded->GetParent() == lastDataAdded )
                     {
                         _activeModel->GetDCS()->
-                        AddChild( lastDataAdded->GetDCS() );
-                        _activeModel->SetActiveDataSet( 0 );
+                            addChild( lastDataAdded->GetDCS() );
+                        _activeModel->SetActiveDataSet( lfx::core::vtk::DataSetPtr() );
                     }
                     m_datafileLoaded.signal( tempDataSetFilename );
                 }
@@ -332,7 +334,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     {
         DataValuePairPtr tempDVP( boost::dynamic_pointer_cast<DataValuePair>( command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" )->GetDataXMLObject() ) );
         std::string precomputedDataSliceDir = tempDVP->GetDataString();
-        DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
+        lfx::core::vtk::DataSetPtr tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         tempDataSet->SetUUID( "VTK_PRECOMPUTED_DIR_PATH", tempDVP->GetID() );
         tempDataSet->SetPrecomputedDataSliceDir( precomputedDataSliceDir );
         tempDataSet->LoadPrecomputedDataSlices();
@@ -341,7 +343,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     {
         DataValuePairPtr tempDVP = boost::dynamic_pointer_cast<DataValuePair>( command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" )->GetDataXMLObject() );
         std::string precomputedSurfaceDir = tempDVP->GetDataString();
-        DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
+        lfx::core::vtk::DataSetPtr tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         tempDataSet->SetUUID( "VTK_SURFACE_DIR_PATH", tempDVP->GetID() );
         tempDataSet->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
 
@@ -359,7 +361,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
         std::ostringstream textId;
         //VTK_TEXTURE_DIR_PATH
         textId << "VTK_SURFACE_DIR_PATH_" << tempDVP->GetID();
-        DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
+        lfx::core::vtk::DataSetPtr tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         tempDataSet->SetUUID( textId.str(), tempDVP->GetID() );
     }
     else if( command->GetDataValuePair( "DELETE_DATASET" ) )
@@ -367,14 +369,14 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
         DataValuePairSharedPtr tempDVP =
             command->GetDataValuePair( "DELETE_DATASET" );
         _activeModel->DeleteDataSet( tempDVP->GetDataString() );
-        _activeModel->SetActiveDataSet( 0 );
+        _activeModel->SetActiveDataSet( lfx::core::vtk::DataSetPtr() );
     }
     else if( command->GetDataValuePair( "Update Surface Wrap" ) )
     {
         DataValuePairSharedPtr tempDVP = boost::dynamic_pointer_cast<DataValuePair>( command->GetDataValuePair( "Update Surface Wrap" )->GetDataXMLObject() );
         unsigned int surfaceToggle = 0;
         tempDVP->GetData( surfaceToggle );
-        DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
+        lfx::core::vtk::DataSetPtr tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         if( surfaceToggle )
         {
             //Create surface

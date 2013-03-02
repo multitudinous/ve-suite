@@ -34,31 +34,31 @@
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
 
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdStreamers.h>
 #include <ves/xplorer/event/viz/cfdPolyData.h>
 
 #include <ves/xplorer/scenegraph/util/PhongLoader.h>
 #include <ves/xplorer/Debug.h>
 
-#include <ves/open/xml/Command.h>
+#include <latticefx/core/DataSet.h>
 
 // --- OSG Includes --- //
 #include <osg/BlendFunc>
 #include <osg/Sequence>
+#include <osg/PositionAttitudeTransform>
 
 #include <osgDB/WriteFile>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdGraphicsObject::cfdGraphicsObject()
     :
-    parentNode( 0 ),
     worldNode( 0 ),
     type( OTHER ),
-    model( 0 ),
-    m_dataset( 0 )
+    model( 0 )
 {
     ;
 }
@@ -66,7 +66,6 @@ cfdGraphicsObject::cfdGraphicsObject()
 cfdGraphicsObject::~cfdGraphicsObject()
 {
     type = OTHER;
-    m_dataset = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdGraphicsObject::cfdGraphicsObject( const cfdGraphicsObject& input )
@@ -89,7 +88,7 @@ cfdGraphicsObject& cfdGraphicsObject::operator=( const cfdGraphicsObject& input 
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdGraphicsObject::SetParentNode( ves::xplorer::scenegraph::DCS* const input )
+void cfdGraphicsObject::SetParentNode( osg::PositionAttitudeTransform* const input )
 {
     parentNode = input;
 }
@@ -99,12 +98,12 @@ void cfdGraphicsObject::SetWorldNode( ves::xplorer::scenegraph::DCS* const input
     worldNode = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdGraphicsObject::SetDataSet( ves::xplorer::DataSet* const dataset )
+void cfdGraphicsObject::SetDataSet( lfx::core::vtk::DataSetPtr const dataset )
 {
     m_dataset = dataset;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::DataSet* cfdGraphicsObject::GetDataSet()
+lfx::core::vtk::DataSetPtr cfdGraphicsObject::GetDataSet()
 {
     return m_dataset;
 }
@@ -114,24 +113,24 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
     if( type == CLASSIC )
     {
         // is parent on graph
-        if( !worldNode->SearchChild( parentNode ) )
+        if( !worldNode->containsNode( parentNode.get() ) )
         {
             vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active switch node to worldDCS"
                                   << std::endl << vprDEBUG_FLUSH;
-            worldNode->AddChild( parentNode );
+            worldNode->addChild( parentNode.get() );
         }
 
         // is it transient, classic, or animated class
         // add animation or dcs
-        ves::xplorer::scenegraph::Switch* temp = model->GetActiveDataSet()->GetSwitchNode();
+        osg::Switch* temp = model->GetActiveDataSet()->GetSwitchNode();
         if( geodes.size() == 1 )
         {
             // classic ss
-            if( !parentNode->SearchChild( temp ) )
+            if( !parentNode->containsNode( temp ) )
             {
                 vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active dcs node to worldDCS for classic ss "
                                       << std::endl << vprDEBUG_FLUSH;
-                parentNode->AddChild( temp );
+                parentNode->addChild( temp );
             }
 
             vprDEBUG( vesDBG, 1 ) << "|\t\tAdding geode to active dataset dcs "
@@ -139,7 +138,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
 
             // we can do this because classic group is always
             // child 0 see line 58 of cfdModel.cxx
-            ves::xplorer::scenegraph::Group* test = dynamic_cast< ves::xplorer::scenegraph::Group* >( temp->GetChild( 0 ) );
+            ves::xplorer::scenegraph::Group* test = dynamic_cast< ves::xplorer::scenegraph::Group* >( temp->getChild( 0 ) );
             test->AddChild( geodes.back().get() );
             vprDEBUG( vesDBG, 1 ) << "|\tFinished classic ss add to graph"
                                   << std::endl << vprDEBUG_FLUSH;
@@ -151,13 +150,13 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             //( !(model->GetAnimation() ) ||
             // !(model->GetActiveDataSet()->IsPartOfTransientSeries() ) ) )
         {
-            ves::xplorer::scenegraph::Switch* temp = model->GetActiveDataSet()->GetSwitchNode();
+            osg::Switch* temp = model->GetActiveDataSet()->GetSwitchNode();
 
-            if( !parentNode->SearchChild( temp ) )
+            if( !parentNode->containsNode( temp ) )
             {
                 vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active dcs node to worldDCS for classic ss animation"
                                       << std::endl << vprDEBUG_FLUSH;
-                parentNode->AddChild( temp );
+                parentNode->addChild( temp );
             }
             m_animation = new osg::Sequence();
             //m_animation->setDefaultTime( 1.0f );
@@ -170,7 +169,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             m_animation->setDuration( 1.0f, -1 );
             m_animation->setMode( osg::Sequence::START );
 
-            ves::xplorer::scenegraph::Group* test = dynamic_cast< ves::xplorer::scenegraph::Group* >( temp->GetChild( 0 ) );
+            ves::xplorer::scenegraph::Group* test = dynamic_cast< ves::xplorer::scenegraph::Group* >( temp->getChild( 0 ) );
             test->addChild( m_animation.get() );
         }
         /*else if( ( geodes.size() > 1 ) &&
@@ -200,6 +199,40 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
     {
         ;
     }
+    else if( type == LFX )
+    {
+        // is parent on graph
+        if( !worldNode->containsNode( parentNode.get() ) )
+        {
+            vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active switch node to worldDCS"
+            << std::endl << vprDEBUG_FLUSH;
+            worldNode->addChild( parentNode.get() );
+        }
+        
+        // is it transient, classic, or animated class
+        // add animation or dcs
+        osg::Switch* temp = model->GetActiveDataSet()->GetSwitchNode();
+        //if( geodes.size() == 1 )
+        {
+            // classic ss
+            if( !parentNode->containsNode( temp ) )
+            {
+                vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active dcs node to worldDCS for classic ss "
+                << std::endl << vprDEBUG_FLUSH;
+                parentNode->addChild( temp );
+            }
+            
+            vprDEBUG( vesDBG, 1 ) << "|\t\tAdding geode to active dataset dcs "
+            << std::endl << vprDEBUG_FLUSH;
+            
+            // we can do this because classic group is always
+            // child 0 see line 58 of cfdModel.cxx
+            osg::Group* test = dynamic_cast< osg::Group* >( temp->getChild( 0 ) );
+            test->addChild( m_lfxGroup.get() );
+            vprDEBUG( vesDBG, 1 ) << "|\tFinished classic ss add to graph"
+            << std::endl << vprDEBUG_FLUSH;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdGraphicsObject::SetTypeOfViz( VizType x )
@@ -210,6 +243,12 @@ void cfdGraphicsObject::SetTypeOfViz( VizType x )
 void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* const input )
 {
     SetUUID( input->GetUUID() );
+
+    if( input->GetLFXDataSet() )
+    {
+        m_lfxGroup = input->GetLFXDataSet()->getSceneData();
+        return;
+    }
 
     bool isStreamLine = false;
     if( dynamic_cast< ves::xplorer::cfdStreamers* >( input ) )
@@ -262,9 +301,9 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* const input )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* cfdGraphicsObject::GetParentNode()
+osg::PositionAttitudeTransform* cfdGraphicsObject::GetParentNode()
 {
-    return parentNode;
+    return parentNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdGraphicsObject::SetActiveModel( Model* const input )
@@ -493,6 +532,12 @@ void cfdGraphicsObject::RemoveGeodeFromDCS()
             osg::Group* parent = m_animation->getParent( 0 );
             parent->removeChild( m_animation.get() );
         }
+    }
+    else if( type == LFX )
+    {
+        osg::ref_ptr< osg::Group > tempGroup = m_lfxGroup->getParent( 0 );
+        tempGroup->removeChild( m_lfxGroup.get() );
+        m_lfxGroup = 0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

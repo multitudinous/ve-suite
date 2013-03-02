@@ -38,9 +38,9 @@ headers = Split("""
 """)
 
 lib_env = ves_pkg.getEnv().Clone()
-lib_env.Append(LIBPATH = [pj('#', buildDir,'src','ves','xplorer','util'),
+lib_env.Append(LIBPATH = [
                           pj('#', buildDir, 'src','ves','builder','cfdTranslatorToVTK') ],
-               LIBS = ['ves_xplorer_util', 'ves_builder_translator_base'])
+               LIBS = [ 'ves_builder_translator_base'])
                
 boost_options.apply( lib_env )
 vtk_options.apply( lib_env )

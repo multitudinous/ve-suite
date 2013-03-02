@@ -42,7 +42,7 @@
 
 #include <ves/xplorer/Debug.h>
 
-#include <ves/xplorer/util/fileIO.h>
+#include <latticefx/utils/vtk/fileIO.h>
 
 #include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
 #include <ves/xplorer/scenegraph/nurbs/KnotVector.h>
@@ -649,7 +649,7 @@ osg::Node* CADEntityHelper::parseOCCNURBSFile( const std::string& directory )
     std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> > nurbsPatches;
     //std::string nurbsfile(argv[1]);
     std::vector< std::string > patchFiles =
-        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".txt" );
+        lfx::vtk_utils::fileIO::GetFilesInDirectory( directory, ".txt" );
     size_t nPatches = patchFiles.size();
     ves::xplorer::scenegraph::nurbs::util::OCCNURBSFileReader patchReader;
 

@@ -38,14 +38,8 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
 
-#include <ves/xplorer/util/fileIO.h>
-
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/environment/cfdQuatCam.h>
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
-
-#include <ves/xplorer/event/environment/QCClearDataEH.h>
-#include <ves/xplorer/event/environment/QCLoadFileEH.h>
 
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>

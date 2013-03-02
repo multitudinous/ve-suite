@@ -65,7 +65,7 @@ class AppWrapper
 {
 public:
     ///Contructor
-    AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::program_options::variables_map vm, Poco::SplitterChannel* splitter );
+    AppWrapper( int argc,  char* argv[], boost::program_options::variables_map vm, Poco::SplitterChannel* splitter );
 
     ///destructor
     ~AppWrapper();
@@ -85,9 +85,6 @@ private:
 
     ///Is juggler running
     bool m_jugglerIsRunning;
-
-    ///Points to the wrapper to send to cfdapp
-    ves::xplorer::VjObsWrapper* m_vjObsWrapper;
 
     ///Command line args
     int m_argc;

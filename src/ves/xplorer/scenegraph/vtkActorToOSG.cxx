@@ -41,7 +41,6 @@
 // workaround end
 
 #include <ves/xplorer/scenegraph/vtkActorToOSG.h>
-#include <ves/xplorer/util/readWriteVtkThings.h>
 
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>

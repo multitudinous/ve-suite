@@ -31,9 +31,6 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/ParticleAnimation.h>
-#include <ves/xplorer/event/viz/OSGParticleStage.h>
-
-#include <ves/xplorer/DataSet.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -41,6 +38,8 @@
 #include <propertystore/PropertySet.h>
 
 #include <ves/xplorer/Debug.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
@@ -95,16 +94,9 @@ void ParticleAnimation::Update()
                 << vprDEBUG_FLUSH;
     }
 
-    if( m_gpuTools )
-    {
-        OSGParticleStage* particles = new OSGParticleStage();
-        geodes.push_back( particles->createInstanced(
-                              GetActiveDataSet()->GetTransientDataSets(),
-                              GetActiveDataSet()->GetActiveScalarName(),
-                              GetActiveDataSet()->GetActiveVectorName() ) );
-        delete particles;
-        updateFlag = true;
-    }
+    CreateLFXPlane();
+    this->updateFlag = true;
+    return;
 }
 
 //////////////////////////////////////////////////////////
@@ -211,4 +203,287 @@ void ParticleAnimation::UpdatePropertySet()
         boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void ParticleAnimation::CreateLFXPlane()
+{
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+/*lfx::core::DataSetPtr ParticleAnimation::createInstanced( const std::vector< lfx::core::vtk::DataSetPtr >& transData,
+                                      const std::string& activeScalar,
+                                      const std::string& activeVector,
+                                      lfx::core::DBBasePtr dbBase )
+{
+    std::vector< std::vector< std::pair< vtkIdType, double* > > >  m_pointCollection;
+    ///The raw data for the respective points
+    std::vector< std::vector< std::pair< std::string, std::vector< double > > > >  m_dataCollection;
+    ///Streamline ordered raw data for the respective lines
+    std::vector< std::vector< std::pair< std::string, std::vector< double > > > >  m_lineDataCollection;
+    
+    m_pointCollection.clear();
+    
+    std::vector< lfx::core::vtk::DataSetPtr > m_transientDataSet;
+    m_transientDataSet = transData;
+    std::string m_activeVector = activeVector;
+    std::string m_activeScalar = activeScalar;
+    
+    lfx::vtk_utils::FindVertexCellsCallback* findVertexCellsCbk =
+    new lfx::vtk_utils::FindVertexCellsCallback();
+    lfx::vtk_utils::DataObjectHandler* dataObjectHandler =
+    new lfx::vtk_utils::DataObjectHandler();
+    dataObjectHandler->SetDatasetOperatorCallback( findVertexCellsCbk );
+    
+    size_t maxNumPoints = 0;
+    for( size_t i = 0; i < m_transientDataSet.size(); ++i )
+    {
+        vtkDataObject* tempDataSet = m_transientDataSet.at( i )->GetDataSet();
+        
+        dataObjectHandler->OperateOnAllDatasetsInObject( tempDataSet );
+        std::vector< std::pair< vtkIdType, double* > > tempCellGroups =
+        findVertexCellsCbk->GetVertexCells();
+        m_pointCollection.push_back( tempCellGroups );
+        findVertexCellsCbk->ResetPointGroup();
+        if( maxNumPoints < tempCellGroups.size() )
+        {
+            maxNumPoints = tempCellGroups.size();
+        }
+    }
+    delete findVertexCellsCbk;
+    std::cout << maxNumPoints << std::endl;
+    lfx::vtk_utils::CountNumberOfParametersCallback* getNumParamsCbk =
+    new lfx::vtk_utils::CountNumberOfParametersCallback();
+    dataObjectHandler->SetDatasetOperatorCallback( getNumParamsCbk );
+    for( size_t i = 0; i < m_transientDataSet.size(); ++i )
+    {
+        vtkDataObject* tempDataSet = m_transientDataSet.at( i )->GetDataSet();
+        
+        dataObjectHandler->OperateOnAllDatasetsInObject( tempDataSet );
+    }
+    std::vector< std::string > scalarNames = getNumParamsCbk->GetParameterNames( false );
+    for( size_t i = 0; i < scalarNames.size(); ++i )
+    {
+        std::cout << " scalar names " << scalarNames.at( i ) << std::endl;
+    }
+    
+    lfx::vtk_utils::ProcessScalarRangeCallback* processScalarRangeCbk =
+    new lfx::vtk_utils::ProcessScalarRangeCallback();
+    double* diamRange = new double[ 2 ];
+    double* vmagRange = new double[ 2 ];
+    double diamRangeF[ 2 ] = {10000000.,-10000000.};
+    double vmagRangeF[ 2 ] = {10000000.,-10000000.};
+    for( size_t j = 0; j < m_transientDataSet.size(); ++j )
+    {
+        dataObjectHandler->SetDatasetOperatorCallback( processScalarRangeCbk );
+        vtkDataObject* tempDataSet = m_transientDataSet.at( j )->GetDataSet();
+        dataObjectHandler->OperateOnAllDatasetsInObject( tempDataSet );
+        processScalarRangeCbk->GetScalarRange( diameterNameString, diamRange );
+        processScalarRangeCbk->GetScalarRange( vmagNameString, vmagRange );
+        if( diamRange[ 0 ] < diamRangeF[ 0 ] )
+        {
+            diamRangeF[ 0 ] = diamRange[ 0 ];
+        }
+        
+        if( diamRange[ 1 ] > diamRangeF[ 1 ] )
+        {
+            diamRangeF[ 1 ] = diamRange[ 1 ];
+        }
+        
+        if( vmagRange[ 0 ] < vmagRangeF[ 0 ] )
+        {
+            vmagRangeF[ 0 ] = vmagRange[ 0 ];
+        }
+        
+        if( vmagRange[ 1 ] > vmagRangeF[ 1 ] )
+        {
+            vmagRangeF[ 1 ] = vmagRange[ 1 ];
+        }
+    }
+    delete [] diamRange;
+    diamRange = 0;
+    delete [] vmagRange;
+    vmagRange = 0;
+    
+    std::cout << " range " << diamRangeF[ 0 ] << " " << diamRangeF[ 1 ] << std::endl;
+    std::cout << " range " << vmagRangeF[ 0 ] << " " << vmagRangeF[ 1 ] << std::endl;
+    
+    lfx::vtk_utils::GetScalarDataArraysCallback* getScalarDataArrayCbk =
+    new lfx::vtk_utils::GetScalarDataArraysCallback();
+    dataObjectHandler->SetDatasetOperatorCallback( getScalarDataArrayCbk );
+    getScalarDataArrayCbk->SetScalarNames( scalarNames );
+    for( size_t i = 0; i < m_transientDataSet.size(); ++i )
+    {
+        vtkDataObject* tempDataSet = m_transientDataSet.at( i )->GetDataSet();
+        
+        dataObjectHandler->OperateOnAllDatasetsInObject( tempDataSet );
+        std::vector< std::pair< std::string, std::vector< double > > > tempCellGroups =
+        getScalarDataArrayCbk->GetCellData();
+        m_dataCollection.push_back( tempCellGroups );
+        getScalarDataArrayCbk->ResetPointGroup();
+    }
+    
+    delete getScalarDataArrayCbk;
+    delete dataObjectHandler;
+    delete getNumParamsCbk;
+    delete processScalarRangeCbk;
+    
+    lfx::core::DataSetPtr dsp( new lfx::core::DataSet() );
+    for( size_t i = 0; i < transData.size(); ++i )
+    {
+        std::vector< std::pair< std::string, std::vector< double > > >* tempScalarData = &m_dataCollection.at( i );
+        osg::ref_ptr< osg::FloatArray > radArray( new osg::FloatArray );
+        //radArray->resize( samplesPerTime );
+        osg::ref_ptr< osg::FloatArray > depthArray( new osg::FloatArray );
+        //depthArray->resize( samplesPerTime );
+        std::vector< double >* diamArray = 0;
+        std::vector< double >* vmagArray = 0;
+        
+        for( size_t j = 0; j < tempScalarData->size(); ++j )
+        {
+            if( tempScalarData->at( j ).first == diameterNameString && tempScalarData->at( j ).second.size() > 0 )
+            {
+                //std::cout << tempScalarData->at( j ).second.size() << std::endl;
+                diamArray = &tempScalarData->at( j ).second;
+            }
+            else if( tempScalarData->at( j ).first == vmagNameString && tempScalarData->at( j ).second.size() > 0 )
+            {
+                //std::cout << tempScalarData->at( j ).second.size() << std::endl;
+                vmagArray = &tempScalarData->at( j ).second;
+            }
+            //std::cout << " scalar name " << tempScalarData->at( j ).first << " " << tempScalarData->at( j ).second.size() << std::endl;
+        }
+        
+        
+        std::vector< std::pair< vtkIdType, double* > >* tempCellGroups =
+        &m_pointCollection.at( i );
+        osg::ref_ptr< osg::Vec3Array > posArray( new osg::Vec3Array );
+        double val=0;
+        for( size_t j = 0; j < tempCellGroups->size(); ++j )
+        {
+            //std::cout << tempCellGroups->size() << std::endl;
+            double* tempData = tempCellGroups->at( j ).second;
+            osg::Vec3d position( tempData[ 0 ], tempData[ 1 ], tempData[ 2 ] );
+            position *= conversionFactor;
+            posArray->push_back( position );
+            //std::cout << tempCellGroups->at( j ).first << " " << tempData[ 0 ] << " " << tempData[ 1 ] << " " << tempData[ 2 ] << std::endl;
+            
+            //radArray->push_back( 0.02 );
+            if( diamArray )
+            {
+                val = diamArray->at( j ) * 0.5 * conversionFactor;
+                //val = vtkMath::ClampAndNormalizeValue( val, diamRange );
+                
+                radArray->push_back( val );
+            }
+            else
+            {
+                std::cout << " no diameter " << j << std::endl;
+            }
+            
+            //depthArray->push_back( float(j%6)/5. );
+            if( vmagArray )
+            {
+                val = vmagArray->at( j );
+                val = vtkMath::ClampAndNormalizeValue( val, vmagRangeF );
+                
+                depthArray->push_back( val );
+            }
+            else
+            {
+                std::cout << " no vmag " << j << std::endl;
+            }
+        }
+        
+        lfx::core::ChannelDataOSGArrayPtr posData( new lfx::core::ChannelDataOSGArray( "positions", posArray.get() ) );
+        dsp->addChannel( posData, i * 0.25 );
+        lfx::core::ChannelDataOSGArrayPtr radData( new lfx::core::ChannelDataOSGArray( "radii", radArray.get() ) );
+        dsp->addChannel( radData, i * 0.25 );
+        lfx::core::ChannelDataOSGArrayPtr depthData( new lfx::core::ChannelDataOSGArray( "depth", depthArray.get() ) );
+        dsp->addChannel( depthData, i * 0.25 );
+    }
+    //341 - 343
+    lfx::core::VectorRendererPtr renderOp( new lfx::core::VectorRenderer() );
+    renderOp->setPointStyle( lfx::core::VectorRenderer::SPHERES );
+    renderOp->addInput( "positions" );
+    renderOp->addInput( "radii" );
+    renderOp->addInput( "depth" ); // From DepthComputation channel creator
+    
+    // Configure transfer function.
+    renderOp->setTransferFunctionInput( "depth" );
+    renderOp->setTransferFunction( lfx::core::loadImageFromDat( "01.dat" ) );
+    renderOp->setTransferFunctionDestination( lfx::core::Renderer::TF_RGBA );
+    
+    // Configure hardware mask.
+    renderOp->setHardwareMaskInputSource( lfx::core::Renderer::HM_SOURCE_RED );
+    renderOp->setHardwareMaskOperator( lfx::core::Renderer::HM_OP_OFF );
+    renderOp->setHardwareMaskReference( 0.f );
+    
+    renderOp->setDB( dbBase );
+    
+    dsp->setRenderer( renderOp );
+    dsp->setDB( dbBase );
 
+    ///Clean up memory now that we have transferred it to the streamline list
+    m_pointCollection.clear();
+    m_dataCollection.clear();
+    //osg::Geode* geode = new osg::Geode();
+    
+    //createStreamLines( geode );
+    
+    //m_streamlineList.clear();
+    m_lineDataCollection.clear();
+    
+    return dsp;
+}
+////////////////////////////////////////////////////////////////////////////////
+lfx::core::vtk::DataSetPtr ParticleAnimation::LoadDataSet( std::string filename )
+{
+    lfx::core::vtk::DataSetPtr tempDataSet( new lfx::core::vtk::DataSet() );
+    tempDataSet->SetFileName( filename );
+    tempDataSet->SetUUID( "VTK_DATA_FILE", "test" );
+    
+    {
+        fs::path pathName( filename );
+        if( !fs::exists( pathName ) )
+        {
+            return lfx::core::vtk::DataSetPtr();
+        }
+        
+        fs::path parentDir = pathName.parent_path();
+        
+        tempDataSet->LoadTransientData( parentDir.string(), pathName.extension().string() );
+    }
+    
+    tempDataSet->SetActiveVector( 0 );
+    tempDataSet->SetActiveScalar( 0 );
+    
+    const std::string tempDataSetFilename = tempDataSet->GetFileName();
+    std::cout << "|\tLoading data for file " << tempDataSetFilename << std::endl;
+    
+    if( tempDataSet->IsPartOfTransientSeries() )
+    {
+        transientSeries =
+        tempDataSet->GetTransientDataSets();
+    }
+    
+    vtkDataObject* tempVtkDataSet = tempDataSet->GetDataSet();
+    //If the data load failed
+    if( !tempVtkDataSet )
+    {
+        std::cout << "|\tData failed to load." << std::endl;
+        //_activeModel->DeleteDataSet( tempDataSetFilename );
+    }
+    else
+    {
+        std::cout << "|\tData is loaded for file "
+        << tempDataSetFilename
+        << std::endl;
+        //if( lastDataAdded->GetParent() == lastDataAdded )
+        //{
+        //_activeModel->GetDCS()->
+        //AddChild( lastDataAdded->GetDCS() );
+        //_activeModel->SetActiveDataSet( 0 );
+        //}
+        //m_datafileLoaded( tempDataSetFilename );
+    }
+    return tempDataSet;
+}*/
+////////////////////////////////////////////////////////////////////////////////

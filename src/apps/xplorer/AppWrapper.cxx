@@ -34,7 +34,6 @@
 // --- VE-Suite Includes --- //
 #include "AppWrapper.h"
 #include "App.h"
-#include "VjObsWrapper.h"
 
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
@@ -63,11 +62,10 @@
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
-AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::program_options::variables_map vm, Poco::SplitterChannel* splitter )
+AppWrapper::AppWrapper( int argc,  char* argv[], boost::program_options::variables_map vm, Poco::SplitterChannel* splitter )
     :
     m_cfdApp( 0 ),
     m_jugglerIsRunning( false ),
-    m_vjObsWrapper( input ),
     m_argc( argc ),
     m_argv( argv ),
     m_vm( vm )
@@ -117,7 +115,6 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input, boost::pro
     // Delcare an instance of my application
     m_cfdApp = new App( m_argc, m_argv, enableRTT, vm, splitter );
     m_cfdApp->SetDesktopInfo( desktopMode, desktopWidth, desktopHeight );
-    m_cfdApp->SetWrapper( m_vjObsWrapper );
 
     vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
 #if defined VES_QT_APP
@@ -166,8 +163,6 @@ AppWrapper::~AppWrapper()
     delete m_cfdApp;
     m_cfdApp = NULL;
 
-    delete m_vjObsWrapper;
-    m_vjObsWrapper = NULL;
     m_jugglerIsRunning = false;
 
     switchwire::EventManager::instance()->Shutdown();
@@ -181,14 +176,6 @@ bool AppWrapper::JugglerIsRunning()
 void AppWrapper::init()
 {
     vrj::Kernel::instance()->waitForKernelStop();// Block until kernel stops
-
-    /*
-        delete m_cfdApp;
-        m_cfdApp = NULL;
-
-        delete m_vjObsWrapper;
-        m_vjObsWrapper = NULL;
-        m_jugglerIsRunning = false;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppWrapper::SetupOSGFILEPATH()

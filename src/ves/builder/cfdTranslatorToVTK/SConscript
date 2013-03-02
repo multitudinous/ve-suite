@@ -14,8 +14,7 @@ headers = Split("""
 ##srcs = map(lambda s: pj('#', 'VE_CE', 'Utilities', s), srcs)
 
 lib_env = ves_pkg.getEnv().Clone()
-lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves','xplorer','util')],
-               LIBS = ['ves_xplorer_util'])
+
 boost_options.apply( lib_env )
 vtk_options.apply( lib_env )
 lib_env.Append( CPPDEFINES = ['VE_BUILDER_LIBRARY'])

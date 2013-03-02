@@ -36,13 +36,14 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/GlobalBase.h>
-#include <ves/xplorer/DataSetPtr.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Geode.h>
 
 #include <ves/open/xml/CommandPtr.h>
+
+#include <latticefx/core/vtk/DataSetPtr.h>
 
 // --- VTK Includes --- //
 class vtkGlyph3D;
@@ -137,8 +138,8 @@ public:
     vtkCubeSource* getBox();
     float boxExtent;
 
-    void SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS );
-    void SetActiveDataSet( ves::xplorer::DataSet* input );
+    void SetActiveDataSetDCS( osg::PositionAttitudeTransform* myDCS );
+    void SetActiveDataSet( lfx::core::vtk::DataSetPtr input );
 
     int GetCursorID( void );
     double* GetCursorLocation( void );
@@ -172,7 +173,6 @@ private:
     vtkPolyDataMapper* arrowMapperS;
     vtkActor* arrowActorS;
     vtkGlyph3D* arrowGlyphS;
-    //DataSet * dataSet;
 
     // Line Source Stuff
     void UpdateLineSource( int );
@@ -237,10 +237,10 @@ private:
     // last plane direction
     int last_cursor_type;
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS;
+    osg::ref_ptr< osg::PositionAttitudeTransform > activeDataSetDCS;
 
     osg::ref_ptr< ves::xplorer::scenegraph::Group > _rootNode;
-    ves::xplorer::DataSet* _activeDataSet;
+    lfx::core::vtk::DataSetPtr _activeDataSet;
     int cursorId;
     float sphereRadius;
     float last_sphereRadius;

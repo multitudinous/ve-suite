@@ -37,7 +37,6 @@
 #include <ves/xplorer/SteadyStateVizHandler.h>
 
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/GlobalBase.h>
 

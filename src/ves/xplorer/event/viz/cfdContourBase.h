@@ -107,6 +107,8 @@ public:
 
     ///Update the feature with the property set
     void UpdatePropertySet();
+    ///Create the plane based on lfx rather than raw vtk
+    void CreateLFXPlane();
 
 protected:
     vtkPolyDataMapper* mapper;///<mapper.

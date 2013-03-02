@@ -36,7 +36,6 @@
 
 #include <ves/xplorer/SteadyStateVizHandler.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
 
@@ -47,6 +46,8 @@
 #include <iostream>
 
 #include <boost/concept_check.hpp>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::volume;
@@ -109,6 +110,14 @@ void VisFeatureMakerBase::Execute( propertystore::PropertySetPtr set )
     {
         direction =
             boost::any_cast< std::string >( set->GetPropertyValue( "Direction" ) );
+    }
+
+    if( set->PropertyExists( "ParticleData" ) )
+    {
+        if( boost::any_cast< bool >( set->GetPropertyValue( "ParticleData" ) ) )
+        {
+            direction = "PARTICLE_VIZ";
+        }
     }
 
     std::string planes;
@@ -201,19 +210,7 @@ void VisFeatureMakerBase::Execute( propertystore::PropertySetPtr set )
               << activeObject->GetObjectType()
               << " to _activeObject." );
 
-    //SceneManager::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
-
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS =
-        ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
-
-    // add active dataset DCS to scene graph if not already there...
-    LOG_INFO( "Setting DCS to activeDCS = "
-              << activeDataSetDCS.get() );
-
-    //this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-    //this->activeObject->SetNormal( EnvironmentHandler::instance()->GetNavigate()->GetDirection() );
-    //this->activeObject->SetOrigin( EnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
-    activeObject->SetCursorType( NONE );//EnvironmentHandler::instance()->GetCursor()->GetCursorID() );
+    activeObject->SetCursorType( NONE );
     activeObject->SetUpdateFlag( false );
     //call back over to ssvishandler to set the flags
     SteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
@@ -232,7 +229,7 @@ void VisFeatureMakerBase::SetActiveVector( propertystore::PropertySetPtr set )
         LOG_INFO( "VisFeatureMakerBase::SetActiveVector Setting Active Vector = " << activeVector );
 
         Model* activeModel = ModelHandler::instance()->GetActiveModel();
-        DataSet* activeDataset = activeModel->GetActiveDataSet();
+        lfx::core::vtk::DataSetPtr activeDataset = activeModel->GetActiveDataSet();
         // need to set the vector by name
         activeDataset->SetActiveVector( activeVector );
         //activeDataset->GetParent()->SetActiveVector( vectorIndex );
@@ -256,7 +253,8 @@ void VisFeatureMakerBase::SetActiveScalarAndRange( propertystore::PropertySetPtr
                           << ", scalar = " << activeScalarName
                           << ", min = " << scalarMin
                           << ", max = " << scalarMax );
-    DataSet* activeDataset = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+    lfx::core::vtk::DataSetPtr activeDataset =
+        ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
     //update active scalar texture if it exists
 
     activeDataset->SetActiveScalar( activeScalarName );
@@ -295,7 +293,7 @@ bool VisFeatureMakerBase::SetActiveDataSet( propertystore::PropertySetPtr set )
 
         // set the dataset as the appropriate dastaset type
         // (and the active dataset as well)
-        DataSet* activeDataset = activeModel->GetCfdDataSet( i );
+        lfx::core::vtk::DataSetPtr activeDataset = activeModel->GetCfdDataSet( i );
 
         // Get the previous active dataset
         std::string oldDatasetName;

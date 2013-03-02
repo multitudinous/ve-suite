@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdContour.h>
 
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>    // needed for cursorType
 
 #include <ves/open/xml/Command.h>
@@ -47,6 +46,8 @@
 #ifdef USE_OMP
 #include <vtkAppendPolyData.h>
 #endif
+
+#include <latticefx/core/vtk/DataSet.h>
 
 #include <ves/xplorer/Debug.h>
 

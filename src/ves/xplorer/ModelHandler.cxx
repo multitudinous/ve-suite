@@ -35,14 +35,11 @@
 
 #include <ves/xplorer/Debug.h>
 
-#include <ves/xplorer/util/fileIO.h>
-
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
 #include <ves/xplorer/scenegraph/util/RescaleTextureVisitor.h>
 
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
 #include <ves/xplorer/environment/cfdEnum.h>
@@ -75,10 +72,7 @@
 #include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
 #include <ves/xplorer/event/data/AxesEventHandler.h>
 #include <ves/xplorer/event/data/AxesLabelsEventHandler.h>
-#include <ves/xplorer/event/data/BBoxEventHandler.h>
 #include <ves/xplorer/event/data/DataTransformEH.h>
-#include <ves/xplorer/event/data/ScalarBarEventHandler.h>
-#include <ves/xplorer/event/data/WireframeEventHandler.h>
 #include <ves/xplorer/event/data/ActiveDataSetEventHandler.h>
 #include <ves/xplorer/event/data/DataSlots.h>
 
@@ -114,11 +108,9 @@ using namespace ves::xplorer::volume;
 vprSingletonImpLifetime( ves::xplorer::ModelHandler, 1 );
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
-using namespace ves::xplorer::util;
 
 ModelHandler::ModelHandler()
     :
-    activeDataset( 0 ),
     activeCommand( ves::open::xml::CommandPtr() ),
     _activeModel( 0 ),
     _activeTDSet( 0 ),
@@ -163,16 +155,10 @@ ModelHandler::ModelHandler()
         new ves::xplorer::event::CADMoveNodeEventHandler();
     _eventHandlers[ std::string( "UPDATE_MODEL_DATASETS" )] =
         new ves::xplorer::event::AddVTKDataSetEventHandler();
-    _eventHandlers[ std::string( "Change Bounding Box State" )] =
-        new ves::xplorer::event::BBoxEventHandler();
-    _eventHandlers[ std::string( "Change Wire Frame State" )] =
-        new ves::xplorer::event::WireframeEventHandler();
     _eventHandlers[ std::string( "Change Axes State" )] =
         new ves::xplorer::event::AxesEventHandler();
     _eventHandlers[ std::string( "Change Axes Labels" )] =
         new ves::xplorer::event::AxesLabelsEventHandler();
-    _eventHandlers[ std::string( "Change Scalar Bar State" )] =
-        new ves::xplorer::event::ScalarBarEventHandler();
     _eventHandlers[ std::string( "DATA_TRANSFORM_UPDATE" )] =
         new ves::xplorer::event::DataTransformEventHandler();
     _eventHandlers[ std::string( "Enable/Disable Sound" )] =
@@ -225,7 +211,32 @@ ModelHandler::ModelHandler()
                           void( std::string const& ),
                           &ves::xplorer::event::data::DeleteDataSet,
                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%ShowDatasetBBox",
+                     void ( const std::string&, const bool& ),
+                     &ves::xplorer::event::data::ShowBBox,
+                     m_connections, any_SignalType, normal_Priority );
     
+    CONNECTSIGNALS_STATIC( "%UpdateSeedPointDimensions",
+                     void ( const std::string&, const std::vector< int >& ),
+                     &ves::xplorer::event::data::UpdateDimensions,
+                     m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%UpdateSeedPointBounds",
+                     void ( const std::vector< double >& bounds ),
+                     &ves::xplorer::event::data::UpdateAllBounds,
+                     m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%ActivateSeedPoints",
+                     void ( const std::string & dataSetName, const bool seedPointDisplay ),
+                     &ves::xplorer::event::data::ActivateSeedPoints,
+                     m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%ShowDatasetScalarBar",
+                     void ( const std::string&, const bool& ),
+                     &ves::xplorer::event::data::ShowScalarBar,
+                     m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNAL_1( "ChangeActiveModel",
                      void( std::string const& ),
                      &ModelHandler::SetActiveModel,

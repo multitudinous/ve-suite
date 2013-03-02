@@ -40,10 +40,8 @@
 
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/DataSet.h>
 
-#include <ves/xplorer/util/fileIO.h>
-#include <ves/xplorer/util/readWriteVtkThings.h>
+#include <latticefx/utils/vtk/readWriteVtkThings.h>
 
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
 
@@ -365,8 +363,7 @@ void VEIntStovemod::LoadStoveDataSet()
 #else
     tempStr = "star.vtu";
 #endif
-    m_stoveData = static_cast< vtkDataSet* >
-        ( ves::xplorer::util::readVtkThing( tempStr ) );
+    m_stoveData = static_cast< vtkDataSet* >( lfx::vtk_utils::readVtkThing( tempStr ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void VEIntStovemod::CreateContourPlane()

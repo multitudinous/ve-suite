@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/vtkActorToStreamLine.h>
-#include <ves/xplorer/util/readWriteVtkThings.h>
 
 // --- VTK Includes --- //
 #include <vtkDataSet.h>

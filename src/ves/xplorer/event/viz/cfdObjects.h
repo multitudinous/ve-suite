@@ -35,10 +35,13 @@
 
 #include <ves/xplorer/GlobalBase.h>
 
-#include <ves/xplorer/DataSetPtr.h>
 #include <ves/xplorer/scenegraph/Geode.h>
 
 #include <propertystore/PropertySetPtr.h>
+
+#include <latticefx/core/vtk/DataSet.h>
+
+#include <latticefx/core/DataSet.h>
 
 #include <vector>
 
@@ -189,10 +192,10 @@ public:
 
     ///Selects the active dataset.
     ///\param dataset
-    void SetActiveDataSet( DataSet* dataset );
+    void SetActiveDataSet( lfx::core::vtk::DataSetPtr dataset );
 
     ///Gets the active dataset.
-    DataSet* GetActiveDataSet( void );
+    lfx::core::vtk::DataSetPtr GetActiveDataSet();
 
     ///Get gpu tools active
     bool IsGPUTools();
@@ -209,10 +212,13 @@ public:
     ///Set the surface dataset name
     void SetDataMapSurfaceName( std::string const& surfName );
 
+    ///Get the lfx dataset ptr
+    lfx::core::DataSetPtr GetLFXDataSet() const;
+
 protected:
     vtkPolyData* ComputeVolumeFlux( vtkPolyData* inputPD );
     ///active dataset.
-    DataSet* activeDataSet;
+    lfx::core::vtk::DataSetPtr activeDataSet;
     ///The current property set
     propertystore::PropertySetPtr m_propertySet;
     ///geode vector.
@@ -225,7 +231,9 @@ protected:
     vtkGeometryFilter* m_geometryFilter;
 
     vtkDataSetSurfaceFilter* m_surfaceFilter;
-
+    ///The pointer to the lfx dataset that contains the rtp operation and scene data
+    lfx::core::DataSetPtr m_dsp;
+    
     bool updateFlag;///<flag for updating.
     int vtkToPFDebug;///<debugging for performer (may not be needed).
     int objectType;///<sets object type.

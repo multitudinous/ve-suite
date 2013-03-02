@@ -37,7 +37,7 @@
 #include <ves/xplorer/volume/cfdTextureManager.h>
 #include <ves/xplorer/volume/TBVolumeSlices.h>
 
-#include <ves/xplorer/util/fileIO.h>
+#include <latticefx/utils/vtk/fileIO.h>
 
 // --- VR Juggler Includes --- //
 #include <boost/filesystem/path.hpp>
@@ -241,7 +241,7 @@ void cfdTextureDataSet::CreateTextureManager( std::string textureDescriptionFile
     std::cout << "|\tReading texture description file: "
               << textureDescriptionFile << std::endl;
 
-    std::vector< std::string > files = ves::xplorer::util::fileIO::GetFilesInDirectory( textureDescriptionFile, std::string( ".vti" ) );
+    std::vector< std::string > files = lfx::vtk_utils::fileIO::GetFilesInDirectory( textureDescriptionFile, std::string( ".vti" ) );
     for( size_t i = 0; i < files.size(); ++i )
     {
         std::cout << "|\tLoading texture time step file: " << i << " " << files.at( i ) << std::endl;

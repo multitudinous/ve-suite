@@ -7,7 +7,7 @@ Import( 'baseEnv ves_pkg GetPlatform buildDir osg_options vtk_options xerces_opt
 Import( 'minerva_options tao_options boost_options vrjuggler_options osgal_options osgworks_options' )
 Import( 'ApplyBulletVars bullet_options osgbullet_options bdfx_options poco_options storyteller_options' )
 Import( 'switchwire_options' )
-Import('propertystore_options')
+Import('propertystore_options latticefx_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'xplorer') )
 buildSrcDir = pj('#',buildDir,'src', 'apps', 'xplorer')
@@ -27,10 +27,7 @@ env = ves_pkg.getEnv().Clone()
 
 # now continue on with all of the normal stuff
 env.Append( LIBS = [ 'ves_open_xml',
-                     'ves_builder_dataloader',
-                     'ves_builder_translator_base',
                      'ves_xplorer_scenegraph',
-                     'ves_xplorer_util',
                      'ves_xplorer_volume',
                      'ves_xplorer_communication',
                      'ves_xplorer_command',
@@ -43,13 +40,10 @@ env.Append( LIBS = [ 'ves_open_xml',
                      'switchwire' ])
 
 env.Append(LIBPATH = [  pj('#',buildDir,'src','ves','xplorer','scenegraph'),
-                        pj('#',buildDir,'src','ves','xplorer','util'),
                         pj('#',buildDir,'src','ves','xplorer','volume'),
                         pj('#',buildDir,'src','ves','xplorer','communication'),
                         pj('#',buildDir,'src','ves','xplorer','command'),
                         pj('#',buildDir,'src','ves','xplorer'),
-                        pj('#',buildDir,'src','ves','builder','DataLoader'),
-                        pj('#',buildDir,'src','ves','builder','cfdTranslatorToVTK'),
                         pj('#',buildDir,'src','ves','open'),
                         pj('#',buildDir,'src','ves','open','xml'),
                         pj('#',buildDir,'src','ves','conductor','qt'),
@@ -93,6 +87,7 @@ poco_options.apply( env )
 storyteller_options.apply( env )
 switchwire_options.apply( env )
 propertystore_options.apply( env )
+latticefx_options.apply( env )
 
 if GetPlatform() != 'darwin':
     Import('qt_options')

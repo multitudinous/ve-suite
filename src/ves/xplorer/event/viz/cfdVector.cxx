@@ -37,7 +37,6 @@
 #endif
 
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/DataSet.h>
 
 #include <ves/open/xml/Command.h>
 
@@ -52,6 +51,8 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 #include <ves/xplorer/Debug.h>
 

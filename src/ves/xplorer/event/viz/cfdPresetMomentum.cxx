@@ -33,7 +33,6 @@
 #include <ves/xplorer/event/viz/cfdPresetMomentum.h>
 
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 
@@ -51,6 +50,8 @@
 // the following is for the PD stuff...
 #include <vtkActor.h>
 #include <vtkProperty.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 #include <ves/xplorer/Debug.h>
 using namespace ves::xplorer;
@@ -95,7 +96,7 @@ void cfdPresetMomentum::Update( void )
     vprDEBUG( vesDBG, 1 ) << "cfdPresetMomentum::Update, usePreCalcData = "
                           << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
 
-    if( this->usePreCalcData )
+    /*if( this->usePreCalcData )
     {
         vtkPolyData* preCalcData = this->GetActiveDataSet()
                                    ->GetPrecomputedSlices( xyz )
@@ -124,7 +125,7 @@ void cfdPresetMomentum::Update( void )
                               << this->cursorType << " : " << usePreCalcData
                               << std::endl << vprDEBUG_FLUSH;
     }
-    else
+    else*/
     {
         if( cuttingPlane )
         {

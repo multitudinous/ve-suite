@@ -33,7 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/volume/cfdTextureManager.h>
-#include <ves/xplorer/util/readWriteVtkThings.h>
+#include <latticefx/utils/vtk/readWriteVtkThings.h>
 
 // --- VTK Includes --- //
 //#include <vtkZLibDataCompressor.h>
@@ -239,7 +239,7 @@ void cfdTextureManager::addFieldTextureFromFile( std::string textureFile )
     {
         fin.close();
 
-        vtkImageData* flowImage = dynamic_cast< vtkImageData* >( ves::xplorer::util::readVtkThing( textureFile, 0 ) );
+        vtkImageData* flowImage = dynamic_cast< vtkImageData* >( lfx::vtk_utils::readVtkThing( textureFile, 0 ) );
         if( flowImage->GetPointData()->GetNumberOfArrays() > 1 )
         {
             std::cerr << " Warning : cfdTextureManager::addFieldTextureFromFile : There are too many scalars in this texture " << std::endl;

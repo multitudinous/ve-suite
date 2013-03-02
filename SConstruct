@@ -426,6 +426,12 @@ kibitz_options = fp_option.FlagPollBasedOption("kibitz",
                                                   compileTest=True, headerToCheck="kibitz/kibitz.hpp")
 AppendOptions( opts, options, kibitz_options )
 
+latticefx_options = fp_option.FlagPollBasedOption("latticefx",
+                                                  "latticefx", "0", True, True,
+                                                  None,
+                                                  compileTest=True, headerToCheck="latticefx/core/Export.h")
+AppendOptions( opts, options, latticefx_options )
+
 #Setup qt on linux
 if GetPlatform() != 'darwin':
    qt_options = fp_option.FlagPollBasedOption("Qt libraries",
@@ -453,7 +459,7 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'bdfx_options', 'lemon_options',
         'switchwire_options','crunchstore_options',
         'storyteller_options','propertystore_options',
-        'kibitz_options'
+        'kibitz_options','latticefx_options'
         #, 'mongo_options'
 	)
 

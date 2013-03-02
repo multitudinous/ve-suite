@@ -40,7 +40,7 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Debug.h>
 
-#include <ves/xplorer/util/fileIO.h>
+#include <latticefx/utils/vtk/fileIO.h>
 
 #include <ves/open/xml/Command.h>
 
@@ -81,16 +81,14 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, osg::Group* worldDCS )
     dcs->SetName( "Teacher Node" );
     mModelRoot->addChild( dcs.get() );
     //Get ive, osg, and pfb filenames
-    pfbFileNames =
-        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
     tempFilenames =
-        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
+        lfx::vtk_utils::fileIO::GetFilesInDirectory( directory, ".ive" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
     tempFilenames.clear();
     tempFilenames =
-        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
+        lfx::vtk_utils::fileIO::GetFilesInDirectory( directory, ".osg" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
 
@@ -269,16 +267,14 @@ void cfdTeacher::Reset()
     }
     //Get ive, osg, and pfb filenames for the new application
     pfbFileNames.clear();
-    pfbFileNames =
-        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
     tempFilenames =
-        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
+        lfx::vtk_utils::fileIO::GetFilesInDirectory( directory, ".ive" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
     tempFilenames.clear();
     tempFilenames =
-        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
+        lfx::vtk_utils::fileIO::GetFilesInDirectory( directory, ".osg" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
 

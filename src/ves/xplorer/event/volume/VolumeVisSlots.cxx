@@ -40,12 +40,13 @@
 #include <ves/xplorer/event/data/DataSetScalarBar.h>
 
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
 #include <ves/xplorer/Debug.h>
+
+#include <latticefx/core/vtk/DataSet.h>
 
 namespace ves
 {
@@ -154,28 +155,28 @@ void ActivateTBDataset( std::string const& activeDataset )
 {
     ves::xplorer::Model* activeModel =
         ves::xplorer::ModelHandler::instance()->GetActiveModel();
-    DataSet* dataSet = activeModel->GetCfdDataSet(
+    lfx::core::vtk::DataSetPtr dataSet = activeModel->GetCfdDataSet(
                            activeModel->GetIndexOfDataSet( activeDataset ) );
 
     activeModel->SetActiveDataSet( dataSet );
 
     //make the CAD transparent
     activeModel->GetModelCADHandler()->MakeCADRootTransparent();
-    if( !activeModel->GetDCS()->SearchChild( activeModel->GetActiveDataSet()->GetDCS() ) )
+    if( !activeModel->GetDCS()->containsNode( activeModel->GetActiveDataSet()->GetDCS() ) )
     {
         vprDEBUG( vesDBG, 1 ) << "|\t\tadding active switch node to worldDCS"
                               << std::endl << vprDEBUG_FLUSH;
-        activeModel->GetDCS()->AddChild( activeModel->GetActiveDataSet()->GetDCS() );
+        activeModel->GetDCS()->addChild( activeModel->GetActiveDataSet()->GetDCS() );
     }
-    ves::xplorer::scenegraph::Switch* temp = activeModel->GetActiveDataSet()->GetSwitchNode();
-    if( !activeModel->GetActiveDataSet()->GetDCS()->SearchChild( temp ) )
+    osg::Switch* temp = activeModel->GetActiveDataSet()->GetSwitchNode();
+    if( !activeModel->GetActiveDataSet()->GetDCS()->containsNode( temp ) )
     {
         vprDEBUG( vesDBG, 1 ) << "|\t\tadding active dcs node to worldDCS for classic ss "
                               << std::endl << vprDEBUG_FLUSH;
-        activeModel->GetActiveDataSet()->GetDCS()->AddChild( temp );
+        activeModel->GetActiveDataSet()->GetDCS()->addChild( temp );
     }
     ///what happens if texture is somehow added first? Is that possible?
-    activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal( 1 );
+    activeModel->GetActiveDataSet()->GetSwitchNode()->setSingleChildOn( 1 );
 
     SetActiveTextureDataset();
 }
@@ -235,19 +236,19 @@ void UpdateTBSolution( std::string const& dataName, std::string const& dataType,
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateScalarRange( floatRange );
 
         //need to pass the scalar range command to update it
-        DataSet* dataSet =
+        lfx::core::vtk::DataSetPtr dataSet =
             ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
         if( !dataSet )
         {
             return;
         }
 
-        DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
+        /*DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
         if( scalarBar )
         {
             dataSet->SetActiveScalar( dataName );
             scalarBar->AddScalarBarToGroup();
-        }
+        }*/
     }
     else if( dataType == "Vector" )
     {
