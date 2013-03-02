@@ -1056,8 +1056,6 @@ void MainWindow::onFileSaveSelected( const QString& fileName )
         mFileDialog = 0;
     }
 
-    //std::cout << "Telling DatabaseManager to save off to " << fileName.toStdString() << std::endl << std::flush;
-
     QString tFileName( fileName );
     // If the filename ends in ".ves", break that off
     if( tFileName.endsWith( ".ves", Qt::CaseInsensitive ) )

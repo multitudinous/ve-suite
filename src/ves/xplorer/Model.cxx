@@ -202,10 +202,11 @@ void Model::PreFrameUpdate()
     vprDEBUG( vesDBG, 1 ) << "Model::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::CreateCfdDataSet( void )
+void Model::CreateCfdDataSet()
 {
-    mVTKDataSets.push_back( lfx::core::vtk::DataSetPtr( new lfx::core::vtk::DataSet() ) );
-    //mVTKDataSets.back()->SetModel( this );
+    lfx::core::vtk::DataSetPtr tempPtr = lfx::core::vtk::DataSetPtr( new lfx::core::vtk::DataSet() );
+    tempPtr->SetParent( tempPtr );
+    mVTKDataSets.push_back( tempPtr );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetMirrorNode( ves::xplorer::scenegraph::Group* )

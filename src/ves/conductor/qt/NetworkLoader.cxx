@@ -33,7 +33,7 @@
 
 // This file has to be included first on Windows, or the compiler
 // will complain about u_int in an ACE header file.
-#include <ves/xplorer/network/VE_i.h>
+//#include <ves/xplorer/network/VE_i.h>
 
 #include <ves/conductor/qt/NetworkLoader.h>
 
@@ -213,7 +213,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     }
 
     ///This code will be moved in the future. It is Aspen specific code.
-    CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
+    /*CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
                               GetCommand( "Aspen_Plus_Preferences" );
 
     if( aspenBKPFile->GetCommandName() != "NULL" )
@@ -255,7 +255,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         // RPT: What does this variable do? Does not appear to do anything
         // based on code in apps/conductor/AppFrame.cxx
         //AspenSimOpen = true;
-    }
+    }*/
 
     const std::string nw_str = XMLDataBufferEngine::instance()->
                                SaveVESData( std::string( "returnString" ) );
