@@ -604,7 +604,7 @@ void App::initScene()
     _tbvHandler->SetMasterNode( m_isMaster );
 
     //Need to initialize this to ensure the model handling is correct.
-    GraphicalPluginManager::instance()->Initialize( 0, 0 );
+    GraphicalPluginManager::instance()->Initialize();
 
     //Get or create UIManager
     ves::conductor::UIManager* m_UIManager = ves::conductor::UIManager::instance();

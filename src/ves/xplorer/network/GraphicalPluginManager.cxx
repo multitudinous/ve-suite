@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/network/VE_i.h>
 #include <ves/xplorer/network/cfdVEAvailModules.h>
 #include <ves/xplorer/network/PluginLoader.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
@@ -88,9 +87,6 @@
 #include <vpr/System.h>
 #include <vpr/Util/GUID.h>
 
-// --- ACE-TAO Includes --- //
-#include <orbsvcs/CosNamingC.h>
-
 // --- Xercesc Includes --- //
 #include <xercesc/dom/DOM.hpp>
 XERCES_CPP_NAMESPACE_USE
@@ -113,21 +109,14 @@ vprSingletonImpLifetime( ves::xplorer::network::GraphicalPluginManager, 0 );
 GraphicalPluginManager::GraphicalPluginManager()
     :
     mAvailableModules( 0 ),
-    netSystemView( 0 ),
-    naming_context( 0 ),
-    _exec( 0 ),
-    ui_i( 0 ),
-    m_ChildPOA( 0 )
+    netSystemView( 0 )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameContext,
-        PortableServer::POA* child_poa )
+void GraphicalPluginManager::Initialize()
 {
     std::cout << "| Initializing.............................. GraphicalPluginManager |" << std::endl;
-    naming_context = inputNameContext;
-    m_ChildPOA = child_poa;
 
     try
     {
@@ -147,13 +136,6 @@ void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameCont
     dirStringStream << "VEClient-" << vpr::System::getHostname()
                     << "-" <<  vpr::GUID( vpr::GUID::generateTag ).toString();
     m_UINAME = dirStringStream.str();
-
-    ConnectToCE();
-    if( ui_i )
-    {
-        ui_i->GetNetworkFromCE();
-        LoadDataFromCE();
-    }
 
     _eventHandlers[std::string( "DELETE_OBJECT_FROM_NETWORK" )] =
         new DeleteObjectFromNetworkEventHandler();
@@ -211,12 +193,6 @@ GraphicalPluginManager::~GraphicalPluginManager()
     {
         delete netSystemView;
     }
-
-    if( ui_i )
-    {
-        delete ui_i;
-        ui_i = 0;
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::UnloadPlugins()
@@ -233,64 +209,13 @@ void GraphicalPluginManager::UnloadPlugins()
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::UnRegisterExecutive()
 {
-    try
-    {
-        if( ui_i )
-        {
-            _exec->UnRegisterUI( ui_i->UIName_.c_str() );
-            std::cout << "|\tDisconnect from VE-CE succeeded!" << std::endl;
-        }
-    }
-    catch( CORBA::Exception& ex )
-    {
-        std::cerr << "|\tDisconnect from VE_CE failed!" << std::endl;
-        std::cerr << ex._info().c_str() << std::endl;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void GraphicalPluginManager::UnbindORB()
-{
-    if( !ui_i )
-    {
-        return;
-    }
-
-    CosNaming::Name UIname( 1 );
-    UIname.length( 1 );
-    UIname[0].id = CORBA::string_dup( ( ui_i->UIName_ ).c_str() );
-    //UIname[0].id = CORBA::string_dup( "Executive" );
-    //UIname[0].kind = CORBA::string_dup( "VE-CE" );
-    try
-    {
-        naming_context->unbind( UIname );
-    }
-    catch( CosNaming::NamingContext::InvalidName& ex )
-    {
-        vprDEBUG( vesDBG, 1 ) << "|\t\tGraphicalPluginManager : Invalid Name! "
-                              << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
-    }
-    catch( CosNaming::NamingContext::NotFound& ex )
-    {
-        vprDEBUG( vesDBG, 1 ) << "|\t\tGraphicalPluginManager : Not Found! "
-                              << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
-    }
-    catch( CosNaming::NamingContext::CannotProceed& ex )
-    {
-        vprDEBUG( vesDBG, 1 ) << "|\t\tGraphicalPluginManager : Cannot Proceed! "
-                              << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
-    }
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::GetNetwork()
 {
     // Get buffer value from Body_UI implementation
     std::string temp;
-    if( ui_i )
-    {
-        // We're in distributed mode, so use CORBA
-        temp = ui_i->GetNetworkString();
-    }
-    else
     {
         // Not in distributed mode, so look at value of internal network buffer
         temp = mNetworkBuffer;
@@ -349,14 +274,6 @@ void GraphicalPluginManager::SetCurrentNetwork( const std::string& network )
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::GetEverything()
 {
-    if( CORBA::is_nil( this->_exec ) )
-    {
-        vprDEBUG( vesDBG, 3 ) << "ERROR : The Executive has not been intialized!"
-                              << std::endl << vprDEBUG_FLUSH;
-        // Don't fail out for now -RPT
-        //return;
-    }
-
     vprDEBUG( vesDBG, 0 ) << "|\t\tGetting Network From Executive"
                           << std::endl << vprDEBUG_FLUSH;
     GetNetwork();
@@ -418,13 +335,6 @@ void GraphicalPluginManager::PreFrameUpdate()
 {
     vprDEBUG( vesDBG, 3 ) << "|\tGraphicalPluginManager::PreFrameUpdate"
                           << std::endl << vprDEBUG_FLUSH;
-    if( !ui_i )
-    {
-        ConnectToCE();
-        // Temporarily commenting this out since it prevents further execution in
-        // new normal situation in which there is no CORBA -RPT
-        //return;
-    }
 
     //process the current command form the gui
     const CommandPtr tempCommand = CommandManager::instance()->GetXMLCommand();
@@ -523,16 +433,6 @@ void GraphicalPluginManager::PostFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::LoadDataFromCE()
 {
-    if( CORBA::is_nil( this->_exec ) )
-    {
-        std::cerr
-                << "|\tTried to load data from VE-CE but there is no connection."
-                << std::endl << std::flush;
-        // Don't fail out here for now -RPT
-        //return;
-    }
-
-    //if( ui_i->GetNetworkFlag() )
     {
 #ifdef MINERVA_GIS_SUPPORT
         ves::xplorer::minerva::MinervaManager::instance()->ClearModels();
@@ -541,81 +441,10 @@ void GraphicalPluginManager::LoadDataFromCE()
 #endif
         //Clear the highlight circles
         ves::xplorer::scenegraph::SceneManager::instance()->
-        GetHighlightManager().removeChildren();
+            GetHighlightManager().removeChildren();
         // Get Network and parse it
         GetEverything();
         ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( false );
-    }
-    return;
-    // store the statusString in order to perform multiple operations on it...
-    //std::string statusString = ui_i->GetStatusString();
-    //vprDEBUG(vesDBG,3) << "|\tGraphicalPluginManager::PreFrameUpdate statusString = " << statusString
-    //   << std::endl << vprDEBUG_FLUSH;
-
-    // record position of some key phrases...
-    //size_t pos1 = statusString.find( "VES Network Execution Complete" );
-
-    //*******************************************************************//
-    //For multiple model apps this implementation has to be changed      //
-    //We need to be able to grab the id of of the currently completed    //
-    //model and then in the loop below rather than iterating across      //
-    //all plugins set the result and activate custom viz for the         //
-    //current model id                                                   //
-    //*******************************************************************//
-    //unsigned int pos2 = statusString.find("Execution is done");
-
-    //size_t pos3 = statusString.find("Time Step Complete");
-
-    // If either of the positions are valid positions,
-    // then make results available to the graphical plugins...
-    //if ( pos1 != std::string::npos ||
-    //     pos3 != std::string::npos )
-    {
-        //std::map< int, std::string >::iterator idMap;
-        for( std::map< std::string, PluginBase* >::iterator foundPlugin =
-                    mPluginsMap.begin();
-                foundPlugin != mPluginsMap.end();
-                foundPlugin++ )
-        {
-            //idMap = _id_map.find( foundPlugin->first );
-            //No need to call this function when execution is complete because it
-            //is called in the get network call
-            /*if( pos3 != std::string::npos )
-            {
-                Command returnState;
-                returnState.SetCommandName("Get XML Model Results");
-
-                DataValuePairPtr data(  new DataValuePair() );
-                data->SetData("moduleName", idMap->second );
-                returnState.AddDataValuePair( data );
-
-                data = new DataValuePair();
-                data->SetData("vendorUnit",
-                      idToModel[ foundPlugin->first ]->GetVendorName() );
-                returnState.AddDataValuePair( data );
-
-                data = new DataValuePair();
-                data->SetData("moduleId",
-                      static_cast< unsigned int >( idMap->first ) );
-                returnState.AddDataValuePair( data );
-
-                std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-                nodes.push_back( std::pair< XMLObjectPtr,
-                      std::string >( &returnState, "vecommand" ) );
-                XMLReaderWriter commandWriter;
-                std::string status="returnString";
-                commandWriter.UseStandaloneDOMDocumentManager();
-                commandWriter.WriteXMLDocument( nodes, status, "Command" );
-                const char* tempResult = this->_exec->Query( status.c_str() );
-                std::string tempResultString = tempResult;
-                _plugins[ foundPlugin->first ]->
-                    SetModuleResults( tempResultString );
-                delete tempResult;
-            }*/
-
-            int dummyVar = 0;
-            mPluginsMap[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
-        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -636,62 +465,6 @@ void GraphicalPluginManager::LoadDataFromCE()
 cfdVEAvailModules* GraphicalPluginManager::GetAvailablePlugins()
 {
     return mAvailableModules;
-}
-////////////////////////////////////////////////////////////////////////////////
-VE_i* GraphicalPluginManager::GetCORBAInterface()
-{
-    return ui_i;
-}
-////////////////////////////////////////////////////////////////////////////////
-void GraphicalPluginManager::ConnectToCE()
-{
-    if( !naming_context )
-    {
-        return;
-    }
-
-    try
-    {
-        std::cout << "|\tTrying to register " << m_UINAME << std::endl << std::flush;
-
-        CosNaming::Name name( 1 );
-        name.length( 1 );
-        name[0].id = CORBA::string_dup( "Executive" );
-        //name[0].kind = CORBA::string_dup( "VE-CE" );
-
-        CORBA::Object_var exec_object = this->naming_context->resolve( name );
-        _exec = Body::Executive::_narrow( exec_object.in() );
-
-        //Create the Servant
-        ui_i = new VE_i( _exec, m_UINAME );
-
-        PortableServer::ObjectId_var id =
-            PortableServer::string_to_ObjectId( "GraphicalPluginManager" );
-
-        //activate it with this child POA
-        m_ChildPOA->activate_object_with_id( id.in(), &( *ui_i ) );
-
-        // obtain the object reference
-        CORBA::Object_var objectRef = m_ChildPOA->id_to_reference( id.in() );
-        Body::UI_var unit = Body::UI::_narrow( objectRef.in() );
-
-        // Don't register it to the naming service anymore
-        // the bind call will hang if you try to register
-        // Instead, the new idl make the ref part of the register call
-        // Naming Service now is only used for boot trap
-        // to get the ref for Executive
-
-        //Call the Executive CORBA call to register it to the Executive
-        std::cout << "|\tRegistering " << m_UINAME << std::endl << std::flush;
-        _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
-        std::cout << "|\tConnected to the Executive " << std::endl << std::flush;
-    }
-    catch( CORBA::Exception& ex )
-    {
-        std::cerr << "|\tExecutive not present or VEClient registration error"
-                  << ex._info().c_str() << std::endl << std::flush;
-        ui_i = 0;
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string GraphicalPluginManager::GetCurrentNetwork()
@@ -813,7 +586,7 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
             nodes.clear();
             //Get results
-            try
+            /*try
             {
                 // CE May not always exist anymore, so always test -RPT
                 if( _exec )
@@ -836,7 +609,7 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
             {
                 std::cerr << "|\tExecutive Query error: "
                           << ex._info().c_str() << std::endl << std::flush;
-            }
+            }*/
         }
 
         newPlugin->ProcessOnSubmitJob();

@@ -57,20 +57,6 @@ namespace osg
 class Group;
 }
 
-// --- ACE+TAO Includes --- //
-namespace Body
-{
-class Executive;
-}
-namespace CosNaming
-{
-class NamingContext;
-}
-namespace PortableServer
-{
-class POA;
-}
-
 // --- STL Includes --- //
 #include <map>
 #include <string>
@@ -99,7 +85,6 @@ class DCS;
 namespace network
 {
 class cfdVEAvailModules;
-class VE_i;
 class NetworkSystemView;
 
 class VE_XPLORER_NETWORK_EXPORTS GraphicalPluginManager : public ves::xplorer::GlobalBase
@@ -121,7 +106,7 @@ private:
 
 public:
     ///
-    void Initialize( CosNaming::NamingContext*, PortableServer::POA* );
+    void Initialize();
 
     ///Functions that operate on the Executive
     void GetNetwork();
@@ -147,10 +132,6 @@ public:
     ///Update function called from within latePreFrame
     void PostFrameUpdate();
 
-    ///Function called within preFrame to allow GraphicalPluginManager
-    ///to have access to scalar information
-    void UnbindORB();
-
     ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
     virtual void UpdateCommand()
     {
@@ -164,9 +145,6 @@ public:
 
     ///Get available plugins object
     cfdVEAvailModules* GetAvailablePlugins();
-
-    ///Accessor for ehs to use
-    VE_i* GetCORBAInterface();
 
     ///Laod data from CE
     void LoadDataFromCE();
@@ -197,9 +175,6 @@ public:
     void RemovePlugin( std::string const& pluginId );
 
 private:
-    ///Connect function so that we can connect at run time if needed
-    void ConnectToCE();
-
     ///Recusive function to find all sub-systems
     void ParseSystem(
         ves::open::xml::model::SystemPtr system,
@@ -237,20 +212,8 @@ private:
     ///The event handler for commands.
     std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;
 
-    ///the Computational Engine
-    CosNaming::NamingContext* naming_context;
-
-    ///The executive interface in veopen
-    Body::Executive* _exec;
-
-    ///The UI interface in veopen
-    VE_i* ui_i;
-
     ///The GUID for the executive
     std::string m_UINAME;
-
-    ///The POA interface from the main vexplorer app
-    PortableServer::POA* m_ChildPOA;
 
     ///Wire up the slots
     switchwire::ScopedConnectionList m_connections;

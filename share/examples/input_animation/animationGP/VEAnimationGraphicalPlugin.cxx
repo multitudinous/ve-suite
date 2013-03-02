@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- My Includes --- //
-#include <ves/xplorer/network/VE_i.h>
+//#include <ves/xplorer/network/VE_i.h>
 #include "VEAnimationGraphicalPlugin.h"
 
 // --- VE-Suite Includes --- //
@@ -532,7 +532,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
             std::string status="returnString";
             commandWriter.UseStandaloneDOMDocumentManager();
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
-            std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
+            //std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
         }
         //stop button
         else if( objectHit == m_startButtonGeometry )
@@ -557,7 +557,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
             std::string status="returnString";
             commandWriter.UseStandaloneDOMDocumentManager();
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
-            std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
+            //std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
         }
         //handheel
         else if( objectHit == m_handwheelGeometry )
@@ -593,7 +593,7 @@ void VEAnimationGraphicalPlugin::FindPartNodeAndHighlightNode()
             std::string status="returnString";
             commandWriter.UseStandaloneDOMDocumentManager();
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
-            std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
+            //std::string temp = m_graphicalPluginManager->GetCORBAInterface()->QueryCE( status );
         }
 
         /*if( !tempParent )

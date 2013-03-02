@@ -31,10 +31,6 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-// This file has to be included first on Windows, or the compiler
-// will complain about u_int in an ACE header file.
-//#include <ves/xplorer/network/VE_i.h>
-
 #include <ves/conductor/qt/NetworkLoader.h>
 
 #include <ves/conductor/qt/XMLDataBufferEngine.h>

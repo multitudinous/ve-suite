@@ -36,6 +36,8 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
+#include <ves/xplorer/communication/Xplorer_i.h>
+
 vprSingletonImp( ves::xplorer::communication::CommunicationHandler );
 
 using namespace ves::xplorer::communication;

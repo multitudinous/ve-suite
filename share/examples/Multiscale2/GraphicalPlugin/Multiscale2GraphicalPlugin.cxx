@@ -31,10 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-
-
 // --- My Includes --- //
-#include <ves/xplorer/network/VE_i.h>
 #include "Multiscale2GraphicalPlugin.h"
 
 // --- VE-Suite Includes --- //

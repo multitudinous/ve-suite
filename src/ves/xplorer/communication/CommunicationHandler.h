@@ -38,13 +38,12 @@
 *
 */
 #include <ves/VEConfig.h>
-#include <ves/xplorer/communication/CommunicationHandlerPtr.h>
-
-#include <ves/xplorer/communication/Xplorer_i.h>
 
 #include <ves/open/xml/CommandPtr.h>
 
 #include <vpr/Util/Singleton.h>
+
+class Body_VEXplorer_i;
 
 namespace ves
 {
