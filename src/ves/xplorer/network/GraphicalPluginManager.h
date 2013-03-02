@@ -80,8 +80,6 @@ namespace ves
 {
 namespace xplorer
 {
-class cfdVjObsWrapper;
-
 namespace event
 {
 class EventHandler;
@@ -191,9 +189,6 @@ public:
 
     ///Clean up plugins
     void UnloadPlugins();
-
-    ///Clear things when loading a ves file
-    void NewFileLoading( std::string const& fileName );
 
     ///Discover plugins when changing directories
     void DiscoverPlugins( std::string const& fileName );

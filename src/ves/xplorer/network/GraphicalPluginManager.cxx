@@ -35,14 +35,15 @@
 #include <ves/xplorer/network/VE_i.h>
 #include <ves/xplorer/network/cfdVEAvailModules.h>
 #include <ves/xplorer/network/PluginLoader.h>
-#include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
+
 #include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
 #include <ves/xplorer/network/DeleteNetworkViewEventHandler.h>
 #include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
-#include <ves/xplorer/network/ReloadPluginsEventHandler.h>
 #include <ves/xplorer/network/LoadVesFileEventHandler.h>
+
+#include <ves/xplorer/network/NetworkSlots.h>
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
@@ -160,17 +161,13 @@ void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameCont
         new DeleteNetworkViewEventHandler();
     _eventHandlers[std::string( "CHANGE_XPLORER_VIEW" )] =
         new SwitchXplorerViewEventHandler();
-    _eventHandlers[std::string( "Plugin_Control" )] =
-        new ReloadPluginsEventHandler();
-    _eventHandlers[std::string( "veNetwork Update" )] =
-        new UpdateNetworkEventHandler();
     _eventHandlers[std::string( "LOAD_VES_FILE" )] =
         new LoadVesFileEventHandler();
 
     ///Delete everything before loading things up
-    CONNECTSIGNALS_1( "%VesFileLoading%",
+    CONNECTSIGNALS_STATIC( "%VesFileLoading%",
                       void( std::string const& ),
-                      &GraphicalPluginManager::NewFileLoading,
+                      &NewFileLoading,
                       m_connections, any_SignalType, normal_Priority );
 
     ///Reload plugins
@@ -179,6 +176,11 @@ void GraphicalPluginManager::Initialize( CosNaming::NamingContext* inputNameCont
                       &GraphicalPluginManager::DiscoverPlugins,
                       m_connections, any_SignalType, normal_Priority );
 
+
+    CONNECTSIGNALS_STATIC( "UpdateNetwork",
+                     void(),
+                     &UpdateNetwork,
+                     m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, ves::xplorer::plugin::PluginBase* >*
@@ -851,16 +853,6 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
                          !parentResultsFailed, newPlugin->GetPluginDCS() );
         }
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-void GraphicalPluginManager::NewFileLoading( std::string const& )
-{
-    //Set active model to null so that if the previous active model is deleted
-    //that we don't get errors in our code other places.
-    std::string nullString;
-    ModelHandler::instance()->SetActiveModel( nullString );
-
-    ves::xplorer::data::DatabaseManager::instance()->ResetAll();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::DiscoverPlugins( std::string const& )

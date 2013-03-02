@@ -30,71 +30,47 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef RELOAD_PLUGINS_EVENT_HANDLER_H
-#define RELOAD_PLUGINS_EVENT_HANDLER_H
-/*!\file ReloadPluginsEventHandler.h
- * ReloadPluginsEventHandler API
- * \class ReloadPluginsEventHandler
- * Reload plugins for the network.
- */
+#include <ves/xplorer/network/NetworkSlots.h>
 
-#include <ves/VEConfig.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class XMLObject;
-}
-}
-}
+#include <ves/xplorer/network/GraphicalPluginManager.h>
 
-namespace ves
-{
-namespace xplorer
-{
-class GlobalBase;
-}
-}
+#include <ves/xplorer/data/DatabaseManager.h>
 
-#include <ves/xplorer/event/EventHandler.h>
-
+#include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 namespace ves
 {
 namespace xplorer
 {
 namespace network
 {
-class VE_XPLORER_NETWORK_EXPORTS ReloadPluginsEventHandler: public ves::xplorer::event::EventHandler
+////////////////////////////////////////////////////////////////////////////////
+void UpdateNetwork()
 {
-public:
-    ///Constructor
-    ReloadPluginsEventHandler();
-
-    ///Copy Constructor
-    ReloadPluginsEventHandler( const ReloadPluginsEventHandler& rhs );
-
-    ///Destructor
-    virtual ~ReloadPluginsEventHandler();
-
-    ///Equal operator
-    ReloadPluginsEventHandler& operator=( const ReloadPluginsEventHandler& rhs );
-
-    ///Set the cfdModel.
-    ///\param model The cfdModel to execute the Command on\n.
-    ///Default uses the active cfdModel from ModelHandler\n
-    ///Otherwise, the cfdModel passed in is used.
-    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
-
-    ///Exectute the event
-    ///\param xmlObject The current xmlObject event.
-    void Execute( const ves::open::xml::XMLObjectPtr& command );
-
-private:
-};
+    // CORBA no longer runs in typical desktop mode, so we have to test
+    /*if( ves::xplorer::network::GraphicalPluginManager::instance()->GetCORBAInterface() )
+    {
+        ves::xplorer::network::GraphicalPluginManager::instance()->GetCORBAInterface()->GetNetworkFromCE();
+    }*/
+    ves::xplorer::network::GraphicalPluginManager::instance()->LoadDataFromCE();
+    
+    ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void NewFileLoading( std::string const& )
+{
+    //Set active model to null so that if the previous active model is deleted
+    //that we don't get errors in our code other places.
+    std::string nullString;
+    ves::xplorer::ModelHandler::instance()->SetActiveModel( nullString );
+    
+    ves::xplorer::data::DatabaseManager::instance()->ResetAll();
+}
+////////////////////////////////////////////////////////////////////////////////
 }
 }
 }
-#endif// RELOAD_PLUGINS_EVENT_HANDLER_H
+

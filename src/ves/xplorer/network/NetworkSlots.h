@@ -30,38 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef UPDATE_NETWORK_EVENT_HANDLER_H
-#define UPDATE_NETWORK_EVENT_HANDLER_H
-/*!\file UpdateNetworkEventHandler.h
-  UpdateNetworkEventHandler API
-  */
-/*!\class UpdateNetworkEventHandler
- * Reload plugins for the network.
- */
+#pragma once
 
-#include <ves/VEConfig.h>
-#include <switchwire/ScopedConnectionList.h>
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-class GlobalBase;
-}
-}
-
-#include <ves/xplorer/event/EventHandler.h>
+#include <string>
 
 namespace ves
 {
@@ -69,37 +40,11 @@ namespace xplorer
 {
 namespace network
 {
-class VE_XPLORER_NETWORK_EXPORTS UpdateNetworkEventHandler: public ves::xplorer::event::EventHandler
-{
-public:
-    ///Constructor
-    UpdateNetworkEventHandler();
-
-    ///Copy Constructor
-    UpdateNetworkEventHandler( const UpdateNetworkEventHandler& rhs );
-
-    ///Destructor
-    virtual ~UpdateNetworkEventHandler();
-
-    ///Equal operator
-    UpdateNetworkEventHandler& operator=( const UpdateNetworkEventHandler& rhs );
-
-    ///Set the cfdModel.
-    ///\param model The cfdModel to execute the Command on\n.
-    ///Default uses the active cfdModel from ModelHandler\n
-    ///Otherwise, the cfdModel passed in is used.
-    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
-
-    ///Exectute the event
-    ///\param xmlObject The current xmlObject event.
-    void Execute( const ves::open::xml::XMLObjectPtr& command );
-
-    void UpdateNetwork();
-
-private:
-    switchwire::ScopedConnectionList m_connections;
-};
+///Force an update of the xml network
+void UpdateNetwork();
+///Called when networks are loaded
+void NewFileLoading( std::string const& );
 }
 }
 }
-#endif// RELOAD_PLUGINS_EVENT_HANDLER_H
+
