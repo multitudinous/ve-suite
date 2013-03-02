@@ -45,7 +45,7 @@ function getNamedVRJConfigFile()
 function getRenderNodes()
 {
     RENDER_NODES=$(awk '{
-        if( NF == 2 && $1 == "rendernode" )
+        if( NF == 3 && $1 == "rendernode" )
         {
             print $2
         }
@@ -54,6 +54,27 @@ function getRenderNodes()
     if [ -z "${RENDER_NODES}" ]
     then
         echo "No render nodes found"
+        exit 1
+    fi
+}
+
+function getListenPortForRenderNode()
+{
+    local named_node="${2}"
+
+    LISTEN_PORT=$(awk -v NODE="${named_node}" '{
+        if( NF == 3 && $1 == "rendernode" )
+        {
+            if( $2 == NODE )
+            {
+                print $3
+            }
+        }
+    }' "${1}")
+
+    if [ -z "${LISTEN_PORT}" ]
+    then
+        printf "Couldn't find render node: %s\n" ${named_node}
         exit 1
     fi
 }
@@ -116,7 +137,10 @@ case "${ACTION}" in
         
         for node in ${RENDER_NODES}
         do
-            ssh ${node} "/bin/bash -c 'source ${VES_ENV_FILE} && launch-ves_xplorer-rendernode.sh'" &
+            unset LISTEN_PORT
+            getListenPortForRenderNode "${CLUSTER_CONFIG_FILE}" "${node}"
+
+            ssh ${node} "/bin/bash -c 'source ${VES_ENV_FILE} && launch-ves_xplorer-rendernode.sh -p ${LISTEN_PORT}'" &
         done
         ;;
     kill)
