@@ -86,7 +86,6 @@ cfdCursor::cfdCursor( vtkPolyData* arrow, ves::xplorer::scenegraph::DCS* worldDC
     cursorId = NONE;
     this->arrow = arrow;
     this->worldDCS = worldDCS;
-    //this->activeDataSetDCS = NULL;
     _rootNode = rootNode;
 
     // get scale factors of the worldDCS...
@@ -560,10 +559,10 @@ vtkCubeSource* cfdCursor::getBox()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::SetPlaneSize( float size )
 {
-    /*double* dataDCSScale = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS()->GetScaleArray();
+    const osg::Vec3d& dataDCSScale = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS()->getScale();
     double* worldDCSScale = this->worldDCS->GetScaleArray();
     double combineScale[ 3 ];
-    combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
+    combineScale[ 0 ] = dataDCSScale.x() * worldDCSScale[ 0 ];
 
     //this controls the size of the plane for the seed points
     //the range on the GUI is from 1 to 100
@@ -573,7 +572,7 @@ void cfdCursor::SetPlaneSize( float size )
     this->pSize = size;
 
     vprDEBUG( vesDBG, 1 ) << "Setting plane size : " << size
-                          << std::endl << vprDEBUG_FLUSH;*/
+                          << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::SetPlaneReso( int size )
@@ -710,21 +709,26 @@ void cfdCursor::SetTranslation( void )
     Matrix44d worldMat = this->worldDCS->GetMat();
 
     Matrix44d totalMat;
-    if( this->activeDataSetDCS.valid() )
+    if( activeDataSetDCS.valid() )
     {
         // apparently unused ...Matrix44d cursorDCSMat = this->cursorDCS->GetMat();
-        /*double* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
-        double* worldDCSScale = this->worldDCS->GetScaleArray();
-
-        double combineScale[ 3 ];
+        osg::Vec3d dataDCSScale = this->activeDataSetDCS->getScale();
+        osg::Vec3d worldDCSScale = this->worldDCS->getScale();
+        osg::Vec3d combineScale;
         combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
         combineScale[ 1 ] = dataDCSScale[ 1 ] * worldDCSScale[ 1 ];
         combineScale[ 2 ] = dataDCSScale[ 2 ] * worldDCSScale[ 2 ];
 
-        dynamic_cast< ves::xplorer::scenegraph::DCS* >( this->cursorDCS->GetChild( 0 ) )->SetScaleArray( combineScale );
-        Matrix44d dataSetMatrix = this->activeDataSetDCS->GetMat();
+        static_cast< osg::PositionAttitudeTransform* >( cursorDCS->getChild( 0 ) )->setScale( combineScale );
+        osg::Matrix tempMat;
+        tempMat.makeScale( activeDataSetDCS->getScale() );
+        tempMat.setTrans( activeDataSetDCS->getPosition() );
+        tempMat.setRotate( activeDataSetDCS->getAttitude() );
 
-        totalMat = worldMat * dataSetMatrix;*/
+        Matrix44d dataSetMatrix;// = this->activeDataSetDCS->GetMat();
+        dataSetMatrix.set( tempMat.ptr() );
+
+        totalMat = worldMat * dataSetMatrix;
     }
     else
     {
@@ -743,7 +747,7 @@ void cfdCursor::GetLocalLocationVector( void )
     // local_vec = [activeDataSet mat]^(-1) * [world mat]^(-1) * global_vec
 
     // verify that there is a dataset DCS ...
-    if( this->activeDataSetDCS  == NULL )
+    if( !activeDataSetDCS.valid() )
     {
         std::cerr << "ERROR: don't have an activeDataSetDCS" << std::endl;
         return;
@@ -917,11 +921,11 @@ void cfdCursor::ProcessCommand()
             {
                 this->SetPlaneReso( int( commandIds.at( 1 ) ) );
 
-                if( this->activeDataSetDCS.valid() )
+                if( activeDataSetDCS.valid() )
                 {
-                    /*double* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
-                    double* worldDCSScale = this->worldDCS->GetScaleArray();
-                    double combineScale[ 3 ];
+                    osg::Vec3d dataDCSScale = this->activeDataSetDCS->getScale();
+                    osg::Vec3d worldDCSScale = this->worldDCS->getScale();
+                    osg::Vec3d combineScale;
                     combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
 
                     //this controls the size of the plane for the seed points
@@ -930,7 +934,7 @@ void cfdCursor::ProcessCommand()
 
                     //this controls the size of the sphere seed points
                     //when the GUI is from 1 to 100, this will take the seed points from approximately 0.1 foot to 3 feet
-                    sphereRadius = ( commandIds.at( 3 ) + 5 ) * 0.01f;*/
+                    sphereRadius = ( commandIds.at( 3 ) + 5 ) * 0.01f;
                 }
             }
         }

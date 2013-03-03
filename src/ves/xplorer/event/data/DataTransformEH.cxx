@@ -31,14 +31,14 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/data/DataTransformEH.h>
+
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/event/data/SeedPoints.h>
 
-#include <ves/xplorer/scenegraph/CADEntity.h>
-#include <ves/xplorer/scenegraph/Clone.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
+#include <ves/xplorer/event/data/SeedPoints.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -52,6 +52,8 @@
 #include <iostream>
 
 #include <latticefx/core/vtk/DataSet.h>
+
+#include <osgwTools/Quat.h>
 
 using namespace ves::xplorer::event;
 using namespace ves::open::xml;
@@ -110,21 +112,28 @@ void DataTransformEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             return;
         }
 
-        //TODO: Must Fix
-        /*DataValuePairPtr newTransform = command->GetDataValuePair( "Transform" );
-        ves::xplorer::scenegraph::DCS* transform = 0;
-        transform = _activeModel->GetActiveDataSet()->GetDCS();
+        DataValuePairPtr newTransform = command->GetDataValuePair( "Transform" );
+        osg::PositionAttitudeTransform* transform = _activeModel->GetActiveDataSet()->GetDCS();
 
         if( transform )
         {
-            TransformPtr dataTransform = boost::dynamic_pointer_cast<Transform>( newTransform->GetDataXMLObject() );
-            transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
-            transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
-            transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
-            ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
-            ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
-            ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
-        }*/
+            TransformPtr dataTransform =
+                boost::dynamic_pointer_cast<Transform>( newTransform->GetDataXMLObject() );
+
+            std::vector< double > translation = dataTransform->GetTranslationArray()->GetArray();
+            std::vector< double > rotation = dataTransform->GetRotationArray()->GetArray();
+            std::vector< double > scale = dataTransform->GetScaleArray()->GetArray();
+            
+            transform->setScale( osg::Vec3d( scale[ 0 ], scale[ 1 ], scale[ 2 ] ) );
+            transform->setPosition( osg::Vec3d( translation[ 0 ], translation[ 1 ], translation[ 2 ] ) );
+            transform->setAttitude( osgwTools::makeHPRQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );
+    
+            osg::PositionAttitudeTransform* seedPoint =
+                ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS();
+            seedPoint->setScale( transform->getScale() );
+            seedPoint->setPosition( transform->getPosition() );
+            seedPoint->setAttitude( transform->getAttitude() );
+        }
         //Reset back to null after working with the dataset we are after.
         _activeModel->SetActiveDataSet( lfx::core::vtk::DataSetPtr() );
     }

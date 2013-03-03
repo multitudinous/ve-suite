@@ -48,6 +48,8 @@
 
 #include <latticefx/core/vtk/DataSet.h>
 
+#include <osgwTools/Quat.h>
+
 namespace ves
 {
 namespace xplorer
@@ -115,11 +117,10 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
         std::vector<double> translation( start, stop );
         std::vector<double> rotation( start + 3, stop + 3 );
         std::vector<double> scale( start + 6, stop + 6 );
-
-        //TODO: Must fix
-        //dcs->SetTranslationArray( translation );
-        //dcs->SetRotationArray( rotation );
-        //dcs->SetScaleArray( scale );
+        
+        dcs->setScale( osg::Vec3d( scale[ 0 ], scale[ 1 ], scale[ 2 ] ) );
+        dcs->setPosition( osg::Vec3d( translation[ 0 ], translation[ 1 ], translation[ 2 ] ) );
+        dcs->setAttitude( osgwTools::makeHPRQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -224,7 +225,7 @@ void ActivateSeedPoints( const std::string& dataSetName, const bool seedPointDis
     if( !ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->containsNode( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() ) )
     {
         ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->
-        addChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() );
+            addChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() );
     }
     
     //this seems to be a bad sequence of calls but we need to set the
@@ -233,9 +234,10 @@ void ActivateSeedPoints( const std::string& dataSetName, const bool seedPointDis
     tempModel->SetActiveDataSet( tempModel->GetCfdDataSet( tempModel->GetIndexOfDataSet( dataSetName ) ) );
     osg::ref_ptr< osg::PositionAttitudeTransform > tempDCS = tempModel->GetActiveDataSet()->GetDCS();
     ves::xplorer::scenegraph::DCS* seedPointDCS = ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS();
-    //TODO:Need to fix
-    //seedPointDCS->SetMat( tempDCS->GetMat() );
-    
+    seedPointDCS->setScale( tempDCS->getScale() );
+    seedPointDCS->setPosition( tempDCS->getPosition() );
+    seedPointDCS->setAttitude( tempDCS->getAttitude() );
+
     ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->Toggle( seedPointDisplay );
 }
 ////////////////////////////////////////////////////////////////////////////////
