@@ -105,7 +105,7 @@ namespace pt = boost::property_tree;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 //#define NETL_DEMO
-#define TEST_GAUGES
+//#define TEST_GAUGES
 
 #include "HyperLabICEGP.h"
 #ifdef NETL_DEMO
@@ -177,7 +177,7 @@ int HyperLabICEGP::InitializeLabModels()
     }
     renderRoot->addChild( models.get() );
 
-    models = osgDB::readNodeFile( "Models/HyperSystem_v8.osg", options.get() );
+    models = osgDB::readNodeFile( "Models/HyperSystem_v9.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
@@ -240,7 +240,7 @@ void HyperLabICEGP::ProcessOPCData()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
 {
-#ifdef TEST_GAUGES
+#if 1
     ProcessOPCData();
 #else
     if( !OneSecondCheck( m_lastSend, 250000 ) )
@@ -363,15 +363,15 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
 {
     //Update the Pressure Indicators
     {
-        //ConfigurePressureIndicators();
+        ConfigurePressureIndicators();
     }
     //Update the HV gauges
     {
-        //ConfigureHandValves();
+        ConfigureHandValves();
     }
     //Update the FI015 gauges
     {
-        //ConfigureFlowIndicators();
+        ConfigureFlowIndicators();
     }
     //Update the Pressure Transducers
     {
@@ -526,7 +526,7 @@ void HyperLabICEGP::ConfigurePressureTransducers()
             text->setAlignment( osgText::TextBase::LEFT_BOTTOM ); //osgText::TextBase::BASE_LINE );
             text->setAxisAlignment( osgText::TextBase::YZ_PLANE );
             text->setColor( osg::Vec4( 0, 0, 0, 1.0f ) );
-            text->setText( "12.5" );
+            text->setText( "0.000" );
             
             tempGroup->addDrawable( text.get() );
             
@@ -695,7 +695,7 @@ void HyperLabICEGP::SetupOPCClient()
             SetOPCData( tree );
             //const std::string message_type = tree.get<std::string>( "message_type" );
             //std::cout << str << std::endl;
-                    boost::optional<std::string> val = tree.get_optional< std::string >( "PT003" );
+            //boost::optional<std::string> val = tree.get_optional< std::string >( "PT003" );
         /*if( val )
         {
             std::ostringstream streamData;

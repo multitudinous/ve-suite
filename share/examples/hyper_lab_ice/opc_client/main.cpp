@@ -150,7 +150,7 @@ int main( int argc, char** argv )
     if( vm.count( "variables" ) )
     {
         std::vector< std::string > opcVars = vm["variables"].as< std::vector< std::string > >();
-        std::cout << opcVars.size() << std::endl;
+        //std::cout << opcVars.size() << std::endl;
         for( size_t i = 0; i < opcVars.size(); ++i )
         {
             opcInterface->AddOPCVariable( opcVars[ i ] );
