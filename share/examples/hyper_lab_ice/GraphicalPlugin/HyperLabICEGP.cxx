@@ -522,8 +522,8 @@ void HyperLabICEGP::ConfigurePressureTransducers()
             text->setDataVariance( osg::Object::DYNAMIC );
             text->setFont( font.get() );
             text->setCharacterSize( 0.90 );
-            text->setPosition( osg::Vec3d( 0.0, -0.3, 0.0 ) );
-            text->setAlignment( osgText::TextBase::LEFT_BOTTOM ); //osgText::TextBase::BASE_LINE );
+            text->setPosition( osg::Vec3d( 0.0, 0.0, 0.0 ) );
+            text->setAlignment( osgText::TextBase::RIGHT_BOTTOM ); //osgText::TextBase::BASE_LINE );
             text->setAxisAlignment( osgText::TextBase::YZ_PLANE );
             text->setColor( osg::Vec4( 0, 0, 0, 1.0f ) );
             text->setText( "0.000" );
