@@ -68,6 +68,7 @@ Name: propertystore; Description: propertystore; Types: full
 Name: crunchstore; Description: crunchstore; Types: full
 Name: storyteller; Description: storyteller; Types: full
 Name: zmq; Description: zmq; Types: full
+Name: latticefx; Description: latticefx; Types: full
 Name: depsbuildenv; Description: Headers and Libs
 
 [Files]
@@ -196,6 +197,13 @@ Source: {#DEPENDSINSTALLHOME}\{#STORYTELLERHOME}\lib\*.lib; DestDir: {app}\lib; 
 Source: {#DEPENDSINSTALLHOME}\{#STORYTELLERHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#DEPENDSINSTALLHOME}\{#STORYTELLERHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: storyteller
 Source: {#DEPENDSINSTALLHOME}\{#STORYTELLERHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs; Components: storyteller; Languages: 
+
+; lfx Files
+Source: {#DEPENDSINSTALLHOME}\{#LATTICEFXHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#LATTICEFXHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#LATTICEFXHOME}\lib\*.fpc; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#DEPENDSINSTALLHOME}\{#LATTICEFXHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: latticefx
+Source: {#DEPENDSINSTALLHOME}\{#LATTICEFXHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs; Components: latticefx; Languages: 
 
 ; zmq Files
 Source: {#DEPENDSINSTALLHOME}\{#ZMQHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs; Components: depsbuildenv
