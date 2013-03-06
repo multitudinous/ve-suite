@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <ves/xplorer/communication/Xplorer_i.h>
+
 #include <ves/xplorer/communication/CommunicationHandler.h>
 
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
-
-#include <ves/xplorer/communication/Xplorer_i.h>
 
 vprSingletonImp( ves::xplorer::communication::CommunicationHandler );
 

@@ -39,9 +39,9 @@
 */
 #include <ves/VEConfig.h>
 
-#include <ves/open/xml/CommandPtr.h>
-
 #include <vpr/Util/Singleton.h>
+
+#include <ves/open/xml/CommandPtr.h>
 
 class Body_VEXplorer_i;
 
