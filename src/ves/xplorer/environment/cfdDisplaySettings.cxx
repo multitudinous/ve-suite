@@ -135,7 +135,7 @@ void cfdDisplaySettings::ProcessCommand()
             jccl::ConfigManager::instance()->unlockActive();
             vpr::System::msleep( 50 );
         }
-        jccl::ConfigManager::instance()->lockActive();
+        //jccl::ConfigManager::instance()->lockActive();
         //Now we can change the dsiplay now that the default display element
         //has been loaded.
         DataValuePairPtr desktopData =
@@ -223,7 +223,7 @@ void cfdDisplaySettings::ProcessCommand()
             }
             ChangeDisplayElements( false, elements.at( i ) );
         }
-        jccl::ConfigManager::instance()->unlockActive();
+        //jccl::ConfigManager::instance()->unlockActive();
     }
     veCommand = ves::open::xml::CommandPtr();
 }
