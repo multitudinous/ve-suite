@@ -85,14 +85,14 @@
             <device>Joystick1</device>
             <unit>3</unit>
         </analog_proxy>
-        <analog_proxy name="VESJoystick1Axis4" version="1">
+        <!--analog_proxy name="VESJoystick1Axis4" version="1">
             <device>Joystick1</device>
             <unit>4</unit>
         </analog_proxy>
         <analog_proxy name="VESJoystick1Axis5" version="1">
             <device>Joystick1</device>
             <unit>5</unit>
-        </analog_proxy>
+        </analog_proxy-->
     </elements>
 </configuration>
 

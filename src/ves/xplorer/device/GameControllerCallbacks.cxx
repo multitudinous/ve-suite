@@ -964,7 +964,10 @@ void GameControllerCallbacks::ConfigureGameControllerDevices()
             else if( joystickType == "Logitech Cordless RumblePad 2" )
             {
                 configuration->load( xplorerBaseDir + "rumble_pad_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
-                std::cout << xplorerBaseDir << std::endl;
+            }
+            else if( joystickType == "Controller (Xbox 360 Wireless Receiver for Windows)" )
+            {
+                configuration->load( xplorerBaseDir + "xbox_360_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
             }
             else
             {

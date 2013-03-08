@@ -83,10 +83,11 @@ void GameController::InitInterfaces( const std::string deviceName )
     
     //Right stick - Y
     m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis3Event, this, _1 ) );
-    
-    m_analogAxis4EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis4Event, this, _1 ) );
-    
-    m_analogAxis5EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis5Event, this, _1 ) );
+
+    if( m_analogAxis4EventInterface.isConnected() )
+        m_analogAxis4EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis4Event, this, _1 ) );
+    if( m_analogAxis5EventInterface.isConnected() )    
+        m_analogAxis5EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis5Event, this, _1 ) );
     
     //All the buttons
     m_button0EventInterface.addCallback( boost::bind( &GameController::OnButton0Event, this, _1 ) );
@@ -128,9 +129,11 @@ void GameController::ConnectInterfaces( device::GameControllerCallbacks* const c
     //Right stick - Y
     m_analogAxis3EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis3Event, controller, _1 ) );
     
-    m_analogAxis4EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis4Event, controller, _1 ) );
+    if( m_analogAxis4EventInterface.isConnected() )  
+        m_analogAxis4EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis4Event, controller, _1 ) );
     
-    m_analogAxis5EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis5Event, controller, _1 ) );
+    if( m_analogAxis5EventInterface.isConnected() )  
+        m_analogAxis5EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis5Event, controller, _1 ) );
     
     //All the buttons
     m_button0EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton0Event, controller, _1 ) );
