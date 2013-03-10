@@ -71,7 +71,10 @@ void GameController::InitInterfaces( const std::string deviceName )
     m_controllerPosition.init( deviceName + "Position" );
     
     m_controllerPosition.addCallback( boost::bind( &GameController::OnPositionEvent, this, _1 ) );
-    
+
+    _rumble.init( deviceName + "Rumble0");
+    //std::cout << deviceName + "Rumble0 " << _rumble->isStupefied() << std::endl;
+
     //Left stick - X
     m_analogAxis0EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameController::OnAxis0Event, this, _1 ) );
     
@@ -135,6 +138,13 @@ void GameController::ConnectInterfaces( device::GameControllerCallbacks* const c
     if( m_analogAxis5EventInterface.isConnected() )  
         m_analogAxis5EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis5Event, controller, _1 ) );
     
+      //Setup Rumble
+     _speed = _rumble->createEffect(gadget::RumbleEffect::SINE);
+     //std::cout << "*********************Try to create....****************" << std::endl;
+     if (_speed) {
+     std::cout << "Have a rumble effect " << _speed->load() << std::endl;
+     }
+
     //All the buttons
     m_button0EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton0Event, controller, _1 ) );
     
@@ -223,6 +233,11 @@ void GameController::OnAxis0Event( const float val )
         return;
     }
 
+     if (_speed) {
+     _speed->setMagnitude(1.0-val);
+     _speed->update();
+     _speed->play(-1);
+     }
     m_grabControllSignal.signal( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -282,6 +297,13 @@ void GameController::OnButton0Event( gadget::DigitalState::State event )
     {
         return;
     }
+    
+    if (_speed) {
+     _speed->setMagnitude(1.0);
+     _speed->update();
+     _speed->play(-1);
+     }
+     
     m_grabControllSignal.signal( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -386,9 +408,9 @@ void GameController::OnButton11Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 bool GameController::CheckDeadZone( const float& val ) const
 {
-    if( val < 0.51f )
+    if( val < 0.53f )
     {
-        if( val > 0.49f )
+        if( val > 0.47f )
         {
             return true;
         }

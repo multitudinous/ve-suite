@@ -233,9 +233,6 @@ private:
     ///THe position of the controller
     gmtl::Matrix44f m_controllerPosition;
 
-    //The signal handler to hand off to VR Juggler
-    //vrj::Kernel::signal_callback_t m_signalHandler;
-
     /// signal for generating the start and end point for selection and other
     ///interaction tools.
     /// Params are: start point and end point

@@ -6,10 +6,11 @@
 
 #include <switchwire/ScopedConnectionList.h>
 
-#include <gadget/Type/PositionInterface.h>
 #include <gadget/Event/AnalogEventInterface.h>
 #include <gadget/Event/DigitalEventInterface.h>
 #include <gadget/Event/PositionEventInterface.h>
+
+#include <gadget/Type/RumbleInterface.h>
 
 namespace ves
 {
@@ -89,6 +90,11 @@ private:
     GamePadClickInterface m_button13EventInterface;
     GamePadClickInterface m_button14EventInterface;
     
+    
+    gadget::RumbleInterface _rumble;
+
+	gadget::RumbleEffectPtr _speed;
+	
     ///The id of this controller which maps to the m_gameControllerBaseNames
     //list of names.
     unsigned int m_controllerMask;

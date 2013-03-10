@@ -464,7 +464,7 @@ void GameControllerCallbacks::OnButton0Event( gadget::DigitalState::State event 
     {
         return;
     }
-    
+    //std::cout << "GameControllerCallbacks::OnButton0Event" << std::endl;
     switch( event )
     {
         case gadget::DigitalState::ON:
@@ -502,7 +502,7 @@ void GameControllerCallbacks::OnButton1Event( gadget::DigitalState::State event 
     {
         return;
     }
-    
+    //std::cout << "GameControllerCallbacks::OnButton1Event" << std::endl;
     switch( event )
     {
         case gadget::DigitalState::ON:
@@ -536,7 +536,7 @@ void GameControllerCallbacks::OnButton2Event( gadget::DigitalState::State event 
     {
         return;
     }
-    
+    //std::cout << "GameControllerCallbacks::OnButton2Event" << std::endl;
     switch( event )
     {
         case gadget::DigitalState::ON:
@@ -570,7 +570,7 @@ void GameControllerCallbacks::OnButton3Event( gadget::DigitalState::State event 
     {
         return;
     }
-
+    //std::cout << "GameControllerCallbacks::OnButton3Event" << std::endl;
     switch( event )
     {
     case gadget::DigitalState::ON:
@@ -604,7 +604,7 @@ void GameControllerCallbacks::OnButton4Event( gadget::DigitalState::State event 
     {
         return;
     }
-
+    //std::cout << "GameControllerCallbacks::OnButton4Event" << std::endl;
     switch( event )
     {
     case gadget::DigitalState::ON:
@@ -638,7 +638,7 @@ void GameControllerCallbacks::OnButton5Event( gadget::DigitalState::State event 
     {
         return;
     }
-
+    //std::cout << "GameControllerCallbacks::OnButton5Event" << std::endl;
     switch( event )
     {
     case gadget::DigitalState::ON:
@@ -670,7 +670,7 @@ void GameControllerCallbacks::OnButton6Event( gadget::DigitalState::State event 
     {
         return;
     }
-
+    //std::cout << "GameControllerCallbacks::OnButton6Event" << std::endl;
     switch( event )
     {
     case gadget::DigitalState::ON:
@@ -701,7 +701,7 @@ void GameControllerCallbacks::OnButton7Event( gadget::DigitalState::State event 
     {
         return;
     }
-
+    //std::cout << "GameControllerCallbacks::OnButton7Event" << std::endl;
     switch( event )
     {
     case gadget::DigitalState::ON:
@@ -732,7 +732,7 @@ void GameControllerCallbacks::OnButton8Event( gadget::DigitalState::State event 
     {
         return;
     }
-
+    //std::cout << "GameControllerCallbacks::OnButton8Event" << std::endl;
     switch( event )
     {
     case gadget::DigitalState::ON:
@@ -764,7 +764,7 @@ void GameControllerCallbacks::OnButton9Event( gadget::DigitalState::State event 
     {
         return;
     }
-    
+    //std::cout << "GameControllerCallbacks::OnButton9Event" << std::endl;
     switch( event )
     {
     case gadget::DigitalState::ON:
@@ -795,7 +795,7 @@ void GameControllerCallbacks::OnButton10Event( gadget::DigitalState::State event
     {
         return;
     }
-
+    //std::cout << "GameControllerCallbacks::OnButton10Event" << std::endl;
     switch( event )
     {
     case gadget::DigitalState::ON:
@@ -838,7 +838,7 @@ void GameControllerCallbacks::OnButton11Event( gadget::DigitalState::State event
     {
         return;
     }
-
+    //std::cout << "GameControllerCallbacks::OnButton11Event" << std::endl;
     switch( event )
     {
     case gadget::DigitalState::ON:
@@ -967,7 +967,7 @@ void GameControllerCallbacks::ConfigureGameControllerDevices()
             }
             else if( joystickType == "Controller (Xbox 360 Wireless Receiver for Windows)" )
             {
-                configuration->load( xplorerBaseDir + "xbox_360_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
+                configuration->load( xplorerBaseDir + "xbox_360_windows_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
             }
             else
             {
@@ -1018,6 +1018,7 @@ void GameControllerCallbacks::CheckControlState()
     boost::posix_time::ptime current_time( boost::posix_time::microsec_clock::local_time() );
     boost::posix_time::time_duration diff = current_time - m_lastActiveTime;
     double frameTime = diff.total_milliseconds() * 0.001;
+    //std::cout << frameTime << std::endl;
     if( frameTime > 3.0 )
     {
         m_controlledState = OpenControlState;
