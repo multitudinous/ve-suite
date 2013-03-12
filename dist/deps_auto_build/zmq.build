@@ -11,25 +11,17 @@ INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
 
 case $PLATFORM in
   Windows)
-    unset PROJ_STR
-    unset BUILD_TARGET
-    unset PREBUILD_METHOD
-    BUILD_METHOD=devenv
-    MSVC_CONFIG=Release
+    PREBUILD_METHOD=cmake
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    
+    MSVC_CONFIG=RelWithDebInfo
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
-      #PLATFORM_SUFFIX=
     else
       MSVC_PLATFORM=x64
-      PLATFORM_SUFFIX=_x64
     fi
-
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/builds/msvc/msvc.sln" )
-
-    POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && mkdir -p ${INSTALL_DIR}/include && mkdir -p ${INSTALL_DIR}/lib && \
-                cp -R ../include ${INSTALL_DIR}/. && \
-                cp ../lib/* ${INSTALL_DIR}/lib/. && \
-                cp -R ../bin ${INSTALL_DIR}/."
+    MSVC_SOLUTION="zmq.sln"
+    
     SKIP_FPC_INSTALL="no"
     FPC_FILE=zmq.fpc
     ;;
