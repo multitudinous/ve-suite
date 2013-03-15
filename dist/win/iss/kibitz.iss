@@ -59,5 +59,11 @@ Source: {#VESAUTODEPSDIR}\{#KIBITZDIRNAME}\{#VESINSTALLDIR}\lib\*; DestDir: {app
 Source: {#VESAUTODEPSDIR}\{#KIBITZDIRNAME}\{#VESINSTALLDIR}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VESAUTODEPSDIR}\{#KIBITZDIRNAME}\{#VESINSTALLDIR}\share\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 
+Source: {#VESAUTODEPSDIR}\{#GLOGDIRNAME}\{#VESINSTALLDIR}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#GLOGDIRNAME}\{#VESINSTALLDIR}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+
+Source: {#VESAUTODEPSDIR}\{#YAMLDIRNAME}\{#VESINSTALLDIR}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VESAUTODEPSDIR}\{#YAMLDIRNAME}\{#VESINSTALLDIR}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}_{#MyAppVer}_{#MSVCVERSION}}; Filename: {uninstallexe}; Languages: 

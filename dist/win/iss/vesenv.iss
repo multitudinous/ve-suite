@@ -111,6 +111,8 @@
 #define ZMQDIRNAME "zmq"
 #define LATTICEFXDIRNAME "latticefx"
 #define KIBITZDIRNAME "kibitz"
+#define GLOGDIRNAME "glog-0.3.2"
+#define YAMLDIRNAME "yaml-cpp-0.3.0"
 #ifdef x64
 #define ACETAODIRNAME "ACE_wrappers_64-bit"
 #define XERCESCDIRNAME "xerces-c-3.1.1-x86_64-windows-vc-9.0"
