@@ -60,6 +60,7 @@
 #define QTHOME "C:\dev\deps\Qt\4.8.0_x64"
 #define ZMQHOME "zmq_3.2.1_msvc-9.0-sp1-x64"
 #define LATTICEFXHOME "latticeFX_0.0.0_msvc-9.0-sp1-x64"
+#define KIBITZHOME "kibitz_0.2.0_msvc-9.0-sp1-x64"
 #else
 ; Install prefix of ves
 #define VEINSTALLHOME "C:\dev\ve-suite-trunk\install-win32-qt"
@@ -86,6 +87,7 @@
 #define QTHOME "C:\dev\deps\Qt\4.8.0"
 #define ZMQHOME "zmq-3.2.1_msvc-9.0-sp1-x86"
 #define LATTICEFXHOME "latticeFX_0.0.0_msvc-9.0-sp1-x86"
+#define KIBITZHOME "kibitz_0.2.0_msvc-9.0-sp1-x86"
 #endif
 
 ; Source directories for compiling application specific installers
@@ -108,6 +110,7 @@
 #define COIN3DDIRNAME "Coin-3.1.3"
 #define ZMQDIRNAME "zmq"
 #define LATTICEFXDIRNAME "latticefx"
+#define KIBITZDIRNAME "kibitz"
 #ifdef x64
 #define ACETAODIRNAME "ACE_wrappers_64-bit"
 #define XERCESCDIRNAME "xerces-c-3.1.1-x86_64-windows-vc-9.0"
