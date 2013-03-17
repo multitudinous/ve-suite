@@ -92,6 +92,9 @@ void ActivateSeedPoints( const std::string& dataSetName, const bool seedPointDis
 ///Show the scalar bar
 void ShowScalarBar( const std::string& uuid, const bool& show );
 
+///Write db entry for the given dataset
+void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet );
+
 } //end data
 } //end event
 } //end xplorer

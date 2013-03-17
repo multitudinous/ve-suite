@@ -78,6 +78,7 @@
 
 #include <latticefx/core/vtk/ChannelDatavtkDataObject.h>
 #include <latticefx/core/vtk/VTKActorRenderer.h>
+#include <latticefx/core/vtk/VTKSurfaceRenderer.h>
 #include <latticefx/core/vtk/VTKContourSliceRTP.h>
 #include <latticefx/core/vtk/CuttingPlane.h>
 #include <latticefx/core/vtk/DataSet.h>
@@ -684,18 +685,17 @@ void cfdContourBase::CreateLFXPlane()
         contourRTP->SetPlaneDirection( lfx::core::vtk::CuttingPlane::Z_PLANE );
     }
     contourRTP->SetRequestedValue( requestedValue );
-    double range[2];
-    GetActiveDataSet()->GetUserRange( range );
-    contourRTP->SetMinMaxScalarRangeValue( range[ 0 ], range[ 1 ] );
     contourRTP->addInput( "vtkDataObject" );
     m_dsp->addOperation( contourRTP );
 
     //Try the vtkActor renderer
-    lfx::core::vtk::VTKActorRendererPtr renderOp( new lfx::core::vtk::VTKActorRenderer() );
+    lfx::core::vtk::VTKSurfaceRendererPtr renderOp( new lfx::core::vtk::VTKSurfaceRenderer() );
     renderOp->SetActiveVector( GetActiveDataSet()->GetActiveVectorName() );
     renderOp->SetActiveScalar( GetActiveDataSet()->GetActiveScalarName() );
     renderOp->addInput( "vtkPolyDataMapper" );
+    renderOp->addInput( "vtkDataObject" );
     m_dsp->setRenderer( renderOp );
+    m_dsp->setDirty();
     //Now force an update of the lfx pipeline
     bool success = m_dsp->updateAll();
     

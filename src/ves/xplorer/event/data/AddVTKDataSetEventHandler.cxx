@@ -31,6 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
+#include <ves/xplorer/event/data/DataSlots.h>
+
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
 
@@ -291,10 +293,21 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                         tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" )->
                         GetDataString();
                     lastDataAdded->LoadTransientData( precomputedSurfaceDir );
+                    std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetTransientDataSets();
+                    for( size_t i = 0; i < dataSetVector.size(); ++i )
+                    {
+                        ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ] );
+                    }
                 }
                 else
                 {
                     lastDataAdded->LoadData();
+                    ves::xplorer::event::data::WriteDatabaseEntry( lastDataAdded );
+                    std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetChildDataSets();
+                    for( size_t i = 0; i < dataSetVector.size(); ++i )
+                    {
+                        ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ] );
+                    }
                 }
                 //If the data load failed
                 if( !lastDataAdded->GetDataSet() )

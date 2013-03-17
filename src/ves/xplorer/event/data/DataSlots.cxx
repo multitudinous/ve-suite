@@ -250,6 +250,47 @@ void ShowScalarBar( const std::string& uuid, const bool& show )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet )
+{
+    xplorer::data::DatasetPropertySet set;
+
+    //boost::filesystem::path tempPath( fileName );
+    //std::string shortName = tempPath.filename().string();
+
+    //set.LoadByKey( "Filename", shortName );
+    set.LoadByKey( "Filename", dataSet->GetFileName() );
+
+    osg::Node::DescriptionList descriptorsList;
+    descriptorsList.push_back( "VE_DATA_NODE" );
+    descriptorsList.push_back( set.GetUUIDAsString() );
+    dataSet->GetDCS()->setDescriptions( descriptorsList );
+
+    //set.SetPropertyValue( "Filename", shortName );
+    set.SetPropertyValue( "Filename", dataSet->GetFileName() );
+    set.SetPropertyValue( "StepLength", dataSet->GetStepLength() );
+    set.SetPropertyValue( "MaxTime", dataSet->GetMaxTime() );
+    set.SetPropertyValue( "TimeStep", dataSet->GetTimeStep() );
+    set.SetPropertyValue( "Type", dataSet->GetType() );
+    set.SetPropertyValue( "PrecomputedDataSliceDir", dataSet->GetPrecomputedDataSliceDir() );
+    set.SetPropertyValue( "PrecomputedSurfaceDir", dataSet->GetPrecomputedSurfaceDir() );
+    set.SetPropertyValue( "ScalarNames", dataSet->GetScalarNames() );
+    set.SetPropertyValue( "VectorNames", dataSet->GetVectorNames() );
+
+    std::vector< double > ScalarMins;
+    std::vector< double > ScalarMaxes;
+    for( int index = 0; index < dataSet->GetNumberOfScalars(); ++index )
+    {
+        double* range = dataSet->GetActualScalarRange( index );
+        ScalarMins.push_back( range[0] );
+        ScalarMaxes.push_back( range[1] );
+    }
+    set.SetPropertyValue( "ScalarMins", ScalarMins );
+    set.SetPropertyValue( "ScalarMaxes", ScalarMaxes );
+
+    set.Save();
+}
+////////////////////////////////////////////////////////////////////////////////
+
 }
 }
 }
