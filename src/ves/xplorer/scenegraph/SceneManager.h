@@ -40,7 +40,6 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
-#include <ves/xplorer/scenegraph/Switch.h>
 #include <ves/xplorer/scenegraph/GLTransformInfoPtr.h>
 
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
@@ -51,6 +50,7 @@
 #include <osg/ref_ptr>
 #include <osg/FrameStamp>
 #include <osg/Matrix>
+#include <osg/Switch>
 
 #include <osgwMx/MxCore.h>
 
@@ -85,7 +85,6 @@ namespace scenegraph
 {
 class DCS;
 class Group;
-class Switch;
 
 #ifdef VE_SOUND
 class Sound;
@@ -362,10 +361,10 @@ private:
     osg::ref_ptr< DCS > mLogoNode;
 
     ///Node to switch between the logo and the worldDCS
-    osg::ref_ptr< Switch > mLogoSwitch;
+    osg::ref_ptr< osg::Switch > mLogoSwitch;
 
     ///Node to switch between the nav dcs for logo, world, and network
-    osg::ref_ptr< Switch > mNavSwitch;
+    osg::ref_ptr< osg::Switch > mNavSwitch;
 
     ///A convenience pointer to help find which node is being used for nav
     osg::ref_ptr< DCS > mActiveNavDCS;

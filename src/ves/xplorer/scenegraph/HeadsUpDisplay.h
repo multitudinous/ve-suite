@@ -37,14 +37,13 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/Switch.h>
-
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 
 namespace osg
 {
 class Camera;
+class Geode;
 }
 
 namespace osgText
@@ -63,7 +62,6 @@ namespace xplorer
 namespace scenegraph
 {
 // --- VE-Suite Forward Declarations --- //
-class Switch;
 class CADEntity;
 
 /*!\file HeadsUpDisplay.h

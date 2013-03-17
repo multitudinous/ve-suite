@@ -43,7 +43,6 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
-#include <ves/xplorer/scenegraph/Switch.h>
 
 #include <ves/open/xml/model/ModelPtr.h>
 
@@ -82,7 +81,6 @@ namespace scenegraph
 {
 class DCS;
 class Group;
-class Switch;
 class CADEntity;
 class CADEntityHelper;
 class Clone;
@@ -237,7 +235,6 @@ private:
     std::string currentsurfacefilename;
     bool mirrorDataFlag;
 
-    osg::ref_ptr< ves::xplorer::scenegraph::Switch > switchNode;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > classic;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased;
     typedef std::vector< ves::xplorer::scenegraph::CADEntity* > GeometoryDataSetList;

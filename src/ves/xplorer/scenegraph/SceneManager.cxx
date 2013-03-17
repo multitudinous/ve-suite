@@ -50,7 +50,6 @@
 // --- OSG Includes --- //
 #include <osg/Node>
 #include <osg/Group>
-#include <osg/Switch>
 #include <osg/MatrixTransform>
 #include <osg/PositionAttitudeTransform>
 #include <osg/io_utils>
@@ -392,7 +391,7 @@ void SceneManager::InitScene()
                   << ex.what() << std::endl;
     }
 #endif
-    mNavSwitch = new ves::xplorer::scenegraph::Switch();
+    mNavSwitch = new osg::Switch();
     mNavSwitch->setName( "Nav Switch" );
 
     m_navDCS = new ves::xplorer::scenegraph::DCS();
@@ -569,7 +568,7 @@ void SceneManager::_createLogo()
 {
     if( !mLogoSwitch )
     {
-        mLogoSwitch = new ves::xplorer::scenegraph::Switch();
+        mLogoSwitch = new osg::Switch();
         mLogoSwitch->setName( "Models Graph" );
     }
 
