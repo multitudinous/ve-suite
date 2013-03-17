@@ -138,8 +138,8 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
 
             // we can do this because classic group is always
             // child 0 see line 58 of cfdModel.cxx
-            ves::xplorer::scenegraph::Group* test = dynamic_cast< ves::xplorer::scenegraph::Group* >( temp->getChild( 0 ) );
-            test->AddChild( geodes.back().get() );
+            osg::Group* test = dynamic_cast< osg::Group* >( temp->getChild( 0 ) );
+            test->addChild( geodes.back().get() );
             vprDEBUG( vesDBG, 1 ) << "|\tFinished classic ss add to graph"
                                   << std::endl << vprDEBUG_FLUSH;
         }
@@ -169,7 +169,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             m_animation->setDuration( 1.0f, -1 );
             m_animation->setMode( osg::Sequence::START );
 
-            ves::xplorer::scenegraph::Group* test = dynamic_cast< ves::xplorer::scenegraph::Group* >( temp->getChild( 0 ) );
+            osg::Group* test = dynamic_cast< osg::Group* >( temp->getChild( 0 ) );
             test->addChild( m_animation.get() );
         }
         /*else if( ( geodes.size() > 1 ) &&
@@ -516,12 +516,12 @@ void cfdGraphicsObject::RemoveGeodeFromDCS()
         {
             // Need to find tha parent because with multiple models
             // Not all geodes are going to be on the same dcs
-            ves::xplorer::scenegraph::Group* parent =
-                dynamic_cast< ves::xplorer::scenegraph::Group* >
+            osg::Group* parent =
+                dynamic_cast< osg::Group* >
                 ( geodes.at( i )->GetParent( 0 ) );
             if( parent )
             {
-                parent->RemoveChild( geodes.at( i ).get() );
+                parent->removeChild( geodes.at( i ).get() );
             }
         }
 

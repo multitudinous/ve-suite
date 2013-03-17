@@ -338,9 +338,6 @@ void cfdIsosurface::CreateLFXPlane()
     
     lfx::core::vtk::VTKIsoSurfaceRTPPtr isosurfaceRTP( new lfx::core::vtk::VTKIsoSurfaceRTP() );
     isosurfaceRTP->SetRequestedValue( convertPercentage( requestedValue ) );
-    double range[2];
-    GetActiveDataSet()->GetUserRange( range );
-    isosurfaceRTP->SetMinMaxScalarRangeValue( range[ 0 ], range[ 1 ] );
     isosurfaceRTP->SetActiveScalar( GetActiveDataSet()->GetActiveScalarName() );
     isosurfaceRTP->addInput( "vtkDataObject" );
     m_dsp->addOperation( isosurfaceRTP );
@@ -353,6 +350,7 @@ void cfdIsosurface::CreateLFXPlane()
     renderOp->addInput( "vtkPolyDataMapper" );
     renderOp->addInput( "vtkDataObject" );
     m_dsp->setRenderer( renderOp );
+    m_dsp->setDirty();
     //Now force an update of the lfx pipeline
     bool success = m_dsp->updateAll();
     
