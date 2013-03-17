@@ -211,7 +211,6 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                 tempInfoPacket->GetTransform()->GetRotationArray()->GetArray() );*/
 
             vprDEBUG( vesDBG, 0 ) << "|\tvtk file = " << vtk_filein
-                                  << ", dcs = "  << lastDataAdded->GetDCS()
                                   << std::endl << vprDEBUG_FLUSH;
             lastDataAdded->SetFileName( vtk_filein );
             lastDataAdded->SetUUID( "VTK_DATA_FILE",
@@ -407,10 +406,8 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
 ////////////////////////////////////////////////////////////////////////////////
 void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurfaceDir )
 {
-    if( precomputedSurfaceDir.empty() )// == NULL )
+    if( precomputedSurfaceDir.empty() )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\tLoadSurfaceFiles precomputedSurfaceDir == NULL"
-                              << std::endl << vprDEBUG_FLUSH;
         return;
     }
 
