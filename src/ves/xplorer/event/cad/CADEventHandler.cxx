@@ -39,7 +39,6 @@
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
-#include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/UpdateIDOnChildrenVisitor.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -188,13 +187,7 @@ void CADEventHandler::_setTransformOnNode( CADNodePtr activeNode )
     {
         transform = m_cadHandler->GetPart( nodeID )->GetDCS();
     }
-    else if( activeNode->GetNodeType() == "Clone" )
-    {
-        if( m_cadHandler->GetClone( nodeID ) )
-        {
-            transform = m_cadHandler->GetClone( nodeID )->GetClonedGraph();
-        }
-    }
+
     if( transform )
     {
         transform->SetCADPart( activeNode );
@@ -240,13 +233,6 @@ void CADEventHandler::SetNodeDescriptors( std::string nodeID,
     {
         ves::xplorer::scenegraph::CADEntity* partNode = m_cadHandler->GetPart( nodeID );
         partNode->GetDCS()->setDescriptions( descriptorsList );
-    }
-    else if( nodeType == "Clone" )
-    {
-        /*ves::xplorer::scenegraph::Clone* cloneNode = m_cadHandler->GetClone( nodeID );
-        ves::xplorer::scenegraph::UpdateIDOnChildrenVisitor idUpdate( cloneNode->GetClonedGraph(), descriptorValue );
-        cloneNode->GetClonedGraph()->setDescriptions( descriptorsList );*/
-        std::cerr << "ERROR: CADEventHandler::SetNodeDescriptors clone node" << std::endl;
     }
 }
 /////////////////////////////////////////////////////////////

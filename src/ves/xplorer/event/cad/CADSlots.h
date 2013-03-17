@@ -41,7 +41,6 @@
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/DCS.h>
-#include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
 
 #include <ves/xplorer/scenegraph/util/ToggleNodeVisitor.h>
@@ -308,10 +307,7 @@ static void DeleteCADNode( std::string const& parentID, std::string const& nodeI
                         removeChild( tempPart->GetDCS()->getParent( 0 ) );
             }
         }
-        else if( nodeType == std::string( "Clone" ) )
-        {
-            parentAssembly->RemoveChild( m_cadHandler->GetClone( nodeID )->GetClonedGraph() );
-        }
+
         //Need to also remove the node from ModelCADHandler node maps
         m_cadHandler->RemoveNode( nodeID, nodeType );
     }

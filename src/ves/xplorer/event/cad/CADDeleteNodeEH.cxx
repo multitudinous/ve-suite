@@ -36,7 +36,6 @@
 #include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
-#include <ves/xplorer/scenegraph/Clone.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -107,10 +106,7 @@ void CADDeleteNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
                         removeChild( tempPart->GetDCS()->getParent( 0 ) );
             }
         }
-        else if( nodeType->GetDataString() == std::string( "Clone" ) )
-        {
-            parentAssembly->RemoveChild( m_cadHandler->GetClone( nodeID->GetDataString() )->GetClonedGraph() );
-        }
+
         //Need to also remove the node from ModelCADHandler node maps
         m_cadHandler->RemoveNode( nodeID->GetDataString(), nodeType->GetDataString() );
     }

@@ -35,7 +35,6 @@
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
-#include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -107,19 +106,6 @@ void CADSetNameEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             else
             {
                 errorString = std::string( "Part: " ) + newName->GetDataString() + std::string( " not added to the graph yet!" );
-                ;
-                throw( errorString );
-            }
-        }
-        else if( nodeType->GetDataString() == std::string( "Clone" ) )
-        {
-            if( m_cadHandler->CloneExists( nodeID->GetDataString() ) )
-            {
-                m_cadHandler->GetClone( nodeID->GetDataString() )->GetClonedGraph()->SetName( newName->GetDataString() );
-            }
-            else
-            {
-                errorString = std::string( "Clone: " ) + newName->GetDataString() + std::string( " not added to the graph yet!" );
                 ;
                 throw( errorString );
             }

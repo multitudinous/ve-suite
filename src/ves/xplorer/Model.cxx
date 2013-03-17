@@ -39,7 +39,6 @@
 #include <ves/xplorer/environment/TextTextureCallback.h>
 
 #include <ves/xplorer/scenegraph/util/Attribute.h>
-#include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
@@ -106,10 +105,8 @@ namespace xplorer
 Model::Model( ves::xplorer::scenegraph::DCS* worldDCS )
     :
     loadDataTh( 0 ),
-    mirrorDataFlag( false ),
     _activeTextureDataSet( 0 ),
     _worldDCS( worldDCS ),
-    mirrorNode( 0 ),
     m_cadHandler( new ves::xplorer::ModelCADHandler( _worldDCS.get() ) ),
     m_datasetHandler( 0 )
 {
@@ -209,33 +206,6 @@ void Model::CreateCfdDataSet()
     mVTKDataSets.push_back( tempPtr );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::SetMirrorNode( ves::xplorer::scenegraph::Group* )
-{
-    if( !mirrorNode )
-    {
-        mirrorNode = new ves::xplorer::scenegraph::Clone();
-        mirrorNode->CloneNode( GetActiveDataSet()->GetDCS() );
-        double rot[ 3 ];
-        rot[ 0 ] = 180.0f;
-        rot[ 1 ] = 0.0f;
-        rot[ 2 ] = 0.0f;
-        mirrorNode->SetRotationArray( rot );
-        this->_worldDCS->AddChild( mirrorNode->GetClonedGraph() );
-    }
-    else
-    {
-        this->_worldDCS->RemoveChild( mirrorNode->GetClonedGraph() );
-        delete mirrorNode;
-        mirrorNode = new ves::xplorer::scenegraph::Clone( GetActiveDataSet()->GetDCS() );
-        double rot[ 3 ];
-        rot[ 0 ] = 180.0f;
-        rot[ 1 ] = 0.0f;
-        rot[ 2 ] = 0.0f;
-        mirrorNode->SetRotationArray( rot );
-        this->_worldDCS->AddChild( mirrorNode->GetClonedGraph() );
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 lfx::core::vtk::DataSetPtr Model::GetActiveDataSet( void )
 {
     return activeDataSet;
@@ -282,16 +252,6 @@ void Model::setModelType( ModelTypeIndex type )
 ves::xplorer::scenegraph::DCS* Model::GetDCS( )
 {
     return this->_worldDCS.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-bool Model::GetMirrorDataFlag( void )
-{
-    return mirrorDataFlag;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Model::SetMirrorDataFlag( bool input )
-{
-    mirrorDataFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& Model::GetID()

@@ -83,7 +83,6 @@ class DCS;
 class Group;
 class CADEntity;
 class CADEntityHelper;
-class Clone;
 class fileInfo;
 class TextTexture;
 }
@@ -153,9 +152,6 @@ public:
     void setModelNode( ves::xplorer::scenegraph::CADEntityHelper* );
     ///four type models right now (experiment, simulation, design, and geometry)
     void setModelType( ModelTypeIndex );
-    bool GetMirrorDataFlag( void );
-    void SetMirrorDataFlag( bool );
-    void SetMirrorNode( ves::xplorer::scenegraph::Group* );
 
     ///\@{
     lfx::core::vtk::DataSetPtr GetCfdDataSet( int );
@@ -233,7 +229,6 @@ private:
     vpr::Mutex mValueLock;
     std::vector<vtkDataSet* > waitingdatalist;
     std::string currentsurfacefilename;
-    bool mirrorDataFlag;
 
     osg::ref_ptr< ves::xplorer::scenegraph::Group > classic;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased;
@@ -251,10 +246,6 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
     ///Active dataset
     lfx::core::vtk::DataSetPtr activeDataSet;
-    ///Way hold hack node...there definitely is a better way
-    ves::xplorer::scenegraph::Clone* mirrorNode;
-    ///Way hold hack node...there definitely is a better way
-    osg::ref_ptr< ves::xplorer::scenegraph::Group > mirrorGroupNode;
 
     //the information for following three variables should be transfered from cfdApp
     ModelTypeIndex mModelType;

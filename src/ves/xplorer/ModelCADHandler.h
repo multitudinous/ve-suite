@@ -54,7 +54,6 @@ namespace scenegraph
 class DCS;
 class CADEntity;
 class CADEntityHelper;
-class Clone;
 }
 }
 }
@@ -122,10 +121,6 @@ public:
     ///\param assemblyID The xml id for the assembly
     void CreateAssembly( const std::string& assemblyID );
 
-    ///Create a new clone
-    void CreateClone( const std::string& cloneID,
-                      const std::string& originalID,
-                      const std::string& orignalType );
 
     ///Create a new part
     ///\param fileName The filename of the part to load
@@ -180,13 +175,6 @@ public:
     ///\param assemblyID The ID of the assembly to search form
     ves::xplorer::scenegraph::DCS* GetAssembly( const std::string& assemblyID ) const;
 
-    ///Get a specific assembly.
-    ///\param assemblyID The ID of the assembly to search form
-    ves::xplorer::scenegraph::Clone* GetClone( const std::string& cloneID );
-
-    ///\param cloneID The part ID to search for.
-    bool CloneExists( const std::string& clone );
-
     ///\param partID The part ID to search for.
     bool PartExists( const std::string& partID ) const;
 
@@ -231,8 +219,6 @@ protected:
     std::map< std::string, ves::xplorer::scenegraph::CADEntity* > m_partList;
     ///A list of the current assemblies.
     std::map< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > > m_assemblyList;
-    ///A list of clones.
-    std::map< std::string, ves::xplorer::scenegraph::Clone* > m_cloneList;
     ///ID for root CAD node id
     std::string m_rootCADNodeID;
     ///Attribute list mapping for all CAD

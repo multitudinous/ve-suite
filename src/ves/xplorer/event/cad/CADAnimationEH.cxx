@@ -36,7 +36,6 @@
 #include <ves/xplorer/ModelHandler.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
-#include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/util/AnimationNonInterpolatedPath.h>
 
 #include <ves/open/xml/XMLObject.h>

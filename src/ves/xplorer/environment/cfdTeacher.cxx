@@ -34,7 +34,6 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
-#include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/Group.h>
 
 #include <ves/xplorer/ModelHandler.h>

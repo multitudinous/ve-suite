@@ -35,7 +35,6 @@
 #include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
-#include <ves/xplorer/scenegraph/Clone.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -102,13 +101,6 @@ void CADTransformEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
                 transform = m_cadHandler->GetAssembly( nodeID->GetDataString() );
             }
         }
-        /*else if( nodeType->GetDataString() == std::string( "Clone" ) )
-        {
-            if( m_cadHandler->CloneExists( nodeID->GetDataString() ) )
-            {
-                transform = m_cadHandler->GetClone( nodeID->GetDataString() )->GetClonedGraph();
-            }
-        }*/
 
         if( transform )
         {
