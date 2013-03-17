@@ -55,6 +55,10 @@ class TreeTab;
 
 class TreeModel;
 
+namespace osg
+{
+class PositionAttitudeTransform;
+}
 /*!\file TreeTab.h
  * Tree Tab
  * \class ves::conductor::TreeTab
@@ -108,7 +112,7 @@ protected:
     /// Syncs db with current transform info read from DCS. This is done
     /// right after a CADPropertySet is read from the db but before its
     /// live properties are enabled.
-    void SyncTransformFromDCS( ves::xplorer::scenegraph::DCS* dcs );
+    void SyncTransformFromDCS( osg::PositionAttitudeTransform* dcs );
 
     void OnNodeAdded( std::string const& filename );
     void ScenegraphChanged();
@@ -160,7 +164,6 @@ protected Q_SLOTS:
     void on_m_expandAllButton_clicked();
 
 Q_SIGNALS:
-
     /// Queued signal emitted when OnObjectPicked slot is called. This is
     /// required for thread safety
     void ObjectPicked( osg::NodePath nodePath );

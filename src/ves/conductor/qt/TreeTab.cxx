@@ -67,8 +67,6 @@
 
 #include <osgwTools/NodePathUtils.h>
 
-#include <iostream>
-
 #include <crunchstore/SearchCriterion.h>
 
 #include <boost/algorithm/string/replace.hpp>
@@ -76,6 +74,13 @@
 #include <boost/uuid/string_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/lexical_cast.hpp>
+
+#include <gmtl/Coord.h>
+#include <gmtl/Generate.h>
+#include <gmtl/EulerAngle.h>
+#include <gmtl/AxisAngle.h>
+
+#include <iostream>
 
 Q_DECLARE_METATYPE( osg::NodePath )
 Q_DECLARE_METATYPE( std::string )
@@ -271,11 +276,13 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
             {
                 type = "CAD";
                 found = true;
+                break;
             }
             else if( descList.at( i ) == "VE_DATA_NODE" )
             {
                 type = "DATA";
                 found = true;
+                break;
             }
         }
     }
@@ -290,6 +297,7 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
         ///even if it is not a top level node
         if( node )
         {
+            std::cout << "setting cad node " << std::endl;
             ves::xplorer::scenegraph::FindParentsVisitor
             parentVisitor( node, ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
             LOG_DEBUG( "Trying to select " << node->getName() );
@@ -316,12 +324,11 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     }
     LOG_DEBUG( "Node is of type " << type );
 
-    ves::xplorer::scenegraph::DCS* newSelectedDCS =
-        static_cast< ves::xplorer::scenegraph::DCS* >( node );
-
     // Create a CADPropertySet and load it in the browser
     if( type == "CAD" )
     {
+        ves::xplorer::scenegraph::DCS* newSelectedDCS =
+            static_cast< ves::xplorer::scenegraph::DCS* >( node );
         mActiveSet = propertystore::PropertySetPtr( new ves::xplorer::data::CADPropertySet() );
         mActiveSet->SetUUID( newSelectedDCS->GetCADPart()->GetID() );
     }
@@ -334,7 +341,10 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     mActiveSet->Load();
     ui->cadPropertyBrowser->ParsePropertySet( mActiveSet, false );
 
-    SyncTransformFromDCS( newSelectedDCS );
+    osg::PositionAttitudeTransform* trans =
+        dynamic_cast< osg::PositionAttitudeTransform* >( node );
+
+    SyncTransformFromDCS( trans );
     // Turn on live updates
     mActiveSet->EnableLiveProperties( true );
 
@@ -356,32 +366,37 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TreeTab::SyncTransformFromDCS( ves::xplorer::scenegraph::DCS* dcs )
+void TreeTab::SyncTransformFromDCS( osg::PositionAttitudeTransform* dcs )
 {
     if( !mActiveSet.get() )
     {
         return;
     }
 
-    //ves::xplorer::Model* model = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-    //ves::xplorer::ModelCADHandler* mch = model->GetModelCADHandler();
-    //if( mch->PartExists( mActiveSet->GetUUIDAsString() ) )
     {
-        //  ves::xplorer::scenegraph::CADEntity* cad = mch->GetPart( mActiveSet->GetUUIDAsString() );
-        //  ves::xplorer::scenegraph::DCS* dcs = cad->GetDCS();
-
-        double* trans = dcs->GetVETranslationArray();
+        osg::Vec3d trans = dcs->getPosition();
         mActiveSet->SetPropertyValue( "Transform_Translation_X", trans[0] );
         mActiveSet->SetPropertyValue( "Transform_Translation_Y", trans[1] );
         mActiveSet->SetPropertyValue( "Transform_Translation_Z", trans[2] );
 
         // Rotation angles are in order z, x, y
-        double* rot = dcs->GetRotationArray();
-        mActiveSet->SetPropertyValue( "Transform_Rotation_X", rot[1] );
-        mActiveSet->SetPropertyValue( "Transform_Rotation_Y", rot[2] );
-        mActiveSet->SetPropertyValue( "Transform_Rotation_Z", rot[0] );
+        {
+            osg::Quat quat = dcs->getAttitude();
+            gmtl::Quatd tempQuat( quat[0], quat[1], quat[2], quat[3] );
+            gmtl::Matrix44d _vjMatrix = gmtl::makeRot< gmtl::Matrix44d >( tempQuat );
+            gmtl::EulerAngleZXYd tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYd >( _vjMatrix );
+            
+            double rot[ 3 ];
+            rot[0] = gmtl::Math::rad2Deg( tempZXY[0] );
+            rot[1] = gmtl::Math::rad2Deg( tempZXY[1] );
+            rot[2] = gmtl::Math::rad2Deg( tempZXY[2] );
+            
+            mActiveSet->SetPropertyValue( "Transform_Rotation_X", rot[1] );
+            mActiveSet->SetPropertyValue( "Transform_Rotation_Y", rot[2] );
+            mActiveSet->SetPropertyValue( "Transform_Rotation_Z", rot[0] );
+        }
 
-        double* scale = dcs->GetScaleArray();
+        osg::Vec3d scale = dcs->getScale();
         mActiveSet->SetPropertyValue( "Transform_Scale_X", scale[0] );
         mActiveSet->SetPropertyValue( "Transform_Scale_Y", scale[1] );
         mActiveSet->SetPropertyValue( "Transform_Scale_Z", scale[2] );
@@ -403,9 +418,6 @@ void TreeTab::on_OKButton_clicked()
     if( mActiveSet )
     {
         mActiveSet->Save();
-        //        ves::xplorer::ModelHandler::instance()->GetActiveModel()->
-        //                GetModelCADHandler()->
-        //                UpdateCADNode( mActiveSet->GetUUIDAsString() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
