@@ -55,7 +55,7 @@
 
 #include <ves/xplorer/Debug.h>
 
-#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/operations.hpp> 
 #include <boost/filesystem/path.hpp>
 #include <boost/version.hpp>
 
@@ -302,12 +302,12 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                 else
                 {
                     lastDataAdded->LoadData();
-                    ves::xplorer::event::data::WriteDatabaseEntry( lastDataAdded );
                     std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetChildDataSets();
                     for( size_t i = 0; i < dataSetVector.size(); ++i )
                     {
                         ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ] );
                     }
+                    ves::xplorer::event::data::WriteDatabaseEntry( lastDataAdded );
                 }
                 //If the data load failed
                 if( !lastDataAdded->GetDataSet() )

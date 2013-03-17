@@ -560,7 +560,7 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
         //send command to get results
         if( getResults )
         {
-            std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+            /*std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
             XMLReaderWriter commandWriter;
             CommandPtr returnState( new Command() );
             returnState->SetCommandName( "Get XML Model Results" );
@@ -584,7 +584,7 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
                                  returnState, "vecommand" ) );
             commandWriter.UseStandaloneDOMDocumentManager();
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
-            nodes.clear();
+            nodes.clear();*/
             //Get results
             /*try
             {

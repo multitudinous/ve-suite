@@ -126,16 +126,15 @@ Model::~Model()
      }
      _eventHandlers.clear();*/
 
-    mVTKDataSets.clear();
+    //mVTKDataSets.clear();
     
-    /*for( std::vector< lfx::core::vtk::DataSetPtr >::iterator iter = mVTKDataSets.begin();
+    for( std::vector< lfx::core::vtk::DataSetPtr >::iterator iter = mVTKDataSets.begin();
             iter != mVTKDataSets.end(); )
     {
-        //std::cout << "Deleteing " << ( *iter )->GetFileName() << std::endl;
-        delete *iter;
+        std::cout << "Deleting " << ( *iter )->GetFileName() << std::endl;
+        //delete *iter;
         iter = mVTKDataSets.erase( iter );
-    }*/
-
+    }
     //texture data cleanup
     /*TextureDataSetList::iterator tDataSet;
     for(tDataSet=mTextureDataSets.begin(); tDataSet!=mTextureDataSets.end();tDataSet++ )
