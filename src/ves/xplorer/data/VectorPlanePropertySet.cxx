@@ -172,7 +172,7 @@ void VectorPlanePropertySet::CreateSkeleton()
     GetProperty( "Mode_CyclePrecomputedSurfaces" )->SetDisabled();
 
 
-    AddProperty( "PlaneLocation", 0.00, "Plane Location" );
+    AddProperty( "PlaneLocation", 50.00, "Plane Location" );
     SetPropertyAttribute( "PlaneLocation", "minimumValue", 0.00 );
     SetPropertyAttribute( "PlaneLocation", "maximumValue", 100.00 );
 
