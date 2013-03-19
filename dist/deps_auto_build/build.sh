@@ -35,6 +35,7 @@ VES_30_PACKAGES+=("propertystore")
 VES_30_PACKAGES+=("osgephemeris")
 VES_30_PACKAGES+=("bdfx")
 VES_30_PACKAGES+=("xerces")
+VES_30_PACKAGES+=("latticefx")
 
 #
 # Define the platform
