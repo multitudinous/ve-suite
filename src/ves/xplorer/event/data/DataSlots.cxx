@@ -117,7 +117,7 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
         std::vector<double> translation( start, stop );
         std::vector<double> rotation( start + 3, stop + 3 );
         std::vector<double> scale( start + 6, stop + 6 );
-        
+
         dcs->setScale( osg::Vec3d( scale[ 0 ], scale[ 1 ], scale[ 2 ] ) );
         dcs->setPosition( osg::Vec3d( translation[ 0 ], translation[ 1 ], translation[ 2 ] ) );
         dcs->setAttitude( osgwTools::makeHPRQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );

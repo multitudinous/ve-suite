@@ -64,6 +64,8 @@
 
 #include <latticefx/core/vtk/DataSet.h>
 
+#include <osgwTools/Quat.h>
+
 using namespace ves::xplorer::event;
 using namespace ves::open;
 using namespace ves::open::xml;
@@ -203,13 +205,19 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                     << "|\t*************Now starting to load new data************ "
                     << std::endl << vprDEBUG_FLUSH;
 
-            /*lastDataAdded->GetDCS()->SetScaleArray(
-                tempInfoPacket->GetTransform()->GetScaleArray()->GetArray() );
-            lastDataAdded->GetDCS()->SetTranslationArray(
-                tempInfoPacket->GetTransform()->GetTranslationArray()->GetArray() );
-            lastDataAdded->GetDCS()->SetRotationArray(
-                tempInfoPacket->GetTransform()->GetRotationArray()->GetArray() );*/
-
+            //Setup the transform for the dataset
+            {
+                TransformPtr dataTransform = tempInfoPacket->GetTransform();
+                std::vector< double > translation = dataTransform->GetTranslationArray()->GetArray();
+                std::vector< double > rotation = dataTransform->GetRotationArray()->GetArray();
+                std::vector< double > scale = dataTransform->GetScaleArray()->GetArray();
+                
+                osg::ref_ptr< osg::PositionAttitudeTransform > transform = lastDataAdded->GetDCS();
+                transform->setScale( osg::Vec3d( scale[ 0 ], scale[ 1 ], scale[ 2 ] ) );
+                transform->setPosition( osg::Vec3d( translation[ 0 ], translation[ 1 ], translation[ 2 ] ) );
+                transform->setAttitude( osgwTools::makeHPRQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );
+            }
+            
             vprDEBUG( vesDBG, 0 ) << "|\tvtk file = " << vtk_filein
                                   << std::endl << vprDEBUG_FLUSH;
             lastDataAdded->SetFileName( vtk_filein );
