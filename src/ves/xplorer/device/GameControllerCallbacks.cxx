@@ -961,7 +961,7 @@ void GameControllerCallbacks::ConfigureGameControllerDevices()
             {
                 configuration->load( xplorerBaseDir + "xbox_360_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
             }
-            else if( joystickType == "Logitech Cordless RumblePad 2" )
+            else if( (joystickType == "Logitech Cordless RumblePad 2") || (joystickType == "Logitech Logitech Cordless RumblePad 2") )
             {
                 configuration->load( xplorerBaseDir + "rumble_pad_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
             }
@@ -971,7 +971,9 @@ void GameControllerCallbacks::ConfigureGameControllerDevices()
             }
             else
             {
-                std::cout << "This " << joystickType << " game controller is not supported." << std::endl;
+                std::cout << "This " << joystickType << " game controller is not supported. We will use" << std::endl
+                    << "the generic joystick config file generic_js.jconf." << std::endl;
+                configuration->load( xplorerBaseDir + "generic_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
             }
             jccl::ConfigManager::instance()->addConfigurationAdditions( configuration );
             delete configuration;
