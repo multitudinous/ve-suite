@@ -503,7 +503,8 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     }
 
     //if( !root.valid() && occlude )
-    if( occlude )
+    //if( occlude )
+    if( 0 )
     {
         osg::ref_ptr< osg::Group > tempGroup = new osg::Group();
         tempGroup->addChild( tempCADNode.get() );
