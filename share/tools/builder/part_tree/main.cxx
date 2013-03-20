@@ -10,6 +10,8 @@
 #include <iostream>
 #include <string>
 
+#include <boost/filesystem/path.hpp>
+
 int main( int argc, char* argv[] )
 {
     if( argc < 2 )
@@ -24,8 +26,11 @@ int main( int argc, char* argv[] )
         std::cout << "Invalid file loaded" << std::endl;
         return 1;
     }
+    
+    boost::filesystem::path p( argv[ 1 ] );
+
     //create stream
-    std::string fileName( "partTree.txt" );
+    std::string fileName = p.parent_path().string() + "/partTree.txt";
     //create visitor
     ves::xplorer::scenegraph::CreatePartTreeFileVisitor partTreeVisitor( tempCADNode.get(), fileName );
     //put visitor on node

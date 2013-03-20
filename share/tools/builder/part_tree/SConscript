@@ -10,11 +10,9 @@ srcs = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
 env = ves_pkg.getEnv().Clone()
-#env.Append( LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util')],
-#            LIBS = ['ves_xplorer_util'])
 
-#boost_options.apply( env )
 osg_options.apply( env )
+boost_options.apply( env )
 
 prog = ves_pkg.createProgram('osgPartTree' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
