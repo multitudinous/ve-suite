@@ -29,5 +29,7 @@ then
     usage
     exit 1
 fi
- 
+
+export DISPLAY=:0
+
 ves_xplorer --vrjslave --listen_port=${LISTEN_PORT} --VESLog=debug --VESRTT
