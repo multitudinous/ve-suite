@@ -368,12 +368,13 @@ void WarrantyToolPlugin_UIDialog::ParseDataFile( const std::string& csvFilename 
         }
         boost::algorithm::trim( sCol1 );
         boost::algorithm::replace_all( sCol1, " ", "_" );
-        data.push_back( sCol1 );
-        csvDataMap[ columnCount ] = data;
-        if( sCol1 == "Part_Number" )
+        if( ("Part_Number" == sCol1) || ("MATERIAL" == sCol1) )
         {
             partNumberColumn = columnCount;
+            sCol1 = "Part_Number";
         }
+        data.push_back( sCol1 );
+        csvDataMap[ columnCount ] = data;
         columnCount += 1;
     }
 

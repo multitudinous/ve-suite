@@ -147,6 +147,9 @@ private:
     ///Clear the current view
     void Clear();
 
+    ///Validate the cad file against the csv file
+    void ValidateDataFile();
+
     ///line segment for intersection tests
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
     ///The start end point

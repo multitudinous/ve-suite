@@ -116,7 +116,6 @@ WarrantyToolGP::WarrantyToolGP()
     m_currentStatement( 0 ),
     m_connections( 0 )
 {
-    //std::cout << "WarrantyToolGP ctor " << this << std::endl << std::flush;
     //Needs to match inherited UIPluginBase class name
     mObjectName = "WarrantyToolUI";
     m_dbFilename = "sample.db";
@@ -305,20 +304,10 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             {
                 ParseDataFile( dataPath.string() );
             }
-            /*for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
-            {
-                ves::xplorer::scenegraph::util::FindChildWithNameVisitor 
-                    childVisitor( mDCS.get(), mLoadedPartNumbers.at( i ), false, true );
-                if( childVisitor.FoundChild() )
-                {
-                    ;//std::cout << "Found graphics node match for " << mLoadedPartNumbers.at( i ) << std::endl;
-                }
-                else
-                {
-                    std::cout << "Did not find graphics node for " << mLoadedPartNumbers.at( i ) << std::endl;
-                }
-            }*/
-            CreateTextTextures();
+            
+            ValidateDataFile();
+            
+            //CreateTextTextures();
         }
         else if( dvpName == "SET_ACTIVE_TABLES" )
         {
@@ -438,12 +427,14 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
             sCol1 = headerTemp.str();
         }
         ReplaceSpacesCharacters( sCol1 );
-        data.push_back( sCol1 );
-        csvDataMap[ columnCount ] = data;
-        if( "Part_Number" == sCol1 )
+
+        if( ("Part_Number" == sCol1) || ("MATERIAL" == sCol1) )
         {
             m_partNumberColumn = columnCount;
+            sCol1 = "Part_Number";
         }
+        data.push_back( sCol1 );
+        csvDataMap[ columnCount ] = data;
         
         //if( boost::algorithm::ifind_first( sCol1, "promise_date" ) )
         if( boost::algorithm::iequals( sCol1, "promise_date" ) )
@@ -455,7 +446,8 @@ void WarrantyToolGP::ParseDataFile( const std::string& csvFilename )
     }
 
     std::cout << "Part Number Column = " << m_partNumberColumn 
-        << " Promise Date Column = " << m_promiseDateColumn << std::endl;
+        << " Promise Date Column = " << m_promiseDateColumn
+        << " Number of Columns = " << columnCount << std::endl;
 
     while( iss.good() )
     {
@@ -1812,5 +1804,37 @@ void WarrantyToolGP::Clear()
     //Clear the list of active part numbers
     m_assemblyPartNumbers.clear();
     m_joinedPartNumbers.clear();
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::ValidateDataFile()
+{
+    std::ofstream present("cad_parts_present.txt");
+    std::ofstream notFound("cad_parts_not_found.txt");
+    present << "Found graphics node match for " << std::endl;
+    notFound << "Did not find graphics node for " << std::endl;
+    size_t foundParts = 0;
+    size_t notFoundParts = 0;
+    //We skip the first one because it is the column header
+    for( size_t i = 1; i < mLoadedPartNumbers.size(); ++i )
+    {
+        ves::xplorer::scenegraph::util::FindChildWithNameVisitor
+            childVisitor( mDCS.get(), mLoadedPartNumbers.at( i ), false, true );
+        if( childVisitor.FoundChild() )
+        {
+            foundParts += 1;
+            present << mLoadedPartNumbers.at( i ) << std::endl;
+        }
+        else
+        {
+            notFoundParts += 1;
+            notFound << mLoadedPartNumbers.at( i ) << std::endl;
+        }
+    }
+    notFound << notFoundParts << " parts not found."std::endl;
+    present << foundParts << " parts found." << std::endl;
+    std::cout << "Found " << foundParts << " matched parts and " << notFoundParts << " unmatched parts." << std::endl;
+    
+    notFound.close();
+    present.close();
 }
 ////////////////////////////////////////////////////////////////////////////////
