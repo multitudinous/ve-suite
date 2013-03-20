@@ -2,32 +2,31 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-       <input_manager name="IM SDL Joystick" version="2">
-           <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
-           <driver>SdlJoystick_drv</driver>
-           <!--driver>DirectXJoystick_drv</driver-->
-       </input_manager>
-       <sdl_joystick name="Joystick0" version="1">
-           <device>0</device>
-           <min>0.0</min>
-           <max>255.0</max>
-       </sdl_joystick>
-       <sdl_joystick name="Joystick1" version="1">
-           <device>1</device>
-           <min>0.0</min>
-           <max>255.0</max>
-       </sdl_joystick>
-       <sdl_joystick name="Joystick2" version="1">
-           <device>2</device>
-           <min>0.0</min>
-           <max>255.0</max>
-       </sdl_joystick>
-       <sdl_joystick name="Joystick3" version="1">
-           <device>3</device>
-           <min>0.0</min>
-           <max>255.0</max>
-       </sdl_joystick>
-       <user name="User1" version="1">
+      <input_manager name="IM SDL Joystick" version="2">
+         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
+         <driver>SdlJoystick_drv</driver>
+      </input_manager>
+      <sdl_joystick name="Joystick0" version="2">
+         <device>0</device>
+         <min>0.0</min>
+         <max>255.0</max>
+      </sdl_joystick>
+      <sdl_joystick name="Joystick1" version="2">
+         <device>1</device>
+         <min>0.0</min>
+         <max>255.0</max>
+      </sdl_joystick>
+      <sdl_joystick name="Joystick2" version="2">
+         <device>2</device>
+         <min>0.0</min>
+         <max>255.0</max>
+      </sdl_joystick>
+      <sdl_joystick name="Joystick3" version="2">
+         <device>3</device>
+         <min>0.0</min>
+         <max>255.0</max>
+      </sdl_joystick>
+      <user name="User1" version="1">
          <head_position>VJHead</head_position>
          <interocular_distance>0.0</interocular_distance>
       </user>
@@ -241,12 +240,6 @@
          <translation_coordinate_system>1</translation_coordinate_system>
          <rotation_coordinate_system>1</rotation_coordinate_system>
       </simulated_positional_device>
-      <!--
-      <digital_proxy name="VJSystemStopKernelProxy" version="1">
-         <device>DigitalSystemControls</device>
-         <unit>0</unit>
-      </digital_proxy>
-      -->
       <digital_proxy name="VJAppExitProxy" version="1">
          <device>AppDigitalSim</device>
          <unit>0</unit>
@@ -259,36 +252,12 @@
          <device>SimCamera</device>
          <unit>0</unit>
       </position_proxy>
-      <!--alias name="VJWand" version="1">
-         <proxy>RelativeWand Proxy</proxy>
-      </alias-->
-      <!--alias name="VJSystemStopKernel" version="1">
-         <proxy>VJSystemStopKernelProxy</proxy>
-      </alias-->
       <alias name="VJKeyboard" version="1">
          <proxy>SimKeyboard Proxy</proxy>
       </alias>
       <alias name="VJHead" version="1">
          <proxy>Head Proxy</proxy>
       </alias>
-      <!--alias name="VJButton5" version="1">
-         <proxy>NONE</proxy>
-      </alias>
-      <alias name="VJButton4" version="1">
-         <proxy>NONE</proxy>
-      </alias>
-      <alias name="VJButton3" version="1">
-         <proxy>NONE</proxy>
-      </alias>
-      <alias name="VJButton2" version="1">
-         <proxy>NONE</proxy>
-      </alias>
-      <alias name="VJButton1" version="1">
-         <proxy>NONE</proxy>
-      </alias>
-      <alias name="VJButton0" version="1">
-         <proxy>NONE</proxy>
-      </alias-->
       <position_proxy name="RelativeWand Proxy" version="1">
          <device>SimRelativePosition1</device>
          <unit>0</unit>
@@ -588,6 +557,6 @@
          <translation_coordinate_system>0</translation_coordinate_system>
          <rotation_coordinate_system>0</rotation_coordinate_system>
       </simulated_positional_device>
-  </elements>
+   </elements>
 </configuration>
 
