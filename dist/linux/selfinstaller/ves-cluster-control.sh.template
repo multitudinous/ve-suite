@@ -133,8 +133,6 @@ case "${ACTION}" in
         
         getRenderNodes "${CLUSTER_CONFIG_FILE}"
 
-        launch-ves_xplorer-master.sh -j "${VRJ_CONFIG_FILE}" &
-        
         for node in ${RENDER_NODES}
         do
             unset LISTEN_PORT
@@ -142,6 +140,8 @@ case "${ACTION}" in
 
             ssh ${node} "/bin/bash -c 'source ${VES_ENV_FILE} && launch-ves_xplorer-rendernode.sh -p ${LISTEN_PORT}'" &
         done
+
+        launch-ves_xplorer-master.sh -j "${VRJ_CONFIG_FILE}"
         ;;
     kill)
         killall -9 ves_xplorer
