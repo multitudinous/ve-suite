@@ -1830,7 +1830,7 @@ void WarrantyToolGP::ValidateDataFile()
             notFound << mLoadedPartNumbers.at( i ) << std::endl;
         }
     }
-    notFound << notFoundParts << " parts not found."std::endl;
+    notFound << notFoundParts << " parts not found." << std::endl;
     present << foundParts << " parts found." << std::endl;
     std::cout << "Found " << foundParts << " matched parts and " << notFoundParts << " unmatched parts." << std::endl;
     
