@@ -17,14 +17,14 @@ int getRootWindowSize(int *w, int *h)
     
     pdsp = XOpenDisplay( NULL );
     if ( !pdsp ) {
-        fprintf(stderr, "Failed to open default display.\n");
+        std::cout << "Failed to open default display." << std::endl;
         return -1;
     }
     
     wid = DefaultRootWindow( pdsp );
     if ( 0 > wid ) {
-        fprintf(stderr, "Failed to obtain the root windows Id "
-                "of the default screen of given display.\n");
+        std::cout << "Failed to obtain the root windows Id " <<
+            "of the default screen of given display." << std::endl;
         return -2;
     }
     
@@ -44,13 +44,13 @@ int getScreenSize(int *w, int*h)
     
     pdsp = XOpenDisplay( NULL );
     if ( !pdsp ) {
-        fprintf(stderr, "Failed to open default display.\n");
+        std::cout << "Failed to open default display." << std::endl;
         return -1;
     }
     
     pscr = DefaultScreenOfDisplay( pdsp );
     if ( !pscr ) {
-        fprintf(stderr, "Failed to obtain the default screen of given display.\n");
+        std::cout << "Failed to obtain the default screen of given display." << std::endl;
         return -2;
     }
     
