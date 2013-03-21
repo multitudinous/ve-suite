@@ -22,11 +22,12 @@ int getRootWindowSize(int *w, int *h)
     }
     
     wid = DefaultRootWindow( pdsp );
-    if ( 0 > wid ) {
+    //Window is an unsigned int evidently...so this is always false.
+    /*if ( 0 > wid ) {
         std::cout << "Failed to obtain the root windows Id " <<
             "of the default screen of given display." << std::endl;
         return -2;
-    }
+    }*/
     
     Status ret = XGetWindowAttributes( pdsp, wid, &xwAttr );
     *w = xwAttr.width;
