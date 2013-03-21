@@ -74,7 +74,7 @@ std::pair< int, int > GetDesktopSize()
     int desktopHeight = GetSystemMetrics( SM_CYSCREEN );
     desktopSize = std::make_pair< int, int >( desktopWidth, desktopHeight );
 #elif defined( VPR_OS_Linux )
-    int w, h;
+    int w = 0, h = 0;
     getScreenSize(&w, &h);
     getRootWindowSize(&w, &h);
     desktopSize = std::make_pair< int, int >( w, h );
