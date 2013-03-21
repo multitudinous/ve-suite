@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
+#include "GetDesktopSize.h"
 #include "AppWrapper.h"
 #include "App.h"
 
@@ -87,18 +88,10 @@ AppWrapper::AppWrapper( int argc,  char* argv[], boost::program_options::variabl
     bool desktopModeOp = vm["VESDesktopMode"].as<bool>();
     if( desktopModeOp )
     {
-#ifdef WIN32
-        {
-            std::cout << "|\tEnabling Desktop Mode" << std::endl;
-            desktopMode = true;
-            //int dwWidth = GetSystemMetrics(SM_CXBORDER);
-            desktopWidth = GetSystemMetrics( SM_CXSCREEN );
-            //int dwHeight = GetSystemMetrics(SM_CYBORDER);
-            desktopHeight = GetSystemMetrics( SM_CYSCREEN );
-        }
-#else
-        std::cout << "Automatic desktop mode not yet supported on this platform" << std::endl;
-#endif
+        desktopMode = true;
+        std::pair< int, int > screenSize = GetDesktopSize();
+        desktopWidth = screenSize.first;
+        desktopHeight = screenSize.second;
     }
     else if( vm.count( "VESDesktop" ) )
     {
