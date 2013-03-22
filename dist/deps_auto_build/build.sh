@@ -227,7 +227,8 @@ echo "
     -a      Specify if we want to build 32 bit on 64 bit
     -g      Install the deps for ves 2.2 or 3.0 - 22 or 30 are valid options
     -F      Install all of the valid deps that have been built
-    -D      Build release with debug symbols" >&2
+    -D      Build release with debug symbols
+    -z      Compress the install directory of the specified library" >&2
 }
 
 #
@@ -736,16 +737,23 @@ function e()
     if [ -z "${INSTALL_DIR}" ]; then echo "INSTALL_DIR undefined in package $package"; return; fi
     if [ ! -d "${INSTALL_DIR}" ]; then echo "${INSTALL_DIR} non existent."; return; fi
     if [ ! -d "${DEPS_INSTALL_DIR}" ]; then mkdir -p "${DEPS_INSTALL_DIR}"; fi
-    
+
+    cd "${DEV_BASE_DIR}"
+    REL_INSTALL_DIR="${INSTALL_DIR#$DEV_BASE_DIR/}"
+    REL_BASE_DIR="${BASE_DIR#$DEV_BASE_DIR/}"
+
     case $PLATFORM in
       Windows )
-        if [ -z "${ISS_FILENAME}" ]; then echo "ISS_FILENAME undefined in package $package"; return; fi
-        innosetup;
+        #if [ -z "${ISS_FILENAME}" ]; then echo "ISS_FILENAME undefined in package $package"; return; fi
+        #innosetup;
+        zip -r "${REL_BASE_DIR}".zip "${REL_INSTALL_DIR}"
         ;;
       Darwin | Linux )
-        cd "${INSTALL_DIR}"
-        cp -R "${INSTALL_DIR}"/. "${DEPS_INSTALL_DIR}"
-        cd "${PRESENT_DIR}"
+        #cd "${INSTALL_DIR}"
+        #cp -R "${INSTALL_DIR}"/. "${DEPS_INSTALL_DIR}"
+        #cd "${PRESENT_DIR}"
+        #echo "${REL_INSTALL_DIR}"
+        tar -jcvf "${REL_BASE_DIR}".tar.bz2 "${REL_INSTALL_DIR}"
         ;;
     esac
   fi
@@ -802,7 +810,7 @@ wget
 #
 # execute the script
 #
-while getopts "hkucpbj:U:tdg:aFD" opts
+while getopts "hkucpbj:U:tdg:aFDz" opts
 do
 case $opts in
   h)
@@ -844,6 +852,9 @@ case $opts in
     ;;
   D)
     export BUILD_TYPE=RelWithDebInfo
+    ;;
+  z)
+    export build_installer="yes"
     ;;
   ?)
     echo "Invalid option: $OPTARG" >&2
