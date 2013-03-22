@@ -25,11 +25,11 @@ fi
 case $PLATFORM in
   Windows)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/${BOOST_VERSION_DIR}" )
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -Dswitchwire_DIR="${switchwire_INSTALL_DIR}/lib" )
     CMAKE_PARAMS+=( -Dcrunchstore_DIR="${crunchstore_INSTALL_DIR}/lib" )
 
-    MSVC_CONFIG=RelWithDebInfo
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
       CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.0/bin/qmake.exe" )
@@ -42,13 +42,13 @@ case $PLATFORM in
     ;;
   Darwin)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -Dswitchwire_DIR="${switchwire_INSTALL_DIR}/lib" )
     CMAKE_PARAMS+=( -Dcrunchstore_DIR="${crunchstore_INSTALL_DIR}/lib" )
     ;;
   Linux)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -Dswitchwire_DIR="${switchwire_INSTALL_DIR}/lib64" )
     CMAKE_PARAMS+=( -Dcrunchstore_DIR="${crunchstore_INSTALL_DIR}/lib64" )
     ;;

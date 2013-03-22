@@ -30,8 +30,8 @@ CMAKE_PARAMS+=( -DGDAL_INCLUDE_DIR="${gdal_INSTALL_DIR}/include" )
 
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
-    MSVC_CONFIG=RelWithDebInfo
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else
@@ -65,7 +65,7 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DOSG_LIBRARY_RELEASE="${OSG_INSTALL_DIR}/lib/libosg.dylib" )
 
     CMAKE_PARAMS+=( -DBUILD_GDAL_PLUGIN_AS_BUNDLE=ON )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="/usr/include" )
     CMAKE_PARAMS+=( -DZLIB_LIBRARY="/usr/lib/libz.dylib" )
     CMAKE_PARAMS+=( -DGDAL_LIBRARY="${gdal_INSTALL_DIR}/lib/libgdal.dylib" )
@@ -84,7 +84,7 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DOSGVIEWER_LIBRARY_RELEASE="${OSG_INSTALL_DIR}/lib/libosgViewer.so" )
     CMAKE_PARAMS+=( -DOSG_LIBRARY_RELEASE="${OSG_INSTALL_DIR}/lib/libosg.so" )
 
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/libz.so" )
     CMAKE_PARAMS+=( -DGDAL_LIBRARY="${gdal_INSTALL_DIR}/lib/libgdal.so" )

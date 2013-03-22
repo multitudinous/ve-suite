@@ -16,8 +16,8 @@ case $PLATFORM in
     SOURCE_URL=http://sourceforge.net/projects/pcre/files/pcre/8.30/pcre-8.30.zip/download
     SOURCE_FORMAT=zip
 
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
-    MSVC_CONFIG=RelWithDebInfo
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else
@@ -28,11 +28,11 @@ case $PLATFORM in
   Darwin)
     SOURCE_URL=http://sourceforge.net/projects/pcre/files/pcre/8.30/pcre-8.30.tar.bz2/download
     SOURCE_FORMAT=bz2
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     ;;
   Linux)
     SOURCE_URL=http://sourceforge.net/projects/pcre/files/pcre/8.30/pcre-8.30.tar.bz2/download
     SOURCE_FORMAT=bz2
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     ;;
 esac

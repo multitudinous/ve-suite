@@ -21,8 +21,8 @@ VES_INSTALL_PARAMS+=( lib )
 
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
-    MSVC_CONFIG=RelWithDebInfo
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else
@@ -32,7 +32,7 @@ case $PLATFORM in
     #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
   Darwin | Linux)
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -DLIB_POSTFIX="" )
     ;;
 esac

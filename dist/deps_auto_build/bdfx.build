@@ -33,14 +33,14 @@ VES_INSTALL_PARAMS+=( share )
 case $PLATFORM in
   Windows)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/${BOOST_VERSION_DIR}" )
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
     #CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/osgwTools.lib" )
 
     CMAKE_PARAMS+=( -DPNG_PNG_INCLUDE_DIR="${PNG_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DPNG_LIBRARY="${PNG_INSTALL_DIR}/lib/libpng15.lib" )
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/zlib.lib" )
-    MSVC_CONFIG=RelWithDebInfo
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else
@@ -51,7 +51,7 @@ case $PLATFORM in
     ;;
   Darwin)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     #CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/libosgwTools.dylib" )
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="/usr/include" )
     CMAKE_PARAMS+=( -DZLIB_LIBRARY="/usr/lib/libz.dylib" )
@@ -60,7 +60,7 @@ case $PLATFORM in
     ;;
   Linux)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     #CMAKE_PARAMS+=( -DOSGWTOOLS_LIBRARY="${OSGWORKS_INSTALL_DIR}/lib/libosgwTools.so" )
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="/usr/include" )
     CMAKE_PARAMS+=( -DZLIB_LIBRARY="/usr/lib64/libz.so" )

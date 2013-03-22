@@ -15,8 +15,8 @@ SKIP_PREBUILD="yes"
 
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
-    MSVC_CONFIG=RelWithDebInfo
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else

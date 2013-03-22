@@ -30,10 +30,10 @@ VES_INSTALL_PARAMS+=( lib64 )
 
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
 
     #SCONS_PARAMS+=( MSVC_VERSION=9.0 )
-    MSVC_CONFIG=RelWithDebInfo
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ "$ARCH" = "64-bit" ]; then
       #SCONS_PARAMS+=( MSVS_ARCH=amd64 )
       #SCONS_PARAMS+=( var_arch=x64 )
@@ -49,12 +49,12 @@ case $PLATFORM in
   Darwin)
     #SCONS_PARAMS+=( var_arch=x64 )
     #SCONS_PARAMS+=( darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     ;;
   Linux)
     #SCONS_PARAMS+=( var_arch=x64 )
     #SCONS_PARAMS+=( BoostBaseDir="${BOOST_INSTALL_DIR}" )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
     CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
     ;;

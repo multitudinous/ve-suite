@@ -12,9 +12,9 @@ INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
 case $PLATFORM in
   Windows)
     PREBUILD_METHOD=cmake
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
     
-    MSVC_CONFIG=RelWithDebInfo
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else

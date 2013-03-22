@@ -14,8 +14,8 @@ CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
 
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
-    MSVC_CONFIG=RelWithDebInfo
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else
@@ -27,9 +27,9 @@ case $PLATFORM in
     SKIP_FPC_INSTALL="no"
     ;;
   Darwin)
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     ;;
   Linux)
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     ;;
 esac

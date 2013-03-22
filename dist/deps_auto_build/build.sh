@@ -184,7 +184,7 @@ function windows()
 #
 export CTAGS_INSTALL_DIR=/opt/local
 export TAGS_DIR=${HOME}/.vim/tags
-
+export BUILD_TYPE=Release
 #
 # some "over-writeable" variables
 #
@@ -226,7 +226,8 @@ echo "
     -t      Create tag file with exuberant ctags
     -a      Specify if we want to build 32 bit on 64 bit
     -g      Install the deps for ves 2.2 or 3.0 - 22 or 30 are valid options
-    -F      Install all of the valid deps that have been built " >&2
+    -F      Install all of the valid deps that have been built
+    -D      Build release with debug symbols" >&2
 }
 
 #
@@ -801,7 +802,7 @@ wget
 #
 # execute the script
 #
-while getopts "hkucpbj:U:tdg:aF" opts
+while getopts "hkucpbj:U:tdg:aFD" opts
 do
 case $opts in
   h)
@@ -840,6 +841,9 @@ case $opts in
     ;;
   F)# install all of the valid deps
     findvaliddeps
+    ;;
+  D)
+    export BUILD_TYPE=RelWithDebInfo
     ;;
   ?)
     echo "Invalid option: $OPTARG" >&2

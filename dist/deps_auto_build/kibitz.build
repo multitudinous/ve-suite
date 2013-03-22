@@ -20,13 +20,13 @@ case $PLATFORM in
   Windows)
     #unset PROJ_STR
     #unset BUILD_TARGET
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
 
     CMAKE_PARAMS+=( -DGLOG_INCLUDE_DIRS="${glog_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DGLOG_LIBRARIES="${glog_INSTALL_DIR}/lib/libglog.lib" )
     CMAKE_PARAMS+=( -DYAMLCPP_STATIC_LIBRARY=ON )
 
-    MSVC_CONFIG=RelWithDebInfo
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else
@@ -35,7 +35,7 @@ case $PLATFORM in
     MSVC_SOLUTION="kibitz.sln"
     ;;
   Darwin | Linux)
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     ;;
 esac
 

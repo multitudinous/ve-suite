@@ -18,9 +18,9 @@ CMAKE_PARAMS+=( -DBUILD_SHARED_LIBS=ON )
 
 case $PLATFORM in
   Windows)
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
-    MSVC_CONFIG=RelWithDebInfo
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else
@@ -33,12 +33,12 @@ case $PLATFORM in
   Darwin)
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="/usr/include" )
     CMAKE_PARAMS+=( -DZLIB_LIBRARY="/usr/lib/libz.dylib" )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     ;;
   Linux)
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="${ZLIB_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DZLIB_LIBRARY="${ZLIB_INSTALL_DIR}/lib/libz.so" )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
     CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
     ;;

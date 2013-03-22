@@ -28,9 +28,9 @@ fi
 case $PLATFORM in
   Windows)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include/${BOOST_VERSION_DIR}" )
-    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
 
-    MSVC_CONFIG=RelWithDebInfo
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
     else
@@ -41,10 +41,10 @@ case $PLATFORM in
     ;;
   Darwin)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     ;;
   Linux)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE=RelWithDebInfo )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     ;;
 esac
