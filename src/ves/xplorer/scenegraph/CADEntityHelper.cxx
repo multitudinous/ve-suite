@@ -94,22 +94,20 @@
 //#include <osgbBulletPlus/SaveRestore.h>
 
 #include <osgwTools/Version.h>
-#if OSGWORKS_VERSION >= 10002
-#include <osgwTools/RemoveLOD.h>
-#endif
+#include <osgwTools/CollapseLOD.h>
 
 #include <osg/Version>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-/*#if( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 4 ) )
+#if( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 4 ) )
 #include <osg/OcclusionQueryNode>
 #include <ves/xplorer/scenegraph/util/OcclusionQueryVisitor.h>
 #else
 #include <osgOQ/OcclusionQueryNode.h>
 #include <osgOQ/OcclusionQueryVisitor.h>
-#endif*/
-#include <osgwQuery/QueryUtils.h>
+#endif
+//#include <osgwQuery/QueryUtils.h>
 
 
 
@@ -364,16 +362,28 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     else
     {
         std::istringstream textNodeStream( filename );
+        //std::ofstream tempFile( "test_stream.osg" );
+        // tempFile << textNodeStream.str();
+        // tempFile.close();
         tempCADNode = osgDB::Registry::instance()->
-                      getReaderWriterForExtension( "osg" )->
-                      readNode( textNodeStream ).getNode();
+        getReaderWriterForExtension( "osg" )->
+        readNode( textNodeStream ).getNode();
     }
-
+    
     if( !tempCADNode.valid() )
     {
-        std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: "
-                  << filename << std::endl;
+        if( isStream )
+        {
+            std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file stream"
+            << std::endl;
+        }
+        else
+        {
+            std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: "
+            << filename << std::endl;
+        }
         return;
+        
     }
 
     if( mIsSTLFile )
@@ -407,7 +417,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         //This is not optimal but provides a way to remove LODs that are
         //problematic. We often run into problem LOD nodes when working with
         //data from the Priority 5 JT2OSG converter.
-        osgwTools::RemoveLOD removeLOD;
+        osgwTools::CollapseLOD removeLOD;
         tempCADNode->accept( removeLOD );
     }
 #endif
@@ -467,16 +477,16 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     //ves::xplorer::scenegraph::util::RescaleTextureVisitor
     //    textureVisitor( tempCADNode.get() );
 
-    /*#if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
+    #if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
         osg::ref_ptr< osg::OcclusionQueryNode > root;
         root = dynamic_cast< osg::OcclusionQueryNode* >( tempCADNode.get() );
     #else
         osg::ref_ptr< osgOQ::OcclusionQueryNode > root;
         root = dynamic_cast< osgOQ::OcclusionQueryNode* >( tempCADNode.get() );
-    #endif*/
+    #endif
 
-    //unsigned int occlusionThreshold = 1000;
-    //unsigned int visibilityThreshold = 100;
+    unsigned int occlusionThreshold = 1000;
+    unsigned int visibilityThreshold = 100;
     bool occlude = false;
 
     if( m_occlusionSettings == "Off" )
@@ -486,29 +496,28 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     else if( m_occlusionSettings == "Low" )
     {
         occlude = true;
-        //occlusionThreshold = 10000;
-        //visibilityThreshold = 100;
+        occlusionThreshold = 10000;
+        visibilityThreshold = 100;
     }
     else if( m_occlusionSettings == "Medium" )
     {
         occlude = true;
-        //occlusionThreshold = 5000;
-        //visibilityThreshold = 250;
+        occlusionThreshold = 5000;
+        visibilityThreshold = 250;
     }
     else if( m_occlusionSettings == "High" )
     {
         occlude = true;
-        //occlusionThreshold = 2500;
-        //visibilityThreshold = 500;
+        occlusionThreshold = 2500;
+        visibilityThreshold = 500;
     }
 
-    //if( !root.valid() && occlude )
+    if( !root.valid() && occlude )
     //if( occlude )
-    if( 0 )
     {
         osg::ref_ptr< osg::Group > tempGroup = new osg::Group();
         tempGroup->addChild( tempCADNode.get() );
-        /*
+
         osgOQ::OcclusionQueryNonFlatVisitor oqv;
         //Specify the vertex count threshold for performing
         // occlusion query tests.
@@ -535,9 +544,9 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( visibilityThreshold );
         tempGroup->accept( visibilityThresholdVisitor );
 
-        mCadNode = tempGroup.get();*/
+        mCadNode = tempGroup.get();
 
-
+        /*The osgWorks version of the new osgOQ tools.
         // Any models using occlusion query must render in front-to-back order.
         tempGroup->getOrCreateStateSet()->setRenderBinDetails( 0, _QUERY_FRONT_TO_BACK_BIN_NAME );
 
@@ -545,7 +554,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         // be the top-level Camera. We want to add queries starting at that node.
         osgwQuery::AddQueries aqs;
         tempGroup->accept( aqs );
-        mCadNode = tempGroup.get();
+        mCadNode = tempGroup.get();*/
     }
     else
     {
