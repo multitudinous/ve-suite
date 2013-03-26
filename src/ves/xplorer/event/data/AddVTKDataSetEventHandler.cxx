@@ -64,7 +64,7 @@
 
 #include <latticefx/core/vtk/DataSet.h>
 
-#include <osgwTools/Quat.h>
+#include <osgwTools/Orientation.h>
 
 using namespace ves::xplorer::event;
 using namespace ves::open;
@@ -215,7 +215,10 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                 osg::ref_ptr< osg::PositionAttitudeTransform > transform = lastDataAdded->GetDCS();
                 transform->setScale( osg::Vec3d( scale[ 0 ], scale[ 1 ], scale[ 2 ] ) );
                 transform->setPosition( osg::Vec3d( translation[ 0 ], translation[ 1 ], translation[ 2 ] ) );
-                transform->setAttitude( osgwTools::makeHPRQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );
+                {
+                    osg::ref_ptr< osgwTools::Orientation > tempQuat = new osgwTools::Orientation();
+                    transform->setAttitude( tempQuat->getQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );
+                }
             }
             
             vprDEBUG( vesDBG, 0 ) << "|\tvtk file = " << vtk_filein
