@@ -297,7 +297,6 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
         ///even if it is not a top level node
         if( node )
         {
-            std::cout << "setting cad node " << std::endl;
             ves::xplorer::scenegraph::FindParentsVisitor
             parentVisitor( node, ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
             LOG_DEBUG( "Trying to select " << node->getName() );

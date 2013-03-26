@@ -383,7 +383,6 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             << filename << std::endl;
         }
         return;
-        
     }
 
     if( mIsSTLFile )
