@@ -67,8 +67,14 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
+#include <ves/xplorer/data/DatabaseManager.h>
+
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
+
+#include <crunchstore/Persistable.h>
+#include <crunchstore/DataManager.h>
+#include <crunchstore/SearchCriterion.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -153,8 +159,13 @@ SteadyStateVizHandler::SteadyStateVizHandler()
                       m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_2( "%HideVizFeature",
-                      void( std::string const&, std::vector< bool > const& ),
+                      void( std::string const&, bool const& ),
                       &SteadyStateVizHandler::HideVizFeature,
+                      m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_2( "%HideVizFeatureByName",
+                      void( std::string const&, bool const& ),
+                      &SteadyStateVizHandler::HideVizFeatureByName,
                       m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -189,7 +200,7 @@ SteadyStateVizHandler::~SteadyStateVizHandler()
     vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SteadyStateVizHandler::HideVizFeature( const std::string& uuid, const std::vector< bool >& onOff )
+void SteadyStateVizHandler::HideVizFeature( const std::string& uuid, const bool& onOff )
 {
     LOG_DEBUG( "HideVizFeature = " << uuid );
     graphics_objects_map::iterator hashIter = m_graphicsObjectMap.find( vpr::GUID( uuid ) );
@@ -197,11 +208,42 @@ void SteadyStateVizHandler::HideVizFeature( const std::string& uuid, const std::
     {
         std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >& geode =
             hashIter->second->GetGeodes();
-        geode.back().get()->setNodeMask( !onOff.at( 0 ) );
+        geode.back().get()->setNodeMask( !onOff );
     }
     else
     {
         LOG_WARNING( "HideVizFeature: Unable to find relevant viz feature." );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void SteadyStateVizHandler::HideVizFeatureByName( const std::string& pattern, const bool& onOff )
+{
+    LOG_DEBUG( "HideVizFeatureByName "<< pattern );
+    std::vector< std::string > featureTypes;
+    featureTypes.push_back( "ContourPlane" );
+    featureTypes.push_back( "Isosurface" );
+    featureTypes.push_back( "Polydata" );
+    featureTypes.push_back( "Streamline" );
+    featureTypes.push_back( "VectorPlane" );
+    featureTypes.push_back( "VolumeVis" );
+
+    // Search through NameTag property of each of these types to get list of
+    // uuids to toggle.
+    crunchstore::SearchCriterion name( "NameTag", "LIKE", pattern );
+    std::vector< std::string > uuids;
+    for( size_t index = 0; index < featureTypes.size(); ++index )
+    {
+        std::vector< crunchstore::SearchCriterion > criteria;
+        criteria.push_back( name );
+        xplorer::data::DatabaseManager::instance()->GetDataManager()->
+                Search( featureTypes.at(index), criteria, "uuid", uuids );
+    }
+
+    // Hide or show everything in the results list.
+    for( size_t index = 0; index < uuids.size(); ++index )
+    {
+        LOG_DEBUG( "HideVizFeatureByName "<< uuids.at(index) );
+        HideVizFeature( uuids.at( index ), onOff );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -406,12 +406,10 @@ void VolumeVisPropertySet::EnableLiveProperties( bool live )
     else
     {
         {
-            const std::string slotName =
-                boost::lexical_cast<std::string>( this ) + ".TBETHideVizFeature";
-            std::vector< propertystore::PropertyPtr > dataLink;
-            dataLink.push_back( GetProperty( "Hide" ) );
             propertystore::MakeLiveBasePtr p(
-                new propertystore::MakeLiveLinked< bool >( m_UUIDString, dataLink, slotName ) );
+                        new propertystore::MakeLive< bool const& >( m_UUIDString,
+                                                             GetProperty("Hide"),
+                                                             "TBETHideVizFeature", true ) );
             m_liveObjects.push_back( p );
         }
         {

@@ -51,11 +51,14 @@
 
 #include <ves/xplorer/data/CADSubNodePropertySet.h>
 #include <ves/xplorer/data/CADPropertySet.h>
-
+#include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Logging.h>
+
+#include <crunchstore/DataManager.h>
+#include <crunchstore/SearchCriterion.h>
 
 /*#if( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 4 ) )
  #include <osg/OcclusionQueryNode>
@@ -205,6 +208,32 @@ static void ToggleCADNode( const std::string& nodeID,
 
             // ^^^ There was no code following the above comment in CADToggleEH.cxx
         }
+    }
+}
+//////////////////////////////////////////////////////////////////////////
+/**
+  * Turns CAD node(s) on or off in the scenegraph.
+  * @param pattern SQL-style name pattern of node to alter. ( "%" is wildcard)
+  * @param visible Whether the CAD should be visible
+  */
+static void ToggleCADNodeByName( const std::string& pattern,
+                           bool const& visible )
+{
+    std::cout << "ToggleCADNodeByName: " << pattern << ", " << visible << std::endl << std::flush;
+    std::vector< std::string > uuids;
+    crunchstore::SearchCriterion name( "NameTag", "LIKE", pattern );
+    std::vector< crunchstore::SearchCriterion > criteria;
+    criteria.push_back( name );
+    xplorer::data::DatabaseManager::instance()->GetDataManager()->
+            Search( "CADPropertySet", criteria, "uuid", uuids );
+
+    std::cout << "\treturned " << uuids.size() << " results" << std::endl << std::flush;
+
+    // Hide or show everything in the results list.
+    for( size_t index = 0; index < uuids.size(); ++index )
+    {
+        std::cout << "\ttoggling node with id: " << uuids.at(index) << std::endl << std::flush;
+        ToggleCADNode( uuids.at( index ), visible );
     }
 }
 //////////////////////////////////////////////////////////////////////////

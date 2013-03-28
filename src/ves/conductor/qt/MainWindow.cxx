@@ -56,6 +56,7 @@
 #include <ves/conductor/qt/extendedWidgets/ExtendedToolBar.h>
 #include <ves/conductor/qt/UITabs.h>
 #include <ves/conductor/qt/RecentFiles.h>
+#include <ves/conductor/qt/ScriptingTab.h>
 #include <ves/conductor/qt/UIManager.h>
 
 #include <ves/xplorer/command/CommandManager.h>
@@ -158,7 +159,8 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
     {
         tempFeatures.clear();
         tempFeatures.append( "Physics,Manipulator,Navigation,Plugins," );
-        tempFeatures.append( "Constraints,Visualization,Tree,GIS" );
+        tempFeatures.append( "Constraints,Visualization,Tree,GIS," );
+        tempFeatures.append( "Camera,Scripting" );
     }
     m_displayFeatures = tempFeatures.split( "," );
 
@@ -256,7 +258,15 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
             m_viewMenuStack->AddAction( ui->actionConstraints );
         }
         //m_viewMenuStack->AddAction( ui->actionShowTestPlot );
-        m_viewMenuStack->AddAction( ui->actionShowCameraTab );
+        if( m_displayFeatures.contains( "Camera" ) )
+        {
+            m_viewMenuStack->AddAction( ui->actionShowCameraTab );
+        }
+
+        if( m_displayFeatures.contains( "Scripting" ) )
+        {
+            m_viewMenuStack->AddAction( ui->actionShowScriptingTab );
+        }
 
         m_viewMenuStack->setObjectName( "m_viewMenuStack" );
 
@@ -301,9 +311,15 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
     {
         m_constraintsTab = new ves::conductor::Constraints( 0 );
     }
+    if( m_displayFeatures.contains( "Scripting" ) )
+    {
+        m_scriptingTab = new ves::conductor::ScriptingTab( 0 );
+    }
+    if( m_displayFeatures.contains( "Camera" ) )
+    {
+        m_cameraTab = new ves::conductor::CameraTab( 0 );
+    }
 
-    //TODO: guard this with displayFeatures
-    m_cameraTab = new ves::conductor::CameraTab( 0 );
 
     this->on_actionRecent_triggered();
 
@@ -353,6 +369,11 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
 
     CONNECTSIGNALS_2( "%UseAsSurfaceData%", void( const std::string&, bool ),
                       &MainWindow::UseAsSurfaceData,
+                      mConnections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_1( "VESLoadFile",
+                      void( const std::string& ),
+                      &MainWindow::OpenFileSlot,
                       mConnections, any_SignalType, normal_Priority );
 
 
@@ -666,12 +687,22 @@ void MainWindow::OnOpenFileFilterSelected( const QString& filter )
         mFileDialog->setFileMode( QFileDialog::ExistingFiles );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::OpenFileSlot( const std::string& filename )
+{
+    QStringList files;
+    files.push_back( QString::fromStdString( filename ) );
+    onFileOpenSelected( files );
+}
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::onFileOpenSelected( const QStringList& fileNames )
 {
     // Close out the fileDialog tab and kill the file dialog
-    RemoveTab( mFileDialog );
+    if( mFileDialog)
+    {
+        RemoveTab( mFileDialog );
+    }
+
     if( mFileDialog != 0 )
     {
         mFileDialog->close();
@@ -1690,6 +1721,11 @@ void MainWindow::SetLogSplitter( Poco::SplitterChannel* splitter )
 void MainWindow::on_actionShowCameraTab_triggered()
 {
     ActivateTab( AddTab( m_cameraTab, "Cameras" ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::on_actionShowScriptingTab_triggered()
+{
+    ActivateTab( AddTab( m_scriptingTab, "Scripting" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 

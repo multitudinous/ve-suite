@@ -267,8 +267,8 @@ void VisFeatureMakerBase::SetActiveScalarAndRange( propertystore::PropertySetPtr
 bool VisFeatureMakerBase::SetActiveDataSet( propertystore::PropertySetPtr set )
 {
     std::string dataSetName = boost::any_cast<std::string >( set->GetPropertyValue( "DataSet" ) );
-    xplorer::data::DatasetPropertySet dataset;
-    dataset.LoadByKey( "Filename", dataSetName );
+    //xplorer::data::DatasetPropertySet dataset;
+    //dataset.LoadByKey( "Filename", dataSetName );
     //const std::string& longFilename = boost::any_cast< std::string >( dataset.GetPropertyValue( "LongFilename" ) );
 
     //Need to set the active datasetname and get the position of the dataset

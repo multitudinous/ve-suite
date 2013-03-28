@@ -572,6 +572,18 @@ QToolButton:hover
     <string>Display Camera Controls</string>
    </property>
   </action>
+  <action name="actionShowScriptingTab">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/xpm/scripting.png</normaloff>:/xpm/scripting.png</iconset>
+   </property>
+   <property name="text">
+    <string>Scripting Tools</string>
+   </property>
+   <property name="toolTip">
+    <string>Display Scripting Tools</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

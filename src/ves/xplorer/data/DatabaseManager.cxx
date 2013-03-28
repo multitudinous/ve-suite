@@ -357,6 +357,19 @@ void DatabaseManager::ConvertFromOld()
         properties.at( index )->Save();
     }
 }
+
+void DatabaseManager::OpenBulkMode()
+{
+    Poco::Data::Session session( m_workingStore->GetPool()->get() );
+    session.begin();
+}
+
+void DatabaseManager::CloseBulkMode()
+{
+    Poco::Data::Session session( m_workingStore->GetPool()->get() );
+    session.commit();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 }// namespace data
 }// namespace xplorer

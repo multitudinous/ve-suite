@@ -77,6 +77,14 @@ public:
     /// Override from PropertySet
     virtual void EnableLiveProperties( bool live );
 
+    ///Write this PropertySet to the DB. We override this from propertystore::PropertySet
+    virtual bool Save(  );
+
+    ///Delete this PropertySet from the DB. We override this from PropertySet.
+    ///\param session The DB sesion holding this data
+    ///\param TableName The TableName we are deleting
+    virtual bool Remove(  );
+
 protected:
     ///Registration of this property set for a child case
     ///\param tableName The table to be registered
@@ -87,14 +95,6 @@ protected:
     {
         ;
     }
-    ///Delete this PropertySet from the DB. We override this from PropertySet.
-    ///\param session The DB sesion holding this data
-    ///\param TableName The TableName we are deleting
-    virtual bool Remove(  );
-
-    ///Write this PropertySet to the DB. We override this from propertystore::PropertySet
-    virtual bool Save(  );
-
 
     ///Signal to generate deleting a viz feature
     //typedef switchwire::Event< void ( std::string const& ) > DeleteVizFeatureSignal_type;

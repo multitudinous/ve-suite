@@ -149,6 +149,9 @@ public:
       */
     bool LoadFrom( const std::string& path );
 
+    void OpenBulkMode();
+    void CloseBulkMode();
+
 private:
     /// ctor
     DatabaseManager( );

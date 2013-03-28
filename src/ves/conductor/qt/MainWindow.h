@@ -65,6 +65,7 @@ class PluginSelectionTab;
 class Constraints;
 class RecentFiles;
 class CameraTab;
+class ScriptingTab;
 
 namespace qt
 {
@@ -143,6 +144,9 @@ protected:
     void RemoveNotifier( const std::string& filename );
 
     void UseAsSurfaceData( const std::string& uuid, bool flag );
+
+    /// switchwire slot that opens the file @c filename
+    void OpenFileSlot( const std::string& filename );
 
 protected Q_SLOTS:
 
@@ -290,9 +294,14 @@ protected Q_SLOTS:
     void on_actionRemove_Planet_triggered( bool );
     void on_actionConfigure_Layers_triggered( bool );
 
+    /// Show the constraints tab
     void on_actionConstraints_triggered();
 
+    /// Show the camera tab
     void on_actionShowCameraTab_triggered();
+
+    /// Show the scripting tab
+    void on_actionShowScriptingTab_triggered();
 
     /// Temporary slot to demonstrate qwtPlot integration
     void on_actionShowTestPlot_triggered();
@@ -358,9 +367,14 @@ private:
     /// The Constraints Tab
     ves::conductor::Constraints* m_constraintsTab;
 
+    /// The recent files tab
     ves::conductor::RecentFiles* m_recentTab;
 
+    /// The camera tab
     ves::conductor::CameraTab* m_cameraTab;
+
+    /// The Scripting tab
+    ves::conductor::ScriptingTab* m_scriptingTab;
 
     /// ButtonPress signal type
     /// Params are: button, x, y, state (modifier mask OR'd with button mask)

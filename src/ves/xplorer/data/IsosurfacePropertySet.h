@@ -63,6 +63,8 @@ public:
     /// Factory ctor
     virtual propertystore::PropertySetPtr CreateNew();
 
+    virtual void EnableLiveProperties( bool live );
+
 protected:
     ///Validate method
     bool ValidateColorByScalarMinMax( propertystore::PropertyPtr property, boost::any value );

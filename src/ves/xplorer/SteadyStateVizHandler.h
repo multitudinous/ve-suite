@@ -173,8 +173,11 @@ public:
     ///Add the viz feature
     void AddVizFeature( std::string const& featureUUID, std::string const& tableName );
 
-    ///Hide a given viz feature
-    void HideVizFeature( const std::string& uuid, const std::vector< bool >& onOff );
+    ///Hide a given viz feature by uuid
+    void HideVizFeature( const std::string& uuid, const bool& onOff );
+
+    ///Hide a viz feature by name or name pattern (SQL pattern syntax, not regex)
+    void HideVizFeatureByName( const std::string& pattern, const bool& onOff );
 
     ///Create the map of viz objects
     void CreateVizObjectMap();

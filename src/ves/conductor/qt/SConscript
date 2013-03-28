@@ -86,6 +86,9 @@ cppSources += lib_env.qt_moc(source)
 source = [pj(buildSrcDir,'Constraints.h')]
 cppSources += lib_env.qt_moc(source)
 
+source = [pj(buildSrcDir,'ScriptingTab.h')]
+cppSources += lib_env.qt_moc(source)
+
 source = [pj(buildSrcDir,'propertyBrowser','VesTreePropertyBrowser.h')]
 cppSources += lib_env.qt_moc(source)
 
@@ -143,6 +146,9 @@ cppHeaders += lib_env.qt_uic(source)
 source = [pj(buildSrcDir,'CameraTab.ui')]
 cppHeaders += lib_env.qt_uic(source)
 
+source = [pj(buildSrcDir,'ScriptingTab.ui')]
+cppHeaders += lib_env.qt_uic(source)
+
 if minerva_options.isAvailable():
 	source = [pj(buildSrcDir,'minerva/AddFileSystemWidget.ui')]
 	cppHeaders += lib_env.qt_uic(source)
@@ -182,7 +188,9 @@ lib_env.Append(LIBS = ['ves_open_xml',
                        'ves_xplorer_scenegraph',
                        'osgQtTree',
                        'qwt',
-                       'storyteller'
+                       'storyteller',
+                       'squirrel',
+                       'sqstdlib'
                       ])
 lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'open', 'xml'),

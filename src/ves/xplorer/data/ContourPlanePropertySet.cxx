@@ -71,17 +71,7 @@ propertystore::PropertySetPtr ContourPlanePropertySet::CreateNew()
 ////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::CreateSkeleton()
 {
-    {
-        AddProperty( "Hide", false, "Toggle Viz Off" );
-        const std::string slotName =
-            boost::lexical_cast<std::string>( this ) + ".HideVizFeature";
-        std::vector< propertystore::PropertyPtr > dataLink;
-        dataLink.push_back( GetProperty( "Hide" ) );
-        propertystore::MakeLiveBasePtr p(
-            new propertystore::MakeLiveLinked< bool >( m_UUIDString, dataLink,
-                                        slotName ) );
-        m_liveObjects.push_back( p );
-    }
+    AddProperty( "Hide", false, "Toggle Viz Off" );
 
     AddProperty( "DataSet", std::string(""), "Data Set" );
     PSVectorOfStrings enumValues;
@@ -242,6 +232,28 @@ void ContourPlanePropertySet::CreateSkeleton()
                 greyscale,
                 slotName ) );
         m_liveObjects.push_back( p );*/
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void ContourPlanePropertySet::EnableLiveProperties( bool live )
+{
+    if( !live )
+    {
+        m_liveObjects.clear();
+        return;
+    }
+    else if( !m_liveObjects.empty() )
+    {
+        // Properties are already live
+        return;
+    }
+    else
+    {
+        propertystore::MakeLiveBasePtr p(
+                    new propertystore::MakeLive< bool const& >( m_UUIDString,
+                                                         GetProperty("Hide"),
+                                                         "HideVizFeature", true ) );
+        m_liveObjects.push_back( p );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

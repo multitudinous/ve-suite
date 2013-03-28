@@ -64,6 +64,8 @@ public:
     /// Factory ctor
     virtual propertystore::PropertySetPtr CreateNew();
 
+    virtual void EnableLiveProperties( bool live );
+
 protected:
     ///Create the skeleton
     virtual void CreateSkeleton();
