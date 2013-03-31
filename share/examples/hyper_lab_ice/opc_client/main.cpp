@@ -138,11 +138,22 @@ int main( int argc, char** argv )
     {
         std::string xmlData = opcInterface->GetAllOPCVariables( "" );
         std::vector< std::pair< std::string, std::string > > rawDataVector = opcInterface->GetAllRawOPCData();
+        std::vector< unsigned int > stateDataVector = opcInterface->GetAllStateOPCData();
         std::ofstream opcLog( "vesOpc.log" );
         for( std::vector< std::pair< std::string, std::string > >::const_iterator iter = rawDataVector.begin(); 
             iter != rawDataVector.end(); ++iter)
         {
-            opcLog << iter->first << " " << iter->second<< std::endl;
+            opcLog << iter->first << " " << iter->second << std::endl;
+        }
+        
+        opcLog << std::endl << std::endl << "Can write all of these variables: " << std::endl;
+        for( std::vector< unsigned int >::const_iterator iter = stateDataVector.begin(); 
+            iter != stateDataVector.end(); ++iter)
+        {
+            if( *iter & OPC::OPC_WRITEVARIABLE )
+            {
+                opcLog << rawDataVector[ iter - stateDataVector.begin() ].first << std::endl;
+            }
         }
         opcLog.close();
     }

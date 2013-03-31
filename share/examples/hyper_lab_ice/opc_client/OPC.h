@@ -70,6 +70,13 @@ public:
     ///Destructor
     ///\note CoUninitialize should be called after the OPC class is destroyed.
     ~OPC();
+
+    typedef enum
+    {
+        OPC_READVARIABLE      = 0x1 << 1,
+        OPC_WRITEVARIABLE     = 0x1 << 2
+    } OPCVars;
+
     ///Open the supplied file name in dynsim
     ///\param filename This must be a fully qualified path reference to a file.
     std::vector< std::pair< std::string, std::string > > ReadVars();
@@ -91,6 +98,8 @@ public:
     ///OPC data. This should be called after GetAllOPCVariables.
     std::vector< std::pair< std::string, std::string > > GetAllRawOPCData() const;
     
+    std::vector< unsigned int > GetAllStateOPCData() const;
+
     ///Set the OPC server name
     void SetOPCServerName( std::string const& opcServer );
  
@@ -171,7 +180,7 @@ private:
     std::vector< std::string > m_opcVariables;
     std::string m_unitName;
     std::vector< std::pair< std::string, std::string > > m_AllVarsAndVals;
-
+    std::vector< unsigned int > m_varsAccessRights;
     
     CComSafeArray<long> * serverID;
     CComSafeArray<BSTR> * itemIDs;

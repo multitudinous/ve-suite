@@ -138,6 +138,7 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
 {
     //clear previous requests
     m_AllVarsAndVals.clear();
+    m_varsAccessRights.clear();
 
     //attach the browser to the server
     m_Server->QueryInterface(&browse);
@@ -181,6 +182,13 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
     for( int i = 0; i < count; i++ )
     {
         hServerItem[i] = pResults[i].hServer;
+        switch( pResults[i].dwAccessRights )
+        {
+        case OPC_READABLE: m_varsAccessRights.push_back( OPC_READVARIABLE ); break;
+        case OPC_WRITEABLE: m_varsAccessRights.push_back( OPC_WRITEVARIABLE ); break;
+        case OPC_READABLE|OPC_WRITEABLE: m_varsAccessRights.push_back( OPC_READVARIABLE|OPC_WRITEVARIABLE ); break;
+        default: break;
+        }
     }
 	//get a pointer to the IOPCSyncIOInterface:
 	OPCITEMSTATE* pValue = NULL;
@@ -698,4 +706,8 @@ void OPC::SetDeviceOrHardwareFlag( std::string const& opcDevice )
     m_opcReadIO = opcDevice;
 }
 ///////////////////////////////////////////////////////////////////////////////
-    
+std::vector< unsigned int > OPC::GetAllStateOPCData() const
+{
+    return m_varsAccessRights;
+}
+///////////////////////////////////////////////////////////////////////////////
