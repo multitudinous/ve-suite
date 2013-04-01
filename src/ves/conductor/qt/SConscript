@@ -188,9 +188,7 @@ lib_env.Append(LIBS = ['ves_open_xml',
                        'ves_xplorer_scenegraph',
                        'osgQtTree',
                        'qwt',
-                       'storyteller',
-                       'squirrel',
-                       'sqstdlib'
+                       'storyteller'
                       ])
 lib_env.Append(LIBPATH = [
                            pj('#', buildDir, 'src', 'ves', 'open', 'xml'),

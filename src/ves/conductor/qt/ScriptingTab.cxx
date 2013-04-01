@@ -4,22 +4,24 @@
 #include <QtGui/QFileDialog>
 #include <QtCore/QFile>
 
+#include <ves/xplorer/data/ContourPlanePropertySet.h>
+#include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/conductor/qt/VisFeatureManager.h>
+
 #include <switchwire/EventManager.h>
+#include <switchwire/Version.h>
+#if SWITCHWIRE_HAVE_SQUIRREL
 #include <switchwire/squirrel/ConnectScripts.h>
 #include <switchwire/squirrel/ExposeSignals.h>
 #include <switchwire/squirrel/SQStdMap.h>
 #include <switchwire/squirrel/SQStdVector.h>
-
-#include <ves/xplorer/data/ContourPlanePropertySet.h>
-#include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/conductor/qt/VisFeatureManager.h>
 
 #include <squirrel.h>
 //DIAG_OFF(unused-parameter)
 #include <sqrat.h>
 #include <sqrat/sqratVM.h>
 //DIAG_ON(unused-parameter)
-
+#endif
 
 namespace ves
 {
@@ -120,6 +122,7 @@ void ScriptingTab::onFileOpenSelected( const QStringList& files )
 // it's easier to deal with it all in one place.
 void ScriptingTab::on_m_runButton_clicked()
 {
+#if SWITCHWIRE_HAVE_SQUIRREL
     // Set up a default Squirrel VM.
     Sqrat::SqratVM vm;
     Sqrat::DefaultVM::Set(vm.getVM());
@@ -160,6 +163,7 @@ void ScriptingTab::on_m_runButton_clicked()
         std::cout << "Unspecified Sqrat exception" << std::endl << std::flush;
         return;
     }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 }} // ves::conductor
