@@ -110,8 +110,7 @@ public:
     bool IsOPCVarsEmpty() const;
  
 private:
-    //void UpdateOPCList( );
-    
+    ///The file name of the project file to read
     std::string m_fileName;
     ///The OPC server name
     std::string m_serverName;
