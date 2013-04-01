@@ -65,6 +65,9 @@
 #include <latticefx/core/vtk/DataSet.h>
 
 #include <osgwTools/Orientation.h>
+#include <osgwTools/Quat.h>
+
+#include <osg/io_utils>
 
 using namespace ves::xplorer::event;
 using namespace ves::open;
@@ -216,8 +219,12 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                 transform->setScale( osg::Vec3d( scale[ 0 ], scale[ 1 ], scale[ 2 ] ) );
                 transform->setPosition( osg::Vec3d( translation[ 0 ], translation[ 1 ], translation[ 2 ] ) );
                 {
-                    osg::ref_ptr< osgwTools::Orientation > tempQuat = new osgwTools::Orientation();
-                    transform->setAttitude( tempQuat->getQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );
+                    //osg::ref_ptr< osgwTools::Orientation > tempQuat = new osgwTools::Orientation();
+                    //transform->setAttitude( tempQuat->getQuat( rotation[ 2 ], rotation[ 0 ], rotation[ 1 ] ) );
+                    //std::cout << " add " << rotation[ 0 ] << " " << rotation[ 1 ] << " " << rotation[ 2 ] << std::endl;
+                    //std::cout << tempQuat->getQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) << std::endl;
+                    //std::cout << osgwTools::makeHPRQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] )  << std::endl;
+                    transform->setAttitude( osgwTools::makeHPRQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );
                 }
             }
             

@@ -49,6 +49,7 @@
 #include <latticefx/core/vtk/DataSet.h>
 
 #include <osgwTools/Orientation.h>
+#include <osgwTools/Quat.h>
 
 namespace ves
 {
@@ -121,8 +122,11 @@ void TransformDatasetNode( const std::string& uuid, const std::vector< double >&
         dcs->setScale( osg::Vec3d( scale[ 0 ], scale[ 1 ], scale[ 2 ] ) );
         dcs->setPosition( osg::Vec3d( translation[ 0 ], translation[ 1 ], translation[ 2 ] ) );
         {
-            osg::ref_ptr< osgwTools::Orientation > tempQuat = new osgwTools::Orientation();
-            dcs->setAttitude( tempQuat->getQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );
+            //osg::ref_ptr< osgwTools::Orientation > tempQuat = new osgwTools::Orientation();
+            //dcs->setAttitude( tempQuat->getQuat( rotation[ 2 ], rotation[ 0 ], rotation[ 1 ] ) );
+            
+            
+            dcs->setAttitude( osgwTools::makeHPRQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );
         }
     }
 }

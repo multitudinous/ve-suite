@@ -66,6 +66,7 @@
 #include <ves/open/xml/cad/CADNode.h>
 
 #include <osgwTools/NodePathUtils.h>
+#include <osgwTools/Orientation.h>
 
 #include <crunchstore/SearchCriterion.h>
 
@@ -381,11 +382,18 @@ void TreeTab::SyncTransformFromDCS( osg::PositionAttitudeTransform* dcs )
         // Rotation angles are in order z, x, y
         {
             osg::Quat quat = dcs->getAttitude();
+            double rot[ 3 ];
+            /*osg::ref_ptr< osgwTools::Orientation > tempQuat = new osgwTools::Orientation();
+            tempQuat->getYPR( quat, rot[2], rot[0], rot[1] );
+
+            mActiveSet->SetPropertyValue( "Transform_Rotation_X", rot[0] );
+            mActiveSet->SetPropertyValue( "Transform_Rotation_Y", rot[1] );
+            mActiveSet->SetPropertyValue( "Transform_Rotation_Z", rot[2] );*/
+
             gmtl::Quatd tempQuat( quat[0], quat[1], quat[2], quat[3] );
             gmtl::Matrix44d _vjMatrix = gmtl::makeRot< gmtl::Matrix44d >( tempQuat );
             gmtl::EulerAngleZXYd tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYd >( _vjMatrix );
             
-            double rot[ 3 ];
             rot[0] = gmtl::Math::rad2Deg( tempZXY[0] );
             rot[1] = gmtl::Math::rad2Deg( tempZXY[1] );
             rot[2] = gmtl::Math::rad2Deg( tempZXY[2] );
