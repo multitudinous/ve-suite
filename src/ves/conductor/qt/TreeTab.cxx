@@ -462,10 +462,8 @@ std::string TreeTab::GetSelectedNodeID()
     {
         return mActiveSet->GetUUIDAsString();
     }
-    else
-    {
-        return std::string();
-    }
+
+    return std::string();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TreeTab::OnNodeAdded( std::string const& filename )
