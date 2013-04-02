@@ -131,7 +131,7 @@ Model::~Model()
     for( std::vector< lfx::core::vtk::DataSetPtr >::iterator iter = mVTKDataSets.begin();
             iter != mVTKDataSets.end(); )
     {
-        std::cout << "Deleting " << ( *iter )->GetFileName() << std::endl;
+        //std::cout << "Deleting " << ( *iter )->GetFileName() << std::endl;
         //delete *iter;
         iter = mVTKDataSets.erase( iter );
     }
