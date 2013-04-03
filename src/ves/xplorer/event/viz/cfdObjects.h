@@ -71,7 +71,10 @@ public:
     cfdObjects( const cfdObjects& src );
 
     ///Constructor.
-    cfdObjects( void );
+    cfdObjects();
+
+    ///Destructor.
+    virtual ~cfdObjects();
 
     // pure virtual functions to be specified in concrete implementations
 
@@ -213,9 +216,7 @@ public:
     lfx::core::DataSetPtr GetLFXDataSet() const;
 
 protected:
-    ///Destructor.
-    virtual ~cfdObjects( void );
-
+    ///Helper method to compute flux based on a surface
     vtkPolyData* ComputeVolumeFlux( vtkPolyData* inputPD );
     ///active dataset.
     lfx::core::vtk::DataSetPtr activeDataSet;
