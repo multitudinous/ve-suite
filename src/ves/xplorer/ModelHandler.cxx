@@ -207,6 +207,11 @@ ModelHandler::ModelHandler()
                            &ves::xplorer::event::data::ToggleCADNode,
                            m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_STATIC( "%TimeDatasetChanged",
+                          void( const std::string& uuid, const bool& load ),
+                          &ves::xplorer::event::data::LoadTransientData,
+                          m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_STATIC( "%DeleteDataSet",
                           void( std::string const& ),
                           &ves::xplorer::event::data::DeleteDataSet,

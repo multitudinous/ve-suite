@@ -51,6 +51,8 @@
 #include <osgwTools/Orientation.h>
 #include <osgwTools/Quat.h>
 
+#include <boost/filesystem.hpp>
+
 namespace ves
 {
 namespace xplorer
@@ -301,7 +303,33 @@ void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet )
     set.Save();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void LoadTransientData( const std::string& uuid, const bool& load )
+{
+    if( !load )
+    {
+        return;
+    }
+    
+    lfx::core::vtk::DataSetPtr dataSet = GetSelectedDataset( uuid );;
 
+    boost::filesystem::path tempPath( dataSet->GetFileName() );
+    std::string dataDir = tempPath.parent_path().string();
+    if( dataDir.empty() )
+    {
+        dataDir = "./";
+    }
+    const std::string fileExt = tempPath.extension().string();
+    //std::cout << fileExt << " " << dataDir << std::endl;
+    dataSet->LoadTransientData( dataDir, fileExt );
+    std::vector< lfx::core::vtk::DataSetPtr > dataSetVector =
+        dataSet->GetTransientDataSets();
+    //std::cout << dataSetVector.size() << std::endl;
+    for( size_t i = 0; i < dataSetVector.size(); ++i )
+    {
+        ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ] );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 }
 }
 }

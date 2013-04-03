@@ -95,6 +95,9 @@ void ShowScalarBar( const std::string& uuid, const bool& show );
 ///Write db entry for the given dataset
 void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet );
 
+///Load the transient dataset
+void LoadTransientData( const std::string& uuid, const bool& load );
+
 } //end data
 } //end event
 } //end xplorer

@@ -81,6 +81,8 @@ void DatasetPropertySet::CreateSkeleton()
 
     AddProperty( "ScalarBar", false, "Scalar Bar" );
 
+    AddProperty( "TimeDataset", false, "Time Based" );
+
     AddProperty( "Axes", false, "Axes" );
     SetPropertyAttribute( "Axes", "setExpanded", false );
 
@@ -240,6 +242,11 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
         p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool const&>( m_UUIDString,
                              GetProperty( "Visible" ),
                              "ToggleDataNode" ) );
+        m_liveObjects.push_back( p );
+
+        p = propertystore::MakeLiveBasePtr( new propertystore::MakeLive<bool const&>( m_UUIDString,
+                            GetProperty( "TimeDataset" ),
+                            "TimeDatasetChanged" ) );
         m_liveObjects.push_back( p );
     }
 }
