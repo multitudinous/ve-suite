@@ -73,9 +73,6 @@ public:
     ///Constructor.
     cfdObjects( void );
 
-    ///Destructor.
-    virtual ~cfdObjects( void );
-
     // pure virtual functions to be specified in concrete implementations
 
     ///Process the VECommand from Conductor
@@ -216,6 +213,9 @@ public:
     lfx::core::DataSetPtr GetLFXDataSet() const;
 
 protected:
+    ///Destructor.
+    virtual ~cfdObjects( void );
+
     vtkPolyData* ComputeVolumeFlux( vtkPolyData* inputPD );
     ///active dataset.
     lfx::core::vtk::DataSetPtr activeDataSet;
@@ -235,7 +235,6 @@ protected:
     lfx::core::DataSetPtr m_dsp;
     
     bool updateFlag;///<flag for updating.
-    int vtkToPFDebug;///<debugging for performer (may not be needed).
     int objectType;///<sets object type.
     double requestedValue;///flag for requested value.
     int cursorType;///<flag for cursor type.
