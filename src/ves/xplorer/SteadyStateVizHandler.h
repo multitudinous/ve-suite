@@ -76,6 +76,8 @@ class vtkPolyData;
 #  include <unordered_map>
 #endif
 
+#include <latticefx/core/PlayControl.h>
+
 namespace ves
 {
 namespace xplorer
@@ -240,7 +242,8 @@ private:
     ves::xplorer::LogStreamPtr m_logStream;
     ///The container for all of the cfdObjects
     std::map< std::pair< std::string, std::pair< std::string, std::string > > , ves::xplorer::cfdObjects* > m_visObjectMap;
-
+    ///Play controller
+    lfx::core::PlayControlPtr m_playControl;
 };
 }
 }

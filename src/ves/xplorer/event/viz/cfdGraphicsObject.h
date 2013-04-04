@@ -147,6 +147,9 @@ public:
     ///Update the any per frame data
     void PreFrameUpdate();
 
+    ///Set the play controller pointer from ssvh
+    void SetPlayControl( lfx::core::PlayControlPtr playControl );
+    
 protected:
     ///SceneGraph Geode
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;

@@ -127,7 +127,8 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     useLastSource( false ),
     transientActors( true ),
     m_logger( Poco::Logger::get( "xplorer.SteadyStateVizHandler" ) ),
-    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) ),
+    m_playControl( lfx::core::PlayControlPtr( new lfx::core::PlayControl() ) )
 {
     vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
     vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
@@ -399,13 +400,18 @@ void SteadyStateVizHandler::PreFrameUpdate()
         }
     }
 
+    //const double clockTime( viewer.getFrameStamp()->getReferenceTime() );
+    //const double elapsed( clockTime - prevClockTime );
+    //prevClockTime = clockTime;
+    m_playControl->elapsedClockTick( 0.1 );
+    
     //Update any per frame data
-    for( std::multimap< int, cfdGraphicsObject* >::const_iterator
+    /*for( std::multimap< int, cfdGraphicsObject* >::const_iterator
         itr = graphicsObjects.begin();
         itr != graphicsObjects.end(); ++itr )
     {
         itr->second->PreFrameUpdate();
-    }
+    }*/
 
     //Check any virtual objects need to be updated
     if( actorsAreReady && transientActors )
@@ -432,6 +438,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
             {
                 temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             }
+            temp->SetPlayControl( m_playControl );
             temp->SetParentNode( tempVisObject->GetActiveDataSet()->GetDCS() );
             temp->SetDataSet( tempVisObject->GetActiveDataSet() );
             temp->SetActiveModel( ModelHandler::instance()->GetActiveModel() );

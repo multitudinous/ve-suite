@@ -250,11 +250,13 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* const input )
     {
         m_lfxGroup = input->GetLFXDataSet()->getSceneData();
         //Get transient state from lfx dataset
-        if( input->GetActiveDataSet()->IsPartOfTransientSeries() )
+        
+        if( input->GetLFXDataSet()->isTemporalData() )
         {
             m_transient = true;
             // Play the time series animation
-            m_playControl = lfx::core::PlayControlPtr( new lfx::core::PlayControl( m_lfxGroup.get() ) );
+            //m_playControl = lfx::core::PlayControlPtr( new lfx::core::PlayControl() );
+            m_playControl->addScene( m_lfxGroup.get() );
             m_playControl->setTimeRange( input->GetLFXDataSet()->getTimeRange() );
         }
         return;
@@ -578,7 +580,12 @@ void cfdGraphicsObject::PreFrameUpdate()
         //const double clockTime( viewer.getFrameStamp()->getReferenceTime() );
         //const double elapsed( clockTime - prevClockTime );
         //prevClockTime = clockTime;
-        m_playControl->elapsedClockTick( 0.1 );
+        //m_playControl->elapsedClockTick( 0.1 );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdGraphicsObject::SetPlayControl( lfx::core::PlayControlPtr playControl )
+{
+    m_playControl = playControl;
 }
 ////////////////////////////////////////////////////////////////////////////////
