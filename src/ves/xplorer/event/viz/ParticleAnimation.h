@@ -90,6 +90,11 @@ private:
     void CreateLFXPlane();
     ///Sphere scaling.
     float GetSphereScaleFactor();
+    ///
+    lfx::core::DataSetPtr createInstanced( const std::vector< lfx::core::vtk::DataSetPtr >& transData,
+                                          const std::string& activeScalar,
+                                          const std::string& activeVector,
+                                          lfx::core::DBBasePtr dbBase );
 
     ///String to hold color by scalar.
     std::string colorByScalar;
@@ -101,6 +106,11 @@ private:
     unsigned int _particleOption;
     ///particle scale.
     float _particleScale;
+    
+    std::vector< lfx::core::vtk::DataSetPtr > transientSeries;
+    std::string diameterNameString;
+    std::string vmagNameString;
+    double conversionFactor;
 };
 }
 }

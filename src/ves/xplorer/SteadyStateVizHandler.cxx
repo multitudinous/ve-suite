@@ -399,6 +399,14 @@ void SteadyStateVizHandler::PreFrameUpdate()
         }
     }
 
+    //Update any per frame data
+    for( std::multimap< int, cfdGraphicsObject* >::const_iterator
+        itr = graphicsObjects.begin();
+        itr != graphicsObjects.end(); ++itr )
+    {
+        itr->second->PreFrameUpdate();
+    }
+
     //Check any virtual objects need to be updated
     if( actorsAreReady && transientActors )
     {

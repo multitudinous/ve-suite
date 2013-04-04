@@ -41,6 +41,31 @@
 
 #include <latticefx/core/vtk/DataSet.h>
 
+#include <latticefx/utils/vtk/FindVertexCellsCallback.h>
+#include <latticefx/utils/vtk/GetScalarDataArraysCallback.h>
+#include <latticefx/utils/vtk/CountNumberOfParametersCallback.h>
+#include <latticefx/utils/vtk/ProcessScalarRangeCallback.h>
+
+#include <latticefx/core/DataSet.h>
+#include <latticefx/core/ChannelData.h>
+#include <latticefx/core/ChannelDataOSGArray.h>
+#include <latticefx/core/RTPOperation.h>
+#include <latticefx/core/Renderer.h>
+#include <latticefx/core/TextureUtils.h>
+#include <latticefx/core/BoundUtils.h>
+#include <latticefx/core/VectorRenderer.h>
+#include <latticefx/core/TransferFunctionUtils.h>
+#include <latticefx/core/PlayControl.h>
+#include <latticefx/core/DBDisk.h>
+#include <latticefx/core/Log.h>
+#include <latticefx/core/LogMacros.h>
+
+#include <latticefx/core/vtk/VTKSurfaceWrapRTP.h>
+#include <latticefx/core/vtk/VTKActorRenderer.h>
+#include <latticefx/core/vtk/ChannelDatavtkDataObject.h>
+
+#include <vtkMath.h>
+
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::event::viz;
@@ -205,10 +230,32 @@ void ParticleAnimation::UpdatePropertySet()
 ////////////////////////////////////////////////////////////////////////////////
 void ParticleAnimation::CreateLFXPlane()
 {
-    
+    if( !GetActiveDataSet()->IsPartOfTransientSeries() )
+    {
+    }
+    std::cout << "create particles." << std::endl;
+    lfx::core::DBBasePtr dbBase;
+    {
+        lfx::core::DBDiskPtr disk( lfx::core::DBDiskPtr( new lfx::core::DBDisk() ) );
+        std::string filePath( "." );
+        disk->setRootPath( filePath );
+        dbBase = disk;
+    }
+
+    {
+        transientSeries = GetActiveDataSet()->GetTransientDataSets();
+        m_dsp = createInstanced( transientSeries, "test", "test", dbBase );
+        //Now force an update of the lfx pipeline
+        bool success = m_dsp->updateAll();
+        
+        if( !success )
+        {
+            std::cout << "Some sort of problem with lfx " << std::endl;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*lfx::core::DataSetPtr ParticleAnimation::createInstanced( const std::vector< lfx::core::vtk::DataSetPtr >& transData,
+lfx::core::DataSetPtr ParticleAnimation::createInstanced( const std::vector< lfx::core::vtk::DataSetPtr >& transData,
                                       const std::string& activeScalar,
                                       const std::string& activeVector,
                                       lfx::core::DBBasePtr dbBase )
@@ -216,8 +263,6 @@ void ParticleAnimation::CreateLFXPlane()
     std::vector< std::vector< std::pair< vtkIdType, double* > > >  m_pointCollection;
     ///The raw data for the respective points
     std::vector< std::vector< std::pair< std::string, std::vector< double > > > >  m_dataCollection;
-    ///Streamline ordered raw data for the respective lines
-    std::vector< std::vector< std::pair< std::string, std::vector< double > > > >  m_lineDataCollection;
     
     m_pointCollection.clear();
     
@@ -227,9 +272,9 @@ void ParticleAnimation::CreateLFXPlane()
     std::string m_activeScalar = activeScalar;
     
     lfx::vtk_utils::FindVertexCellsCallback* findVertexCellsCbk =
-    new lfx::vtk_utils::FindVertexCellsCallback();
+        new lfx::vtk_utils::FindVertexCellsCallback();
     lfx::vtk_utils::DataObjectHandler* dataObjectHandler =
-    new lfx::vtk_utils::DataObjectHandler();
+        new lfx::vtk_utils::DataObjectHandler();
     dataObjectHandler->SetDatasetOperatorCallback( findVertexCellsCbk );
     
     size_t maxNumPoints = 0;
@@ -268,8 +313,8 @@ void ParticleAnimation::CreateLFXPlane()
     new lfx::vtk_utils::ProcessScalarRangeCallback();
     double* diamRange = new double[ 2 ];
     double* vmagRange = new double[ 2 ];
-    double diamRangeF[ 2 ] = {10000000.,-10000000.};
-    double vmagRangeF[ 2 ] = {10000000.,-10000000.};
+    double diamRangeF[ 2 ] = {10000000., -10000000.};
+    double vmagRangeF[ 2 ] = {10000000., -10000000.};
     for( size_t j = 0; j < m_transientDataSet.size(); ++j )
     {
         dataObjectHandler->SetDatasetOperatorCallback( processScalarRangeCbk );
@@ -355,7 +400,7 @@ void ParticleAnimation::CreateLFXPlane()
         std::vector< std::pair< vtkIdType, double* > >* tempCellGroups =
         &m_pointCollection.at( i );
         osg::ref_ptr< osg::Vec3Array > posArray( new osg::Vec3Array );
-        double val=0;
+        double val = 0;
         for( size_t j = 0; j < tempCellGroups->size(); ++j )
         {
             //std::cout << tempCellGroups->size() << std::endl;
@@ -420,70 +465,10 @@ void ParticleAnimation::CreateLFXPlane()
     
     dsp->setRenderer( renderOp );
     dsp->setDB( dbBase );
-
+    
     ///Clean up memory now that we have transferred it to the streamline list
     m_pointCollection.clear();
-    m_dataCollection.clear();
-    //osg::Geode* geode = new osg::Geode();
-    
-    //createStreamLines( geode );
-    
-    //m_streamlineList.clear();
-    m_lineDataCollection.clear();
+    m_dataCollection.clear();;
     
     return dsp;
 }
-////////////////////////////////////////////////////////////////////////////////
-lfx::core::vtk::DataSetPtr ParticleAnimation::LoadDataSet( std::string filename )
-{
-    lfx::core::vtk::DataSetPtr tempDataSet( new lfx::core::vtk::DataSet() );
-    tempDataSet->SetFileName( filename );
-    tempDataSet->SetUUID( "VTK_DATA_FILE", "test" );
-    
-    {
-        fs::path pathName( filename );
-        if( !fs::exists( pathName ) )
-        {
-            return lfx::core::vtk::DataSetPtr();
-        }
-        
-        fs::path parentDir = pathName.parent_path();
-        
-        tempDataSet->LoadTransientData( parentDir.string(), pathName.extension().string() );
-    }
-    
-    tempDataSet->SetActiveVector( 0 );
-    tempDataSet->SetActiveScalar( 0 );
-    
-    const std::string tempDataSetFilename = tempDataSet->GetFileName();
-    std::cout << "|\tLoading data for file " << tempDataSetFilename << std::endl;
-    
-    if( tempDataSet->IsPartOfTransientSeries() )
-    {
-        transientSeries =
-        tempDataSet->GetTransientDataSets();
-    }
-    
-    vtkDataObject* tempVtkDataSet = tempDataSet->GetDataSet();
-    //If the data load failed
-    if( !tempVtkDataSet )
-    {
-        std::cout << "|\tData failed to load." << std::endl;
-        //_activeModel->DeleteDataSet( tempDataSetFilename );
-    }
-    else
-    {
-        std::cout << "|\tData is loaded for file "
-        << tempDataSetFilename
-        << std::endl;
-        //if( lastDataAdded->GetParent() == lastDataAdded )
-        //{
-        //_activeModel->GetDCS()->
-        //AddChild( lastDataAdded->GetDCS() );
-        //_activeModel->SetActiveDataSet( 0 );
-        //}
-        //m_datafileLoaded( tempDataSetFilename );
-    }
-    return tempDataSet;
-}*/
-////////////////////////////////////////////////////////////////////////////////

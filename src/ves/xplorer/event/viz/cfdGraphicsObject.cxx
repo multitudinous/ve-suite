@@ -58,7 +58,8 @@ cfdGraphicsObject::cfdGraphicsObject()
     :
     worldNode( 0 ),
     type( OTHER ),
-    model( 0 )
+    model( 0 ),
+    m_transient( false )
 {
     ;
 }
@@ -74,7 +75,8 @@ cfdGraphicsObject::cfdGraphicsObject( const cfdGraphicsObject& input )
     worldNode( input.worldNode ),
     type( input.type ),
     model( input.model ),
-    m_dataset( input.m_dataset )
+    m_dataset( input.m_dataset ),
+    m_transient( false )
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -247,6 +249,14 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* const input )
     if( input->GetLFXDataSet() )
     {
         m_lfxGroup = input->GetLFXDataSet()->getSceneData();
+        //Get transient state from lfx dataset
+        if( input->GetActiveDataSet()->IsPartOfTransientSeries() )
+        {
+            m_transient = true;
+            // Play the time series animation
+            m_playControl = lfx::core::PlayControlPtr( new lfx::core::PlayControl( m_lfxGroup.get() ) );
+            m_playControl->setTimeRange( input->GetLFXDataSet()->getTimeRange() );
+        }
         return;
     }
 
@@ -554,5 +564,21 @@ void cfdGraphicsObject::SetUUID( std::string const& uuid )
 std::string const& cfdGraphicsObject::GetUUID() const
 {
     return m_uuid;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool cfdGraphicsObject::IsTransient() const
+{
+    return( m_transient );
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdGraphicsObject::PreFrameUpdate()
+{
+    if( IsTransient() )
+    {
+        //const double clockTime( viewer.getFrameStamp()->getReferenceTime() );
+        //const double elapsed( clockTime - prevClockTime );
+        //prevClockTime = clockTime;
+        m_playControl->elapsedClockTick( 0.1 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -49,6 +49,7 @@
 #include <vector>
 
 #include <latticefx/core/vtk/DataSetPtr.h>
+#include <latticefx/core/PlayControl.h>
 
 namespace osg
 {
@@ -70,9 +71,7 @@ class Geode;
 
 /*!\file cfdGraphicsObject.h
  * cfdGraphicsObject API
- */
-
-/*!\class ves::xplorer::cfdGraphicsObject
+ *\class ves::xplorer::cfdGraphicsObject
  *
  */
 class VE_XPLORER_EXPORTS cfdGraphicsObject
@@ -142,6 +141,12 @@ public:
     ///Set the uui for the current feature
     std::string const& GetUUID() const;
 
+    ///Determine whether this is a transient dataset
+    bool IsTransient() const;
+
+    ///Update the any per frame data
+    void PreFrameUpdate();
+
 protected:
     ///SceneGraph Geode
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;
@@ -159,6 +164,10 @@ protected:
     std::string m_uuid;
     ///lfx viz group node
     osg::ref_ptr< osg::Node > m_lfxGroup;
+    ///Flag to determine transient datasets
+    bool m_transient;
+    ///Control lfx animations
+    lfx::core::PlayControlPtr m_playControl;
 };
 }
 }
