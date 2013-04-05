@@ -271,6 +271,10 @@ lfx::core::DataSetPtr ParticleAnimation::createInstanced( const std::vector< lfx
     std::string m_activeVector = activeVector;
     std::string m_activeScalar = activeScalar;
     
+std::string diameterNameString = "Diameter";
+std::string vmagNameString = "MotionVector_magnitude";
+double conversionFactor = 0.00328084;
+
     lfx::vtk_utils::FindVertexCellsCallback* findVertexCellsCbk =
         new lfx::vtk_utils::FindVertexCellsCallback();
     lfx::vtk_utils::DataObjectHandler* dataObjectHandler =

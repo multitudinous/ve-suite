@@ -108,9 +108,9 @@ private:
     float _particleScale;
     
     std::vector< lfx::core::vtk::DataSetPtr > transientSeries;
-    std::string diameterNameString;
-    std::string vmagNameString;
-    double conversionFactor;
+    //std::string diameterNameString;
+    //std::string vmagNameString;
+    //double conversionFactor;
 };
 }
 }
