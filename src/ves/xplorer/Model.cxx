@@ -694,7 +694,8 @@ void Model::VesFileLoaded( const std::string& filename )
         pdSet.SetUUID( *idIter );
         pdSet.Load();
         reinterpret_cast< ves::util::TwoStringSignal_type* >
-        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VizBasePropertySet.AddVizFeature" ) )->signal( *idIter, temp.GetTypeName() );
+        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VizBasePropertySet.AddVizFeature" ) )->
+        signal( *idIter, temp.GetTypeName() );
 
         ++idIter;
     }
