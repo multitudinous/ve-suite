@@ -242,6 +242,11 @@ ModelHandler::ModelHandler()
                      &ves::xplorer::event::data::ShowScalarBar,
                      m_connections, any_SignalType, normal_Priority );
 
+    CONNECTSIGNALS_STATIC( "AddVTKDataSetEventHandler.DatafileLoaded",
+                    void ( std::string const& ),
+                    &ves::xplorer::event::data::LoadTransientTimeSteps,
+                    m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNAL_1( "ChangeActiveModel",
                      void( std::string const& ),
                      &ModelHandler::SetActiveModel,
@@ -251,6 +256,13 @@ ModelHandler::ModelHandler()
                       void( bool const& ),
                       &ModelHandler::SetDBPresent,
                       m_connections, any_SignalType, normal_Priority );
+
+    // Connect to VesFileLoaded signal, which is sent out when loading of a .ves
+    // finishes
+    CONNECTSIGNAL_1( "VesFileLoaded",
+                    void ( const std::string& ),
+                    &ModelHandler::VesFileLoaded,
+                    m_connections, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ModelHandler::~ModelHandler()
@@ -649,5 +661,10 @@ void ModelHandler::SetDBPresent( bool const& dbPresent )
 bool ModelHandler::GetDBPresent()
 {
     return m_dbPresent;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ModelHandler::VesFileLoaded( const std::string& filename )
+{
+    
 }
 ////////////////////////////////////////////////////////////////////////////////

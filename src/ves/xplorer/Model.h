@@ -46,6 +46,10 @@
 
 #include <ves/open/xml/model/ModelPtr.h>
 
+#include <switchwire/ScopedConnectionList.h>
+
+#include <switchwire/Event.h>
+
 #include <vrj/vrjParam.h>
 
 #include <vpr/Sync/Mutex.h>
@@ -225,6 +229,9 @@ public:
     ves::xplorer::ModelDatasetHandler* GetModelDatasetHandler();
 
 private:
+    ///Slot called when the ves file has been loaded completely
+    void VesFileLoaded( const std::string& filename );
+
     vpr::Thread* loadDataTh;
     vpr::Mutex mValueLock;
     std::vector<vtkDataSet* > waitingdatalist;
@@ -261,6 +268,8 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::TextTexture > mModelText;
     ///The VE-Open Model data for this model
     ves::open::xml::model::ModelPtr m_modelVEOpenData;
+    /// Required to be able to connect up to signals.
+    switchwire::ScopedConnectionList m_connections;
 };
 }
 }

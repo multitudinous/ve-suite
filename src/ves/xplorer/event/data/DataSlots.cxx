@@ -271,14 +271,19 @@ void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet )
     //std::string shortName = tempPath.filename().string();
 
     //set.LoadByKey( "Filename", shortName );
-    set.LoadByKey( "Filename", dataSet->GetFileName() );
+    bool tempLoad = set.LoadByKey( "Filename", dataSet->GetFileName() );
+    const std::string& dataSetUUID = dataSet->GetUUID( "VTK_DATA_FILE" );
 
+    if( !tempLoad && !dataSetUUID.empty() )
+    {
+        set.SetUUID( dataSetUUID );
+    }
+    
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_DATA_NODE" );
     descriptorsList.push_back( set.GetUUIDAsString() );
     dataSet->GetDCS()->setDescriptions( descriptorsList );
 
-    //set.SetPropertyValue( "Filename", shortName );
     set.SetPropertyValue( "Filename", dataSet->GetFileName() );
     set.SetPropertyValue( "StepLength", dataSet->GetStepLength() );
     set.SetPropertyValue( "MaxTime", dataSet->GetMaxTime() );
@@ -313,20 +318,44 @@ void LoadTransientData( const std::string& uuid, const bool& load )
     lfx::core::vtk::DataSetPtr dataSet = GetSelectedDataset( uuid );;
 
     boost::filesystem::path tempPath( dataSet->GetFileName() );
+    std::string tempFilename = dataSet->GetFileName();
+
     std::string dataDir = tempPath.parent_path().string();
     if( dataDir.empty() )
     {
         dataDir = "./";
+        tempFilename = dataDir + tempFilename;
     }
     const std::string fileExt = tempPath.extension().string();
-    //std::cout << fileExt << " " << dataDir << std::endl;
     dataSet->LoadTransientData( dataDir, fileExt );
     std::vector< lfx::core::vtk::DataSetPtr > dataSetVector =
         dataSet->GetTransientDataSets();
-    //std::cout << dataSetVector.size() << std::endl;
+    
     for( size_t i = 0; i < dataSetVector.size(); ++i )
     {
-        ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ] );
+        if( tempFilename != dataSetVector[ i ]->GetFileName() )
+        {
+            ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ] );
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void LoadTransientTimeSteps( const std::string& filename )
+{
+    ves::xplorer::data::DatasetPropertySet set;
+    bool loaded = set.LoadByKey( "Filename", filename );
+    if( !loaded )
+    {
+        return;
+    }
+    std::string uuidString = set.GetUUIDAsString();
+    //std::cout << " load data " << filename << " " << loaded << " " << uuidString << std::endl;
+
+    loaded = boost::any_cast< bool >( set.GetPropertyValue( "TimeDataset" ) );
+    //std::cout << loaded << std::endl;
+    if( loaded )
+    {
+        LoadTransientData( uuidString, true );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

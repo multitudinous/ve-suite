@@ -589,3 +589,16 @@ void cfdGraphicsObject::SetPlayControl( lfx::core::PlayControlPtr playControl )
     m_playControl = playControl;
 }
 ////////////////////////////////////////////////////////////////////////////////
+osg::Node* cfdGraphicsObject::GetVizNode()
+{
+    if( m_lfxGroup.valid() )
+    {
+        return m_lfxGroup.get();
+    }
+    
+    if( !geodes.empty() )
+    {
+        return geodes.back().get();
+    }
+    return 0;
+}

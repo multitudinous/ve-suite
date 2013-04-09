@@ -51,7 +51,7 @@
 
 #include <ves/VEConfig.h>
 
-#define CURRENT_DB_VERSION 2012.0820
+#define CURRENT_DB_VERSION 2013.0408
 
 // Forward declarations
 namespace Poco

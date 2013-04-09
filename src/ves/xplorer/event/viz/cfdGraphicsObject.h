@@ -150,6 +150,9 @@ public:
     ///Set the play controller pointer from ssvh
     void SetPlayControl( lfx::core::PlayControlPtr playControl );
     
+    ///Get the node
+    osg::Node* GetVizNode();
+
 protected:
     ///SceneGraph Geode
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;

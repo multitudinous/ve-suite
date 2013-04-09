@@ -151,6 +151,9 @@ public:
     void SetDBPresent( bool const& dbPresent );
 
 private:
+    ///Slot called when the ves file has been loaded completely
+    void VesFileLoaded( const std::string& filename );
+    
     ///Create the arrow polydata
     vtkPolyData* _GetArrowPolyData();
     ///The current command

@@ -43,6 +43,11 @@
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
 
+#include <ves/xplorer/event/data/DataSlots.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
+#include <ves/xplorer/data/PolydataPropertySet.h>
+#include <ves/xplorer/data/DatabaseManager.h>
+
 #include <latticefx/utils/vtk/Grid2Surface.h>
 
 #include <ves/open/xml/Command.h>
@@ -57,8 +62,9 @@
 
 #include <ves/open/xml/model/Model.h>
 
-#include <osg/StateSet>
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
+
+#include <osg/StateSet>
 
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
@@ -70,6 +76,8 @@
 
 #include <gadget/Type/PositionInterface.h>
 
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 #include <vtkUnstructuredGrid.h>
 #include <vtkDataWriter.h>
@@ -110,6 +118,13 @@ Model::Model( ves::xplorer::scenegraph::DCS* worldDCS )
     m_cadHandler( new ves::xplorer::ModelCADHandler( _worldDCS.get() ) ),
     m_datasetHandler( 0 )
 {
+
+    // Connect to VesFileLoaded signal, which is sent out when loading of a .ves
+    // finishes
+    CONNECTSIGNAL_1( "VesFileLoaded",
+                    void ( const std::string& ),
+                    &Model::VesFileLoaded,
+                    m_connections, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Model::~Model()
@@ -652,6 +667,37 @@ ves::open::xml::model::ModelPtr Model::GetModelData()
 void Model::SetModelData( ves::open::xml::model::ModelPtr tempModelData )
 {
     m_modelVEOpenData = tempModelData;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::VesFileLoaded( const std::string& filename )
+{
+    //This is all a hack to get around the fact that the db is not loaded when
+    //the add vtk datasets are processed.
+    std::cout << "|\t\tProcessing data from " << filename << " file." << std::endl;
+    for( std::vector< lfx::core::vtk::DataSetPtr >::iterator iter = mVTKDataSets.begin();
+        iter != mVTKDataSets.end(); ++iter )
+    {
+        ves::xplorer::event::data::LoadTransientTimeSteps( (*iter)->GetFileName() );
+    }
+    
+    
+    ves::xplorer::data::PolydataPropertySet temp;
+    std::vector<std::string> ids =
+        ves::xplorer::data::DatabaseManager::instance()->
+    GetStringVector( temp.GetTypeName(), "uuid" );
+    
+    // Iterate through each available set and load it from db
+    std::vector<std::string>::const_iterator idIter = ids.begin();
+    while( idIter != ids.end() )
+    {
+        ves::xplorer::data::PolydataPropertySet pdSet;
+        pdSet.SetUUID( *idIter );
+        pdSet.Load();
+        reinterpret_cast< ves::util::TwoStringSignal_type* >
+        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VizBasePropertySet.AddVizFeature" ) )->signal( *idIter, temp.GetTypeName() );
+
+        ++idIter;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer

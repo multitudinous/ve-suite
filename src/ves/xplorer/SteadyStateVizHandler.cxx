@@ -207,9 +207,9 @@ void SteadyStateVizHandler::HideVizFeature( const std::string& uuid, const bool&
     graphics_objects_map::iterator hashIter = m_graphicsObjectMap.find( vpr::GUID( uuid ) );
     if( hashIter != m_graphicsObjectMap.end() )
     {
-        std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > >& geode =
-            hashIter->second->GetGeodes();
-        geode.back().get()->setNodeMask( !onOff );
+        osg::ref_ptr< osg::Node > node =
+            hashIter->second->GetVizNode();
+        node->setNodeMask( !onOff );
     }
     else
     {

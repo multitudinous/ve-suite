@@ -98,6 +98,9 @@ void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet );
 ///Load the transient dataset
 void LoadTransientData( const std::string& uuid, const bool& load );
 
+///Load transient child datasets by file name
+void LoadTransientTimeSteps( const std::string& filename );
+
 } //end data
 } //end event
 } //end xplorer
