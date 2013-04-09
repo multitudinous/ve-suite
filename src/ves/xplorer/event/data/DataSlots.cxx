@@ -42,6 +42,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/data/DatasetPropertySet.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <string>
 #include <vector>
@@ -338,6 +339,11 @@ void LoadTransientData( const std::string& uuid, const bool& load )
             ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ] );
         }
     }
+
+    // Notify about scenegraph changes
+    reinterpret_cast< ves::util::VoidSignal_type* >
+    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "ScenegraphChanged" ) )
+    ->signal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void LoadTransientTimeSteps( const std::string& filename )
