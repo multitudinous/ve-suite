@@ -90,6 +90,9 @@ ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
                       << std::endl;
             return ves::open::xml::model::ModelPtr();
         }
+        //It is possible right here to get in a place where the cfd model
+        //for this plugin has been deleted out from under it
+        //since we are not using smart pointers for the model class
         m_veModel = m_xplorerPlugin->GetCFDModel()->GetModelData();
     }
 
