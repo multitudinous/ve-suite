@@ -618,7 +618,9 @@ void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassN
 void PluginSelectionTab::qFileLoadedSlot( const std::string& fileName )
 {
     boost::ignore_unused_variable_warning( fileName );
-    ClearActivePlugins();
+    //I am not sure why this is needed. The plugins are cleared before hand in
+    //the ReDiscoverPlugins method.
+    //ClearActivePlugins();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool PluginSelectionTab::eventFilter( QObject* obj, QEvent* event )
@@ -652,14 +654,17 @@ void PluginSelectionTab::RemovePlugin( UIPluginInterface* plugin )
     ves::open::xml::model::ModelPtr modelPtr = plugin->m_base.GetVEModel();
     if( modelPtr )
     {
-        ///Remove the data from the ui xml representation
+        //Remove the graphics side of things
+        //We must remove this first because the modelptr's are weak
+        //and therefore are null by the time we remove them from
+        //the XMLDataBufferEngine.
+        ves::xplorer::network::GraphicalPluginManager::instance()->
+            RemovePlugin( modelPtr->GetID() );
+
+        //Remove the data from the ui xml representation
         XMLDataBufferEngine* mDataBufferEngine = XMLDataBufferEngine::instance();
         bool success = mDataBufferEngine->RemoveModelFromSystem( modelPtr );
         boost::ignore_unused_variable_warning( success );
-
-        ///Remove the graphics side of things
-        ves::xplorer::network::GraphicalPluginManager::instance()->
-        RemovePlugin( modelPtr->GetID() );
     }
     else
     {
