@@ -43,13 +43,6 @@
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
 
-#include <ves/xplorer/event/data/DataSlots.h>
-#include <ves/xplorer/eventmanager/EventFactory.h>
-#include <ves/xplorer/data/PolydataPropertySet.h>
-#include <ves/xplorer/data/DatabaseManager.h>
-
-#include <latticefx/utils/vtk/Grid2Surface.h>
-
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/XMLCreator.h>
@@ -63,9 +56,6 @@
 #include <ves/open/xml/model/Model.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
-
-#include <switchwire/EventManager.h>
-#include <switchwire/OptionalMacros.h>
 
 #include <osg/StateSet>
 
@@ -101,6 +91,17 @@
 #include <ves/xplorer/Debug.h>
 
 #include <latticefx/core/vtk/DataSet.h>
+
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+//#include <switchwire/Event.h>
+
+#include <ves/xplorer/event/data/DataSlots.h>
+#include <ves/xplorer/eventmanager/EventFactory.h>
+#include <ves/xplorer/data/PolydataPropertySet.h>
+#include <ves/xplorer/data/DatabaseManager.h>
+
+#include <latticefx/utils/vtk/Grid2Surface.h>
 
 using namespace ves::xplorer::scenegraph;
 using namespace lfx::vtk_utils;

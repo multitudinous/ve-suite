@@ -48,7 +48,7 @@
 
 #include <switchwire/ScopedConnectionList.h>
 
-#include <switchwire/Event.h>
+#include <latticefx/core/vtk/DataSetPtr.h>
 
 #include <vrj/vrjParam.h>
 
@@ -57,8 +57,6 @@
 
 #include <osg/ref_ptr>
 #include <osg/StateSet>
-
-#include <latticefx/core/vtk/DataSetPtr.h>
 
 namespace ves
 {
