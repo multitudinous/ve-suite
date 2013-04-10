@@ -57,6 +57,11 @@
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Logging.h>
 
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/cad/CADPart.h>
+#include <ves/open/xml/model/Model.h>
+
 #include <crunchstore/DataManager.h>
 #include <crunchstore/SearchCriterion.h>
 
@@ -313,8 +318,8 @@ static void DeleteCADNode( std::string const& parentID, std::string const& nodeI
                               << vprDEBUG_FLUSH;
 
         ModelCADHandler* m_cadHandler = GetModelCADHandler();
-        ves::xplorer::scenegraph::DCS* parentAssembly = 0;
-        parentAssembly = m_cadHandler->GetAssembly( parentID );
+        ves::xplorer::scenegraph::DCS* parentAssembly =
+            m_cadHandler->GetAssembly( parentID );
 
         //This assumes the part/assembly isn't there already
         if( nodeType == std::string( "Assembly" ) )
@@ -339,6 +344,17 @@ static void DeleteCADNode( std::string const& parentID, std::string const& nodeI
 
         //Need to also remove the node from ModelCADHandler node maps
         m_cadHandler->RemoveNode( nodeID, nodeType );
+        
+        //We need to remove the xml model now
+        ves::open::xml::model::ModelPtr xmlModel = ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData();
+        ves::open::xml::cad::CADAssemblyPtr tempAssembly =
+            boost::dynamic_pointer_cast<ves::open::xml::cad::CADAssembly>( xmlModel->GetGeometry() );
+        if( tempAssembly->GetID() != parentID )
+        {
+            tempAssembly =
+                boost::dynamic_pointer_cast<ves::open::xml::cad::CADAssembly>( tempAssembly->SearchAllChildren( parentID ) );
+        }
+        tempAssembly->RemoveChild( nodeID );
     }
     catch( ... )
     {
