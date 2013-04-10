@@ -346,7 +346,8 @@ static void DeleteCADNode( std::string const& parentID, std::string const& nodeI
         m_cadHandler->RemoveNode( nodeID, nodeType );
         
         //We need to remove the xml model now
-        ves::open::xml::model::ModelPtr xmlModel = ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData();
+        ves::open::xml::model::ModelPtr xmlModel =
+            ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData();
         ves::open::xml::cad::CADAssemblyPtr tempAssembly =
             boost::dynamic_pointer_cast<ves::open::xml::cad::CADAssembly>( xmlModel->GetGeometry() );
         if( tempAssembly->GetID() != parentID )

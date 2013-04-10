@@ -44,6 +44,9 @@
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/ParameterBlock.h>
+
 #include <string>
 #include <vector>
 
@@ -181,6 +184,16 @@ void DeleteDataSet( const std::string& dataFilename )
     ves::xplorer::Model* activeModel =
         ModelHandler::instance()->GetActiveModel();
 
+    size_t numDataSets = activeModel->GetModelData()->GetNumberOfInformationPackets();
+    for( size_t i = 0; i < numDataSets; ++i )
+    {
+        std::string xmlFileName = activeModel->GetModelData()->GetInformationPacket( i )->GetProperty( "VTK_DATA_FILE" )->GetDataString();
+        if( dataFilename == xmlFileName )
+        {
+            activeModel->GetModelData()->RemoveInformationPacket( i );
+            break;
+        }
+    }
     activeModel->DeleteDataSet( dataFilename );
     activeModel->SetActiveDataSet( lfx::core::vtk::DataSetPtr() );
 
