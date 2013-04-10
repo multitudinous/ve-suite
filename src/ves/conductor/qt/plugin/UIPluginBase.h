@@ -43,7 +43,7 @@
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/CommandPtr.h>
 
-#include <ves/xplorer/plugin/PluginBase.h>
+#include <ves/xplorer/plugin/PluginBasePtr.h>
 
 #include <vector>
 #include <map>
@@ -84,7 +84,7 @@ public:
     ///Set the ve model
     void SetVEModel( ves::open::xml::model::ModelPtr tempModel );
 
-    void SetXplorerPlugin( ves::xplorer::plugin::PluginBase* plugin );
+    void SetXplorerPlugin( ves::xplorer::plugin::PluginBasePtr plugin );
 
     ///Sets the active model in Xplorer
     ///NOTE: Keep in mind that after a user submits a job that the active model
@@ -185,7 +185,7 @@ protected:
     std::vector< ves::open::xml::model::PortPtr > m_inputPorts;
     std::vector< ves::open::xml::model::PortPtr > m_outputPorts;
 
-    ves::xplorer::plugin::PluginBase* m_xplorerPlugin;
+    ves::xplorer::plugin::PluginBasePtr m_xplorerPlugin;
 
 private:
 };

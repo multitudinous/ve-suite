@@ -101,11 +101,11 @@ void DeleteObjectFromNetworkEventHandler::Execute( const ves::open::xml::XMLObje
     std::string id;
     activeModelDVP->GetData( id );
 
-    std::map< std::string, ves::xplorer::plugin::PluginBase* >* _plugins;
+    std::map< std::string, ves::xplorer::plugin::PluginBasePtr >* _plugins;
     _plugins = GraphicalPluginManager::instance()->GetTheCurrentPlugins();
 
     // Remove any plugins that aren't present in the current network
-    std::map< std::string, PluginBase* >::iterator foundPlugin;
+    std::map< std::string, PluginBasePtr >::iterator foundPlugin;
     foundPlugin = _plugins->find( id );
 
     if( foundPlugin != _plugins->end() )
@@ -118,7 +118,7 @@ void DeleteObjectFromNetworkEventHandler::Execute( const ves::open::xml::XMLObje
         foundPlugin->second->RemoveSelfFromSG();
         ModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
         // Must delete current instance of vebaseclass object
-        delete foundPlugin->second;
+        //delete foundPlugin->second;
         _plugins->erase( foundPlugin );
     }
     else

@@ -191,10 +191,10 @@ Multiscale2GraphicalPlugin::Multiscale2GraphicalPlugin()
 {
     //DYNSIM
     mObjectName = "Multiscale2";
-    mEventHandlerMap[ "OPCData" ] = this;
-    mEventHandlerMap[ "TANK_CAD" ] = this;
-	mEventHandlerMap[ "MULTISCALE_COMMAND" ] = this;
-    //mEventHandlerMap[ "VALVE_CAD" ] = this;
+    mEventHandlerMap[ "OPCData" ] = shared_from_this();
+    mEventHandlerMap[ "TANK_CAD" ] = shared_from_this();
+	mEventHandlerMap[ "MULTISCALE_COMMAND" ] = shared_from_this();
+    //mEventHandlerMap[ "VALVE_CAD" ] = shared_from_this();
     m_tankDCS = 0;
 	animating = true;
 	

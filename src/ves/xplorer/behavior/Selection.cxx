@@ -233,12 +233,12 @@ bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
         DeviceHandler::instance()->UnselectObjects();
 
         std::map < std::string,
-            ves::xplorer::plugin::PluginBase* > * tempPlugins =
+            ves::xplorer::plugin::PluginBasePtr > * tempPlugins =
                 ves::xplorer::network::GraphicalPluginManager::instance()->
                 GetTheCurrentPlugins();
 
         std::map < std::string,
-            ves::xplorer::plugin::PluginBase* >::iterator pluginIter;
+            ves::xplorer::plugin::PluginBasePtr >::iterator pluginIter;
 
         for( pluginIter = tempPlugins->begin();
                 pluginIter != tempPlugins->end(); ++pluginIter )

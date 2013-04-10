@@ -452,7 +452,7 @@ void PluginBase::ProcessOnSubmitJob()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, PluginBase* > PluginBase::GetCommandNameMap()
+std::map< std::string, PluginBasePtr > PluginBase::GetCommandNameMap()
 {
     return mEventHandlerMap;
 }

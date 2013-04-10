@@ -45,7 +45,7 @@
 #include <string>
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/plugin/PluginBase.h>
+#include <ves/xplorer/plugin/PluginBasePtr.h>
 
 #include <switchwire/Event.h>
 
@@ -72,15 +72,15 @@ public:
 
     int GetNumberOfPlugins();
 
-    ves::xplorer::plugin::PluginBase* CreateObject( std::string );
+    ves::xplorer::plugin::PluginBasePtr CreateObject( std::string );
 
     //Keep the list of the first intance of each plugin
-    std::map< int, ves::xplorer::plugin::PluginBase* > plugins;
+    std::map< int, ves::xplorer::plugin::PluginBasePtr > plugins;
 
     vpr::LibraryFinder::LibraryList libs;
 
     typedef switchwire::Event < void ( const std::string&,
-            ves::xplorer::plugin::PluginBase* ) > createPluginSignal_type;
+            ves::xplorer::plugin::PluginBasePtr ) > createPluginSignal_type;
     createPluginSignal_type m_createUIPlugin;
 };
 }

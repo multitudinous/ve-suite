@@ -69,10 +69,10 @@ PluginLoader::PluginLoader()
 ////////////////////////////////////////////////////////////////////////////////
 PluginLoader::~PluginLoader()
 {
-    std::map< int, PluginBase* >::iterator iter;
+    std::map< int, PluginBasePtr >::iterator iter;
     for( iter = plugins.begin(); iter != plugins.end(); ++iter )
     {
-        delete iter->second;
+        //delete iter->second;
     }
     plugins.clear();
 
@@ -98,10 +98,10 @@ int PluginLoader::GetNumberOfPlugins( void )
     return plugins.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-PluginBase* PluginLoader::CreateObject( std::string _objname )
+PluginBasePtr PluginLoader::CreateObject( std::string _objname )
 {
     int selectPlugin = -1;
-    std::map< int, PluginBase* >::iterator iter;
+    std::map< int, PluginBasePtr >::iterator iter;
     for( iter = plugins.begin(); iter != plugins.end(); ++iter )
     {
         if( iter->second->GetName() == _objname )
@@ -117,10 +117,10 @@ PluginBase* PluginLoader::CreateObject( std::string _objname )
     {
         std::cerr << "|\tPluginLoader::CreateObject : " << _objname
                   << " : Plugin Not Found." << std::endl;
-        return NULL;
+        return PluginBasePtr();
     }
 
-    PluginBase* result = CreateNewPlugin( selectPlugin );
+    PluginBasePtr result = PluginBasePtr( CreateNewPlugin( selectPlugin ) );
 
     m_createUIPlugin.signal( _objname, result );
 
@@ -268,11 +268,11 @@ void PluginLoader::LoadPlugins( void )
 {
     for( size_t i = 0; i < libs.size(); ++i )
     {
-        PluginBase* test_obj( 0 );
+        PluginBasePtr test_obj;
 
         if( libs.at( i )->isLoaded() )
         {
-            test_obj = CreateNewPlugin( i );
+            test_obj = PluginBasePtr( CreateNewPlugin( i ) );
         }
 
         if( test_obj )

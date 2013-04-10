@@ -165,7 +165,7 @@ void GraphicalPluginManager::Initialize()
                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, ves::xplorer::plugin::PluginBase* >*
+std::map< std::string, ves::xplorer::plugin::PluginBasePtr >*
 GraphicalPluginManager::GetTheCurrentPlugins()
 {
     return &mPluginsMap;
@@ -280,7 +280,7 @@ void GraphicalPluginManager::GetEverything()
 
     std::map< std::string, std::string >::iterator iter;
     // Remove any plugins that aren't present in the current network
-    for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator
+    for( std::map< std::string, ves::xplorer::plugin::PluginBasePtr >::iterator
             foundPlugin = mPluginsMap.begin(); foundPlugin != mPluginsMap.end(); )
     {
         // When we clear the _plugin map will
@@ -302,11 +302,11 @@ void GraphicalPluginManager::GetEverything()
             ModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
             // Remove a plugins event handler map
             // do this before the foundPlugin is deleted
-            std::map< std::string, std::map< std::string, PluginBase* > >::iterator cmdIter;
+            std::map< std::string, std::map< std::string, PluginBasePtr > >::iterator cmdIter;
             cmdIter = pluginEHMap.find( foundPlugin->first );
             pluginEHMap.erase( cmdIter );
             // Must delete current instance of vebaseclass object
-            delete mPluginsMap[ foundPlugin->first ];
+            //delete mPluginsMap[ foundPlugin->first ];
             mPluginsMap.erase( foundPlugin++ );
         }
         else
@@ -366,10 +366,10 @@ void GraphicalPluginManager::PreFrameUpdate()
     //    }
 
     std::map < std::string, std::map < std::string,
-        ves::xplorer::plugin::PluginBase* > >::const_iterator pluginEHMapIter;
+        ves::xplorer::plugin::PluginBasePtr > >::const_iterator pluginEHMapIter;
 
     ///process the standard plugin stuff
-    for( std::map< std::string, PluginBase* >::const_iterator
+    for( std::map< std::string, PluginBasePtr >::const_iterator
             foundPlugin = mPluginsMap.begin(); foundPlugin != mPluginsMap.end();
             ++foundPlugin )
     {
@@ -388,9 +388,9 @@ void GraphicalPluginManager::PreFrameUpdate()
             {
                 //Process a special plugin command
                 const std::string cmdName = tempCommand->GetCommandName();
-                std::map< std::string, ves::xplorer::plugin::PluginBase* >::const_iterator
+                std::map< std::string, ves::xplorer::plugin::PluginBasePtr >::const_iterator
                 foundCommand = pluginEHMapIter->second.find( cmdName );
-                //PluginBase* const tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
+                //PluginBasePtr const tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
                 if( foundCommand != pluginEHMapIter->second.end() )
                 {
                     foundPlugin->second->SetCurrentCommand( tempCommand );
@@ -448,9 +448,9 @@ void GraphicalPluginManager::LoadDataFromCE()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*bool GraphicalPluginManager::RegisterEHForGEPlugin( std::string commandName, PluginBase* baseClass )
+/*bool GraphicalPluginManager::RegisterEHForGEPlugin( std::string commandName, PluginBasePtr baseClass )
 {
-   std::map< std::string, PluginBase* >::iterator iter;
+   std::map< std::string, PluginBasePtr >::iterator iter;
    iter = pluginEHMap.find( commandName );
    if(iter == pluginEHMap.end() )
    {
@@ -492,7 +492,7 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
     //add the system to the map
     mIDToSystem[ system->GetID() ] = system;
 
-    std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator
+    std::map< std::string, ves::xplorer::plugin::PluginBasePtr >::iterator
     foundPlugin;
     //Parse out the subsystems
     std::vector< model::ModelPtr > tempModels = system->GetModels();
@@ -513,17 +513,14 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
         {
             // if a new module is on the id map but not on the plugins map
             // create it...
-            PluginBase* temp =
-                static_cast< ves::xplorer::plugin::PluginBase* >(
+            PluginBasePtr temp =
                     mAvailableModules->GetLoader()->CreateObject(
-                        model->GetPluginType() ) );
+                        model->GetPluginType() );
 
-            if( temp == 0 )
+            if( !temp )
             {
                 //load the default plugin
-                temp = static_cast< ves::xplorer::plugin::PluginBase* >(
-                           mAvailableModules->GetLoader()->
-                           CreateObject( "DefaultPlugin" ) );
+                temp = mAvailableModules->GetLoader()->CreateObject( "DefaultPlugin" );
             }
 
             mPluginsMap[ modelID ] = temp;
@@ -555,7 +552,7 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
         }
         // this call always returns something because it is up to
         // date with the id map
-        ves::xplorer::plugin::PluginBase* newPlugin = mPluginsMap[ modelID ];
+        ves::xplorer::plugin::PluginBasePtr newPlugin = mPluginsMap[ modelID ];
         newPlugin->SetXMLModel( model );
         //send command to get results
         if( getResults )
@@ -630,14 +627,14 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::DiscoverPlugins( std::string const& )
 {
-    for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter =
+    for( std::map< std::string, ves::xplorer::plugin::PluginBasePtr >::iterator iter =
                 mPluginsMap.begin(); iter != mPluginsMap.end(); )
     {
         // if a module is on the plugins map then remove it
         iter->second->RemoveSelfFromSG();
         ModelHandler::instance()->RemoveModel( iter->second->GetCFDModel() );
         // Must delete current instance of vebaseclass object
-        delete iter->second;
+        //delete iter->second;
         mPluginsMap.erase( iter++ );
     }
     mPluginsMap.clear();
@@ -651,12 +648,12 @@ void GraphicalPluginManager::DiscoverPlugins( std::string const& )
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPluginManager::RemovePlugin( std::string const& pluginId )
 {
-    std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter
+    std::map< std::string, ves::xplorer::plugin::PluginBasePtr >::iterator iter
         = mPluginsMap.find( pluginId );
     if( iter != mPluginsMap.end() )
     {
         ///First lets cleanup the event map for the plugin
-        std::map< std::string, std::map< std::string, PluginBase* > >::iterator
+        std::map< std::string, std::map< std::string, PluginBasePtr > >::iterator
         cmdIter = pluginEHMap.find( pluginId );
         if( cmdIter != pluginEHMap.end() )
         {
@@ -668,7 +665,7 @@ void GraphicalPluginManager::RemovePlugin( std::string const& pluginId )
         ModelHandler::instance()->RemoveModel( iter->second->GetCFDModel() );
 
         ///Now lets clean up its memory and from the plugin map
-        delete iter->second;
+        //delete iter->second;
         mPluginsMap.erase( iter );
     }
 }

@@ -46,6 +46,8 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 
+#include <boost/enable_shared_from_this.hpp>
+
 // --- OSG Includes --- //
 #include <osg/TexGenNode>
 
@@ -64,51 +66,51 @@ CameraPlacementToolGP::CameraPlacementToolGP()
     //Needs to match inherited UIPluginBase class name
     mObjectName = "CameraPlacementToolUI";
 
-    mEventHandlerMap[ "DRUM_ANIMATION_ON_OFF" ] = this;
+    mEventHandlerMap[ "DRUM_ANIMATION_ON_OFF" ] = shared_from_this();
     mCommandNameToInt[ "DRUM_ANIMATION_ON_OFF" ] =
         DRUM_ANIMATION_ON_OFF;
-    mEventHandlerMap[ "CAMERA_GEOMETRY_ON_OFF" ] = this;
+    mEventHandlerMap[ "CAMERA_GEOMETRY_ON_OFF" ] = shared_from_this();
     mCommandNameToInt[ "CAMERA_GEOMETRY_ON_OFF" ] =
         CAMERA_GEOMETRY_ON_OFF;
-    mEventHandlerMap[ "FRUSTUM_GEOMETRY_ON_OFF" ] = this;
+    mEventHandlerMap[ "FRUSTUM_GEOMETRY_ON_OFF" ] = shared_from_this();
     mCommandNameToInt[ "FRUSTUM_GEOMETRY_ON_OFF" ] =
         FRUSTUM_GEOMETRY_ON_OFF;
 
-    mEventHandlerMap[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] = this;
+    mEventHandlerMap[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] = shared_from_this();
     mCommandNameToInt[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] =
         DEPTH_OF_FIELD_EFFECT_ON_OFF;
-    mEventHandlerMap[ "PROJECTION_EFFECT_ON_OFF" ] = this;
+    mEventHandlerMap[ "PROJECTION_EFFECT_ON_OFF" ] = shared_from_this();
     mCommandNameToInt[ "PROJECTION_EFFECT_ON_OFF" ] =
         PROJECTION_EFFECT_ON_OFF;
-    mEventHandlerMap[ "PROJECTION_EFFECT_OPACITY" ] = this;
+    mEventHandlerMap[ "PROJECTION_EFFECT_OPACITY" ] = shared_from_this();
     mCommandNameToInt[ "PROJECTION_EFFECT_OPACITY" ] =
         PROJECTION_EFFECT_OPACITY;
 
-    mEventHandlerMap[ "CAMERA_WINDOW_ON_OFF" ] = this;
+    mEventHandlerMap[ "CAMERA_WINDOW_ON_OFF" ] = shared_from_this();
     mCommandNameToInt[ "CAMERA_WINDOW_ON_OFF" ] =
         CAMERA_WINDOW_ON_OFF;
-    mEventHandlerMap[ "CAMERA_WINDOW_RESOLUTION" ] = this;
+    mEventHandlerMap[ "CAMERA_WINDOW_RESOLUTION" ] = shared_from_this();
     mCommandNameToInt[ "CAMERA_WINDOW_RESOLUTION" ] =
         CAMERA_WINDOW_RESOLUTION;
 
-    mEventHandlerMap[ "DEPTH_HELPER_WINDOW_ON_OFF" ] = this;
+    mEventHandlerMap[ "DEPTH_HELPER_WINDOW_ON_OFF" ] = shared_from_this();
     mCommandNameToInt[ "DEPTH_HELPER_WINDOW_ON_OFF" ] =
         DEPTH_HELPER_WINDOW_ON_OFF;
-    mEventHandlerMap[ "DEPTH_HELPER_WINDOW_RESOLUTION" ] = this;
+    mEventHandlerMap[ "DEPTH_HELPER_WINDOW_RESOLUTION" ] = shared_from_this();
     mCommandNameToInt[ "DEPTH_HELPER_WINDOW_RESOLUTION" ] =
         DEPTH_HELPER_WINDOW_RESOLUTION;
     
-    mEventHandlerMap[ "PROJECTION_UPDATE" ] = this;
+    mEventHandlerMap[ "PROJECTION_UPDATE" ] = shared_from_this();
     mCommandNameToInt[ "PROJECTION_UPDATE" ] =
         PROJECTION_UPDATE;
 
-    mEventHandlerMap[ "FOCAL_DISTANCE" ] = this;
+    mEventHandlerMap[ "FOCAL_DISTANCE" ] = shared_from_this();
     mCommandNameToInt[ "FOCAL_DISTANCE" ] =
         FOCAL_DISTANCE;
-    mEventHandlerMap[ "FOCAL_RANGE" ] = this;
+    mEventHandlerMap[ "FOCAL_RANGE" ] = shared_from_this();
     mCommandNameToInt[ "FOCAL_RANGE" ] =
         FOCAL_RANGE;
-    mEventHandlerMap[ "MAX_CIRCLE_OF_CONFUSION" ] = this;
+    mEventHandlerMap[ "MAX_CIRCLE_OF_CONFUSION" ] = shared_from_this();
     mCommandNameToInt[ "MAX_CIRCLE_OF_CONFUSION" ] =
         MAX_CIRCLE_OF_CONFUSION;
 }

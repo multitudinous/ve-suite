@@ -117,9 +117,9 @@ VEIntStovemod::VEIntStovemod( void )
     showContour = false;
 
     stlColor[0] = 0.0; stlColor[1] = 0.0; stlColor[2] = 1.0;
-    mEventHandlerMap["BAFFLE_UPDATE"]=this;
-    mEventHandlerMap["SHOW_VECTORS"]=this;
-    mEventHandlerMap["SHOW_CONTOUR"]=this;
+    mEventHandlerMap["BAFFLE_UPDATE"]=shared_from_this();
+    mEventHandlerMap["SHOW_VECTORS"]=shared_from_this();
+    mEventHandlerMap["SHOW_CONTOUR"]=shared_from_this();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VEIntStovemod::~VEIntStovemod( void )

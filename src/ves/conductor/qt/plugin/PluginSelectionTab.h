@@ -37,7 +37,10 @@
 
 #include <switchwire/ScopedConnectionList.h>
 
+#include <ves/xplorer/plugin/PluginBasePtr.h>
+
 #include <QtGui/QWidget>
+
 #include <map>
 
 namespace Ui
@@ -49,13 +52,6 @@ class QListWidgetItem;
 
 namespace ves
 {
-namespace xplorer
-{
-namespace plugin
-{
-class PluginBase;
-}
-}
 namespace conductor
 {
 class MainWindow;
@@ -90,7 +86,7 @@ private:
 
     void InstantiatePlugin( QListWidgetItem* item );
     void CreateUIPlugin( const std::string& pluginFactoryName,
-                         ves::xplorer::plugin::PluginBase* xplorerPlugin );
+                         ves::xplorer::plugin::PluginBasePtr xplorerPlugin );
     ///On file load populate the plugin tree
     void FileLoadedSlot( const std::string& fileName );
 
@@ -119,12 +115,12 @@ protected Q_SLOTS:
     void on_m_instantiatedPlugins_currentItemChanged( QListWidgetItem* current, QListWidgetItem* previous );
 
     void qCreateUIPlugin( const std::string& pluginFactoryName,
-                          ves::xplorer::plugin::PluginBase* xplorerPlugin );
+                          ves::xplorer::plugin::PluginBasePtr xplorerPlugin );
     void qFileLoadedSlot( const std::string& fileName );
 
 Q_SIGNALS:
     void CreateUIPluginQSignal( const std::string& pluginFactoryName,
-                                ves::xplorer::plugin::PluginBase* xplorerPlugin );
+                                ves::xplorer::plugin::PluginBasePtr xplorerPlugin );
     void FileLoadedQSignal( const std::string& fileName );
 
 };

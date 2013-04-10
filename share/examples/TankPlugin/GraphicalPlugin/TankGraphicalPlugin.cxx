@@ -75,9 +75,9 @@ TankGraphicalPlugin::TankGraphicalPlugin()
 {
     //DYNSIM
     mObjectName = "TankPlugin";
-    mEventHandlerMap[ "OPCData" ] = this;
-    mEventHandlerMap[ "TANK_CAD" ] = this;
-    //mEventHandlerMap[ "VALVE_CAD" ] = this;
+    mEventHandlerMap[ "OPCData" ] = shared_from_this();
+    mEventHandlerMap[ "TANK_CAD" ] = shared_from_this();
+    //mEventHandlerMap[ "VALVE_CAD" ] = shared_from_this();
     m_tankDCS = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////

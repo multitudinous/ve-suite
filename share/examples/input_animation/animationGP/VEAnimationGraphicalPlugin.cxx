@@ -82,7 +82,7 @@ VEAnimationGraphicalPlugin::VEAnimationGraphicalPlugin()
     //DYNSIM
     mObjectName = "DSPlugin"; //name of the sheet
     ///Set the name of the commands we want to capture from the dynsim unit
-    mEventHandlerMap[ "OPCData" ] = this;
+    mEventHandlerMap[ "OPCData" ] = shared_from_this();
 
     //DYNAMICS
 //    mObjectName = "ADPlugin"; //name of the sheet

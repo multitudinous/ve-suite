@@ -36,10 +36,16 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+#include <ves/util/PointerTypes.h>
+
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/CommandPtr.h>
 
+#include <ves/xplorer/plugin/PluginBasePtr.h>
+
 #include <ves/xplorer/scenegraph/DCS.h>
+
+#include <boost/enable_shared_from_this.hpp>
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
@@ -95,7 +101,7 @@ namespace plugin
  * \class ves::xplorer::plugin::PluginBase
  *
  */
-class VE_GRAPHICALPLUGINS_EXPORTS PluginBase
+    class VE_GRAPHICALPLUGINS_EXPORTS PluginBase : public boost::enable_shared_from_this< PluginBase >
 {
 public:
     ///Default constructor
@@ -137,7 +143,7 @@ public:
 
     ///Return map that maps command names to this plugin
     ///\return The map used by cfdExecutive to process commands send by the gui
-    std::map< std::string, PluginBase* > GetCommandNameMap();
+    std::map< std::string, PluginBasePtr > GetCommandNameMap();
 
     ///Get the model for this plugin
     ///\return The model for this plugin
@@ -268,7 +274,7 @@ protected:
     osg::ref_ptr< osg::Group > mWorldDCS;
     ///This map is populated with this pointers and with event names
     ///so that this plugin can execute events from conductor plugins
-    std::map< std::string, PluginBase* > mEventHandlerMap;
+    std::map< std::string, PluginBasePtr > mEventHandlerMap;
 
 private:
     std::string mNetwork;

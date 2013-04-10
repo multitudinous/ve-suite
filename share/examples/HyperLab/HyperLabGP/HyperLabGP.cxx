@@ -55,10 +55,10 @@ HyperLabGP::HyperLabGP()
 {
     mObjectName = "HyperLabUI";
 
-    mEventHandlerMap[ "SHADER_EFFECTS_UPDATE" ] = this;
-    mEventHandlerMap[ "AMBIENT_UPDATE" ] = this;
-    mEventHandlerMap[ "DIFFUSE_UPDATE" ] = this;
-    mEventHandlerMap[ "SPECULAR_UPDATE" ] = this;
+    mEventHandlerMap[ "SHADER_EFFECTS_UPDATE" ] = shared_from_this();
+    mEventHandlerMap[ "AMBIENT_UPDATE" ] = shared_from_this();
+    mEventHandlerMap[ "DIFFUSE_UPDATE" ] = shared_from_this();
+    mEventHandlerMap[ "SPECULAR_UPDATE" ] = shared_from_this();
 }
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabGP::~HyperLabGP()

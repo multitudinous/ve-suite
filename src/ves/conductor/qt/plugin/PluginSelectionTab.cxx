@@ -95,9 +95,9 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget* parent 
     qRegisterMetaType<ves::xplorer::plugin::PluginBase>();
 
     connect( this, SIGNAL( CreateUIPluginQSignal( const std::string& ,
-                           ves::xplorer::plugin::PluginBase* ) ),
+                           ves::xplorer::plugin::PluginBasePtr ) ),
              this, SLOT( qCreateUIPlugin( const std::string& ,
-                                          ves::xplorer::plugin::PluginBase* ) ),
+                                          ves::xplorer::plugin::PluginBasePtr ) ),
              Qt::QueuedConnection );
 
     connect( this, SIGNAL( FileLoadedQSignal( const std::string& ) ),
@@ -105,7 +105,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget* parent 
              Qt::QueuedConnection );
 
     CONNECTSIGNALS_2( "%CreatePlugin",
-                      void ( const std::string&, ves::xplorer::plugin::PluginBase* ),
+                      void ( const std::string&, ves::xplorer::plugin::PluginBasePtr ),
                       &PluginSelectionTab::CreateUIPlugin, m_connections,
                       any_SignalType, normal_Priority );
 
@@ -464,7 +464,7 @@ void PluginSelectionTab::on_m_removePluginButton_clicked()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::CreateUIPlugin( const std::string& pluginFactoryClassName,
-        ves::xplorer::plugin::PluginBase* xplorerPlugin )
+        ves::xplorer::plugin::PluginBasePtr xplorerPlugin )
 {
     CreateUIPluginQSignal( pluginFactoryClassName, xplorerPlugin );
 }
@@ -507,7 +507,7 @@ void PluginSelectionTab::FileLoadedSlot( const std::string& fileName )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::qCreateUIPlugin( const std::string& pluginFactoryClassName,
-        ves::xplorer::plugin::PluginBase* xplorerPlugin )
+        ves::xplorer::plugin::PluginBasePtr xplorerPlugin )
 {
     //std::cout << "PluginSelectionTab: Looking for " << pluginFactoryClassName << std::endl << std::flush;
     QString pluginName = QString::fromStdString( pluginFactoryClassName );

@@ -33,6 +33,8 @@
 #include <ves/conductor/qt/plugin/UIPluginBase.h>
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/Model.h>
+#include <ves/xplorer/plugin/PluginBase.h>
+
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -51,8 +53,7 @@ using namespace ves::open::xml::model;
 UIPluginBase::UIPluginBase()
     :
     m_id( 0 ),
-    m_veModel( ModelPtr() ),
-    m_xplorerPlugin( 0 )
+    m_veModel( ModelPtr() )
 {
     ;
 }
@@ -432,7 +433,7 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelPtr tempModel )
     }
 }
 
-void UIPluginBase::SetXplorerPlugin( ves::xplorer::plugin::PluginBase* plugin )
+void UIPluginBase::SetXplorerPlugin( ves::xplorer::plugin::PluginBasePtr plugin )
 {
     if( !plugin )
     {

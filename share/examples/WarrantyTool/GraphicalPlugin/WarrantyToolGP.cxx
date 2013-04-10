@@ -120,8 +120,8 @@ WarrantyToolGP::WarrantyToolGP()
     mObjectName = "WarrantyToolUI";
     m_dbFilename = "sample.db";
     
-    mEventHandlerMap[ "WARRANTY_TOOL_PART_TOOLS" ] = this;
-    mEventHandlerMap[ "WARRANTY_TOOL_DB_TOOLS" ] = this;
+    mEventHandlerMap[ "WARRANTY_TOOL_PART_TOOLS" ] = shared_from_this();
+    mEventHandlerMap[ "WARRANTY_TOOL_DB_TOOLS" ] = shared_from_this();
     
     m_lineSegmentIntersector = new osgUtil::LineSegmentIntersector( osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
 }

@@ -43,6 +43,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/GlobalBase.h>
 
+#include <ves/xplorer/plugin/PluginBasePtr.h>
+
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/model/SystemPtr.h>
 
@@ -69,11 +71,6 @@ namespace xplorer
 namespace event
 {
 class EventHandler;
-}
-
-namespace plugin
-{
-class PluginBase;
 }
 
 namespace scenegraph
@@ -141,7 +138,7 @@ public:
     ///This function returns the map of the current plugins
     ///so that evehenthandlers can manipulate the plugins while
     ///with commands from the gui
-    std::map< std::string, ves::xplorer::plugin::PluginBase* >* GetTheCurrentPlugins();
+    std::map< std::string, ves::xplorer::plugin::PluginBasePtr >* GetTheCurrentPlugins();
 
     ///Get available plugins object
     cfdVEAvailModules* GetAvailablePlugins();
@@ -201,16 +198,16 @@ private:
     std::string mTopSystemID;
 
     ///_name_map : maps a module name to it's module id.
-    std::map< std::string, ves::xplorer::plugin::PluginBase* > mPluginsMap;
+    std::map< std::string, ves::xplorer::plugin::PluginBasePtr > mPluginsMap;
 
     ///map to hold unique plugin command names and associated plugin pointers
-    std::map< std::string, std::map< std::string, ves::xplorer::plugin::PluginBase* > > pluginEHMap;
+    std::map< std::string, std::map< std::string, ves::xplorer::plugin::PluginBasePtr > > pluginEHMap;
 
     ///Network View
     NetworkSystemView* netSystemView;
 
     ///The event handler for commands.
-    std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;
+    std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;
 
     ///The GUID for the executive
     std::string m_UINAME;

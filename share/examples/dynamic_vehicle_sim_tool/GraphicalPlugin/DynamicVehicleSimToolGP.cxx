@@ -151,12 +151,12 @@ DynamicVehicleSimToolGP::DynamicVehicleSimToolGP()
                       m_connections, any_SignalType, normal_Priority );
 
 
-    mEventHandlerMap[ "Tool Info" ] = this;
-    mEventHandlerMap[ "Geometry Data Map" ] = this;
-    mEventHandlerMap[ "Geometry Map Update" ] = this;
-    mEventHandlerMap[ "Simulator Update" ] = this;
-    mEventHandlerMap[ "Computer Info Update" ] = this;
-    mEventHandlerMap[ "DVST Registration Update" ] = this;
+    mEventHandlerMap[ "Tool Info" ] = shared_from_this();
+    mEventHandlerMap[ "Geometry Data Map" ] = shared_from_this();
+    mEventHandlerMap[ "Geometry Map Update" ] = shared_from_this();
+    mEventHandlerMap[ "Simulator Update" ] = shared_from_this();
+    mEventHandlerMap[ "Computer Info Update" ] = shared_from_this();
+    mEventHandlerMap[ "DVST Registration Update" ] = shared_from_this();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DynamicVehicleSimToolGP::~DynamicVehicleSimToolGP()
