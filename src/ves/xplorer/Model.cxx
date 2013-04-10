@@ -64,6 +64,9 @@
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
+
 #include <osg/StateSet>
 
 #include <vpr/IO/Socket/SocketStream.h>
@@ -75,9 +78,6 @@
 #include <gmtl/Misc/MatrixConvert.h>
 
 #include <gadget/Type/PositionInterface.h>
-
-#include <switchwire/EventManager.h>
-#include <switchwire/OptionalMacros.h>
 
 #include <vtkUnstructuredGrid.h>
 #include <vtkDataWriter.h>
