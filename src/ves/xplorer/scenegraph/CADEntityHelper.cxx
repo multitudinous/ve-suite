@@ -91,8 +91,6 @@
 
 #include <OpenThreads/Thread>
 
-//#include <osgbBulletPlus/SaveRestore.h>
-
 #include <osgwTools/Version.h>
 #include <osgwTools/CollapseLOD.h>
 
@@ -109,8 +107,6 @@
 #endif
 //#include <osgwQuery/QueryUtils.h>
 
-
-
 // --- STL Includes --- //
 #include <cctype>
 #include <sstream>
@@ -119,12 +115,19 @@
 
 using namespace ves::xplorer::scenegraph;
 
+#include <plugins/ApplicationBarrierManager/ApplicationBarrier.h>
+///When running on a cluster this holds all of the viz nodes until the data is ready to be added to the scenegraph
+cluster::ApplicationBarrier m_modelBarrier;
+
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper()
     :
     m_occlusionSettings( "Off" )
 {
     mIsSTLFile = false;
+    // initialize barrier
+    vpr::GUID id("446F5FCE-56B3-4376-A10C-BA58CBC5CC97");
+    m_modelBarrier.init(id);
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
@@ -599,7 +602,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     {
         util::UnRefImageDataVisitor uridv( mCadNode.get() );
     }
-
+    m_modelBarrier.wait();
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntityHelper::

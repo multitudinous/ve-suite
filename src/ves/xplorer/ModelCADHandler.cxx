@@ -159,8 +159,8 @@ void ModelCADHandler::CreatePart( const std::string& fileName,
                                   const std::string& parentID,
                                   const std::string& occlusionSettings )
 {
-    ves::xplorer::communication::CommunicationHandler::instance()->
-    SendConductorMessage( "Loading file: " + fileName );
+    //ves::xplorer::communication::CommunicationHandler::instance()->
+    //SendConductorMessage( "Loading file: " + fileName );
     ves::xplorer::scenegraph::CADEntity* tempCAD =
         ModelHandler::instance()->IsCADFileLoaded( fileName );
     if( tempCAD )
@@ -192,8 +192,8 @@ void ModelCADHandler::CreatePart( const std::string& fileName,
     ModelHandler::instance()->RegisterCADFile( m_partList[ partID ] );
     //add key pointer to physics map for bullet rigid body
     //add data pair for transform node
-    ves::xplorer::communication::CommunicationHandler::instance()->
-    SendConductorMessage( "Loaded file: " + fileName );
+    //ves::xplorer::communication::CommunicationHandler::instance()->
+    //SendConductorMessage( "Loaded file: " + fileName );
 }
 /////////////////////////////////////////////////////
 void ModelCADHandler::RemoveNode( const std::string& nodeID,

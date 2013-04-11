@@ -341,7 +341,6 @@ private:
 
     ///The root model node of our scenegraph
     osg::ref_ptr< osg::Group > mModelRoot;
-    //osg::ref_ptr< DCS > mModelRoot;
 
     ///
     osg::ref_ptr< Group > m_graphicalPluginManager;

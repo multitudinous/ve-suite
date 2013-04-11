@@ -511,7 +511,6 @@ vtkPolyData* ModelHandler::_GetArrowPolyData()
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::InitScene()
 {
-
     this->arrow = _GetArrowPolyData();
 
     if( !arrow )
@@ -520,10 +519,6 @@ void ModelHandler::InitScene()
         std::cerr << "Couldn't create arrow polydata!!" << std::endl;
         exit( 1 );
     }
-
-    // initialize barrier
-    vpr::GUID id("446F5FCE-56B3-4376-A10C-BA58CBC5CC97");
-    m_modelBarrier.init(id);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::PreFrameUpdate()
