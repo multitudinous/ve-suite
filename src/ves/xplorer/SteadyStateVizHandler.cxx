@@ -121,14 +121,14 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     m_vizThread( 0 ),
     actorsAreReady( false ),
     computeActorsAndGeodes( false ),
-    texturesActive( false ),
     lastSource( 0 ),
     cursor( 0 ),
     useLastSource( false ),
     transientActors( true ),
     m_logger( Poco::Logger::get( "xplorer.SteadyStateVizHandler" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) ),
-    m_playControl( lfx::core::PlayControlPtr( new lfx::core::PlayControl() ) )
+    m_playControl( lfx::core::PlayControlPtr( new lfx::core::PlayControl() ) ),
+    m_frameTime( 0.0 )
 {
     vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
     vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
@@ -376,6 +376,12 @@ void SteadyStateVizHandler::InitScene()
 {
     //This set of thread stuff needs to be in ssvizhandler and transvizhandler
     std::cout << "| Initializing............................................. Threads |" << std::endl;
+    
+    // initialize barrier
+    vpr::GUID id("EDD95F8E-BDB9-4063-B749-08681532E264");
+    m_vizBarrier.init(id);
+
+    m_frameTime = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentTime();
     runIntraParallelThread = true;
     //static_cast<void (App::*)( MyEvent& )>(&App::OnEvent)
     m_vizThread = new vpr::Thread( boost::bind( static_cast< void ( SteadyStateVizHandler::* )() >( &SteadyStateVizHandler::CreateActorThread ), boost::ref( *this ) ) );
@@ -400,11 +406,11 @@ void SteadyStateVizHandler::PreFrameUpdate()
         }
     }
 
-    //const double clockTime( viewer.getFrameStamp()->getReferenceTime() );
-    //const double elapsed( clockTime - prevClockTime );
-    //prevClockTime = clockTime;
-    m_playControl->elapsedClockTick( 0.1 );
-    
+    const double clockTime = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentTime();
+    const double elapsed = clockTime - m_frameTime;
+    m_frameTime = clockTime;
+    m_playControl->elapsedClockTick( elapsed );
+
     //Update any per frame data
     /*for( std::multimap< int, cfdGraphicsObject* >::const_iterator
         itr = graphicsObjects.begin();
@@ -540,16 +546,17 @@ void SteadyStateVizHandler::CreateActorThread()
             cfdObjects* const tempVisObject = m_visObjectQueue.front();
             m_visObjectQueue.pop();
 
-            //if( !tempVisObject->GetUpdateFlag() )
-            {
-                vprDEBUG( vesDBG, 0 ) << "|\tUpdating Graphics Data..."
-                                      << std::endl << vprDEBUG_FLUSH;
-                tempVisObject->Update();
-                m_visObjectSGQueue.push( tempVisObject );
-                SetActorsAreReady( true );
-                vprDEBUG( vesDBG, 0 ) << "|\tDone updating Graphics Data"
-                                      << std::endl << std::endl << vprDEBUG_FLUSH;
-            }
+            vprDEBUG( vesDBG, 0 ) << "|\tUpdating Graphics Data..."
+                                  << std::endl << vprDEBUG_FLUSH;
+            tempVisObject->Update();
+            m_visObjectSGQueue.push( tempVisObject );
+            //Wait until all of the viz nodes are ready
+            m_vizBarrier.wait();
+            m_frameTime = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentTime();
+            m_playControl->setAnimationTime( 0.0 );
+            SetActorsAreReady( true );
+            vprDEBUG( vesDBG, 0 ) << "|\tDone updating Graphics Data"
+                                  << std::endl << std::endl << vprDEBUG_FLUSH;
         }
 
         if( m_visObjectQueue.empty() )

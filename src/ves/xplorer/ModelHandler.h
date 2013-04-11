@@ -50,6 +50,8 @@
 #include <vpr/Util/Singleton.h>
 #include <vpr/Sync/Mutex.h>
 
+#include <plugins/ApplicationBarrierManager/ApplicationBarrier.h>
+
 #include <osg/Node>
 
 #include <vector>
@@ -191,6 +193,8 @@ private:
     switchwire::ScopedConnectionList m_connections;
     ///Whether we have a db or not
     bool m_dbPresent;
+    ///When running on a cluster this holds all of the viz nodes until the data is ready to be added to the scenegraph
+    cluster::ApplicationBarrier m_modelBarrier;
 };
 }
 }

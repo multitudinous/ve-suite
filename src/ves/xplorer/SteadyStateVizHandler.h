@@ -59,6 +59,8 @@
 #include <vpr/Util/Singleton.h>
 #include <vpr/Util/GUID.h>
 
+#include <plugins/ApplicationBarrierManager/ApplicationBarrier.h>
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 
@@ -203,15 +205,11 @@ private:
     ///THe queue that holds the objects that need to be added to the sg
     std::queue< cfdObjects* > m_visObjectSGQueue;
 
-    //ves::xplorer::scenegraph::cfdTempAnimation* _activeTempAnimation;
-
     //Classes and variables for multithreading.
     vpr::Thread* m_vizThread;
 
     bool actorsAreReady;
     bool computeActorsAndGeodes;
-    bool changeGeometry;
-    bool texturesActive;
     vtkPolyData* lastSource;
     cfdCursor* cursor;
 
@@ -244,6 +242,10 @@ private:
     std::map< std::pair< std::string, std::pair< std::string, std::string > > , ves::xplorer::cfdObjects* > m_visObjectMap;
     ///Play controller
     lfx::core::PlayControlPtr m_playControl;
+    ///When running on a cluster this holds all of the viz nodes until the data is ready to be added to the scenegraph
+    cluster::ApplicationBarrier m_vizBarrier;
+    ///Previous time tag
+    double m_frameTime;
 };
 }
 }
