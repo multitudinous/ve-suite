@@ -42,9 +42,6 @@
 #include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
-#include <switchwire/EventManager.h>
-#include <switchwire/OptionalMacros.h>
-
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/environment/NavigationAnimationEngine.h>
@@ -92,6 +89,9 @@
 /// C/C++ libraries
 #include <fstream>
 #include <cstdlib>
+
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 vprSingletonImpLifetime( ves::xplorer::EnvironmentHandler, 1 );
 
