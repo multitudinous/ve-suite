@@ -68,6 +68,8 @@
 #include <osgwTools/NodePathUtils.h>
 #include <osgwTools/Orientation.h>
 
+//#include <osgDB/WriteFile>
+
 #include <crunchstore/SearchCriterion.h>
 
 #include <boost/algorithm/string/replace.hpp>
@@ -287,7 +289,7 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
             }
         }
     }
-
+    
     //If not node and not found
     if( !found )
     {
@@ -335,6 +337,7 @@ void TreeTab::Select( const QModelIndex& index, bool highlight )
     else if( type == "DATA" )
     {
         mActiveSet = propertystore::PropertySetPtr( new ves::xplorer::data::DatasetPropertySet() );
+        //osgDB::writeNodeFile( *(ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()), node->getDescriptions().at( 1 ) +".osg" );
         mActiveSet->SetUUID( node->getDescriptions().at( 1 ) );
     }
 

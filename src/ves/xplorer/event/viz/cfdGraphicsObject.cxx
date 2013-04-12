@@ -47,7 +47,7 @@
 #include <osg/Sequence>
 #include <osg/PositionAttitudeTransform>
 
-#include <osgDB/WriteFile>
+//#include <osgDB/WriteFile>
 
 #include <latticefx/core/vtk/DataSet.h>
 
