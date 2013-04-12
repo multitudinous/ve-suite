@@ -67,11 +67,6 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include <ves/xplorer/data/DatabaseManager.h>
-
-#include <switchwire/EventManager.h>
-#include <switchwire/OptionalMacros.h>
-
 #include <crunchstore/Persistable.h>
 #include <crunchstore/DataManager.h>
 #include <crunchstore/SearchCriterion.h>
@@ -93,7 +88,6 @@
 #include <vtkCompositeDataPipeline.h>
 #include <vtkAlgorithm.h>
 
-
 #include <ves/xplorer/event/viz/VisFeatureMakerBase.h>
 
 #include <ves/xplorer/event/viz/ContourFeatureMaker.h>
@@ -104,6 +98,11 @@
 #include <ves/xplorer/event/viz/VolumeVisFeatureMaker.h>
 
 #include <latticefx/core/vtk/DataSet.h>
+
+#include <ves/xplorer/data/DatabaseManager.h>
+
+#include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 1 );
 
