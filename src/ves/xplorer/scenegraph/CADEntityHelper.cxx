@@ -31,6 +31,9 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
+//This header needs to be here or else windows complains about things.
+#include <plugins/ApplicationBarrierManager/ApplicationBarrier.h>
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -115,7 +118,6 @@
 
 using namespace ves::xplorer::scenegraph;
 
-#include <plugins/ApplicationBarrierManager/ApplicationBarrier.h>
 ///When running on a cluster this holds all of the viz nodes until the data is ready to be added to the scenegraph
 cluster::ApplicationBarrier m_modelBarrier;
 

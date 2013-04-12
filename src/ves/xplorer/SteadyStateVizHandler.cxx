@@ -30,8 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
+//This header needs to be here or else windows complains about things.
+#include <plugins/ApplicationBarrierManager/ApplicationBarrier.h>
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/SteadyStateVizHandler.h>
+
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/Model.h>
@@ -106,6 +111,9 @@
 
 vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 1 );
 
+///When running on a cluster this holds all of the viz nodes until the data is ready to be added to the scenegraph
+static cluster::ApplicationBarrier m_vizBarrier;
+    
 using namespace ves::xplorer::command;
 using namespace ves::xplorer::event::viz;
 

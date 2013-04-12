@@ -36,15 +36,14 @@
 #include <ves/xplorer/ModelPtr.h>
 #include <ves/xplorer/GlobalBase.h>
 
-#include <ves/xplorer/ModelHandlerPtr.h>
 #include <ves/xplorer/ModelCADHandlerPtr.h>
 
 #include <ves/xplorer/event/EventHandlerPtr.h>
 
+#include <ves/open/xml/model/ModelPtr.h>
+
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
-
-#include <ves/open/xml/model/ModelPtr.h>
 
 #include <switchwire/ScopedConnectionList.h>
 

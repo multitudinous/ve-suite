@@ -34,18 +34,18 @@
 #define VE_XPLORER_MODELHANDLER_H
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/ModelHandlerPtr.h>
 
 #include <ves/xplorer/ModelPtr.h>
+
 #include <ves/xplorer/event/EventHandlerPtr.h>
 
 #include <ves/xplorer/event/cad/CADSlotInitializerPtr.h>
 
+#include <ves/open/xml/CommandPtr.h>
+
 #include <switchwire/ScopedConnectionList.h>
 
 #include <switchwire/Event.h>
-
-#include <ves/open/xml/CommandPtr.h>
 
 #include <vpr/Util/Singleton.h>
 #include <vpr/Sync/Mutex.h>

@@ -32,9 +32,10 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/viz/PolydataSurfaceEventHandler.h>
-#include <ves/xplorer/event/viz/cfdGraphicsObject.h>
 
 #include <ves/xplorer/SteadyStateVizHandler.h>
+
+#include <ves/xplorer/event/viz/cfdGraphicsObject.h>
 
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>

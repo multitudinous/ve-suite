@@ -36,8 +36,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/SteadyStateVizHandlerPtr.h>
-
 #include <ves/xplorer/GlobalBasePtr.h>
 
 #include <ves/xplorer/event/EventHandlerPtr.h>
@@ -48,9 +46,11 @@
 
 #include <ves/open/xml/CommandPtr.h>
 
+#include <ves/xplorer/Logging.h>
+
 #include <switchwire/ScopedConnectionList.h>
 
-#include <ves/xplorer/Logging.h>
+#include <latticefx/core/PlayControl.h>
 
 // --- Juggler Includes --- //
 #include <vrj/vrjParam.h>
@@ -58,8 +58,6 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Singleton.h>
 #include <vpr/Util/GUID.h>
-
-#include <plugins/ApplicationBarrierManager/ApplicationBarrier.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -77,8 +75,6 @@ class vtkPolyData;
 #elif defined(_MSC_VER) && _MSC_VER >= 1500
 #  include <unordered_map>
 #endif
-
-#include <latticefx/core/PlayControl.h>
 
 namespace ves
 {
@@ -242,8 +238,6 @@ private:
     std::map< std::pair< std::string, std::pair< std::string, std::string > > , ves::xplorer::cfdObjects* > m_visObjectMap;
     ///Play controller
     lfx::core::PlayControlPtr m_playControl;
-    ///When running on a cluster this holds all of the viz nodes until the data is ready to be added to the scenegraph
-    cluster::ApplicationBarrier m_vizBarrier;
     ///Previous time tag
     double m_frameTime;
 };
