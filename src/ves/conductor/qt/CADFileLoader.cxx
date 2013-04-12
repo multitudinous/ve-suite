@@ -139,7 +139,7 @@ void CADFileLoader::WritePartToDB( std::string const& vegFileNamePath,
     boost::filesystem::path cadFileName( vegFileNamePath );
     newSet.SetPropertyValue( "NameTag", boost::filesystem::basename( cadFileName ) );
     newSet.SetPropertyValue( "Opacity", 1.0 );
-    newSet.SetPropertyValue( "TransparencyFlag", true );
+    newSet.SetPropertyValue( "TransparencyFlag", false );
     newSet.SetPropertyValue( "Transform_Translation_X", 0. );
     newSet.SetPropertyValue( "Transform_Translation_Y", 0. );
     newSet.SetPropertyValue( "Transform_Translation_Z", 0. );
