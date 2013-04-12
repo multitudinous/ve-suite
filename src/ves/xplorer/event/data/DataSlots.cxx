@@ -292,12 +292,18 @@ void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet )
     {
         set.SetUUID( dataSetUUID );
     }
-    
-    osg::Node::DescriptionList descriptorsList;
-    descriptorsList.push_back( "VE_DATA_NODE" );
-    descriptorsList.push_back( set.GetUUIDAsString() );
-    dataSet->GetDCS()->setDescriptions( descriptorsList );
 
+    //When there are child datasets we do not want to overwrite the
+    //scenegraph with uuid data for the child datasets because the ui
+    //will use this information to look up the db entries
+    if( dataSet->GetParent() == dataSet )
+    {
+        osg::Node::DescriptionList descriptorsList;
+        descriptorsList.push_back( "VE_DATA_NODE" );
+        descriptorsList.push_back( set.GetUUIDAsString() );
+        dataSet->GetDCS()->setDescriptions( descriptorsList );
+    }
+    
     set.SetPropertyValue( "Filename", dataSet->GetFileName() );
     set.SetPropertyValue( "StepLength", dataSet->GetStepLength() );
     set.SetPropertyValue( "MaxTime", dataSet->GetMaxTime() );
@@ -333,7 +339,6 @@ void LoadTransientData( const std::string& uuid, const bool& load )
 
     boost::filesystem::path tempPath( dataSet->GetFileName() );
     std::string tempFilename = dataSet->GetFileName();
-
     std::string dataDir = tempPath.parent_path().string();
     if( dataDir.empty() )
     {
@@ -344,7 +349,7 @@ void LoadTransientData( const std::string& uuid, const bool& load )
     dataSet->LoadTransientData( dataDir, fileExt );
     std::vector< lfx::core::vtk::DataSetPtr > dataSetVector =
         dataSet->GetTransientDataSets();
-    
+
     for( size_t i = 0; i < dataSetVector.size(); ++i )
     {
         if( tempFilename != dataSetVector[ i ]->GetFileName() )
