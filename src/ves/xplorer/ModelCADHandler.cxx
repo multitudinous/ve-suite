@@ -51,6 +51,8 @@
 
 #include <osgUtil/Optimizer>
 
+//#include <boost/thread/thread.hpp>
+
 ///This must be here due to boost header conflicts on windows
 #include <ves/xplorer/Debug.h>
 
@@ -159,6 +161,9 @@ void ModelCADHandler::CreatePart( const std::string& fileName,
                                   const std::string& parentID,
                                   const std::string& occlusionSettings )
 {
+    //boost::thread t3( &ModelCADHandler::RemoveNode, *this, partID, "Part" );
+    //t3.join();
+    
     //ves::xplorer::communication::CommunicationHandler::instance()->
     //SendConductorMessage( "Loading file: " + fileName );
     ves::xplorer::scenegraph::CADEntity* tempCAD =

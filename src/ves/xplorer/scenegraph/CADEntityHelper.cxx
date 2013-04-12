@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 //This header needs to be here or else windows complains about things.
-#include <plugins/ApplicationBarrierManager/ApplicationBarrier.h>
+//#include <plugins/ApplicationBarrierManager/ApplicationBarrier.h>
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
@@ -119,7 +119,11 @@
 using namespace ves::xplorer::scenegraph;
 
 ///When running on a cluster this holds all of the viz nodes until the data is ready to be added to the scenegraph
-cluster::ApplicationBarrier m_modelBarrier;
+//Unfortunately there is no way to push the loading of cad data off to a separate thread
+//until we are loading things through signals and slots. There are to many
+//serial operations that occur after a cad file is loaded to easily extract loading
+//cad files on a separate thread.
+//cluster::ApplicationBarrier m_modelBarrier;
 
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper()
@@ -128,8 +132,8 @@ CADEntityHelper::CADEntityHelper()
 {
     mIsSTLFile = false;
     // initialize barrier
-    vpr::GUID id("446F5FCE-56B3-4376-A10C-BA58CBC5CC97");
-    m_modelBarrier.init(id);
+    //vpr::GUID id("446F5FCE-56B3-4376-A10C-BA58CBC5CC97");
+    //m_modelBarrier.init(id);
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
@@ -604,7 +608,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     {
         util::UnRefImageDataVisitor uridv( mCadNode.get() );
     }
-    m_modelBarrier.wait();
+    //m_modelBarrier.wait();
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntityHelper::
