@@ -97,11 +97,6 @@ function arch()
       ;;
     x86_64 | x64 | 64-bit)
       ARCH=64-bit
-      if [ $PLATFORM = "Windows" ]; then
-        REGROOT=${REGROOT}64
-        REGPATH=${REGPATH}/Wow6432Node
-        CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
-      fi
       ;;
     *)
       echo "Unrecognized Architecture: $ARCH" >&2
@@ -136,6 +131,10 @@ function wget()
 function windows()
 {
   if [ $PLATFORM = "Windows" ]; then
+    if [ $ARCH = "64-bit" ]; then
+        REGROOT=${REGROOT}64
+    fi
+
     #Find installed VS versions
     declare -a VS_VERSIONS=( "${REGROOT}"/HKEY_CLASSES_ROOT/VisualStudio.DTE.* )
     VS_VERSIONS=( ${VS_VERSIONS[@]#*DTE.*} )
@@ -157,14 +156,19 @@ function windows()
         ;;
     esac
     echo "Using Visual Studio version: ${VS_VERSION}"
-    VS_REGPATH=( "${REGROOT}/${REGPATH}"/Microsoft/VisualStudio/${VS_VERSION}/InstallDir )
+
+    if [ $ARCH = "64-bit" ]; then
+      REGPATH=${REGPATH}/Wow6432Node
+      CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
+    fi
+    VS_REGPATH=( ${REGROOT}/${REGPATH}/Microsoft/VisualStudio/${VS_VERSION}/InstallDir )
     VSInstallDir=$( awk '{ print }' "${VS_REGPATH}" )
 
-    DOTNET_REGVAL=( "${REGROOT}/${REGPATH}"/Microsoft/.NETFramework/InstallRoot )
+    DOTNET_REGVAL=( ${REGROOT}/${REGPATH}/Microsoft/.NETFramework/InstallRoot )
     # .NET version is hardcoded to 3.5 for now
     DotNETInstallDir=$( awk '{ gsub( "", "" ); print }' "${DOTNET_REGVAL}" )v3.5
 
-    #declare -a CMAKE_REGPATH=( "${REGROOT}/${REGPATH}"/Kitware/* )
+    #declare -a CMAKE_REGPATH=( ${REGROOT}/${REGPATH}/Kitware/* )
     #CMAKEInstallDir=$( awk '{ print }' "${CMAKE_REGPATH[@]: -1}/@" )
 
     #export Path="${DotNETInstallDir}";${Path}
