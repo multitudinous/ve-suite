@@ -65,9 +65,8 @@ function platform()
       HOME=$USERPROFILE;
       # Does cmake exist?
       type -P cmake &>/dev/null || { echo "CMake is not installed." >&2; kill -SIGINT $$; }
-      # Just going to assume VS 9 for now
-      CMAKE_GENERATOR="Visual Studio 9 2008"
-      REGPATH="/proc/registry/HKEY_LOCAL_MACHINE/SOFTWARE"
+      REGROOT="/proc/registry"
+      REGPATH="HKEY_LOCAL_MACHINE/SOFTWARE"
       ;;
     Darwin | Linux)
       ;;
@@ -99,7 +98,8 @@ function arch()
     x86_64 | x64 | 64-bit)
       ARCH=64-bit
       if [ $PLATFORM = "Windows" ]; then
-        # export REGPATH=${REGPATH}/Wow6432Node
+        REGROOT=${REGROOT}64
+        REGPATH=${REGPATH}/Wow6432Node
         CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
       fi
       ;;
@@ -136,24 +136,41 @@ function wget()
 function windows()
 {
   if [ $PLATFORM = "Windows" ]; then
-    declare -a MSVC_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/SxS/V*7 )
-    #VCInstallDir=$( awk '{ print }' "${MSVC_REGPATH[1]}" )
-    #VSInstallDir=$( awk '{ print }' "${MSVC_REGPATH[@]: -1}" )
-
-    VS_REGPATH=( "${REGPATH}"/Microsoft/VisualStudio/9.0/InstallDir )
+    #Find installed VS versions
+    declare -a VS_VERSIONS=( "${REGROOT}"/HKEY_CLASSES_ROOT/VisualStudio.DTE.* )
+    VS_VERSIONS=( ${VS_VERSIONS[@]#*DTE.*} )
+    echo "Installed Visual Studio versions: ${VS_VERSIONS[@]}"
+    [ -z "${VS_VERSION}" ] && export VS_VERSION="${VS_VERSIONS[@]:-1}"
+    case $VS_VERSION in
+      9.0)
+        CMAKE_GENERATOR="Visual Studio 9 2008"
+        ;;
+      10.0)
+        CMAKE_GENERATOR="Visual Studio 10"
+        ;;
+      11.0)
+        CMAKE_GENERATOR="Visual Studio 11"
+        ;;
+      *)
+        echo "Unrecognized VS version: $VS_VERSION" >&2
+        kill -SIGINT $$
+        ;;
+    esac
+    echo "Using Visual Studio version: ${VS_VERSION}"
+    VS_REGPATH=( "${REGROOT}/${REGPATH}"/Microsoft/VisualStudio/${VS_VERSION}/InstallDir )
     VSInstallDir=$( awk '{ print }' "${VS_REGPATH}" )
 
-    declare DOTNET_REGVAL=( "${REGPATH}/Microsoft/.NETFramework/InstallRoot" )
+    DOTNET_REGVAL=( "${REGROOT}/${REGPATH}"/Microsoft/.NETFramework/InstallRoot )
     # .NET version is hardcoded to 3.5 for now
     DotNETInstallDir=$( awk '{ gsub( "", "" ); print }' "${DOTNET_REGVAL}" )v3.5
 
-    #declare -a CMAKE_REGPATH=( "${REGPATH}"/Kitware/* )
+    #declare -a CMAKE_REGPATH=( "${REGROOT}/${REGPATH}"/Kitware/* )
     #CMAKEInstallDir=$( awk '{ print }' "${CMAKE_REGPATH[@]: -1}/@" )
 
     #export Path="${DotNETInstallDir}";${Path}
     MSBUILD="${DotNETInstallDir}/MSBuild.exe"
     DEVENV="devenv.com"
-    declare -a PYTHON_REGPATH=( "${REGPATH}"/Python/PythonCore/* )
+    declare -a PYTHON_REGPATH=( "${REGROOT}"/HKEY_LOCAL_MACHINE/SOFTWARE/Python/PythonCore/* )
     export PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
     export PYTHONPATH=$( awk '{ print }' "${PYTHON_REGPATH[0]}/PythonPath/@" )
     #DRIVE_LETTER="${PYTHONHOME:0:1}"
