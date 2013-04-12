@@ -260,7 +260,7 @@ public:
 
     ///Update the UI quad with new position information
     void UpdateUIQuadPosition();
- 
+
 private:
     // Set this class up as a singleton
     ///Constructor

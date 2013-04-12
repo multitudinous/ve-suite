@@ -155,7 +155,8 @@ SceneRenderToTexture::SceneRenderToTexture( bool const& enableRTT )
     m_1dyFP( NULL ),
     m_finalShader( NULL ),
     m_light0( new osg::Light() ),
-    m_isUIAdded( false )
+    m_isUIAdded( false ),
+    m_desktopClusterControl( false )
 {
     /// When m_enableRTT is true we will use our old RTT and post processing
     /// pipeline. When it is false we will use bdfx.
@@ -1318,7 +1319,7 @@ void SceneRenderToTexture::Update(
     ///Add the ui to all of the cameras.
     if( !m_isUIAdded )
     {
-        if( scenegraph::SceneManager::instance()->IsDesktopMode() )
+        if( scenegraph::SceneManager::instance()->IsDesktopClusterControl() )
         {
             ///In desktop mode multiple contexts are opened an closed and we
             ///need to make sure we are on everyone. This loop gets added

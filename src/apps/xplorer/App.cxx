@@ -218,6 +218,8 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
 
     m_isMaster = !vm["vrjslave"].as<bool>();
 
+    //bool clusterMode = !vm["vrjslave"].as<bool>() && !vm["vrjmaster"].as<bool>();
+    //std::cout << " cluster mode " << clusterMode << std::endl;
     _tbvHandler = 0;
 #ifdef _PBUFFER
     _pbuffer = 0;
@@ -567,12 +569,30 @@ void App::initScene()
     }
 
     //Set rtt mode for devices
-    SceneManager::instance()->SetRTT( mRTT );
+    ves::xplorer::scenegraph::SceneManager::instance()->SetRTT( mRTT );
     //Define the rootNode, worldDCS, and lighting
-    SceneManager::instance()->InitScene();
-    SceneManager::instance()->ViewLogo( true );
-    SceneManager::instance()->SetFrameStamp( mFrameStamp.get() );
+    ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
+    ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( true );
+    ves::xplorer::scenegraph::SceneManager::instance()->SetFrameStamp( mFrameStamp.get() );
+    //Tell scenemanager if we are the master node
+    ves::xplorer::scenegraph::SceneManager::instance()->SetMasterNode( m_isMaster );
+    // Check commandline args for "--DesktopClusterControl"
 
+    if( !m_desktopMode )
+    {
+        bool clusterControl = m_vm["DesktopClusterControl"].as<bool>();
+        {
+            if( clusterControl )
+            {
+                ( *m_logStream ).information() << "Turning desktop cluster control on for the UI" << std::endl;
+            }
+            else
+            {
+                ( *m_logStream ).information() << "Desktop cluster control is off for the UI" << std::endl;
+            }
+        }
+        ves::xplorer::scenegraph::SceneManager::instance()->SetDesktopClusterControl( clusterControl );
+    }
     // modelHandler stores the arrow and holds all data and geometry
     ModelHandler::instance()->InitScene();
 
@@ -591,9 +611,6 @@ void App::initScene()
     }
 
     EnvironmentHandler::instance()->InitScene();
-
-    //Tell scenemanager if we are the master node
-    ves::xplorer::scenegraph::SceneManager::instance()->SetMasterNode( m_isMaster );
 
     // create steady state visualization objects
     SteadyStateVizHandler::instance()->InitScene();

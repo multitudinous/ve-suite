@@ -224,7 +224,8 @@ private:
 
     ///Add the ui group to the cameras
     bool m_isUIAdded;
-
+    ///Control if the UI in cluster mode will be controlled by the user from the master
+    bool m_desktopClusterControl;
 };
 } //end xplorer
 } //end ves

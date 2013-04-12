@@ -128,7 +128,8 @@ SceneManager::SceneManager()
     m_previousTime( 0 ),
     m_deltaTime( 0 ),
     m_viewMatrix( new osgwMx::MxCore() ),
-    m_userHeight( 5.0 )
+    m_userHeight( 5.0 ),
+    m_isDesktopClusterControl( true )
 {
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     m_zUpTransform = gmtl::makeRot< gmtl::Matrix44d >( gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0 ), x_axis ) );
@@ -886,7 +887,7 @@ void SceneManager::SetRTT( bool isRTTOn )
     m_isRTTOn = isRTTOn;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool SceneManager::IsDesktopMode()
+bool SceneManager::IsDesktopMode() const
 {
     return m_isDesktopMode;
 }
@@ -914,6 +915,16 @@ void SceneManager::SetMasterNode( bool isMasterNode )
 bool SceneManager::IsMasterNode()
 {
     return m_isMasterNode;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneManager::SetDesktopClusterControl( bool control )
+{
+    m_isDesktopClusterControl = control;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool SceneManager::IsDesktopClusterControl() const
+{
+    return m_isDesktopClusterControl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetDeviceHandlerGroup( osg::Group* deviceGroup )

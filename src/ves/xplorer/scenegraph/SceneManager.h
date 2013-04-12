@@ -263,7 +263,7 @@ public:
     void SetDesktopMode( bool isDesktopMode );
 
     ///Tell if we are in Desktop mode
-    bool IsDesktopMode();
+    bool IsDesktopMode() const;
 
     ///Set if we are in desktop mode
     void SetScreenAlignedNormals( bool isScreenAligned );
@@ -310,6 +310,12 @@ public:
 
     ///Return the current time from the VR Juggler time stamp
     double GetCurrentTime() const;
+
+    ///Set whether to use the master node as the controller for the UI
+    void SetDesktopClusterControl( bool control );
+    
+    ///Check whether to use the master node as the controller for the UI
+    bool IsDesktopClusterControl() const;
 
 protected:
     ///Create the model for the logo
@@ -491,6 +497,9 @@ private:
 
     ///The signature to tell others the game pad is active
     ves::util::BoolSignal_type m_updateData;
+    
+    ///Set if the master node in cluster mode is used for desktop control
+    bool m_isDesktopClusterControl;
 };
 } //end scenegraph
 } //end xplorer

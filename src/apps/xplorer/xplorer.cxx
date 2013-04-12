@@ -150,6 +150,9 @@ int main( int argc, char* argv[] )
     xplorer_desc.add_options()( "VESDesktopMode", po::bool_switch(),
                                 "Enable automatic desktop mode" );
 
+    xplorer_desc.add_options()( "DesktopClusterControl", po::bool_switch(),
+                               "Enable controlling the UI from the master node on a cluster" );
+    
     xplorer_desc.add_options()( "VESDesktop", po::value< std::vector< int > >(),
                                 "Enable desktop mode with the resolution of the desktop" );
     //-VESDesktop', '1440', '900'

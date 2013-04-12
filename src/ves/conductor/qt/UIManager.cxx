@@ -125,7 +125,7 @@ UIManager::UIManager() :
     m_selectedUIElement( 0 ),
     m_updateBBoxes( false ),
     m_bringToFront( 0 ),
-    m_isDesktopMode( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() ),
+    m_isDesktopMode( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopClusterControl() ),
     m_isWandIntersection( false ),
     m_useRegionDamaging( false ),
     m_kill( false ),
