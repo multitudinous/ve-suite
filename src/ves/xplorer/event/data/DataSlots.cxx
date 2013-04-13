@@ -41,11 +41,16 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
+#include <ves/xplorer/network/GraphicalPluginManager.h>
+
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 
 #include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/System.h>
 #include <ves/open/xml/ParameterBlock.h>
+#include <ves/open/xml/FloatArray.h>
+#include <ves/open/xml/Transform.h>
 
 #include <string>
 #include <vector>
@@ -277,7 +282,7 @@ void ShowScalarBar( const std::string& uuid, const bool& show )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet )
+void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet, ves::open::xml::ParameterBlockPtr tempInfoPacket )
 {
     xplorer::data::DatasetPropertySet set;
 
@@ -325,6 +330,47 @@ void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet )
     set.SetPropertyValue( "ScalarMins", ScalarMins );
     set.SetPropertyValue( "ScalarMaxes", ScalarMaxes );
 
+    if( tempInfoPacket )
+    {
+        ves::open::xml::TransformPtr dataTransform = tempInfoPacket->GetTransform();
+
+        ves::open::xml::FloatArrayPtr nodeTranslation =
+            dataTransform->GetTranslationArray();
+        ves::open::xml::FloatArrayPtr nodeRotation =
+            dataTransform->GetRotationArray();
+        ves::open::xml::FloatArrayPtr nodeScale =
+            dataTransform->GetScaleArray();
+        
+        set.SetPropertyValue( "Transform_Translation_X",
+                                nodeTranslation->GetElement( 0 ) );
+        set.SetPropertyValue( "Transform_Translation_Y",
+                                nodeTranslation->GetElement( 1 ) );
+        set.SetPropertyValue( "Transform_Translation_Z",
+                                nodeTranslation->GetElement( 2 ) );
+        set.SetPropertyValue( "Transform_Rotation_X",
+                                nodeRotation->GetElement( 1 ) );
+        set.SetPropertyValue( "Transform_Rotation_Y",
+                                nodeRotation->GetElement( 2 ) );
+        set.SetPropertyValue( "Transform_Rotation_Z",
+                                nodeRotation->GetElement( 0 ) );
+        
+        if( ( nodeScale->GetElement( 0 ) == nodeScale->GetElement( 1 ) ) &&
+           ( nodeScale->GetElement( 1 ) == nodeScale->GetElement( 2 ) ) )
+        {
+            set.SetPropertyValue( "Transform_Scale_Uniform", true );
+        }
+        else
+        {
+            set.SetPropertyValue( "Transform_Scale_Uniform", false );
+        }
+        
+        set.SetPropertyValue( "Transform_Scale_X",
+                                nodeScale->GetElement( 0 ) );
+        set.SetPropertyValue( "Transform_Scale_Y",
+                                nodeScale->GetElement( 1 ) );
+        set.SetPropertyValue( "Transform_Scale_Z",
+                                nodeScale->GetElement( 2 ) );
+    }
     set.Save();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -354,7 +400,7 @@ void LoadTransientData( const std::string& uuid, const bool& load )
     {
         if( tempFilename != dataSetVector[ i ]->GetFileName() )
         {
-            ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ] );
+            ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ], ves::open::xml::ParameterBlockPtr() );
         }
     }
 

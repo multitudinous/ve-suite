@@ -39,6 +39,8 @@
 
 #include <latticefx/core/vtk/DataSetPtr.h>
 
+#include <ves/open/xml/ParameterBlockPtr.h>
+
 namespace ves
 {
 namespace xplorer
@@ -93,7 +95,7 @@ void ActivateSeedPoints( const std::string& dataSetName, const bool seedPointDis
 void ShowScalarBar( const std::string& uuid, const bool& show );
 
 ///Write db entry for the given dataset
-void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet );
+void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet, ves::open::xml::ParameterBlockPtr tempInfoPacket );
 
 ///Load the transient dataset
 void LoadTransientData( const std::string& uuid, const bool& load );

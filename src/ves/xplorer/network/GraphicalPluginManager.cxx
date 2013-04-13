@@ -670,3 +670,8 @@ void GraphicalPluginManager::RemovePlugin( std::string const& pluginId )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+std::map< std::string, ves::open::xml::model::SystemPtr > GraphicalPluginManager::GetSystemsMap() const
+{
+    return( mIDToSystem );
+}
+////////////////////////////////////////////////////////////////////////////////

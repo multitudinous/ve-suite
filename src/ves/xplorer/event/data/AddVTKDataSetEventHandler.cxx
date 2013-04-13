@@ -313,7 +313,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                     std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetTransientDataSets();
                     for( size_t i = 0; i < dataSetVector.size(); ++i )
                     {
-                        ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ] );
+                        ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ], tempInfoPacket );
                     }
                 }
                 else
@@ -322,9 +322,9 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                     std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetChildDataSets();
                     for( size_t i = 0; i < dataSetVector.size(); ++i )
                     {
-                        ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ] );
+                        ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ], tempInfoPacket );
                     }
-                    ves::xplorer::event::data::WriteDatabaseEntry( lastDataAdded );
+                    ves::xplorer::event::data::WriteDatabaseEntry( lastDataAdded, tempInfoPacket );
                 }
                 //If the data load failed
                 if( !lastDataAdded->GetDataSet() )

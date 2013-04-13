@@ -171,6 +171,8 @@ public:
     ///Remove a plugin from the plugin map and the event handler map
     void RemovePlugin( std::string const& pluginId );
 
+    std::map< std::string, ves::open::xml::model::SystemPtr > GetSystemsMap() const;
+
 private:
     ///Recusive function to find all sub-systems
     void ParseSystem(
