@@ -42,7 +42,7 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
-#include <ves/xplorer/scenegraph/util/TransparencySupport.h>
+#include <osgwTools/TransparencyUtils.h>
 
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAttribute.h>
@@ -313,11 +313,11 @@ void ModelCADHandler::UpdateOpacity( const std::string& nodeID, float opacity )
 
     if( transparent )
     {
-        transparentEnable( tempNode.get(), opacity );
+        osgwTools::transparentEnable( tempNode.get(), opacity );
     }
     else
     {
-        transparentDisable( tempNode.get() );
+        osgwTools::transparentDisable( tempNode.get() );
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -335,11 +335,11 @@ void ModelCADHandler::MakeCADRootTransparent()
         osg::Node* tempNode = iter->second->GetDCS();
         if( iter->second->GetTransparentFlag() )
         {
-            transparentEnable( tempNode, 0.3f );
+            osgwTools::transparentEnable( tempNode, 0.3f );
         }
         else
         {
-            transparentDisable( tempNode );
+            osgwTools::transparentDisable( tempNode );
         }
     }
 }
@@ -358,7 +358,7 @@ void ModelCADHandler::MakeCADRootOpaque()
         osg::Node* tempNode = iter->second->GetDCS();
         if( iter->second->GetTransparentFlag() )
         {
-            transparentDisable( tempNode );
+            osgwTools::transparentDisable( tempNode );
         }
     }
 }

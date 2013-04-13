@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/HighlightNodesByNameVisitor.h>
-#include <ves/xplorer/scenegraph/util/TransparencySupport.h>
+#include <osgwTools/TransparencyUtils.h>
 
 #include <iostream>
 //#include <algorithm>
@@ -114,7 +114,7 @@ void HighlightNodesByNameVisitor::apply( osg::Node& node )
                 }
                 
                 //Now highlight the node
-                transparentDisable( &node );
+                osgwTools::transparentDisable( &node );
                 
                 //Add shader code to have code highlighted
                 //osg::Vec3 enableGlow( 1.0, 0.0, 0.0 );
