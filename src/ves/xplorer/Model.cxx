@@ -57,8 +57,6 @@
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
-#include <ves/xplorer/data/DatasetPropertySet.h>
-
 #include <osg/StateSet>
 
 #include <vpr/IO/Socket/SocketStream.h>
@@ -96,12 +94,12 @@
 
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
-//#include <switchwire/Event.h>
 
 #include <ves/xplorer/event/data/DataSlots.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 #include <ves/xplorer/data/PolydataPropertySet.h>
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/data/DatasetPropertySet.h>
 
 #include <latticefx/utils/vtk/Grid2Surface.h>
 
