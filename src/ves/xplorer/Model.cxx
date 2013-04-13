@@ -57,6 +57,8 @@
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
+#include <ves/xplorer/data/DatasetPropertySet.h>
+
 #include <osg/StateSet>
 
 #include <vpr/IO/Socket/SocketStream.h>
@@ -678,9 +680,29 @@ void Model::VesFileLoaded( const std::string& filename )
     for( std::vector< lfx::core::vtk::DataSetPtr >::iterator iter = mVTKDataSets.begin();
         iter != mVTKDataSets.end(); ++iter )
     {
-        ves::xplorer::event::data::LoadTransientTimeSteps( (*iter)->GetFileName() );
+        const std::string dataFilename = (*iter)->GetFileName();
+        ves::xplorer::event::data::LoadTransientTimeSteps( dataFilename );
+
+        ves::xplorer::data::DatasetPropertySet set;
+        if( set.LoadByKey( "Filename", dataFilename ) )
+        {
+            std::string uuidString = set.GetUUIDAsString();
+            std::vector< double > transformVec;
+            transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Translation_X" ) ) );
+            transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Translation_Y" ) ) );
+            transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Translation_Z" ) ) );
+            transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Rotation_Z" ) ) );
+            transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Rotation_X" ) ) );
+            transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Rotation_Y" ) ) );
+            transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Scale_X" ) ) );
+            transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Scale_Y" ) ) );
+            transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Scale_Z" ) ) );
+            
+            ves::xplorer::event::data::TransformDatasetNode( uuidString, transformVec );
+
+            ves::xplorer::event::data::ShowBBox( uuidString, boost::any_cast< bool >( set.GetPropertyValue( "BoundingBox" ) ) );
+        }
     }
-    
     
     ves::xplorer::data::PolydataPropertySet temp;
     std::vector<std::string> ids =
