@@ -565,88 +565,6 @@ void SensorDemoPluginGP::CreateTextTextures()
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPluginGP::CreateDBQuery( ves::open::xml::DataValuePairPtr dvp )
 {
-    std::cout << "SensorDemoPluginGP::CreateDBQuery" << std::endl << std::flush;
-    mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
-
-    //Clear and reset the data containers for the user defined queries
-    m_assemblyPartNumbers.clear();
-    m_joinedPartNumbers.clear();
-    {
-        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight2( m_cadRootNode, "", false, true );
-        
-        transparentEnable( m_cadRootNode, 0.3f );
-    }
-
-    RenderTextualDisplay( false );
-    bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
-    boost::ignore_unused_variable_warning( removed );
-    m_groupedTextTextures = 0;
-
-    //Now lets query things
-    const std::string queryString = dvp->GetDataString();
-
-    if( !boost::find_first( queryString, "INNER JOIN" ) )
-    {
-        QueryUserDefinedAndHighlightParts( queryString );
-    }
-    else
-    {
-        HighlightPartsInJoinedTabled( queryString );
-    }
-        
-    mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
-/*
-    //ves::xplorer::scenegraph::util::OpacityVisitor 
-    //    opVisitor1( mDCS.get(), false, true, 0.3f );
-    //mAddingParts = true;
-    bool removed = m_textTrans->removeChild( m_groupedTextTextures.get() );
-
-    m_groupedTextTextures = 
-        new ves::xplorer::scenegraph::GroupedTextTextures();
-
-    for( Assembly::const_iterator it = m_selectedAssembly.begin(); it != m_selectedAssembly.end(); ++it )
-    {
-        std::cout
-            << "Part Number: " << it->get<0>() 
-            << ", Description: " << it->get<1>() 
-            << ", Claims: " << it->get<2>()
-            << ", Claim Cost: " << it->get<3>()
-            << ", FPM: " << it->get<4>() 
-            << ", CCPM: " << it->get<5>()
-            << ", By: " << it->get<6>() << std::endl;
-        
-        std::ostringstream tempTextData;
-        tempTextData
-            << "Part Number: " << it->get<0>() << "\n"
-            << "Description: " << it->get<1>() << "\n"
-            << "Claims: " << it->get<2>() << "\n"
-            << "Claim Cost: " << it->get<3>() << "\n"
-            << "FPM: " << it->get<4>() << "\n"
-            << "CCPM: " << it->get<5>() << "\n"
-            << "By: " << it->get<6>();
-        
-        ves::xplorer::scenegraph::TextTexture* tempText = 
-            new ves::xplorer::scenegraph::TextTexture();
-        //std::string tempKey = "test_" + it->get<0>(); 
-        //boost::lexical_cast<std::string>( std::distance( assem.begin(), it) );
-        std::string partText = tempTextData.str();
-        //std::cout << " here 1 " << partText << std::endl;
-        tempText->UpdateText( partText );
-        tempText->SetTitle( it->get<0>() );
-        m_groupedTextTextures->AddTextTexture( it->get<0>(), tempText );
-        
-        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( mDCS.get(), it->get<0>(), true, osg::Vec3( 0.57255, 0.34118, 1.0 ) );
-    }
-    m_textTrans->addChild( m_groupedTextTextures.get() );
-    //m_textTrans->getOrCreateStateSet()->setAttributeAndModes(
-    //                               new osg::Depth( osg::Depth::ALWAYS ),
-    //                               osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    
-    //ves::xplorer::scenegraph::util::OpacityVisitor 
-    //    opVisitor1( m_textTrans.get(), false, true, 0.3f );
-*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPluginGP::RemoveSelfFromSG()
@@ -737,17 +655,7 @@ void SensorDemoPluginGP::ReplaceSpacesCharacters( std::string& data )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SensorDemoPluginGP::ParseDataBase( const std::string& csvFilename )
-{
-    // register SQLite connector
-    Poco::Data::SQLite::Connector::registerConnector();
-
-    m_dbFilename = csvFilename;
-    
-    if( !mAddingParts )
-    {
-        transparentEnable( mDCS.get(), 0.3f );
-        mAddingParts = true;
-    }    
+{ 
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool SensorDemoPluginGP::FindPartNodeAndHighlightNode()
