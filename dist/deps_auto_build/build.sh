@@ -47,6 +47,10 @@ function platform()
   #http://en.wikipedia.org/wiki/Uname
   case $PLATFORM in
     CYGWIN*)
+      #Test for environment variables $TMP and $TEMP which mess with VS builds
+      if [ ${TMP+x} ]; then unset TMP; fi
+      if [ ${TEMP+x} ]; then unset TEMP; fi
+
       #Test for 64-buit capability
       if [[ "${PLATFORM}" = *WOW64 ]]; then
         ARCH=64-bit
