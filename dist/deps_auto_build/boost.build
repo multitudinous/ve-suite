@@ -36,7 +36,7 @@ case $PLATFORM in
 
     BJAM_PREBUILD=./bootstrap.bat
     BJAM_PARAMS+=( embed-manifest=on )
-    BJAM_PARAMS+=( toolset=msvc-9.0 )
+    BJAM_PARAMS+=( toolset=msvc-${VS_VERSION} )
     #There is an actual file called INSTALL in boost src dir
     BUILD_TARGET=install
     ;;

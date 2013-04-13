@@ -157,31 +157,30 @@ function windows()
     esac
     echo "Using Visual Studio version: ${VS_VERSION}"
 
-    if [ $ARCH = "64-bit" ]; then
-      REGPATH=${REGPATH}/Wow6432Node
-      CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
-    fi
-    VS_REGPATH=( ${REGROOT}/${REGPATH}/Microsoft/VisualStudio/${VS_VERSION}/InstallDir )
-    VSInstallDir=$( awk '{ print }' "${VS_REGPATH}" )
-
     DOTNET_REGVAL=( ${REGROOT}/${REGPATH}/Microsoft/.NETFramework/InstallRoot )
     # .NET version is hardcoded to 3.5 for now
     DotNETInstallDir=$( awk '{ gsub( "", "" ); print }' "${DOTNET_REGVAL}" )v3.5
-
-    #declare -a CMAKE_REGPATH=( ${REGROOT}/${REGPATH}/Kitware/* )
-    #CMAKEInstallDir=$( awk '{ print }' "${CMAKE_REGPATH[@]: -1}/@" )
-
     #export Path="${DotNETInstallDir}";${Path}
     MSBUILD="${DotNETInstallDir}/MSBuild.exe"
     DEVENV="devenv.com"
-    declare -a PYTHON_REGPATH=( "${REGROOT}"/HKEY_LOCAL_MACHINE/SOFTWARE/Python/PythonCore/* )
+
+    declare -a PYTHON_REGPATH=( ${REGROOT}/${REGPATH}/Python/PythonCore/* )
     export PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
     export PYTHONPATH=$( awk '{ print }' "${PYTHON_REGPATH[0]}/PythonPath/@" )
     #DRIVE_LETTER="${PYTHONHOME:0:1}"
     echo "Using Python $PYTHONHOME"
     echo "Using Python Path $PYTHONPATH"
-    export PATH=$PYTHONHOME/Scripts:$PYTHONHOME:${VSInstallDir}:$PATH
+
+    if [ $ARCH = "64-bit" ]; then
+      REGPATH=${REGPATH}/Wow6432Node
+      CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
+    fi
+
+    VS_REGPATH=( ${REGROOT}/${REGPATH}/Microsoft/VisualStudio/${VS_VERSION}/InstallDir )
+    VSInstallDir=$( awk '{ print }' "${VS_REGPATH}" )
     echo ${VSInstallDir}
+
+    export PATH=$PYTHONHOME/Scripts:$PYTHONHOME:${VSInstallDir}:$PATH
 
     #
     #Setup OSG 3rd party directory
