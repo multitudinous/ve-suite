@@ -42,6 +42,7 @@
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/CoordinateSystemTransform.h>
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
 
 #include <ves/xplorer/scenegraph/util/ToggleNodeVisitor.h>
 
@@ -77,6 +78,8 @@
 
 #include <osgwTools/NodePathUtils.h>
 #include <osgwTools/Transform.h>
+
+#include <osgwMx/MxUtils.h>
 
 #include <osg/io_utils>
 #include <osg/ComputeBoundsVisitor>
@@ -729,24 +732,31 @@ static void NavigateToNode( osg::NodePath const& nodePath )
     //vx::DeviceHandler::instance()->SetSelectedDCS( selectedDCS.get() );
 
     osg::ref_ptr< osg::Node > selectedNode = nodePath.back();
-    osg::BoundingSphere sbs = selectedNode->getBound();
+    osg::BoundingSphere bs = selectedNode->getBound();
     
     osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
     selectedNode->accept( cbbv );
     osg::BoundingBox bb = cbbv.getBoundingBox();
     
     osg::Matrixd bsMat = osg::computeLocalToWorld( nodePath );
-    sbs = osgwTools::transform( bsMat, sbs );
+    osg::BoundingSphere sbs = osgwTools::transform( bsMat, bs );
 
     /*std::cout
     << "|\tBounding Box Info" << std::endl
     << "|\tCenter " << bb.center() << std::endl
     << "|\tRadius " << bb.radius() << std::endl
     << "|\tMin " << bb._min << std::endl
-    << "|\tMax " << bb._max << std::endl;*/
+    << "|\tMax " << bb._max << std::endl;
+    std::cout
+    << "|\tBounding Sphere Info" << std::endl
+    << "|\tCenter " << sbs.center() << std::endl
+    << "|\tRadius " << sbs.radius() << std::endl;*/
+
     
     //Calculate the offset distance
-    double distance = 1.5 * sbs.radius();
+    double fovz = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentGLTransformInfo()->GetFOVZ();
+    //We need a scaled radius here
+    double mxdistance = osgwMx::computeInitialDistanceFromFOVY( sbs, osg::RadiansToDegrees( fovz ) );
     
     ///Get the location of the selected model in local coordinates
     ///This value is always the same no matter where we are
@@ -754,20 +764,26 @@ static void NavigateToNode( osg::NodePath const& nodePath )
     gmtl::Point3d osgTransformedPosition2;
     gmtl::Point3d osgOrigPosition;
     osgTransformedPosition[ 0 ] = sbs.center().x();
-    osgTransformedPosition[ 2 ] = sbs.center().y() + distance;
+    osgTransformedPosition[ 2 ] = sbs.center().y() + mxdistance;
     osgTransformedPosition[ 1 ] = sbs.center().z();
     osgOrigPosition[ 0 ] = sbs.center().x();
     osgOrigPosition[ 1 ] = sbs.center().y();
     osgOrigPosition[ 2 ] = sbs.center().z();
     osgTransformedPosition2 = osgTransformedPosition * -1.0;
 
-    double tempRotRad2 = osg::DegreesToRadians( -90.0 );
-    gmtl::AxisAngled axisAngle( tempRotRad2, 1, 0, 0 );
-    gmtl::Quatd quatAxisAngle = gmtl::make< gmtl::Quatd >( axisAngle );
+    //This rotates the view back to oriented at 0,0,0
+    //double tempRotRad2 = osg::DegreesToRadians( -90.0 );
+    //gmtl::AxisAngled axisAngle( tempRotRad2, 1, 0, 0 );
+    //gmtl::Quatd quatAxisAngle = gmtl::make< gmtl::Quatd >( axisAngle );
 
-    ///Hand the node we are interested in off to the animation engine
-    ves::xplorer::NavigationAnimationEngine::instance()->SetDCS(
-        ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS() );
+    osgwMx::MxCore& core =
+        ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
+    osg::Matrixd currentView = core.getInverseMatrix();
+    
+    //convert osg quat to gmtl quat
+    osg::Quat tempWorldQuat = currentView.getRotate();
+    gmtl::Quatd quatAxisAngle( tempWorldQuat[0], tempWorldQuat[1],
+                        tempWorldQuat[2], tempWorldQuat[3] );
     
     ///Hand our created end points off to the animation engine
     ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
