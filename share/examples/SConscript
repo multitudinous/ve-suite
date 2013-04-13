@@ -29,7 +29,6 @@ exampleSubdirs = Split("""
 #VascularSimViewer
 #sensor_overlay
 #VirtualLab
-#painting
 #Fermentor
 
 if poco_options.isAvailable():
