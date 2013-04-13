@@ -89,16 +89,18 @@ void FrameAll::DoFrameAll()
     osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
     activeSwitchNode->accept( cbbv );
     osg::BoundingBox bb = cbbv.getBoundingBox();
-    osg::notify( osg::INFO )
+    osgwMx::MxCore& core = m_sceneManager.GetMxCoreViewMatrix();
+    double mFoVZ = 0.0;
+    /*osg::notify( osg::INFO )
+    std::cout 
             << "|\tBounding Box Info" << std::endl
             << "|\tCenter " << bb.center() << std::endl
             << "|\tRadius " << bb.radius() << std::endl
             << "|\tMin " << bb._min << std::endl
             << "|\tMax " << bb._max << std::endl;
-    //osg::BoundingSphered bs( bb.center(), bb.radius() );
-    osgwMx::MxCore& core = m_sceneManager.GetMxCoreViewMatrix();
-    double mFoVZ = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ();
-    /*mFoVZ = osg::RadiansToDegrees( mFoVZ );
+    osg::BoundingSphered bs( bb.center(), bb.radius() );
+    mFoVZ = m_sceneManager.GetCurrentGLTransformInfo()->GetFOVZ();
+    mFoVZ = osg::RadiansToDegrees( mFoVZ );
     std::cout << mFoVZ << std::endl;
     double mxdistance = osgwMx::computeInitialDistanceFromFOVY( bs, mFoVZ );
     std::cout << mxdistance << std::endl;
