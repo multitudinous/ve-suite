@@ -1,14 +1,20 @@
 PACKAGE_NAME=glog
-BASE_DIR="${DEV_BASE_DIR}/glog-0.3.2"
 
-SOURCE_RETRIEVAL_METHOD=wget
-SOURCE_FORMAT=tgz
-SOURCE_URL=http://google-glog.googlecode.com/files/glog-0.3.2.tar.gz
+if [ $PLATFORM = "Windows" ] && [ $VS_VERSION = "11.0" ]; then
+  BASE_DIR="${DEV_BASE_DIR}/google-glog"
+  SOURCE_RETRIEVAL_METHOD=svn
+  SOURCE_URL=http://google-glog.googlecode.com/svn/trunk
+  SOURCE_REVISION=135
+else
+  BASE_DIR="${DEV_BASE_DIR}/glog-0.3.2"
+  SOURCE_RETRIEVAL_METHOD=wget
+  SOURCE_FORMAT=tgz
+  SOURCE_URL=http://google-glog.googlecode.com/files/glog-0.3.2.tar.gz
+fi
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
 INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
-PREBUILD_METHOD=cmake
 
 case $PLATFORM in
   Windows)
@@ -28,6 +34,14 @@ case $PLATFORM in
     fi
 
     MSVC_SOLUTION+=( "${SOURCE_DIR}/google-glog.sln" )
+
+    if (( "${VS_VERSION/.*}" > 9 )); then
+      PREBUILD_METHOD=custom
+
+      unset CUSTOM_PREBUILD
+      CUSTOM_PREBUILD=( "${MSVC_SOLUTION[@]/#/${DEVENV} }" )
+      CUSTOM_PREBUILD=( "${CUSTOM_PREBUILD[@]/%/ /upgrade}" )
+    fi
 
     #POST_BUILD_METHOD="find . -name \*.pdb -exec cp {} ${INSTALL_DIR}/lib/. \; -print"
     POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && mkdir -p ${INSTALL_DIR}/include && mkdir -p ${INSTALL_DIR}/lib && \

@@ -141,9 +141,9 @@ function windows()
 
     #Find installed VS versions
     declare -a VS_VERSIONS=( "${REGROOT}"/HKEY_CLASSES_ROOT/VisualStudio.DTE.* )
-    VS_VERSIONS=( ${VS_VERSIONS[@]#*DTE.*} )
+    VS_VERSIONS=( "${VS_VERSIONS[@]#*DTE.*}" )
     echo "Installed Visual Studio versions: ${VS_VERSIONS[@]}"
-    [ -z "${VS_VERSION}" ] && export VS_VERSION="${VS_VERSIONS[@]:-1}"
+    [ -z "${VS_VERSION}" ] && export VS_VERSION="${VS_VERSIONS[@]: -1}"
     case $VS_VERSION in
       9.0)
         CMAKE_GENERATOR="Visual Studio 9 2008"
@@ -166,7 +166,6 @@ function windows()
     DotNETInstallDir=$( awk '{ gsub( "", "" ); print }' "${DOTNET_REGVAL}" )v3.5
     #export Path="${DotNETInstallDir}";${Path}
     MSBUILD="${DotNETInstallDir}/MSBuild.exe"
-    DEVENV="devenv.com"
 
     declare -a PYTHON_REGPATH=( ${REGROOT}/${REGPATH}/Python/PythonCore/* )
     export PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
@@ -182,9 +181,9 @@ function windows()
 
     VS_REGPATH=( ${REGROOT}/${REGPATH}/Microsoft/VisualStudio/${VS_VERSION}/InstallDir )
     VSInstallDir=$( awk '{ print }' "${VS_REGPATH}" )
-    echo ${VSInstallDir}
+    DEVENV="devenv.com"
 
-    export PATH=$PYTHONHOME/Scripts:$PYTHONHOME:${VSInstallDir}:$PATH
+    PATH=$PYTHONHOME/Scripts:$PYTHONHOME:${VSInstallDir}:$PATH
 
     #
     #Setup OSG 3rd party directory
@@ -590,7 +589,7 @@ function e()
         ;;
       custom)
         cd "${SOURCE_DIR}";
-        "${CUSTOM_PREBUILD[@]}";
+        for cmd in "${CUSTOM_PREBUILD[@]}"; do eval "${cmd}"; done
         ;;
       *)
         echo "Pre-Build method ${PREBUILD_METHOD} unsupported";
