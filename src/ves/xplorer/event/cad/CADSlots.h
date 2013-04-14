@@ -734,11 +734,18 @@ static void NavigateToNode( osg::NodePath const& nodePath )
     osg::ref_ptr< osg::Node > selectedNode = nodePath.back();
     osg::BoundingSphere bs = selectedNode->getBound();
     
-    osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
-    selectedNode->accept( cbbv );
-    osg::BoundingBox bb = cbbv.getBoundingBox();
-    
-    osg::Matrixd bsMat = osg::computeLocalToWorld( nodePath );
+    //osg::ComputeBoundsVisitor cbbv( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN );
+    //selectedNode->accept( cbbv );
+    //osg::BoundingBox bb = cbbv.getBoundingBox();
+
+    //We must pop the last matrix so that local transform information
+    //is not applied twice to the bounding sphere in the osgwTools::transform call.
+    osg::NodePath tempPath = nodePath;
+    if( tempPath.size() > 1 )
+    {
+        tempPath.pop_back();
+    }
+    osg::Matrixd bsMat = osg::computeLocalToWorld( tempPath );
     osg::BoundingSphere sbs = osgwTools::transform( bsMat, bs );
 
     /*std::cout
