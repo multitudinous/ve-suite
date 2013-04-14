@@ -142,6 +142,9 @@ Wand::Wand()
     m_wandButton5DoubleClickEventInterface.init( "VJButton5" );
     m_wandButton5DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>( boost::bind( &Wand::OnWandButton5DoubleClick, this, _1 ) );
 
+    m_wandButton6DoubleClickEventInterface.setClickTime( 300 );
+    m_wandButton6DoubleClickEventInterface.init( "VJButton6" );
+    m_wandButton6DoubleClickEventInterface.addCallback<gadget::event::double_click_tag>( boost::bind( &Wand::OnWandButton6DoubleClick, this, _1 ) );
 
     m_wandButton0EventInterface.init( "VJButton0" );
     m_wandButton0EventInterface.addCallback( boost::bind( &Wand::OnWandButton0Event, this, _1 ) );
@@ -163,6 +166,9 @@ Wand::Wand()
 
     m_wandButton6EventInterface.init( "VJButton6" );
     m_wandButton6EventInterface.addCallback( boost::bind( &Wand::OnWandButton6Event, this, _1 ) );
+
+    m_wandHideShowUIEventInterface.init( "VESHideShowUI" );
+    m_wandHideShowUIEventInterface.addCallback( boost::bind( &Wand::OnWandButton6Event, this, _1 ) );
 
     ///Setup the ves signals generated from the VR Juggler events
     m_wandButtonPressSignalMap["Wand.ButtonPress0"] = new WandButtonPressSignal_type;

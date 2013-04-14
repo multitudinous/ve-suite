@@ -196,6 +196,7 @@ private:
     WandClickInterface m_wandButton4EventInterface;
     WandClickInterface m_wandButton5EventInterface;
     WandClickInterface m_wandButton6EventInterface;
+    WandClickInterface m_wandHideShowUIEventInterface;
 
     /// All keyboardmouse events get delivered here
     void OnWandButton0Event( gadget::DigitalState::State event );
@@ -216,6 +217,7 @@ private:
     WandDoubleClickInterface m_wandButton3DoubleClickEventInterface;
     WandDoubleClickInterface m_wandButton4DoubleClickEventInterface;
     WandDoubleClickInterface m_wandButton5DoubleClickEventInterface;
+    WandDoubleClickInterface m_wandButton6DoubleClickEventInterface;
 
     void OnWandButton0DoubleClick( gadget::DigitalState::State event );
     void OnWandButton1DoubleClick( gadget::DigitalState::State event );
@@ -223,6 +225,7 @@ private:
     void OnWandButton3DoubleClick( gadget::DigitalState::State event );
     void OnWandButton4DoubleClick( gadget::DigitalState::State event );
     void OnWandButton5DoubleClick( gadget::DigitalState::State event );
+    void OnWandButton6DoubleClick( gadget::DigitalState::State event );
 
     /// Required to be able to connect up to signals.
     switchwire::ScopedConnectionList m_connections;
