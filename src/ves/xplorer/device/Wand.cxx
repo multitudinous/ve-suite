@@ -1373,6 +1373,14 @@ void Wand::OnWandButton5DoubleClick( gadget::DigitalState::State event )
     ( *( m_wandDoubleClickSignalMap["Wand.ButtonDoubleClick5"] ) ).signal( gadget::MBUTTON6, 0, 0, 0, gadget::KEY_DOWN | gadget::BUTTON6_MASK );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Wand::OnWandButton6DoubleClick( gadget::DigitalState::State event )
+{
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void Wand::PreProcessNav()
 {
     //If the wand does not exist
