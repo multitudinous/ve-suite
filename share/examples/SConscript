@@ -22,7 +22,6 @@ exampleSubdirs = Split("""
     TankPlugin
     real_time_sensor
     Multiscale2
-    image_manipulation
     constraint_demo
     hyper_lab_ice
 """)
