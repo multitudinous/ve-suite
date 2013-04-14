@@ -272,7 +272,7 @@ public:
     bool IsScreenAligned();
 
     ///Tell if we are the master node
-    ///Returns true if in desktop mode as well
+    ///\note Returns true if in desktop mode as well
     bool IsMasterNode();
 
     ///Set if it is the master node

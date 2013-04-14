@@ -217,9 +217,9 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     }
 
     m_isMaster = !vm["vrjslave"].as<bool>();
-
     //bool clusterMode = !vm["vrjslave"].as<bool>() && !vm["vrjmaster"].as<bool>();
     //std::cout << " cluster mode " << clusterMode << std::endl;
+
     _tbvHandler = 0;
 #ifdef _PBUFFER
     _pbuffer = 0;
@@ -606,8 +606,7 @@ void App::initScene()
     EnvironmentHandler::instance()->Initialize();
     if( m_desktopMode )
     {
-        EnvironmentHandler::instance()->
-        SetDesktopSize( m_screenWidth, m_screenHeight );
+        EnvironmentHandler::instance()->SetDesktopSize( m_screenWidth, m_screenHeight );
     }
 
     EnvironmentHandler::instance()->InitScene();
@@ -1380,12 +1379,12 @@ void App::LoadUI()
 
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
-        ///These values must match the values in UIElement on line 105
+        //These values must match the values in UIElement on line 105
         width = 600;
         height = 967;
     }
-    ///Only the height value is used to enable flipping the y value to put
-    ///it in qt space.
+    //Only the height value is used to enable flipping the y value to put
+    //it in qt space.
     m_UIManager->SetRectangle( 0, width, 0, height );
 
     element->SetInitialImageWidthAndHeight( 600, height );
@@ -1394,10 +1393,23 @@ void App::LoadUI()
 
     m_UIManager->AddElement( element );
 
-    // Start the main UI minimized
+    //In desktop mode start the main UI minimized
     if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
         m_UIManager->MinimizeElement( element );
+    }
+    else
+    {
+        //If we are in cluster mode and we have asked for desktop control of the cluster
+        if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopClusterControl() )
+        {
+            //If we are a render node then make the UI invisible
+            if( !ves::xplorer::scenegraph::SceneManager::instance()->IsMasterNode() )
+            {
+                //In cluster mode set all of the render node UIs to fully transparent
+                m_UIManager->SetOpacity( 0.0 );
+            }
+        }
     }
 
     m_uiInitialized = true;
