@@ -7,7 +7,7 @@ SOURCE_URL=http://downloads.sourceforge.net/project/scrat/Sqrat/Sqrat%200.8/sqra
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}"
-#INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+INSTALL_DIR="${BASE_DIR}"
 #PREBUILD_METHOD=cmake
 #FPC_FILE=bullet.fpc
 #SKIP_FPC_INSTALL="no"

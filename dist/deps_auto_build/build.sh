@@ -555,7 +555,7 @@ function e()
         fi
         ;;
       *)
-        echo "Source retrieval method ${SOURCE_RETRIEVAL_METHOD} not supported";
+        echo "Source update method ${SOURCE_RETRIEVAL_METHOD} not supported";
         ;;
     esac
   fi
