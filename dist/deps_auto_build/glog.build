@@ -1,16 +1,9 @@
 PACKAGE_NAME=glog
+BASE_DIR="${DEV_BASE_DIR}/glog-0.3.3"
 
-if [ $PLATFORM = "Windows" ] && [ $VS_VERSION = "11.0" ]; then
-  BASE_DIR="${DEV_BASE_DIR}/google-glog"
-  SOURCE_RETRIEVAL_METHOD=svn
-  SOURCE_URL=http://google-glog.googlecode.com/svn/trunk
-  SOURCE_REVISION=135
-else
-  BASE_DIR="${DEV_BASE_DIR}/glog-0.3.2"
-  SOURCE_RETRIEVAL_METHOD=wget
-  SOURCE_FORMAT=tgz
-  SOURCE_URL=http://google-glog.googlecode.com/files/glog-0.3.2.tar.gz
-fi
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_FORMAT=tgz
+SOURCE_URL=http://google-glog.googlecode.com/files/glog-0.3.3.tar.gz
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
@@ -23,6 +16,17 @@ case $PLATFORM in
     unset PREBUILD_METHOD
     BUILD_METHOD=devenv
     MSVC_CONFIG=Release
+
+    PREBUILD_METHOD=custom
+    unset CUSTOM_PREBUILD
+
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/google-glog.sln" )
+
+    if (( "${VS_VERSION/.*}" > 9 )); then
+      CUSTOM_PREBUILD=( "${MSVC_SOLUTION[@]/#/${DEVENV} }" )
+      CUSTOM_PREBUILD=( "${CUSTOM_PREBUILD[@]/%/ /upgrade}" )
+    fi
+
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
       #PLATFORM_SUFFIX=
@@ -31,16 +35,14 @@ case $PLATFORM in
       MSVC_PLATFORM=x64
       PLATFORM_SUFFIX=_x64
       BUILD_STR="x64/Release"
-    fi
 
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/google-glog.sln" )
-
-    if (( "${VS_VERSION/.*}" > 9 )); then
-      PREBUILD_METHOD=custom
-
-      unset CUSTOM_PREBUILD
-      CUSTOM_PREBUILD=( "${MSVC_SOLUTION[@]/#/${DEVENV} }" )
-      CUSTOM_PREBUILD=( "${CUSTOM_PREBUILD[@]/%/ /upgrade}" )
+      if (( "${VS_VERSION/.*}" > 9 )); then
+        CUSTOM_PREBUILD+=( "find \"${SOURCE_DIR}/vsprojects\" -type f -name \"*.vcxproj\" -exec sed -i '/^\s*<OutDir>\$(SolutionDir)\$(Configuration)\\\\<\/OutDir>\s*$/d;/^\s*<IntDir>\$(Configuration)\\\\<\/IntDir>\s*$/d' {} \;" )
+      else
+        CUSTOM_PREBUILD+=( "find \"${SOURCE_DIR}/vsprojects\" -type f -name \"*.vcproj\" -exec sed -i '/^\s*OutputDirectory=\"\$(SolutionDir)\$(ConfigurationName)\"/d;/^\s*IntermediateDirectory=\"\$(ConfigurationName)\"\s*$/d' {} \;" )
+      fi
+      CUSTOM_PREBUILD+=( "find \"${SOURCE_DIR}\" -type f -name \"*.sln\" -exec sed -i 's/Win32/x64/g' {} \;" )
+      CUSTOM_PREBUILD+=( "find \"${SOURCE_DIR}/vsprojects\" -type f -name \"*.vc*proj\" -exec sed -i 's/Win32/x64/g;s/WIN32/WIN64/g;s/MachineX86/MachineX64/g;s/Win32Proj/x64Proj/g' {} \;" )
     fi
 
     #POST_BUILD_METHOD="find . -name \*.pdb -exec cp {} ${INSTALL_DIR}/lib/. \; -print"
