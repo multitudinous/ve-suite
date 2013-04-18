@@ -120,9 +120,6 @@ WarrantyToolGP::WarrantyToolGP()
     mObjectName = "WarrantyToolUI";
     m_dbFilename = "sample.db";
     
-    mEventHandlerMap[ "WARRANTY_TOOL_PART_TOOLS" ] = shared_from_this();
-    mEventHandlerMap[ "WARRANTY_TOOL_DB_TOOLS" ] = shared_from_this();
-    
     m_lineSegmentIntersector = new osgUtil::LineSegmentIntersector( osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,6 +132,9 @@ void WarrantyToolGP::InitializeNode(
     osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
+
+    mEventHandlerMap[ "WARRANTY_TOOL_PART_TOOLS" ] = shared_from_this();
+    mEventHandlerMap[ "WARRANTY_TOOL_DB_TOOLS" ] = shared_from_this();
 
     m_connections = new switchwire::ScopedConnectionList();
     //Connect signals here so that only specific plugins are connected to the
