@@ -7,9 +7,11 @@ else
     setenv LD_LIBRARY_PATH ${VES_PREFIX}/lib:${VES_PREFIX}/lib/vtk-5.10:${VES_PREFIX}/lib64
 endif
 
-setenv OSG_FILE_PATH ${VES_PREFIX}/share/osgWorks/data:${VES_PREFIX}/share/osgBullet/data:${VES_PREFIX}/share/backdropFX/data
+setenv OSG_FILE_PATH ${VES_PREFIX}/share/osgWorks/data:${VES_PREFIX}/share/osgBullet/data:${VES_PREFIX}/share/backdropFX/data:${VES_PREFIX}/share/latticefx/data
 setenv OSGNOTIFYLEVEL WARNING
 setenv VJ_BASE_DIR ${VES_PREFIX}
+setenv NO_RTRC_PLUGIN TRUE
+setenv NO_PERF_PLUGIN TRUE
 
 # if necessary, set PYTHONPATH
 set WXPYTHON_BASE_DIR=(`find ${VES_PREFIX} -type d -name "python*"`)
