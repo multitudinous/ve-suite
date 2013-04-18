@@ -74,7 +74,7 @@
 #include <QtGui/QKeyEvent>
 
 Q_DECLARE_METATYPE( std::string )
-Q_DECLARE_METATYPE( ves::xplorer::plugin::PluginBase )
+Q_DECLARE_METATYPE( ves::xplorer::plugin::PluginBasePtr )
 
 namespace ves
 {
