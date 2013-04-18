@@ -581,15 +581,13 @@ void App::initScene()
     if( !m_desktopMode )
     {
         bool clusterControl = m_vm["DesktopClusterControl"].as<bool>();
+        if( clusterControl )
         {
-            if( clusterControl )
-            {
-                ( *m_logStream ).information() << "Turning desktop cluster control on for the UI" << std::endl;
-            }
-            else
-            {
-                ( *m_logStream ).information() << "Desktop cluster control is off for the UI" << std::endl;
-            }
+            ( *m_logStream ).information() << "Turning desktop cluster control on for the UI" << std::endl;
+        }
+        else
+        {
+            ( *m_logStream ).information() << "Desktop cluster control is off for the UI" << std::endl;
         }
         ves::xplorer::scenegraph::SceneManager::instance()->SetDesktopClusterControl( clusterControl );
     }
@@ -1377,7 +1375,8 @@ void App::LoadUI()
     std::cout << "|\tWindow value: " << width << " "
               << height << std::endl << std::flush;
 
-    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() &&
+       !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopClusterControl() )
     {
         //These values must match the values in UIElement on line 105
         width = 600;
