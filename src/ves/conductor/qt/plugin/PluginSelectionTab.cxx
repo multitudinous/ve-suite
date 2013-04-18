@@ -92,7 +92,7 @@ PluginSelectionTab::PluginSelectionTab( MainWindow* mainWindow, QWidget* parent 
     ReDiscoverPlugins( "" );
 
     qRegisterMetaType<std::string>();
-    qRegisterMetaType<ves::xplorer::plugin::PluginBase>();
+    qRegisterMetaType<ves::xplorer::plugin::PluginBasePtr>();
 
     connect( this, SIGNAL( CreateUIPluginQSignal( const std::string& ,
                            ves::xplorer::plugin::PluginBasePtr ) ),
@@ -297,7 +297,7 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
     }
     // Get plugin filename from the current item
     QString fileName = item->data( Qt::UserRole + 1 ).toString();
-    std::cout << "Creating instance of " << fileName.toStdString() << std::endl << std::flush;
+    //std::cout << "Creating instance of " << fileName.toStdString() << std::endl << std::flush;
 
     QPluginLoader loader( fileName );
     QObject* plugin = loader.instance();
@@ -489,7 +489,7 @@ void PluginSelectionTab::on_m_instantiatedPlugins_currentItemChanged
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::ClearActivePlugins()
 {
-    std::cout << "|\tClearing active plugins" << std::endl << std::flush;
+    //std::cout << "|\tClearing active plugins" << std::endl << std::flush;
     std::map< QListWidgetItem*, UIPluginInterface* >::iterator iter =
         m_itemInterfaceMap.begin();
     while( iter != m_itemInterfaceMap.end() )
