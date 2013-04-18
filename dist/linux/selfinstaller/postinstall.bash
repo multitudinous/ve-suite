@@ -42,5 +42,7 @@ then
         chmod +x "${1}/bin/launch-ves_xplorer-master.sh"
         sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./launch-ves_xplorer-rendernode.sh.template > "${1}/bin/launch-ves_xplorer-rendernode.sh"
         chmod +x "${1}/bin/launch-ves_xplorer-rendernode.sh"
+        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./launch-ves_xplorer-desktop.sh.in > "${1}/bin/launch-ves_xplorer-desktop.sh"
+        chmod +x "${1}/bin/launch-ves_xplorer-desktop.sh"
     fi
 fi

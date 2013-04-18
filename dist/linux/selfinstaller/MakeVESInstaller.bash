@@ -122,6 +122,7 @@ cp ${SCRIPT_DIR}/velauncher.sh.template ${INSTALLER_PAYLOAD_DIR}
 cp ${SCRIPT_DIR}/ves-cluster-control.sh.template ${INSTALLER_PAYLOAD_DIR}
 cp ${SCRIPT_DIR}/launch-ves_xplorer-master.sh.template ${INSTALLER_PAYLOAD_DIR}
 cp ${SCRIPT_DIR}/launch-ves_xplorer-rendernode.sh.template ${INSTALLER_PAYLOAD_DIR}
+cp ${SCRIPT_DIR}/launch-ves_xplorer-desktop.sh.in ${INSTALLER_PAYLOAD_DIR}
 
 echo "Adding environment templates..."
 cp ${SCRIPT_DIR}/ves-env.sh.template ${INSTALLER_PAYLOAD_DIR}
