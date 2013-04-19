@@ -29,7 +29,6 @@ case $PLATFORM in
     # generate an options file for use with build_windows.py
     OPTIONS_FILE="./ves-vrj-build-options"
 
-    unset CUSTOM_PREBUILD
     CUSTOM_PREBUILD+=( "if [ -f ${OPTIONS_FILE} ]; then rm ${OPTIONS_FILE}; fi;" )
     CUSTOM_PREBUILD+=( "echo \"options['BOOST_ROOT'] = r'\$(cygpath -w ${BOOST_INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
     CUSTOM_PREBUILD+=( "echo \"options['BOOST_VERSION'] = r'1_50'\" >> ${OPTIONS_FILE};" )

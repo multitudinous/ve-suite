@@ -13,12 +13,10 @@ case $PLATFORM in
   Windows)
     unset PROJ_STR
     unset BUILD_TARGET
-    unset PREBUILD_METHOD
     BUILD_METHOD=devenv
     MSVC_CONFIG=Release
 
     PREBUILD_METHOD=custom
-    unset CUSTOM_PREBUILD
 
     MSVC_SOLUTION+=( "${SOURCE_DIR}/google-glog.sln" )
 
@@ -37,12 +35,12 @@ case $PLATFORM in
       BUILD_STR="x64/Release"
 
       if (( "${VS_VERSION/.*}" > 9 )); then
-        CUSTOM_PREBUILD+=( "find \"${SOURCE_DIR}/vsprojects\" -type f -name \"*.vcxproj\" -exec sed -i '/^\s*<OutDir>\$(SolutionDir)\$(Configuration)\\\\<\/OutDir>\s*$/d;/^\s*<IntDir>\$(Configuration)\\\\<\/IntDir>\s*$/d' {} \;" )
+        CUSTOM_PREBUILD+=( "find vsprojects -type f -name \"*.vcxproj\" -exec sed -i '/^\s*<OutDir>\$(SolutionDir)\$(Configuration)\\\\<\/OutDir>\s*$/d;/^\s*<IntDir>\$(Configuration)\\\\<\/IntDir>\s*$/d' {} \;" )
       else
-        CUSTOM_PREBUILD+=( "find \"${SOURCE_DIR}/vsprojects\" -type f -name \"*.vcproj\" -exec sed -i '/^\s*OutputDirectory=\"\$(SolutionDir)\$(ConfigurationName)\"/d;/^\s*IntermediateDirectory=\"\$(ConfigurationName)\"\s*$/d' {} \;" )
+        CUSTOM_PREBUILD+=( "find vsprojects -type f -name \"*.vcproj\" -exec sed -i '/^\s*OutputDirectory=\"\$(SolutionDir)\$(ConfigurationName)\"/d;/^\s*IntermediateDirectory=\"\$(ConfigurationName)\"\s*$/d' {} \;" )
       fi
-      CUSTOM_PREBUILD+=( "find \"${SOURCE_DIR}\" -type f -name \"*.sln\" -exec sed -i 's/Win32/x64/g' {} \;" )
-      CUSTOM_PREBUILD+=( "find \"${SOURCE_DIR}/vsprojects\" -type f -name \"*.vc*proj\" -exec sed -i 's/Win32/x64/g;s/WIN32/WIN64/g;s/MachineX86/MachineX64/g;s/Win32Proj/x64Proj/g' {} \;" )
+      CUSTOM_PREBUILD+=( "find ./ -type f -name \"*.sln\" -exec sed -i 's/Win32/x64/g' {} \;" )
+      CUSTOM_PREBUILD+=( "find vsprojects -type f -name \"*.vc*proj\" -exec sed -i 's/Win32/x64/g;s/WIN32/WIN64/g;s/MachineX86/MachineX64/g;s/Win32Proj/x64Proj/g' {} \;" )
     fi
 
     #POST_BUILD_METHOD="find . -name \*.pdb -exec cp {} ${INSTALL_DIR}/lib/. \; -print"

@@ -26,7 +26,6 @@ case $PLATFORM in
       MSVC_PLATFORM=x64
     fi
     MSVC_SOLUTION="${SOURCE_DIR}/TAO/TAO_ACE_vc9.sln"
-    unset CUSTOM_PREBUILD
     CUSTOM_PREBUILD+=( "cp ./ace/config-win32.h ./ace/config.h" )
     ISS_FILENAME=acetaoPrecomp.iss
     INNO_PARAMS+=( "/dACETAOSRCHOME=${INSTALL_DIR}" )

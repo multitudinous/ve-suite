@@ -288,6 +288,7 @@ function unsetvars()
   unset PREBUILD_METHOD
   unset FPC_FILE
   unset VES_INSTALL_PARAMS
+  unset CUSTOM_PREBUILD
   unset CUSTOM_BUILD
 }
 
@@ -570,7 +571,7 @@ function e()
     if [ ! -d "${SOURCE_DIR}" ]; then echo "SOURCE_DIR does not exist for package $package"; return; fi
     if [ ! -d "${BUILD_DIR}" ]; then mkdir -p "${BUILD_DIR}"; fi
 
-    case ${PREBUILD_METHOD} in
+    for method in "${PREBUILD_METHOD[@]}"; do case ${method} in
       cmake)
         cd "${BUILD_DIR}";
         echo $BUILD_DIR
@@ -594,7 +595,7 @@ function e()
       *)
         echo "Pre-Build method ${PREBUILD_METHOD} unsupported";
         ;;
-    esac
+    esac done
   fi
 
   #build the package
