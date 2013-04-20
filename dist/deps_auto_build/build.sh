@@ -36,6 +36,7 @@ VES_30_PACKAGES+=("osgephemeris")
 VES_30_PACKAGES+=("bdfx")
 VES_30_PACKAGES+=("xerces")
 VES_30_PACKAGES+=("latticefx")
+VES_30_PACKAGES+=("gmtl")
 
 #
 # Define the platform
