@@ -602,10 +602,10 @@ void App::initScene()
 
     // navigation and cursor
     EnvironmentHandler::instance()->Initialize();
-    if( m_desktopMode )
+    /*if( m_desktopMode )
     {
         EnvironmentHandler::instance()->SetDesktopSize( m_screenWidth, m_screenHeight );
-    }
+    }*/
 
     EnvironmentHandler::instance()->InitScene();
 
@@ -1372,7 +1372,7 @@ void App::LoadUI()
         vrj::DisplayPtr display = displays.at( i );
         display->getOriginAndSize( originX, originY, width, height );
     }
-    std::cout << "|\tWindow value: " << width << " "
+    ( *logStream ).information() << "|\tWindow value: " << width << " "
               << height << std::endl << std::flush;
 
     if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() &&
@@ -1387,7 +1387,6 @@ void App::LoadUI()
     m_UIManager->SetRectangle( 0, width, 0, height );
 
     element->SetInitialImageWidthAndHeight( 600, height );
-    element->SetScreenDimensions( width, height );
     element->SetWidget( mainUIWidget );
 
     m_UIManager->AddElement( element );

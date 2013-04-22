@@ -173,7 +173,8 @@ void SceneGLTransformInfo::Initialize()
         sceneManager->PushBackGLTransformInfo( viewport, glTransformInfo );
     }
 
-    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    //I am not sure of the reason for this guard. 
+    //if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
     {
         ves::xplorer::scenegraph::SceneManager::instance()->
         SetCurrentGLTransformInfo(

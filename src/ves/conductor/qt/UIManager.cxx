@@ -34,7 +34,6 @@
 // --- VES Includes --- //
 #include <ves/conductor/qt/UIManager.h>
 #include <ves/conductor/qt/UIElement.h>
-#include <ves/conductor/qt/UIElementQt.h>
 #include <ves/conductor/qt/UIUpdateCallback.h>
 
 #include <switchwire/InteractionEvent.h>
@@ -660,6 +659,7 @@ void UIManager::_insertNodesToAdd()
             osg::ref_ptr<osg::Texture2D> texture = new osg::Texture2D;
             UIElement* element = iter->second;
             osg::Image* img = new osg::Image;
+            LOG_INFO("UIManager::_insertNodesToAdd The element width = " <<  element->GetImageWidth() );
             img->allocateImage( element->GetImageWidth(), element->GetImageHeight(), 1, GL_RGB, GL_UNSIGNED_BYTE );
             texture->setImage( img );
             texture->setSubloadCallback( m_subloaders[ element ].get() );
@@ -667,7 +667,7 @@ void UIManager::_insertNodesToAdd()
         }
         else
         {
-            std::cout << "UIManager::_insertNodesToAdd : no elements yet " << mElements.size() << std::endl;
+            LOG_INFO("UIManager::_insertNodesToAdd : no elements yet " << mElements.size() );
         }
 
     }
@@ -798,7 +798,6 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
             return true;
         }
         return false;
-        //return m_isWandIntersection;
     }
 
     // Walk through every visible quad we own, in descending z-order,

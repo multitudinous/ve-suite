@@ -76,9 +76,10 @@ UIElement::UIElement()
     //mGeode( 0 ),
     m_mouseInsideUI( true ),
     m_pixelUIRatio( 0 ),
-    m_osgImage( new osg::Image )
+    m_osgImage( new osg::Image ),
+    m_logger( Poco::Logger::get( "conductor.UIElement" ) ),
+    m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
 {
-    m_desktopSize = std::make_pair< int, int >( 0, 0 );
     //Request connection to UIManager.EnterLeaveUI signal
     CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &UIElement::UIEnterLeave,
                      m_connections, highest_Priority );
@@ -92,7 +93,8 @@ UIElement::~UIElement()
 void UIElement::PostConstructor()
 {
     m_vertices = new osg::Vec3Array();
-    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() ||
+       ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopClusterControl() )
     {
         m_vertices->push_back( osg::Vec3( -1.0f, -1.0f, -1.0f ) );
         m_vertices->push_back( osg::Vec3( 1.0f, -1.0f, -1.0f ) );
@@ -120,6 +122,7 @@ void UIElement::PostConstructor()
     float m_right = coordinates.x();
     float m_bottom = coordinates.y();
     float m_top = coordinates.z();
+    LOG_INFO( "PostConstructor initial texture coordinates " << coordinates );
 
     osg::ref_ptr< osg::Vec2Array > texture_coordinates = new osg::Vec2Array();
     texture_coordinates->push_back( osg::Vec2( m_left, m_bottom ) );
@@ -172,11 +175,6 @@ void UIElement::SetInitialImageWidthAndHeight( int width, int height )
     m_initialImageSize = std::make_pair< int, int >( width, height );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SetScreenDimensions( int width, int height )
-{
-    m_desktopSize = std::make_pair< int, int >( width, height );
-}
-////////////////////////////////////////////////////////////////////////////////
 int UIElement::GetImageWidth()
 {
     return 0;
@@ -213,7 +211,7 @@ void UIElement::SendButtonPressEvent( gadget::Keys button, int x, int y, int sta
     boost::ignore_unused_variable_warning( x );
     boost::ignore_unused_variable_warning( y );
     boost::ignore_unused_variable_warning( state );
-    std::cerr << "UIElement::SendButtonPressEvent If you see this we have problems." << std::endl;
+    LOG_WARNING( "SendButtonPressEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
@@ -222,7 +220,7 @@ void UIElement::SendButtonReleaseEvent( gadget::Keys button, int x, int y, int s
     boost::ignore_unused_variable_warning( x );
     boost::ignore_unused_variable_warning( y );
     boost::ignore_unused_variable_warning( state );
-    std::cerr << "UIElement::SendButtonReleaseEvent If you see this we have problems." << std::endl;
+    LOG_WARNING( "SendButtonReleaseEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendDoubleClickEvent( gadget::Keys button, int x, int y, int state )
@@ -231,7 +229,7 @@ void UIElement::SendDoubleClickEvent( gadget::Keys button, int x, int y, int sta
     boost::ignore_unused_variable_warning( x );
     boost::ignore_unused_variable_warning( y );
     boost::ignore_unused_variable_warning( state );
-    std::cerr << "UIElement::SendDoubleClickEvent If you see this we have problems." << std::endl;
+    LOG_WARNING( "SendDoubleClickEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendMouseMoveEvent( int x, int y, int z, int state )
@@ -240,7 +238,7 @@ void UIElement::SendMouseMoveEvent( int x, int y, int z, int state )
     boost::ignore_unused_variable_warning( y );
     boost::ignore_unused_variable_warning( z );
     boost::ignore_unused_variable_warning( state );
-    std::cerr << "UIElement::SendMouseMoveEvent If you see this we have problems." << std::endl;
+    LOG_WARNING( "SendMouseMoveEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendKeyPressEvent( gadget::Keys key, int modifierMask, char unicode )
@@ -248,7 +246,7 @@ void UIElement::SendKeyPressEvent( gadget::Keys key, int modifierMask, char unic
     boost::ignore_unused_variable_warning( key );
     boost::ignore_unused_variable_warning( modifierMask );
     boost::ignore_unused_variable_warning( unicode );
-    std::cerr << "UIElement::SendKeyPressEvent If you see this we have problems." << std::endl;
+    LOG_WARNING( "SendKeyPressEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode )
@@ -256,7 +254,7 @@ void UIElement::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char un
     boost::ignore_unused_variable_warning( key );
     boost::ignore_unused_variable_warning( modifierMask );
     boost::ignore_unused_variable_warning( unicode );
-    std::cerr << "UIElement::SendKeyReleaseEvent If you see this we have problems." << std::endl;
+    LOG_WARNING( "SendKeyReleaseEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::SendScrollEvent( int deltaX, int deltaY, int x, int y, int state )
@@ -266,7 +264,7 @@ void UIElement::SendScrollEvent( int deltaX, int deltaY, int x, int y, int state
     boost::ignore_unused_variable_warning( x );
     boost::ignore_unused_variable_warning( y );
     boost::ignore_unused_variable_warning( state );
-    std::cerr << "UIElement::SendScrollEvent If you see this we have problems." << std::endl;
+    LOG_WARNING( "SendScrollEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Image* UIElement::RenderElementToImage()
@@ -330,7 +328,7 @@ void UIElement::ResizeCanvas( int width, int height )
 {
     boost::ignore_unused_variable_warning( width );
     boost::ignore_unused_variable_warning( height );
-    std::cerr << "UIElement::ResizeCanvas If you see this we have problems." << std::endl;
+    LOG_WARNING( "ResizeCanvas If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::Update()
@@ -348,7 +346,8 @@ void UIElement::Update()
         //m_animationPath->get
     }
 
-    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() &&
+       !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopClusterControl() )
     {
         return;
     }
@@ -356,6 +355,7 @@ void UIElement::Update()
     if( !ves::xplorer::scenegraph::SceneManager::instance()->
             GetCurrentGLTransformInfo() )
     {
+        LOG_INFO( "Update no GL Transform Info is available. " );
         return;
     }
 
@@ -481,7 +481,8 @@ void UIElement::UIEnterLeave( bool uiEnter )
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::GetPointIntersectionInPixels( int& x, int& y, osg::Vec3d& point )
 {
-    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    if( !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() &&
+       !ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopClusterControl() )
     {
         double xVal = ( point.x() - ( *m_vertices )[0].x() ) * m_pixelUIRatio;
         //Z is up in OSG and VE-Suite land
@@ -514,6 +515,7 @@ void UIElement::ComputeMouseBoundsForElement()
 
     // Return in the form (left, right, bottom, top)
     m_uiCorners = osg::Vec4( min.x(), max.x(), min.y(), max.y() );
+    LOG_INFO( "ComputeMouseBoundsForElement the new UI texture bounds are " << m_uiCorners );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIElement::TestQuadIntersection( int x, int y )
@@ -536,7 +538,8 @@ osg::Vec4d& UIElement::GetUICorners()
 ////////////////////////////////////////////////////////////////////////////////
 osg::Vec2d& UIElement::GetTextureCoords( int x, int y )
 {
-    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() ||
+       ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopClusterControl() )
     {
         m_texCoords[ 0 ] = -1.0;//double( x ) / double( GetImageWidth() );
         m_texCoords[ 1 ] = -1.0;//double( y ) / double( GetImageHeight() );

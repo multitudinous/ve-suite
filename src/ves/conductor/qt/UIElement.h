@@ -35,6 +35,8 @@
 
 #include <ves/VEConfig.h>
 
+#include <ves/xplorer/Logging.h>
+
 #include <vector>
 #include <utility>
 
@@ -251,13 +253,11 @@ public:
     /// cleanup to be done that may be sensitive to thread context.
     virtual void Cleanup() {}
 
-    ///
-    void SetScreenDimensions( int width, int height );
-
     ///Get the intersection point in pixels from a mouse press or wand test
     void GetPointIntersectionInPixels( int& x, int& y, osg::Vec3d& point );
 
     ///Update the min and max corners for the UI element
+    ///\note This method sets the size for the UI element in desktop control mode
     void ComputeMouseBoundsForElement();
 
     ///Test the quad for intersections with mouse coordinates
@@ -282,24 +282,18 @@ protected:
 
     /// Flag telling whether this element has been initialized
     bool mInitialized;
-
+    ///Is the UI minimized
     bool mIsMinimized;
     bool mUIMatrixDirty;
     std::vector< osg::Matrixf > mUIMatrices;
-    //std::vector< osg::Matrixf > mElementMatrices;
     osg::ref_ptr< osg::Vec3Array > m_vertices;
-    //osg::ref_ptr< osg::MatrixTransform > mUITransform;
-    //osg::ref_ptr< osg::MatrixTransform > mElementTransform;
-    //osg::Matrixf mElementMatrix;
-    //bool mElementMatrixDirty;
     bool mAnimationOn;
     osg::ref_ptr< osg::AnimationPath > m_animationPath;
+    ///Container for the UI image data
     osg::ref_ptr< osg::Geode > mGeode;
 
     ///The resolution of the initial image size
     std::pair< int, int > m_initialImageSize;
-    ///The resolution of the desktop size
-    std::pair< int, int > m_desktopSize;
     ///Tell whether the UI enter or leave
     bool m_mouseInsideUI;
     /// Required to be able to connect up to signals.
@@ -312,12 +306,14 @@ protected:
     osg::Vec2d m_texCoords;
     ///UI size for cave mode
     std::pair< int, int > m_uiSize;
-
+    ///The UI texture
     osg::ref_ptr< osg::Image > m_osgImage;
+    ///Track damaged areas of the UI
     std::vector< std::pair< osg::ref_ptr<osg::Image>, std::pair< int, int > > > m_damagedAreas;
-    
-    ///Is this UIElement initialized
-    
+    ///Logger reference
+    Poco::Logger& m_logger;
+    ///Actual stream for this class
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 } // namepsace conductor

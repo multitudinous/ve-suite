@@ -1316,14 +1316,15 @@ void SceneRenderToTexture::Update(
         tempCommandName = tempCommand->GetCommandName();
     }
 
-    ///Add the ui to all of the cameras.
+    //Add the ui to all of the cameras.
     if( !m_isUIAdded )
     {
-        if( scenegraph::SceneManager::instance()->IsDesktopClusterControl() )
+        if( scenegraph::SceneManager::instance()->IsDesktopMode() ||
+           scenegraph::SceneManager::instance()->IsDesktopClusterControl() )
         {
-            ///In desktop mode multiple contexts are opened an closed and we
-            ///need to make sure we are on everyone. This loop gets added
-            ///to every sv camera that is created.
+            //In desktop mode multiple contexts are opened and closed and we
+            //need to make sure we are on everyone. This loop gets added
+            //to every sv camera that is created.
             for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin();
                     iter != m_updateList.end(); ++iter )
             {
@@ -1341,19 +1342,23 @@ void SceneRenderToTexture::Update(
         }
     }
 
-    ///Do not run the update visitor on every camera because that forces an
-    ///update multiple times across all cameras.
-    if( !scenegraph::SceneManager::instance()->IsDesktopMode() )
+    //Do not run the update visitor on every camera because that forces an
+    //update multiple times across all cameras.
+    if( !scenegraph::SceneManager::instance()->IsDesktopMode() &&
+       !scenegraph::SceneManager::instance()->IsDesktopClusterControl() )
     {
         m_rootGroup->accept( *updateVisitor );
     }
 
-    ///Update all of the cameras
+    //Update all of the cameras
     for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin();
             iter != m_updateList.end(); ++iter )
     {
-        if( scenegraph::SceneManager::instance()->IsDesktopMode() )
+        if( scenegraph::SceneManager::instance()->IsDesktopMode() ||
+           scenegraph::SceneManager::instance()->IsDesktopClusterControl() )
         {
+            //This is required in desktop control mode becuase of the screen
+            //space camera above the UI.
             ( *iter )->accept( *updateVisitor );
         }
 
@@ -1400,8 +1405,7 @@ void SceneRenderToTexture::WriteLowResImageFile(
     int m = 1;
     w = screenDims.first;
     h = screenDims.second;
-    std::cout << w << " " << h << std::endl;
-    //EnvironmentHandler::instance()->GetDesktopSize( w, h );
+
     int largeWidth =  w * m;
     int largeHeight = h * m ;
     shot->allocateImage( largeWidth, largeHeight, 1, GL_RGB, GL_UNSIGNED_BYTE );
