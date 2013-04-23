@@ -44,5 +44,7 @@ then
         chmod +x "${1}/bin/launch-ves_xplorer-rendernode.sh"
         sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./launch-ves_xplorer-desktop.sh.in > "${1}/bin/launch-ves_xplorer-desktop.sh"
         chmod +x "${1}/bin/launch-ves_xplorer-desktop.sh"
+        sed "s|__VES_INSTALL_PREFIX_PLACEHOLDER__|${1}|g" ./ves-aliases.sh.example.in > "${1}/ves-aliases.sh.example"
+        sed "s|__VES_INSTALL_PREFIX_PLACEHOLDER__|${1}|g" ./ves-aliases.csh.example.in > "${1}/ves-aliases.csh.example"
     fi
 fi

@@ -127,6 +127,8 @@ cp ${SCRIPT_DIR}/launch-ves_xplorer-desktop.sh.in ${INSTALLER_PAYLOAD_DIR}
 echo "Adding environment templates..."
 cp ${SCRIPT_DIR}/ves-env.sh.in ${INSTALLER_PAYLOAD_DIR}
 cp ${SCRIPT_DIR}/ves-env.csh.in ${INSTALLER_PAYLOAD_DIR}
+cp ${SCRIPT_DIR}/ves-aliases.sh.example.in ${INSTALLER_PAYLOAD_DIR}
+cp ${SCRIPT_DIR}/ves-aliases.csh.example.in ${INSTALLER_PAYLOAD_DIR}
 
 # tar up the VE-Suite install and add it to the payload directory
 echo "Archiving the VE-Suite install..."
