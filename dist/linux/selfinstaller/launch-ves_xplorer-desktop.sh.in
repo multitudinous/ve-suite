@@ -2,4 +2,4 @@
 
 source __VE_SUITE_ENV_FILE_PLACEHOLDER__
 
-ves_xplorer --jconf=${VES_PREFIX}/share/vesuite/vrj_configs/stereo_desktop/desktop.jconf --VESRTT --VESDesktopMode
+ves_xplorer --jconf=${VES_PREFIX}/share/vesuite/vrj_configs/stereo_desktop/desktop.jconf --VESRTT --VESDesktopMode --VESLog=warning --VESLogPath="${VES_PREFIX}"/debug.log
