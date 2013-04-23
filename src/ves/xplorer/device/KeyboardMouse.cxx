@@ -614,6 +614,11 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
     for( unsigned int i = 0; i < display->getNumViewports(); ++i )
     {
         viewport = display->getViewport( i );
+        if( !viewport->isActive() )
+        {
+            continue;
+        }
+
         m_currentGLTransformInfo = m_sceneManager.GetGLTransformInfo( viewport );
         if( m_currentGLTransformInfo == scenegraph::GLTransformInfoPtr() )
         {

@@ -175,10 +175,10 @@ void SceneGLTransformInfo::Initialize()
 
     //I am not sure of the reason for this guard. 
     //if( ves::xplorer::scenegraph::SceneManager::instance()->IsDesktopMode() )
+    if( display->getViewport( 0 )->isSurface() && display->getViewport( 0 )->isActive() )
     {
         ves::xplorer::scenegraph::SceneManager::instance()->
-        SetCurrentGLTransformInfo(
-            GetGLTransformInfo( display->getViewport( 0 ) ) );
+            SetCurrentGLTransformInfo( GetGLTransformInfo( display->getViewport( 0 ) ) );
     }
 
     vprDEBUG( vesDBG, 1 ) << "SceneGLTransformInfo::Initialize - "
