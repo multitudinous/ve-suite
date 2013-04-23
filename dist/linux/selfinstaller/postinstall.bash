@@ -15,8 +15,8 @@ function getEnvironmentFileDir()
 
 env_file_dir=$(getEnvironmentFileDir ${1} ${2})
 
-sed "s|__VES_INSTALL_PREFIX_PLACEHOLDER__|${1}|g" ./ves-env.sh.template > "${env_file_dir}"/ves-env.sh
-sed "s|__VES_INSTALL_PREFIX_PLACEHOLDER__|${1}|g" ./ves-env.csh.template > "${env_file_dir}"/ves-env.csh
+sed "s|__VES_INSTALL_PREFIX_PLACEHOLDER__|${1}|g" ./ves-env.sh.in > "${env_file_dir}"/ves-env.sh
+sed "s|__VES_INSTALL_PREFIX_PLACEHOLDER__|${1}|g" ./ves-env.csh.in > "${env_file_dir}"/ves-env.csh
 
 printf "A Bourne-compatible environment file has been placed at %s.\n" "${env_file_dir}/ves-env.sh"
 printf "A C shell-compatible environment file has been placed at %s.\n" "${env_file_dir}/ves-env.csh"
@@ -32,15 +32,15 @@ then
     if [[ ${major_version} == 2 && ${minor_version} == 2 ]]
     then
         # this is a 2.2 install
-        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./velauncher.sh.template > "${1}/bin/velauncher.sh"
+        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./velauncher.sh.in > "${1}/bin/velauncher.sh"
         chmod +x "${1}/bin/velauncher.sh"
     else
         # this is a 3.x install
-        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./ves-cluster-control.sh.template > "${1}/bin/ves-cluster-control.sh"
+        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./ves-cluster-control.sh.in > "${1}/bin/ves-cluster-control.sh"
         chmod +x "${1}/bin/ves-cluster-control.sh"
-        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./launch-ves_xplorer-master.sh.template > "${1}/bin/launch-ves_xplorer-master.sh"
+        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./launch-ves_xplorer-master.sh.in > "${1}/bin/launch-ves_xplorer-master.sh"
         chmod +x "${1}/bin/launch-ves_xplorer-master.sh"
-        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./launch-ves_xplorer-rendernode.sh.template > "${1}/bin/launch-ves_xplorer-rendernode.sh"
+        sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./launch-ves_xplorer-rendernode.sh.in > "${1}/bin/launch-ves_xplorer-rendernode.sh"
         chmod +x "${1}/bin/launch-ves_xplorer-rendernode.sh"
         sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./launch-ves_xplorer-desktop.sh.in > "${1}/bin/launch-ves_xplorer-desktop.sh"
         chmod +x "${1}/bin/launch-ves_xplorer-desktop.sh"
