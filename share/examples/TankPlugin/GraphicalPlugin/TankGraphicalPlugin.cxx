@@ -75,9 +75,7 @@ TankGraphicalPlugin::TankGraphicalPlugin()
 {
     //DYNSIM
     mObjectName = "TankPlugin";
-    mEventHandlerMap[ "OPCData" ] = shared_from_this();
-    mEventHandlerMap[ "TANK_CAD" ] = shared_from_this();
-    //mEventHandlerMap[ "VALVE_CAD" ] = shared_from_this();
+
     m_tankDCS = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,6 +86,10 @@ TankGraphicalPlugin::~TankGraphicalPlugin()
 void TankGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
+
+    mEventHandlerMap[ "OPCData" ] = shared_from_this();
+    mEventHandlerMap[ "TANK_CAD" ] = shared_from_this();
+    //mEventHandlerMap[ "VALVE_CAD" ] = shared_from_this();
         
     //do we want to provide default CAD?
     //If so initialize

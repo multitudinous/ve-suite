@@ -54,11 +54,6 @@ HyperLabGP::HyperLabGP()
     PluginBase()
 {
     mObjectName = "HyperLabUI";
-
-    mEventHandlerMap[ "SHADER_EFFECTS_UPDATE" ] = shared_from_this();
-    mEventHandlerMap[ "AMBIENT_UPDATE" ] = shared_from_this();
-    mEventHandlerMap[ "DIFFUSE_UPDATE" ] = shared_from_this();
-    mEventHandlerMap[ "SPECULAR_UPDATE" ] = shared_from_this();
 }
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabGP::~HyperLabGP()
@@ -69,7 +64,12 @@ HyperLabGP::~HyperLabGP()
 void HyperLabGP::InitializeNode( osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
-
+    
+    mEventHandlerMap[ "SHADER_EFFECTS_UPDATE" ] = shared_from_this();
+    mEventHandlerMap[ "AMBIENT_UPDATE" ] = shared_from_this();
+    mEventHandlerMap[ "DIFFUSE_UPDATE" ] = shared_from_this();
+    mEventHandlerMap[ "SPECULAR_UPDATE" ] = shared_from_this();
+    
     mHyperLabScene = hyperlab::HyperLabScenePtr(
         new hyperlab::HyperLabScene( mDCS.get(), mPhysicsSimulator ) );
 }

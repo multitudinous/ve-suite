@@ -149,14 +149,6 @@ DynamicVehicleSimToolGP::DynamicVehicleSimToolGP()
                       void( ),
                       &DynamicVehicleSimToolGP::ResetScene,
                       m_connections, any_SignalType, normal_Priority );
-
-
-    mEventHandlerMap[ "Tool Info" ] = shared_from_this();
-    mEventHandlerMap[ "Geometry Data Map" ] = shared_from_this();
-    mEventHandlerMap[ "Geometry Map Update" ] = shared_from_this();
-    mEventHandlerMap[ "Simulator Update" ] = shared_from_this();
-    mEventHandlerMap[ "Computer Info Update" ] = shared_from_this();
-    mEventHandlerMap[ "DVST Registration Update" ] = shared_from_this();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DynamicVehicleSimToolGP::~DynamicVehicleSimToolGP()
@@ -168,7 +160,14 @@ void DynamicVehicleSimToolGP::InitializeNode(
     osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
-    
+
+    mEventHandlerMap[ "Tool Info" ] = shared_from_this();
+    mEventHandlerMap[ "Geometry Data Map" ] = shared_from_this();
+    mEventHandlerMap[ "Geometry Map Update" ] = shared_from_this();
+    mEventHandlerMap[ "Simulator Update" ] = shared_from_this();
+    mEventHandlerMap[ "Computer Info Update" ] = shared_from_this();
+    mEventHandlerMap[ "DVST Registration Update" ] = shared_from_this();
+ 
     m_sampleThread = 
         new vpr::Thread( boost::bind( &DynamicVehicleSimToolGP::SimulatorCaptureThread, this ) );
 }

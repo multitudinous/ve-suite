@@ -65,6 +65,36 @@ CameraPlacementToolGP::CameraPlacementToolGP()
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "CameraPlacementToolUI";
+}
+////////////////////////////////////////////////////////////////////////////////
+CameraPlacementToolGP::~CameraPlacementToolGP()
+{
+    if( mSceneManager )
+    {
+        osg::ref_ptr< osg::Group > rootNode =
+            mSceneManager->GetRootNode();
+
+        if( rootNode.valid() )
+        {
+            if( mCameraEntity.valid() )
+            {
+                rootNode->removeChild( mCameraEntity->GetDCS() );
+                if( mMovieQuad )
+                {
+                    delete mMovieQuad;
+                }
+
+                rootNode->removeChild( mCameraEntity.get() );
+            }
+        }
+    }
+
+    
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolGP::InitializeNode( osg::Group* veworldDCS )
+{
+    PluginBase::InitializeNode( veworldDCS );
 
     mEventHandlerMap[ "DRUM_ANIMATION_ON_OFF" ] = shared_from_this();
     mCommandNameToInt[ "DRUM_ANIMATION_ON_OFF" ] =
@@ -113,36 +143,6 @@ CameraPlacementToolGP::CameraPlacementToolGP()
     mEventHandlerMap[ "MAX_CIRCLE_OF_CONFUSION" ] = shared_from_this();
     mCommandNameToInt[ "MAX_CIRCLE_OF_CONFUSION" ] =
         MAX_CIRCLE_OF_CONFUSION;
-}
-////////////////////////////////////////////////////////////////////////////////
-CameraPlacementToolGP::~CameraPlacementToolGP()
-{
-    if( mSceneManager )
-    {
-        osg::ref_ptr< osg::Group > rootNode =
-            mSceneManager->GetRootNode();
-
-        if( rootNode.valid() )
-        {
-            if( mCameraEntity.valid() )
-            {
-                rootNode->removeChild( mCameraEntity->GetDCS() );
-                if( mMovieQuad )
-                {
-                    delete mMovieQuad;
-                }
-
-                rootNode->removeChild( mCameraEntity.get() );
-            }
-        }
-    }
-
-    
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolGP::InitializeNode( osg::Group* veworldDCS )
-{
-    PluginBase::InitializeNode( veworldDCS );
 
     //Initialize the resources for this plugin
     InitializeResources();

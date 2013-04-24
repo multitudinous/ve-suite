@@ -163,7 +163,7 @@ int HyperLabICEGP::InitializeLabModels()
     osg::ref_ptr< osg::Group > renderRoot = new osg::Group;
 #ifndef TEST_GAUGES
     osg::ref_ptr< osg::Node > models;
-    /*models = osgDB::readNodeFile( "Models/ControlRoom_v9.osg", options.get() );
+    models = osgDB::readNodeFile( "Models/ControlRoom_v9.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
@@ -175,7 +175,7 @@ int HyperLabICEGP::InitializeLabModels()
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
     }
-    renderRoot->addChild( models.get() );*/
+    renderRoot->addChild( models.get() );
 
     models = osgDB::readNodeFile( "Models/HyperSystem_v9b.osg", options.get() );
     if( !( models.valid() ) )
@@ -240,7 +240,7 @@ void HyperLabICEGP::ProcessOPCData()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
 {
-#if 1
+#if 0
     ProcessOPCData();
 #else
     if( !OneSecondCheck( m_lastSend, 250000 ) )

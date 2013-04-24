@@ -191,10 +191,7 @@ Multiscale2GraphicalPlugin::Multiscale2GraphicalPlugin()
 {
     //DYNSIM
     mObjectName = "Multiscale2";
-    mEventHandlerMap[ "OPCData" ] = shared_from_this();
-    mEventHandlerMap[ "TANK_CAD" ] = shared_from_this();
-	mEventHandlerMap[ "MULTISCALE_COMMAND" ] = shared_from_this();
-    //mEventHandlerMap[ "VALVE_CAD" ] = shared_from_this();
+
     m_tankDCS = 0;
 	animating = true;
 	
@@ -208,7 +205,12 @@ Multiscale2GraphicalPlugin::~Multiscale2GraphicalPlugin()
 void Multiscale2GraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
-	
+    
+    mEventHandlerMap[ "OPCData" ] = shared_from_this();
+    mEventHandlerMap[ "TANK_CAD" ] = shared_from_this();
+	mEventHandlerMap[ "MULTISCALE_COMMAND" ] = shared_from_this();
+    //mEventHandlerMap[ "VALVE_CAD" ] = shared_from_this();
+    
 	//start off displaying the lattice and not the dislocations because the lattice looks quite a bit better
 	latticeEnabled = true;
 	dislocationsEnabled = false;

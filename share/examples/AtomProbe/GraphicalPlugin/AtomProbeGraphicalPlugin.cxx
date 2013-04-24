@@ -198,10 +198,7 @@ AtomProbeGraphicalPlugin::AtomProbeGraphicalPlugin()
 {
     //DYNSIM
     mObjectName = "AtomProbe";
-    mEventHandlerMap[ "OPCData" ] = this;
-    mEventHandlerMap[ "TANK_CAD" ] = this;
-	mEventHandlerMap[ "MULTISCALE_COMMAND" ] = this;
-    //mEventHandlerMap[ "VALVE_CAD" ] = this;
+
     m_tankDCS = 0;
 	animating = true;
 	std::vector<double> bgcolor;
@@ -264,6 +261,11 @@ void AtomProbeGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 	
     PluginBase::InitializeNode( veworldDCS );
 	
+    mEventHandlerMap[ "OPCData" ] = this;
+    mEventHandlerMap[ "TANK_CAD" ] = this;
+	mEventHandlerMap[ "MULTISCALE_COMMAND" ] = this;
+    //mEventHandlerMap[ "VALVE_CAD" ] = this;
+
 	//start off displaying the lattice and not the dislocations because the lattice looks quite a bit better
 	latticeEnabled = true;
 	dislocationsEnabled = false;
