@@ -13,13 +13,13 @@
          </display_system>
          <display_windows>
             <display_window name="Front Screen (Right Eye)" version="6">
-               <origin>1024</origin>
-               <origin>768</origin>
+               <origin>0</origin>
+               <origin>0</origin>
                <size>1024</size>
                <size>768</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-                  <opengl_frame_buffer_config name="GL Frame Buffer" version="4">
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="5">
                      <visual_id>-1</visual_id>
                      <red_size>8</red_size>
                      <green_size>8</green_size>
@@ -38,11 +38,12 @@
                      <gl_context_major_version>3</gl_context_major_version>
                      <gl_context_minor_version>0</gl_context_minor_version>
                      <gl_context_flags>0</gl_context_flags>
+                     <gl_context_profile_mask>2</gl_context_profile_mask>
                   </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
                <border>false</border>
-               <hide_mouse>true</hide_mouse>
+               <hide_mouse>false</hide_mouse>
                <full_screen>false</full_screen>
                <always_on_top>false</always_on_top>
                <active>true</active>
@@ -72,15 +73,15 @@
                      <auto_corner_update>0</auto_corner_update>
                   </surface_viewport>
                </surface_viewports>
-               <keyboard_mouse_device_name />
-               <allow_mouse_locking>true</allow_mouse_locking>
+               <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+               <allow_mouse_locking>false</allow_mouse_locking>
                <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>
             </display_window>
          </display_windows>
-         <listen_port>6202</listen_port>
-         <host_name>doug-mccorkles-computer.local</host_name>
+         <listen_port>12599</listen_port>
+         <host_name>triangle-mbp.vrac.iastate.edu</host_name>
       </cluster_node>
    </elements>
 </configuration>
