@@ -10,7 +10,7 @@
 #define VELauncher "velauncher.bat"
 #define VesIcon "ves_icon.ico"
 #define VesDocumentIcon "ves_document.ico"
-
+#define deere "1"
 ;[InnoIDE_Settings]
 ;LogFile=compile.log
 ;LogFileOverwrite=true
@@ -96,13 +96,18 @@ Source: {#MSREDISTRIBUTABLE}; DestDir: {tmp}
 Source: {#OPCVESINSTALLER}; DestDir: {tmp}; Flags: skipifsourcedoesntexist
 Source: {#INSTALLERINSTALLLOCATION}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVERSION}.exe; DestDir: {tmp}; Flags: ignoreversion
 
+#ifdef deere
+Source: {#VEINSTALLHOME}\share\vesuite\examples\WarrantyTool\Plugins\UI\win32\*; DestDir: {app}\{#LIBDIR}\conductor\plugins; Components: examples; Flags: skipifsourcedoesntexist
+Source: {#VEINSTALLHOME}\share\vesuite\examples\WarrantyTool\Plugins\GP\win32\*; DestDir: {app}\{#LIBDIR}\xplorer\plugins; Components: examples; Flags: skipifsourcedoesntexist
+#endif
+
 [Icons]
 Name: {group}\Uninstallers\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
 Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}
 Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\{#VesIcon}; Tasks: desktopVELauncherIcon
 
 [Run]
-Filename: {tmp}\{#MSREDISTRIBUTABLEFILENAME}; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Tasks: 
+;Filename: {tmp}\{#MSREDISTRIBUTABLEFILENAME}; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Tasks: 
 Filename: {tmp}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVERSION}; Flags: runascurrentuser; Description: VE-Suite Dependency Installer; StatusMsg: Installing VE-Suite dependencies; Parameters: /SILENT /SP- /DIR={app}; 
 Filename: {tmp}\{#OPCVESINSTALLERFILENAME}; Description: Install OPC for use with VE-PSI; StatusMsg: Installing OPC for use with VE-PSI...; Flags: postinstall unchecked skipifdoesntexist; Tasks: 
 
