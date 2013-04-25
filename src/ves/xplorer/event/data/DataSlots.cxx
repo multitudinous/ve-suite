@@ -192,7 +192,8 @@ void DeleteDataSet( const std::string& dataFilename )
     size_t numDataSets = activeModel->GetModelData()->GetNumberOfInformationPackets();
     for( size_t i = 0; i < numDataSets; ++i )
     {
-        std::string xmlFileName = activeModel->GetModelData()->GetInformationPacket( i )->GetProperty( "VTK_DATA_FILE" )->GetDataString();
+        std::string xmlFileName = activeModel->GetModelData()->GetInformationPacket( i )->
+            GetProperty( "VTK_DATA_FILE" )->GetDataString();
         if( dataFilename == xmlFileName )
         {
             activeModel->GetModelData()->RemoveInformationPacket( i );
@@ -202,9 +203,19 @@ void DeleteDataSet( const std::string& dataFilename )
     activeModel->DeleteDataSet( dataFilename );
     activeModel->SetActiveDataSet( lfx::core::vtk::DataSetPtr() );
 
-    ves::xplorer::data::DatasetPropertySet set;
-    set.LoadByKey( "Filename", dataFilename );
-    set.Remove();
+    //The underlying property set is being removed in the TreeTab remove dataset methods.
+    //There is no need to do that here.
+    /*ves::xplorer::data::DatasetPropertySet set;
+    bool success = set.LoadByKey( "Filename", dataFilename );
+    if( !success )
+    {
+        std::cout << "dataset not found "  << dataFilename << std::endl;
+    }
+    success = set.Remove();
+    if( !success )
+    {
+        std::cout << "dataset not found "  << dataFilename << std::endl;
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ShowBBox( const std::string& uuid, const bool& show )
