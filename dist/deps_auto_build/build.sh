@@ -37,6 +37,7 @@ VES_30_PACKAGES+=("bdfx")
 VES_30_PACKAGES+=("xerces")
 VES_30_PACKAGES+=("latticefx")
 VES_30_PACKAGES+=("gmtl")
+VES_30_PACKAGES+=("minerva")
 
 #
 # Define the platform
