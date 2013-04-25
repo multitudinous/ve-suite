@@ -505,11 +505,12 @@ void TreeTab::on_m_deleteButton_clicked()
     {
         return;
     }
-    ves::xplorer::ModelCADHandler* mch = model->GetModelCADHandler();
+    
+    /*ves::xplorer::ModelCADHandler* mch = model->GetModelCADHandler();
     if( !mch )
     {
         return;
-    }
+    }*/
 
     QModelIndex modelIndex = ui->mTreeView->currentIndex();
     osg::Node* node = 
