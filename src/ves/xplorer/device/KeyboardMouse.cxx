@@ -210,9 +210,7 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
 
         if( keyEvt->getKey() == gadget::KEY_UNKNOWN )
         {
-            vprDEBUG( vesDBG, 2 )
-                    << "|\tGadgeteer does not recognize this key: " <<
-                    keyEvt->getKeyChar() << std::endl << vprDEBUG_FLUSH;
+            LOG_INFO( "|\tGadgeteer does not recognize this key: " << keyEvt->getKeyChar() );
         }
 
         // Emit the keypress signal associated with this particular key
@@ -227,9 +225,7 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
         }
         else
         {
-            vprDEBUG( vesDBG, 2 )
-                    << "|\tKeyboardMouse::onKeyboardMouseEvent::Unknown key in KeyPress event"
-                    << std::endl << vprDEBUG_FLUSH;
+            LOG_INFO( "|\tKeyboardMouse::onKeyboardMouseEvent::Unknown key in KeyPress event" );
         }
 
         break;
@@ -257,16 +253,13 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
         }
         else
         {
-            vprDEBUG( vesDBG, 2 )
-                    << "|\tKeyboardMouse::onKeyboardMouseEvent::Unknown key in KeyRelease event"
-                    << std::endl << vprDEBUG_FLUSH;
+            LOG_INFO( "|\tKeyboardMouse::onKeyboardMouseEvent::Unknown key in KeyRelease event" );
         }
 
         break;
     }
     case gadget::MouseButtonPressEvent:
     {
-        //std::cout << "press event " << std::endl;
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
 
@@ -303,7 +296,6 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
     }
     case gadget::MouseButtonReleaseEvent:
     {
-        //std::cout << "press release " << std::endl;
         const gadget::MouseEventPtr mouseEvt =
             boost::static_pointer_cast< gadget::MouseEvent >( event );
 
@@ -373,15 +365,13 @@ void KeyboardMouse::onKeyboardMouseEvent( gadget::EventPtr event )
     }
     default:
     {
-        std::cout << "KeyboardMouse event not implemented."
-                  << std::endl << std::flush;
+        LOG_INFO( "KeyboardMouse event not implemented." );
     }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::onMouseDoubleClick( gadget::EventPtr event )
 {
-    //std::cout << "double click " << std::endl;
     const gadget::MouseEventPtr mouseEvt =
         boost::static_pointer_cast< gadget::MouseEvent >( event );
 
@@ -590,9 +580,7 @@ vrj::DisplayPtr const KeyboardMouse::GetCurrentDisplay(
     else
     {
         //Error output, this should never happen
-        vprDEBUG( vesDBG, 2 )
-                << "VPR OS is not defined properly in KeyboardMouse::GetCurrentDisplay."
-                << std::endl << vprDEBUG_FLUSH;
+        LOG_INFO( "VPR OS is not defined properly in KeyboardMouse::GetCurrentDisplay." );
         return vrj::DisplayPtr();
     }
 }
@@ -603,6 +591,13 @@ bool KeyboardMouse::SetCurrentGLTransformInfo(
     //If current display is invalid, return
     if( display == vrj::DisplayPtr() )
     {
+        if( m_sceneManager.IsDesktopClusterControl() && !m_sceneManager.IsDesktopMode() )
+        {
+            //In the case of desktop control in clustered and custom desktop
+            //situations we will use the transform info set on line 180 of
+            //SceneGLTransformInfo in method void SceneGLTransformInfo::Initialize().
+            return true;
+        }
         m_sceneManager.SetCurrentGLTransformInfo( GLTransformInfoPtr() );
         return false;
     }
