@@ -24,13 +24,12 @@ do
 done
 
 
-if [ -z "${LISTEN_PORT}" ]
-then
-    usage
-    exit 1
-fi
-
 export DISPLAY=:0
 HOSTNAME=`hostname`
-ves_xplorer --vrjslave --listen_port=${LISTEN_PORT} --VESRTT --VESLog=warning --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log
 
+if [ -z "${LISTEN_PORT}" ]
+then
+    ves_xplorer --vrjslave --VESRTT --VESLog=warning --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log
+else
+    ves_xplorer --vrjslave --listen_port=${LISTEN_PORT} --VESRTT --VESLog=warning --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log
+fi

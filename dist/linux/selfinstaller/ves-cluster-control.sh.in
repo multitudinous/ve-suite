@@ -45,9 +45,12 @@ function getNamedVRJConfigFile()
 function getRenderNodes()
 {
     RENDER_NODES=$(awk '{
-        if( NF == 3 && $1 == "rendernode" )
+        if( $1 == "rendernode" )
         {
-            print $2
+            if( NF == 3 || NF == 2 )
+            {
+                print $2
+            }
         }
     }' "${1}")
 
@@ -63,13 +66,20 @@ function getListenPortForRenderNode()
     local named_node="${2}"
 
     LISTEN_PORT=$(awk -v NODE="${named_node}" '{
-        if( NF == 3 && $1 == "rendernode" )
+        if( $1 == "rendernode" )
         {
             if( $2 == NODE )
             {
-                print $3
+                if( NF == 3 )
+                {
+                    print $3
+                }
+                else if( NF == 2 )
+                {
+                    print "12599"
+                }
             }
-        }
+        } 
     }' "${1}")
 
     if [ -z "${LISTEN_PORT}" ]
