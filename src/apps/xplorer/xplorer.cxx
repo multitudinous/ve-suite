@@ -153,6 +153,9 @@ int main( int argc, char* argv[] )
     xplorer_desc.add_options()( "DesktopClusterControl", po::bool_switch(),
                                "Enable controlling the UI from the master node on a cluster" );
     
+    xplorer_desc.add_options()( "UIOpacity", po::value< double >()->default_value( 0.0 ),
+                               "Enable controlling the UI opacity for the render nodes when using DesktopClusterControl" );
+    
     xplorer_desc.add_options()( "VESDesktop", po::value< std::vector< int > >(),
                                 "Enable desktop mode with the resolution of the desktop" );
     //-VESDesktop', '1440', '900'

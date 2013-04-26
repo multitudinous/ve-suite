@@ -1405,7 +1405,7 @@ void App::LoadUI()
             if( !ves::xplorer::scenegraph::SceneManager::instance()->IsMasterNode() )
             {
                 //In cluster mode set all of the render node UIs to fully transparent
-                //m_UIManager->SetOpacity( 0.0 );
+                m_UIManager->SetOpacity( m_vm["UIOpacity"].as< double >() );
             }
         }
     }
