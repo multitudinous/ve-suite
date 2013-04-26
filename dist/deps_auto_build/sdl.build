@@ -47,7 +47,5 @@ case $PLATFORM in
     then
         CONFIGURE_PARAMS+=( CFLAGS=-std=gnu99 )
     fi
-
-    POST_BUILD_METHOD="cd ${INSTALL_DIR}/include && ln -s SDL2 SDL && cd ${INSTALL_DIR}/lib && ln -s libSDL2.dylib libSDL.dylib && cd ${BUILD_DIR}"
     ;;
 esac
