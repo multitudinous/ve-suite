@@ -41,7 +41,7 @@ namespace fs = boost::filesystem;
 std::map< std::string, std::string > variableMap;
 std::vector< std::string > writeableVars;
 
-void OPCInputThread( OPC* opcAPI );
+void OPCInputThread( OPC* opcAPI = 0 );
 
 std::string to_json()
 {
@@ -85,7 +85,7 @@ std::string to_json( std::vector< std::pair< std::string, std::string > >& valVe
 
 int main( int argc, char** argv )
 {
-    HRESULT hr = CoInitialize(NULL);//, COINIT_MULTITHREADED);
+    HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
     /*{
         pt::ptree tree;
@@ -139,7 +139,6 @@ int main( int argc, char** argv )
     opcInterface->SetDeviceOrHardwareFlag( dataSource );
     
     bool connectedToServer = opcInterface->ConnectToOPCServer();
-    std::cout << " here 1 " << std::endl;
     //Now get all of the current variables
     if( vm[ "logServerVars" ].as<bool>() )
     {
@@ -164,7 +163,7 @@ int main( int argc, char** argv )
         }
         opcLog.close();
     }
-        std::cout << " here 2 " << std::endl;
+
     if( vm.count( "variables" ) )
     {
         std::vector< std::string > opcVars = vm["variables"].as< std::vector< std::string > >();
@@ -175,7 +174,6 @@ int main( int argc, char** argv )
         }
     }
 
-    std::cout << " here 3 " << std::endl;
     if( vm.count( "configFile" ) )
     {
         fs::path file_name( vm[ "configFile" ].as< std::string >() );
@@ -203,8 +201,7 @@ int main( int argc, char** argv )
             }
         }
     }
-    
-    std::cout << " here 4 " << std::endl;
+ 
     if( vm[ "broadcast" ].as<bool>() )
     {
         //Launch the input the thread
@@ -229,7 +226,7 @@ int main( int argc, char** argv )
             {
                 //std::string str = to_json();
                 //std::cout << str << std::endl;
-                if( !opcInterface->IsOPCVarsEmpty() )
+                if( 0 )//!opcInterface->IsOPCVarsEmpty() )
                 {
                     //int counter = 0;
                     //while( counter < 100 )
@@ -326,6 +323,7 @@ void OPCInputThread( OPC* opcAPI )
                 std::cout << "Caught unknown exception." << std::endl;
             }
         }
+        std::cout << " setting vars " << std::endl;
         if( !inputVector.empty() )
         opcAPI->SetOPCValues( inputVector );
     }

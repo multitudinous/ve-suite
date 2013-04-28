@@ -55,6 +55,8 @@
 #include <fstream>
 #include <cctype>
 
+#include <boost/thread/thread.hpp>
+
 #ifdef WIN64 
 #include <x64/Include/opcda_i.c>
 #else
@@ -473,19 +475,14 @@ void OPC::SetOPCValues(
     OPCITEMRESULT *pResults = NULL;
 	HRESULT* pErrors = NULL;
     int count = varAndValues.size();
-    
     //create the required OPCITEMDEF array
     OPCITEMDEF *pItemArray =
         (OPCITEMDEF *) CoTaskMemAlloc ( count * sizeof (OPCITEMDEF) );
     for( int i = 0; i < count; i++ )
     {   
-        std::string temp = varAndValues[i].first.substr( 
-            varAndValues[i].first.find_first_of(".") + 1,
-            varAndValues[i].first.size() -
-            ( varAndValues[i].first.find_first_of(".")+1 ) );
+        std::string temp = varAndValues[i].first;
         pItemArray [i].szAccessPath = NULL;
         pItemArray [i].szItemID = CA2W( temp.c_str() );
-        //pItemArray [i].szItemID = m_szItemID[117];
         pItemArray [i].bActive = true;
         pItemArray [i].hClient = 1; //we need a better client id
         pItemArray [i].dwBlobSize = 0;
@@ -494,10 +491,26 @@ void OPC::SetOPCValues(
     }
     
     //add that array of items to the group
-    m_SetItemMgt->AddItems( count, pItemArray, &pResults, &pErrors );
+    HRESULT hr = m_SetItemMgt->AddItems( count, pItemArray, &pResults, &pErrors );
+    
+    if( hr == S_OK )
+    {
+        if( pErrors[ 0 ] != S_OK )
+        {
+            std::cout << "Write operation failed because " 
+                << _com_error( pErrors[ 0 ] ).ErrorMessage() << std::endl;
+            return;
+        }
+    }
+    else
+    {
+        std::cout << "Write operation failed because " 
+            << _com_error( hr ).ErrorMessage() << std::endl;
+        return;
+    } 
 
-	//CoTaskMemFree(pErrors);
-	//pErrors = NULL;
+	CoTaskMemFree(pErrors);
+	pErrors = NULL;
             
     //create an array of the server's id for the items
     OPCHANDLE *hServerItem =
@@ -513,10 +526,8 @@ void OPC::SetOPCValues(
     for( int i = 0; i < count; i++ )
     {
         hServerItem[i] = pResults[i].hServer;
-
         pValue[i].vt = VT_BSTR;
         pValue[i].bstrVal = _bstr_t( varAndValues[i].second.c_str() );
-        
         //IOPCSyncIO2
         //pValue[i].vDataValue.vt = VT_BSTR;
         //pValue[i].vDataValue.bstrVal =
@@ -528,13 +539,35 @@ void OPC::SetOPCValues(
 	//get a pointer to the IOPCSyncIOInterface:
 	IOPCSyncIO* pIOPCSyncIO;
 	//IOPCSyncIO2* pIOPCSyncIO;
+	IOPCAsyncIO2* pIOPCAsyncIO;
 
     //assign io interface to item management
 	m_SetItemMgt->QueryInterface(__uuidof(pIOPCSyncIO), (void**) &pIOPCSyncIO);
         
 	// write the item value(s)
-	HRESULT hr = pIOPCSyncIO->Write( count, hServerItem, pValue, &pErrors);
-	
+	//for( size_t i = 0; i < count; ++i )
+	{
+	//hr = pIOPCSyncIO->Write( 1, &hServerItem[ i ], &pValue[ i ], &pErrors);
+	hr = pIOPCSyncIO->Write( 1, hServerItem, pValue, &pErrors);
+	//boost::this_thread::sleep(boost::posix_time::milliseconds(500));
+	if( hr == S_OK )
+    {
+        if( pErrors[ 0 ] != S_OK )
+        {
+            std::cout << "Write operation failed because " 
+                << _com_error( pErrors[ 0 ] ).ErrorMessage() << std::endl;
+            return;
+        }
+    }
+    else
+    {
+        std::cout << "Write operation failed because " 
+            << _com_error( hr ).ErrorMessage() << std::endl;
+        return;
+    }
+	CoTaskMemFree(pErrors);
+	pErrors = NULL;
+    }
     //IOPCSyncIO2
     //HRESULT hr=pIOPCSyncIO->WriteVQT( count, hServerItem, pValue, &pErrors);
     
@@ -665,6 +698,7 @@ void OPC::Parse( std::string name )
                     varAndVal.second = "missing";
                     m_AllVarsAndVals.push_back( varAndVal );
                     m_szItemID.push_back(pBrowseElements[i].szItemID);
+                    std::cout << m_szItemID.back() << std::endl;
                 }
             } 
             
