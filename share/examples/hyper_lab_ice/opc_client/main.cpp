@@ -17,6 +17,10 @@ DIAG_OFF( unused-parameter )
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
+#include <boost/thread/thread.hpp>
+
+#include <boost/lexical_cast.hpp>
+
 #ifdef BOOST_WINDOWS
 # pragma warning(default: 4275)
 #else
@@ -35,7 +39,10 @@ namespace pt = boost::property_tree;
 namespace fs = boost::filesystem;
 
 std::map< std::string, std::string > variableMap;
-    
+std::vector< std::string > writeableVars;
+
+void OPCInputThread( OPC* opcAPI );
+
 std::string to_json()
 {
     std::map< std::string, double > testMap;
@@ -200,12 +207,19 @@ int main( int argc, char** argv )
             if( opcInterface->AddOPCVariable( varName ) )
             {
                 variableMap[ varName ] = v.second.get<std::string>( "id" );
+                if( v.second.get< std::string >( "writeable" ) == "yes" )
+                {
+                    writeableVars.push_back( varName );
+                }
             }
         }
     }
     
     if( vm[ "broadcast" ].as<bool>() )
     {
+        //Launch the input the thread
+        //boost::thread opcInputThread( &OPCInputThread, opcInterface );
+
         //Init zeromq context
         zmq::context_t context( 1 );
 
@@ -250,6 +264,8 @@ int main( int argc, char** argv )
                 }
             }
         }
+        
+        //opcInputThread.join();
     }
     else
     {
@@ -276,3 +292,47 @@ int main( int argc, char** argv )
 
     return 0;
 }
+////////////////////////////////////////////////////////////////////////////////
+void OPCInputThread( OPC* opcAPI )
+{
+    std::string exit();
+    while( exit != "q" )
+    {
+        std::string inputVar;
+        std::vector< std::pair < std::string, std::string > > inputVector;
+        for( size_t i = 0; i < writeableVars.size(); ++i )
+        {
+            std::cout << "Set the new value for " << writeableVars[ i ] << " = ";
+            std::cin >> inputVar;
+            std::cout << std::endl;
+            if( inputVar == "n" )
+            {
+                continue;
+            }
+            
+            if( inputVar == "q" )
+            {
+                exit = "q";
+                break;
+            }
+            
+            try
+            {
+                double inputValue = boost::lexical_cast< double >( inputVar );
+                inputVector.push_back( std::make_pair< std::string, std::string >( writeableVars[ i ], inputVar ) );
+                opcAPI->SetOPCValues( inputVector );
+            }
+            catch( boost::bad_lexical_cast& ex )
+            {
+                std::cout << "Please input a number." << std::endl;
+                std::cout << ex.what() << std::endl;
+            }
+            catch( ... )
+            {
+                std::cout << "Caught unknown exception." << std::endl;
+            }
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+

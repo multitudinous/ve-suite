@@ -235,10 +235,6 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
 
     //Remove the items
     m_AllItemMgt->RemoveItems( count, hServerItem, &pErrors );
-       
-	// release the reference to the IOPCSyncIO interface:
-	//pIOPCSyncIO->Release();
-    //m_AllItemMgt->Release();
 	
     //cleanup
 	CoTaskMemFree(pErrors);
@@ -412,7 +408,6 @@ std::vector< std::pair< std::string, std::string > > OPC::ReadVars()
 	//cleanup
 	CoTaskMemFree(pErrors);
 	CoTaskMemFree(pValue);
-    //CoTaskMemFree(pIOPCSyncIO);
     CoTaskMemFree(hServerItem);
     pIOPCSyncIO->Release();
 	pErrors = NULL;
@@ -545,7 +540,6 @@ void OPC::SetOPCValues(
     
     //Remove the items
     m_SetItemMgt->RemoveItems( count, hServerItem, &pErrors );
-    //m_SetItemMgt->Release();
 
     //cleanup
 	CoTaskMemFree(pErrors);
@@ -553,7 +547,6 @@ void OPC::SetOPCValues(
     CoTaskMemFree(pItemArray);
     CoTaskMemFree(hServerItem);
     CoTaskMemFree(pValue);
-    //CoTaskMemFree(pIOPCSyncIO);
     pIOPCSyncIO->Release();
 	pErrors = NULL;
 	pResults = NULL;
