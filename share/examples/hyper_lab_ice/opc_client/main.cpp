@@ -139,7 +139,7 @@ int main( int argc, char** argv )
     opcInterface->SetDeviceOrHardwareFlag( dataSource );
     
     bool connectedToServer = opcInterface->ConnectToOPCServer();
-    
+    std::cout << " here 1 " << std::endl;
     //Now get all of the current variables
     if( vm[ "logServerVars" ].as<bool>() )
     {
@@ -164,7 +164,7 @@ int main( int argc, char** argv )
         }
         opcLog.close();
     }
-    
+        std::cout << " here 2 " << std::endl;
     if( vm.count( "variables" ) )
     {
         std::vector< std::string > opcVars = vm["variables"].as< std::vector< std::string > >();
@@ -175,7 +175,7 @@ int main( int argc, char** argv )
         }
     }
 
-
+    std::cout << " here 3 " << std::endl;
     if( vm.count( "configFile" ) )
     {
         fs::path file_name( vm[ "configFile" ].as< std::string >() );
@@ -188,21 +188,10 @@ int main( int argc, char** argv )
     
         pt::ptree variableMapTree;
         boost::property_tree::json_parser::read_json( file_name.string(), variableMapTree );
-        
-        //boost::program_options::parse_config_file(ifs, desc);
-        //po::store( po::parse_config_file( ifs, desc ), vm );
-        //po::notify( vm );
-        /*ptree::const_iterator end = pt.end();
-        for (ptree::const_iterator it = pt.begin(); it != end; ++it) {
-            std::cout << it->first << ": " << it->second.get_value<std::string>() << std::endl;
-            print(it->second);
-        }*/
+        std::cout << "Reading config file " << file_name.string() << std::endl;
+
         BOOST_FOREACH(boost::property_tree::ptree::value_type& v, variableMapTree )
         {
-            
-            //opcInterface.AddOPCVariable( v.second.get_value<std::string>() );
-            //std::cout << v.first << " " << v.second.get<std::string>( "opc" ) << std::endl;
-            //std::cout << v.first << " " << v.second.get<std::string>( "id" ) << std::endl;
             const std::string varName = v.second.get<std::string>( "opc" );
             if( opcInterface->AddOPCVariable( varName ) )
             {
@@ -215,6 +204,7 @@ int main( int argc, char** argv )
         }
     }
     
+    std::cout << " here 4 " << std::endl;
     if( vm[ "broadcast" ].as<bool>() )
     {
         //Launch the input the thread
@@ -295,6 +285,11 @@ int main( int argc, char** argv )
 ////////////////////////////////////////////////////////////////////////////////
 void OPCInputThread( OPC* opcAPI )
 {
+    if( writeableVars.empty() )
+    {
+        return;
+    }
+
     std::string exit;
     while( exit != "q" )
     {
@@ -320,7 +315,6 @@ void OPCInputThread( OPC* opcAPI )
             {
                 double inputValue = boost::lexical_cast< double >( inputVar );
                 inputVector.push_back( std::make_pair< std::string, std::string >( writeableVars[ i ], inputVar ) );
-                opcAPI->SetOPCValues( inputVector );
             }
             catch( boost::bad_lexical_cast& ex )
             {
@@ -332,6 +326,8 @@ void OPCInputThread( OPC* opcAPI )
                 std::cout << "Caught unknown exception." << std::endl;
             }
         }
+        if( !inputVector.empty() )
+        opcAPI->SetOPCValues( inputVector );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
