@@ -218,7 +218,7 @@ int main( int argc, char** argv )
     if( vm[ "broadcast" ].as<bool>() )
     {
         //Launch the input the thread
-        //boost::thread opcInputThread( &OPCInputThread, opcInterface );
+        boost::thread opcInputThread( &OPCInputThread, opcInterface );
 
         //Init zeromq context
         zmq::context_t context( 1 );
@@ -265,7 +265,7 @@ int main( int argc, char** argv )
             }
         }
         
-        //opcInputThread.join();
+        opcInputThread.join();
     }
     else
     {
@@ -295,7 +295,7 @@ int main( int argc, char** argv )
 ////////////////////////////////////////////////////////////////////////////////
 void OPCInputThread( OPC* opcAPI )
 {
-    std::string exit();
+    std::string exit;
     while( exit != "q" )
     {
         std::string inputVar;
