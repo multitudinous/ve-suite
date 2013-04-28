@@ -323,9 +323,11 @@ void OPCInputThread( OPC* opcAPI )
                 std::cout << "Caught unknown exception." << std::endl;
             }
         }
-        std::cout << " setting vars " << std::endl;
+
         if( !inputVector.empty() )
-        opcAPI->SetOPCValues( inputVector );
+        {
+            opcAPI->SetOPCValues( inputVector );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
