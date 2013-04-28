@@ -548,13 +548,16 @@ void OPC::SetOPCValues(
 	//for( size_t i = 0; i < count; ++i )
 	{
 	//hr = pIOPCSyncIO->Write( 1, &hServerItem[ i ], &pValue[ i ], &pErrors);
-	hr = pIOPCSyncIO->Write( 1, hServerItem, pValue, &pErrors);
+	hr = pIOPCSyncIO->Write( count, hServerItem, pValue, &pErrors);
+	//unsigned int transactionID = 6;
+	//DWORD cancelID = 0;
+    //hr = pIOPCAsyncIO->Write( count, hServerItem, pValue, transactionID, &cancelID, &pErrors);
 	//boost::this_thread::sleep(boost::posix_time::milliseconds(500));
 	if( hr == S_OK )
     {
         if( pErrors[ 0 ] != S_OK )
         {
-            std::cout << "Write operation failed because " 
+            std::cout << "Write operation failed because of error " 
                 << _com_error( pErrors[ 0 ] ).ErrorMessage() << std::endl;
             return;
         }
