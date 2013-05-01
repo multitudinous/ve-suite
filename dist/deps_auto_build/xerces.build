@@ -19,24 +19,46 @@ fi
 case $PLATFORM in
   Windows)
     if [ ${ARCH} = "32-bit" ]; then
-      SOURCE_URL=http://apache.deathculture.net//xerces/c/3/binaries/xerces-c-3.1.1-x86-windows-vc-9.0.zip
-      BASE_DIR="${DEV_BASE_DIR}/xerces-c-3.1.1-x86-windows-vc-9.0"
+      ARCH_DIR=x86
+      MSVC_PLATFORM=Win32
+      BUILD_STR="Build/Win32/VC10/Release"
     else
-      SOURCE_URL=http://apache.deathculture.net//xerces/c/3/binaries/xerces-c-3.1.1-x86_64-windows-vc-9.0.zip
-      BASE_DIR="${DEV_BASE_DIR}/xerces-c-3.1.1-x86_64-windows-vc-9.0"
+      ARCH_DIR=x86_64
+      MSVC_PLATFORM=x64
+      BUILD_STR="Build/Win64/VC10/Release"
     fi
-    SOURCE_FORMAT=zip
-    SKIP_FPC_INSTALL="no"
+
+    if (( "${VS_VERSION/.*}" < 11 )); then
+      BASE_DIR="${DEV_BASE_DIR}/xerces-c-3.1.1-${ARCH_DIR}-windows-vc-${VS_VERSION}"
+      SOURCE_URL="http://apache.deathculture.net//xerces/c/3/binaries/xerces-c-3.1.1-${ARCH_DIR}-windows-vc-${VS_VERSION}.zip"
+      SOURCE_FORMAT=zip
+      BUILD_DIR="${BASE_DIR}"
+      INSTALL_DIR="${BASE_DIR}"
+      #POST_RETRIEVAL_METHOD="mkdir -p ${INSTALL_DIR} && mv ./bin ${INSTALL_DIR}/. && mv ./lib ${INSTALL_DIR}/. && mv ./include ${INSTALL_DIR}/. && mv ./share ${INSTALL_DIR}/."
+    else
+      unset PROJ_STR
+      unset BUILD_TARGET
+      PREBUILD_METHOD=custom
+      BUILD_METHOD=devenv
+
+      MSVC_SOLUTION+=( "${SOURCE_DIR}/projects/Win32/VC10/xerces-all/xerces-all.sln" )
+
+      CUSTOM_PREBUILD=( "${MSVC_SOLUTION[@]/#/${DEVENV} }" )
+      CUSTOM_PREBUILD=( "${CUSTOM_PREBUILD[@]/%/ /upgrade}" )
+      POST_BUILD_METHOD="\
+        mkdir -p ${INSTALL_DIR} && \
+        mkdir -p ${INSTALL_DIR}/include && \
+        mkdir -p ${INSTALL_DIR}/lib && \
+        cd ../src/xercesc && \
+        find ./ -type f -name '*.hpp' | cpio -pdm ${INSTALL_DIR}/include/xercesc && \
+        cd "${BUILD_DIR}" && \
+        cp ../${BUILD_STR}/*.lib ${INSTALL_DIR}/lib/. && \
+        cp ../${BUILD_STR}/*.pdb ${INSTALL_DIR}/lib/. && \
+        cp ../${BUILD_STR}/*.dll ${INSTALL_DIR}/lib/."
+    fi
+
     FPC_FILE=xerces.fpc
-    SOURCE_DIR="${BASE_DIR}"
-    BUILD_DIR="${BASE_DIR}"
-    INSTALL_DIR="${BASE_DIR}"
-    #POST_RETRIEVAL_METHOD="mkdir -p ${INSTALL_DIR} && mv ./bin ${INSTALL_DIR}/. && mv ./lib ${INSTALL_DIR}/. && mv ./include ${INSTALL_DIR}/. && mv ./share ${INSTALL_DIR}/."
-    unset PROJ_STR
-    unset BUILD_TARGET
-    #unset BUILD_DIR
-    PREBUILD_METHOD=none
-    BUILD_METHOD=none
+    SKIP_FPC_INSTALL="no"
     ;;
   Darwin)
     PREBUILD_METHOD=configure
