@@ -297,7 +297,6 @@ void PluginSelectionTab::InstantiatePlugin( QListWidgetItem* item )
     }
     // Get plugin filename from the current item
     QString fileName = item->data( Qt::UserRole + 1 ).toString();
-    //std::cout << "Creating instance of " << fileName.toStdString() << std::endl << std::flush;
 
     QPluginLoader loader( fileName );
     QObject* plugin = loader.instance();
@@ -649,8 +648,6 @@ bool PluginSelectionTab::eventFilter( QObject* obj, QEvent* event )
 ////////////////////////////////////////////////////////////////////////////////
 void PluginSelectionTab::RemovePlugin( UIPluginInterface* plugin )
 {
-    //UIPluginBase* pb = dynamic_cast<UIPluginBase*>( plugin );
-    //ves::open::xml::model::ModelPtr modelPtr = pb->GetVEModel();
     ves::open::xml::model::ModelPtr modelPtr = plugin->m_base.GetVEModel();
     if( modelPtr )
     {

@@ -49,7 +49,7 @@ namespace conductor
 
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
-
+////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::UIPluginBase()
     :
     m_id( 0 ),
@@ -57,25 +57,23 @@ UIPluginBase::UIPluginBase()
 {
     ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::~UIPluginBase()
 {
-
+    ;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 unsigned int UIPluginBase::GetID()
 {
     return m_id;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetPluginType( const std::string& pluginType )
 {
     m_pluginType = pluginType;
 }
-
-
-ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
+////////////////////////////////////////////////////////////////////////////////
+ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel()
 {
     if( !m_xplorerPlugin )
     {
@@ -278,8 +276,7 @@ ves::open::xml::model::ModelPtr UIPluginBase::GetVEModel( void )
 
     return m_veModel;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetVEModel( ves::open::xml::model::ModelPtr tempModel )
 {
     //m_veModel = tempModel.lock();

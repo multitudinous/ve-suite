@@ -43,7 +43,8 @@ namespace conductor
 {
 
 
-DefaultPlugin::DefaultPlugin():
+DefaultPlugin::DefaultPlugin()
+    :
     m_UIWidget( 0 ),
     m_ResultWidget( 0 ),
     m_FinancialDataWidget( 0 ),
@@ -97,12 +98,26 @@ QWidget* DefaultPlugin::ViewResultsVariables( QWidget* )
 void DefaultPlugin::DeleteWidgets()
 {
     delete m_UIWidget;
-    delete m_ResultWidget;
-    delete m_FinancialDataWidget;
-    delete m_InputVariablesWidget;
-    delete m_ResultsVariablesWidget;
+
+    if( m_ResultWidget )
+    {
+        delete m_ResultWidget;
+    }
+    if( m_FinancialDataWidget )
+    {
+        delete m_FinancialDataWidget;
+    }
+    if( m_InputVariablesWidget )
+    {
+        delete m_InputVariablesWidget;
+    }
+    if( m_ResultsVariablesWidget )
+    {
+        delete m_ResultsVariablesWidget;
+    }
+
     m_UIWidget = m_ResultWidget = m_FinancialDataWidget =
-                                      m_InputVariablesWidget = m_ResultsVariablesWidget = 0;
+        m_InputVariablesWidget = m_ResultsVariablesWidget = 0;
 }
 
 }
