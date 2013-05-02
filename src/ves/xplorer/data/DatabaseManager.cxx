@@ -86,6 +86,9 @@ vprSingletonImp( DatabaseManager );
 //vprSingletonImpLifetime( DatabaseManager, 0 );
 ////////////////////////////////////////////////////////////////////////////////
 DatabaseManager::DatabaseManager()
+    :
+    m_logger( Poco::Logger::get( "xplorer.data.DatabaseManager" ) ),
+    m_logStream( new Poco::LogStream( m_logger ) )
 {
     // Right now we use a null buffer and a null cache. These will be replaced
     // with actual caching and buffering strategies at some point in the future.
@@ -170,7 +173,8 @@ bool DatabaseManager::TableExists( const std::string& tableName )
 ////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::ResetAll()
 {
-    std::cout << "DatabaseManager::ResetAll" << std::endl << std::flush;
+    LOG_INFO( "ResetAll" );
+
     // Warning: This method is absolutely, positively specific to using an
     // sqlite store. We do this operation directly on the db rather than using
     // crunchstore's Remove() method on each entry, because that strategy would
@@ -207,7 +211,7 @@ void DatabaseManager::ResetAll()
     }
     catch( Poco::Data::DataException& e )
     {
-        std::cout << e.displayText() << std::endl;
+        LOG_ERROR( e.displayText() );
     }
 
     // Give everyone else a chance to alter their state to agree with a reset.
@@ -216,7 +220,7 @@ void DatabaseManager::ResetAll()
 ////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::SaveAs( const std::string& path )
 {
-    std::cout << "DatabaseManager::SaveAs" << path << std::endl << std::flush;
+    LOG_INFO( "DatabaseManager::SaveAs" << path );
     // Warning: This assumes we are using sqlite for the working store. If we
     // switch to something else, this code will need to be re-thought.
     DatabaseDetailsPropertySet details;
@@ -237,14 +241,14 @@ bool DatabaseManager::SaveAs( const std::string& path )
     }
     catch( std::exception& e )
     {
-        std::cerr << e.what() << std::endl << std::flush;
+        LOG_ERROR( e.what() );
         return false;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::LoadFrom( const std::string& path )
 {
-    std::cout << "DatabaseManager::LoadFrom " << path << std::endl << std::flush;
+    LOG_INFO( "DatabaseManager::LoadFrom " << path );
     // Warning: This assumes we are using sqlite for the working store. If we
     // switch to something else, this code will need to be re-thought.
 
@@ -300,7 +304,7 @@ bool DatabaseManager::LoadFrom( const std::string& path )
 ////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::ConvertFromOld()
 {
-    std::cout << "DatabaseManager::ConvertFromOld" << std::endl << std::flush;
+    LOG_INFO( "ConvertFromOld" );
     std::vector< propertystore::PropertySetPtr > propList;
 
     propList.push_back( propertystore::PropertySetPtr( new PreferencesPropertySet() ) );
@@ -357,19 +361,18 @@ void DatabaseManager::ConvertFromOld()
         properties.at( index )->Save();
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::OpenBulkMode()
 {
     Poco::Data::Session session( m_workingStore->GetPool()->get() );
     session.begin();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::CloseBulkMode()
 {
     Poco::Data::Session session( m_workingStore->GetPool()->get() );
     session.commit();
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 }// namespace data
 }// namespace xplorer

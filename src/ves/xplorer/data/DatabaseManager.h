@@ -45,11 +45,15 @@
 #include <boost/noncopyable.hpp>
 #include <switchwire/Event.h>
 
+// --- Poco Includes --- //
+#include <Poco/Logger.h>
+
 // --- C++ headers --- //
 #include <string>
 #include <vector>
 
 #include <ves/VEConfig.h>
+#include <ves/xplorer/Logging.h>
 
 #define CURRENT_DB_VERSION 2013.0408
 
@@ -178,6 +182,10 @@ private:
     /// Signal registered as "DatabaseManager.ResyncFromDatabase" that is
     /// emitted during calls to LoadFrom.
     switchwire::Event< void() > m_resyncFromDatabase;
+    ///Logger
+    Poco::Logger& m_logger;
+    ///Logger stream
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 }// namespace data
