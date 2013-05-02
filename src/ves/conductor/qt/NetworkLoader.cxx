@@ -258,7 +258,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
 
     ///Load the ves data on the xplorer side
     ves::xplorer::network::GraphicalPluginManager::instance()->
-    SetCurrentNetwork( nw_str );
+        SetCurrentNetwork( nw_str );
 
     // This signal replaces the above block. xplorerColor doesn't appear to be
     // processed anywhere, so was left out of the signal.
