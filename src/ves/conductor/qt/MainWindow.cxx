@@ -1110,7 +1110,7 @@ void MainWindow::onFileSaveSelected( const QString& fileName )
         ves::xplorer::ModelHandler::instance()->GetActiveModel();
     ves::open::xml::model::SystemPtr system = model->GetModelData()->GetParentSystem();
     system->SetDBReference( dbFileName );
-    LOG_DEBUG( "onFileSaveSelected: setting database filename to " << dbFileName );
+    LOG_INFO( "onFileSaveSelected: setting database filename to " << dbFileName );
 
     // Save off the .ves file
     std::string vesFileName = pathName;
