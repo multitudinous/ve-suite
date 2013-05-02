@@ -40,8 +40,11 @@ namespace fs = boost::filesystem;
 
 std::map< std::string, std::string > variableMap;
 std::vector< std::string > writeableVars;
-
+boost::mutex guard;
+std::vector< std::pair< std::string, std::string > > m_dataVector;
 void OPCInputThread( OPC* opcAPI = 0 );
+void SetDataVector(  std::vector< std::pair< std::string, std::string > > valVector );
+std::vector< std::pair< std::string, std::string > > GetDataVector();
 
 std::string to_json()
 {
@@ -226,12 +229,14 @@ int main( int argc, char** argv )
             {
                 //std::string str = to_json();
                 //std::cout << str << std::endl;
-                if( 0 )//!opcInterface->IsOPCVarsEmpty() )
+                if( !opcInterface->IsOPCVarsEmpty() )
                 {
                     //int counter = 0;
                     //while( counter < 100 )
                     {
                         valVector = opcInterface->ReadVars();
+            
+                        SetDataVector( valVector );
                         /*for( std::vector< std::pair< std::string, std::string > >::const_iterator iter = valVector.begin(); iter != valVector.end(); ++iter)
                         {
                             if( variableMap[ iter->first ] == "PT003" )
@@ -292,9 +297,11 @@ void OPCInputThread( OPC* opcAPI )
     {
         std::string inputVar;
         std::vector< std::pair < std::string, std::string > > inputVector;
+        std::string variableName;
         for( size_t i = 0; i < writeableVars.size(); ++i )
         {
-            std::cout << "Set the new value for " << writeableVars[ i ] << " = ";
+            variableName = writeableVars[ i ];
+            std::cout << "Set the new value for " << variableName << " = ";
             std::cin >> inputVar;
             std::cout << std::endl;
             if( inputVar == "n" )
@@ -311,7 +318,43 @@ void OPCInputThread( OPC* opcAPI )
             try
             {
                 double inputValue = boost::lexical_cast< double >( inputVar );
-                inputVector.push_back( std::make_pair< std::string, std::string >( writeableVars[ i ], inputVar ) );
+                inputVector.push_back( std::make_pair< std::string, std::string >( variableName, inputVar ) );
+                std::vector< std::pair< std::string, std::string > > readData = GetDataVector();
+                for( size_t j = 0; j < readData.size(); ++j )
+                {
+                    if( readData[ j ].first == variableName )
+                    {
+                        double currentVal = boost::lexical_cast< double >( readData[ j ].second );
+                        std::cout << "Current value = " << currentVal << std::endl;
+                        std::cout << "Final value = " << inputValue << std::endl;
+                        double diff = inputValue - currentVal;
+                        double increment = 0.01;
+
+                        if( diff < 0 )
+                        {
+                            if( inputValue > 1. )
+                            {
+                                increment = inputValue * 0.09;
+                            }
+                            increment = -1.* increment;
+                        }
+                        else
+                        {
+                            if( currentVal > 1. )
+                            {
+                                increment = currentVal * 0.09;
+                            }
+                        }
+                        size_t numInts = diff / increment;
+                        for( size_t k = 0; k < numInts; ++k )
+                        {
+                            const std::string updatedVal = boost::lexical_cast< std::string >( currentVal += increment );
+                            opcAPI->SetOPCValue( writeableVars[ i ], updatedVal );
+                            boost::this_thread::sleep(boost::posix_time::milliseconds(5));
+                        }
+                        break;
+                    }
+                }
             }
             catch( boost::bad_lexical_cast& ex )
             {
@@ -331,4 +374,15 @@ void OPCInputThread( OPC* opcAPI )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-
+void SetDataVector(  std::vector< std::pair< std::string, std::string > > valVector )
+{
+    boost::mutex::scoped_lock lock(guard);
+    m_dataVector = valVector;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< std::pair< std::string, std::string > > GetDataVector()
+{
+    boost::mutex::scoped_lock lock(guard);
+    return m_dataVector;
+}
+////////////////////////////////////////////////////////////////////////////////

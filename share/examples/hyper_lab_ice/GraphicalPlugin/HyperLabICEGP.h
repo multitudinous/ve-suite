@@ -137,6 +137,9 @@ private:
     ///Setup the Flow Indicator
     void ConfigureFlowIndicators();
 
+    ///Setup the light indicators
+    void ConfigureLightIndicators();
+    
     ///Process the data from the opc client
     void ProcessOPCData();
     
@@ -173,6 +176,10 @@ private:
     SensorGaugeContainer m_hvIndicators;
     SensorGaugeContainer m_fiIndicators;
 
+
+    typedef std::map< std::string, osg::ref_ptr< osg::Group > > LightContainer;
+    LightContainer m_lightIndicators;
+    
     typedef std::map< std::string, osg::ref_ptr< osgText::Text > > GuageTextContainer;
     GuageTextContainer m_pressureTransducers;
 

@@ -163,7 +163,7 @@ int HyperLabICEGP::InitializeLabModels()
     osg::ref_ptr< osg::Group > renderRoot = new osg::Group;
 #ifndef TEST_GAUGES
     osg::ref_ptr< osg::Node > models;
-    models = osgDB::readNodeFile( "Models/ControlRoom_v9.osg", options.get() );
+    models = osgDB::readNodeFile( "Models/ControlRoom_v11.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
@@ -177,7 +177,7 @@ int HyperLabICEGP::InitializeLabModels()
     }
     renderRoot->addChild( models.get() );
 
-    models = osgDB::readNodeFile( "Models/HyperSystem_v9b.osg", options.get() );
+    models = osgDB::readNodeFile( "Models/HyperSystem_v11.osg", options.get() );
     if( !( models.valid() ) )
     {
         osg::notify( osg::FATAL ) << "Can't open model file(s)." << std::endl;
@@ -224,7 +224,6 @@ void HyperLabICEGP::ProcessOPCData()
     pt::ptree tree;
     GetOPCData( tree );
     
-    //for( GuageTextContainer::const_iterator iter = m_pressureTransducers.begin(); iter != m_pressureTransducers.end(); ++iter )
     BOOST_FOREACH( const GuageTextContainer::value_type& gaugePair, m_pressureTransducers )
     {
         boost::optional<std::string> val = tree.get_optional< std::string >( gaugePair.first );
@@ -233,14 +232,32 @@ void HyperLabICEGP::ProcessOPCData()
             std::ostringstream streamData;
             streamData << std::fixed << std::setprecision( 3 ) << boost::lexical_cast< double >( *val );
             gaugePair.second->setText( streamData.str() );
-            //std::cout << "data " << streamData.str() << std::endl;
+        }
+    }
+    
+    BOOST_FOREACH( const LightContainer::value_type& gaugePair, m_lightIndicators )
+    {
+        boost::optional<std::string> val = tree.get_optional< std::string >( gaugePair.first );
+        if( val )
+        {
+            double lightVal = boost::lexical_cast< double >( *val );
+            if( lightVal == 0 )
+            {
+                gaugePair.second->getChild( 0 )->setNodeMask( 0 );
+                gaugePair.second->getChild( 1 )->setNodeMask( 1 );
+            }
+            else
+            {
+                gaugePair.second->getChild( 1 )->setNodeMask( 0 );
+                gaugePair.second->getChild( 0 )->setNodeMask( 1 );
+            }
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
 {
-#if 0
+#if 1
     ProcessOPCData();
 #else
     if( !OneSecondCheck( m_lastSend, 250000 ) )
@@ -377,6 +394,10 @@ void HyperLabICEGP::InitializeLiveSensorObjects()
     {
         ConfigurePressureTransducers();
     }
+    //Update the Light Indicators
+    {
+        ConfigureLightIndicators();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
@@ -504,6 +525,8 @@ void HyperLabICEGP::ConfigurePressureTransducers()
     loadedPartNumbers.push_back( "FT380" );
     loadedPartNumbers.push_back( "FT432" );
     loadedPartNumbers.push_back( "PDT172" );
+    loadedPartNumbers.push_back( "UI500_Volts" );
+    loadedPartNumbers.push_back( "UI500_Amps" );
 #else
     loadedPartNumbers.push_back( "PT003" );
 #endif
@@ -714,3 +737,35 @@ void HyperLabICEGP::SetupOPCClient()
 }
 ////////////////////////////////////////////////////////////////////////////////
 #endif
+void HyperLabICEGP::ConfigureLightIndicators()
+{
+    std::vector< std::string > loadedPartNumbers;
+#ifndef TEST_GAUGES
+    loadedPartNumbers.push_back( "LIGHTSWITCH_YL611A" );
+    loadedPartNumbers.push_back( "LIGHTSWITCH_YL021" );
+    loadedPartNumbers.push_back( "LIGHTSWITCH_YL020" );
+    loadedPartNumbers.push_back( "LIGHTSWITCH_YL380" );
+    loadedPartNumbers.push_back( "LIGHTSWITCH_YL616" );
+    loadedPartNumbers.push_back( "LIGHTSWITCH_RedGreenLight" );
+    loadedPartNumbers.push_back( "LIGHTSWITCH_WhiteStrobe" );
+#else
+
+#endif
+    for( size_t i = 0; i < loadedPartNumbers.size(); ++i )
+    {
+        ves::xplorer::scenegraph::util::FindChildWithNameVisitor
+        childVisitor( mDCS.get(), loadedPartNumbers.at( i ), true, false );
+        if( childVisitor.FoundChild() )
+        {
+            std::cout << "Found graphics node match for " << loadedPartNumbers.at( i ) << std::endl;
+            osg::ref_ptr< osg::Group > tempGroup = childVisitor.GetFoundNode()->asGroup();
+            
+            m_lightIndicators[ loadedPartNumbers.at( i ) ] = tempGroup.get();
+        }
+        else
+        {
+            std::cout << "Did not find graphics node for " << loadedPartNumbers.at( i ) << std::endl;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

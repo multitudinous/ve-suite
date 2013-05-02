@@ -224,6 +224,10 @@ std::string OPC::GetAllOPCVariables( const std::string& modname )
         //return std::string();
     }*/
 
+    //cleanup
+    CoTaskMemFree(pErrors);
+    pErrors = NULL;
+
 	if( pValue == NULL )
 	{
 	    std::cout << "No data returned from Read all variables." << std::endl;
@@ -314,6 +318,9 @@ bool OPC::AddOPCVariable( const std::string& var )
             {
                 std::cout << "Variable " << var << " add operation is " 
                     << _com_error( pErrors[ 0 ] ).ErrorMessage() << std::endl;
+                //cleanup
+	            CoTaskMemFree(pErrors);
+	            pErrors = NULL;
                 return false;
             }
         }
@@ -321,8 +328,14 @@ bool OPC::AddOPCVariable( const std::string& var )
         {
             std::cout << "Variable " << var << " add operation is " 
                 << _com_error( hr ).ErrorMessage() << std::endl;
+            //cleanup
+	        CoTaskMemFree(pErrors);
+	        pErrors = NULL;
             return false;
         } 
+        //cleanup
+	    CoTaskMemFree(pErrors);
+	    pErrors = NULL;
         return true;
     }
     
@@ -593,7 +606,132 @@ void OPC::SetOPCValues(
 
     return;
 }
+///////////////////////////////////////////////////////////////////////////////
+void OPC::SetOPCValue( const std::string& opcID, const std::string& value )
+{
+    ///
+    ///Set the values of the requested variables
+    ///
+    OPCITEMRESULT *pResults = NULL;
+	HRESULT* pErrors = NULL;
+    int count = 1;
+    //create the required OPCITEMDEF array
+    OPCITEMDEF *pItemArray =
+        (OPCITEMDEF *) CoTaskMemAlloc ( count * sizeof (OPCITEMDEF) );
+    for( int i = 0; i < count; i++ )
+    {
+        pItemArray [i].szAccessPath = NULL;
+        pItemArray [i].szItemID = CA2W( opcID.c_str() );
+        pItemArray [i].bActive = true;
+        pItemArray [i].hClient = 1; //we need a better client id
+        pItemArray [i].dwBlobSize = 0;
+        pItemArray [i].pBlob = NULL;
+        pItemArray [i].vtRequestedDataType = VT_BSTR;//pItem->GetDataType ();
+    }
+    
+    //add that array of items to the group
+    HRESULT hr = m_SetItemMgt->AddItems( count, pItemArray, &pResults, &pErrors );
+    
+    if( hr == S_OK )
+    {
+        if( pErrors[ 0 ] != S_OK )
+        {
+            std::cout << "Write operation failed because " 
+                << _com_error( pErrors[ 0 ] ).ErrorMessage() << std::endl;
+            return;
+        }
+    }
+    else
+    {
+        std::cout << "Write operation failed because " 
+            << _com_error( hr ).ErrorMessage() << std::endl;
+        return;
+    } 
 
+	CoTaskMemFree(pErrors);
+	pErrors = NULL;
+            
+    //create an array of the server's id for the items
+    OPCHANDLE *hServerItem =
+        (OPCHANDLE *) CoTaskMemAlloc ( count * sizeof (OPCHANDLE) );
+	VARIANT* pValue =
+        (VARIANT *) CoTaskMemAlloc ( count * sizeof (VARIANT) );
+	
+    //IOPCSyncIO2
+    //OPCITEMVQT *pValue =
+        //(OPCITEMVQT *) CoTaskMemAlloc ( count * sizeof (OPCITEMVQT) );
+
+    //loop over and create a list of server ids and put the values in a list
+    for( int i = 0; i < count; i++ )
+    {
+        hServerItem[i] = pResults[i].hServer;
+        pValue[i].vt = VT_BSTR;
+        pValue[i].bstrVal = _bstr_t( value.c_str() );
+        //IOPCSyncIO2
+        //pValue[i].vDataValue.vt = VT_BSTR;
+        //pValue[i].vDataValue.bstrVal =
+            //_bstr_t( varAndValues[i].second.c_str() );
+        //pValue[i].bQualitySpecified = false;
+        //pValue[i].bTimeStampSpecified = false;
+    }
+
+	//get a pointer to the IOPCSyncIOInterface:
+	IOPCSyncIO* pIOPCSyncIO;
+	//IOPCSyncIO2* pIOPCSyncIO;
+	IOPCAsyncIO2* pIOPCAsyncIO;
+
+    //assign io interface to item management
+	m_SetItemMgt->QueryInterface(__uuidof(pIOPCSyncIO), (void**) &pIOPCSyncIO);
+        
+	// write the item value(s)
+	//for( size_t i = 0; i < count; ++i )
+	{
+	//hr = pIOPCSyncIO->Write( 1, &hServerItem[ i ], &pValue[ i ], &pErrors);
+	hr = pIOPCSyncIO->Write( count, hServerItem, pValue, &pErrors);
+	//unsigned int transactionID = 6;
+	//DWORD cancelID = 0;
+    //hr = pIOPCAsyncIO->Write( count, hServerItem, pValue, transactionID, &cancelID, &pErrors);
+	//boost::this_thread::sleep(boost::posix_time::milliseconds(500));
+	if( hr == S_OK )
+    {
+        if( pErrors[ 0 ] != S_OK )
+        {
+            std::cout << "Write operation failed because of error " 
+                << _com_error( pErrors[ 0 ] ).ErrorMessage() << std::endl;
+            return;
+        }
+    }
+    else
+    {
+        std::cout << "Write operation failed because " 
+            << _com_error( hr ).ErrorMessage() << std::endl;
+        return;
+    }
+	CoTaskMemFree(pErrors);
+	pErrors = NULL;
+    }
+    //IOPCSyncIO2
+    //HRESULT hr=pIOPCSyncIO->WriteVQT( count, hServerItem, pValue, &pErrors);
+    
+    //Remove the items
+    m_SetItemMgt->RemoveItems( count, hServerItem, &pErrors );
+
+    //cleanup
+	CoTaskMemFree(pErrors);
+    CoTaskMemFree(pResults);
+    CoTaskMemFree(pItemArray);
+    CoTaskMemFree(hServerItem);
+    CoTaskMemFree(pValue);
+    pIOPCSyncIO->Release();
+	pErrors = NULL;
+	pResults = NULL;
+    pItemArray = NULL;
+    hServerItem = NULL;
+    pValue = NULL;
+    pIOPCSyncIO = NULL;
+
+    return;
+}
 ///////////////////////////////////////////////////////////////////////////////
 bool OPC::IsOPCVarsEmpty() const
 {

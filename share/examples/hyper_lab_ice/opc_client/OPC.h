@@ -85,6 +85,8 @@ public:
     ///Write a list of variables to the associated OPC server
     void SetOPCValues( std::vector< std::pair < std::string, std::string > > );
 
+    void SetOPCValue( const std::string& opcID, const std::string& value );
+
     ///Connect to the opc server
     bool ConnectToOPCServer();
 
