@@ -50,7 +50,7 @@ case $PLATFORM in
         mkdir -p ${INSTALL_DIR}/include && \
         mkdir -p ${INSTALL_DIR}/lib && \
         cd ../src/xercesc && \
-        find ./ -type f -name '*.hpp' | cpio -pdm ${INSTALL_DIR}/include/xercesc && \
+        find ./ -type f -name '*.hpp' -o -name '*.c' | cpio -pdm ${INSTALL_DIR}/include/xercesc && \
         cd "${BUILD_DIR}" && \
         cp ../${BUILD_STR}/*.lib ${INSTALL_DIR}/lib/. && \
         cp ../${BUILD_STR}/*.pdb ${INSTALL_DIR}/lib/. && \
