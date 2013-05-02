@@ -146,17 +146,19 @@ void GraphicalPluginManager::Initialize()
     _eventHandlers[std::string( "LOAD_VES_FILE" )] =
         new LoadVesFileEventHandler();
 
-    ///Delete everything before loading things up
+    //Delete everything before loading things up
     CONNECTSIGNALS_STATIC( "%VesFileLoading%",
                       void( std::string const& ),
                       &NewFileLoading,
                       m_connections, any_SignalType, normal_Priority );
 
-    ///Reload plugins
+    //Reload plugins - this needs to be done last because the plugins that
+    //are referenced by the plugin loader are referenced by ui plugins as well.
+    //THe ui plugins need to be cleaned up first.
     CONNECTSIGNALS_1( "%WorkingDirectoryChanged%",
                       void( std::string const& ),
                       &GraphicalPluginManager::DiscoverPlugins,
-                      m_connections, any_SignalType, normal_Priority );
+                      m_connections, any_SignalType, lowest_Priority );
 
 
     CONNECTSIGNALS_STATIC( "UpdateNetwork",
