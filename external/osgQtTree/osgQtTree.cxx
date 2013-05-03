@@ -23,9 +23,11 @@ void initResources()
 
 namespace osgQtTree 
 {
-
-osgTreeItem*
-getOrCreateTreeRoot( TreeModel *tree, osgTreeItem* currentRoot, osg::Node *node, osg::Node* rootnode )
+////////////////////////////////////////////////////////////////////////////////
+osgTreeItem* getOrCreateTreeRoot( TreeModel *tree,
+                                  osgTreeItem* currentRoot,
+                                  osg::Node *node,
+                                  osg::Node* rootnode )
 {
     osgTreeItem* newItem = currentRoot;
     if( newItem == 0 )
@@ -38,8 +40,11 @@ getOrCreateTreeRoot( TreeModel *tree, osgTreeItem* currentRoot, osg::Node *node,
 
     return( newItem );
 }
-
-PopulateTreeControlWithNodeVisitor::PopulateTreeControlWithNodeVisitor( osg::Node* rootnode, TreeModel* tree, osg::NodeVisitor::TraversalMode travMode )
+////////////////////////////////////////////////////////////////////////////////
+PopulateTreeControlWithNodeVisitor::PopulateTreeControlWithNodeVisitor(
+        osg::Node* rootnode,
+        TreeModel* tree,
+        osg::NodeVisitor::TraversalMode travMode )
   : osg::NodeVisitor( travMode ),
     tree_( tree ),
     rootnode_( rootnode ),
@@ -50,10 +55,8 @@ PopulateTreeControlWithNodeVisitor::PopulateTreeControlWithNodeVisitor( osg::Nod
     setTraversalMask( 0xffffffff );
     setNodeMaskOverride( 0xffffffff );
 }
-
-
-void
-PopulateTreeControlWithNodeVisitor::apply( osg::Node& node )
+////////////////////////////////////////////////////////////////////////////////
+void PopulateTreeControlWithNodeVisitor::apply( osg::Node& node )
 {
     activeGroup_ = getOrCreateTreeRoot( tree_, activeGroup_, &node, rootnode_ );
     std::string nodepath = getNodePathString( rootnode_, &node );
@@ -61,16 +64,16 @@ PopulateTreeControlWithNodeVisitor::apply( osg::Node& node )
 
     traverse( node );
 }
-
-void
-PopulateTreeControlWithNodeVisitor::apply( osg::Group& group )
+////////////////////////////////////////////////////////////////////////////////
+void PopulateTreeControlWithNodeVisitor::apply( osg::Group& group )
 {
     osgTreeItem* pushgroup = 0;
     // first time, initialize root
     if( tree_->GetRoot()->childCount() == 0 )
     {
         // First item
-        activeGroup_ = getOrCreateTreeRoot( tree_, activeGroup_, &group, rootnode_ );
+        activeGroup_ = getOrCreateTreeRoot( tree_, activeGroup_, &group,
+                                            rootnode_ );
     }
     else
     {
@@ -83,15 +86,13 @@ PopulateTreeControlWithNodeVisitor::apply( osg::Group& group )
 
     activeGroup_ = pushgroup;
 }
-
-void 
-PopulateTreeControlWithNodeVisitor::setRootNode( osg::Node* rootnode )
+////////////////////////////////////////////////////////////////////////////////
+void PopulateTreeControlWithNodeVisitor::setRootNode( osg::Node* rootnode )
 {
     rootnode_ = rootnode;
 }
-
-QModelIndex
-findItemIndex( TreeModel* tree, const osg::NodePath& nodepath )
+////////////////////////////////////////////////////////////////////////////////
+QModelIndex findItemIndex( TreeModel* tree, const osg::NodePath& nodepath )
 {
     // Get the index of the first item
     QModelIndex modelIndex = tree->index( 0, 0 );
@@ -145,9 +146,10 @@ findItemIndex( TreeModel* tree, const osg::NodePath& nodepath )
     }
     return( modelIndex );
 }
-
-QModelIndex
-openToAndSelect( QTreeView* view, TreeModel* model, const osg::NodePath& nodepath )
+////////////////////////////////////////////////////////////////////////////////
+QModelIndex openToAndSelect( QTreeView* view,
+                             TreeModel* model,
+                             const osg::NodePath& nodepath )
 {
     view->clearSelection();
     
@@ -165,7 +167,7 @@ openToAndSelect( QTreeView* view, TreeModel* model, const osg::NodePath& nodepat
     }
     return index;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 osgTreeItem* addTreeItem( TreeItem* parent,
                           osg::Node* node,
                           const std::string& nodepath,
@@ -175,7 +177,9 @@ osgTreeItem* addTreeItem( TreeItem* parent,
     if( node != NULL )
     {
         //nodename = node->className() + std::string( ": " );
-        nodename = name.empty() ?  node->getName() : name; // use supplied name if it exists, else nodename
+        nodename = name.empty() ?  node->getName() : name; // use supplied name
+                                                           // if it exists,
+                                                           // else nodename
         nodename += std::string(": ") + node->className();
     }
 
@@ -189,7 +193,8 @@ osgTreeItem* addTreeItem( TreeItem* parent,
         osg::Node::DescriptionList descList = node->getDescriptions();
         for( size_t i = 0; i < descList.size(); ++i )
         {
-            if( (descList.at( i ) == "Assembly") || (descList.at( i ) == "Part") )
+            if( (descList.at( i ) == "Assembly") ||
+                (descList.at( i ) == "Part") )
             {
                 child->SetIcon(QIcon(
                 ":/tree/cadicon.png"));
@@ -210,9 +215,9 @@ osgTreeItem* addTreeItem( TreeItem* parent,
     parent->appendChild( child );
     return( child );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 std::string getNodePathString( osg::Node* const startNode,
-                                                 osg::Node* endNode )
+                               osg::Node* endNode )
 {
     // Walk up from end to start
     osg::NodePath nodePath;
@@ -229,7 +234,7 @@ std::string getNodePathString( osg::Node* const startNode,
 
     return osgwTools::nodePathToString( temp );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 
 // end namespace osgQtTree
 }

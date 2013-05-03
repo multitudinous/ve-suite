@@ -50,22 +50,22 @@ TreeModel::TreeModel( QObject *parent )
     : QAbstractItemModel(parent)
 {
 }
-
+////////////////////////////////////////////////////////////////////////////////
 TreeModel::~TreeModel()
 {
     delete rootItem;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeModel::CreateRootItem( QList<QVariant> data )
 {
     rootItem = new TreeItem( data );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 TreeItem* TreeModel::GetRoot()
 {
     return rootItem;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int TreeModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
@@ -73,7 +73,7 @@ int TreeModel::columnCount(const QModelIndex &parent) const
     else
         return rootItem->columnCount();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 QVariant TreeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -89,7 +89,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 
     return item->data(index.column());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -97,7 +97,7 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
 
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
                                int role) const
 {
@@ -106,7 +106,7 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
 
     return QVariant();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent)
             const
 {
@@ -126,7 +126,7 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent)
     else
         return QModelIndex();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 QModelIndex TreeModel::parent(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -140,7 +140,7 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
 
     return createIndex(parentItem->row(), 0, parentItem);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int TreeModel::rowCount(const QModelIndex &parent) const
 {
     TreeItem *parentItem;
@@ -154,19 +154,20 @@ int TreeModel::rowCount(const QModelIndex &parent) const
 
     return parentItem->childCount();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeModel::BeginReset()
 {
     beginResetModel();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeModel::EndReset()
 {
     endResetModel();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void TreeModel::Clear()
 {
     // Dump the root item and all else will follow
     delete rootItem;
 }
+////////////////////////////////////////////////////////////////////////////////
