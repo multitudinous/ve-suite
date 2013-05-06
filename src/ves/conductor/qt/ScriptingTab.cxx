@@ -1,109 +1,112 @@
 #include <ves/conductor/qt/ScriptingTab.h>
 #include <ves/conductor/qt/ui_ScriptingTab.h>
+#include <ves/conductor/qt/UITabs.h>
 
 #include <QtGui/QFileDialog>
 #include <QtCore/QFile>
 
-#include <ves/xplorer/data/ContourPlanePropertySet.h>
-#include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/conductor/qt/VisFeatureManager.h>
-
 #include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 #include <switchwire/Version.h>
-#if SWITCHWIRE_HAVE_SQUIRREL
-#include <switchwire/squirrel/ConnectScripts.h>
-#include <switchwire/squirrel/ExposeSignals.h>
-#include <switchwire/squirrel/SQStdMap.h>
-#include <switchwire/squirrel/SQStdVector.h>
 
-#include <squirrel.h>
-//DIAG_OFF(unused-parameter)
-#include <sqrat.h>
-#include <sqrat/sqratVM.h>
-//DIAG_ON(unused-parameter)
-#endif
+#include <ves/xplorer/eventmanager/SquirrelConnection.h>
+
+#include <vpr/Thread/Thread.h>
 
 namespace ves
 {
 namespace conductor
 {
-
-// This class will eventually move into some scripting utility library along
-// with similar access classes for touching core VES pieces
-class VizPropertySetWrapper
-{
-public:
-
-    void CreateNewFeature( const std::string& featureType )
-    {
-        m_set = ves::conductor::VisFeatureManager::instance()->CreateNewFeature( featureType );
-    }
-
-    void SetPropertyValue( const std::string& key, boost::any value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
-
-    void SetDoublePropertyValue( const std::string& key, double value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
-
-    void SetStringPropertyValue( const std::string& key, std::string value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
-
-    std::string GetUUIDAsString()
-    {
-        return m_set->GetUUIDAsString();
-    }
-
-    void Save()
-    {
-        m_set->Save();
-    }
-
-private:
-    propertystore::PropertySetPtr m_set;
-};
-////////////////////////////////////////////////////////////////////////////////
-
-
 ////////////////////////////////////////////////////////////////////////////////
 ScriptingTab::ScriptingTab(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ScriptingTab)
+    ui(new Ui::ScriptingTab),
+    m_currentLoadButton(0),
+    m_fileDialog(0)
 {
     ui->setupUi(this);
+
+    m_loadButtonVector.push_back( ui->m_load_1 );
+    m_loadButtonVector.push_back( ui->m_load_2 );
+    m_loadButtonVector.push_back( ui->m_load_3 );
+    m_loadButtonVector.push_back( ui->m_load_4 );
+    m_loadButtonVector.push_back( ui->m_load_5 );
+    m_loadButtonVector.push_back( ui->m_load_6 );
+    m_loadButtonVector.push_back( ui->m_load_7 );
+    m_loadButtonVector.push_back( ui->m_load_8 );
+    m_loadButtonVector.push_back( ui->m_load_9 );
+    m_loadButtonVector.push_back( ui->m_load_10 );
+    m_loadButtonVector.push_back( ui->m_load_11 );
+    m_loadButtonVector.push_back( ui->m_load_12 );
+
+    //Pair a load button with a run button
+    m_buttonMap[ ui->m_load_1 ] = ui->m_run_1;
+    m_buttonMap[ ui->m_load_2 ] = ui->m_run_2;
+    m_buttonMap[ ui->m_load_3 ] = ui->m_run_3;
+    m_buttonMap[ ui->m_load_4 ] = ui->m_run_4;
+    m_buttonMap[ ui->m_load_5 ] = ui->m_run_5;
+    m_buttonMap[ ui->m_load_6 ] = ui->m_run_6;
+    m_buttonMap[ ui->m_load_7 ] = ui->m_run_7;
+    m_buttonMap[ ui->m_load_8 ] = ui->m_run_8;
+    m_buttonMap[ ui->m_load_9 ] = ui->m_run_9;
+    m_buttonMap[ ui->m_load_10 ] = ui->m_run_10;
+    m_buttonMap[ ui->m_load_11 ] = ui->m_run_11;
+    m_buttonMap[ ui->m_load_12 ] = ui->m_run_12;
+
+    //Click signal connections for all the load and run buttons on the multi tab
+    std::map< QObject*, QObject* >::iterator it = m_buttonMap.begin();
+    while( it != m_buttonMap.end() )
+    {
+        connect( it->first, SIGNAL(clicked()),
+                 this, SLOT(multi_load_clicked()) );
+        connect( it->second, SIGNAL(clicked()),
+                 this, SLOT(multi_run_clicked()) );
+        ++it;
+    }
+
+    connect( this, SIGNAL(SetButtonTextSignal(QPushButton*, const QString&)),
+             this, SLOT(DelayedSetButtonText(QPushButton*, const QString&)),
+             Qt::QueuedConnection );
+
+    CONNECTSIGNALS_2( "%AssociateScript", void( const std::string&, int ),
+                      &ScriptingTab::AssociateScript,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ScriptingTab::~ScriptingTab()
 {
     delete ui;
+    for( size_t idx = 0; idx < m_threads.size(); ++idx )
+    {
+        m_threads.at( idx )->kill();
+        delete m_threads.at( idx );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScriptingTab::on_m_openButton_clicked()
 {
-    QFileDialog* fd = new QFileDialog(0);
-    fd->setOptions( QFileDialog::DontUseNativeDialog );
-    // Make mFileDialog manage its own lifetime and memory
-    fd->setAttribute( Qt::WA_DeleteOnClose );
-    fd->setFileMode( QFileDialog::ExistingFiles );
-    // Tell the dialog to open in the cwd
-    fd->setDirectory( QDir::current() );
+    //QFileDialog* fd = new QFileDialog(0);
+    m_fileDialog = new QFileDialog(0);
+    m_fileDialog->setOptions( QFileDialog::DontUseNativeDialog );
+    m_fileDialog->setAttribute( Qt::WA_DeleteOnClose );
+    m_fileDialog->setFileMode( QFileDialog::ExistingFiles );
+    m_fileDialog->setDirectory( QDir::current() );
     QStringList filters;
     filters << "Squirrel Scripts (*.nut)";
-    fd->setNameFilters( filters );
+    m_fileDialog->setNameFilters( filters );
 
-    QObject::connect( fd, SIGNAL( filesSelected( const QStringList& ) ),
+    QObject::connect( m_fileDialog, SIGNAL( filesSelected( const QStringList& ) ),
                       this, SLOT( onFileOpenSelected( const QStringList& ) ) );
 
-    fd->show();
+    int index = ves::conductor::UITabs::instance()->AddTab( m_fileDialog, "Open Script", true );
+    ves::conductor::UITabs::instance()->ActivateTab( index );
+    //m_fileDialog->show();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScriptingTab::onFileOpenSelected( const QStringList& files )
 {
+    // m_fileDialog was given mode DeleteOnClose, so we can just set to null.
+    m_fileDialog = 0;
     if( !files.isEmpty() )
     {
         ui->m_scriptPath->setText( files.at( 0 ) );
@@ -117,53 +120,85 @@ void ScriptingTab::onFileOpenSelected( const QStringList& files )
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-// NOTE: A lot of what is in this method will eventually move into other
-// classes, but until the basic kinks are worked out of this scripting setup,
-// it's easier to deal with it all in one place.
 void ScriptingTab::on_m_runButton_clicked()
 {
-#if SWITCHWIRE_HAVE_SQUIRREL
-    // Set up a default Squirrel VM.
-    Sqrat::SqratVM vm;
-    Sqrat::DefaultVM::Set(vm.getVM());
-
-    // Expose a void( const std::string& ) signal type to the vm so
-    // that scripts can register signals of that type. Our test will use that
-    // type to load a file.
-    ExposeSignalType_1< void( const std::string& ) >( "VoidStdStringConstRefSignal", vm );
-    // Expose the signal type required for toggling geometry and viz features
-    ExposeSignalType_2< void( const std::string&, const bool& ) >( "v_sscr_bcr_signal", vm );
-
-    typedef VizPropertySetWrapper psw;
-    Sqrat::Class< psw > psClass;
-    psClass.Func( "CreateNewFeature", &psw::CreateNewFeature );
-    psClass.Func( "SetPropertyValue", &psw::SetPropertyValue );
-    psClass.Func( "SetDoublePropertyValue", &psw::SetDoublePropertyValue );
-    psClass.Func( "SetStringPropertyValue", &psw::SetStringPropertyValue );
-    psClass.Func( "Save", &psw::Save );
-    psClass.Func( "GetUUIDAsString", &psw::GetUUIDAsString );
-    Sqrat::RootTable().Bind( "VizPropertySet", psClass );
-
-    std::string scriptPath = ui->m_scriptPath->text().toStdString();
-
-    try
+    if ( ui->m_scriptEdit->toPlainText().toStdString().empty() )
     {
-        Sqrat::Script script;
-        script.CompileString( ui->m_scriptEdit->toPlainText().toStdString() );
-        //script.CompileFile( scriptPath );
-        script.Run();
-    }
-    catch( Sqrat::Exception& e )
-    {
-        std::cout << "Sqrat exception: " << e.Message() << std::endl << std::flush;
         return;
     }
-    catch( ... )
+
+    vpr::Thread* thread =
+            new vpr::Thread( boost::bind(&ScriptingTab::runScript, this, ui->m_scriptEdit->toPlainText().toStdString()) );
+    m_threads.push_back( thread );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScriptingTab::runScript( const std::string& scriptText )
+{
+    ves::xplorer::eventmanager::SquirrelConnection sc( scriptText );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScriptingTab::multi_load_clicked()
+{
+    m_currentLoadButton = QObject::sender();
+
+    //QFileDialog* fd = new QFileDialog(0);
+    m_fileDialog = new QFileDialog(0);
+    m_fileDialog->setOptions( QFileDialog::DontUseNativeDialog );
+    m_fileDialog->setAttribute( Qt::WA_DeleteOnClose );
+    m_fileDialog->setFileMode( QFileDialog::ExistingFiles );
+    m_fileDialog->setDirectory( QDir::current() );
+    QStringList filters;
+    filters << "Squirrel Scripts (*.nut)";
+    m_fileDialog->setNameFilters( filters );
+
+    QObject::connect( m_fileDialog, SIGNAL( filesSelected( const QStringList& ) ),
+                      this, SLOT( MultiOpenSelected( const QStringList& ) ) );
+
+    int index = ves::conductor::UITabs::instance()->AddTab( m_fileDialog, "Open Script", true );
+    ves::conductor::UITabs::instance()->ActivateTab( index );
+    //fd->show();
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScriptingTab::MultiOpenSelected( const QStringList& files )
+{
+    // m_fileDialog was given mode DeleteOnClose, so we can just set to null.
+    m_fileDialog = 0;
+
+    QString fileName = files.at( 0 ).split( QRegExp( "[\\/]" ) ).last();
+    dynamic_cast< QPushButton* >(m_buttonMap[ m_currentLoadButton ])->setText( fileName );
+    m_scriptMap[ m_buttonMap[ m_currentLoadButton ] ] = files.at( 0 );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScriptingTab::multi_run_clicked()
+{
+    QFile file( m_scriptMap[ QObject::sender() ] );
+    if (file.open(QFile::ReadOnly | QFile::Text))
     {
-        std::cout << "Unspecified Sqrat exception" << std::endl << std::flush;
-        return;
+        QString script = file.readAll();
+        vpr::Thread* thread =
+                new vpr::Thread( boost::bind(&ScriptingTab::runScript,
+                                             this, script.toStdString() ) );
+        m_threads.push_back( thread );
     }
-#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScriptingTab::AssociateScript( const std::string& scriptPath,
+                                    int buttonIndex )
+{
+    if( static_cast<size_t>(buttonIndex) < m_loadButtonVector.size() )
+    {
+        QString qScriptPath = QString::fromStdString( scriptPath );
+        QString fileName = qScriptPath.split( QRegExp( "[\\/]" ) ).last();
+        SetButtonTextSignal( dynamic_cast< QPushButton* >(
+                             m_buttonMap[m_loadButtonVector.at( buttonIndex )] ), fileName );
+        m_scriptMap[ m_buttonMap[ m_loadButtonVector.at( buttonIndex ) ] ] =
+                                                                    qScriptPath;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void ScriptingTab::DelayedSetButtonText( QPushButton* button, const QString& text )
+{
+    button->setText( text );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }} // ves::conductor

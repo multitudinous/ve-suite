@@ -40,6 +40,7 @@
 #include <crunchstore/NullBuffer.h>
 #include <crunchstore/NullCache.h>
 #include <crunchstore/SQLiteStore.h>
+#include <crunchstore/SQLiteTransactionKey.h>
 
 // --- Boost includes --- //
 #include <boost/noncopyable.hpp>
@@ -153,8 +154,17 @@ public:
       */
     bool LoadFrom( const std::string& path );
 
-    void OpenBulkMode();
-    void CloseBulkMode();
+    /**
+      * Opens a bulk transaction on the datastore. The returned transaction key
+      * must be passed to any PropertySet::Save() call that should be part of
+      * the bulk transaction.
+      */
+    crunchstore::SQLiteTransactionKey OpenBulkMode();
+
+    /**
+     * Closes (commits) the bulk transaction associated with @c key.
+     */
+    void CloseBulkMode( crunchstore::SQLiteTransactionKey& key );
 
 private:
     /// ctor

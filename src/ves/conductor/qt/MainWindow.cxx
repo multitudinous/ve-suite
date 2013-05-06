@@ -85,6 +85,7 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -340,6 +341,10 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
 
     connect( this, SIGNAL( UseAsSurfaceDataQSignal( std::string, bool ) ),
              this, SLOT( UseAsSurfaceDataQueued( std::string, bool ) ),
+             Qt::QueuedConnection );
+
+    connect( this, SIGNAL(OpenFileQSignal(const QStringList&)),
+             this, SLOT(onFileOpenSelected(const QStringList&)),
              Qt::QueuedConnection );
 
     // Connect to the ActiveModelChangedSignal so we can show the correct
@@ -692,7 +697,7 @@ void MainWindow::OpenFileSlot( const std::string& filename )
 {
     QStringList files;
     files.push_back( QString::fromStdString( filename ) );
-    onFileOpenSelected( files );
+    OpenFileQSignal( files );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::onFileOpenSelected( const QStringList& fileNames )

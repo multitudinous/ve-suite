@@ -362,16 +362,16 @@ void DatabaseManager::ConvertFromOld()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DatabaseManager::OpenBulkMode()
+crunchstore::SQLiteTransactionKey DatabaseManager::OpenBulkMode()
 {
-    Poco::Data::Session session( m_workingStore->GetPool()->get() );
-    session.begin();
+    return m_workingStore->BeginTransaction();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DatabaseManager::CloseBulkMode()
+void DatabaseManager::CloseBulkMode( crunchstore::SQLiteTransactionKey& key )
 {
-    Poco::Data::Session session( m_workingStore->GetPool()->get() );
-    session.commit();
+    std::cout << "CloseBulkMode" << std::endl << std::flush;
+    m_workingStore->EndTransaction( key );
+    std::cout << "\tCloseBulkMode done" << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////
 }// namespace data

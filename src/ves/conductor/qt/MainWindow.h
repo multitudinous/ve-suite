@@ -316,6 +316,7 @@ Q_SIGNALS:
     void ActiveModelChanged( std::string modelID );
     void RemoveNotifierQSignal( std::string filename );
     void UseAsSurfaceDataQSignal( const std::string uuid, bool flag );
+    void OpenFileQSignal( const QStringList& files );
 
 protected Q_SLOTS:
     /// Slot corresponding to ActiveModelChanged queued signal
