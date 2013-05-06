@@ -124,7 +124,8 @@ void DatabaseManager::Shutdown()
 ////////////////////////////////////////////////////////////////////////////////
 void DatabaseManager::SetDatabasePath( const std::string& path )
 {
-    //std::cout << "DatabaseManager::SetDatabasePath " << path << std::endl << std::flush;
+    LOG_INFO( "SetDatabasePath " << path );
+
     if( !(m_dataManager && m_workingStore) )
     {
         return;
@@ -220,7 +221,7 @@ void DatabaseManager::ResetAll()
 ////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::SaveAs( const std::string& path )
 {
-    LOG_INFO( "DatabaseManager::SaveAs" << path );
+    LOG_INFO( "SaveAs " << path );
     // Warning: This assumes we are using sqlite for the working store. If we
     // switch to something else, this code will need to be re-thought.
     DatabaseDetailsPropertySet details;
@@ -248,7 +249,7 @@ bool DatabaseManager::SaveAs( const std::string& path )
 ////////////////////////////////////////////////////////////////////////////////
 bool DatabaseManager::LoadFrom( const std::string& path )
 {
-    LOG_INFO( "DatabaseManager::LoadFrom " << path );
+    LOG_INFO( "LoadFrom " << path );
     // Warning: This assumes we are using sqlite for the working store. If we
     // switch to something else, this code will need to be re-thought.
 
