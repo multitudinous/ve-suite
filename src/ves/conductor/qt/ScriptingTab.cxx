@@ -9,7 +9,7 @@
 #include <switchwire/OptionalMacros.h>
 #include <switchwire/Version.h>
 
-#include <ves/xplorer/eventmanager/SquirrelConnection.h>
+#include <ves/conductor/qt/scriptingTools/SquirrelConnection.h>
 
 #include <vpr/Thread/Thread.h>
 
@@ -134,7 +134,9 @@ void ScriptingTab::on_m_runButton_clicked()
 ////////////////////////////////////////////////////////////////////////////////
 void ScriptingTab::runScript( const std::string& scriptText )
 {
-    ves::xplorer::eventmanager::SquirrelConnection sc( scriptText );
+#if SWITCHWIRE_HAVE_SQUIRREL
+    ves::conductor::SquirrelConnection sc( scriptText );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ScriptingTab::multi_load_clicked()
