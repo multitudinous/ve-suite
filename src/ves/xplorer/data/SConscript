@@ -27,10 +27,6 @@ lib_env.Append( CPPDEFINES = ['VE_DATA_LIBRARY'] )
 lib_env.AppendUnique(LIBS = ['ves_xplorer_eventmanager'])
 lib_env.AppendUnique(LIBPATH = [pj('#',buildDir,'src','ves','xplorer','eventmanager')])
 
-lib_env.Append(LIBS = ['ves_xplorer_eventmanager'])
-
-lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer','eventmanager')])
-
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_data',
                                                         lib_env,
