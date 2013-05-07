@@ -41,7 +41,6 @@
 #include <vpr/Util/Singleton.h>
 
 // --- Boost includes --- //
-#include <boost/noncopyable.hpp>
 
 #include <switchwire/Event.h>
 #include <switchwire/EventManager.h>

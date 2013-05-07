@@ -43,7 +43,6 @@
 #include <crunchstore/SQLiteTransactionKey.h>
 
 // --- Boost includes --- //
-#include <boost/noncopyable.hpp>
 #include <switchwire/Event.h>
 
 // --- Poco Includes --- //
