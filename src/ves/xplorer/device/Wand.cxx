@@ -309,7 +309,7 @@ void Wand::Initialize()
 
     MakeWandLine();
 
-    if( !m_sceneManager.IsDesktopMode() )
+    if( !m_sceneManager.IsDesktopMode() && !m_sceneManager.IsDesktopClusterControl() )
     {
         Poco::Util::TimerTask::Ptr moveTask =
             new Poco::Util::TimerTaskAdapter<Wand>( *this, &Wand::OnWandMoveTimer );
