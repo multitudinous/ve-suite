@@ -97,10 +97,6 @@ QWidget* TankPlugin::ViewResultsVariables( QWidget* )
 void TankPlugin::DeleteWidgets()
 {
     delete m_UIWidget;
-    delete m_ResultWidget;
-    delete m_FinancialDataWidget;
-    delete m_InputVariablesWidget;
-    delete m_ResultsVariablesWidget;
     m_UIWidget = m_ResultWidget = m_FinancialDataWidget =
                  m_InputVariablesWidget = m_ResultsVariablesWidget = 0;
 }
