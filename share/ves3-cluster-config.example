@@ -10,8 +10,8 @@
 # so depending on your network setup, you may need to use the fully-
 # qualified name for the node (e.g. hostname.domainname).
 #
-# The port number is the listening port that your VR Juggler application
-# uses. This setting is optional. If no port number is specified, the
+# The port number is the listening port that your VE-Suite setup uses.
+# This setting is optional. If no port number is specified, the
 # VR Juggler default port will be used (port 12599).
 #
 # For example:
