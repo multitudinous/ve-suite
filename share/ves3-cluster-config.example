@@ -1,0 +1,32 @@
+# Example cluster configuration file for VE-Suite 3
+
+# A valid config file must contain at least one 'rendernode' line.
+#
+# The structure is:
+#  rendernode <node name> [ port number (optional) ]
+#
+# <node name> is the hostname of the render node. Whatever you use for
+# the node name should be resolvable to an IP address by your system,
+# so depending on your network setup, you may need to use the fully-
+# qualified name for the node (e.g. hostname.domainname).
+#
+# The port number is the listening port that your VR Juggler application
+# uses. This setting is optional. If no port number is specified, the
+# VR Juggler default port will be used (port 12599).
+#
+# For example:
+rendernode node1hostname
+rendernode node2hostname
+rendernode node3hostname.domainname
+rendernode node4hostname.domainname 7777
+
+# A valid config file must contain at least one 'vrjconfig' line.
+#
+# The structure is:
+#  vrjconfig <name> <path to jconf file>
+#
+# <name> is a "nickname" that you choose to refer to the jconf file.
+#
+# For example:
+vrjconfig main /full/path/to/main.jconf
+vrjconfig alternate /full/path/to/alternate.jconf

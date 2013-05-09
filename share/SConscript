@@ -15,6 +15,7 @@ shareBundle.addFiles( ['Draft2.png'] )
 shareBundle.addFiles( ['Info_Panel.png'] )
 shareBundle.addFiles( ['Info_Panel-No_Title.png'] )
 shareBundle.addFiles( ['splotch.png'] )
+shareBundle.addFIles( ['ves3-cluster-config.example'] )
 
 wavFiles = sca_util.getFilesRecursiveByExt( pj(sca_util.getFullRootPath(), 'share','audio'), ['.wav'] )
 wavFiles = map(lambda s: pj('audio', s), wavFiles)
