@@ -130,6 +130,8 @@ cp ${SCRIPT_DIR}/ves-env.csh.in ${INSTALLER_PAYLOAD_DIR}
 cp ${SCRIPT_DIR}/ves-aliases.sh.example.in ${INSTALLER_PAYLOAD_DIR}
 cp ${SCRIPT_DIR}/ves-aliases.csh.example.in ${INSTALLER_PAYLOAD_DIR}
 
+cp ${SCRIPT_DIR}/README.txt ${INSTALLER_PAYLOAD_DIR}
+
 # tar up the VE-Suite install and add it to the payload directory
 echo "Archiving the VE-Suite install..."
 cd ${VES_INSTALL_PREFIX}

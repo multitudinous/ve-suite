@@ -36,6 +36,7 @@ then
         chmod +x "${1}/bin/velauncher.sh"
     else
         # this is a 3.x install
+        cp ./README.txt "${1}"
         sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./ves-cluster-control.sh.in > "${1}/bin/ves-cluster-control.sh"
         chmod +x "${1}/bin/ves-cluster-control.sh"
         sed "s|__VE_SUITE_ENV_FILE_PLACEHOLDER__|${env_file_path}|g" ./launch-ves_xplorer-master.sh.in > "${1}/bin/launch-ves_xplorer-master.sh"
