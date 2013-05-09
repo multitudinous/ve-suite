@@ -967,6 +967,7 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
     outString << "Number of parts found " << numQueries;
     if( numQueries == 0 )
     {
+        std::cout << "WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts: No parts found." << std::endl;
         return;
     }
     // iterate over all rows and columns
@@ -977,6 +978,7 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
     }
     catch( ... )
     {
+        std::cout << "WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts: Could not find first row." << std::endl;
         return;
     }
 
