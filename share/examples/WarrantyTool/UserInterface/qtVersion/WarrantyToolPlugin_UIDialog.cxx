@@ -424,7 +424,6 @@ void WarrantyToolPlugin_UIDialog::OnDataLoad( std::string const& fileName )
                               relativeViewLocationsPath );
 
         std::string csvFilename =  viewPtsFilename.string();
-        m_filename = csvFilename;
         //Parse the csv file
         if( viewPtsFilename.extension().string() == (".csv") )
         {
@@ -443,6 +442,9 @@ void WarrantyToolPlugin_UIDialog::OnDataLoad( std::string const& fileName )
             ParseDataBase( csvFilename );
         }
 
+        //We can only query on a sqlite db which is what we create in the gp
+        viewPtsFilename.replace_extension( ".db" );
+        m_filename = viewPtsFilename.string();
 
         //tell ves to load
         ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
