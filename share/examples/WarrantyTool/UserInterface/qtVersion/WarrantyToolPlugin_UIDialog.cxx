@@ -63,6 +63,7 @@
 #include <QtCore/QString>
 #include <QtGui/QTreeWidget>
 #include <QtGui/QTreeWidgetItem>
+#include <QtGui/QBoxLayout>
 
 #include <string>
 #include <vector>
@@ -73,6 +74,7 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::WarrantyToolPlugin_UIDialog),
     m_tableCounter(0),
+    m_fileComposite( 0 ),
     m_fileDialog(0),
     m_mouseSelectionResults( 0 )
 {
@@ -172,12 +174,15 @@ void WarrantyToolPlugin_UIDialog::on_m_fileBrowseButton_clicked()
 {
     ves::conductor::UITabs* tabs = ves::conductor::UITabs::instance();
 
-    if( m_fileDialog )
+    if( m_fileComposite )
     {
-        tabs->ActivateTab( tabs->AddTab( m_fileDialog, "Select File" ) );
+        tabs->ActivateTab( tabs->AddTab( m_fileComposite, "Select File" ) );
         return;
     }
 
+    m_fileComposite = new QWidget( 0 );
+    m_fileComposite->setAttribute( Qt::WA_DeleteOnClose );
+    QVBoxLayout* layout = new QVBoxLayout( 0 );
     m_fileDialog = new QFileDialog( 0 );
     m_fileDialog->setOptions( QFileDialog::DontUseNativeDialog );
     m_fileDialog->setAttribute( Qt::WA_DeleteOnClose );
@@ -192,7 +197,13 @@ void WarrantyToolPlugin_UIDialog::on_m_fileBrowseButton_clicked()
     connect( m_fileDialog, SIGNAL(rejected()), this,
                       SLOT( onFileCancelled() ) );
 
-    tabs->ActivateTab( tabs->AddTab( m_fileDialog, "Select File" ) );
+    layout->addWidget( m_fileDialog );
+    layout->addSpacing( 90 );
+
+    m_fileComposite->setLayout( layout );
+
+    //tabs->ActivateTab( tabs->AddTab( m_fileDialog, "Select File" ) );
+    tabs->ActivateTab( tabs->AddTab( m_fileComposite, "Select File" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::onFileSelected( const QString& filePath )
@@ -202,23 +213,23 @@ void WarrantyToolPlugin_UIDialog::onFileSelected( const QString& filePath )
     QString relativePath = path.relativeFilePath( filePath );
     ui->m_dataPath->setText( relativePath );
 
-    ves::conductor::UITabs::instance()->RemoveTab( m_fileDialog );
+    ves::conductor::UITabs::instance()->RemoveTab( m_fileComposite );
 
-    if ( m_fileDialog != 0 )
+    if ( m_fileComposite != 0 )
     {
-        m_fileDialog->close();
-        m_fileDialog = 0;
+        m_fileComposite->close();
+        m_fileComposite = 0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::onFileCancelled()
 {
-    ves::conductor::UITabs::instance()->RemoveTab( m_fileDialog );
+    ves::conductor::UITabs::instance()->RemoveTab( m_fileComposite );
 
-    if ( m_fileDialog != 0 )
+    if ( m_fileComposite != 0 )
     {
-        m_fileDialog->close();
-        m_fileDialog = 0;
+        m_fileComposite->close();
+        m_fileComposite = 0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1043,7 +1054,7 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolPlugin_UIDialog::QueryItemChanged( QTreeWidgetItem* current,
-                                                    QTreeWidgetItem* previous )
+                                                    QTreeWidgetItem* )
 {
     std::string partNumber = current->text( current->columnCount() - 1 ).
             toStdString();

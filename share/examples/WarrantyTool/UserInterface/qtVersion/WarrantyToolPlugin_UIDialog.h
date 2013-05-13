@@ -133,6 +133,8 @@ private:
     std::vector< std::string > m_tableList;
     ///The filename with the data we are loading
     std::string m_filename;
+    ///Composite widget containing m_fileDialog and a layout with spacing
+    QWidget* m_fileComposite;
     ///File chooser dialog
     QFileDialog* m_fileDialog;
     ///The connect signal for toggle options
