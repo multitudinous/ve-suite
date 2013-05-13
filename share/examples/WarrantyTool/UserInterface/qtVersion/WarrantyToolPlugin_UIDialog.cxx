@@ -468,10 +468,15 @@ void WarrantyToolPlugin_UIDialog::OnDataLoad( std::string const& fileName )
         ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
 
         //Populate all of the choice dialog boxes with the appropriate data
+        ui->m_variableChoice00->clear();
         ui->m_variableChoice00->addItems( m_columnStrings );
+        ui->m_variableChoice01->clear();
         ui->m_variableChoice01->addItems( m_columnStrings );
+        ui->m_variableChoice02->clear();
         ui->m_variableChoice02->addItems( m_columnStrings );
+        ui->m_variableChoice03->clear();
         ui->m_variableChoice03->addItems( m_columnStrings );
+        ui->m_displayTextChkList->clear();
         ui->m_displayTextChkList->addItems( m_columnStrings );
         for( int index = 0; index < ui->m_displayTextChkList->count(); ++index )
         {
