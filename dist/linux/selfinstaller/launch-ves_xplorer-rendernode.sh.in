@@ -27,9 +27,14 @@ done
 export DISPLAY=:0
 HOSTNAME=`hostname`
 
+if [ -z $VES_LOG_LEVEL ]
+then
+    export VES_LOG_LEVEL=warning
+fi
+
 if [ -z "${LISTEN_PORT}" ]
 then
-    ves_xplorer --vrjslave --VESRTT --VESLog=warning --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log
+    ves_xplorer --vrjslave --VESRTT --VESLog=$VES_LOG_LEVEL --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log
 else
-    ves_xplorer --vrjslave --listen_port=${LISTEN_PORT} --VESRTT --VESLog=warning --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log
+    ves_xplorer --vrjslave --listen_port=${LISTEN_PORT} --VESRTT --VESLog=$VES_LOG_LEVEL --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log
 fi

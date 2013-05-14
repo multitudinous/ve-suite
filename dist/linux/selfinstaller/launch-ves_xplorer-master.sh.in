@@ -28,5 +28,12 @@ then
     usage
     exit 1
 fi
+
 HOSTNAME=`hostname`
-ves_xplorer --vrjmaster --jconf="${JCONF_FILE}" --VESRTT --VESLog=warning --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log
+
+if [ -z $VES_LOG_LEVEL ]
+then
+    export VES_LOG_LEVEL=warning
+fi
+
+ves_xplorer --vrjmaster --jconf="${JCONF_FILE}" --VESRTT --VESLog=$VES_LOG_LEVEL --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log
