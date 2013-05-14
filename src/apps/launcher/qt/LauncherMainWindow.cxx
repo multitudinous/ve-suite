@@ -33,17 +33,24 @@
 #include "ui_LauncherMainWindow.h"
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QFileDialog>
+#include <QtGui/QMessageBox>
 #include <QtCore/QSettings>
+#include <QtCore/QTextStream>
+#include <QtCore/QFile>
 
 LauncherMainWindow::LauncherMainWindow( QWidget* parent ) :
     QMainWindow( parent ),
     ui( new Ui::LauncherMainWindow )
 {
     ui->setupUi( this );
-    QDesktopWidget* dw = QApplication::desktop();
-    const QRect geom = dw->screenGeometry( dw->screenNumber( this ) );
-    ui->m_width->setValue( geom.width() );
-    ui->m_height->setValue( geom.height() );
+//    QDesktopWidget* dw = QApplication::desktop();
+//    const QRect geom = dw->screenGeometry( dw->screenNumber( this ) );
+//    ui->m_width->setValue( geom.width() );
+//    ui->m_height->setValue( geom.height() );
+
+    // Parse the configurations file to put into m_configuration
+
+
 
     QSettings settings( "VESuite.org", "VELauncher" );
 
@@ -51,22 +58,25 @@ LauncherMainWindow::LauncherMainWindow( QWidget* parent ) :
 
     if( notFirstRun )
     {
-        ui->m_workingDir->setText( settings.value( "xplorer/workingDir" ).toString() );
-        ui->m_configuration->setText( settings.value( "xplorer/jconf" ).toString() );
-        ui->m_desktopMode->setChecked( settings.value( "xplorer/desktop" ).toBool() );
+        ui->m_desktop->setChecked( settings.value( "xplorer/desktop" ).toBool() );
+        ui->m_cluster->setChecked( settings.value( "xplorer/cluster" ).toBool() );
+        ui->m_desktopClusterControl->setChecked( settings.value( "xplorer/desktopclustercontrol" ).toBool() );
 
-        int xplorerWidth = settings.value( "xplorer/width" ).toInt();
-        int xplorerHeight = settings.value( "xplorer/height" ).toInt();
-
-        if( ( xplorerWidth != 0 ) && ( xplorerHeight != 0 ) )
+        QString configFile = settings.value( "xplorer/clusterconfigfile" ).toString();
+        ui->m_configurationFilename->setText( configFile );
+        if( !configFile.isEmpty() )
         {
-            ui->m_width->setValue( xplorerWidth );
-            ui->m_height->setValue( xplorerHeight );
+            ParseConfigFile( configFile );
+            ui->m_configuration->setCurrentIndex(
+               ui->m_configuration->findText(
+                  settings.value( "xplorer/clusternamedconfig" ).toString() ) );
         }
 
-        ui->m_RTT->setChecked( settings.value( "xplorer/RTT" ).toBool() );
-        ui->m_logLevel->setCurrentIndex( settings.value( "xplorer/logLevel" ).toInt() );
-        ui->m_showStdout->setChecked( settings.value( "xplorer/showStdout" ).toBool() );
+        ui->m_vesLogLevel->setCurrentIndex( settings.value( "xplorer/logLevel" ).toInt() );
+        ui->m_jugglerLogLevel->setCurrentIndex( settings.value( "juggler/logLevel" ).toInt() );
+        ui->m_osgLogLevel->setCurrentIndex( settings.value( "osg/logLevel" ).toInt() );
+
+        ui->m_showStdout->setChecked( settings.value( "xplorer/showstdout" ).toBool() );
 
         int width = settings.value( "launcher/width" ).toInt();
         int height = settings.value( "launcher/height" ).toInt();
@@ -99,37 +109,109 @@ void LauncherMainWindow::changeEvent( QEvent* e )
     }
 }
 
-void LauncherMainWindow::on_launch_clicked()
+void LauncherMainWindow::ParseConfigFile(QString filename)
 {
-    QString program = "ves_xplorer";
+    QFile file( filename );
+    if ( !file.open(QIODevice::ReadOnly | QIODevice::Text) )
+    {
+        return;
+    }
+
+    QTextStream in(&file);
+    while( !in.atEnd() )
+    {
+        QString line = in.readLine();
+        if( line.indexOf("vrjconfig") == 0 )
+        {
+            QStringList tokens = line.split(" ");
+            if( tokens.size() == 3 )
+            {
+                ui->m_configuration->addItem( tokens.at( 1 ) );
+            }
+        }
+    }
+}
+
+void LauncherMainWindow::m_process_error( QProcess::ProcessError error )
+{
+    QMessageBox message;
+    message.setText("Error starting VE-Suite: Please ensure the directory containing ves_xplorer is in your environment's PATH.");
+    message.exec();
+    this->close();
+}
+
+void LauncherMainWindow::m_process_started()
+{
+    if( ui->m_desktop->isChecked() )
+    {
+        this->close();
+    }
+}
+
+void LauncherMainWindow::on_m_configurationButton_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName( this, tr( "Select configuration file" ),
+                       "",
+                       tr( "Cluster Configuration (*.cconf);;*.* (*.*)" ) );
+
+    if( !fileName.isEmpty() )
+    {
+        ui->m_configurationFilename->setText( fileName );
+    }
+    ParseConfigFile( fileName );
+}
+
+void LauncherMainWindow::on_m_killButton_clicked()
+{
+    StartProcess( "kill" );
+}
+
+void LauncherMainWindow::on_m_shutdownButton_clicked()
+{
+    StartProcess( "kill" );
+}
+
+void LauncherMainWindow::on_m_restartButton_clicked()
+{
+    StartProcess( "kill" );
+    StartProcess( "launch" );
+}
+
+void LauncherMainWindow::on_m_launchButton_clicked()
+{
+    StartProcess( "launch" );
+}
+
+void LauncherMainWindow::StartProcess( const QString& action )
+{
+    QString program;
     QStringList arguments;
-
-    QString jconf = ui->m_configuration->text();
-    arguments << "--jconf" <<  jconf;
-
-    if( ui->m_desktopMode->isChecked() )
+    if( ui->m_desktop->isChecked() )
     {
-        QString width;
-        width.setNum( ui->m_width->value() );
-        QString height;
-        height.setNum( ui->m_height->value() );
-        arguments << "--VESDesktop" << width <<  "--VESDesktop" << height;
+        program = "launch-ves_xplorer-desktop.sh";
     }
-
-    if( ui->m_RTT->isChecked() )
+    else if( ui->m_cluster->isChecked() )
     {
-        arguments <<  "--VESRTT";
+        program = "ves-cluster-control.sh";
+        arguments << "-c" << ui->m_configurationFilename->text()
+                  << "-n" << ui->m_configuration->currentText()
+                  << "-a" << action;
     }
-
-    arguments << "--VESLog" << ui->m_logLevel->currentText();
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert( "VES_LOG_LEVEL", ui->m_vesLogLevel->currentText() );
+    QString num;
+    env.insert( "VPR_DEBUG_NFY_LEVEL", num.setNum( ui->m_jugglerLogLevel->currentIndex() ) );
+    env.insert( "OSG_NOTIFY_LEVEL", ui->m_osgLogLevel->currentText() );
     m_process = new QProcess( 0 );
+    connect( m_process, SIGNAL(started()), this, SLOT(m_process_started()) );
+    connect( m_process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(m_process_error(QProcess::ProcessError)) );
     m_process->setProcessEnvironment( env );
     m_process->start( program, arguments );
 
     // Open a textedit window and use it to display contents of stdoutput from
     // xplorer
+
     if( ui->m_showStdout->isChecked() )
     {
         m_stdout = new QTextEdit( 0 );
@@ -139,49 +221,24 @@ void LauncherMainWindow::on_launch_clicked()
         connect( m_process, SIGNAL( readyReadStandardOutput() ), this, SLOT( onReadyReadStandardOutput() ) );
     }
 
+
+
     QSettings settings( "VESuite.org", "VELauncher" );
-    settings.setValue( "xplorer/workingDir", QDir::currentPath() );
-    settings.setValue( "xplorer/jconf", jconf );
-    settings.setValue( "xplorer/desktop", ui->m_desktopMode->isChecked() );
-    settings.setValue( "xplorer/width", ui->m_width->value() );
-    settings.setValue( "xplorer/height", ui->m_height->value() );
-    settings.setValue( "xplorer/RTT", ui->m_RTT->isChecked() );
-    settings.setValue( "xplorer/logLevel", ui->m_logLevel->currentIndex() );
-    settings.setValue( "xplorer/showStdout", ui->m_showStdout->isChecked() );
+
+    settings.setValue( "xplorer/desktop", ui->m_desktop->isChecked() );
+    settings.setValue( "xplorer/cluster", ui->m_cluster->isChecked() );
+    settings.setValue( "xplorer/desktopclustercontrol", ui->m_desktopClusterControl->isChecked() );
+    settings.setValue( "xplorer/clusterconfigfile", ui->m_configurationFilename->text() );
+    settings.setValue( "xplorer/clusternamedconfig", ui->m_configuration->currentText() );
+    settings.setValue( "xplorer/logLevel", ui->m_vesLogLevel->currentIndex() );
+    settings.setValue( "juggler/logLevel", ui->m_jugglerLogLevel->currentIndex() );
+    settings.setValue( "osg/logLevel", ui->m_osgLogLevel->currentIndex() );
+    settings.setValue( "xplorer/showstdout", ui->m_showStdout->isChecked() );
     settings.setValue( "launcher/notFirstRun", true );
     settings.setValue( "launcher/width", this->width() );
     settings.setValue( "launcher/height", this->height() );
     settings.setValue( "launcher/xposition", this->x() );
     settings.setValue( "launcher/yposition", this->y() );
-
-    this->close();
-}
-
-void LauncherMainWindow::on_m_workingDirButton_clicked()
-{
-    // Get the new working dir and change current path to it
-    QString dir = QFileDialog::getExistingDirectory( this, tr( "Select Working Directory" ),
-                  "",
-                  QFileDialog::ShowDirsOnly
-                  | QFileDialog::DontResolveSymlinks );
-
-    if( !dir.isEmpty() )
-    {
-        ui->m_workingDir->setText( dir );
-        QDir::setCurrent( dir );
-    }
-}
-
-void LauncherMainWindow::on_m_configurationButton_clicked()
-{
-    QString fileName = QFileDialog::getOpenFileName( this, tr( "Select configuration file" ),
-                       "",
-                       tr( "Juggler configuration (*.jconf)" ) );
-
-    if( !fileName.isEmpty() )
-    {
-        ui->m_configuration->setText( fileName );
-    }
 }
 
 void LauncherMainWindow::onReadyReadStandardOutput()

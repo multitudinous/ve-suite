@@ -57,11 +57,18 @@ private:
     QTextEdit* m_stdout;
     QProcess* m_process;
 
+    void ParseConfigFile( QString filename );
+    void StartProcess( const QString& action );
+
 private slots:
-    void on_launch_clicked();
-    void on_m_workingDirButton_clicked();
     void on_m_configurationButton_clicked();
+    void on_m_killButton_clicked();
+    void on_m_shutdownButton_clicked();
+    void on_m_restartButton_clicked();
+    void on_m_launchButton_clicked();
     void onReadyReadStandardOutput();
+    void m_process_error( QProcess::ProcessError error );
+    void m_process_started();
 };
 
 #endif // LAUNCHERMAINWINDOW_H
