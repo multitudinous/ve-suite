@@ -18,6 +18,7 @@ env.AppendUnique( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scene
                               pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ) ] )
 
 osg_options.apply( env )
+xerces_options.apply( env )
 boost_options.apply( env )
 osgbullet_options.apply( env )
 bullet_options.apply( env )
