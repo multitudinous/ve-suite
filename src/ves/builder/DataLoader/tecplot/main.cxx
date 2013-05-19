@@ -49,7 +49,7 @@ int main( int argc, char** argv )
 {
     if( argc < 2 )
     {
-        std::cout << "Error: Need at least one argument specifying a tecplot filename!" << std::endl;
+        std::cout << "Error: Need at least one argument specifying a tecplot filename" << std::endl;
         std::cout << "For more information enter: " << argv[ 0 ] << " --help" << std::endl;
         return( 1 );
     }
