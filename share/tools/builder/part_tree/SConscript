@@ -3,7 +3,8 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('ves_pkg LIBDIR PREFIX buildDir osg_options boost_options RootDir')
+Import('ves_pkg LIBDIR PREFIX buildDir osg_options boost_options RootDir vrjuggler_options')
+Import('osgbullet_options switchwire_options bdfx_options xerces_options latticefx_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'share', 'tools', 'builder','part_tree') )
 srcs = sca_util.getSourcesRecursive( srcDir )
@@ -11,11 +12,19 @@ headers = sca_util.getHeadersRecursive( srcDir )
 
 env = ves_pkg.getEnv().Clone()
 
-env.AppendUnique( LIBS = [ 'ves_xplorer_scenegraph' ] )
-env.AppendUnique( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ) ] )
+env.AppendUnique( LIBS = [ 'ves_xplorer_scenegraph' , 'ves_open_xml' ] )
+env.AppendUnique( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ),
+                              pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ) ] )
 
 osg_options.apply( env )
 boost_options.apply( env )
+osgbullet_options.apply( lib_env )
+bullet_options.apply( lib_env )
+bdfx_options.apply( lib_env )
+poco_options.apply( lib_env )
+switchwire_options.apply( lib_env )
+latticefx_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
 
 prog = ves_pkg.createProgram('osgPartTree' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
