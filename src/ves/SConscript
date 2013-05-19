@@ -2,7 +2,7 @@
 import os
 pj = os.path.join
 
-Import( "ves_pkg" )
+Import( "ves_pkg baseEnv" )
 
 openSubdirs = Split("""
     ce
@@ -12,6 +12,9 @@ openSubdirs = Split("""
     xplorer
 """)
 
+if baseEnv['tecplot_sdk'] != '':
+    openSubdirs.append( pj( 'builder','DataLoader','tecplot' ) )
+    
 ##Run SConscript files in all of those folders.
 for d in openSubdirs:
    SConscript( dirs = d )
