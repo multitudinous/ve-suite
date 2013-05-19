@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>511</width>
-    <height>499</height>
+    <height>540</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,8 +53,11 @@
      <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,0">
       <item>
        <widget class="QLineEdit" name="m_configurationFilename">
-        <property name="placeholderText">
+        <property name="toolTip">
          <string>Enter path to cluster config file</string>
+        </property>
+        <property name="placeholderText">
+         <string/>
         </property>
        </widget>
       </item>
@@ -407,7 +410,7 @@
      <x>0</x>
      <y>0</y>
      <width>511</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
