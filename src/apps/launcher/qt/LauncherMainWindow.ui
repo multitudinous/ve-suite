@@ -56,9 +56,6 @@
         <property name="toolTip">
          <string>Enter path to cluster config file</string>
         </property>
-        <property name="placeholderText">
-         <string/>
-        </property>
        </widget>
       </item>
       <item>
