@@ -593,6 +593,7 @@ function e()
       custom)
         cd "${SOURCE_DIR}";
         for cmd in "${CUSTOM_PREBUILD[@]}"; do eval "${cmd}"; done
+        echo "Ran custom prebuild step.";
         ;;
       *)
         echo "Pre-Build method ${PREBUILD_METHOD} unsupported";
