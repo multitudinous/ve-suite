@@ -54,7 +54,7 @@ namespace scenegraph
 {
 namespace util
 {
-class RemoveNodeNameVisitor : public osg::NodeVisitor
+class VE_SCENEGRAPH_UTILS_EXPORTS RemoveNodeNameVisitor : public osg::NodeVisitor
 {
 public:
     ///Constructor
