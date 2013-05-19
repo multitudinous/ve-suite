@@ -13,10 +13,11 @@ headers = sca_util.getHeadersRecursive( srcDir )
 
 env = ves_pkg.getEnv().Clone()
 
-env.AppendUnique(LIBS = ['ves_open_xml','ves_xplorer_communication','ves_xplorer_eventmanager'])
+env.AppendUnique(LIBS = ['ves_open_xml','ves_xplorer_communication','ves_xplorer_eventmanager', 'ves_xplorer_scenegraph'])
 env.AppendUnique(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml'),
                           pj('#', buildDir, 'src', 'ves', 'xplorer','communication'),
-                          pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager')])
+                          pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager'),
+                          pj('#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph')])
 
 osg_options.apply( env )
 xerces_options.apply( env )
