@@ -4,7 +4,7 @@ pj = os.path.join
 import SConsAddons.Util as sca_util
 
 Import('ves_pkg LIBDIR PREFIX buildDir osg_options boost_options RootDir vrjuggler_options')
-Import('osgbullet_options switchwire_options bdfx_options xerces_options latticefx_options')
+Import('osgbullet_options switchwire_options bdfx_options xerces_options latticefx_options bullet_options' )
 
 srcDir = os.path.abspath( pj(RootDir, 'share', 'tools', 'builder','part_tree') )
 srcs = sca_util.getSourcesRecursive( srcDir )
