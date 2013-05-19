@@ -12,6 +12,8 @@
 
 #include <boost/filesystem/path.hpp>
 
+#include <ves/xplorer/scenegraph/util/RemoveNodeNameVisitor.h>
+
 int main( int argc, char* argv[] )
 {
     if( argc < 2 )
@@ -32,6 +34,7 @@ int main( int argc, char* argv[] )
     //create stream
     std::string fileName = p.parent_path().string() + "/partTree.txt";
     //create visitor
+    ves::xplorer::scenegraph::util::RemoveNodeNameVisitor polyTransCleanup( tempCADNode.get(), "", "" );
     ves::xplorer::scenegraph::CreatePartTreeFileVisitor partTreeVisitor( tempCADNode.get(), fileName );
     //put visitor on node
     //the visitor will write a file just like the graphviz visitor

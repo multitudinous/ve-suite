@@ -101,6 +101,7 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
             //osg::Vec3 enableGlow( 1.0, 0.0, 0.0 );
             geode_stateset->addUniform( new osg::Uniform( "glowColor", m_glowColor ) );
             m_foundNodes.push_back( &node );
+            m_foundNodePaths.push_back( _nodePath );
         }
     }
     else
@@ -127,5 +128,10 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
 std::vector< osg::ref_ptr< osg::Node > > HighlightNodeByNameVisitor::GetFoundNodes()
 {
     return m_foundNodes;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< osg::NodePath > HighlightNodeByNameVisitor::GetFoundNodePaths()
+{
+    return m_foundNodePaths;
 }
 ////////////////////////////////////////////////////////////////////////////////

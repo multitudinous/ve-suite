@@ -81,11 +81,16 @@ public:
     ///\return A vector of all the nodes found with this name
     std::vector< osg::ref_ptr< osg::Node > > GetFoundNodes();
 
+    ///Get the node paths
+    std::vector< osg::NodePath > GetFoundNodePaths();
+
 private:
     ///The name of the node to highlight
     std::string mNodeName;
-    ///Fond node
+    ///Found node
     std::vector< osg::ref_ptr< osg::Node > > m_foundNodes;
+    ///Found node paths
+    std::vector< osg::NodePath > m_foundNodePaths;
     ///Add the glow to parts, if false then remove all glow
     bool mAddGlow;
     ///The color to set the glow

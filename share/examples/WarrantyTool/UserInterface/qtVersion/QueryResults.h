@@ -84,5 +84,5 @@ private:
     ves::util::StringSignal_type m_highlightPartSignal;
 
     /// Signal to highlight multiple parts
-    switchwire::Event< void(std::vector<std::string>&) > m_highlightPartsSignal;
+    switchwire::Event< void( const std::vector<std::string>&) > m_highlightPartsSignal;
 };

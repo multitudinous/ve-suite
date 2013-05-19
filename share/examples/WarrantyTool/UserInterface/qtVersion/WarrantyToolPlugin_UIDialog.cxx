@@ -147,7 +147,7 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
         std::string signalName = "WarrantyToolPlugin_UIDialog" +
         boost::lexical_cast<std::string>( this ) + ".WarrantyToolHighlightParts";
         evm->RegisterSignal( ( &m_highlightPartsSignal ),
-                            signalName, switchwire::EventManager::unspecified_SignalType );
+                            signalName);//, switchwire::EventManager::unspecified_SignalType );
     }
     
     {

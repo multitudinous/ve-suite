@@ -43,7 +43,7 @@ using namespace ves::xplorer::scenegraph;
 //using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-HighlightNodesByNameVisitor::HighlightNodesByNameVisitor( osg::Node* node, std::vector< std::string >& nodeNames, bool addGlow, bool ignoreCase, osg::Vec3 glowColor )
+HighlightNodesByNameVisitor::HighlightNodesByNameVisitor( osg::Node* node, const std::vector< std::string >& nodeNames, bool addGlow, bool ignoreCase, osg::Vec3 glowColor )
     :
     NodeVisitor( TRAVERSE_ALL_CHILDREN ),
     m_nodeNames( nodeNames ),

@@ -112,7 +112,7 @@ void QueryResults::on_m_highlightAllButton_clicked()
 {
     // Clear out previous highlight before doing new
     m_highlightPartSignal.signal( "" );
-    if( m_partNumbers.size() > 0 )
+    if( !m_partNumbers.empty() )
     {
         m_highlightPartsSignal.signal( m_partNumbers );
     }

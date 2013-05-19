@@ -133,7 +133,7 @@ private:
 
     /// Highlights multiple parts; connects to signal name
     /// "%WarrantyToolHighlightParts"
-    void HighlightParts( std::vector< std::string >& partNumbers );
+    void HighlightParts( const std::vector< std::string >& partNumbers );
     
     ///Update the selection line
     void UpdateSelectionLine();

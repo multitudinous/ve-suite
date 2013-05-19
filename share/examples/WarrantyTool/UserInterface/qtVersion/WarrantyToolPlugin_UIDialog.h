@@ -148,7 +148,7 @@ private:
     ///Submit custom query
     ves::util::StringSignal_type m_querySignal;
     ///Send a list of part numbers to be highlighted
-    switchwire::Event< void(std::vector<std::string>&) > m_highlightPartsSignal;
+    switchwire::Event< void( const std::vector<std::string>&) > m_highlightPartsSignal;
     /// Required to connect to switchwire signals
     switchwire::ScopedConnectionList m_connections;
     ///The mouse slection results tab

@@ -30,12 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef HIGHLIGHT_NODES_BY_NAME_VISITOR_H
-#define HIGHLIGHT_NODES_BY_NAME_VISITOR_H
+#ifndef REMOVE_NODE_NAME_VISITOR_H
+#define REMOVE_NODE_NAME_VISITOR_H
 
-/*!\file HighlightNodesByNameVisitor.h
- * \class ves::xplorer::scenegraph::HighlightNodesByNameVisitor
- * \namespace ves::xplorer::scenegraph
+/*!\file RemoveNodeNameVisitor.h
+ * \class ves::xplorer::scenegraph::util::RemoveNodeNameVisitor
  *
  */
 
@@ -53,22 +52,22 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class VE_SCENEGRAPH_EXPORTS HighlightNodesByNameVisitor : public osg::NodeVisitor
+namespace util
+{
+class RemoveNodeNameVisitor : public osg::NodeVisitor
 {
 public:
     ///Constructor
     ///\param node The node to be traversed
     ///\param nodeName The name of the node to highlight
     ///\param opaqueParent The hack to get around osg transparency issues
-    HighlightNodesByNameVisitor( osg::Node* node, const std::vector< std::string >& nodeNames,
-                                bool addGlow = true, bool ignoreCase = false,
-                                osg::Vec3 glowColor = osg::Vec3( 1.0, 0.0, 0.0 ) );
+    RemoveNodeNameVisitor( osg::Node* node, std::string prefix, std::string postfix );
 
     ///Default Constructor
-    HighlightNodesByNameVisitor();
+    RemoveNodeNameVisitor();
 
     ///Destructor
-    virtual ~HighlightNodesByNameVisitor()
+    virtual ~RemoveNodeNameVisitor()
     {
         ;
     }
@@ -83,7 +82,7 @@ public:
 
 private:
     ///The name of the node to highlight
-    std::vector< std::string > m_nodeNames;
+    std::string mNodeName;
     ///Fond node
     std::vector< osg::ref_ptr< osg::Node > > m_foundNodes;
     ///Add the glow to parts, if false then remove all glow
@@ -92,9 +91,15 @@ private:
     osg::Vec3 m_glowColor;
     ///Ignore the case of the node name
     bool m_ignoreCase;
+    ///prefix to remove
+    std::string m_prefix;
+    ///postfix to remove
+    std::string m_postfix;
+    ///node names to remove
+    std::string m_bodyName;
 };
 }
 }
 }
-
+}
 #endif //HIGHLIGHT_NODE_BY_NAME_VISITOR_H

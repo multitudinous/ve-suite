@@ -36,8 +36,10 @@
 // --- My Includes --- //
 #include "WarrantyToolGP.h"
 #include "csvparser.h"
-#include "ves/xplorer/ModelCADHandler.h"
-#include "ves/xplorer/Model.h"
+#include <ves/xplorer/scenegraph/util/RemoveNodeNameVisitor.h>
+
+#include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/Model.h>
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/model/Model.h>
@@ -46,6 +48,7 @@
 #include <ves/open/xml/OneDStringArray.h>
 
 #include <osgwTools/TransparencyUtils.h>
+#include <osgwTools/Transform.h>
 #include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
 #include <ves/xplorer/scenegraph/util/FindChildWithNameVisitor.h>
 #include <ves/xplorer/scenegraph/util/ToggleNodesVisitor.h>
@@ -159,8 +162,8 @@ void WarrantyToolGP::InitializeNode(
                      &WarrantyToolGP::CreateDBQuery,
                      *m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_1( "%WarrantyToolHighlightParts",
-                      void( std::vector<std::string>&),
+    CONNECTSIGNALS_1( "%.WarrantyToolHighlightParts",
+                      void ( const std::vector< std::string >& ),
                       &WarrantyToolGP::HighlightParts,
                       *m_connections, any_SignalType, normal_Priority );
 
@@ -303,10 +306,11 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             else if( dataPath.extension() == ".csv" )
             {
                 ParseDataFile( dataPath.string() );
+                ValidateDataFile();
             }
-            
-            ValidateDataFile();
-            
+
+            ves::xplorer::scenegraph::util::RemoveNodeNameVisitor polyTransCleanup( m_cadRootNode, "", "" );
+
             //CreateTextTextures();
         }
         else if( dvpName == "SET_ACTIVE_TABLES" )
@@ -1729,16 +1733,17 @@ void WarrantyToolGP::HighlightPart( const std::string& partNumber )
 {
     m_cadRootNode = mModel->GetModelCADHandler()->
         GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
-
-    /*m_assemblyPartNumbers.clear();
+    /*
+    m_assemblyPartNumbers.clear();
     m_joinedPartNumbers.clear();
     //Highlight the respective node
     //Make a user specified part glow
     osgwTools::transparentEnable( m_cadRootNode, 0.3f );
 
-    mAddingParts = false;
-    ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-        highlight2( m_cadRootNode, "", false, true );*/
+    mAddingParts = false;     */
+    //ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+    //    highlight2( m_cadRootNode, "", false, true );
+
     osg::Vec3 nullGlowColor( 0.57255, 0.34118, 1.0 );
     ves::xplorer::scenegraph::HighlightNodesByNameVisitor
         highlightNodes( m_cadRootNode, m_assemblyPartNumbers, true, true, nullGlowColor );
@@ -1746,22 +1751,45 @@ void WarrantyToolGP::HighlightPart( const std::string& partNumber )
     //Highlight part
     m_lastPartNumber = partNumber;
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-        highlight( m_cadRootNode, m_lastPartNumber, true, true );
-    //RenderTextualDisplay( true );
+        highlight( m_cadRootNode, m_lastPartNumber, !m_lastPartNumber.empty(), true );
+    std::vector< osg::NodePath > nodePaths = highlight.GetFoundNodePaths();
+    
+    if( !nodePaths.empty() )
+    {
+        osg::ref_ptr< osg::Node > selectedNode = nodePaths.back().back();
+        osg::BoundingSphere bs = selectedNode->getBound();
+
+        //We must pop the last matrix so that local transform information
+        //is not applied twice to the bounding sphere in the osgwTools::transform call.
+        osg::NodePath tempPath = nodePaths.back();
+        if( tempPath.size() > 1 )
+        {
+            tempPath.pop_back();
+        }
+        osg::Matrixd bsMat = osg::computeLocalToWorld( tempPath );
+        osg::BoundingSphere sbs = osgwTools::transform( bsMat, bs );
+        ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix().setOrbitCenterPoint( sbs.center() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::HighlightParts(std::vector<std::string>& partNumbers)
+void WarrantyToolGP::HighlightParts( const std::vector<std::string>& partNumbers)
 {
     m_cadRootNode = mModel->GetModelCADHandler()->
         GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
 
+    //ves::xplorer::scenegraph::HighlightNodeByNameVisitor
+    //    highlight2( m_cadRootNode, "", false, true );
+
+    m_assemblyPartNumbers.clear();
+    m_assemblyPartNumbers = partNumbers;
+    
     osg::Vec3 nullGlowColor( 0.57255, 0.34118, 1.0 );
     ves::xplorer::scenegraph::HighlightNodesByNameVisitor
         highlightNodes( m_cadRootNode, partNumbers, true, true, nullGlowColor );
 
     m_lastPartNumber = partNumbers.back();
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor
-        highlight( m_cadRootNode, m_lastPartNumber, true, true );
+        highlight( m_cadRootNode, m_lastPartNumber, !m_lastPartNumber.empty(), true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::UpdateSelectionLine()
