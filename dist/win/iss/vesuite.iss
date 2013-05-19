@@ -98,7 +98,7 @@ Source: {#INSTALLERINSTALLLOCATION}\VE-Suite_Dependencies_{#VEVERSION}_{#MSVCVER
 
 #ifdef deere
 Source: {#VEINSTALLHOME}\share\vesuite\examples\WarrantyTool\Plugins\UI\win32\*; DestDir: {app}\{#LIBDIR}\conductor\plugins; Components: examples; Flags: skipifsourcedoesntexist
-Source: {#VEINSTALLHOME}\share\vesuite\examples\WarrantyTool\Plugins\GP\win32\*; DestDir: {app}\{#LIBDIR}\xplorer\plugins; Components: examples; Flags: skipifsourcedoesntexist
+Source: {#VEINSTALLHOME}\share\vesuite\examples\WarrantyTool\Plugins\GE\win32\*; DestDir: {app}\{#LIBDIR}\xplorer\plugins; Components: examples; Flags: skipifsourcedoesntexist
 #endif
 
 [Icons]
