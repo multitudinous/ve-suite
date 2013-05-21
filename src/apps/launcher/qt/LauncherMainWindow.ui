@@ -338,20 +338,19 @@
      <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
        <widget class="QPushButton" name="m_restartButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Restart</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="m_killButton">
-        <property name="text">
-         <string>Kill</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="m_shutdownButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Shutdown</string>
         </property>
@@ -369,6 +368,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="m_killButton">
+        <property name="text">
+         <string>Kill</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="m_launchButton">
@@ -407,7 +413,7 @@
      <x>0</x>
      <y>0</y>
      <width>511</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
@@ -422,38 +428,6 @@
   <connection>
    <sender>m_cluster</sender>
    <signal>toggled(bool)</signal>
-   <receiver>m_restartButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>356</x>
-     <y>56</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>69</x>
-     <y>402</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_cluster</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>m_shutdownButton</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>356</x>
-     <y>56</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>237</x>
-     <y>395</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_cluster</sender>
-   <signal>toggled(bool)</signal>
    <receiver>m_killButton</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -462,8 +436,8 @@
      <y>56</y>
     </hint>
     <hint type="destinationlabel">
-     <x>150</x>
-     <y>409</y>
+     <x>409</x>
+     <y>465</y>
     </hint>
    </hints>
   </connection>
@@ -474,8 +448,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>93</x>
-     <y>463</y>
+     <x>102</x>
+     <y>508</y>
     </hint>
     <hint type="destinationlabel">
      <x>353</x>

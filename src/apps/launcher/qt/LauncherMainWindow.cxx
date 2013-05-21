@@ -168,13 +168,13 @@ void LauncherMainWindow::on_m_killButton_clicked()
 
 void LauncherMainWindow::on_m_shutdownButton_clicked()
 {
-    StartProcess( "kill" );
+//    StartProcess( "kill" );
 }
 
 void LauncherMainWindow::on_m_restartButton_clicked()
 {
-    StartProcess( "kill" );
-    StartProcess( "launch" );
+//    StartProcess( "kill" );
+//    StartProcess( "launch" );
 }
 
 void LauncherMainWindow::on_m_launchButton_clicked()
