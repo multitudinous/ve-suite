@@ -296,6 +296,8 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         }
         else if( dvpName == "WARRANTY_FILE" )
         {
+            ves::xplorer::scenegraph::util::RemoveNodeNameVisitor polyTransCleanup( m_cadRootNode, "", "" );
+
             std::string filename = dvp->GetDataString();
             std::cout << "WarrantyToolGP::SetCurrentCommand::WARRANTY_FILE: " <<  filename << std::endl << std::flush;
             boost::filesystem::path dataPath( filename );
@@ -308,8 +310,6 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                 ParseDataFile( dataPath.string() );
                 ValidateDataFile();
             }
-
-            ves::xplorer::scenegraph::util::RemoveNodeNameVisitor polyTransCleanup( m_cadRootNode, "", "" );
 
             //CreateTextTextures();
         }

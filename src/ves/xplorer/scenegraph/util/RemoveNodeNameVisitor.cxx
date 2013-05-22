@@ -63,7 +63,7 @@ void RemoveNodeNameVisitor::apply( osg::Node& node )
         name.erase();
     }
 
-    boost::algorithm::erase_regex( name, boost::regex( "^body\\ \\#[1-9]+" ) );
+    boost::algorithm::erase_regex( name, boost::regex( "^body\\ \\#[0-9]+" ) );
 
     //if( boost::algorithm::starts_with( name, "body #" ) )
     //{
@@ -75,7 +75,7 @@ void RemoveNodeNameVisitor::apply( osg::Node& node )
         boost::algorithm::erase_regex( name, boost::regex( "^a_" ) );
 
         //Remove all of the #1, #2 suffixes
-        boost::algorithm::erase_regex( name, boost::regex( "\\ \\#[1-9]+$" ) );
+        boost::algorithm::erase_regex( name, boost::regex( "\\ \\#[0-9]+$" ) );
     }
 
     node.setName( name );
