@@ -32,12 +32,9 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/util/RemoveNodeNameVisitor.h>
-#include <osgwTools/TransparencyUtils.h>
 
-#include <iostream>
-//#include <algorithm>
-//#include <cctype>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/regex.hpp>
 
 using namespace ves::xplorer::scenegraph::util;
 
@@ -61,26 +58,25 @@ void RemoveNodeNameVisitor::apply( osg::Node& node )
 {
     std::string name = node.getName();
 
-    if( boost::algorithm::starts_with( name, "a_" ) )
-    {
-        name.erase( 0, 2 );
-    }
-
     if( name == "body" )
     {
         name.erase();
     }
 
-    if( boost::algorithm::starts_with( name, "body #" ) )
-    {
-        name.erase();
-    }
+    boost::algorithm::erase_regex( name, boost::regex( "^body\\ \\#[1-9]+" ) );
 
-    //Remove all of the #1, #2 suffixes
-    //if( boost::algorithm::starts_with( name, "a_" ) )
+    //if( boost::algorithm::starts_with( name, "body #" ) )
     //{
-    //    name.erase( 0, 2 );
+    //    name.erase();
     //}
+
+    if( !name.empty() )
+    {
+        boost::algorithm::erase_regex( name, boost::regex( "^a_" ) );
+
+        //Remove all of the #1, #2 suffixes
+        boost::algorithm::erase_regex( name, boost::regex( "\\ \\#[1-9]+$" ) );
+    }
 
     node.setName( name );
 

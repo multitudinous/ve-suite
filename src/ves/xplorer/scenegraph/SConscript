@@ -56,6 +56,8 @@ if GetPlatform() == 'win32':
     #LIBCPMT is being linked in via a third party library so there is
     # no need for us to link in the dynamic version of the library as well
     lib_env.AppendUnique( LINKFLAGS = ['/NODEFAULTLIB:LIBCMT'] )
+else:
+    lib_env.AppendUnique( LIBS=['boost_regex'])
 
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_scenegraph',
