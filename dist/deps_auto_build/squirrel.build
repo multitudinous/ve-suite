@@ -53,6 +53,6 @@ case $PLATFORM in
     ;;
   Darwin | Linux)
     BUILD_METHOD=make
-    BUILD_TARGET=sq64
+    BUILD_TARGET="sq64 DEFS=-fPIC"
     ;;
 esac
