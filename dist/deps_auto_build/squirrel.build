@@ -51,7 +51,14 @@ case $PLATFORM in
     #            cp ../${BUILD_STR}/*.dll ${INSTALL_DIR}/lib/."
 
     ;;
-  Darwin | Linux)
+  Darwin)
+    SKIP_PREBUILD=no
+    PREBUILD_METHOD=custom
+    CUSTOM_PREBUILD=( "sed -i '' 's/gcc/gcc -fPIC/g' ${SOURCE_DIR}/squirrel/Makefile ${SOURCE_DIR}/sqstdlib/Makefile" )
+    BUILD_METHOD=make
+    BUILD_TARGET=sq64
+    ;;
+  Linux)
     SKIP_PREBUILD=no
     PREBUILD_METHOD=custom
     CUSTOM_PREBUILD=( "sed -i 's/gcc/gcc -fPIC/g' ${SOURCE_DIR}/squirrel/Makefile ${SOURCE_DIR}/sqstdlib/Makefile" )
