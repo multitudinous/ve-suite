@@ -121,18 +121,23 @@ void LauncherMainWindow::ParseConfigFile(QString filename)
     while( !in.atEnd() )
     {
         QString line = in.readLine();
-        if( line.indexOf("vrjconfig") == 0 )
+        //QStringList tokens = line.split( QRegExp("\\W+"), QString::SkipEmptyParts );
+        QStringList tokens = line.split( QRegExp("\\s"), QString::SkipEmptyParts );
+        //if( tokens.size() > 0 )
+        if( tokens.size() >= 3 )
         {
-            QStringList tokens = line.split(" ");
-            if( tokens.size() == 3 )
+            if( tokens.at( 0 ) == "vrjconfig" )
             {
-                ui->m_configuration->addItem( tokens.at( 1 ) );
+                //if( tokens.size() >= 3 )
+                {
+                    ui->m_configuration->addItem( tokens.at( 1 ) );
+                }
             }
         }
     }
 }
 
-void LauncherMainWindow::m_process_error( QProcess::ProcessError error )
+void LauncherMainWindow::m_process_error( QProcess::ProcessError )
 {
     QMessageBox message;
     message.setText("Error starting VE-Suite: Please ensure the directory containing ves_xplorer is in your environment's PATH.");
