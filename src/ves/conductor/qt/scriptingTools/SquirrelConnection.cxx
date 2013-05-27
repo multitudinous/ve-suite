@@ -35,16 +35,9 @@
 #if SWITCHWIRE_HAVE_SQUIRREL
 #include <ves/conductor/qt/scriptingTools/SquirrelUtilClasses.h>
 
-#include <switchwire/squirrel/ConnectScripts.h>
-#include <switchwire/squirrel/ExposeSignals.h>
+#include <switchwire/squirrel/Events.h>
 #include <switchwire/squirrel/SQStdMap.h>
 #include <switchwire/squirrel/SQStdVector.h>
-
-#include <squirrel.h>
-//DIAG_OFF(unused-parameter)
-#include <sqrat.h>
-#include <sqrat/sqratVM.h>
-//DIAG_ON(unused-parameter)
 
 namespace ves
 {
@@ -61,27 +54,107 @@ SquirrelConnection::SquirrelConnection( const std::string& scriptText )
     runScript( scriptText );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SquirrelConnection::ExposeSignalTypes( Sqrat::SqratVM& vm )
+void SquirrelConnection::ExposeSignalSlotTypes( switchwire::SquirrelContext& sc )
 {
-    // Add signal types to expose to script engine.
+    // Add signal and slot types to expose to script engine.
     // Naming scheme for signal types should mimic that in
     // ves/util/SimpleDataTypeSignalSignatures.h, but omitting "_type" at the
     // end. Non-void return types should be prepended to the name, e.g.
     // Bool_IntSignal to describe a signal with signature bool( int ).
 
-    ExposeSignalType_0< void( ) >( "VoidSignal", vm );
-    ExposeSignalType_1< void( const std::string& ) >( "StringSignal", vm );
-    ExposeSignalType_2< void( const std::string&, const std::string& ) >( "TwoStringSignal", vm );
-    ExposeSignalType_3< void ( std::string const&, std::string const&, std::string const& ) >( "ThreeStringSignal", vm );
-    ExposeSignalType_2< void( const std::string&, const bool& ) >( "StringBoolSignal", vm );
-    ExposeSignalType_2< void( const std::string&, int ) >( "StringIntSignal", vm );
-    ExposeSignalType_1< void ( bool const& ) >( "BoolSignal", vm );
-    ExposeSignalType_1< void ( double const& ) >( "DoubleSignal", vm );
-    ExposeSignalType_2< void ( double const&, double const& ) >( "TwoDoubleSignal", vm );
-    ExposeSignalType_3< void ( double const&, double const&, double const& ) >( "ThreeDoubleSignal", vm );
-    ExposeSignalType_1< void ( int const& ) >( "IntSignal", vm );
-    ExposeSignalType_1< void ( unsigned int const& ) >( "UnsignedIntSignal", vm );
-    ExposeSignalType_2< void ( const bool, const std::vector< double >& ) >( "BoolAndDoubleVectorSignal", vm );
+    // For code cleanliness...
+    using namespace switchwire;
+
+    ExposeSignalType_0
+            < void( ) >
+            ( "VoidSignal", sc );
+    ExposeSlotType_0
+            < void( ) >
+            ( "VoidSlot", sc );
+
+    ExposeSignalType_1
+            < void( const std::string& ) >
+            ( "StringSignal", sc );
+    ExposeSlotType_1
+            < void( const std::string& ) >
+            ( "StringSlot", sc );
+
+    ExposeSignalType_2
+            < void( const std::string&, const std::string& ) >
+            ( "TwoStringSignal", sc );
+    ExposeSlotType_2
+            < void( const std::string&, const std::string& ) >
+            ( "TwoStringSlot", sc );
+
+    ExposeSignalType_3
+            < void ( std::string const&, std::string const&, std::string const& ) >
+            ( "ThreeStringSignal", sc );
+    ExposeSlotType_3
+            < void ( std::string const&, std::string const&, std::string const& ) >
+            ( "ThreeStringSlot", sc );
+
+    ExposeSignalType_2
+            < void( const std::string&, const bool& ) >
+            ( "StringBoolSignal", sc );
+    ExposeSlotType_2
+            < void( const std::string&, const bool& ) >
+            ( "StringBoolSlot", sc );
+
+    ExposeSignalType_2
+            < void( const std::string&, int ) >
+            ( "StringIntSignal", sc );
+    ExposeSlotType_2
+            < void( const std::string&, int ) >
+            ( "StringIntSlot", sc );
+
+    ExposeSignalType_1
+            < void ( bool const& ) >
+            ( "BoolSignal", sc );
+    ExposeSlotType_1
+            < void ( bool const& ) >
+            ( "BoolSlot", sc );
+
+    ExposeSignalType_1
+            < void ( double const& ) >
+            ( "DoubleSignal", sc );
+    ExposeSlotType_1
+            < void ( double const& ) >
+            ( "DoubleSlot", sc );
+
+    ExposeSignalType_2
+            < void ( double const&, double const& ) >
+            ( "TwoDoubleSignal", sc );
+    ExposeSlotType_2
+            < void ( double const&, double const& ) >
+            ( "TwoDoubleSlot", sc );
+
+    ExposeSignalType_3
+            < void ( double const&, double const&, double const& ) >
+            ( "ThreeDoubleSignal", sc );
+    ExposeSlotType_3
+            < void ( double const&, double const&, double const& ) >
+            ( "ThreeDoubleSlot", sc );
+
+    ExposeSignalType_1
+            < void ( int const& ) >
+            ( "IntSignal", sc );
+    ExposeSlotType_1
+            < void ( int const& ) >
+            ( "IntSlot", sc );
+
+    ExposeSignalType_1
+            < void ( unsigned int const& ) >
+            ( "UnsignedIntSignal", sc );
+    ExposeSlotType_1
+            < void ( unsigned int const& ) >
+            ( "UnsignedIntSlot", sc );
+
+    ExposeSignalType_2
+            < void ( const bool, const std::vector< double >& ) >
+            ( "BoolAndDoubleVectorSignal", sc );
+    ExposeSlotType_2
+            < void ( const bool, const std::vector< double >& ) >
+            ( "BoolAndDoubleVectorSlot", sc );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::BindSpecialClasses()
@@ -123,12 +196,17 @@ void SquirrelConnection::BindSpecialClasses()
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::runScript( const std::string& scriptText )
 {
-    Sqrat::SqratVM vm;
-    Sqrat::DefaultVM::Set(vm.getVM());
+    switchwire::SquirrelContext sc;
+    //Sqrat::SqratVM vm;
+    Sqrat::DefaultVM::Set( sc.GetVM().getVM() );
 
-    ExposeSignalTypes( vm );
+    ExposeSignalSlotTypes( sc );
     BindSpecialClasses();
 
+    sc.LoadScriptFromText( scriptText );
+    sc.ExecuteScript();
+
+    /*
     try
     {
         Sqrat::Script script;
@@ -145,7 +223,7 @@ void SquirrelConnection::runScript( const std::string& scriptText )
     {
         std::cout << "Unspecified Sqrat exception" << std::endl << std::flush;
         return;
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 }} //ves::conductor

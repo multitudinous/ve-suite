@@ -36,9 +36,9 @@
 
 #include <string>
 
-namespace Sqrat
+namespace switchwire
 {
- class SqratVM;
+ class SquirrelContext;
 }
 
 namespace ves
@@ -52,7 +52,7 @@ public:
     SquirrelConnection();
     SquirrelConnection( const std::string& scriptText );
 
-    void ExposeSignalTypes( Sqrat::SqratVM& vm );
+    void ExposeSignalSlotTypes( switchwire::SquirrelContext& sc );
     void BindSpecialClasses();
     void runScript( const std::string& scriptText );
 };
