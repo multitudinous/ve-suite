@@ -148,7 +148,6 @@ void CameraTab::on_m_removeCameraButton_clicked()
     {
         return;
     }
-    // TODO: pull user data from item to get UUID and remove this entry from store.
     propertystore::PropertySetPtr tempSet;
     tempSet = propertystore::PropertySetPtr( new ves::xplorer::data::CameraSettingsPropertySet );
     std::string uuid( item->data( Qt::UserRole ).toString().toStdString() );
