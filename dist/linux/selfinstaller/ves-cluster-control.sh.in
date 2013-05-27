@@ -15,7 +15,7 @@ fi
 
 function usage()
 {
-    printf "Usage: %s -c <cluster config file> [ -a <action> [ -n <named vrj config> ]] [ -h ]\n" $0
+    printf "Usage: %s -c <cluster config file> [ -a <action> [ -n <named vrj config> ]] [ -d ] [ -h ]\n" $0
 }
 
 function printAvailableActions()
@@ -94,7 +94,9 @@ function getListenPortForRenderNode()
     fi
 }
 
-while getopts "c:a:n:h" OPT
+DESKTOP_CLUSTER_CONTROL="no"
+
+while getopts "c:a:n:dh" OPT
 do
     case ${OPT} in
         c)
@@ -105,6 +107,9 @@ do
             ;;
         n)
             NAMED_VRJ_CONFIG="${OPTARG}"
+            ;;
+        d)
+            DESKTOP_CLUSTER_CONTROL="yes"
             ;;
         h)
             usage
@@ -136,6 +141,13 @@ then
     exit 1
 fi
 
+EXTRA_ARGS=""
+
+if [ "${DESKTOP_CLUSTER_CONTROL}" = "yes" ]
+then
+    EXTRA_ARGS="-d"
+fi
+
 case "${ACTION}" in
     launch)
         if [ -z "${NAMED_VRJ_CONFIG}" ]
@@ -153,10 +165,10 @@ case "${ACTION}" in
             unset LISTEN_PORT
             getListenPortForRenderNode "${CLUSTER_CONFIG_FILE}" "${node}"
 
-            ssh ${node} "/bin/bash -c 'source ${VES_ENV_FILE} && VES_LOG_LEVEL=$VES_LOG_LEVEL && OSG_NOTIFY_LEVEL=$OSG_NOTIFY_LEVEL && VPR_DEBUG_NFY_LEVEL=$VPR_DEBUG_NFY_LEVEL && launch-ves_xplorer-rendernode.sh -p ${LISTEN_PORT}'" &
+            ssh ${node} "/bin/bash -c 'source ${VES_ENV_FILE} && VES_LOG_LEVEL=$VES_LOG_LEVEL && OSG_NOTIFY_LEVEL=$OSG_NOTIFY_LEVEL && VPR_DEBUG_NFY_LEVEL=$VPR_DEBUG_NFY_LEVEL && launch-ves_xplorer-rendernode.sh -p ${LISTEN_PORT} ${EXTRA_ARGS}'" &
         done
 
-        VES_LOG_LEVEL=$VES_LOG_LEVEL && OSG_NOTIFY_LEVEL=$OSG_NOTIFY_LEVEL && VPR_DEBUG_NFY_LEVEL=$VPR_DEBUG_NFY_LEVEL && launch-ves_xplorer-master.sh -j "${VRJ_CONFIG_FILE}"
+        VES_LOG_LEVEL=$VES_LOG_LEVEL && OSG_NOTIFY_LEVEL=$OSG_NOTIFY_LEVEL && VPR_DEBUG_NFY_LEVEL=$VPR_DEBUG_NFY_LEVEL && launch-ves_xplorer-master.sh -j "${VRJ_CONFIG_FILE}" ${EXTRA_ARGS}
         ;;
     kill)
         killall -9 ves_xplorer

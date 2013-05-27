@@ -4,17 +4,21 @@ source __VE_SUITE_ENV_FILE_PLACEHOLDER__
 
 function usage()
 {
-    echo "usage: $0 -p <listen port>"
+    echo "usage: $0 -p <listen port> [ -d ]"
     exit 1
 }
 
 LISTEN_PORT=""
+DESKTOP_CLUSTER_CONTROL="no"
 
-while getopts "p:" OPT
+while getopts "p:d" OPT
 do
     case ${OPT} in
         p)
             LISTEN_PORT=${OPTARG}
+            ;;
+        d)
+            DESKTOP_CLUSTER_CONTROL="yes"
             ;;
         ?)
             usage
@@ -32,9 +36,16 @@ then
     export VES_LOG_LEVEL=warning
 fi
 
+EXTRA_ARGS=""
+
+if [ "${DESKTOP_CLUSTER_CONTROL}" = "yes" ]
+then
+    EXTRA_ARGS="--DesktopClusterControl"
+fi
+
 if [ -z "${LISTEN_PORT}" ]
 then
-    ves_xplorer --vrjslave --VESRTT --VESLog=$VES_LOG_LEVEL --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log
+    ves_xplorer --vrjslave --VESRTT --VESLog=$VES_LOG_LEVEL --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log ${EXTRA_ARGS}
 else
-    ves_xplorer --vrjslave --listen_port=${LISTEN_PORT} --VESRTT --VESLog=$VES_LOG_LEVEL --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log
+    ves_xplorer --vrjslave --listen_port=${LISTEN_PORT} --VESRTT --VESLog=$VES_LOG_LEVEL --VESLogPath="${VES_PREFIX}"/debug."${HOSTNAME}".log ${EXTRA_ARGS}
 fi
