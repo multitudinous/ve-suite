@@ -1,4 +1,37 @@
-// See bottom of file for execution sequence
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            //
+//                          Main Entry point                                  //
+//                                                                            //
+////////////////////////////////////////////////////////////////////////////////
+function Execute()
+{
+    VoidSignalMaker <- VoidSignal;
+    VoidSignalMaker.RegisterSignal( "Script.FrameAll", "FrameAll" );
+    sleeper <- Sleeper();
+
+    loadFiles();
+    sleeper.Sleep(1000);
+
+    FrameAll.signal();
+    sleeper.Sleep(1000);
+
+    createContourPlane( "TestPlane", 5.0 );
+    showCube( false );
+    sleeper.Sleep(1500);
+
+    createContourPlane( "TestPlane", 36.0 );
+    createContourPlane( "TestPlane", 75.0 );
+    showCube( true );
+    createContourPlane( "TestPlane", 95.0 );
+    sleeper.Sleep( 1500 );
+
+    showCube( false );
+    createLotsOfContourPlanes( 200 );
+
+    // This will hide every viz feature whose name starts with "ScriptPlane".
+    // To un-hide the planes, change the second argument to 'false'.
+    //hideContourPlanes( "ScriptPlane%", true );
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -74,37 +107,3 @@ function hideContourPlanes( pattern, hide )
     VizToggleSignalMaker.RegisterSignal( "HideVizFeatureByName", "HideViz" );
     HideViz.signal( pattern, hide );
 }
-
-////////////////////////////////////////////////////////////////////////////////
-//                                                                            //
-//                          Execution sequence                                //
-//                                                                            // 
-////////////////////////////////////////////////////////////////////////////////
-
-VoidSignalMaker <- VoidSignal;
-VoidSignalMaker.RegisterSignal( "Script.FrameAll", "FrameAll" );
-sleeper <- Sleeper();
-
-loadFiles();
-sleeper.Sleep(1000);
-
-FrameAll.signal();
-sleeper.Sleep(1000);
-
-createContourPlane( "TestPlane", 5.0 );
-showCube( false );
-sleeper.Sleep(1500);
-
-createContourPlane( "TestPlane", 36.0 );
-createContourPlane( "TestPlane", 75.0 );
-showCube( true );
-createContourPlane( "TestPlane", 95.0 );
-sleeper.Sleep( 1500 );
-
-showCube( false );
-createLotsOfContourPlanes( 200 );
-
-// This will hide every viz feature whose name starts with "ScriptPlane".
-// To un-hide the planes, change the second argument to 'false'.
-//hideContourPlanes( "ScriptPlane%", true );
-
