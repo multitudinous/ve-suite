@@ -4,14 +4,19 @@ source __VE_SUITE_ENV_FILE_PLACEHOLDER__
 
 function usage()
 {
-    echo "usage: $0 -p <listen port> [ -d ]"
-    exit 1
+    echo "Usage: $0 [ -p <listen port> ] [ -d ] [ -h ]"
+    echo ""
+    echo "  Options"
+    echo ""
+    echo "  -p : specify the VR Juggler listening port (optional)"
+    echo "  -d : enable desktop cluster control mode"
+    echo "  -h : show this help info"
 }
 
 LISTEN_PORT=""
 DESKTOP_CLUSTER_CONTROL="no"
 
-while getopts "p:d" OPT
+while getopts "p:dh" OPT
 do
     case ${OPT} in
         p)
@@ -19,6 +24,10 @@ do
             ;;
         d)
             DESKTOP_CLUSTER_CONTROL="yes"
+            ;;
+        h)
+            usage
+            exit 0
             ;;
         ?)
             usage

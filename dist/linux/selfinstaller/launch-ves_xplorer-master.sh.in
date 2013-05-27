@@ -4,14 +4,19 @@ source __VE_SUITE_ENV_FILE_PLACEHOLDER__
 
 function usage()
 {
-    echo "usage: $0 -j <path to jconf file> [ -d ]"
-    exit 1
+    echo "Usage: $0 -j <path to jconf file> [ -d ] [ -h ]"
+    echo ""
+    echo "  Options"
+    echo ""
+    echo "  -j : specify the path to a VR Juggler config file (required)"
+    echo "  -d : enable desktop cluster control mode (optional)"
+    echo "  -h : show this help info"
 }
 
 JCONF_FILE=""
 DESKTOP_CLUSTER_CONTROL="no"
 
-while getopts "j:d" OPT
+while getopts "j:dh" OPT
 do
     case ${OPT} in
         j)
@@ -19,6 +24,10 @@ do
             ;;
         d)
             DESKTOP_CLUSTER_CONTROL="yes"
+            ;;
+        h)
+            usage
+            exit 0
             ;;
         ?)
             usage

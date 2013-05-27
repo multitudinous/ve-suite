@@ -15,7 +15,15 @@ fi
 
 function usage()
 {
-    printf "Usage: %s -c <cluster config file> [ -a <action> [ -n <named vrj config> ]] [ -d ] [ -h ]\n" $0
+    printf "Usage: %s -c <cluster config file> -a <action> -n <named vrj config> [ -d ] [ -h ]\n" $0
+    echo ""
+    echo "  Options"
+    echo ""
+    echo "  -c : specify cluster config file (required - see README)"
+    echo "  -a : specify action (required - must be used with -n)"
+    echo "  -n : specify named VR Juggler configuration"
+    echo "  -d : enable desktop cluster control mode"
+    echo "  -h : show this help info"
 }
 
 function printAvailableActions()
