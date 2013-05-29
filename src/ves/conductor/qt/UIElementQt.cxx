@@ -1024,9 +1024,10 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
     Qt::KeyboardModifiers modifiers = _extractModifiers( state );
 
     QPoint position( x, y );
-
+    QRect rect = this->viewport()->rect();
     QPoint globalPos = this->viewport()->mapToGlobal( position );
     LOG_INFO( "UIElementQt::_buttonEvent global " << globalPos.x() << " " << globalPos.y() );
+    LOG_INFO( "UIElementQt::_buttonEvent viewport " << rect.x() << " " << rect.y() << " " << rect.width() << " " << rect.height() );
 
     if( type == 1 )
     {
