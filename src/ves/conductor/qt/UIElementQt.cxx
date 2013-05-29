@@ -1017,7 +1017,7 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
         return;
     }
 
-    LOG_INFO( "UIElementQt::_buttonEvent " << x << " " << y );
+    //LOG_INFO( "UIElementQt::_buttonEvent " << x << " " << y );
 
     Qt::MouseButton qbutton = _extractButton( button );
     Qt::MouseButtons buttons = _extractButtons( state );
@@ -1026,8 +1026,8 @@ void UIElementQt::_buttonEvent( int type, gadget::Keys button, int x, int y, int
     QPoint position( x, y );
     QRect rect = this->viewport()->rect();
     QPoint globalPos = this->viewport()->mapToGlobal( position );
-    LOG_INFO( "UIElementQt::_buttonEvent global " << globalPos.x() << " " << globalPos.y() );
-    LOG_INFO( "UIElementQt::_buttonEvent viewport " << rect.x() << " " << rect.y() << " " << rect.width() << " " << rect.height() );
+    //LOG_INFO( "UIElementQt::_buttonEvent global " << globalPos.x() << " " << globalPos.y() );
+    //LOG_INFO( "UIElementQt::_buttonEvent viewport " << rect.x() << " " << rect.y() << " " << rect.width() << " " << rect.height() );
 
     if( type == 1 )
     {

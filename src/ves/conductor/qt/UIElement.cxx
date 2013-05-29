@@ -515,7 +515,7 @@ void UIElement::ComputeMouseBoundsForElement()
 
     // Return in the form (left, right, bottom, top)
     m_uiCorners = osg::Vec4( min.x(), max.x(), min.y(), max.y() );
-    LOG_INFO( "ComputeMouseBoundsForElement the new UI texture bounds are " << m_uiCorners );
+    //LOG_INFO( "ComputeMouseBoundsForElement the new UI texture bounds are " << m_uiCorners );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIElement::TestQuadIntersection( int x, int y )

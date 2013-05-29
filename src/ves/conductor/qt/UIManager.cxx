@@ -1094,7 +1094,7 @@ void UIManager::ToggleElementVisibility( UIElement* element )
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
-    LOG_INFO("UIManager::ButtonPressEvent");
+    //LOG_INFO("UIManager::ButtonPressEvent");
     if( !_okayToSendEvent() )
     {
         return false;
@@ -1144,10 +1144,10 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
     // Only send events if element is visible and not minimzed
     if( ( visible ) && ( !minimized ) )
     {
-        LOG_INFO( "UIManager::ButtonPressEvent pixel point " << x << " " << y );
-        LOG_INFO( "UIManager::ButtonPressEvent point " << m_intersectionPoint.x() << " " << m_intersectionPoint.z() );
-        LOG_INFO( "UIManager::ButtonPressEvent start point " << m_startPoint.x() << " " << m_startPoint.y() << " " << m_startPoint.z() );
-        LOG_INFO( "UIManager::ButtonPressEvent end point " << m_endPoint.x() << " " << m_endPoint.y() << " " << m_endPoint.z() );
+        //LOG_INFO( "UIManager::ButtonPressEvent pixel point " << x << " " << y );
+        //LOG_INFO( "UIManager::ButtonPressEvent point " << m_intersectionPoint.x() << " " << m_intersectionPoint.z() );
+        //LOG_INFO( "UIManager::ButtonPressEvent start point " << m_startPoint.x() << " " << m_startPoint.y() << " " << m_startPoint.z() );
+        //LOG_INFO( "UIManager::ButtonPressEvent end point " << m_endPoint.x() << " " << m_endPoint.y() << " " << m_endPoint.z() );
         // Translate mouse coordinates to window coordinates
         m_selectedUIElement->GetPointIntersectionInPixels( x, y, m_intersectionPoint );
         // Flip y mouse coordinate to origin GUI expects
