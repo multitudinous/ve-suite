@@ -1,12 +1,12 @@
 PACKAGE_NAME=BOOST
-BASE_DIR="${DEV_BASE_DIR}/boost_1_50_0"
+BASE_DIR="${DEV_BASE_DIR}/boost_1_53_0"
 
 SOURCE_RETRIEVAL_METHOD=wget
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
 INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
-BOOST_VERSION_DIR=boost-1_50
+BOOST_VERSION_DIR=boost-1_53
 
 PREBUILD_METHOD=bjam
 BUILD_METHOD=bjam
@@ -31,7 +31,7 @@ VES_INSTALL_PARAMS+=( lib )
 
 case $PLATFORM in
   Windows)
-    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.50.0/boost_1_50_0.zip
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_53_0.zip
     SOURCE_FORMAT=zip
 
     BJAM_PREBUILD=./bootstrap.bat
@@ -41,14 +41,14 @@ case $PLATFORM in
     BUILD_TARGET=install
     ;;
   Darwin)
-    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.50.0/boost_1_50_0.tar.bz2
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_53_0.tar.bz2
     SOURCE_FORMAT=bz2
 
     BJAM_PREBUILD=./bootstrap.sh
     BJAM_PARAMS+=( toolset=darwin )
     ;;
   Linux)
-    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.50.0/boost_1_50_0.tar.bz2
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_50_0.tar.bz2
     SOURCE_FORMAT=bz2
 
     BJAM_PREBUILD=./bootstrap.sh
