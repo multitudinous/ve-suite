@@ -93,7 +93,6 @@ extern osg::ref_ptr<osg::Texture2D> RTTtex;
 #include <osgwTools/GeometryModifier.h>
 #include <osgwTools/Shapes.h>
 
-using namespace Poco::Data;
 using namespace ves::xplorer::scenegraph;
 using namespace warrantytool;
 

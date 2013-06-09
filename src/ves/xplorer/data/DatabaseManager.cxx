@@ -68,7 +68,12 @@
 #include <Poco/Data/RecordSet.h>
 #include <Poco/Data/Session.h>
 #include <Poco/Data/DataException.h>
-
+#include <Poco/Version.h>
+#if POCO_VERSION > 01050000
+#define POCO_KEYWORD_NAMESPACE Poco::Data::Keywords::
+#else
+#define POCO_KEYWORD_NAMESPACE Poco::Data::
+#endif
 #include <boost/shared_ptr.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/smart_ptr/shared_array.hpp>
@@ -204,7 +209,7 @@ void DatabaseManager::ResetAll()
                 std::string tableName = recordset.value( 0, rowIndex ).convert< std::string > ();
                 if( ( tableName != "sqlite_sequence" ) && ( tableName != "XplorerDBDetails" ) )
                 {
-                    session << "DROP TABLE " << tableName, Poco::Data::now;
+                    session << "DROP TABLE " << tableName, POCO_KEYWORD_NAMESPACE now;
                 }
             }
             session.commit();

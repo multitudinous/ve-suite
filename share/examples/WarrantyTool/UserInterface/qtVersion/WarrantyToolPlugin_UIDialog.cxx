@@ -59,6 +59,12 @@
 #include <Poco/Data/Session.h>
 #include <Poco/Data/Statement.h>
 #include <Poco/Data/RecordSet.h>
+#include <Poco/Version.h>
+#if POCO_VERSION > 01050000
+#define POCO_KEYWORD_NAMESPACE Poco::Data::Keywords::
+#else
+#define POCO_KEYWORD_NAMESPACE Poco::Data::
+#endif
 
 #include <QtCore/QString>
 #include <QtGui/QTreeWidget>
@@ -776,7 +782,7 @@ void WarrantyToolPlugin_UIDialog::ParseDataBase( const std::string& csvFilename 
         {
             //std::string queryString = "DESCRIBE Parts";
             std::string queryString = "SELECT * FROM Parts WHERE rowid = \"1\"";
-            select << queryString, now;
+            select << queryString, POCO_KEYWORD_NAMESPACE now;
         }
         catch( Poco::Data::DataException& ex )
         {
@@ -813,7 +819,7 @@ void WarrantyToolPlugin_UIDialog::ParseDataBase( const std::string& csvFilename 
         try
         {
             std::string queryString = "SELECT Part_Number FROM Parts";
-            select2 << queryString.c_str(),now;
+            select2 << queryString.c_str(), POCO_KEYWORD_NAMESPACE now;
         }
         catch( Poco::Data::DataException& ex )
         {
@@ -858,7 +864,7 @@ void WarrantyToolPlugin_UIDialog::ParseDataBase( const std::string& csvFilename 
         try
         {
             std::string queryString = "SELECT name FROM sqlite_master WHERE tbl_name LIKE 'User_Table_%'";
-            select3 << queryString.c_str(),now;
+            select3 << queryString.c_str(), POCO_KEYWORD_NAMESPACE now;
         }
         catch( Poco::Data::DataException& ex )
         {
@@ -937,7 +943,7 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
     Poco::Data::Statement select( session );
     try
     {
-        select << queryString , Poco::Data::now;
+        select << queryString , POCO_KEYWORD_NAMESPACE now;
     }
     catch( Poco::Data::DataException& ex )
     {
@@ -967,7 +973,7 @@ void WarrantyToolPlugin_UIDialog::QueryUserDefinedAndHighlightParts( const std::
         try
         {
             Poco::Data::Statement select2( session );
-            select2 << tempString.c_str(), Poco::Data::now;
+            select2 << tempString.c_str(), POCO_KEYWORD_NAMESPACE now;
             select.swap( select2 );
         }
         catch( Poco::Data::DataException& ex )
@@ -1152,7 +1158,7 @@ void WarrantyToolPlugin_UIDialog::QueryPartNumber( const std::string& queryStrin
     Poco::Data::Statement select( session );
     try
     {
-        select << queryCommand , Poco::Data::now;
+        select << queryCommand , POCO_KEYWORD_NAMESPACE now;
     }
     catch( Poco::Data::DataException& ex )
     {

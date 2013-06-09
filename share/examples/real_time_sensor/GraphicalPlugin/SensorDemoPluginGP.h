@@ -50,10 +50,6 @@
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 
-#include <Poco/Tuple.h>
-#include <Poco/Data/Statement.h>
-#include <Poco/Data/RecordSet.h>
-
 namespace ves
 {
 namespace xplorer
@@ -153,14 +149,10 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::GroupedTextTextures > m_groupedTextTextures;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_textTrans;
 
-    typedef Poco::Tuple< std::string, std::string, int, double, double, double, std::string > Part;
-	typedef std::vector<Part> Assembly;
     ///All of the currently highlighted parts
     std::vector< std::string > m_assemblyPartNumbers;
     ///All of the currently highlighted joined parts
     std::vector< std::string > m_joinedPartNumbers;
-    ///insert some rows
-	Assembly m_selectedAssembly;
     ///Command being processed
     ves::open::xml::CommandPtr m_currentCommand;
     ///db filename
@@ -179,9 +171,6 @@ private:
     bool m_mouseSelection;
     ///Container for the two currently active table names
     std::pair< std::string, std::string > m_tableNames;
-    ///The current select statement
-    Poco::Data::Statement* m_currentStatement;
-    //Poco::Data::RecordSet m_currentStatement;
     
     /// Required to be able to connect up to signals.
     switchwire::ScopedConnectionList m_connections;

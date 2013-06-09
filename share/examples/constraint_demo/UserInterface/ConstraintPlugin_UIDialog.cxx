@@ -49,12 +49,6 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/find.hpp>
 
-#include <Poco/Data/SQLite/SQLite.h>
-#include <Poco/Data/SQLite/Connector.h>
-#include <Poco/Data/Session.h>
-#include <Poco/Data/Statement.h>
-#include <Poco/Data/RecordSet.h>
-
 #include <QtCore/QString>
 #include <QtGui/QTreeWidget>
 #include <QtGui/QTreeWidgetItem>

@@ -10,5 +10,5 @@ if poco_options.isAvailable():
     toolsSubdirs.append('post_processor')
 
 #Run SConscript files in all of those folders.
-for d in toolsSubdirs:
-    SConscript( dirs = d )
+#for d in toolsSubdirs:
+#    SConscript( dirs = d )

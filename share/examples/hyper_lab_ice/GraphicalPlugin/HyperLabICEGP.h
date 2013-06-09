@@ -50,10 +50,6 @@
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 
-#include <Poco/Tuple.h>
-#include <Poco/Data/Statement.h>
-#include <Poco/Data/RecordSet.h>
-
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <osg/MatrixTransform>

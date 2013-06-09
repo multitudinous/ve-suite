@@ -66,12 +66,6 @@
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 
-#include <Poco/Data/SQLite/SQLite.h>
-#include <Poco/Data/SQLite/Connector.h>
-#include <Poco/Data/Session.h>
-#include <Poco/Data/Statement.h>
-#include <Poco/Data/RecordSet.h>
-
 SensorDemoPlugin_UIDialog::SensorDemoPlugin_UIDialog(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SensorDemoPlugin_UIDialog),

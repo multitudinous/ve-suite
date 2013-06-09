@@ -111,7 +111,6 @@ namespace pt = boost::property_tree;
 #include "RenderPrep.h"
 #endif
 
-using namespace Poco::Data;
 using namespace ves::xplorer::scenegraph;
 using namespace warrantytool;
 

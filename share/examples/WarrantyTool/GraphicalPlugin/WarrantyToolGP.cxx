@@ -75,6 +75,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <vector>
 
 using namespace ves::xplorer::scenegraph;
 using namespace warrantytool;
@@ -87,11 +88,18 @@ using namespace warrantytool;
 #include <Poco/DateTimeFormatter.h>
 #include <Poco/DateTimeParser.h>
 
-#include <Poco/Data/SessionFactory.h>
+//#include <Poco/Data/SessionFactory.h>
+using namespace std;
 #include <Poco/Data/Session.h>
+#include <Poco/Data/Statement.h>
 #include <Poco/Data/RecordSet.h>
 #include <Poco/Data/SQLite/Connector.h>
-#include <vector>
+#include <Poco/Version.h>
+#if POCO_VERSION > 01050000
+#define POCO_KEYWORD_NAMESPACE Poco::Data::Keywords::
+#else
+#define POCO_KEYWORD_NAMESPACE Poco::Data::
+#endif
 
 #include <boost/lexical_cast.hpp>
 #include <boost/concept_check.hpp>
@@ -586,7 +594,7 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
             // a simple query
             //std::string queryString = "SELECT * FROM Parts WHERE \"Part_Number\" = '" + m_lastPartNumber +"'";
             queryString +=  "\"Part_Number\" = '" + m_lastPartNumber +"'";
-            select << queryString.c_str(),now;
+            select << queryString.c_str(), POCO_KEYWORD_NAMESPACE now;
             //select.execute();
         }
         catch( Poco::Data::DataException& ex )
@@ -669,7 +677,7 @@ void WarrantyToolGP::CreateDB()
     //db is faster
     session.begin();
     // drop sample table, if it exists
-    session << "DROP TABLE IF EXISTS Parts", now;
+    session << "DROP TABLE IF EXISTS Parts", POCO_KEYWORD_NAMESPACE now;
     //SELECT * FROM sqlite_master WHERE tbl_name LIKE 'User_Table_%'
     
     // (re)create table
@@ -728,7 +736,7 @@ void WarrantyToolGP::CreateDB()
 
     try
     {
-        session << createCommand.str(), now;
+        session << createCommand.str(), POCO_KEYWORD_NAMESPACE now;
     }
     catch( Poco::Data::DataException& ex )
     {
@@ -795,7 +803,7 @@ void WarrantyToolGP::CreateDB()
             Statement insert( session );
             try
             {
-                insert << insertCommand.str(), now;
+                insert << insertCommand.str(), POCO_KEYWORD_NAMESPACE now;
             }
             catch( Poco::Data::DataException& ex )
             {
@@ -1248,7 +1256,7 @@ void WarrantyToolGP::ClearDatabaseUserTables()
     {
         std::string queryString = 
             "SELECT name FROM sqlite_master WHERE tbl_name LIKE 'User_Table_%'";
-        select << queryString.c_str(),now;
+        select << queryString.c_str(), POCO_KEYWORD_NAMESPACE now;
     }
     catch( Poco::Data::DataException& ex )
     {
@@ -1279,7 +1287,7 @@ void WarrantyToolGP::ClearDatabaseUserTables()
     {
         std::string tableName = tableRS[0].convert<std::string>();
         tableName = "DROP TABLE " + tableName;
-        session << tableName, now;
+        session << tableName, POCO_KEYWORD_NAMESPACE now;
         more = tableRS.moveNext();
     }
 
@@ -1335,7 +1343,7 @@ void WarrantyToolGP::QueryTableAndHighlightParts(
     try
     {
         table = "SELECT * FROM " + table;
-        select << table, now;
+        select << table, POCO_KEYWORD_NAMESPACE now;
     }
     catch( Poco::Data::DataException& ex )
     {
@@ -1420,7 +1428,7 @@ void WarrantyToolGP::QueryInnerJoinAndHighlightParts( const std::string& querySt
         //into( m_selectedAssembly ),
         //now;
         // a simple query
-        select << queryString.c_str(),now;
+        select << queryString.c_str(), POCO_KEYWORD_NAMESPACE now;
         //select.execute();
     }
     catch( Poco::Data::DataException& ex )
@@ -1503,7 +1511,7 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
     Statement select( session );
     try
     {
-        select << queryString , now;
+        select << queryString, POCO_KEYWORD_NAMESPACE now;
     }
     catch( Poco::Data::DataException& ex )
     {
@@ -1532,7 +1540,7 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
         try
         {
             Statement select2( session );
-            select2 << tempString.c_str(),now;
+            select2 << tempString.c_str(), POCO_KEYWORD_NAMESPACE now;
             select.swap( select2 );
         }
         catch( Poco::Data::DataException& ex )

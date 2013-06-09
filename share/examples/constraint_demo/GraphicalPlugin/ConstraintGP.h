@@ -50,9 +50,6 @@
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 
-#include <Poco/Tuple.h>
-#include <Poco/Data/Statement.h>
-#include <Poco/Data/RecordSet.h>
 
 class btDiscreteDynamicsWorld;
 namespace osgbInteraction

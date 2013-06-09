@@ -51,6 +51,7 @@
 #include <boost/algorithm/string/find.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
+using namespace std;
 #include <Poco/SharedPtr.h>
 #include <Poco/Tuple.h>
 #include <Poco/DateTimeFormatter.h>
@@ -243,7 +244,7 @@ void ParseDataFile( std::string csvFilename, std::string dbTableName )
     dropTable << "DROP TABLE IF EXISTS " << dbTableName;
     try
     {
-        session << dropTable.str().c_str(), Poco::Data::now;
+        session << dropTable.str().c_str(), Poco::Data::Keywords::now;
     }
     catch( Poco::Data::DataException& ex )
     {
@@ -268,7 +269,7 @@ void ParseDataFile( std::string csvFilename, std::string dbTableName )
     
     try
     {
-        session << createCommand.str(), Poco::Data::now;
+        session << createCommand.str(), Poco::Data::Keywords::now;
     }
     catch( Poco::Data::DataException& ex )
     {
@@ -317,7 +318,7 @@ void ParseDataFile( std::string csvFilename, std::string dbTableName )
             Poco::Data::Statement insert( session );
             try
             {
-                insert << insertCommand.str(), Poco::Data::now;
+                insert << insertCommand.str(), Poco::Data::Keywords::now;
             }
             catch( Poco::Data::DataException& ex )
             {

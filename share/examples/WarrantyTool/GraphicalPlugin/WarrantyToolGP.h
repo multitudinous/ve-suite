@@ -44,8 +44,6 @@
 #include <switchwire/Event.h>
 
 #include <Poco/Tuple.h>
-#include <Poco/Data/Statement.h>
-#include <Poco/Data/RecordSet.h>
 
 #include <map>
 #include <vector>
@@ -55,6 +53,14 @@
 #include <osgUtil/LineSegmentIntersector>
 
 #include <gadget/Type/KeyboardMouseInterface.h>
+
+namespace Poco
+{
+namespace Data
+{
+class Statement;
+}
+}
 
 namespace ves
 {
@@ -200,7 +206,6 @@ private:
     std::pair< std::string, std::string > m_tableNames;
     ///The current select statement
     Poco::Data::Statement* m_currentStatement;
-    //Poco::Data::RecordSet m_currentStatement;
     
     /// Required to be able to connect up to signals.
     switchwire::ScopedConnectionList* m_connections;
