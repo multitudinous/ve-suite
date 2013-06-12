@@ -1,3 +1,5 @@
+Don't install dev deps in the default location in cygwin. Specify an absolute path. The default location confuses CMAKE
+
 subversion
 wget
 unzip
