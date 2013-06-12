@@ -163,10 +163,14 @@ void SquirrelConnection::BindSpecialClasses()
     // this method
 
     // Add any other vector types required to the bottom of this block
+    // MS Windows is unhappy with these vector bindings. We need a wrapper
+    // class that hides more of the guts than what's currently in BindSQStdVector
+    /*
     BindSQStdVector< int >( "IntVector" );
     BindSQStdVector< float >( "FloatVector" );
     BindSQStdVector< double >( "DoubleVector" );
     BindSQStdVector< std::string >( "StringVector" );
+    */
 
     // Add any other map types require to the bottom of this block
     BindSQStdMap< std::string, std::string >( "StringStringMap" );
