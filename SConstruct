@@ -435,7 +435,7 @@ AppendOptions( opts, options, latticefx_options )
 #Setup qt on linux
 if GetPlatform() != 'darwin':
    qt_options = fp_option.FlagPollBasedOption("Qt libraries",
-      "QtCore QtDesigner QtGui QtOpenGL QtScript QtSvg QtXml",
+      "QtCore QtGui QtOpenGL QtSvg QtXml",
       "4.0", True, True, helpText=None, compileTest=True,
       headerToCheck="QtCore/qglobal.h")
    AppendOptions( opts, options, qt_options )
@@ -557,7 +557,7 @@ if GetPlatform() == 'win32':
     #tempEnv['MSVC_BATCH'] = "1"
     #tempEnv[ 'MSVS_USE_MFC_DIRS' ] = "1"
     #tempEnv[ 'MSVC_USE_SCRIPT' ] = True
-    tempEnv[ 'WINDOWS_INSERT_MANIFEST' ] = "1"
+    #tempEnv[ 'WINDOWS_INSERT_MANIFEST' ] = "1"
     #tempEnv['ENV'][ 'SCONS_MSCOMMON_DEBUG' ] = "test.log"
     #This explicit additon of the SysWOW64 directory is needed because on
     #x64 windows platforms the opcproxy.dll is not being picked up by
@@ -696,8 +696,8 @@ if not SConsAddons.Util.hasHelpFlag():
         baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502','_WIN32_WINNT=0x0502'] )
         # setup the windows compilers to compile in the manifest files
         # Embed .manifest into .DLL and .EXE
-        baseEnv['LINKCOM'] = [baseEnv['LINKCOM'], 'mt -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
-        baseEnv['SHLINKCOM'] = [baseEnv['SHLINKCOM'], 'mt -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
+        #baseEnv['LINKCOM'] = [baseEnv['LINKCOM'], 'mt -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
+        #baseEnv['SHLINKCOM'] = [baseEnv['SHLINKCOM'], 'mt -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
         # linker optimizations
         # http://msdn.microsoft.com/en-us/library/fsk896zz.aspx
         baseEnv.AppendUnique( LINKFLAGS = ['/OPT:REF','/OPT:ICF'] )
@@ -763,7 +763,7 @@ if not SConsAddons.Util.hasHelpFlag():
     vesSubdirs=pj(buildDir, 'src' )
     distSubdirs = pj(buildDir,'dist','installerImages')
     shareSubdirs = pj(buildDir,'share')
-    lokiSubdirs = pj( buildDir, 'external', lokiBaseVar )
+    #lokiSubdirs = pj( buildDir, 'external', lokiBaseVar )
     minervaDataSubdirs = pj( buildDir, 'external', 'gdal_data')
     osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
     test = pj( buildDir, 'test', 'osg')
@@ -774,7 +774,7 @@ if not SConsAddons.Util.hasHelpFlag():
     #persistenceSubdirs = pj( buildDir, 'external', 'Persistence' )
 
     ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
-               shareSubdirs, lokiSubdirs, minervaDataSubdirs
+               shareSubdirs, minervaDataSubdirs
                #, persistenceSubdirs
 	       ]
 
