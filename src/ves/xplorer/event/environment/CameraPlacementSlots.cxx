@@ -521,7 +521,7 @@ void CameraProjectionUpdate( const std::string& uuid )
     cameraObject->ComputeNearFarPlanes( autoComputeFarPlane );
 
     std::pair< unsigned int, unsigned int > resolution =
-        std::make_pair< unsigned int, unsigned int >( width, height );
+        std::pair< unsigned int, unsigned int >( width, height );
     cameraObject->SetTextureResolution( resolution );
 
     //Now update everything

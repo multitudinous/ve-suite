@@ -169,7 +169,7 @@ void cfdAnimatedStreamlineCone::Update( void )
             points2->GetPoint( 0, x2 );
             if( ( x1[ 0 ] == x2[ 0 ] ) && ( x1[ 1 ] == x2[ 1 ] ) && ( x1[ 2 ] == x2[ 2 ] ) )
             {
-                m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( cellId, cellId2 ) );
+                m_streamlines.push_back( std::pair< vtkIdType, vtkIdType >( cellId, cellId2 ) );
                 foundmatch = true;
                 npts += points2->GetNumberOfPoints();
                 break;
@@ -213,12 +213,12 @@ void cfdAnimatedStreamlineCone::Update( void )
             {
                 //Is a backward integrated line
                 //std::cout << " Use backward" << std::endl;
-                m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( -1, cellId ) );
+                m_streamlines.push_back( std::pair< vtkIdType, vtkIdType >( -1, cellId ) );
             }
             else
             {
                 //std::cout << " Use forward" << std::endl;
-                m_streamlines.push_back( std::make_pair< vtkIdType, vtkIdType >( cellId, -1 ) );
+                m_streamlines.push_back( std::pair< vtkIdType, vtkIdType >( cellId, -1 ) );
             }
         }
     }

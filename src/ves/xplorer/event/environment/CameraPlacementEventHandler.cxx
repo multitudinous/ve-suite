@@ -651,7 +651,7 @@ void CameraPlacementEventHandler::Execute(
         command->GetDataValuePair(
             "projectionYImageResolution" )->GetData( tempY );
         std::pair< unsigned int, unsigned int > resolution =
-            std::make_pair< unsigned int, unsigned int >( tempX, tempY );
+            std::pair< unsigned int, unsigned int >( tempX, tempY );
         activeCameraObject->SetTextureResolution( resolution );
 
         //Now update everything

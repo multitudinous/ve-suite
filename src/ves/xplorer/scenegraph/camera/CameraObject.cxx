@@ -212,7 +212,7 @@ void CameraObject::InitializeCamera( osg::Camera& camera )
     camera.setViewport( 0, 0, m_texWidth, m_texHeight );
 
     std::pair< int, int > textureRes =
-        std::make_pair< int, int >( m_texWidth, m_texHeight );
+        std::pair< int, int >( m_texWidth, m_texHeight );
     if( !m_colorMap.valid() )
     {
         m_colorMap = CreateViewportTexture(
@@ -1072,7 +1072,7 @@ void CameraObject::SetTextureResolution( std::pair< unsigned int, unsigned int >
 
     m_colorMap = 0;
     std::pair< int, int > textureRes =
-        std::make_pair< int, int >( m_texWidth, m_texHeight );
+        std::pair< int, int >( m_texWidth, m_texHeight );
     m_colorMap = CreateViewportTexture(
                      GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
                      osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
