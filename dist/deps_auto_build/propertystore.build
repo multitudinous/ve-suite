@@ -33,10 +33,10 @@ case $PLATFORM in
     MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
-      CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.0/bin/qmake.exe" )
+      CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.4/bin/qmake.exe" )
     else
       MSVC_PLATFORM=x64
-      CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.0_x64/bin/qmake.exe" )
+      CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.4_x64/bin/qmake.exe" )
     fi
     MSVC_SOLUTION="propertystore.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
