@@ -47,7 +47,7 @@ latticefx_options.apply( lib_env )
 if GetPlatform() == 'win32':
     lib_env['no_import_lib'] = 1
     lib_env['WINDOWS_INSERT_MANIFEST'] = False
-    lib_env.Append( LIBS = [ 'boost_thread-vc90-mt-1_50' ])
+    lib_env.Append( LIBS = [ 'boost_thread-vc110-mt-1_53' ])
 else:
     lib_env.Append( LIBS = [ 'boost_thread' ])
 

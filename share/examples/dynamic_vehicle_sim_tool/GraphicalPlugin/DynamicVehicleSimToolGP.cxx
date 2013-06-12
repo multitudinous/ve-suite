@@ -385,7 +385,7 @@ void DynamicVehicleSimToolGP::SetCurrentCommand( ves::open::xml::CommandPtr comm
                 const double scaleFactor = gmtl::length( scaleXVec );
 
 
-                m_animationedNodes.push_back( std::make_pair< double,
+                m_animationedNodes.push_back( std::pair< double,
                     osg::ref_ptr< ves::xplorer::scenegraph::DCS > >( scaleFactor, tempNode.get() ) );
                 
                 m_initialPositionAccumulatedStack.push_back( tempMat );
@@ -1028,7 +1028,7 @@ void DynamicVehicleSimToolGP::SetupGeometryDataMaps( const std::vector< std::str
             const double scaleFactor = gmtl::length( scaleXVec );
 
 
-            m_animationedNodes.push_back( std::make_pair< double,
+            m_animationedNodes.push_back( std::pair< double,
                 osg::ref_ptr< ves::xplorer::scenegraph::DCS > >( scaleFactor, tempNode.get() ) );
 
             m_initialPositionAccumulatedStack.push_back( tempMat );

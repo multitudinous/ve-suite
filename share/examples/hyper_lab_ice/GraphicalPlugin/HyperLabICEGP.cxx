@@ -256,7 +256,7 @@ void HyperLabICEGP::ProcessOPCData()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabICEGP::PreFrameUpdate()
 {
-#if 1
+#if 0
     ProcessOPCData();
 #else
     if( !OneSecondCheck( m_lastSend, 250000 ) )

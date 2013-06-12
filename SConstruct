@@ -558,6 +558,7 @@ if GetPlatform() == 'win32':
     #tempEnv[ 'MSVS_USE_MFC_DIRS' ] = "1"
     #tempEnv[ 'MSVC_USE_SCRIPT' ] = True
     #tempEnv[ 'WINDOWS_INSERT_MANIFEST' ] = "1"
+    #tempEnv[ 'WINDOWS_INSERT_MANIFEST' ] = True
     #tempEnv['ENV'][ 'SCONS_MSCOMMON_DEBUG' ] = "test.log"
     #This explicit additon of the SysWOW64 directory is needed because on
     #x64 windows platforms the opcproxy.dll is not being picked up by
@@ -694,6 +695,7 @@ if not SConsAddons.Util.hasHelpFlag():
         # As noted below WINVER will be defined as 0x0502
         # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
         baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502','_WIN32_WINNT=0x0502'] )
+        baseEnv.AppendUnique(LINKFLAGS=['/MANIFEST:EMBED'])
         # setup the windows compilers to compile in the manifest files
         # Embed .manifest into .DLL and .EXE
         #baseEnv['LINKCOM'] = [baseEnv['LINKCOM'], 'mt -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
