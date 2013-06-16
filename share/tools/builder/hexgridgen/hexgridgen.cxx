@@ -73,32 +73,32 @@ void MakePoints( std::pair< double, double > centerPoint )
     
     double x1 = centerPoint.first - halfRadius;
     double y1 = centerPoint.second + height;
-    points.push_back( std::make_pair< double, double >( x1, y1 ) );
+    points.push_back( std::pair< double, double >( x1, y1 ) );
     counter += 1;
 
     double x2 = centerPoint.first - radius;
     double y2 = centerPoint.second;
-    points.push_back( std::make_pair< double, double >( x2, y2 ) );
+    points.push_back( std::pair< double, double >( x2, y2 ) );
     counter += 1;
 
     double x3 = x1; 
     double y3 = centerPoint.second - height;
-    points.push_back( std::make_pair< double, double >( x3, y3 ) );
+    points.push_back( std::pair< double, double >( x3, y3 ) );
     counter += 1;
 
     double x4 = centerPoint.first + halfRadius;
     double y4 = y3;
-    points.push_back( std::make_pair< double, double >( x4, y4 ) );
+    points.push_back( std::pair< double, double >( x4, y4 ) );
     counter += 1;
 
     double x5 = centerPoint.first + radius;
     double y5 = centerPoint.second;
-    points.push_back( std::make_pair< double, double >( x5, y5 ) );
+    points.push_back( std::pair< double, double >( x5, y5 ) );
     counter += 1;
 
     double x6 = x4;
     double y6 = y1;
-    points.push_back( std::make_pair< double, double >( x6, y6 ) );
+    points.push_back( std::pair< double, double >( x6, y6 ) );
     counter += 1;
 }
 
@@ -118,7 +118,7 @@ void MakeCenters()
         {
             x = x0 + ( i * ( radius + halfRadius ) );
             y = y0 + ( j * ( height * 2 ) ) + ( ( i % 2 ) * height );
-            centers.push_back( std::make_pair< double, double >( x, y ) );
+            centers.push_back( std::pair< double, double >( x, y ) );
         }
     }
 }

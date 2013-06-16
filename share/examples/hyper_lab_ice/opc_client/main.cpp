@@ -318,7 +318,7 @@ void OPCInputThread( OPC* opcAPI )
             try
             {
                 double inputValue = boost::lexical_cast< double >( inputVar );
-                inputVector.push_back( std::make_pair< std::string, std::string >( variableName, inputVar ) );
+                inputVector.push_back( std::pair< std::string, std::string >( variableName, inputVar ) );
                 std::vector< std::pair< std::string, std::string > > readData = GetDataVector();
                 for( size_t j = 0; j < readData.size(); ++j )
                 {
