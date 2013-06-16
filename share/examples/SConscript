@@ -9,7 +9,6 @@ exampleSubdirs = Split("""
     CoinFunnel
     ConstructionBots
     HyperLab
-    InteractiveStove
     nurbs
     ParallaxMapping
     simple
@@ -25,6 +24,7 @@ exampleSubdirs = Split("""
     constraint_demo
     hyper_lab_ice
 """)
+#InteractiveStove
 #VascularSimViewer
 #sensor_overlay
 #VirtualLab
