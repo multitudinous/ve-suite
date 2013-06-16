@@ -328,7 +328,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
                 dvp->GetDataXMLObject() )->GetArray();
             
             m_tableNames = 
-                std::make_pair< std::string, std::string >( 
+                std::pair< std::string, std::string >( 
                 stringArray.at( 0 ), stringArray.at( 1 ) );
         }
         else if( dvpName == "SAVE" )
