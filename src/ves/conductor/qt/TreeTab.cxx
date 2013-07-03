@@ -38,6 +38,7 @@
 
 #include <QtGui/QScrollBar>
 #include <QtCore/QUuid>
+#include <ves/util/GNUCompilerGuards.h>
 
 #include <ves/conductor/qt/ui_TreeTab.h>
 
@@ -73,7 +74,9 @@
 #include <crunchstore/SearchCriterion.h>
 
 #include <boost/algorithm/string/replace.hpp>
+DIAG_OFF( attributes )
 #include <boost/uuid/random_generator.hpp>
+DIAG_ON( attributes )
 #include <boost/uuid/string_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/lexical_cast.hpp>

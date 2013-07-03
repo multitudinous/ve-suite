@@ -109,7 +109,10 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/convenience.hpp>
 
+#include <ves/util/GNUCompilerGuards.h>
+DIAG_OFF( unused-parameter )
 #include <vrj/Kernel/Kernel.h>
+DIAG_ON( unused-parameter )
 
 #include <vpr/Perf/ProfileManager.h>
 
