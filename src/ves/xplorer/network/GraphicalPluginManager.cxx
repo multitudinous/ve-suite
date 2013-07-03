@@ -141,8 +141,9 @@ void GraphicalPluginManager::Initialize()
         new DeleteObjectFromNetworkEventHandler();
     _eventHandlers[std::string( "DELETE_NETWORK_SYSTEM_VIEW" )] =
         new DeleteNetworkViewEventHandler();
-    _eventHandlers[std::string( "CHANGE_XPLORER_VIEW" )] =
-        new SwitchXplorerViewEventHandler();
+    // Replaced by "ChangeXplorerView" slot
+//    _eventHandlers[std::string( "CHANGE_XPLORER_VIEW" )] =
+//        new SwitchXplorerViewEventHandler();
     _eventHandlers[std::string( "LOAD_VES_FILE" )] =
         new LoadVesFileEventHandler();
 
@@ -162,9 +163,14 @@ void GraphicalPluginManager::Initialize()
 
 
     CONNECTSIGNALS_STATIC( "UpdateNetwork",
-                     void(),
-                     &UpdateNetwork,
-                     m_connections, any_SignalType, normal_Priority );
+                           void(),
+                           &UpdateNetwork,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%ChangeXplorerView",
+                           void( const std::string&),
+                           &ChangeXplorerView,
+                           m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, ves::xplorer::plugin::PluginBasePtr >*

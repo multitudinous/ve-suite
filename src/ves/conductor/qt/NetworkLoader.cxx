@@ -42,6 +42,7 @@
 #include <ves/xplorer/data/CADPropertySet.h>
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
+#include <switchwire/SingleShotSignal.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
@@ -121,78 +122,49 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     }
 #endif
     using namespace ves::xplorer;
-    reinterpret_cast< ves::util::StringSignal_type* >
-    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "WorkingDirectoryChanged" ) )
-    ->signal( newWorkingDir );
+    xplorer::eventmanager::EventFactory* factory = xplorer::eventmanager::EventFactory::instance();
+
+    factory->GetSignalByType< ves::util::StringSignal_type >( "WorkingDirectoryChanged" )
+        ->signal( newWorkingDir );
 
     ///Now lets reset the view back to 0,0,0
     m_navReset.signal();
-
-    //A new working directory also means that
-    //the STORED scenes are no longer valid
-    //ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->Reset();
-
-    // A change in the working dir also requires that we connect to the db file
-    // in the new working dir and reset it.
-    // UPDATE 2011-02-25: Moving to unified dir for db, so no path change for
-    // db here. Still reset it since we're loading a new .ves.
-    //    std::string newDBPath = newWorkingDir;
-    //    newDBPath += "/ves.db";
-    //    ves::xplorer::data::DatabaseManager::instance()->SetDatabasePath( newDBPath );
-    //    ves::xplorer::data::DatabaseManager::instance()->ResetAll();
-
-    // TODO: This code needs a thorough cleanup since it is mostly ripped from
-    // other files and pasted in here.
-
-    // TODO: The Aspen-specific section needs to be uncommented and made
-    // functional.
 
     using namespace ves::open::xml;
 
     {
         // Let xplorer know we are loading a new ves file so that it can do any
         // necessary cleanup, such as resetting the database
-        reinterpret_cast< ves::util::StringSignal_type* >
-        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VesFileLoading" ) )
-        ->signal( m_filename );
+        factory->GetSignalByType< ves::util::StringSignal_type >
+                ( "VesFileLoading" )->signal( m_filename );
 
         //Send a new start position for all apps
         //do this before loading the ves data
         // so in case a file has a start position it will be used
-        CommandPtr viewPointGUIData( new Command() );
-        viewPointGUIData->SetCommandName( "Navigation_Data" );
+        std::vector< double > quat;
+        quat.push_back( 0.0 );
+        quat.push_back( 0.0 );
+        quat.push_back( 0.0 );
+        quat.push_back( 1.0 );
+        std::vector< double > position;
+        position.push_back( 0.0 );
+        position.push_back( 0.0 );
+        position.push_back( 0.0 );
 
-        DataValuePairPtr quatStartPosition( new DataValuePair() );
-        OneDDoubleArrayPtr quatData( new OneDDoubleArray( 0 ) );
-        quatData->AddElementToArray( 0 );
-        quatData->AddElementToArray( 0 );
-        quatData->AddElementToArray( 0 );
-        quatData->AddElementToArray( 1 );
-        quatStartPosition->SetData( "QUAT_START_POSITION", quatData );
-        viewPointGUIData->AddDataValuePair( quatStartPosition );
-
-        DataValuePairPtr positionStartPosition( new DataValuePair() );
-        OneDDoubleArrayPtr positionsData( new OneDDoubleArray( 0 ) );
-        positionsData->AddElementToArray( 0 );
-        positionsData->AddElementToArray( 0 );
-        positionsData->AddElementToArray( 0 );
-        positionStartPosition->SetData( "POSITION_START_POSITION", positionsData );
-        viewPointGUIData->AddDataValuePair( positionStartPosition );
-        ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( viewPointGUIData );
+        // TEMP: I know this block called into DeviceHandler (DeviceSlots) not
+        // EnvironmentHanlder (SetResetStartPositionEventHandler) because
+        // the command package did not include the command name "SET_START_POSITION"
+        factory->GetSignalBySignature
+                < void( std::vector< double >&, std::vector< double >& ) >
+                ( "SetNavigationData" )->signal( quat, position );
     }
     {
         //Reset the center point when a new app is loaded
         //do this first in case a file has a default center point it will be used
-        CommandPtr centerPointUpdateData( new Command() );
-        centerPointUpdateData->SetCommandName( "CENTER_POINT_UPDATE" );
-
-        DataValuePairPtr resetDVP( new DataValuePair() );
-        resetDVP->SetData( "CENTER_POINT_UPDATE_DVP", "Reset" );
-        centerPointUpdateData->AddDataValuePair( resetDVP );
-        ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( centerPointUpdateData );
+        factory->GetSignalByType< ves::util::StringSignal_type >
+                ( "CenterPointUpdate" )->signal( "Reset" );
     }
 
-    // RPT: Following line replaces key functionality of canvas->PopulateNetworks
     XMLDataBufferEngine::instance()->LoadVESData( m_filename );
     ves::open::xml::model::SystemPtr system =
         XMLDataBufferEngine::instance()->
@@ -208,82 +180,24 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         m_dbPresent.signal( false );
     }
 
-    ///This code will be moved in the future. It is Aspen specific code.
-    /*CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
-                              GetCommand( "Aspen_Plus_Preferences" );
-
-    if( aspenBKPFile->GetCommandName() != "NULL" )
-    {
-        DataValuePairPtr bkpPtr =
-            aspenBKPFile->GetDataValuePair( "BKPFileName" );
-        std::string bkpFilename;
-        bkpPtr->GetData( bkpFilename );
-        //OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
-
-        //wxFileName bkpFileName;
-        //bkpFileName.SetName( simName );
-
-        CommandPtr returnState( new Command() );
-        returnState->SetCommandName( "openSimulation" );
-        DataValuePairPtr data( new DataValuePair() );
-        data->SetData( "AspenPlus", "openSimulation" );
-        returnState->AddDataValuePair( data );
-
-        data = DataValuePairPtr( new DataValuePair() );
-        //data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
-        data->SetData( "BKPFileName",  bkpFilename.c_str() );
-        returnState->AddDataValuePair( data );
-
-        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-        nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
-        XMLReaderWriter commandWriter;
-        std::string status = "returnString";
-        commandWriter.UseStandaloneDOMDocumentManager();
-        commandWriter.WriteXMLDocument( nodes, status, "Command" );
-
-        //Get results
-        //std::string nw_str = serviceList->Query( status );
-        std::string nw_str =
-            ves::xplorer::network::GraphicalPluginManager::instance()->
-            GetCORBAInterface()->QueryCE( status );
-        // We don't need to log anything
-        //Log( nw_str.c_str() );
-        // RPT: What does this variable do? Does not appear to do anything
-        // based on code in apps/conductor/AppFrame.cxx
-        //AspenSimOpen = true;
-    }*/
-
     const std::string nw_str = XMLDataBufferEngine::instance()->
                                SaveVESData( std::string( "returnString" ) );
+
 
     ///Load the ves data on the xplorer side
     ves::xplorer::network::GraphicalPluginManager::instance()->
         SetCurrentNetwork( nw_str );
 
-    // This signal replaces the above block. xplorerColor doesn't appear to be
-    // processed anywhere, so was left out of the signal.
-    reinterpret_cast< ves::util::VoidSignal_type* >
-    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "UpdateNetwork" ) )
-    ->signal( );
+    factory->GetSignalByType< ves::util::VoidSignal_type >
+            ( "UpdateNetwork" )->signal( );
 
-    // RPT: Make the first model in the network active
-    // Connect to the ActiveModelChangedSignal. Just below we will send in a command
-    // that will eventually trigger this signal. The slot called looks for a related
-    // database file and tells xplorer to load it up. We can't simply call
-    // DatabaseManager::LoadFrom here because the system and model may not actually
-    // be loaded yet.
-    //    CONNECTSIGNAL_1( "ModelHandler.ActiveModelChangedSignal",
-    //                     void ( const std::string& ),
-    //                     &NetworkLoader::OnActiveModelChanged,
-    //                     m_connections, normal_Priority );
-
+    // Make the first model in the network active
     if( system->GetNumberOfModels() != 0 )
     {
         std::string const modelID = system->GetModel( 0 )->GetID();
 
-        reinterpret_cast< ves::util::StringSignal_type* >
-        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "ChangeActiveModel" ) )
-        ->signal( modelID );
+        factory->GetSignalByType< ves::util::StringSignal_type >
+                ( "ChangeActiveModel" )->signal( modelID );
     }
 
     //Now manage the data that is user specific to this ves file
@@ -301,66 +215,103 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         backgroundColor.push_back( 0.0f );
         backgroundColor.push_back( 1.0f );
 
-        reinterpret_cast< ves::util::BoolAndDoubleVectorSignal_type* >
-        ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
-        ->signal( true, backgroundColor );
+        factory->GetSignalByType< ves::util::BoolAndDoubleVectorSignal_type >
+                ( "PreferencesPropertySet.UsePreferredBackgroundColor" )->
+                    signal( true, backgroundColor );
     }
 
     {
         if( UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" )->GetCommandName().compare( "NULL" ) )
         {
-            // Create the command and data value pairs
             CommandPtr tempCommand = UserPreferencesDataBuffer::instance()->
                                      GetCommand( "CHANGE_BACKGROUND_COLOR" );
             DataValuePairPtr activeModelDVP = tempCommand->GetDataValuePair( "Background Color" );
             std::vector< double > color;
+            color.push_back( 0.0 );
+            color.push_back( 0.0 );
+            color.push_back( 0.0 );
             activeModelDVP->GetData( color );
 
-            //ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( tempCommand );
-            reinterpret_cast< ves::util::BoolAndDoubleVectorSignal_type* >
-            ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) )
-            ->signal( true, color );
+            factory->GetSignalByType< ves::util::BoolAndDoubleVectorSignal_type >
+                    ( "PreferencesPropertySet.UsePreferredBackgroundColor" )
+                        ->signal( true, color );
         }
 
-        // Create the command and data value pairs
         CommandPtr tempCommand =
             UserPreferencesDataBuffer::instance()->
             GetCommand( "Navigation_Data" );
 
-        if( tempCommand->GetCommandName().compare( "NULL" ) )
+        if( tempCommand->GetCommandName().compare( "SET_START_POSITION" ) )
         {
-            ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( tempCommand );
+            // Does not contain SET_START_POSITION
+            // Pull position and quat data and fire SetNavigationData signal
+            std::vector< double > quat;
+            quat.push_back( 0.0 );
+            quat.push_back( 0.0 );
+            quat.push_back( 0.0 );
+            quat.push_back( 1.0 );
+            std::vector< double > position;
+            position.push_back( 0.0 );
+            position.push_back( 0.0 );
+            position.push_back( 0.0 );
+            DataValuePairPtr quatPosition = tempCommand->GetDataValuePair( "QUAT_START_POSITION" );
+            if( quatPosition )
+            {
+                OneDDoubleArrayPtr data = boost::dynamic_pointer_cast<OneDDoubleArray>( quatPosition->GetDataXMLObject() );
+                quat = data->GetArray();
+                quatPosition = tempCommand->GetDataValuePair( "POSITION_START_POSITION" );
+                data = boost::dynamic_pointer_cast<OneDDoubleArray>( quatPosition->GetDataXMLObject() );
+                position = data->GetArray();
+            }
+
+            factory->GetSignalBySignature
+                    < void( std::vector< double >&, std::vector< double >& ) >
+                    ( "SetNavigationData" )->signal( quat, position );
+        }
+        else // Contains SET_START_POSITION
+        {
+            // Fire SetRestartPosition signal
+            factory->GetSignalBySignature
+                    < void( ) >
+                    ( "SetResetStartPosition" )->signal( );
         }
 
-        // Create the command and data value pairs
         tempCommand =
             UserPreferencesDataBuffer::instance()->
             GetCommand( "CHANGE_NEAR_FAR_RATIO" );
 
-        if( tempCommand->GetCommandName().compare( "NULL" ) )
+        DataValuePairPtr nfr = tempCommand->GetDataValuePair( "Near Far Ratio" );
+        double nfrValue = 0.005;
+        if( nfr )
         {
-            ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( tempCommand );
+            nfr->GetData( nfrValue );
         }
+        switchwire::SingleShotSignal< void, bool const&, double const& >
+                ( "NetworkLoader.NearFarRatio", true, nfrValue );
 
-        // Create the command and data value pairs
-        tempCommand =
-            UserPreferencesDataBuffer::instance()->
-            GetCommand( "Update LOD Scale" );
-        if( tempCommand->GetCommandName().compare( "NULL" ) )
+
+
+        tempCommand = UserPreferencesDataBuffer::instance()->
+                GetCommand( "Update LOD Scale" );
+
+        ves::open::xml::DataValuePairPtr scaleValue =
+            tempCommand->GetDataValuePair( "Geometry LOD Scale" );
+        // Getting the value as a long (rather than double) comes directly
+        // from GeometryLODScaleEventHandler.
+        long alpha = 1;
+        if( scaleValue )
         {
-            ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( tempCommand );
+            scaleValue->GetData( alpha );
         }
+        switchwire::SingleShotSignal< void, const double >
+           ( "NetworkLoader.GeometryLODScale", static_cast< double >( alpha ) );
     }
 
     //Send the new commands after the new data is loaded not before
     //Change view to CAD to make sure
     {
-        DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
-        CommandPtr veCommand( new Command() );
-        veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
-        dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_CAD" );
-        veCommand->AddDataValuePair( dataValuePair );
-        ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
+        switchwire::SingleShotSignal< void, const std::string& >
+                ( "ChangeXplorerView", "CAD" );
     }
 
     // Initialze Minerva.
@@ -388,20 +339,6 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         }
     }
 
-    OnActiveModelChanged( "null" );
-}
-
-// At the moment, this shouldn't need to be a separate function since we're
-// no longer connecting to the ActiveModelChanged signal. Leaving it as-is
-// for a bit in case we discover a bug in the current arrangement and need to
-// go back to listening for ActiveModelChanged signal.
-void NetworkLoader::OnActiveModelChanged( const std::string& )
-{
-    ves::xplorer::Model* model =
-        ves::xplorer::ModelHandler::instance()->GetActiveModel();
-    ves::open::xml::model::SystemPtr system =
-        model->GetModelData()->GetParentSystem();
-    std::string const& db( system->GetDBReference() );
     if( !db.empty() )
     {
         ves::xplorer::data::DatabaseManager::instance()->LoadFrom( db );
@@ -453,9 +390,8 @@ void NetworkLoader::OnActiveModelChanged( const std::string& )
     }
 
     // Notify of completion of this file load
-    reinterpret_cast< ves::util::StringSignal_type* >
-    ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VesFileLoaded" ) )
-    ->signal( m_filename );
+    factory->GetSignalByType< ves::util::StringSignal_type >( "VesFileLoaded" )
+        ->signal( m_filename );
 
     //Autodestruct
     delete this;

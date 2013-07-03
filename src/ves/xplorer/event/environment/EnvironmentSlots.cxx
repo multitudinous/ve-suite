@@ -39,6 +39,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
@@ -111,7 +112,27 @@ void UpdateBackgroundColor( bool const, std::vector< double > const& color )
 {
     ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor( color );
     ves::xplorer::EnvironmentHandler::instance()->
-    GetHeadsUpDisplay()->SetTextColor( color );
+            GetHeadsUpDisplay()->SetTextColor( color );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SetResetStartPosition( )
+{
+
+        osg::Quat quat = ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->getAttitude();
+        osg::Vec3d trans = ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->getPosition();
+        std::vector< double > position;
+        position.push_back( trans[ 0 ] );
+        position.push_back( trans[ 1 ] );
+        position.push_back( trans[ 2 ] );
+
+        // I have no idea if this is correct or even needed. It looks as if we
+        // hand the NavDCS back the quat and trans we just asked for, but this
+        // mimics what was previously being done by
+        // SetResetStartPositionEventHandler.cxx
+        ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->SetQuat( quat );
+        ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->SetTranslationArray( position );
+
+        ves::xplorer::DeviceHandler::instance()->SetResetWorldPosition( quat, position );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

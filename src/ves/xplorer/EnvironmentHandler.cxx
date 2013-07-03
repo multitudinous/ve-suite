@@ -163,8 +163,9 @@ EnvironmentHandler::EnvironmentHandler()
         new ves::xplorer::event::EphemerisDisplayToggleEventHandler();
     _eventHandlers[ std::string( "Update LOD Scale" ) ] =
         new ves::xplorer::event::GeometryLODScaleEventHandler();
-    _eventHandlers[ std::string( "Navigation_Data" ) ] =
-        new ves::xplorer::event::SetResetStartPositionEventHandler();
+    // Now handled by SetResetStartPosition slot
+//    _eventHandlers[ std::string( "Navigation_Data" ) ] =
+//        new ves::xplorer::event::SetResetStartPositionEventHandler();
     _eventHandlers[ std::string( "SCENE_STATE_INFORMATION" ) ] =
         new ves::xplorer::event::ScreenAlignedNormalsEventHandler();
     ///CPT Tool
@@ -246,6 +247,11 @@ EnvironmentHandler::EnvironmentHandler()
     CONNECTSIGNALS_STATIC( "%UsePreferredBackgroundColor",
                            void( bool const enable, std::vector< double > const & color ),
                            &ves::xplorer::event::environment::UpdateBackgroundColor,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SetResetStartPosition",
+                           void(  ),
+                           &ves::xplorer::event::environment::SetResetStartPosition,
                            m_connections, any_SignalType, normal_Priority );
 
     // Camera Placement events

@@ -111,10 +111,12 @@ DeviceHandler::DeviceHandler()
         new event::DeviceModeEventHandler();
     mEventHandlers[ "UNSELECT_OBJECTS" ] =
         new event::UnselectObjectsEventHandler();
+    /* // Replaced by CenterPointUpdate slot
     mEventHandlers[ "CENTER_POINT_UPDATE" ] =
-        new event::CenterPointEventHandler();
+        new event::CenterPointEventHandler();*/
+    /* // Replaced by SetNavigationData slot
     mEventHandlers[ "Navigation_Data" ] =
-        new event::NavigationDataEventHandler();
+        new event::NavigationDataEventHandler();*/
     mEventHandlers[ "DRAGGER_SCALING_VALUE" ] =
         new event::DraggerScalingEventHandler();
 
@@ -123,6 +125,16 @@ DeviceHandler::DeviceHandler()
     CONNECTSIGNALS_STATIC( "%DeviceGloveDisplay",
                            void( /*unsigned int const&, */ bool const & enable ),
                            &ves::xplorer::event::device::EnableDevice,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%SetNavigationData",
+                           void( std::vector< double >&, std::vector< double >& ),
+                           &ves::xplorer::event::device::SetNavigationData,
+                           m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "%CenterPointUpdate",
+                           void( const std::string& ),
+                           &ves::xplorer::event::device::CenterPointUpdate,
                            m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////

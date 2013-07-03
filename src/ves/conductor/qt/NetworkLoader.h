@@ -72,8 +72,6 @@ private:
     ///Destructor
     ~NetworkLoader();
 
-    ///Set the active model
-    void OnActiveModelChanged( const std::string& modelID );
     /// Holds the filename we're loading so we can later emit a signal
     /// indicating loading is done.
     std::string m_filename;

@@ -61,7 +61,30 @@ class VE_EVENTMANAGER_EXPORTS EventFactory
 {
 public:
 
+    /// Get the signal with name @c signalName. Calling code will have to
+    /// perform an appropriate reinterpret_cast on the returned pointer.
     switchwire::EventBase* GetSignal( const std::string& signalName );
+
+    /// Get the signal with name @c signalName and signature as specified in
+    /// the template parameter. This hides the necessity for a reinterpret_cast
+    /// for cleaner code. Example signature: void( int )
+    template< typename Signature >
+    switchwire::Event< Signature >* GetSignalBySignature( const std::string& signalName )
+    {
+        return reinterpret_cast< switchwire::Event< Signature >* >
+                ( GetSignal( signalName ) );
+    }
+
+    /// Get the signal with name @c signalName and event type as specified in
+    /// the template parameter. This hides the necessity for a reinterpret_cast
+    /// for cleaner code. Example signal type:
+    /// switchwire::Event< void( int ) >
+    template< typename SignalType >
+    SignalType* GetSignalByType( const std::string& signalName )
+    {
+        return reinterpret_cast< SignalType* >
+                ( GetSignal( signalName ) );
+    }
 
 private:
 
@@ -108,6 +131,13 @@ private:
     ves::util::StringSignal_type m_deleteDataSetSignal;
     /// Scenegraph has changed
     ves::util::VoidSignal_type m_scenegraphChangedSignal;
+    /// SetNavigationData
+    switchwire::Event< void( std::vector< double >&, std::vector< double >& ) >
+                                                      m_setNavigationDataSignal;
+    /// CenterPointUpdate
+    ves::util::StringSignal_type m_CenterPointUpdate;
+    /// SetResetStartPosition
+    ves::util::VoidSignal_type m_setResetStartPosition;
     //--------------------------------------
 
     /// Logging tools

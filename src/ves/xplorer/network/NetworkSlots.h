@@ -44,6 +44,9 @@ namespace network
 void UpdateNetwork();
 ///Called when networks are loaded
 void NewFileLoading( std::string const& );
+/// Change the xplorer view
+/// Valid modes are "Network", "CAD", and "Logo"
+void ChangeXplorerView( const std::string& mode );
 }
 }
 }

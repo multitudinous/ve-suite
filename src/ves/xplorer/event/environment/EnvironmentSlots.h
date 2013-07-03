@@ -60,6 +60,9 @@ void DisplayCoordinateSystem( bool const& display );
 void SetAmbientAudioFile( std::string const& filename );
 ///Set the clear colors
 void UpdateBackgroundColor( bool const enable, std::vector< double > const& color );
+/// ??
+void SetResetStartPosition( );
+
 } //end environment
 } //end event
 } //end xplorer

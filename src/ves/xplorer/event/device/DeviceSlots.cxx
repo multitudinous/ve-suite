@@ -35,6 +35,7 @@
 #include <ves/xplorer/event/device/DeviceSlots.h>
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/device/Device.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -51,7 +52,34 @@ void EnableDevice( /*unsigned int const& deviceType,*/ bool const& enable )
 {
     //device::Device::Type type =
     //    static_cast< device::Device::Type >( deviceType );
-    DeviceHandler::instance()->EnableDevice( ves::xplorer::device::Device::GLOVES, enable );
+    DeviceHandler::instance()->
+            EnableDevice( ves::xplorer::device::Device::GLOVES, enable );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SetNavigationData( std::vector<double> &quat,
+                        std::vector<double> &position )
+{
+    osg::Quat osgquat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->
+            SetQuat( osgquat );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetNavDCS()->
+            SetTranslationArray( position );
+
+    std::vector< double > tempPos = position;
+    ves::xplorer::DeviceHandler::instance()->
+            SetResetWorldPosition( osgquat, tempPos );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CenterPointUpdate( const std::string& mode )
+{
+    if( mode == "Reset" )
+    {
+        ves::xplorer::DeviceHandler::instance()->ResetCenterPoint();
+    }
+    else
+    {
+        ves::xplorer::DeviceHandler::instance()->SetCenterPointJumpMode( mode );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

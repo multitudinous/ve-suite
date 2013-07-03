@@ -117,6 +117,21 @@ EventFactory::EventFactory():
     evm->RegisterSignal( &m_scenegraphChangedSignal, "ScenegraphChanged",
                          switchwire::EventManager::unspecified_SignalType );
     m_signals[ "ScenegraphChanged" ] = &m_scenegraphChangedSignal;
+
+    // Set navigation data
+    evm->RegisterSignal( &m_setNavigationDataSignal, "SetNavigationData",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "SetNavigationData" ] = &m_setNavigationDataSignal;
+
+    // Center point update
+    evm->RegisterSignal( &m_CenterPointUpdate, "CenterPointUpdate",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "CenterPointUpdate" ] = &m_CenterPointUpdate;
+
+    // SetResetStartSignal
+    evm->RegisterSignal( &m_setResetStartPosition, "SetResetStartPosition",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "SetResetStartPosition" ] = &m_setResetStartPosition;
 }
 
 EventFactory::~EventFactory()

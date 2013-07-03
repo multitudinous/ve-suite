@@ -70,6 +70,56 @@ void NewFileLoading( std::string const& )
     ves::xplorer::data::DatabaseManager::instance()->ResetAll();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void ChangeXplorerView( const std::string& mode )
+{
+    //If the job is not submitted return
+    if( !GraphicalPluginManager::instance()->GetNetworkSystemView() )
+    {
+        return;
+    }
+
+    if( mode == "Network" )
+    {
+        //UpdateNetworkView( command );
+        // This commented-out block is what the above call to UpdateNetworkView
+        // would do. I can't tell if any of this is relevant now.
+        /*
+        osg::ref_ptr< osg::Group > tempDCS = SceneManager::instance()->GetNetworkDCS();
+        if( tempDCS->getNumChildren() > 0 )
+        {
+            tempDCS->removeChildren( 0, tempDCS->getNumChildren() );
+        }
+
+        DataValuePairPtr dvp = cmd->GetDataValuePair( "SUBNET_ID" );
+        std::string netId;
+        dvp->GetData( netId );
+        //osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
+        osg::ref_ptr< osg::Group > tempGroup = GraphicalPluginManager::instance()->
+                                               GetNetworkSystemView()->DrawNetwork( netId );
+        if( tempGroup.valid() )
+        {
+            tempDCS->addChild( tempGroup.get() );
+        }
+        */
+        ves::xplorer::scenegraph::SceneManager::instance()->SetActiveSwitchNode( 2 );
+    }
+    else if( mode == "CAD" )
+    {
+        ves::xplorer::scenegraph::SceneManager::instance()->SetActiveSwitchNode( 0 );
+    }
+    else if( mode == "Logo" )
+    {
+        ves::xplorer::scenegraph::SceneManager::instance()->SetActiveSwitchNode( 1 );
+    }
+    else
+    {
+        ves::xplorer::scenegraph::SceneManager::instance()->SetActiveSwitchNode( 0 );
+    }
+
+    ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveNavSwitchNode() );
+}
+////////////////////////////////////////////////////////////////////////////////
 }
 }
 }

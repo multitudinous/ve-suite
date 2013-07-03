@@ -35,6 +35,9 @@
 
 #include <ves/VEConfig.h>
 
+#include <vector>
+#include <string>
+
 namespace ves
 {
 namespace xplorer
@@ -49,6 +52,10 @@ namespace device
  */
 /// Turns greyscaling for contour planes on or off.
 void EnableDevice( /*unsigned int const& deviceType,*/ bool const& enable );
+/// Sets the starting view direction and position
+void SetNavigationData( std::vector< double >& quat, std::vector< double >& position );
+/// CenterPointUpdate
+void CenterPointUpdate( const std::string& mode );
 
 } //end device
 } //end event
