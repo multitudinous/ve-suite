@@ -6,63 +6,32 @@ SOURCE_FORMAT=tgz
 SOURCE_URL=http://squirrel.googlecode.com/files/squirrel_3_0_4_stable.tar.gz
 
 SOURCE_DIR="${BASE_DIR}"
-BUILD_DIR="${BASE_DIR}"
-INSTALL_DIR="${BASE_DIR}"
-SKIP_PREBUILD=yes
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+PREBUILD_METHOD=cmake
+
+SKIP_FPC_INSTALL="yes"
+
+POST_RETRIEVAL_METHOD+=( "cp ${VES_SRC_DIR}/share/patches/squirrel/* ${BASE_DIR}/." )
+
+CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
 
 case $PLATFORM in
   Windows)
-    unset PROJ_STR
-    unset BUILD_TARGET
-    BUILD_METHOD=devenv
-    MSVC_CONFIG=Release
-    PREBUILD_METHOD=custom
+    CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
 
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/squirrel/squirrel.dsp" )
-
-    #if (( "${VS_VERSION/.*}" > 9 )); then
-      CUSTOM_PREBUILD=( "${MSVC_SOLUTION[@]/#/${DEVENV} }" )
-      CUSTOM_PREBUILD=( "${CUSTOM_PREBUILD[@]/%/ /upgrade}" )
-    #fi
-    #echo "${CUSTOM_PREBUILD}"
+    MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
-      #PLATFORM_SUFFIX=
-      BUILD_STR="Release"
     else
       MSVC_PLATFORM=x64
-      PLATFORM_SUFFIX=_x64
-      BUILD_STR="x64/Release"
-
-      #if (( "${VS_VERSION/.*}" > 9 )); then
-        #CUSTOM_PREBUILD+=( "find vsprojects -type f -name \"*.vcxproj\" -exec sed -i '/^\s*<OutDir>\$(SolutionDir)\$(Configuration)\\\\<\/OutDir>\s*$/d;/^\s*<IntDir>\$(Configuration)\\\\<\/IntDir>\s*$/d' {} \;" )
-      #else
-        #CUSTOM_PREBUILD+=( "find vsprojects -type f -name \"*.vcproj\" -exec sed -i '/^\s*OutputDirectory=\"\$(SolutionDir)\$(ConfigurationName)\"/d;/^\s*IntermediateDirectory=\"\$(ConfigurationName)\"\s*$/d' {} \;" )
-      #fi
-      #CUSTOM_PREBUILD+=( "find ./ -type f -name \"*.sln\" -exec sed -i 's/Win32/x64/g' {} \;" )
-      #CUSTOM_PREBUILD+=( "find vsprojects -type f -name \"*.vc*proj\" -exec sed -i 's/Win32/x64/g;s/WIN32/WIN64/g;s/MachineX86/MachineX64/g;s/Win32Proj/x64Proj/g' {} \;" )
     fi
-
-    #POST_BUILD_METHOD="find . -name \*.pdb -exec cp {} ${INSTALL_DIR}/lib/. \; -print"
-    #POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && mkdir -p ${INSTALL_DIR}/include && mkdir -p ${INSTALL_DIR}/lib && \
-    #            cp -R ../src/windows/glog ${INSTALL_DIR}/include/. && \
-    #            cp ../${BUILD_STR}/*.lib ${INSTALL_DIR}/lib/. && \
-    #            cp ../${BUILD_STR}/*.pdb ${INSTALL_DIR}/lib/. && \
-    #            cp ../${BUILD_STR}/*.dll ${INSTALL_DIR}/lib/."
-
+    MSVC_SOLUTION="squirrel.sln"
     ;;
   Darwin)
-    SKIP_PREBUILD=no
-    PREBUILD_METHOD=custom
-    CUSTOM_PREBUILD=( "sed -i '' 's/gcc/gcc -fPIC/g' ${SOURCE_DIR}/squirrel/Makefile ${SOURCE_DIR}/sqstdlib/Makefile" )
-    BUILD_METHOD=make
-    BUILD_TARGET=sq64
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     ;;
   Linux)
-    SKIP_PREBUILD=no
-    PREBUILD_METHOD=custom
-    CUSTOM_PREBUILD=( "sed -i 's/gcc/gcc -fPIC/g' ${SOURCE_DIR}/squirrel/Makefile ${SOURCE_DIR}/sqstdlib/Makefile" )
-    BUILD_METHOD=make
-    BUILD_TARGET=sq64
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     ;;
 esac
