@@ -17,16 +17,16 @@ toolsSubdirs.append( "gis/scenario_builder" )
 
 if GetPlatform() == 'win32':
     #Should Aspen support be built
-    if baseEnv[ 'MakeAspenSupport' ] != 'no':
-        toolsSubdirs.append( "aspen" )
+    #if baseEnv[ 'MakeAspenSupport' ] != 'no':
+    #    toolsSubdirs.append( "aspen" )
 
     #Should DynSim support be built
     #if baseEnv[ 'MakeDynSimSupport' ] != 'no':
     #    toolsSubdirs.append( "aspen/DynSimUnit" )
 
     #Should Powersim support be built
-    if baseEnv[ 'MakePowersimSupport' ] != 'no':
-        toolsSubdirs.append( "powersim" )
+    #if baseEnv[ 'MakePowersimSupport' ] != 'no':
+    #    toolsSubdirs.append( "powersim" )
     
     toolsSubdirs.append( "mfc_test" )
 
