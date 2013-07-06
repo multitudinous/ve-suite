@@ -7,14 +7,12 @@ Import( 'poco_options osgal_options' )
 exampleSubdirs = Split("""
     CameraPlacementTool
     CoinFunnel
-    ConstructionBots
     HyperLab
     nurbs
     ParallaxMapping
     simple
     garage
     golf_game
-    SimpleNetwork
     simple_physics
     input_animation
     dynamic_vehicle_sim_tool
@@ -29,6 +27,8 @@ exampleSubdirs = Split("""
 #sensor_overlay
 #VirtualLab
 #Fermentor
+#ConstructionBots
+#SimpleNetwork
 
 if poco_options.isAvailable():
     exampleSubdirs.append( 'WarrantyTool' )

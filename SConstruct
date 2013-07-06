@@ -309,11 +309,11 @@ bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
 AppendOptions( opts, options, bullet_options )
 
 #need to do a flagpoll check to see if TAO pc or fpc files are available
-tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
-                     "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
-                                               "1.5", True, True, helpText=None, compileTest=True,
-                                               headerToCheck="ace/ACE.h")
-AppendOptions( opts, options, tao_options )
+#tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
+#                     "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
+#                                               "1.5", True, True, helpText=None, compileTest=True,
+#                                               headerToCheck="ace/ACE.h")
+#AppendOptions( opts, options, tao_options )
 
 boost_header_options = fp_option.FlagPollBasedOption("Boost Headers",
         "Boost", "1.46", True, True, helpText=None, compileTest=True)
@@ -449,7 +449,7 @@ Export( 'opts', 'vtk_options', 'osg_options',
         'boost_signals_options', 'boost_program_options',
         'bullet_options', 'boost_header_options', 
         'bulletVersion',
-        'tao_options',
+        #'tao_options',
         'vrjuggler_options', 'boost_options',
         'gmtl_options', 'vpr_options',
         'gadgeteer_options', 'osgal_options',

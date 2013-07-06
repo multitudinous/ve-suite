@@ -5,7 +5,7 @@ import SConsAddons.Util as sca_util
 
 Import('ves_pkg LIBDIR PREFIX buildDir osg_options boost_options RootDir vrjuggler_options')
 Import('osgbullet_options switchwire_options bdfx_options xerces_options latticefx_options' )
-Import('poco_options bullet_options tao_options' )
+Import('poco_options bullet_options' )
 
 srcDir = os.path.abspath( pj(RootDir, 'share', 'tools', 'builder','part_tree') )
 srcs = sca_util.getSourcesRecursive( srcDir )
@@ -28,7 +28,6 @@ poco_options.apply( env )
 switchwire_options.apply( env )
 latticefx_options.apply( env )
 vrjuggler_options.apply( env )
-tao_options.apply( env )
 
 prog = ves_pkg.createProgram('osgPartTree' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )

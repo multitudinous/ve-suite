@@ -7,7 +7,7 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg LIBDIR RootDir buildDir GetPlatform' )
-Import( 'xerces_options tao_options mysqlpp_options poco_options' )
+Import( 'xerces_options mysqlpp_options poco_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'tools', 'db' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -21,7 +21,6 @@ env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open' ),
 #env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
   
 xerces_options.apply( env )
-tao_options.apply( env )
 mysqlpp_options.apply( env )
 poco_options.apply( env )
 

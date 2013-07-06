@@ -5,12 +5,13 @@ pj = os.path.join
 Import( "ves_pkg baseEnv" )
 
 openSubdirs = Split("""
-    conductor
+    conductor/qt
     open
     util
     xplorer
 """)
 #ce
+#conductor
 
 if baseEnv['tecplot_sdk'] != '':
     openSubdirs.append( pj( 'builder','DataLoader','tecplot' ) )

@@ -6,7 +6,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import('baseEnv ves_pkg LIBDIR xerces_options tao_options RootDir buildDir GetPlatform')
+Import('baseEnv ves_pkg LIBDIR xerces_options RootDir buildDir GetPlatform')
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'HyperLab', 'HyperLabUnit' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -30,7 +30,6 @@ lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY',
                                '_AFXDLL' ] )
   
 xerces_options.apply( lib_env )
-tao_options.apply( lib_env )
 
 lib = ves_pkg.createProgram( 'HyperLabUnit' + lib_env["PROGSUFFIX"], lib_env,
     installPrefix = pj( 'share', 'vesuite', 'examples', 'HyperLab', 'Plugins', 'Unit', host_type ) )  

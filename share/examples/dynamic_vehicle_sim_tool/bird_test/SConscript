@@ -6,20 +6,10 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import('ves_pkg buildDir RootDir osg_options xerces_options tao_options GetPlatform vpr_options vrjuggler_options')
+Import('ves_pkg buildDir RootDir osg_options xerces_options GetPlatform vpr_options vrjuggler_options')
 
 lib_env = ves_pkg.getEnv().Clone()
-#lib_env.Append(LIBS = ['ves_open_xml', 'ves_ce_unitwrapper', 'ves_open_module'])
-#lib_env.Append(LIBPATH = [pj(RootDir, buildDir, 'src', 'ves', 'open'),
-#			                 pj(RootDir, buildDir, 'src', 'ves', 'open', 'xml'),
-#			                 pj(RootDir, buildDir, 'src', 'ves', 'ce', 'unitwrapper')])
 
-#if GetPlatform() == 'win32':
-#   lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
-
-#tao_options.apply( lib_env )
-#osg_options.apply( lib_env )
-#xerces_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
 
 srcs = Split("""

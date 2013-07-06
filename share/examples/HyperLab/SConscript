@@ -21,8 +21,8 @@ fileBundle.addFiles( [ 'hyperlab.ves' ] )
 
 HyperLabSubdirs = Split("""
     HyperLabGP
-    HyperLabUI
 """)
+#HyperLabUI
 
 if GetPlatform() == 'win32':
    HyperLabSubdirs += Split("""HyperLabUnit""")

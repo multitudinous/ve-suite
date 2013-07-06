@@ -8,7 +8,7 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
-Import('tao_options xerces_options osgworks_options LIBDIR')
+Import('xerces_options osgworks_options LIBDIR')
 Import('bullet_options osgbullet_options osgal_options vtk_options bdfx_options xerces_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'share', 'examples', 'AtomProbe', 'UserInterface') )

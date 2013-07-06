@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR xerces_options tao_options RootDir vpr_options buildDir GetPlatform')
+Import('baseEnv ves_pkg LIBDIR xerces_options RootDir vpr_options buildDir GetPlatform')
 
 srcs = Split("""
    VEPSI_i.cxx
@@ -90,7 +90,6 @@ for res in ves_res:
   srcs.append(res)
   
 xerces_options.apply( env )
-tao_options.apply( env )
 vpr_options.apply( env )
 
 prog = ves_pkg.createProgram('ve_psi' + env["PROGSUFFIX"], env, 'bin')
