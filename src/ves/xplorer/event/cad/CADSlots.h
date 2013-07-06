@@ -812,6 +812,13 @@ void EnableTwoSidedLighting( const std::string& nodeUUID, const bool& enableTwoS
     part->SetTwoSidedLighting( enableTwoSidedLighting );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void OptimizeAllCAD()
+{
+    ModelCADHandler* m_cadHandler = GetModelCADHandler();
+
+    m_cadHandler->OptimizeAllCAD();
+}
+////////////////////////////////////////////////////////////////////////////////
 } // namespace cad
 } // namespace event
 } // namespace xplorer

@@ -54,8 +54,6 @@
 
 #include <ves/xplorer/command/CommandManager.h>
 
-#include <ves/xplorer/communication/CommunicationHandler.h>
-
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
@@ -328,8 +326,7 @@ void GraphicalPluginManager::GetEverything()
         }
         // The above code is from : The C++ Standard Library by:Josuttis pg. 205
     }
-    ves::xplorer::communication::CommunicationHandler::instance()
-    ->SendConductorMessage( "Finished loading data in VE-Xplorer." );
+
     vprDEBUG( vesDBG, 0 ) << "|\t\tDone Getting Network From Executive"
                           << std::endl << vprDEBUG_FLUSH;
 }
@@ -542,7 +539,6 @@ void GraphicalPluginManager::ParseSystem( ves::open::xml::model::SystemPtr syste
             temp->SetModelHandler( ves::xplorer::ModelHandler::instance() );
             temp->SetSceneManager( ves::xplorer::scenegraph::SceneManager::instance() );
             temp->SetResourceManager( ves::xplorer::scenegraph::ResourceManager::instance() );
-            temp->SetCommunicationHandler( ves::xplorer::communication::CommunicationHandler::instance() );
             temp->SetGraphicalPluginManager( this );
             temp->SetInteractionDevice( DeviceHandler::instance()->GetDevice(
                                             device::Device::KEYBOARD_MOUSE ) );

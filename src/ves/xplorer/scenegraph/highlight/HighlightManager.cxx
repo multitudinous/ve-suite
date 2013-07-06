@@ -32,8 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/communication/CommunicationHandler.h>
-
 #include <ves/xplorer/scenegraph/highlight/HighlightManager.h>
 #include <ves/xplorer/scenegraph/highlight/CircleHighlight.h>
 
@@ -218,8 +216,6 @@ void HighlightManager::UpdateConductorData()
     open::xml::DataValuePairPtr dvpII( new open::xml::DataValuePair() );
     dvpII->SetData( "MarkerName", name );
     command->AddDataValuePair( dvpII );
-
-    communication::CommunicationHandler::instance()->SetXMLCommand( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& HighlightManager::GetNextTagName()

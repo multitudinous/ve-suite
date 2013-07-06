@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/communication/CommunicationHandler.h>
 
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelHandler.h>
@@ -163,9 +162,7 @@ void ModelCADHandler::CreatePart( const std::string& fileName,
 {
     //boost::thread t3( &ModelCADHandler::RemoveNode, *this, partID, "Part" );
     //t3.join();
-    
-    //ves::xplorer::communication::CommunicationHandler::instance()->
-    //SendConductorMessage( "Loading file: " + fileName );
+
     ves::xplorer::scenegraph::CADEntity* tempCAD =
         ModelHandler::instance()->IsCADFileLoaded( fileName );
     if( tempCAD )
@@ -195,10 +192,6 @@ void ModelCADHandler::CreatePart( const std::string& fileName,
                               << std::endl << vprDEBUG_FLUSH;
     }
     ModelHandler::instance()->RegisterCADFile( m_partList[ partID ] );
-    //add key pointer to physics map for bullet rigid body
-    //add data pair for transform node
-    //ves::xplorer::communication::CommunicationHandler::instance()->
-    //SendConductorMessage( "Loaded file: " + fileName );
 }
 /////////////////////////////////////////////////////
 void ModelCADHandler::RemoveNode( const std::string& nodeID,

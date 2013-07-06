@@ -94,29 +94,14 @@ public:
     ///\return Tell the user that the call to xplorer was successful
     void SetActiveModel( void );
 
-    //??? Still needed ???
-    ///allows user to set the image to be displayed on the icon
-    //void SetImageIcon( std::string path, float rotation = 0.0f, int mirror = 0, float scale = 1.0f );
-
-    //??? Still needed ???
-    ///allows users creating new plugins and change the icon
-    //void SetImage( QImage& image );
-
     ///Add port to the plugin
     void AddPort( unsigned int portType );
 
     ///Delete selected port
     void DeletePort( ves::open::xml::model::PortPtr port );
 
-    ///Handle all events to toggle graphics for plugin off/on in cad mode
-    ///\param event WX Event for menu event
-    void TogglePlugin( unsigned int );
-
-    ///Makes the associated VEModel active in xplorer
-    void ActivateAssociatedModel( );
-
     ///Optimize all of the CAD
-    void OnOptimizeCAD( );
+    void OnOptimizeCAD();
 
     //void SetNetwork( Network* network );
 

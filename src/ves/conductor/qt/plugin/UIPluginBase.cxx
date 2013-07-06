@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/qt/plugin/UIPluginBase.h>
-#include <ves/xplorer/command/CommandManager.h>
+
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/plugin/PluginBase.h>
 
@@ -41,6 +41,8 @@
 #include <ves/open/xml/model/Port.h>
 
 #include <iostream>
+
+#include <switchwire/SingleShotSignal.h>
 
 namespace ves
 {
@@ -429,7 +431,7 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelPtr tempModel )
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetXplorerPlugin( ves::xplorer::plugin::PluginBasePtr plugin )
 {
     if( !plugin )
@@ -440,15 +442,7 @@ void UIPluginBase::SetXplorerPlugin( ves::xplorer::plugin::PluginBasePtr plugin 
     m_xplorerPlugin = plugin;
     //SetVEModel( plugin->GetCFDModel()->GetModelData() );
 }
-
-//??? Still needed ???
-///allows user to set the image to be displayed on the icon
-//void UIPluginBase::SetImageIcon( std::string path, float rotation = 0.0f, int mirror = 0, float scale = 1.0f );
-
-//??? Still needed ???
-///allows users creating new plugins and change the icon
-//void UIPluginBase::SetImage( QImage& image );
-
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::AddPort( unsigned int portType )
 {
     if( !( m_veModel.get() ) )
@@ -473,7 +467,7 @@ void UIPluginBase::AddPort( unsigned int portType )
     }
     port->SetPortNumber( m_outputPorts.size() + m_inputPorts.size() );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::DeletePort( ves::open::xml::model::PortPtr port )
 {
     if( !( m_veModel.get() ) )
@@ -498,91 +492,19 @@ void UIPluginBase::DeletePort( ves::open::xml::model::PortPtr port )
         m_veModel->RemovePort( port );
     }
 }
-
-void UIPluginBase::TogglePlugin( unsigned int )
-{
-
-    // Unclear why toggling other plugins on would be part of a specific plugin
-    //  instance
-
-    //    if( flag == UIPLUGINBASE_TOGGLE_ALL_ON )
-    //    {
-    //        ves::open::xml::DataValuePairPtr dataValuePair(
-    //            new ves::open::xml::DataValuePair() );
-    //        dataValuePair->SetData( "VE_XPLORER_PLUGIN_ID", "ALL" );
-    //        ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-    //        veCommand->SetCommandName(
-    //            std::string( "Xplorer Toggle Plugin Events" ) );
-    //        veCommand->AddDataValuePair( dataValuePair );
-
-    //        ves::xplorer::command::CommandManager::Instance()->AddXMLCommand( veCommand );
-    //    }
-    //else if( flag == UIPLUGINBASE_TOGGLE_PLUGIN_ON )
-    {
-        ves::open::xml::DataValuePairPtr dataValuePair(
-            new ves::open::xml::DataValuePair() );
-        dataValuePair->SetData( "VE_XPLORER_PLUGIN_ID", m_veModel->GetID() );
-        ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-        veCommand->SetCommandName(
-            std::string( "Xplorer Toggle Plugin Events" ) );
-        veCommand->AddDataValuePair( dataValuePair );
-
-        ves::xplorer::command::CommandManager::instance()->AddXMLCommand( veCommand );
-    }
-}
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetActiveModel()
 {
-    ves::open::xml::DataValuePairPtr dataValuePair(
-        new ves::open::xml::DataValuePair() );
-    dataValuePair->SetData( "CHANGE_ACTIVE_MODEL", m_veModel->GetID() );
-
-    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-    veCommand->SetCommandName( std::string( "CHANGE_ACTIVE_MODEL" ) );
-    veCommand->AddDataValuePair( dataValuePair );
-
-    ves::xplorer::command::CommandManager::instance()->AddXMLCommand( veCommand );
+    switchwire::SingleShotSignal< void, const std::string& >( "UIPluginBase.ChangeActiveModel", m_veModel->GetID() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-void UIPluginBase::ActivateAssociatedModel( )
-{
-    //Set the active model so that we do not have to in every function
-    SetActiveModel();
-
-    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-    veCommand->SetCommandName( std::string( "Move to cad" ) );
-    ves::open::xml::DataValuePairPtr dataValuePair(
-        new ves::open::xml::DataValuePair() );
-    dataValuePair->SetData( "NAVIGATE_TO", m_veModel->GetID() );
-    veCommand->AddDataValuePair( dataValuePair );
-
-    //if( event.GetId() == UIPLUGINBASE_NAVTO_SELECT )
-    {
-        ves::open::xml::DataValuePairPtr selectDVP(
-            new ves::open::xml::DataValuePair() );
-        selectDVP->SetData( "Select", "Glow" );
-        veCommand->AddDataValuePair( selectDVP );
-    }
-
-    ves::xplorer::command::CommandManager::instance()->AddXMLCommand( veCommand );
-}
-
 void UIPluginBase::OnOptimizeCAD( )
 {
     SetActiveModel();
 
-    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-    veCommand->SetCommandName( std::string( "Optimize CAD" ) );
-    ves::open::xml::DataValuePairPtr dataValuePair(
-        new ves::open::xml::DataValuePair() );
-    dataValuePair->SetData( "Optimize CAD", m_veModel->GetID() );
-    veCommand->AddDataValuePair( dataValuePair );
-
-    ves::xplorer::command::CommandManager::instance()->AddXMLCommand( veCommand );
+    switchwire::SingleShotSignal< void >( "UIPluginBase.OptimizeAllCAD" );
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::RegistVar( std::string vname, long* var )
 {
     _int[vname] = var;

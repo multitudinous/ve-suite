@@ -36,7 +36,6 @@
 #include <ves/conductor/qt/XMLDataBufferEngine.h>
 #include <ves/conductor/qt/UserPreferencesDataBuffer.h>
 
-#include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/data/CADPropertySet.h>
@@ -315,7 +314,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
     }
 
     // Initialze Minerva.
-    {
+    /*{
         CommandPtr earthCommand( UserPreferencesDataBuffer::instance()->GetCommand( ves::util::commands::ADD_EARTH_COMMAND_NAME ) );
         if( earthCommand )
         {
@@ -337,7 +336,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
             //MinervaDialog* dialog ( this->GetMinervaDialog() );
             //dialog->InitalizeFromCommands ( elevationGroupCommand, rasterGroupCommand );
         }
-    }
+    }*/
 
     if( !db.empty() )
     {

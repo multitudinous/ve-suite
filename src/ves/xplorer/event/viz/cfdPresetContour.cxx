@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/communication/CommunicationHandler.h>
 #include <ves/xplorer/event/viz/cfdPresetContour.h>
 
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
@@ -87,43 +86,6 @@ void cfdPresetContour::Update( void )
     vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetContour::Update, usePreCalcData = "
                           << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
 
-    /*if( this->usePreCalcData )
-    {
-        cfdPlanes* precomputedPlanes =
-            this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
-        if( !precomputedPlanes )
-        {
-            vprDEBUG( vesDBG, 0 )
-                    << "|\tDataset contains no precomputed contour planes."
-                    << std::endl << vprDEBUG_FLUSH;
-            ves::xplorer::communication::CommunicationHandler::instance()
-            ->SendConductorMessage( "Dataset contains no precomputed contour planes.\n" );
-            return;
-        }
-
-        vtkPolyData* preCalcData = precomputedPlanes
-                                   ->GetClosestPlane( requestedValue );
-
-        if( preCalcData == NULL )
-        {
-            vprDEBUG( vesDBG, 0 )
-                    << "|\tcfdPresetContour: no precalculated data"
-                    << std::endl << vprDEBUG_FLUSH;
-
-            this->updateFlag = false;
-            return;
-        }
-
-        //Just need a filter to be able to pass the data into the SetMapper
-        //function. May need to create another function so that this filter
-        //is not necessary.
-        vtkCellDataToPointData* tempPipe = vtkCellDataToPointData::New();
-        tempPipe->SetInput( preCalcData );
-        this->SetMapperInput( tempPipe->GetOutputPort() );
-
-        tempPipe->Delete();
-    }
-    else*/
     {
         if( cuttingPlane )
         {

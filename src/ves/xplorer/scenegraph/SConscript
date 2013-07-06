@@ -16,10 +16,9 @@ lib_env = ves_pkg.getEnv().Clone()
 #see if we need to compile support for transform manipulators
 ApplyBulletVars(lib_env)
 
-lib_env.Append(LIBS = ['ves_open_xml','ves_xplorer_communication','ves_xplorer_eventmanager'])
+lib_env.Append(LIBS = ['ves_open_xml','ves_xplorer_eventmanager'])
 
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml'),
-                          pj('#', buildDir, 'src', 'ves', 'xplorer','communication'),
                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager')])
 
 gmtl_options.apply( lib_env )

@@ -31,8 +31,6 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/communication/CommunicationHandler.h>
-
 #include <ves/xplorer/plugin/PluginBase.h>
 
 #include <ves/xplorer/EnvironmentHandler.h>
@@ -88,7 +86,6 @@ PluginBase::PluginBase():
     mSceneManager( 0 ),
     mEnvironmentHandler( 0 ),
     mResourceManager( 0 ),
-    mCommunicationHandler( 0 ),
     mXmlModel( ves::open::xml::model::ModelPtr() ),
     mPhysicsSimulator( 0 ),
     m_graphicalPluginManager( 0 ),
@@ -235,12 +232,6 @@ void PluginBase::SetResourceManager(
     ves::xplorer::scenegraph::ResourceManager* resourceManager )
 {
     mResourceManager = resourceManager;
-}
-////////////////////////////////////////////////////////////////////////////////
-void PluginBase::SetCommunicationHandler(
-    ves::xplorer::communication::CommunicationHandler* commandHandler )
-{
-    mCommunicationHandler = commandHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetInteractionDevice( ves::xplorer::device::Device* device )

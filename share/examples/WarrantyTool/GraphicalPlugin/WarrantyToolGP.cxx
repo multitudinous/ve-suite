@@ -31,8 +31,6 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#include <ves/xplorer/communication/CommunicationHandler.h>
-
 // --- My Includes --- //
 #include "WarrantyToolGP.h"
 #include "csvparser.h"
@@ -577,7 +575,6 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
         //    displayString = displayString + displayPair.first + " " +  displayPair.second + "\n";
         //}
         ////////////////////////////////////////////////////////////////////////////////
-        mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
 
         Poco::Data::Session session("SQLite", m_dbFilename );
         Statement select( session );
@@ -614,7 +611,6 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
         size_t numQueries = rs.rowCount();
         if( numQueries == 0 )
         {
-            mCommunicationHandler->SendConductorMessage( "No parts found." );
             return;
         }
     
@@ -650,8 +646,6 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
         const std::string partText = tempTextData.str();
         mModelText->UpdateText( partText );
         
-        mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
-            
         mModelText->SetTitle( m_lastPartNumber );
     }
     else
@@ -666,7 +660,6 @@ void WarrantyToolGP::RenderTextualDisplay( bool onOff )
 void WarrantyToolGP::CreateDB()
 {
     std::cout << "WarrantyToolGP::CreateDB" << std::endl << std::flush;
-    mCommunicationHandler->SendConductorMessage( "Creating DB..." );
 
     // register SQLite connector
     Poco::Data::SQLite::Connector::registerConnector();
@@ -818,7 +811,6 @@ void WarrantyToolGP::CreateDB()
 
     //insert << "INSERT INTO Parts VALUES(?, ?, ?, ?, ?, ?, ?)",
     //    use(assem), now;
-    mCommunicationHandler->SendConductorMessage( "Finished creating DB..." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::CreateTextTextures()
@@ -849,7 +841,6 @@ void WarrantyToolGP::CreateTextTextures()
 void WarrantyToolGP::CreateDBQuery( const std::string& queryString )
 {
     std::cout << "WarrantyToolGP::CreateDBQuery" << std::endl << std::flush;
-    mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
     m_cadRootNode = mModel->GetModelCADHandler()->
         GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
 
@@ -879,8 +870,6 @@ void WarrantyToolGP::CreateDBQuery( const std::string& queryString )
     {
         HighlightPartsInJoinedTabled( queryString );
     }
-        
-    mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::RemoveSelfFromSG()
@@ -1108,7 +1097,6 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
     {        
         std::ostringstream outString;
         outString << "Number of parts found " << m_assemblyPartNumbers.size();
-        mCommunicationHandler->SendConductorMessage( outString.str() );
 
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor
             highlight2( m_cadRootNode, "", false, true );
@@ -1149,7 +1137,6 @@ bool WarrantyToolGP::FindPartNodeAndHighlightNode()
                 m_cadRootNode, pickedPartNumbers, true, true );
         }
     }
-    mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
     return( m_assemblyPartNumbers.size() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1303,28 +1290,21 @@ void WarrantyToolGP::HighlightPartsInJoinedTabled( const std::string& queryStrin
     //Work with the first table
     std::string table = m_tableNames.first;
     osg::Vec3 glowColor( 0.34118, 1.0, 0.57255 );
-    mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
 
     QueryTableAndHighlightParts( table, glowColor );
     
-    mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
     
     //Work with the first table
     table = m_tableNames.second;
     glowColor = osg::Vec3( 0.57255, 0.34118, 1.0 );
-    mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
     
     QueryTableAndHighlightParts( table, glowColor );
-    
-    mCommunicationHandler->SendConductorMessage( "Finished DB query..." );
-    
+        
     //Now if we are joining tables we are going to need to color the left 
     //and the right table
-    mCommunicationHandler->SendConductorMessage( "Creating DB query..." );
     
     QueryInnerJoinAndHighlightParts( queryString );
     
-    mCommunicationHandler->SendConductorMessage( "Finished DB query..." );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::QueryTableAndHighlightParts(
@@ -1352,7 +1332,6 @@ void WarrantyToolGP::QueryTableAndHighlightParts(
     }
     catch( ... )
     {
-        mCommunicationHandler->SendConductorMessage( "Query is bad." );
         return;
     }
     
@@ -1369,10 +1348,8 @@ void WarrantyToolGP::QueryTableAndHighlightParts(
     size_t numQueries = rs.rowCount();
     std::ostringstream outString;
     outString << "Number of parts found " << numQueries;
-    mCommunicationHandler->SendConductorMessage( outString.str() );
     if( numQueries == 0 )
     {
-        mCommunicationHandler->SendConductorMessage( "No parts found." );
         return;
     }
     // iterate over all rows and columns
@@ -1438,7 +1415,6 @@ void WarrantyToolGP::QueryInnerJoinAndHighlightParts( const std::string& querySt
     }
     catch( ... )
     {
-        mCommunicationHandler->SendConductorMessage( "Query is bad." );
         return;
     }
     
@@ -1455,10 +1431,8 @@ void WarrantyToolGP::QueryInnerJoinAndHighlightParts( const std::string& querySt
     size_t numQueries = rs.rowCount();
     std::ostringstream outString;
     outString << "Number of parts found " << numQueries;
-    mCommunicationHandler->SendConductorMessage( outString.str() );
     if( numQueries == 0 )
     {
-        mCommunicationHandler->SendConductorMessage( "No parts found." );
         return;
     }
     // iterate over all rows and columns
@@ -1521,7 +1495,6 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
     }
     catch( ... )
     {
-        mCommunicationHandler->SendConductorMessage( "Query is bad." );
         return;
     }
     
@@ -1535,7 +1508,6 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
         //Remove from begining to position of string above
         tempString.erase( 0, numEntries );
         //Now rerun select query and color by new color
-        mCommunicationHandler->SendConductorMessage( "Created the table." );
         //return;
         try
         {
@@ -1556,10 +1528,8 @@ void WarrantyToolGP::QueryUserDefinedAndHighlightParts( const std::string& query
     size_t numQueries = rs.rowCount();
     std::ostringstream outString;
     outString << "Number of parts found " << numQueries;
-    mCommunicationHandler->SendConductorMessage( outString.str() );
     if( numQueries == 0 )
     {
-        mCommunicationHandler->SendConductorMessage( "No parts found." );
         return;
     }
     // iterate over all rows and columns
@@ -1620,10 +1590,8 @@ void WarrantyToolGP::SaveCurrentQuery( const std::string& filename )
     size_t numQueries = rs.rowCount();
     std::ostringstream outString;
     outString << "Number of parts found " << numQueries;
-    mCommunicationHandler->SendConductorMessage( outString.str() );
     if( numQueries == 0 )
     {
-        mCommunicationHandler->SendConductorMessage( "No parts found." );
         return;
     }
     // iterate over all rows and columns

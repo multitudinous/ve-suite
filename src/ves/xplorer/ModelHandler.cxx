@@ -45,7 +45,6 @@
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/xplorer/event/EventHandler.h>
-#include <ves/xplorer/event/ActiveModelEventHandler.h>
 
 #include <ves/xplorer/event/cad/CADAddNodeEH.h>
 #include <ves/xplorer/event/cad/CADAnimationEH.h>
@@ -64,7 +63,6 @@
 #include <ves/xplorer/event/cad/MaterialUpdateEH.h>
 #include <ves/xplorer/event/cad/MaterialModeUpdateEH.h>
 #include <ves/xplorer/event/cad/CADSetOpacityEventHandler.h>
-#include <ves/xplorer/event/cad/TogglePluginsEventHandler.h>
 #include <ves/xplorer/event/cad/NavigateToEventHandler.h>
 #include <ves/xplorer/event/cad/OcclusionSettingsEventHandler.h>
 #include <ves/xplorer/event/cad/CADSlotInitializer.h>
@@ -139,12 +137,8 @@ ModelHandler::ModelHandler()
         new ves::xplorer::event::CADSetNameEventHandler();
     _eventHandlers[ std::string( "CAD_TOGGLE_NODE" )] =
         new ves::xplorer::event::CADToggleEventHandler();
-    _eventHandlers[ std::string( "CHANGE_ACTIVE_MODEL" )] =
-        new ves::xplorer::event::ActiveModelEventHandler();
     _eventHandlers[ std::string( "CHANGE_ACTIVE_DATASET" )] =
         new ves::xplorer::event::data::ActiveDataSetEventHandler();
-    _eventHandlers[ std::string( "Optimize CAD" )] =
-        new ves::xplorer::event::ActiveModelEventHandler();
     _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_UPDATE" )] =
         new ves::xplorer::event::MaterialUpdateEventHandler();
     _eventHandlers[ std::string( "CAD_ATTRIBUTE_MATERIAL_MODE" )] =
@@ -173,8 +167,6 @@ ModelHandler::ModelHandler()
         new ves::xplorer::event::CADPhysicsPropertiesEventHandler();
     _eventHandlers[ std::string( "CAD_OPACITY_UPDATE" )] =
         new ves::xplorer::event::CADSetOpacityEventHandler();
-    _eventHandlers[ std::string( "Xplorer Toggle Plugin Events" )] =
-        new ves::xplorer::event::cad::TogglePluginsEventHandler();
     _eventHandlers[ std::string( "Move to cad" )] =
         new ves::xplorer::event::cad::NavigateToEventHandler();
     _eventHandlers[ std::string( "Culling Settings" )] =

@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/communication/CommunicationHandler.h>
 #include <ves/xplorer/scenegraph/manipulator/Dragger.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
@@ -845,9 +844,6 @@ void Dragger::UpdateConductorData( ves::xplorer::scenegraph::DCS* dcs )
     pluginDataDVP->SetData( "PLUGIN_DATA", transformData );
 
     modelUpdateData->AddDataValuePair( pluginDataDVP );
-
-    ves::xplorer::communication::CommunicationHandler::instance()->
-    SetXMLCommand( modelUpdateData );
 }
 ////////////////////////////////////////////////////////////////////////////////
 

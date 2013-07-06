@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #include <ves/conductor/qt/CADFileLoader.h>
-#include <ves/conductor/qt/XMLDataBufferEngine.h>
 
 #include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/ModelHandler.h>

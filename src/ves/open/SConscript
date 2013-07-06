@@ -40,14 +40,14 @@ else:
    lib = ves_pkg.createSharedLibrary('ves_open_module', lib_env,
                                                installPrefix = LIBDIR)
 
-lib.addSources(sources)
-lib.addHeaders(headers,  pj( 'ves','open') )
-lib.build()
+#lib.addSources(sources)
+#lib.addHeaders(headers,  pj( 'ves','open') )
+#lib.build()
 
 openSubdirs = Split("""
-    idl
     xml
 """)
+#idl
 
 ##Run SConscript files in all of those folders.
 for d in openSubdirs:

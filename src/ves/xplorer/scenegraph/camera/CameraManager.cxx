@@ -32,8 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/communication/CommunicationHandler.h>
-
 #include <ves/xplorer/scenegraph/camera/CameraManager.h>
 #include <ves/xplorer/scenegraph/camera/CameraObject.h>
 
@@ -366,10 +364,10 @@ void CameraManager::SetActiveCameraObject(
     }
 
     //Send active object to conductor if we need to
-    if( sendDataToConductor )
+    /*if( sendDataToConductor )
     {
         UpdateConductorData();
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::SetCameraViewQuadResolution( unsigned int const& scale )
@@ -533,7 +531,7 @@ void CameraManager::UpdateConductorData( ves::open::xml::DataValuePairPtr inDvp 
         command->AddDataValuePair( dvp );
     }
 
-    communication::CommunicationHandler::instance()->SetXMLCommand( command );
+    //communication::CommunicationHandler::instance()->SetXMLCommand( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraManager::WriteAllImageFiles( std::string const& saveImageDir )

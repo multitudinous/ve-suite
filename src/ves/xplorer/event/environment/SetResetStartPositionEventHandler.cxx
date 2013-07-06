@@ -31,7 +31,6 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/environment/SetResetStartPositionEventHandler.h>
-#include <ves/xplorer/communication/CommunicationHandler.h>
 #include <ves/xplorer/DeviceHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -105,9 +104,6 @@ void SetResetStartPositionEventHandler::Execute( const ves::open::xml::XMLObject
         positionsData->AddElementToArray( trans[ 2 ] );
         positionStartPosition->SetData( "POSITION_START_POSITION", positionsData );
         viewPointGUIData->AddDataValuePair( positionStartPosition );
-
-        ves::xplorer::communication::CommunicationHandler::instance()->
-        SetXMLCommand( viewPointGUIData );
 
         std::vector< double > tempPos = positionsData->GetArray();
         ves::xplorer::DeviceHandler::instance()->SetResetWorldPosition( quat, tempPos );

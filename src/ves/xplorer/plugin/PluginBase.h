@@ -71,10 +71,6 @@ class cfdCursor;
 class EnvironmentHandler;
 class ModelHandler;
 class Model;
-namespace communication
-{
-class CommunicationHandler;
-}
 
 namespace device
 {
@@ -210,10 +206,6 @@ public:
     ///\param resourceManager The resource manager
     void SetResourceManager( ves::xplorer::scenegraph::ResourceManager* resourceManager );
 
-    ///Provide the conductor communication manager for plugins
-    ///\param conductorComm The conductor CORBA pointer
-    void SetCommunicationHandler( ves::xplorer::communication::CommunicationHandler* commandHandler );
-
     ///Set the graphical plugin manager in the plugin so that plugins can
     ///have access to the VE-CE and other corba tools
     void SetGraphicalPluginManager( ves::xplorer::network::GraphicalPluginManager* pluginManager );
@@ -253,8 +245,6 @@ protected:
     ves::xplorer::EnvironmentHandler* mEnvironmentHandler;
     ///The resource manager pointer
     ves::xplorer::scenegraph::ResourceManager* mResourceManager;
-    ///The command handler pointer
-    ves::xplorer::communication::CommunicationHandler* mCommunicationHandler;
     ///The xml model pointer for this plugin
     ves::open::xml::model::ModelPtr mXmlModel;
     ///Singleton pointers
