@@ -24,8 +24,8 @@ HyperLabSubdirs = Split("""
 """)
 #HyperLabUI
 
-if GetPlatform() == 'win32':
-   HyperLabSubdirs += Split("""HyperLabUnit""")
+#if GetPlatform() == 'win32':
+#   HyperLabSubdirs += Split("""HyperLabUnit""")
 
 ##Run SConscript files in all of these folders.
 for d in HyperLabSubdirs:
