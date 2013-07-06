@@ -30,8 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/xplorer/communication/CommunicationHandler.h>
-
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
 
