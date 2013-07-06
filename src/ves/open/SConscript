@@ -2,7 +2,7 @@
 import os, sys, string, glob
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR buildDir RootDir tao_options')
+Import('baseEnv ves_pkg LIBDIR buildDir RootDir')
 
 sources = Split("""
    moduleS.cpp
@@ -27,8 +27,6 @@ headers.append( pj( 'idl','Body_AMI_UIHandler_i.h') )
 #headers.append( pj( 'idl','Body_AMI_UnitHandler_i.h') )
 
 lib_env = ves_pkg.getEnv().Clone()
-
-tao_options.apply( lib_env )
 
 lib_env.Append( CPPDEFINES = ['VE_OPEN_MODULE_LIBRARY'])
    

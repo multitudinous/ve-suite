@@ -5,7 +5,7 @@ import glob
 import SConsAddons.Util as sca_util
 
 Import('baseEnv buildDir RootDir ves_pkg vtk_options osg_options xerces_options LIBDIR')
-Import('tao_options boost_options vrjuggler_options osgal_options GetPlatform osgworks_options')
+Import('boost_options vrjuggler_options osgal_options GetPlatform osgworks_options')
 Import('poco_options minerva_options')
 Import('ApplyBulletVars bullet_options osgbullet_options')
 Import( 'switchwire_options' )
@@ -88,7 +88,6 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph
                         pj('#', buildDir, 'src', 'ves', 'xplorer','volume'),
                         pj('#', buildDir, 'src', 'ves', 'open','xml')])
 
-tao_options.apply( lib_env )
 #see if we need to compile minerva in
 if minerva_options.isAvailable():
 	minerva_options.apply( lib_env )
