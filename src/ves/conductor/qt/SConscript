@@ -6,7 +6,7 @@ pj = os.path.join
 
 Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir vpr_options vrjuggler_options GetPlatform')
 Import('minerva_options boost_options osgal_options' )
-Import('tao_options xerces_options osg_options')
+Import('xerces_options osg_options')
 Import('bullet_options osgbullet_options storyteller_options')
 Import('switchwire_options')
 Import('propertystore_options latticefx_options')
@@ -229,7 +229,6 @@ if osgal_options.isAvailable():
    lib_env.Append( CPPDEFINES = [ 'VE_SOUND' ] )
 poco_options.apply( lib_env )
 xerces_options.apply(lib_env)
-tao_options.apply(lib_env)
 bullet_options.apply(lib_env)
 osgbullet_options.apply(lib_env)
 boost_options.apply( lib_env )

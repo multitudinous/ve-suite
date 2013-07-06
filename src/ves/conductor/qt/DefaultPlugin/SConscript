@@ -5,7 +5,7 @@ import glob
 pj = os.path.join
 
 Import('poco_options baseEnv ves_pkg LIBDIR buildDir RootDir osg_options vpr_options vrjuggler_options GetPlatform')
-Import('tao_options xerces_options osgworks_options LIBDIR storyteller_options')
+Import('xerces_options osgworks_options LIBDIR storyteller_options')
 Import('bullet_options osgbullet_options osgal_options vtk_options bdfx_options')
 Import('propertystore_options')
 
