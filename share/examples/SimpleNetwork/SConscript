@@ -33,14 +33,14 @@ fileBundle.addFiles( 'RunThreeUnits.bat' )
 InteractiveStoveSubdirs = Split("""
     NetworkOneModel
     NetworkOnePlugin
-    NetworkOneUnit
     NetworkTwoModel
     NetworkTwoPlugin
-    NetworkTwoUnit
     NetworkThreeModel
     NetworkThreePlugin
-    NetworkThreeUnit
 """)
+#    NetworkOneUnit
+#    NetworkTwoUnit
+#    NetworkThreeUnit
 
 ##Run SConscript files in all of these folders.
 for d in InteractiveStoveSubdirs:

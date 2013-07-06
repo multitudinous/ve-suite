@@ -30,13 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-//TAO headers need to be first or else windows complains
-#include <orbsvcs/CosNamingC.h>
-#include <tao/BiDir_GIOP/BiDirGIOP.h>
-#include <tao/TAO_Internal.h>
-//End TAO headers
-
-#include <ves/open/moduleS.h>
 #include <ves/xplorer/Logging.h>
 #include "AppWrapper.h"
 
@@ -335,7 +328,7 @@ int main( int argc, char* argv[] )
         //appWrapper->m_thread->new_thread->join();
         delete appWrapper;
     }
-    catch( CORBA::SystemException& ex )
+    /*catch( CORBA::SystemException& ex )
     {
         std::cerr << "Caught CORBA::SystemException." << std::endl
                   << ex._info().c_str() << std::endl
@@ -356,7 +349,7 @@ int main( int argc, char* argv[] )
     {
         std::cerr << "Caught CORBA::Exception." << std::endl
                   << ex._info().c_str() << std::endl ;
-    }
+    }*/
     catch( vpr::Exception& e )
     {
         std::cerr << e.what() << std::endl << std::flush;
