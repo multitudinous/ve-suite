@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR xerces_options tao_options RootDir vpr_options buildDir GetPlatform')
+Import('baseEnv ves_pkg LIBDIR xerces_options RootDir vpr_options buildDir GetPlatform')
 
 openDir = os.path.abspath( pj( RootDir, 'share', 'tools', 'mfc_test' ) )
 sources = sca_util.getSourcesRecursive( openDir )
@@ -62,10 +62,6 @@ env.Append(LINKFLAGS = ['/SUBSYSTEM:WINDOWS'])
 ves_res=env.RES('mfctestdlg/test.rc')
 for res in ves_res:
   sources.append(res)
-  
-#xerces_options.apply( env )
-#tao_options.apply( env )
-#vpr_options.apply( env )
 
 prog = ves_pkg.createProgram('mfctestdlg' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( sources )
