@@ -193,9 +193,6 @@ void VisFeatureMakerBase::Execute( propertystore::PropertySetPtr set )
     // create actors
     {
         activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-
-        //activeObject->SetVECommand( CommandManager::instance()->GetXMLCommand() );
-        //activeObject->UpdateCommand();
         //propertystore::PropertySetWeakPtr tempPtr = propertystore::PropertySetWeakPtr( &set );
         activeObject->SetPropertySet( set );
         activeObject->UpdateCommand();

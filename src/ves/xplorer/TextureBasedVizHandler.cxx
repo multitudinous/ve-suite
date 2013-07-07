@@ -32,8 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/TextureBasedVizHandler.h>
 
-#include <ves/xplorer/command/CommandManager.h>
-
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>

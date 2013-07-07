@@ -43,8 +43,6 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 
-#include <ves/xplorer/command/CommandManager.h>
-
 #include <ves/xplorer/device/cfdCursor.h>
 
 #include <ves/xplorer/environment/cfdEnum.h>
@@ -397,7 +395,7 @@ void SteadyStateVizHandler::InitScene()
 void SteadyStateVizHandler::PreFrameUpdate()
 {
     //Process the current command form the gui
-    if( CommandManager::instance()->GetXMLCommand() )
+    /*if( CommandManager::instance()->GetXMLCommand() )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::iterator currentEventHandler;
         const ves::open::xml::CommandPtr tempCommand =
@@ -411,7 +409,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tempCommand );
         }
-    }
+    }*/
 
     const double clockTime = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentTime();
     const double elapsed = clockTime - m_frameTime;
