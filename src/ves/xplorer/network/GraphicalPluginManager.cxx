@@ -37,11 +37,6 @@
 #include <ves/xplorer/network/NetworkSystemView.h>
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
-#include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
-#include <ves/xplorer/network/DeleteNetworkViewEventHandler.h>
-#include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
-#include <ves/xplorer/network/LoadVesFileEventHandler.h>
-
 #include <ves/xplorer/network/NetworkSlots.h>
 
 #include <ves/xplorer/Debug.h>
@@ -51,8 +46,6 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 
 #include <ves/xplorer/plugin/PluginBase.h>
-
-#include <ves/xplorer/command/CommandManager.h>
 
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -99,7 +92,6 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::network;
-using namespace ves::xplorer::command;
 
 vprSingletonImpLifetime( ves::xplorer::network::GraphicalPluginManager, 0 );
 
@@ -134,16 +126,6 @@ void GraphicalPluginManager::Initialize()
     dirStringStream << "VEClient-" << vpr::System::getHostname()
                     << "-" <<  vpr::GUID( vpr::GUID::generateTag ).toString();
     m_UINAME = dirStringStream.str();
-
-    _eventHandlers[std::string( "DELETE_OBJECT_FROM_NETWORK" )] =
-        new DeleteObjectFromNetworkEventHandler();
-    _eventHandlers[std::string( "DELETE_NETWORK_SYSTEM_VIEW" )] =
-        new DeleteNetworkViewEventHandler();
-    // Replaced by "ChangeXplorerView" slot
-//    _eventHandlers[std::string( "CHANGE_XPLORER_VIEW" )] =
-//        new SwitchXplorerViewEventHandler();
-    _eventHandlers[std::string( "LOAD_VES_FILE" )] =
-        new LoadVesFileEventHandler();
 
     //Delete everything before loading things up
     CONNECTSIGNALS_STATIC( "%VesFileLoading%",
@@ -341,22 +323,6 @@ void GraphicalPluginManager::PreFrameUpdate()
     vprDEBUG( vesDBG, 3 ) << "|\tGraphicalPluginManager::PreFrameUpdate"
                           << std::endl << vprDEBUG_FLUSH;
 
-    //process the current command form the gui
-    const CommandPtr tempCommand = CommandManager::instance()->GetXMLCommand();
-    if( tempCommand )
-    {
-        std::map< std::string, ves::xplorer::event::EventHandler* >::iterator
-        currentEventHandler;
-        currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
-        if( currentEventHandler != _eventHandlers.end() )
-        {
-            vprDEBUG( vesDBG, 0 ) << "|\t\tExecuting: " << tempCommand->GetCommandName()
-                                  << std::endl << vprDEBUG_FLUSH;
-            currentEventHandler->second->SetGlobalBaseObject();
-            currentEventHandler->second->Execute( tempCommand );
-        }
-    }
-
     ///Load the data from ce
     // Commenting this out since new normal is CORBA-less. Need to figure out
     // how to deal with step #4 below since it relies on value of
@@ -378,35 +344,6 @@ void GraphicalPluginManager::PreFrameUpdate()
             foundPlugin = mPluginsMap.begin(); foundPlugin != mPluginsMap.end();
             ++foundPlugin )
     {
-        //1. Set the current command on all plugins
-        /*if ( ModelHandler::instance()->GetActiveModel() )
-        {
-           CommandPtr tempCommand =
-                    ModelHandler::instance()->GetActiveModel()->GetVECommand();
-           foundPlugin->second->SetCurrentCommand( tempCommand );
-        }*/
-        //1. See if the current plugin wants to process a command
-        if( tempCommand )
-        {
-            pluginEHMapIter = pluginEHMap.find( foundPlugin->first );
-            if( pluginEHMapIter != pluginEHMap.end() )
-            {
-                //Process a special plugin command
-                const std::string cmdName = tempCommand->GetCommandName();
-                std::map< std::string, ves::xplorer::plugin::PluginBasePtr >::const_iterator
-                foundCommand = pluginEHMapIter->second.find( cmdName );
-                //PluginBasePtr const tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
-                if( foundCommand != pluginEHMapIter->second.end() )
-                {
-                    foundPlugin->second->SetCurrentCommand( tempCommand );
-
-                    /*std::vector< ves::open::xml::CommandPtr > tempCommands =
-                    CommandManager::instance()->GetXMLCommands( cmdName );
-                    foundPlugin->second->SetCurrentCommands( tempCommands );*/
-                }
-            }
-        }
-
         //2. if active model is the plugin's model...
         if( ModelHandler::instance()->GetActiveModel() &&
                 ( ModelHandler::instance()->GetActiveModel() ==

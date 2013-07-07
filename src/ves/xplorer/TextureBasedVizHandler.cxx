@@ -66,7 +66,6 @@
 vprSingletonImpLifetime( ves::xplorer::TextureBasedVizHandler, 1 );
 using namespace ves::xplorer::volume;
 using namespace ves::xplorer;
-using namespace ves::xplorer::command;
 
 //////////////////////////////////////////////////////////
 //Constructors                                          //

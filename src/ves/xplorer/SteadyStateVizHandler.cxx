@@ -112,7 +112,6 @@ vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 1 );
 ///When running on a cluster this holds all of the viz nodes until the data is ready to be added to the scenegraph
 static cluster::ApplicationBarrier m_vizBarrier;
     
-using namespace ves::xplorer::command;
 using namespace ves::xplorer::event::viz;
 
 namespace ves
