@@ -1,7 +1,0 @@
-#!/bin/csh -f
-# -f means fast: don't read .cshrc file for set variables
-setenv TAO_MACHINE cruncher.vrac.iastate.edu
-setenv TAO_PORT 1237
-setenv VPR_DEBUG_NFY_LEVEL 2
-
-WebServices -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService
