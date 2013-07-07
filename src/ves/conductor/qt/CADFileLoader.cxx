@@ -51,6 +51,8 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/convenience.hpp>
 
+#include <switchwire/SingleShotSignal.h>
+
 #include <iostream>
 
 namespace ves
@@ -120,13 +122,14 @@ void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string&
     //newCADPart->SetParent( assembly->GetID() );
 
     // Send node off to xplorer
-    ves::open::xml::DataValuePairPtr cadNode( new ves::open::xml::DataValuePair() );
-    cadNode->SetDataType( std::string( "XMLOBJECT" ) );
-    cadNode->SetData( "New Node", newCADPart );
-    ves::open::xml::CommandPtr cadCommand( new ves::open::xml::Command() );
-    cadCommand->SetCommandName( std::string( "CAD_ADD_NODE" ) );
-    cadCommand->AddDataValuePair( cadNode );
-    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( cadCommand );
+//    ves::open::xml::DataValuePairPtr cadNode( new ves::open::xml::DataValuePair() );
+//    cadNode->SetDataType( std::string( "XMLOBJECT" ) );
+//    cadNode->SetData( "New Node", newCADPart );
+//    ves::open::xml::CommandPtr cadCommand( new ves::open::xml::Command() );
+//    cadCommand->SetCommandName( std::string( "CAD_ADD_NODE" ) );
+//    cadCommand->AddDataValuePair( cadNode );
+//    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( cadCommand );
+    switchwire::SingleShotSignal< void, CADNodePtr >( "CADFileLoader.CADAddNewNode", newCADPart );
     WritePartToDB( vegFileNamePath, newCADPart );
 }
 ////////////////////////////////////////////////////////////////////////////////

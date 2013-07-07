@@ -35,6 +35,7 @@
 
 #include <ves/xplorer/event/cad/CADEventHandler.h>
 #include <ves/open/xml/XMLObjectPtr.h>
+#include <ves/open/xml/cad/CADNodePtr.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
@@ -66,9 +67,12 @@ public:
     ///Equal operator
     CADAddNodeEventHandler& operator=( const CADAddNodeEventHandler& rhs );
 protected:
-    ///Update a transform on the CADNode.
+    ///Adds a new cad node
     ///\param command The Command containing the udpated transform.
     void _operateOnNode( ves::open::xml::XMLObjectPtr command );
+
+    ///Adds a new cad node
+    void AddNewNode( ves::open::xml::cad::CADNodePtr cadNode );
 
     ves::util::StringSignal_type m_CADNodeAdded;
 };

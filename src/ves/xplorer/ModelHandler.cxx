@@ -125,6 +125,8 @@ ModelHandler::ModelHandler()
         new ves::xplorer::event::CADTransformEventHandler();
     _eventHandlers[ std::string( "CAD_ADD_ANIMATION_TO_NODE" )] =
         new ves::xplorer::event::CADAnimationEventHandler();
+    // The slot connection associated with CAD_ADD_NODE is made in
+    // CADAddNodeEventHandler rather than in this class.
     _eventHandlers[ std::string( "CAD_ADD_NODE" )] =
         new ves::xplorer::event::CADAddNodeEventHandler();
     _eventHandlers[ std::string( "CAD_DELETE_NODE" )] =
@@ -147,8 +149,10 @@ ModelHandler::ModelHandler()
         new ves::xplorer::event::CADRemoveAttributeEventHandler();
     _eventHandlers[ std::string( "CAD_MOVE_NODE" )] =
         new ves::xplorer::event::CADMoveNodeEventHandler();
+    /* Now handled by LoadDatasetFromFile slot
     _eventHandlers[ std::string( "UPDATE_MODEL_DATASETS" )] =
         new ves::xplorer::event::AddVTKDataSetEventHandler();
+        */
     _eventHandlers[ std::string( "Change Axes State" )] =
         new ves::xplorer::event::AxesEventHandler();
     _eventHandlers[ std::string( "Change Axes Labels" )] =
@@ -234,7 +238,12 @@ ModelHandler::ModelHandler()
                      &ves::xplorer::event::data::ShowScalarBar,
                      m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNALS_STATIC( "AddVTKDataSetEventHandler.DatafileLoaded",
+    CONNECTSIGNALS_STATIC( "%LoadDatasetFromFile",
+                    void ( std::string const& ),
+                    &ves::xplorer::event::data::LoadDatasetFromFile,
+                    m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNALS_STATIC( "LoadDatasetFromFile.DatafileLoaded",
                     void ( std::string const& ),
                     &ves::xplorer::event::data::LoadTransientTimeSteps,
                     m_connections, any_SignalType, normal_Priority );

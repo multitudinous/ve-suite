@@ -33,6 +33,7 @@
 #include <ves/xplorer/event/cad/CADAddNodeEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 
@@ -48,6 +49,12 @@
 using namespace ves::xplorer::event;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml;
+
+/*
+ * We're keeping this class rather than moving AddNewNode into CADSlots because
+ * AddNewNode relies on methods that live in the base class CADEventHandler.
+ * 2013-07-05
+ */
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -58,6 +65,11 @@ CADAddNodeEventHandler::CADAddNodeEventHandler()
     switchwire::EventManager::instance()->RegisterSignal(
         ( &m_CADNodeAdded ),
         "CADEventHandler.NodeAdded" );
+
+    CONNECTSIGNALS_1( "%CADAddNewNode",
+                      void( CADNodePtr ),
+                      &CADAddNodeEventHandler::AddNewNode,
+                      m_connections, any_SignalType, normal_Priority );
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADAddNodeEventHandler::CADAddNodeEventHandler( const CADAddNodeEventHandler& rhs )
@@ -78,15 +90,25 @@ CADAddNodeEventHandler& CADAddNodeEventHandler::operator=( const CADAddNodeEvent
     }
     return *this;
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+// This method can go away once we're sure there is no calling path: 2013-07-05
 void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
+    CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+    DataValuePairPtr cadNode = command->GetDataValuePair( "New Node" );
+    CADNodePtr tempNode( boost::dynamic_pointer_cast<CADNode>( cadNode->GetDataXMLObject() ) );
+    AddNewNode( tempNode );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADAddNodeEventHandler::AddNewNode( ves::open::xml::cad::CADNodePtr cadNode )
+{
+
+    m_activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+    m_cadHandler = m_activeModel->GetModelCADHandler();
+
     try
     {
-        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
-        DataValuePairPtr cadNode = command->GetDataValuePair( "New Node" );
-        CADNodePtr tempNode( boost::dynamic_pointer_cast<CADNode>( cadNode->GetDataXMLObject() ) );
-        std::string nodeType =  tempNode->GetNodeType();
+        std::string nodeType =  cadNode->GetNodeType();
 
         //Get the xml model pointer so that the pointers used by the cad handler
         //are in the same memory space as the xml model in the ves::xplorer::Model.
@@ -100,7 +122,7 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 
         if( nodeType == "Assembly" )
         {
-            if( tempNode->GetID() == rootAssembly->GetID() )
+            if( cadNode->GetID() == rootAssembly->GetID() )
             {
                 assembly = rootAssembly;
             }
@@ -108,7 +130,7 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             {
                 assembly =
                     boost::dynamic_pointer_cast< CADAssembly >(
-                        rootAssembly->SearchAllChildren( tempNode->GetID() ) );
+                        rootAssembly->SearchAllChildren( cadNode->GetID() ) );
             }
 
             node = boost::dynamic_pointer_cast<CADNode>( assembly );
@@ -122,7 +144,7 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         {
             part =
                 boost::dynamic_pointer_cast<CADPart>(
-                    rootAssembly->SearchAllChildren( tempNode->GetID() ) );
+                    rootAssembly->SearchAllChildren( cadNode->GetID() ) );
             node = boost::dynamic_pointer_cast<CADNode>( part );
 
             if( m_cadHandler->PartExists( node->GetID() ) )
@@ -179,8 +201,9 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     }
     catch( ... )
     {
-        std::cerr << "CADAddNodeEventHandler::_operateOnNode : There was an "
+        std::cerr << "CADAddNodeEventHandler::AddNewNode : There was an "
                   << "exception generated somewhere in the CAD event handlers."
                   << std::endl;
     }
 }
+////////////////////////////////////////////////////////////////////////////////

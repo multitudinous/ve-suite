@@ -103,6 +103,12 @@ void LoadTransientData( const std::string& uuid, const bool& load );
 ///Load transient child datasets by file name
 void LoadTransientTimeSteps( const std::string& filename );
 
+///Create vtk data set by loading a file
+void LoadDatasetFromFile( const std::string& filename );
+
+///Loads surface files
+void LoadSurfaceFiles( std::string precomputedSurfaceDir );
+
 } //end data
 } //end event
 } //end xplorer

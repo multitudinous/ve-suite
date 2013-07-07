@@ -68,15 +68,10 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/model/Network.h>
 
-// Req'd for dataset loads
-#include <ves/open/xml/ParameterBlock.h>
-#include <latticefx/utils/vtk/VTKFileHandler.h>
-#include <ves/open/xml/OneDStringArray.h>
-
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
+#include <switchwire/SingleShotSignal.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
-//#include <switchwire/Event.h>
 
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/data/CADPropertySet.h>
@@ -912,109 +907,7 @@ void MainWindow::LoadDataFile( std::string filename )
         filename = tmp2.filename().string();
     }
 
-    ves::open::xml::ParameterBlockPtr mParamBlock;
-    ves::open::xml::model::ModelPtr m_veModel(
-        ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData() );
-    //---------------From OnInformationPacketAdd
-    mParamBlock = m_veModel->GetInformationPacket( -1 );
-    mParamBlock->SetName( filename );
-
-
-
-    //---------------- From OnLoadFile
-    //Load a vtk file
-    ves::open::xml::DataValuePairPtr tempDVP =
-        mParamBlock->GetProperty( "VTK_DATA_FILE" );
-    if( !tempDVP )
-    {
-        tempDVP = mParamBlock->GetProperty( -1 );
-    }
-    tempDVP->SetData( "VTK_DATA_FILE", filename );
-
-    // RPT: This block isn't doing anything useful yet. Need to figure
-    // out proper workflow for determining if the file is part of
-    // a transient series.
-    /*
-    if( ves::xplorer::util::fileIO::getExtension( filename ) == "vtm" )
-    {
-        boost::filesystem::path tempPath( filename );
-        std::string transDir = tempPath.parent_path().string();
-
-        std::vector<std::string> transientFile =
-            ves::xplorer::util::fileIO::GetFilesInDirectory(
-            transDir, ".vtm" );
-        if( transientFile.size() > 0 )
-        {
-            // ----- TODO: RPT: Need to think about how to deal with this.....
-            wxMessageDialog promptDlg( this,
-                _( "Is this file part of a transient series?" ),
-                _( "Transient Data Chooser" ),
-                wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
-                wxDefaultPosition );
-            int answer = promptDlg.ShowModal();
-            if( answer == wxID_YES )
-            {
-                tempDVP =
-                    mParamBlock->GetProperty( "VTK_TRANSIENT_SERIES" );
-                if( !tempDVP )
-                {
-                    tempDVP = mParamBlock->GetProperty( -1 );
-                }
-                //unsigned int translfag = 1;
-                tempDVP->SetData( "VTK_TRANSIENT_SERIES", transDir );
-            }
-        }
-    }*/
-
-    lfx::vtk_utils::VTKFileHandler tempHandler;
-    std::vector< std::string > dataArrayList =
-        tempHandler.GetDataSetArraysFromFile( filename );
-
-    if( !dataArrayList.empty() )
-    {
-        // RPT: For now, we just load all scalars in the file. Need to think
-        // about how to choose specific ones from the file.
-        //open dialog to choose scalars to load
-        //            DataSetDataArrayChoiceDialog choiceDialog( this );
-        //            choiceDialog.SetDataArrays( dataArrayList );
-        //            if( choiceDialog.ShowModal() == wxID_OK )
-        //            {
-        //                dataArrayList = choiceDialog.GetUserActiveArrays();
-        ves::open::xml::DataValuePairPtr arraysDVP =
-            mParamBlock->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
-        if( !arraysDVP )
-        {
-            arraysDVP = mParamBlock->GetProperty( -1 );
-        }
-        ves::open::xml::OneDStringArrayPtr
-        stringArray( new ves::open::xml::OneDStringArray() );
-        stringArray->SetArray( dataArrayList );
-        arraysDVP->SetData( "VTK_ACTIVE_DATA_ARRAYS", stringArray );
-    }
-
-    ves::open::xml::DataValuePairSharedPtr
-    dataValuePair( new ves::open::xml::DataValuePair() );
-    dataValuePair->SetData( "CREATE_NEW_DATASETS",
-                            ves::open::xml::model::ModelPtr(
-                                new ves::open::xml::model::Model( *m_veModel ) ) );
-
-    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
-    veCommand->SetCommandName( std::string( "UPDATE_MODEL_DATASETS" ) );
-    veCommand->AddDataValuePair( dataValuePair );
-    //Add the active dataset name to the command
-    ves::open::xml::DataValuePairSharedPtr dataSetName(
-        new ves::open::xml::DataValuePair() );
-    if( mParamBlock->GetProperty( "VTK_DATA_FILE" ) )
-    {
-        dataSetName->SetData( "VTK_DATASET_NAME",
-                              mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
-    }
-    else
-    {
-        dataSetName->SetData( "VTK_DATASET_NAME", "NULL" );
-    }
-    veCommand->AddDataValuePair( dataSetName );
-    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( veCommand );
+    switchwire::SingleShotSignal< void, const std::string& >( "MainWindow.LoadDatasetFromFile", filename );
 
     if( m_displayFeatures.contains( "Visualization" ) )
     {

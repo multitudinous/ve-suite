@@ -51,16 +51,27 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/FloatArray.h>
 #include <ves/open/xml/Transform.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/OneDStringArray.h>
 
 #include <string>
 #include <vector>
 
 #include <latticefx/core/vtk/DataSet.h>
+#include <latticefx/utils/vtk/fileIO.h>
+#include <latticefx/utils/vtk/VTKFileHandler.h>
 
 #include <osgwTools/Orientation.h>
 #include <osgwTools/Quat.h>
 
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/version.hpp>
+
+#include <switchwire/SingleShotSignal.h>
 
 namespace ves
 {
@@ -440,7 +451,374 @@ void LoadTransientTimeSteps( const std::string& filename )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void LoadDatasetFromFile( const std::string& filename )
+{
+    // TODO: Much of this method could use a good cleaning. Right now, we use
+    // a VTKFileHandler to pull info from a file, pack it up into DVPs,
+    // then later on unpack the very same data from the DVPs. Why? Because this
+    // method is a mash-up of two previous methods that talked to each other
+    // using the DVP mechanism. A lot of it could potentially be eliminated.
+    ves::xplorer::Model* activeModel =
+        ModelHandler::instance()->GetActiveModel();
+    if( !activeModel )
+    {
+        return;
+    }
+
+/// This block has been moved from conductor/qt/MainWindow.cxx::LoadDataFile to
+/// here.
+
+        ves::open::xml::ParameterBlockPtr mParamBlock;
+        ves::open::xml::model::ModelPtr veModel(
+            ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData() );
+        mParamBlock = veModel->GetInformationPacket( -1 );
+        mParamBlock->SetName( filename );
+
+        //Load a vtk file
+        ves::open::xml::DataValuePairPtr tempDVP =
+            mParamBlock->GetProperty( "VTK_DATA_FILE" );
+        if( !tempDVP )
+        {
+            tempDVP = mParamBlock->GetProperty( -1 );
+        }
+        tempDVP->SetData( "VTK_DATA_FILE", filename );
+
+        lfx::vtk_utils::VTKFileHandler tempHandler;
+        std::vector< std::string > dataArrayList =
+            tempHandler.GetDataSetArraysFromFile( filename );
+
+        if( !dataArrayList.empty() )
+        {
+            ves::open::xml::DataValuePairPtr arraysDVP =
+                mParamBlock->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
+            if( !arraysDVP )
+            {
+                arraysDVP = mParamBlock->GetProperty( -1 );
+            }
+            ves::open::xml::OneDStringArrayPtr
+            stringArray( new ves::open::xml::OneDStringArray() );
+            stringArray->SetArray( dataArrayList );
+            arraysDVP->SetData( "VTK_ACTIVE_DATA_ARRAYS", stringArray );
+        }
+
+ ///
+
+
+    //CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+    /*
+    std::string dataSetName =
+        command->GetDataValuePair( "VTK_DATASET_NAME" )->GetDataString();
+    if( !dataSetName.compare( "NULL" ) )
+    {
+        std::cerr << "AddVTKDataSetEventHandler::Execute : No base dataset is specified." << std::endl;
+        return;
+    }*/
+
+    /*DataValuePairPtr veModelDVP =
+        command->GetDataValuePair( "CREATE_NEW_DATASETS" );
+    xml::model::ModelPtr veModel =
+        boost::dynamic_pointer_cast<xml::model::Model>(
+            veModelDVP->GetDataXMLObject() );*/
+
+    size_t numInfoPackets = veModel->GetNumberOfInformationPackets();
+    for( size_t i = 0; i < numInfoPackets; ++i )
+    {
+        ves::open::xml::ParameterBlockPtr tempInfoPacket = veModel->GetInformationPacket( i );
+
+        if( !tempInfoPacket->GetProperty( "VTK_DATA_FILE" ) )
+        {
+            continue;
+        }
+        /*
+        // Assume only one model for now
+        // Flexibilty to have multiply models
+        if( !_activeModel )
+        {
+            return;
+        }*/
+        size_t currentNumberOfDataSets = activeModel->GetNumberOfCfdDataSets();
+        bool foundDataSet = false;
+
+        //check to see if dataset is already on this particular model
+        for( size_t j = 0; j < currentNumberOfDataSets; ++j )
+        {
+            if( tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID() ==
+                    activeModel->GetCfdDataSet( j )->GetUUID( "VTK_DATA_FILE" ) )
+            {
+                foundDataSet = true;
+                break;
+            }
+        }
+
+        if( foundDataSet )
+        {
+            std::cout << "|\tSkipping load of dataset: "
+                      << tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID()
+                      << std::endl;
+            continue;
+        }
+
+        //////////////////////////////////////////////////////////////
+        // get vtk data set name...
+        std::string vtk_filein =
+            tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetDataString();
+        if( !lfx::vtk_utils::fileIO::isFileReadable( vtk_filein ) )
+        {
+            std::cerr << "ERROR: unreadable vtk file = " << vtk_filein
+                      << ".  You may need to correct your ves file."
+                      << std::endl;
+            continue;
+        }
+
+        ///////////////////////////////////////////////////////////////
+        //If not already there lets create a new dataset
+        activeModel->CreateCfdDataSet();
+        // Pass in -1 to GetCfdDataSet to get the last dataset added
+        lfx::core::vtk::DataSetPtr lastDataAdded = activeModel->GetCfdDataSet( -1 );
+        vprDEBUG( vesDBG, 0 )
+                << "|\t*************Now starting to load new data************ "
+                << std::endl << vprDEBUG_FLUSH;
+
+        //Setup the transform for the dataset
+        {
+            ves::open::xml::TransformPtr dataTransform = tempInfoPacket->GetTransform();
+            std::vector< double > translation = dataTransform->GetTranslationArray()->GetArray();
+            std::vector< double > rotation = dataTransform->GetRotationArray()->GetArray();
+            std::vector< double > scale = dataTransform->GetScaleArray()->GetArray();
+
+            osg::ref_ptr< osg::PositionAttitudeTransform > transform = lastDataAdded->GetDCS();
+            transform->setScale( osg::Vec3d( scale[ 0 ], scale[ 1 ], scale[ 2 ] ) );
+            transform->setPosition( osg::Vec3d( translation[ 0 ], translation[ 1 ], translation[ 2 ] ) );
+            {
+                osg::ref_ptr< osgwTools::Orientation > tempQuat = new osgwTools::Orientation();
+                transform->setAttitude( tempQuat->getQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );
+            }
+        }
+
+        vprDEBUG( vesDBG, 0 ) << "|\tvtk file = " << vtk_filein
+                              << std::endl << vprDEBUG_FLUSH;
+        lastDataAdded->SetFileName( vtk_filein );
+        lastDataAdded->SetUUID( "VTK_DATA_FILE",
+                                tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID() );
+        ves::open::xml::DataValuePairPtr stringDVP =
+            tempInfoPacket->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
+        std::vector< std::string > vecStringArray;
+        if( stringDVP )
+        {
+            ves::open::xml::OneDStringArrayPtr stringArray =
+                boost::dynamic_pointer_cast <
+                ves::open::xml::OneDStringArray > (
+                    stringDVP->GetDataXMLObject() );
+            vecStringArray = stringArray->GetArray();
+            lastDataAdded->SetActiveDataArrays( vecStringArray );
+        }
+
+        //////////////////////////////////////////////////////////////
+        if( tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" ) )
+        {
+            std::string precomputedDataSliceDir =
+                tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->
+                GetDataString();
+            lastDataAdded->
+                    SetPrecomputedDataSliceDir( precomputedDataSliceDir );
+            lastDataAdded->SetUUID( "VTK_PRECOMPUTED_DIR_PATH",
+                                    tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->
+                                    GetID() );
+        }
+        //////////////////////////////////////////////////////////////
+        if( tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" ) )
+        {
+            std::string precomputedSurfaceDir =
+                tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->
+                GetDataString();
+            lastDataAdded->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
+            lastDataAdded->SetUUID( "VTK_SURFACE_DIR_PATH",
+                                    tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->
+                                    GetID() );
+        }
+
+        ves::xplorer::event::data::LoadSurfaceFiles( lastDataAdded->GetPrecomputedSurfaceDir() );
+        //////////////////////////////////////////////////////////////
+        //Load texture datasets
+        if( tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" ) )
+        {
+            vprDEBUG( vesDBG, 0 ) << "|\tCreating texture dataset."
+                                  << std::endl << vprDEBUG_FLUSH;
+            activeModel->CreateTextureDataSet();
+            size_t numProperties = tempInfoPacket->GetNumberOfProperties();
+            for( size_t j = 0; j < numProperties; ++j )
+            {
+                if( tempInfoPacket->GetProperty( j )->GetDataName() ==
+                        std::string( "VTK_TEXTURE_DIR_PATH" ) )
+                {
+                    activeModel->AddDataSetToTextureDataSet( 0,
+                            tempInfoPacket->GetProperty( j )->GetDataString() );
+                    std::ostringstream textId;
+                    textId << "VTK_SURFACE_DIR_PATH_" << j;
+                    lastDataAdded->SetUUID( textId.str(), tempInfoPacket->
+                                            GetProperty( "VTK_TEXTURE_DIR_PATH" )->GetID() );
+                }
+            }
+        }
+
+        //Now load up the dataset
+        {
+            const std::string tempDataSetFilename =
+                lastDataAdded->GetFileName();
+            std::cout << "|\tLoading data for file "
+                      << tempDataSetFilename
+                      << std::endl;
+            lastDataAdded->SetArrow(
+                ves::xplorer::ModelHandler::instance()->GetArrow() );
+            //Check and see if the data is part of a transient series
+            if( tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" ) )
+            {
+                std::string precomputedSurfaceDir =
+                    tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" )->
+                    GetDataString();
+                lastDataAdded->LoadTransientData( precomputedSurfaceDir );
+                std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetTransientDataSets();
+                for( size_t i = 0; i < dataSetVector.size(); ++i )
+                {
+                    ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ], tempInfoPacket );
+                }
+            }
+            else
+            {
+                lastDataAdded->LoadData();
+                std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetChildDataSets();
+                for( size_t i = 0; i < dataSetVector.size(); ++i )
+                {
+                    ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ], tempInfoPacket );
+                }
+                ves::xplorer::event::data::WriteDatabaseEntry( lastDataAdded, tempInfoPacket );
+            }
+            //If the data load failed
+            if( !lastDataAdded->GetDataSet() )
+            {
+                std::cout << "|\tData failed to load." << std::endl;
+                activeModel->DeleteDataSet( tempDataSetFilename );
+            }
+            else
+            {
+                std::cout << "|\tData is loaded for file "
+                          << tempDataSetFilename
+                          << std::endl;
+                if( lastDataAdded->GetParent() == lastDataAdded )
+                {
+                    activeModel->GetDCS()->
+                        addChild( lastDataAdded->GetDCS() );
+                    activeModel->SetActiveDataSet( lfx::core::vtk::DataSetPtr() );
+                }
+                switchwire::SingleShotSignal< void, const std::string& >( "LoadDatasetFromFile.DatafileLoaded", tempDataSetFilename );
+            }
+        }
+        //////////////////////////////////////////////////////////////
+        if( tempInfoPacket->GetProperty( "Create Surface Wrap" ) )
+        {
+            unsigned int surfaceToggle = 0;
+            tempInfoPacket->GetProperty( "Create Surface Wrap" )->
+                GetData( surfaceToggle );
+            if( surfaceToggle )
+            {
+                //Create surface
+                lastDataAdded->CreateSurfaceWrap();
+            }
+        }
+    }
 }
+////////////////////////////////////////////////////////////////////////////////
+void LoadSurfaceFiles( std::string precomputedSurfaceDir )
+{
+    if( precomputedSurfaceDir.empty() )
+    {
+        return;
+    }
+
+    ves::xplorer::Model* _activeModel =
+        ModelHandler::instance()->GetActiveModel();
+
+    vprDEBUG( vesDBG, 1 ) << "|\tLoading surface files from "
+                          << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
+
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+    boost::filesystem::path dir_path( precomputedSurfaceDir );
+#else
+    boost::filesystem::path dir_path( precomputedSurfaceDir, boost::filesystem::no_check );
+#endif
+    if( boost::filesystem::is_directory( dir_path ) )
+    {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        std::cout << "|\tIn directory: "
+                  << dir_path.string() << "\n";
+#else
+        std::cout << "|\tIn directory: "
+                  << dir_path.native_directory_string() << "\n";
+#endif
+        boost::filesystem::directory_iterator end_iter;
+        for( boost::filesystem::directory_iterator dir_itr( dir_path );
+                dir_itr != end_iter; ++dir_itr )
+        {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+            const std::string filenameString = dir_itr->path().string();
+#else
+            const std::string filenameString = dir_itr->leaf();
+#endif
+            try
+            {
+                if( boost::filesystem::is_directory( *dir_itr ) )
+                {
+                    std::cout << "|\tIs a sub directory " << filenameString << " [directory]\n";
+                }
+                else
+                {
+                    std::cout << filenameString << "\n";
+                    if( strstr( filenameString.c_str(), ".vtk" ) )
+                    {
+                        std::string pathAndFileName;
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+                        pathAndFileName.assign( filenameString );
+#else
+                        pathAndFileName.assign( dir_path.leaf().c_str() );
+                        pathAndFileName.append( "/" );
+                        pathAndFileName.append( filenameString.c_str() );
+#endif
+                        vprDEBUG( vesDBG, 0 ) << "|\tsurface file = " << pathAndFileName
+                                              << std::endl << vprDEBUG_FLUSH;
+
+                        _activeModel->CreateCfdDataSet();
+                        ///This code needs updated BADLY
+                        ///There should be much better logic here.
+                        unsigned int numDataSets = _activeModel->GetNumberOfCfdDataSets();
+                        // subtract 1 because this number was 1 base not 0 base
+                        numDataSets -= 1;
+                        _activeModel->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
+
+                        // set the dcs matrix the same as the last file
+                        _activeModel->GetCfdDataSet( -1 )->SetDCS(
+                            _activeModel->GetCfdDataSet( ( int )( numDataSets - 1 ) )->GetDCS() );
+
+                        // precomputed data that descends from a flowdata.vtk should
+                        // automatically have the same color mapping as the "parent"
+                        _activeModel->GetCfdDataSet( -1 )->SetParent(
+                            _activeModel->GetCfdDataSet( ( int )( numDataSets - 1 ) )->GetParent() );
+                    }
+                }
+            }
+            catch( const std::exception& ex )
+            {
+                std::cout << filenameString << " " << ex.what() << std::endl;
+            }
+        }
+    }
+    else // must be a file
+    {
+#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
+        std::cout << "\nFound: " << dir_path.string() << "\n";
+#else
+        std::cout << "\nFound: " << dir_path.native_file_string() << "\n";
+#endif
+    }
 }
-}
-}
+////////////////////////////////////////////////////////////////////////////////
+}}}} // namespace
