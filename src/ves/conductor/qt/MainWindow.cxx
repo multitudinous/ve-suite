@@ -59,8 +59,6 @@
 #include <ves/conductor/qt/ScriptingTab.h>
 #include <ves/conductor/qt/UIManager.h>
 
-#include <ves/xplorer/command/CommandManager.h>
-
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/model/Model.h>

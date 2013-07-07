@@ -33,7 +33,6 @@
 
 #include <ves/conductor/qt/CADFileLoader.h>
 
-#include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
@@ -121,14 +120,6 @@ void CADFileLoader::LoadCADFile( const std::string& fileName, const std::string&
     assembly->AddChild( newCADPart );
     //newCADPart->SetParent( assembly->GetID() );
 
-    // Send node off to xplorer
-//    ves::open::xml::DataValuePairPtr cadNode( new ves::open::xml::DataValuePair() );
-//    cadNode->SetDataType( std::string( "XMLOBJECT" ) );
-//    cadNode->SetData( "New Node", newCADPart );
-//    ves::open::xml::CommandPtr cadCommand( new ves::open::xml::Command() );
-//    cadCommand->SetCommandName( std::string( "CAD_ADD_NODE" ) );
-//    cadCommand->AddDataValuePair( cadNode );
-//    ves::xplorer::command::CommandManager::instance( )->AddXMLCommand( cadCommand );
     switchwire::SingleShotSignal< void, CADNodePtr >( "CADFileLoader.CADAddNewNode", newCADPart );
     WritePartToDB( vegFileNamePath, newCADPart );
 }
