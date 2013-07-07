@@ -156,6 +156,9 @@ private:
     ///Validate the cad file against the csv file
     void ValidateDataFile();
 
+    ///Loads the database (sql or csv) file referenced by filename
+    void LoadFile( const std::string& filename );
+
     ///line segment for intersection tests
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
     ///The start end point

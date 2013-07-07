@@ -149,6 +149,8 @@ private:
     ves::util::StringSignal_type m_querySignal;
     ///Send a list of part numbers to be highlighted
     switchwire::Event< void( const std::vector<std::string>&) > m_highlightPartsSignal;
+    ///Requests that a database be loaded into the warranytool GP
+    ves::util::StringSignal_type m_loadDBFileSignal;
     /// Required to connect to switchwire signals
     switchwire::ScopedConnectionList m_connections;
     ///The mouse slection results tab

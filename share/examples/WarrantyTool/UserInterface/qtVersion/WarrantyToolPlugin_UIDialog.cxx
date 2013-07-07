@@ -34,10 +34,6 @@
 #include "ui_WarrantyToolPlugin_UIDialog.h"
 #include "QueryResults.h"
 
-#include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/Command.h>
-#include <ves/open/xml/OneDStringArray.h>
-#include <ves/xplorer/command/CommandManager.h>
 #include <ves/conductor/qt/UITabs.h>
 #include <ves/conductor/qt/NaturalSortQTreeWidgetItem.h>
 #include <ves/xplorer/scenegraph/Select.h>
@@ -170,6 +166,13 @@ WarrantyToolPlugin_UIDialog::WarrantyToolPlugin_UIDialog(QWidget *parent) :
                             signalName, switchwire::EventManager::unspecified_SignalType );
     }
 
+    {
+        std::string signalName = "WarrantyToolPlugin_UIDialog" +
+            boost::lexical_cast<std::string>( this ) + ".WarrantyToolLoadFile";
+        evm->RegisterSignal( ( &m_loadDBFileSignal ),
+                            signalName, switchwire::EventManager::unspecified_SignalType );
+    }
+
     CONNECTSIGNALS_1( "%WarrantyTool.PartPicked",
                       void( const std::string& ),
                       &WarrantyToolPlugin_UIDialog::PartSelected,
@@ -208,7 +211,6 @@ void WarrantyToolPlugin_UIDialog::on_m_fileBrowseButton_clicked()
 
     m_fileComposite->setLayout( layout );
 
-    //tabs->ActivateTab( tabs->AddTab( m_fileDialog, "Select File" ) );
     tabs->ActivateTab( tabs->AddTab( m_fileComposite, "Select File" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -433,12 +435,15 @@ void WarrantyToolPlugin_UIDialog::OnDataLoad( std::string const& fileName )
     if( !fileName.empty() )
     {
         boost::filesystem::path viewPtsFilename( fileName );
+
+        // This block does not appear to do anything. 2013-07-07
+        /*
         std::string relativeViewLocationsPath(  "./" +
                                            viewPtsFilename.string() );
 
         ves::open::xml::DataValuePairPtr velFileName( new ves::open::xml::DataValuePair() );
         velFileName->SetData( "View Locations file",
-                              relativeViewLocationsPath );
+                              relativeViewLocationsPath );*/
 
         std::string csvFilename =  viewPtsFilename.string();
         //Parse the csv file
@@ -463,15 +468,8 @@ void WarrantyToolPlugin_UIDialog::OnDataLoad( std::string const& fileName )
         viewPtsFilename.replace_extension( ".db" );
         m_filename = viewPtsFilename.string();
 
-        //tell ves to load
-        ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
-                                                                      new ves::open::xml::DataValuePair() );
-        cameraGeometryOnOffDVP->SetData( "WARRANTY_FILE", csvFilename );
-        ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
-        command->AddDataValuePair( cameraGeometryOnOffDVP );
-        std::string mCommandName = "WARRANTY_TOOL_PART_TOOLS";
-        command->SetCommandName( mCommandName );
-        ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
+        // Tell WarrantyToolGP to load this file
+        m_loadDBFileSignal.signal( csvFilename );
 
         //Populate all of the choice dialog boxes with the appropriate data
         ui->m_variableChoice00->clear();

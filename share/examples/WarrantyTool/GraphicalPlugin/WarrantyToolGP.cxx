@@ -187,6 +187,11 @@ void WarrantyToolGP::InitializeNode(
                               switchwire::BooleanPropagationCombiner, &WarrantyToolGP::ProcessSelection,
                               *m_connections, any_SignalType, highest_Priority );
 
+    CONNECTSIGNALS_1( "%.WarrantyToolLoadFile",
+                      void ( const std::string& ),
+                      &WarrantyToolGP::LoadFile,
+                      *m_connections, any_SignalType, normal_Priority );
+
     m_selectionSignal = m_connections->GetLastConnection();
 
     switchwire::EventManager::instance()->RegisterSignal(
@@ -302,22 +307,8 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         }
         else if( dvpName == "WARRANTY_FILE" )
         {
-            ves::xplorer::scenegraph::util::RemoveNodeNameVisitor polyTransCleanup( m_cadRootNode, "", "" );
-
             std::string filename = dvp->GetDataString();
-            std::cout << "WarrantyToolGP::SetCurrentCommand::WARRANTY_FILE: " <<  filename << std::endl << std::flush;
-            boost::filesystem::path dataPath( filename );
-            if( dataPath.extension() == ".db" )
-            {
-                ParseDataBase( dataPath.string() );
-            }
-            else if( dataPath.extension() == ".csv" )
-            {
-                ParseDataFile( dataPath.string() );
-                ValidateDataFile();
-            }
-
-            //CreateTextTextures();
+            LoadFile( filename );
         }
         else if( dvpName == "SET_ACTIVE_TABLES" )
         {
@@ -349,6 +340,36 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         dvp = command->GetDataValuePair( "QUERY_STRING" );
         CreateDBQuery( dvp );
     }*/
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolGP::LoadFile( const std::string& filename )
+{
+    m_cadRootNode = mModel->GetModelCADHandler()->
+        GetAssembly( mModel->GetModelCADHandler()->GetRootCADNodeID() );
+    if( !m_cadRootNode )
+    {
+        std::cout << "WarrantyToolGP::LoadFile: m_cadRootNode is invalid" <<
+                     std::endl <<
+                     mModel->GetModelCADHandler()->GetRootCADNodeID() <<
+                     std::endl << std::flush;
+        return;
+    }
+
+    ves::xplorer::scenegraph::util::RemoveNodeNameVisitor polyTransCleanup( m_cadRootNode, "", "" );
+
+    std::cout << "WarrantyToolGP::LoadFile: " <<  filename << std::endl << std::flush;
+    boost::filesystem::path dataPath( filename );
+    if( dataPath.extension() == ".db" )
+    {
+        ParseDataBase( dataPath.string() );
+    }
+    else if( dataPath.extension() == ".csv" )
+    {
+        ParseDataFile( dataPath.string() );
+        ValidateDataFile();
+    }
+
+    //CreateTextTextures();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::StripCharacters( std::string& data, const std::string& character )
