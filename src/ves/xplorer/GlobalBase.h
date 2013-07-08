@@ -53,7 +53,6 @@ class VE_XPLORER_EXPORTS GlobalBase
 {
 public:
     GlobalBase();
-    virtual ~GlobalBase();
     ///copy constructor
     GlobalBase( const GlobalBase& )
     {
@@ -76,6 +75,7 @@ public:
     void SetVECommand( const ves::open::xml::CommandPtr& command );
 
 protected:
+    virtual ~GlobalBase();
 
     ves::open::xml::CommandPtr veCommand;///<cfdApp side variables declared in VjObs_i.h
 

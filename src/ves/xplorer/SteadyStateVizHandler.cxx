@@ -169,13 +169,6 @@ SteadyStateVizHandler::~SteadyStateVizHandler()
 
     runIntraParallelThread = false;
 
-    std::map< std::string, ves::xplorer::event::EventHandler* >::iterator pos;
-    for( pos = _eventHandlers.begin(); pos != _eventHandlers.end(); )
-    {
-        delete pos->second;
-        _eventHandlers.erase( pos++ );
-    }
-
     try
     {
         m_vizThread->join();

@@ -95,11 +95,12 @@ private:
     ///Constructor
     GraphicalPluginManager();
 
-    ///Destructor
-    virtual ~GraphicalPluginManager();
-
     ///
     vprSingletonHeader( GraphicalPluginManager );
+
+protected:
+    ///Destructor
+    virtual ~GraphicalPluginManager();
 
 public:
     ///

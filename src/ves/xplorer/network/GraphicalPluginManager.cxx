@@ -165,11 +165,6 @@ GraphicalPluginManager::~GraphicalPluginManager()
     mPluginsMap.clear();
     _id_map.clear();
     pluginEHMap.clear();
-    for( std::map< std::string, ves::xplorer::event::EventHandler* >::iterator iter = _eventHandlers.begin(); iter != _eventHandlers.end(); ++iter )
-    {
-        delete iter->second;
-    }
-    _eventHandlers.clear();
 
     if( mAvailableModules )
     {
