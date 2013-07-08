@@ -57,13 +57,11 @@ sources += sca_util.getSourcesRecursive( srcDir )
 lib_env.Append(LIBS = ['ves_xplorer',
                        'ves_xplorer_data',
                        'ves_xplorer_eventmanager',
-                       'ves_xplorer_command',
                        'ves_conductor_qtui',
                        'ves_open_xml'
                       ])
 lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'xplorer'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'data'),
-                           pj('#', buildDir, 'src', 'ves', 'xplorer', 'command'),
                            pj('#', buildDir, 'src', 'ves', 'xplorer', 'eventmanager'),
                            pj('#', buildDir, 'src', 'ves', 'conductor', 'qt'),
                            pj('#', buildDir, 'src', 'ves', 'open', 'xml')
