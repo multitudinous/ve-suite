@@ -63,11 +63,6 @@
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
 #include <ves/xplorer/event/viz/ParticleAnimation.h>
 
-#include <ves/xplorer/event/viz/ClearVisObjectsEventHandler.h>
-#include <ves/xplorer/event/viz/StreamLineEventHandler.h>
-#include <ves/xplorer/event/viz/PolydataSurfaceEventHandler.h>
-#include <ves/xplorer/event/viz/VectorEventHandler.h>
-
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <crunchstore/Persistable.h>
@@ -137,17 +132,6 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
     vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
     prototype->Delete();
-
-    _eventHandlers[ std::string( "CLEAR_VIS_OBJECTS" )] =
-        new ves::xplorer::event::ClearVisObjectsEventHandler();
-    _eventHandlers[ std::string( "DELETE_OBJECT_FROM_NETWORK" )] =
-        new ves::xplorer::event::ClearVisObjectsEventHandler();
-    _eventHandlers[ std::string( "LIVE_STREAMLINE_UPDATE" )] =
-        new ves::xplorer::event::StreamLineEventHandler();
-    _eventHandlers[ std::string( "LIVE_POLYDATA_UPDATE" )] =
-        new ves::xplorer::event::PolydataSurfaceEventHandler();
-    _eventHandlers[ std::string( "LIVE_VECTOR_UPDATE" )] =
-        new ves::xplorer::event::VectorEventHandler();
 
     ///Create ciz object factory
     CreateVizObjectMap();
@@ -393,23 +377,6 @@ void SteadyStateVizHandler::InitScene()
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::PreFrameUpdate()
 {
-    //Process the current command form the gui
-    /*if( CommandManager::instance()->GetXMLCommand() )
-    {
-        std::map< std::string, ves::xplorer::event::EventHandler* >::iterator currentEventHandler;
-        const ves::open::xml::CommandPtr tempCommand =
-            CommandManager::instance()->GetXMLCommand();
-        currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
-        if( currentEventHandler != _eventHandlers.end() )
-        {
-            vprDEBUG( vesDBG, 1 ) << "|\tExecuting: "
-                                  << tempCommand->GetCommandName()
-                                  << std::endl << vprDEBUG_FLUSH;
-            currentEventHandler->second->SetGlobalBaseObject();
-            currentEventHandler->second->Execute( tempCommand );
-        }
-    }*/
-
     const double clockTime = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentTime();
     const double elapsed = clockTime - m_frameTime;
     m_frameTime = clockTime;

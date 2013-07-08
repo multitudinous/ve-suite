@@ -77,8 +77,6 @@
 #include <ves/xplorer/event/environment/SoundActivateEH.h>
 #include <ves/xplorer/event/environment/SoundAddNewEH.h>
 
-#include <ves/xplorer/command/CommandManager.h>
-
 #include <ves/open/xml/Command.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
@@ -524,22 +522,7 @@ void ModelHandler::InitScene()
 ////////////////////////////////////////////////////////////////////////////////
 void ModelHandler::PreFrameUpdate()
 {
-    activeCommand =
-        ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
-    if( activeCommand )
-    {
-        std::map<std::string, ves::xplorer::event::EventHandler* >::const_iterator
-        currentEventHandler =
-            _eventHandlers.find( activeCommand->GetCommandName() );
-        if( currentEventHandler != _eventHandlers.end() )
-        {
-            vprDEBUG( vesDBG, 1 ) << "|\tModelHandler::PreFrameUpdate Executing: "
-                                  << activeCommand->GetCommandName() << std::endl << vprDEBUG_FLUSH;
-
-            currentEventHandler->second->SetGlobalBaseObject();
-            currentEventHandler->second->Execute( activeCommand );
-        }
-    }
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 vtkPolyData* ModelHandler::GetArrow()

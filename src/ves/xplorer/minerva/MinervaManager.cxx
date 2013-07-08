@@ -73,7 +73,6 @@
 #include <ves/util/commands/Minerva.h>
 #include <ves/open/xml/Command.h>
 #include <ves/xplorer/Debug.h>
-#include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <osg/CoordinateSystemNode>
@@ -208,37 +207,6 @@ void MinervaManager::PreFrameUpdate()
 {
     vprDEBUG( vesDBG, 3 ) << "|\tMinervaManager::LatePreFrameUpdate"
                           << std::endl << vprDEBUG_FLUSH;
-    const ves::open::xml::CommandPtr tempCommand =
-        ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
-    if( tempCommand )
-    {
-        const std::string name( tempCommand->GetCommandName() );
-
-        EventHandlers::iterator iter( _eventHandlers.find( name ) );
-        if( iter != _eventHandlers.end() )
-        {
-            if( !_manager && ( name != ves::util::commands::ADD_EARTH_COMMAND_NAME ) )
-            {
-                return;
-            }
-
-            EventHandler* handler( iter->second );
-            if( 0x0 != handler )
-            {
-                vprDEBUG( vesDBG, 0 ) << "|\tMinerva manager executing: " << name << std::endl << vprDEBUG_FLUSH;
-                try
-                {
-                    handler->Execute( tempCommand, *this );
-                }
-                catch( ... )
-                {
-                    ;
-                }
-            }
-        }
-        // Clear the command.
-        //_currentCommand = CommandPtr();
-    }
 
     if( _body )
     {

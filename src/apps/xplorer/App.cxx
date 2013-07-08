@@ -54,8 +54,6 @@
 
 #include <ves/xplorer/network/GraphicalPluginManager.h>
 
-#include <ves/xplorer/command/CommandManager.h>
-
 #include <ves/xplorer/volume/cfdPBufferManager.h>
 
 #include <ves/xplorer/data/DatabaseManager.h>
@@ -654,12 +652,7 @@ void App::latePreFrame()
     VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame", 20 );
     vprDEBUG( vesDBG, 3 ) << "|App::latePreFrame" << std::endl << vprDEBUG_FLUSH;
     ///////////////////////
-    ves::xplorer::command::CommandManager::instance()->LatePreFrameUpdate();
-
-    const ves::open::xml::CommandPtr tempCommandPtr =
-        ves::xplorer::command::CommandManager::instance()->GetXMLCommand();
-
-    if( tempCommandPtr )
+    /*if( tempCommandPtr )
     {
         const std::string tempCommandName = tempCommandPtr->GetCommandName();
 
@@ -694,7 +687,7 @@ void App::latePreFrame()
             m_captureMovie = false;
             mSceneRenderToTexture->SetImageCameraCallback( m_captureMovie, "" );
         }
-    }
+    }*/
 
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame Framerate Calculations", 20 );
@@ -1279,8 +1272,7 @@ void App::update()
 
     //if( mRTT )
     {
-        mSceneRenderToTexture->Update( mUpdateVisitor.get(),
-                                       ves::xplorer::command::CommandManager::instance()->GetXMLCommand() );
+        mSceneRenderToTexture->Update( mUpdateVisitor.get(), ves::open::xml::CommandPtr() );
     }
     // now force a recompute of the bounding volume while we are still in
     // the read/write app phase, this should prevent the need to recompute

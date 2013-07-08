@@ -15,7 +15,6 @@ xplorerSubdirs = Split("""
     scenegraph
     volume
     DefaultGraphicalPlugin
-    command
 """)
 #communication
 
@@ -80,11 +79,9 @@ headers += map(lambda s: pj('behavior', s), behavior_header_srcs)
 lib_env = ves_pkg.getEnv().Clone()
 lib_env.Append(LIBS = ['ves_open_xml',
                    'ves_xplorer_scenegraph',
-                   'ves_xplorer_volume',
-                   'ves_xplorer_command'])
+                   'ves_xplorer_volume'])
 
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph'),
-                        pj('#', buildDir, 'src', 'ves', 'xplorer','command'),
                         pj('#', buildDir, 'src', 'ves', 'xplorer','volume'),
                         pj('#', buildDir, 'src', 'ves', 'open','xml')])
 

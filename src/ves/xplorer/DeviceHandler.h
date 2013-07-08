@@ -115,9 +115,6 @@ public:
     ///\param enable
     void EnableDevice( const device::Device::Type& type, const bool& enable );
 
-    ///Execute navigation commands from active device
-    void ExecuteCommands();
-
     ///Get the active coordinate system
     scenegraph::DCS* GetActiveDCS() const;
 

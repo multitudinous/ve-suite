@@ -30,8 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-//#include <ves/conductor/qt/Multiscale2/Multiscale2_UIDialog.h>
-//#include <ves/conductor/qt/Multiscale2/ui_Multiscale2_UIDialog.h>
 
 #include "Multiscale2_UIDialog.h"
 #include "ui_Multiscale2_UIDialog.h"
@@ -79,7 +77,7 @@ void Multiscale2_UIDialog::enableLattice() {
 	command->AddDataValuePair( enableLattice );
 	std::string mCommandName = "MULTISCALE_COMMAND";
 	command->SetCommandName( mCommandName );
-	ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
+	//ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
 
 }
 
@@ -93,7 +91,7 @@ void Multiscale2_UIDialog::enableDislocations() {
 	command->AddDataValuePair( enableLattice );
 	std::string mCommandName = "MULTISCALE_COMMAND";
 	command->SetCommandName( mCommandName );
-	ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
+	//ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
 	
 }
 
@@ -106,7 +104,7 @@ void Multiscale2_UIDialog::toggleAnimation() {
 	command->AddDataValuePair( enableLattice );
 	std::string mCommandName = "MULTISCALE_COMMAND";
 	command->SetCommandName( mCommandName );
-	ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
+	//ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
 	
 }
 
@@ -120,7 +118,7 @@ void Multiscale2_UIDialog::disableAll() {
 	command->AddDataValuePair( enableLattice );
 	std::string mCommandName = "MULTISCALE_COMMAND";
 	command->SetCommandName( mCommandName );
-	ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
+	//ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
 }
 
 
@@ -139,7 +137,7 @@ void Multiscale2_UIDialog::setFrame(int frame) {
 	command->AddDataValuePair( enableLattice );
 	std::string mCommandName = "MULTISCALE_COMMAND";
 	command->SetCommandName( mCommandName );
-	ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
+	//ves::xplorer::command::CommandManager::instance()->AddXMLCommand( command );
 	
 	
 	

@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/DeviceHandler.h>
-#include <ves/xplorer/command/CommandManager.h>
 #include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/device/KeyboardMouse.h>
@@ -75,7 +74,6 @@
 #include <osg/BoundingSphere>
 
 using namespace ves::xplorer;
-using namespace ves::xplorer::command;
 
 vprSingletonImp( DeviceHandler );
 
@@ -207,38 +205,6 @@ void DeviceHandler::Initialize()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::ExecuteCommands()
-{
-    const ves::open::xml::CommandPtr tempCommand =
-        CommandManager::instance()->GetXMLCommand();
-    if( !tempCommand )
-    {
-        return;
-    }
-
-    std::map< std::string, event::EventHandler* >::iterator ehItr =
-        mEventHandlers.find( tempCommand->GetCommandName() );
-    if( ehItr == mEventHandlers.end() )
-    {
-        return;
-    }
-
-    event::EventHandler* tempEvent = ehItr->second;
-    for( DeviceMap::const_iterator itr = m_deviceMap.begin();
-            itr != m_deviceMap.end(); ++itr )
-    {
-        device::Device* device = itr->second;
-        if( device->IsEnabled() )
-        {
-            vprDEBUG( vesDBG, 1 ) << "|\tDeviceHandler::ExecuteCommands Executing: "
-                                  << tempCommand->GetCommandName()
-                                  << std::endl << vprDEBUG_FLUSH;
-            tempEvent->SetGlobalBaseObject( device );
-            tempEvent->Execute( tempCommand );
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 device::Device* DeviceHandler::GetDevice(
     const device::Device::Type& type ) const
 {
@@ -277,23 +243,6 @@ scenegraph::DCS* DeviceHandler::GetSelectedDCS() const
 void DeviceHandler::ProcessDeviceEvents()
 {
     static_cast< device::GameControllerCallbacks* >( m_deviceMap[ device::Device::GAME_CONTROLLER ] )->CheckControlState();
-    
-    //Update device properties
-    /*ExecuteCommands();
-
-    //Process device events
-    for( DeviceMap::const_iterator itr = m_deviceMap.begin();
-            itr != m_deviceMap.end(); ++itr )
-    {
-        m_deviceBeingProcessed = itr->second;
-        if( m_deviceBeingProcessed->IsEnabled() )
-        {
-            m_deviceBeingProcessed->ProcessEvents(
-                CommandManager::instance()->GetXMLCommand() );
-        }
-    }
-
-    m_deviceBeingProcessed = NULL;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ResetCenterPoint()

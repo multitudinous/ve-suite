@@ -37,8 +37,6 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
 
-#include <ves/xplorer/command/CommandManager.h>
-
 #include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
@@ -97,7 +95,6 @@ vprSingletonImpLifetime( ves::xplorer::EnvironmentHandler, 1 );
 
 using namespace ves::xplorer::scenegraph;
 using namespace lfx::vtk_utils;
-using namespace ves::xplorer::command;
 
 namespace ves
 {
@@ -497,22 +494,6 @@ void EnvironmentHandler::LatePreFrameUpdate()
     vprDEBUG( vesDBG, 3 ) << "|\tEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 
     ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
-    
-    const ves::open::xml::CommandPtr tempCommand = CommandManager::instance()->GetXMLCommand();
-    if( tempCommand )
-    {
-        const std::string commandName = tempCommand->GetCommandName();
-        std::map<std::string, ves::xplorer::event::EventHandler*>::const_iterator currentEventHandler;
-        currentEventHandler = _eventHandlers.find( commandName );
-        if( currentEventHandler != _eventHandlers.end() )
-        {
-            vprDEBUG( vesDBG, 1 ) << "|\tEnvironmentHandler::LatePreFrameUpdate Executing: "
-                                  << commandName
-                                  << std::endl << vprDEBUG_FLUSH;
-            currentEventHandler->second->SetGlobalBaseObject();
-            currentEventHandler->second->Execute( tempCommand );
-        }
-    }
 
     mHeadsUpDisplay->SetFrameRate( framerate );
     mHeadsUpDisplay->LatePreFrame();

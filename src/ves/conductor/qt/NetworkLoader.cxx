@@ -318,19 +318,15 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         CommandPtr earthCommand( UserPreferencesDataBuffer::instance()->GetCommand( ves::util::commands::ADD_EARTH_COMMAND_NAME ) );
         if( earthCommand )
         {
-            ves::xplorer::command::CommandManager::instance()->AddXMLCommand( earthCommand );
-
             CommandPtr rasterGroupCommand( UserPreferencesDataBuffer::instance()->GetCommand( ves::util::commands::ADD_RASTER_GROUP ) );
             CommandPtr elevationGroupCommand( UserPreferencesDataBuffer::instance()->GetCommand( ves::util::commands::ADD_ELEVATION_GROUP ) );
 
             if( rasterGroupCommand && rasterGroupCommand->GetNumberOfDataValuePairs() > 0 )
             {
-                ves::xplorer::command::CommandManager::instance()->AddXMLCommand( rasterGroupCommand );
             }
 
             if( elevationGroupCommand && elevationGroupCommand->GetNumberOfDataValuePairs() > 0 )
             {
-                ves::xplorer::command::CommandManager::instance()->AddXMLCommand( elevationGroupCommand );
             }
 
             //MinervaDialog* dialog ( this->GetMinervaDialog() );

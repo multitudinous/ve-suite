@@ -36,7 +36,6 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/OneDStringArray.h>
-#include <ves/xplorer/command/CommandManager.h>
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 
