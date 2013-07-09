@@ -86,7 +86,6 @@ using namespace ves::xplorer::volume;
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 
-//#include <vtkPolyDataWriter.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkPolyData.h>
 #include <vtkLookupTable.h>
@@ -100,6 +99,7 @@ using namespace ves::xplorer::volume;
 #include <algorithm>
 
 #include <osgDB/Registry>
+
 
 vprSingletonImpLifetime( ves::xplorer::ModelHandler, 1 );
 using namespace ves::xplorer;
