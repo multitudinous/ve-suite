@@ -103,8 +103,25 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 void CADAddNodeEventHandler::AddNewNode( ves::open::xml::cad::CADNodePtr cadNode )
 {
 
-    m_activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-    m_cadHandler = m_activeModel->GetModelCADHandler();
+    if( !m_activeModel )
+    {
+        m_activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        if( !m_activeModel )
+        {
+            return;
+        }
+    }
+
+
+    if( !m_cadHandler )
+    {
+        m_cadHandler = m_activeModel->GetModelCADHandler();
+        if( !m_cadHandler )
+        {
+            return;
+        }
+    }
+
 
     try
     {
