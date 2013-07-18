@@ -825,8 +825,8 @@ if not SConsAddons.Util.hasHelpFlag():
             ves_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
 
     # Requires one build on command line to verify options are correct.
-    if GetPlatform() == 'win32':
-        SConsAddons.AutoDist.GenerateVisualStudioSolution(ves_pkg, 'VisualStudio')
+    #if GetPlatform() == 'win32':
+    #    SConsAddons.AutoDist.GenerateVisualStudioSolution(ves_pkg, 'VisualStudio')
 
     #Build up the deps builder for installing available deps
     #baseEnv.Alias('deps')
