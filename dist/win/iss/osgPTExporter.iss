@@ -122,6 +122,9 @@ Source: {#OSGPTEXPORTERHOME}\..\EXP_ISU_OSG.HLP; DestDir: {app}\{#VCPLUGINDIR}; 
 ;Name: {commondesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\VE_icon.ico
 ;Name: {group}\velauncher; Filename: {app}\velauncher.exe; WorkingDir: {app}; Comment: velauncher; Flags: createonlyiffileexists
 [Code]
+procedure ExitProcess(exitCode:integer);
+  external 'ExitProcess@kernel32.dll stdcall';
+
 function GetInstallDir(def: string): string;
 var
 InstallDir : string;
@@ -148,7 +151,7 @@ begin
       Result := InstallDir;
     end else begin
 	  MsgBox('Setup cannot find where PolyTrans or NuGraf is installed.', mbInformation, mb_Ok)
-      Exit;
+      ExitProcess( 0 );
     end;
   end;
 end;
