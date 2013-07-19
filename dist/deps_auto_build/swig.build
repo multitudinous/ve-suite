@@ -1,0 +1,47 @@
+PACKAGE_NAME=swig
+
+SOURCE_RETRIEVAL_METHOD=wget
+
+unset PROJ_STR
+unset BUILD_TARGET
+unset BUILD_DIR
+unset PREBUILD_METHOD
+unset BUILD_METHOD
+    
+case $PLATFORM in
+  Windows)
+    SOURCE_URL=http://prdownloads.sourceforge.net/swig/swigwin-2.0.10.zip
+    BASE_DIR="${DEV_BASE_DIR}/swigwin-2.0.10"
+    BUILD_DIR="${BASE_DIR}"
+    INSTALL_DIR="${BASE_DIR}"
+    SOURCE_FORMAT=zip
+    ;;
+  Darwin)
+    SOURCE_URL=http://prdownloads.sourceforge.net/swig/swig-2.0.10.tar.gz
+    BASE_DIR="${DEV_BASE_DIR}/swig-2.0.10"
+    BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+    INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+    SOURCE_FORMAT=tgz
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    CONFIGURE_PARAMS+=( --with-pcre-prefix="${PCRE_INSTALL_DIR}" )
+    BUILD_METHOD=make
+    BUILD_TARGET=" && make install"
+    ;;
+  Linux)
+    SOURCE_URL=http://prdownloads.sourceforge.net/swig/swig-2.0.10.tar.gz
+    BASE_DIR="${DEV_BASE_DIR}/swig-2.0.10"
+    BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+    INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+    SOURCE_FORMAT=tgz
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    CONFIGURE_PARAMS+=( --with-pcre-prefix="${PCRE_INSTALL_DIR}" )
+    BUILD_METHOD=make
+    BUILD_TARGET=" && make install"
+    ;;
+esac
+
+SOURCE_DIR="${BASE_DIR}"

@@ -666,7 +666,7 @@ function e()
         ;;
       make)
         cd "${BUILD_DIR}";
-        ${MAKE} ${JCMD} ${BUILD_TARGET};
+        eval "${MAKE} ${JCMD} ${BUILD_TARGET}";
         ;;
       scons)
         cd "${BUILD_DIR}";
