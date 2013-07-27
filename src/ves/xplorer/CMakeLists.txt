@@ -2,7 +2,7 @@ add_subdirectory( data )
 add_subdirectory( eventmanager )
 add_subdirectory( scenegraph )
 add_subdirectory( volume )
-#add_subdirectory( DefaultGraphicalPlugin )
+add_subdirectory( DefaultGraphicalPlugin )
 
 add_definitions( -DVE_XPLORER_LIBRARY
                  -DVE_XPLORER_NETWORK_LIBRARY
