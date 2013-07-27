@@ -60,6 +60,8 @@ include(${QT_USE_FILE})
 set( XERCESC_ROOT_DIR "Please specify" CACHE PATH "Root directory where Xerces-C is installed" )
 find_package(XercesC)
 
+find_package( VRJuggler-OpenGL 3.0 )
+
 include_directories( 
     ${Boost_INCLUDE_DIRS}
     ${POCO_INCLUDE_DIR}
