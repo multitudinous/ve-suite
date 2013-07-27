@@ -220,11 +220,11 @@ void CameraManager::Enable( const bool& enable )
 
     if( m_enabled )
     {
-        setNodeMask( NodeMask::CAMERA_MANAGER );
+        setNodeMask( ves::xplorer::scenegraph::NodeMask::CAMERA_MANAGER );
     }
     else
     {
-        setNodeMask( NodeMask::NONE );
+        setNodeMask( ves::xplorer::scenegraph::NodeMask::NONE );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

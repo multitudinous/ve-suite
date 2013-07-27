@@ -768,7 +768,7 @@ void CameraObject::EnableCamera( bool const& enable )
 
     if( enable )
     {
-        m_camera->setNodeMask( NodeMask::CAMERA );
+        m_camera->setNodeMask( ves::xplorer::scenegraph::NodeMask::CAMERA );
     }
     else
     {

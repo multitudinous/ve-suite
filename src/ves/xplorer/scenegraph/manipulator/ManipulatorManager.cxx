@@ -170,11 +170,11 @@ void ManipulatorManager::Enable( const bool& enable )
 
     if( m_enabled )
     {
-        setNodeMask( NodeMask::MANIPULATOR_MANAGER );
+        setNodeMask( ves::xplorer::scenegraph::NodeMask::MANIPULATOR_MANAGER );
     }
     else
     {
-        setNodeMask( NodeMask::NONE );
+        setNodeMask( ves::xplorer::scenegraph::NodeMask::NONE );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

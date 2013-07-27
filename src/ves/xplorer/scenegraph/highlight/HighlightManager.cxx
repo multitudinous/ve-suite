@@ -127,11 +127,11 @@ void HighlightManager::Enable( const bool& enable )
     if( m_enabled )
     {
         setNodeMask( 1 );
-        //setNodeMask( NodeMask::HIGHLIGHT_MANAGER );
+        //setNodeMask( ves::xplorer::scenegraph::NodeMask::HIGHLIGHT_MANAGER );
     }
     else
     {
-        setNodeMask( NodeMask::NONE );
+        setNodeMask( ves::xplorer::scenegraph::NodeMask::NONE );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

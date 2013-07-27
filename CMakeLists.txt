@@ -69,6 +69,16 @@ if( osgBullet_FOUND )
 endif(osgBullet_FOUND)
 
 include( FindBulletHelper )
+if(BULLET_FOUND)
+    set( BULLET_LIBRARIES
+        ${BULLET_COLLISION_LIBRARY}
+        ${BULLET_MATH_LIBRARY}
+        ${BULLET_DYNAMICS_LIBRARY}
+        ${BULLET_SOFTBODY_LIBRARY})
+    if( OSGBULLET_USE_DOUBLE_PRECISION )
+        add_definitions( -DBT_USE_DOUBLE_PRECISION )
+    endif()
+endif(BULLET_FOUND)
 
 find_package( osgEphemeris 0.1.0 REQUIRED)
 if( osgEphemeris_FOUND )
