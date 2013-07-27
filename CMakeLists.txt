@@ -31,7 +31,7 @@ set(Boost_USE_STATIC_LIBS       OFF)
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 
-find_package(Boost 1.53.0 REQUIRED COMPONENTS filesystem system program_options serialization date_time thread chrono)
+find_package(Boost 1.53.0 REQUIRED COMPONENTS filesystem system program_options serialization date_time thread chrono regex)
 
 find_package( crunchstore 0.2.0 REQUIRED )
 if( crunchstore_FOUND )
@@ -150,7 +150,7 @@ add_subdirectory(src)
 
 include(VESInstallPDBFiles)
 
-set(VES_EXPORT_LIBRARY_TARGETS ves_open_xml)
+set(VES_EXPORT_LIBRARY_TARGETS ves_open_xml ves_xplorer_eventmanager ves_xplorer_data ves_xplorer_scenegraph ves_xplorer_volume)
 set(VES_CONFIGURE_VARS CMAKE_INSTALL_LIBDIR)
 
 include(VESInstallAutoDiscoveryTools)
