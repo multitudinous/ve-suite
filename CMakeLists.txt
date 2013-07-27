@@ -16,7 +16,7 @@ if( NOT(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME}) )
     set(ves_LIBRARIES "TODO NEED Libs ves" PARENT_SCOPE)
 endif()
 
-#include( FindOSGHelper )
+include( FindOSGHelper )
 find_package( OpenGL )
 
 set( POCO_ROOT "Please specify" CACHE PATH "Root directory where POCO is installed" )
@@ -33,20 +33,52 @@ set(Boost_USE_STATIC_RUNTIME    OFF)
 
 find_package(Boost 1.53.0 REQUIRED COMPONENTS filesystem system program_options serialization date_time thread chrono)
 
-find_package( crunchstore 0.2.0 )
+find_package( crunchstore 0.2.0 REQUIRED )
 if( crunchstore_FOUND )
     include( ${crunchstore_USE_FILE} )
 endif(crunchstore_FOUND)
 
-find_package( switchwire 0.2.0 )
+find_package( switchwire 0.2.0 REQUIRED)
 if( switchwire_FOUND )
     include( ${switchwire_USE_FILE} )
 endif(switchwire_FOUND)
 
-find_package( propertystore 0.2.0 )
+find_package( propertystore 0.2.0 REQUIRED)
 if( propertystore_FOUND )
     include( ${propertystore_USE_FILE} )
 endif(propertystore_FOUND)
+
+find_package( latticefx 0.0.1 REQUIRED)
+if( latticefx_FOUND )
+    include( ${latticefx_USE_FILE} )
+endif(latticefx_FOUND)
+
+find_package( backdropFX 0.1.0 REQUIRED)
+if( backdropFX_FOUND )
+    include( ${backdropFX_USE_FILE} )
+endif(backdropFX_FOUND)
+
+find_package( osgWorks 0.1.0 REQUIRED)
+if( osgWorks_FOUND )
+    include( ${osgWorks_USE_FILE} )
+endif(osgWorks_FOUND)
+
+find_package( osgBullet 0.1.0 REQUIRED)
+if( osgBullet_FOUND )
+    include( ${osgBullet_USE_FILE} )
+endif(osgBullet_FOUND)
+
+include( FindBulletHelper )
+
+find_package( osgEphemeris 0.1.0 REQUIRED)
+if( osgEphemeris_FOUND )
+    include( ${osgEphemeris_USE_FILE} )
+endif(osgEphemeris_FOUND)
+
+find_package( VTK 5.10.0 REQUIRED)
+if( VTK_FOUND )
+    include( ${VTK_USE_FILE} )
+endif(VTK_FOUND)
 
 set( Squirrel_ROOT "Please specify" CACHE PATH "Root directory where Squirrel is installed" )
 find_package(Squirrel 3.0.0)
@@ -58,9 +90,9 @@ find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui )
 include(${QT_USE_FILE})
 
 set( XERCESC_ROOT_DIR "Please specify" CACHE PATH "Root directory where Xerces-C is installed" )
-find_package(XercesC)
+find_package(XercesC REQUIRED)
 
-find_package( VRJuggler-OpenGL 3.0 )
+find_package( VRJuggler-OpenGL 3.0 REQUIRED)
 
 include_directories( 
     ${Boost_INCLUDE_DIRS}
@@ -68,22 +100,22 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/src
 )
 
-if(Squirrel_FOUND AND Sqrat_FOUND)
-    INCLUDE_DIRECTORIES( 
-        ${Sqrat_INCLUDE_DIR}
-        ${Squirrel_INCLUDE_DIR})
-endif(Squirrel_FOUND AND Sqrat_FOUND)
+#if(Squirrel_FOUND AND Sqrat_FOUND)
+#    INCLUDE_DIRECTORIES(
+#        ${Sqrat_INCLUDE_DIR}
+#        ${Squirrel_INCLUDE_DIR})
+#endif(Squirrel_FOUND AND Sqrat_FOUND)
 
-option(BUILD_EXAMPLE "Build example?" ON)
+#option(BUILD_EXAMPLE "Build example?" ON)
 
 include(VESSetupCompiler)
 
 include(VESBinAndLibDirs)
 
-set(HAVE_SQUIRREL 0)
-if(Squirrel_FOUND AND Sqrat_FOUND)
-    set(HAVE_SQUIRREL 1)
-endif(Squirrel_FOUND AND Sqrat_FOUND)
+#set(HAVE_SQUIRREL 0)
+#if(Squirrel_FOUND AND Sqrat_FOUND)
+#    set(HAVE_SQUIRREL 1)
+#endif(Squirrel_FOUND AND Sqrat_FOUND)
 
 add_subdirectory(src)
 
