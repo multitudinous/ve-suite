@@ -19,6 +19,6 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${BOOST_LIBRARIES} ${XERCES
 include(VESModuleInstall)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        DESTINATION ves/open
+        DESTINATION include/ves/open
         FILES_MATCHING PATTERN "*.h"
         PATTERN ".svn" EXCLUDE)

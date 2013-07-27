@@ -7,6 +7,7 @@ set(VES_TARGET_NAME ves_xplorer_volume)
 set(VES_TARGET_VERSION ${ves_VERSION})
 set(VES_TARGET_EXPORT ${PROJECT_NAME}-targets)
 set(VES_TARGET_CATEGORY Lib)
+set(VES_INCLUDE_DIRECTORY_NAME "ves/xplorer/volume")
 
 include_directories(${GMTL_INCLUDE_DIRS})
 include_directories(${OSG_INCLUDE_DIRS})
