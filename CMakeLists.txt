@@ -16,7 +16,7 @@ if( NOT(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME}) )
     set(ves_LIBRARIES "TODO NEED Libs ves" PARENT_SCOPE)
 endif()
 
-include( FindOSGHelper )
+#include( FindOSGHelper )
 find_package( OpenGL )
 
 set( POCO_ROOT "Please specify" CACHE PATH "Root directory where POCO is installed" )
@@ -57,9 +57,13 @@ find_package(Sqrat 0.8)
 find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui )
 include(${QT_USE_FILE})
 
-INCLUDE_DIRECTORIES( 
+set( XERCESC_ROOT_DIR "Please specify" CACHE PATH "Root directory where Xerces-C is installed" )
+find_package(XercesC)
+
+include_directories( 
     ${Boost_INCLUDE_DIRS}
     ${POCO_INCLUDE_DIR}
+    ${PROJECT_SOURCE_DIR}/src
 )
 
 if(Squirrel_FOUND AND Sqrat_FOUND)
@@ -102,41 +106,8 @@ add_subdirectory(src)
 
 include(VESInstallPDBFiles)
 
-set(VES_EXPORT_LIBRARY_TARGETS ves)
+set(VES_EXPORT_LIBRARY_TARGETS ves_open_xml)
 set(VES_CONFIGURE_VARS CMAKE_INSTALL_LIBDIR)
 
 include(VESInstallAutoDiscoveryTools)
 
-set(CPACK_PACKAGE_VENDOR "Ames Lab")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A library for boosts signals and slots.")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.txt")
-set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.txt") 
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt")
-set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/README.txt") 
-set(CPACK_PACKAGE_VERSION_MAJOR "${switchwire_MAJOR_VERSION}")
-set(CPACK_PACKAGE_VERSION_MINOR "${switchwire_MINOR_VERSION}")
-set(CPACK_PACKAGE_VERSION_PATCH "${switchwire_SUB_VERSION}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}_${VES_PACKAGE_VERSION}")
-#This sits right below CPACK_PACKAGE_DEFAULT_LOCATION
-set(CPACK_PACKAGING_INSTALL_PREFIX "/")
-#set(CPACK_TOPLEVEL_TAG "${PROJECT_NAME}")
-#set(CPACK_SET_DESTDIR TRUE)
-if(WIN32 AND NOT UNIX)
-  # There is a bug in NSI that does not handle full unix paths properly. Make
-  # sure there is at least one set of four (4) backlasshes.
-  set(CPACK_PACKAGE_ICON "${CMake_SOURCE_DIR}/Utilities/Release\\\\InstallIcon.bmp")
-  set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
-  set(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY} My Famous Project")
-  set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.my-project-home-page.org")
-  set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.my-personal-home-page.com")
-  set(CPACK_NSIS_CONTACT "me@my-personal-home-page.com")
-  set(CPACK_NSIS_MODIFY_PATH ON)
-  set(CPACK_PACKAGE_EXECUTABLES "MyExecutable" "My Executable")
-else(WIN32 AND NOT UNIX) 
-  #This directory is the prefix to the default install prefix
-  set(CPACK_PACKAGE_DEFAULT_LOCATION "/opt/${CPACK_PACKAGE_INSTALL_DIRECTORY}")
-  set(CPACK_STRIP_FILES OFF)
-  set(CPACK_SOURCE_STRIP_FILES OFF)
-endif(WIN32 AND NOT UNIX)
-
-include(CPack)

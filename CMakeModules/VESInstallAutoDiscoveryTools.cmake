@@ -54,8 +54,8 @@ if(CMAKE_LIBRARY_ARCHITECTURE)
     set(VES_FPC_PREFIX "\${fp_file_cwd}/../../..")
 endif(CMAKE_LIBRARY_ARCHITECTURE)
 
-configure_file(extra/${PROJECT_NAME}.fpc.in
-  "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/flagpoll/${PROJECT_NAME}.fpc" @ONLY)
+#configure_file(extra/${PROJECT_NAME}.fpc.in
+#  "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/flagpoll/${PROJECT_NAME}.fpc" @ONLY)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/flagpoll/${PROJECT_NAME}.fpc
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/flagpoll )
+#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/flagpoll/${PROJECT_NAME}.fpc
+#        DESTINATION ${CMAKE_INSTALL_LIBDIR}/flagpoll )
