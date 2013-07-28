@@ -11,35 +11,17 @@ add_definitions( -DVE_XPLORER_LIBRARY
 file( GLOB srcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cxx" )
 file( GLOB hdrs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h" )
 
-file( GLOB_RECURSE tmpSrcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "event/*.cxx" )
-file( GLOB_RECURSE tmpHdrs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "event/*.h" )
-list(APPEND srcs ${tmpSrcs})
-list(APPEND hdrs ${tmpHdrs})
-
-file( GLOB tmpSrcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "device/*.cxx" )
-file( GLOB tmpHdrs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "device/*.h" )
-list(APPEND srcs ${tmpSrcs})
-list(APPEND hdrs ${tmpHdrs})
-
-file( GLOB tmpSrcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "environment/*.cxx" )
-file( GLOB tmpHdrs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "environment/*.h" )
-list(APPEND srcs ${tmpSrcs})
-list(APPEND hdrs ${tmpHdrs})
-
-file( GLOB tmpSrcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "network/*.cxx" )
-file( GLOB tmpHdrs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "network/*.h" )
-list(APPEND srcs ${tmpSrcs})
-list(APPEND hdrs ${tmpHdrs})
-
-file( GLOB tmpSrcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "plugin/*.cxx" )
-file( GLOB tmpHdrs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "plugin/*.h" )
-list(APPEND srcs ${tmpSrcs})
-list(APPEND hdrs ${tmpHdrs})
-
-file( GLOB tmpSrcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "behavior/*.cxx" )
-file( GLOB tmpHdrs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "behavior/*.h" )
-list(APPEND srcs ${tmpSrcs})
-list(APPEND hdrs ${tmpHdrs})
+set(XPLORER_SUB_DIRS event device environment network plugin behavior)
+foreach( it ${XPLORER_SUB_DIRS})
+    file( GLOB_RECURSE tmpSrcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${it}/*.cxx" )
+    file( GLOB_RECURSE tmpHdrs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${it}/*.h" )
+    list(APPEND srcs ${tmpSrcs})
+    list(APPEND hdrs ${tmpHdrs})
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${it}
+            DESTINATION include/ves/xplorer
+            FILES_MATCHING PATTERN "*.h"
+            PATTERN ".svn" EXCLUDE)
+endforeach()
 
 set(VES_PRIVATE_HEADERS ${hdrs})
 #set(VES_PUBLIC_HEADERS ${hdrs} )
@@ -82,11 +64,6 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${latticefx_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${BULLET_LIBRARIES})
 
 include(VESModuleInstall)
-
-#install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-#        DESTINATION ves
-#        FILES_MATCHING PATTERN "*.h"
-#        PATTERN ".svn" EXCLUDE)
 
 #see if we need to compile minerva in
 #if minerva_options.isAvailable():
