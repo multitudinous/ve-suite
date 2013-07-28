@@ -35,10 +35,13 @@
 
 #define QT_NO_KEYWORDS
 
+#ifndef Q_MOC_RUN
 #include <propertystore/PropertySetPtr.h>
 #include <switchwire/ScopedConnectionList.h>
+#include <switchwire/Event.h>
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 #include <ves/xplorer/Logging.h>
+#endif
 
 #include <QtGui/QWidget>
 #include <QtCore/QAbstractItemModel>
@@ -46,7 +49,6 @@
 
 #include <osg/Node>
 
-#include <switchwire/Event.h>
 
 namespace Ui
 {

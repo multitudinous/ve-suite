@@ -40,9 +40,10 @@
 //Needed for NodePath
 #include <osg/Node>
 
+#ifndef Q_MOC_RUN
 #include <switchwire/ScopedConnectionList.h>
-
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
+#endif
 
 #include <ves/open/xml/model/SystemPtr.h>
 

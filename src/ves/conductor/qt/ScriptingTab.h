@@ -3,13 +3,14 @@
 #include <QtGui/QWidget>
 #include <QtGui/QFileDialog>
 
-#include <vpr/Thread/Thread.h>
-
 #include <map>
 #include <vector>
 #include <string>
 
+#ifndef Q_MOC_RUN
+#include <vpr/Thread/Thread.h>
 #include <switchwire/ScopedConnectionList.h>
+#endif
 
 namespace Ui {
 class ScriptingTab;

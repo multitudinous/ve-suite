@@ -63,6 +63,11 @@ if( osgWorks_FOUND )
     include( ${osgWorks_USE_FILE} )
 endif(osgWorks_FOUND)
 
+find_package( storyteller 0.1.0 REQUIRED)
+if( storyteller_FOUND )
+    include( ${storyteller_USE_FILE} )
+endif(storyteller_FOUND)
+
 find_package( osgBullet 0.1.0 REQUIRED)
 if( osgBullet_FOUND )
     include( ${osgBullet_USE_FILE} )
@@ -98,7 +103,7 @@ find_package(Sqrat 0.8)
 
 find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui QtOpenGL QtSvg QtXml)
 include(${QT_USE_FILE})
-message("${QT_USE_FILE}")
+
 set(XERCESC_ROOT_DIR "Please specify" CACHE PATH "Root directory where Xerces-C is installed" )
 find_package(XercesC REQUIRED)
 

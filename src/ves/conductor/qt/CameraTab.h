@@ -1,15 +1,15 @@
 #pragma once
 
 #include <QtGui/QWidget>
+#include <QtGui/QListWidgetItem>
 
 #include <propertystore/PropertySetPtr.h>
 
 #include <ves/xplorer/Logging.h>
+#ifndef Q_MOC_RUN
 #include <switchwire/ScopedConnectionList.h>
-
-#include <QtGui/QListWidgetItem>
-
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
+#endif
 
 namespace Ui {
 class CameraTab;

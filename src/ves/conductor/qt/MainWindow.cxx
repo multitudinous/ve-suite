@@ -1476,7 +1476,7 @@ void MainWindow::on_actionNew_triggered( const QString& workingDir )
     SystemPtr system( mDataBufferEngine->GetXMLSystemDataObject(
                           mDataBufferEngine->GetTopSystemId() ) );
 
-    ModelPtr mod( new Model );
+    ves::open::xml::model::ModelPtr mod( new ves::open::xml::model::Model() );
     mod->SetPluginType( "DefaultPlugin" );
     mod->SetPluginName( "DefaultPlugin" );
     mod->SetVendorName( "DefaultPlugin" );
