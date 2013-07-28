@@ -16,7 +16,7 @@ if( NOT(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME}) )
     set(ves_LIBRARIES "TODO NEED Libs ves" PARENT_SCOPE)
 endif()
 
-include( FindOSGHelper )
+include(FindOSGHelper)
 find_package( OpenGL )
 
 set( POCO_ROOT "Please specify" CACHE PATH "Root directory where POCO is installed" )
@@ -90,25 +90,24 @@ if( VTK_FOUND )
     include( ${VTK_USE_FILE} )
 endif(VTK_FOUND)
 
-set( Squirrel_ROOT "Please specify" CACHE PATH "Root directory where Squirrel is installed" )
+set(Squirrel_ROOT "Please specify" CACHE PATH "Root directory where Squirrel is installed" )
 find_package(Squirrel 3.0.0)
 
-set( Sqrat_ROOT "Please specify" CACHE PATH "Root directory where Sqrat is installed" )
+set(Sqrat_ROOT "Please specify" CACHE PATH "Root directory where Sqrat is installed" )
 find_package(Sqrat 0.8)
 
-find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui )
+find_package(Qt4 REQUIRED COMPONENTS QtCore QtGui QtOpenGL QtSvg QtXml)
 include(${QT_USE_FILE})
-
-set( XERCESC_ROOT_DIR "Please specify" CACHE PATH "Root directory where Xerces-C is installed" )
+message("${QT_USE_FILE}")
+set(XERCESC_ROOT_DIR "Please specify" CACHE PATH "Root directory where Xerces-C is installed" )
 find_package(XercesC REQUIRED)
 
-find_package( VRJuggler-OpenGL 3.0 REQUIRED)
+find_package(VRJuggler-OpenGL 3.0 REQUIRED)
 
 include_directories( 
     ${Boost_INCLUDE_DIRS}
     ${POCO_INCLUDE_DIR}
-    ${PROJECT_SOURCE_DIR}/src
-)
+    ${PROJECT_SOURCE_DIR}/src)
 
 #if(Squirrel_FOUND AND Sqrat_FOUND)
 #    INCLUDE_DIRECTORIES(
@@ -128,7 +127,7 @@ include(VESBinAndLibDirs)
 #endif(Squirrel_FOUND AND Sqrat_FOUND)
 
 add_subdirectory(src)
-add_subdirectory(external/osgQtTree)
+add_subdirectory(external)
 
 #
 # Doxygen
