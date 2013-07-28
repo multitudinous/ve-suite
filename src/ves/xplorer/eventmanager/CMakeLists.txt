@@ -26,6 +26,6 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${GADGETEER_LIBRARIES})
 include(VESModuleInstall)
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        DESTINATION ves/xplorer
+        DESTINATION include/ves/xplorer
         FILES_MATCHING PATTERN "*.h"
         PATTERN ".svn" EXCLUDE)
