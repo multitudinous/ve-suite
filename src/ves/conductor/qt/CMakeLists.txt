@@ -85,7 +85,6 @@ set( UI_FILES
 FOREACH(it ${UI_FILES})
     get_filename_component(PARENT_DIR ${it} PATH)
     get_filename_component(FNAME ${it} NAME_WE)
-    #message( "${PARENT_DIR} ${FNAME}")
     EXECUTE_PROCESS(COMMAND ${QT_UIC_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${it} -o ${CMAKE_CURRENT_BINARY_DIR}/${PARENT_DIR}/ui_${FNAME}.h)
 ENDFOREACH(it)
 
@@ -114,5 +113,5 @@ include(VESModuleInstall)
 #        FILES_MATCHING PATTERN "*.h"
 #        PATTERN ".svn" EXCLUDE)
 
-    
+add_subdirectory(DefaultPlugin)
 
