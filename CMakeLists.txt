@@ -128,6 +128,7 @@ include(VESBinAndLibDirs)
 #endif(Squirrel_FOUND AND Sqrat_FOUND)
 
 add_subdirectory(src)
+add_subdirectory(external/osgQtTree)
 
 #
 # Doxygen

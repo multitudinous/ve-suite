@@ -1,11 +1,11 @@
 PACKAGE_NAME=OSGEPHEMERIS
 BASE_DIR="${DEV_BASE_DIR}/osgEphemeris"
 
-# SOURCE_URL=https://www.andesengineering.com/svn/osgEphemeris/trunk/osgEphemeris
-# SOURCE_RETRIEVAL_METHOD=svn
-SOURCE_RETRIEVAL_METHOD=wget
-SOURCE_FORMAT=zip
-SOURCE_URL=http://www.vesuite.org/external/deps/src/osgEphemeris.zip
+SOURCE_URL=http://osgephemeris.googlecode.com/svn/trunk/osgEphemeris
+SOURCE_RETRIEVAL_METHOD=svn
+#SOURCE_RETRIEVAL_METHOD=wget
+#SOURCE_FORMAT=zip
+#SOURCE_URL=http://www.vesuite.org/external/deps/src/osgEphemeris.zip
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
