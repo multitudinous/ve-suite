@@ -104,7 +104,7 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${storyteller_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC qwt)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC osgQtTree)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_open_xml)
-target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer)
+target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer_default)
 
 include(VESModuleInstall)
 

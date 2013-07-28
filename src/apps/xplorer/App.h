@@ -74,7 +74,7 @@ DIAG_ON(unused-parameter)
 #include <Poco/Logger.h>
 #include <Poco/SplitterChannel.h>
 
-#ifdef _DARWIN
+#ifdef __APPLE__
 #define VES_QT_APP 1
 #endif
 

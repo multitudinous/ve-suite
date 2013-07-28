@@ -1,2 +1,2 @@
 add_subdirectory( xplorer )
-add_subdirectory( launcher )
+#add_subdirectory( launcher )

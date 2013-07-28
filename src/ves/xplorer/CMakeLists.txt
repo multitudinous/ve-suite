@@ -26,7 +26,7 @@ endforeach()
 set(VES_PRIVATE_HEADERS ${hdrs})
 #set(VES_PUBLIC_HEADERS ${hdrs} )
 
-set(VES_TARGET_NAME ves_xplorer)
+set(VES_TARGET_NAME ves_xplorer_default)
 set(VES_TARGET_VERSION ${ves_VERSION})
 set(VES_TARGET_EXPORT ${PROJECT_NAME}-targets)
 set(VES_TARGET_CATEGORY Lib)
