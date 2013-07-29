@@ -3,8 +3,8 @@ cmake_minimum_required (VERSION 2.8.8)
 project( gmtl )
 
 set(gmtl_MAJOR_VERSION 0)
-set(gmtl_MINOR_VERSION 6)
-set(gmtl_SUB_VERSION 1)
+set(gmtl_MINOR_VERSION 7)
+set(gmtl_SUB_VERSION 0)
 set(gmtl_VERSION ${gmtl_MAJOR_VERSION}.${gmtl_MINOR_VERSION}.${gmtl_SUB_VERSION})
 set(gmtl_PACKAGE_VERSION ${gmtl_VERSION})
 
@@ -103,6 +103,10 @@ endif()
 configure_file(gmtl.fpc.in "${CMAKE_CURRENT_BINARY_DIR}/gmtl.fpc" @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gmtl.fpc"
         DESTINATION "share/flagpoll"
+        COMPONENT development)
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gmtl.pc"
+        DESTINATION "lib/pkgconfig"
         COMPONENT development)
 
 install(FILES gmtl-config
