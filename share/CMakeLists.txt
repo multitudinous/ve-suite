@@ -105,6 +105,8 @@ install(
     PATTERN ".DS_Store" EXCLUDE
 )
 
+add_subdirectory(examples)
+
 # Directories still left to complete
     #examples
     #tools
