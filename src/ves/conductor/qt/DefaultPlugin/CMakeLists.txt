@@ -22,11 +22,11 @@ set( MOC_HEADERS
     DefaultPluginFactory.h)
 set(VES_PRIVATE_HEADERS ${MOC_HEADERS} )
 
-QT4_WRAP_CPP(MOCCED ${MOC_HEADERS} OPTIONS -p ./ )
-list(APPEND srcs ${MOCCED})
+QT4_WRAP_CPP(${VES_TARGET_NAME}_MOCCED ${MOC_HEADERS} OPTIONS -p ./ )
+list(APPEND srcs ${${VES_TARGET_NAME}_MOCCED})
 
-QT4_ADD_RESOURCES( RCCED DefaultPluginIcons.qrc )
-list(APPEND srcs ${RCCED})
+QT4_ADD_RESOURCES( ${VES_TARGET_NAME}_RCCED DefaultPluginIcons.qrc )
+list(APPEND srcs ${${VES_TARGET_NAME}_RCCED})
 
 QT4_WRAP_UI( UICED DefaultPlugin_UIDialog.ui)
 list(APPEND srcs ${UICED})
