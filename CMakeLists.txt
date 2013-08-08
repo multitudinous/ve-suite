@@ -133,6 +133,7 @@ include(VESBinAndLibDirs)
 
 add_subdirectory(src)
 add_subdirectory(external)
+add_subdirectory(share)
 
 #
 # Doxygen
