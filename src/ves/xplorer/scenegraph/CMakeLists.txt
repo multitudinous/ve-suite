@@ -45,7 +45,7 @@ include_directories(${BULLET_INCLUDE_DIRS})
 #   sources.remove( pj( 'physics','sound','SoundUtilities.cpp') )
 
 add_library(${VES_TARGET_NAME} SHARED ${srcs} ${VES_PUBLIC_HEADERS})
-target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${Boost_REGEX_LIBRARY} ${POCO_LIBRARIES})
+target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${BoostLIBRARIES} ${POCO_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${OSG_LIBRARIES} ${switchwire_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${propertystore_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${VAPOR_LIBRARIES})
