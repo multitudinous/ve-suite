@@ -33,5 +33,6 @@ case $PLATFORM in
     ;;
   Linux)
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
+    CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS=-fPIC )
     ;;
 esac
