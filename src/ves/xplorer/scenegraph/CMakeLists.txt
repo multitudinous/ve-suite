@@ -44,8 +44,17 @@ include_directories(${BULLET_INCLUDE_DIRS})
 #   sources.remove( pj( 'physics','sound','SoundTable.cpp') )
 #   sources.remove( pj( 'physics','sound','SoundUtilities.cpp') )
 
+# Explicitly name the individual Boost dependencies. Fixes build problems
+# with CMake 2.8.11.2 on Mac OS X 10.8
+list( APPEND ${VES_TARGET_NAME}_BOOST_DEPS ${Boost_SIGNALS_LIBRARY} )
+list( APPEND ${VES_TARGET_NAME}_BOOST_DEPS ${Boost_FILESYSTEM_LIBRARY} )
+list( APPEND ${VES_TARGET_NAME}_BOOST_DEPS ${Boost_SYSTEM_LIBRARY} )
+list( APPEND ${VES_TARGET_NAME}_BOOST_DEPS ${Boost_PROGRAM_OPTIONS_LIBRARY} )
+list( APPEND ${VES_TARGET_NAME}_BOOST_DEPS ${Boost_REGEX_LIBRARY} )
+
 add_library(${VES_TARGET_NAME} SHARED ${srcs} ${VES_PUBLIC_HEADERS})
-target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${Boost_LIBRARIES} ${POCO_LIBRARIES})
+target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${POCO_LIBRARIES})
+target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${${VES_TARGET_NAME}_BOOST_DEPS} )
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${OSG_LIBRARIES} ${switchwire_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${propertystore_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${VAPOR_LIBRARIES})
