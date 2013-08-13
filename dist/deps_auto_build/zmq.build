@@ -48,7 +48,7 @@ case $PLATFORM in
       cp ../bin/${MSVC_PLATFORM}/*.exe ${INSTALL_DIR}/bin/. && \
       cp ../bin/${MSVC_PLATFORM}/*.pdb ${INSTALL_DIR}/bin/. && \
       cp ../lib/${MSVC_PLATFORM}/*.lib ${INSTALL_DIR}/lib/. && \
-      cd ${INSTALL_DIR}/include && wget https://raw.github.com/zeromq/cppzmq/master/zmq.hpp"
+      wget --no-check-certificate -P ${INSTALL_DIR}/include https://raw.github.com/zeromq/cppzmq/master/zmq.hpp"
 
     SKIP_FPC_INSTALL="no"
     FPC_FILE=zmq.fpc
