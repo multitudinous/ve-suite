@@ -40,11 +40,15 @@ set( GADGET_FAIL_MESSAGE
 
 if( MSVC )
     set( GADGETEER_LIBRARY_DIRS ${gadgeteer_FLAGPOLL_LIBRARY_DIRS} )
+    string( REGEX REPLACE "[.]" "_" GADGET_VERSION_STRING ${gadgeteer_FLAGPOLL_MODULE_VERSION} )
+    find_library( GADGETEER_LIBRARY NAMES "gadget-${GADGET_VERSION_STRING}"
+                  HINTS ${gadgeteer_FLAGPOLL_LIBRARY_DIRS} )
     find_package_handle_standard_args( Gadgeteer
-                                       REQUIRED_VARS GADGETEER_LIBRARY_DIRS GADGETEER_INCLUDE_DIR
+                                       REQUIRED_VARS GADGETEER_LIBRARY GADGETEER_INCLUDE_DIR
                                        VERSION_VAR gadgeteer_FLAGPOLL_MODULE_VERSION
                                        FAIL_MESSAGE ${GADGET_FAIL_MESSAGE} )
-    set( GADGETEER_LIBRARIES )
+    set( GADGETEER_LIBRARIES ${GADGETEER_LIBRARY} ${JACKAL_LIBRARIES} )
+    mark_as_advanced( GADGETEER_LIBRARY )
     mark_as_advanced( GADGETEER_LIBRARY_DIRS )
     link_directories( ${GADGETEER_LIBRARY_DIRS} )
 else()

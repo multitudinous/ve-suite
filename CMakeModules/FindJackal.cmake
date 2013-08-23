@@ -40,11 +40,15 @@ set( JACKAL_FAIL_MESSAGE
 
 if( MSVC )
     set( JACKAL_LIBRARY_DIRS ${jccl_FLAGPOLL_LIBRARY_DIRS} )
+    string( REGEX REPLACE "[.]" "_" JACKAL_VERSION_STRING ${jccl_FLAGPOLL_MODULE_VERSION} )
+    find_library( JACKAL_LIBRARY NAMES "jccl-${JACKAL_VERSION_STRING}"
+                  HINTS ${jccl_FLAGPOLL_LIBRARY_DIRS} )
     find_package_handle_standard_args( Jackal
                                        REQUIRED_VARS JACKAL_LIBRARY_DIRS JACKAL_INCLUDE_DIR
                                        VERSION_VAR jccl_FLAGPOLL_MODULE_VERSION
                                        FAIL_MESSAGE ${JACKAL_FAIL_MESSAGE} )
-    set( JACKAL_LIBRARIES )
+    set( JACKAL_LIBRARIES ${JACKAL_LIBRARY} ${VAPOR_LIBRARIES} )
+    mark_as_advanced( JACKAL_LIBRARY )
     mark_as_advanced( JACKAL_LIBRARY_DIRS )
     link_directories( ${JACKAL_LIBRARY_DIRS} )
 else()

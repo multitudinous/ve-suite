@@ -43,11 +43,20 @@ set( VRJUGGLER_FAIL_MESSAGE
 
 if( MSVC )
     set( VRJUGGLER_LIBRARY_DIRS ${vrjuggler_FLAGPOLL_LIBRARY_DIRS} )
+    string( REGEX REPLACE "[.]" "_" VRJ_VERSION_STRING ${vrjuggler_FLAGPOLL_MODULE_VERSION} )
+    find_library( VRJUGGLER_LIBRARY names "vrj-${VRJ_VERSION_STRING}"
+                  HINTS ${vrjuggler_FLAGPOLL_LIBRARY_DIRS} )
     find_package_handle_standard_args( VRJuggler
-                                       REQUIRED_VARS VRJUGGLER_LIBRARY_DIRS VRJUGGLER_INCLUDE_DIR
+                                       REQUIRED_VARS VRJUGGLER_LIBRARY VRJUGGLER_INCLUDE_DIR
                                        VERSION_VAR vrjuggler_FLAGPOLL_MODULE_VERSION
                                        FAIL_MESSAGE ${VRJUGGLER_FAIL_MESSAGE} )
-    set( VRJUGGLER_LIBRARIES )
+    set( VRJUGGLER_LIBRARIES ${VRJUGGLER_LIBRARY}
+                             ${VAPOR_LIBRARIES}
+                             ${JACKAL_LIBRARY}
+                             ${SONIX_LIBRARY}
+                             ${GADGETEER_LIBRARY}
+                             ${Boost_PROGRAM_OPTIONS_LIBRARY} )
+    mark_as_advanced( VRJUGGLER_LIBRARY )
     mark_as_advanced( VRJUGGLER_LIBRARY_DIRS )
     link_directories( ${VRJUGGLER_LIBRARY_DIRS} )
 else()
