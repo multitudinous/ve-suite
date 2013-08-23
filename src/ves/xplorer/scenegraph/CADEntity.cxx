@@ -290,6 +290,6 @@ void CADEntity::SetTwoSidedLighting( bool flag )
 {
     osg::ref_ptr< osg::LightModel > lightModel0 = new osg::LightModel();
     lightModel0->setTwoSided( flag );
-    mDCS->getOrCreateStateSet()->setAttributeAndModes( lightModel0, osg::StateAttribute::ON );
+    mDCS->getOrCreateStateSet()->setAttributeAndModes( lightModel0.get(), osg::StateAttribute::ON );
 }
 ////////////////////////////////////////////////////////////////////////////////

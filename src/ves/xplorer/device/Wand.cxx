@@ -817,7 +817,7 @@ void Wand::MakeWandLine()
     m_wandPAT->setNodeMask( 0 );
     m_wandPAT->addChild( beamGeode.get() );
     ves::xplorer::DeviceHandler::instance()->
-    GetDeviceGroup()->addChild( m_wandPAT );
+    GetDeviceGroup()->addChild( m_wandPAT.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetCADSelectionMode( bool cadSelectionMode )

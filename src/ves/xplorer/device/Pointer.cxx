@@ -155,7 +155,7 @@ void Pointer::Initialize()
             osg::Vec3 scale( 0.00328, 0.00328, 0.00328 );
             m_pointerDCS->setScale( scale );
 
-            ves::xplorer::scenegraph::util::NormalizeVisitor normVis( m_pointerDCS, true );
+            ves::xplorer::scenegraph::util::NormalizeVisitor normVis( m_pointerDCS.get(), true );
         }
     }
     /////////

@@ -97,7 +97,7 @@ public:
     ///
     virtual osg::Object* cloneType() const
     {
-        return new CameraObject( m_projectionTechnique, m_texGenNode );
+        return new CameraObject( m_projectionTechnique, m_texGenNode.get() );
     }
 
     ///

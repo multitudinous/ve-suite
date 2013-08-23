@@ -260,7 +260,7 @@ void HighlightManager::CreateHighlightCircle( osg::Node* inNode, osg::NodePath& 
     osg::ref_ptr< osg::Node > tempCircle =
         scenegraph::CreateCircleHighlight(
             eyePoint, nodePath, *inNode, tempTagName );
-    circleHighlight->addChild( tempCircle );
+    circleHighlight->addChild( tempCircle.get() );
 
     RegisterNodeAndHighlight( inNode, circleHighlight.get() );
 
