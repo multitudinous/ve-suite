@@ -53,7 +53,6 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkCellDataToPointData.h>
-#include <vtkPassThroughFilter.h>
 #include <vtkXMLPolyDataWriter.h>
 
 #define WRITE_IMAGE_DATA 0
@@ -108,56 +107,6 @@ void cfdPresetVector::Update( void )
         vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector " << this->cursorType
                               << " : " << usePreCalcData
                               << std::endl << vprDEBUG_FLUSH;
-
-        /*if( this->usePreCalcData && ( xyz < 3 ) )
-        {
-            cfdPlanes* precomputedPlanes =
-                this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
-            if( !precomputedPlanes )
-            {
-                vprDEBUG( vesDBG, 0 )
-                        << "|\tDataset contains no precomputed vector planes."
-                        << std::endl << vprDEBUG_FLUSH;
-                return;
-            }
-
-            vtkPolyData* preCalcData =
-                precomputedPlanes->GetClosestPlane( requestedValue );
-
-            if( preCalcData == NULL )
-            {
-                vprDEBUG( vesDBG, 0 )
-                        << "|\t\tcfdPresetVector: no precalculated data available"
-                        << std::endl << vprDEBUG_FLUSH;
-                this->updateFlag = false;
-                return;
-            }
-            //vtkPassThroughFilter* tempPipe = vtkPassThroughFilter::New();
-            //tempPipe->SetInput( preCalcData );
-
-            // get every nth point from the dataSet data
-            this->ptmask->SetInput( preCalcData );
-            this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
-            this->ptmask->Update();
-
-            this->SetGlyphWithThreshold();
-            this->SetGlyphAttributes();
-            this->glyph->Update();
-
-            mapper->SetInputConnection( glyph->GetOutputPort() );
-            mapper->SetScalarModeToUsePointFieldData();
-            mapper->UseLookupTableScalarRangeOn();
-            mapper->SelectColorArray( GetActiveDataSet()->
-                                      GetActiveScalarName().c_str() );
-            mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
-            mapper->Update();
-
-            //tempPipe->Delete();
-            vprDEBUG( vesDBG, 1 ) << "|\t\tcfdPresetVector::Update Yes Precalc : "
-                                  << this->cursorType << " : " << usePreCalcData
-                                  << std::endl << vprDEBUG_FLUSH;
-        }
-        else*/
         {
             vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
             if( xyz < 3 )
