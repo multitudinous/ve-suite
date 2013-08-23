@@ -71,7 +71,6 @@
 #include <vtkDoubleArray.h>
 
 #include <vtkCellDataToPointData.h>
-#include <vtkPCellDataToPointData.h>
 
 //#include <vtkXMLUnstructuredGridWriter.h>
 #include <vtkUnstructuredGrid.h>
