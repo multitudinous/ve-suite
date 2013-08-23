@@ -97,6 +97,9 @@ macro(_flagpoll_get_results _package _arg _regex_string _output)
             # Remove extra spaces
             string(REGEX REPLACE " +" " " _FLAGPOLL_OUTPUT ${_FLAGPOLL_OUTPUT})
 
+            # strip quotes
+            string(REGEX REPLACE "\"" "" _FLAGPOLL_OUTPUT ${_FLAGPOLL_OUTPUT})
+
             # Make a CMake list, standardize paths, and append only what we want to our final list
             separate_arguments(_FLAGPOLL_OUTPUT)
             foreach(_RESULT ${_FLAGPOLL_OUTPUT})
