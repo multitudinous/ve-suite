@@ -214,7 +214,7 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
         osgDB::Registry::instance()->setOptions( opt );
     }
 
-    m_isMaster = !vm["vrjslave"].as<bool>();
+    m_isMaster = !vm[ "vrjslave" ].as<bool>();
     //bool clusterMode = !vm["vrjslave"].as<bool>() && !vm["vrjmaster"].as<bool>();
     //std::cout << " cluster mode " << clusterMode << std::endl;
 
@@ -232,6 +232,10 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
 
     mSceneRenderToTexture =
         SceneRenderToTexturePtr( new SceneRenderToTexture( mRTT ) );
+    if( vm.count( "DesktopWindowName" ) > 0 )
+    {
+        mSceneRenderToTexture->SetDesktopWindowName( vm[ "DesktopWindowName" ].as< std::string >() );
+    }
 
     //Set the ortho2D( 0, 1, 0, 1, 0, 1 ) matrix
     gmtl::Matrix44d ortho2DMatrix;

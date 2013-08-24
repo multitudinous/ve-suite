@@ -434,7 +434,13 @@ void SceneRenderToTexture::InitScene( osg::Camera* const svCamera )
     svCamera->resizeGLObjectBuffers(
         osg::DisplaySettings::instance()->getMaxNumberOfGraphicsContexts() );
 
+    //Set the camera name to the VR Juggler Display name
+    svCamera->setName( display->getName() );
+    
+    //Store it so that we can add the UI to it and update it appropriately
     m_updateList.push_back( svCamera );
+    
+    //Setup the capture tools for screen caps and movie making
     m_captureTools[ svCamera ] =
         new osgwTools::ScreenCapture( "test_image", ".png", true );
 
@@ -1328,8 +1334,11 @@ void SceneRenderToTexture::Update(
             for( std::vector< osg::Camera* >::iterator iter = m_updateList.begin();
                     iter != m_updateList.end(); ++iter )
             {
-                ves::conductor::UIManager::instance()->AddUIToNode( ( *iter ) );
-                m_isUIAdded = true;
+                if( m_desktopWindowName.empty() || (m_desktopWindowName == (*iter)->getName()) )
+                {
+                    ves::conductor::UIManager::instance()->AddUIToNode( ( *iter ) );
+                    m_isUIAdded = true;
+                }
             }
         }
         else
@@ -1531,5 +1540,10 @@ void SceneRenderToTexture::SetImageCameraCallback(
             ( *iter )->setPostDrawCallback( 0 );
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::SetDesktopWindowName( const std::string& windowName )
+{
+    m_desktopWindowName = windowName;
 }
 ////////////////////////////////////////////////////////////////////////////////

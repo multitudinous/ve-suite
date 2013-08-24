@@ -149,6 +149,10 @@ public:
     ///capture image callback
     void SetImageCameraCallback( bool capture, const std::string& filename );
 
+    ///Set the desktop Display window name to be used to render the UI
+    ///\param windowName The VR Juggler window name to render to
+    void SetDesktopWindowName( const std::string& windowName );
+
 protected:
 
 private:
@@ -226,6 +230,9 @@ private:
     bool m_isUIAdded;
     ///Control if the UI in cluster mode will be controlled by the user from the master
     bool m_desktopClusterControl;
+    
+    ///Window name
+    std::string m_desktopWindowName;
 };
 } //end xplorer
 } //end ves

@@ -152,6 +152,8 @@ int main( int argc, char* argv[] )
     xplorer_desc.add_options()( "VESDesktop", po::value< std::vector< int > >(),
                                 "Enable desktop mode with the resolution of the desktop" );
     //-VESDesktop', '1440', '900'
+    xplorer_desc.add_options()( "DesktopWindowName", po::value< std::string >(),
+                               "This it the name of the Display window that you want the UI rendered into" );
 
     xplorer_desc.add_options()( "VESCluster", po::value< std::string >(),
                                 "Cluster master node machine name" );
