@@ -60,8 +60,6 @@
 #include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
 
-#include <ves/conductor/qt/UIManager.h>
-
 // --- vrJuggler Includes --- //
 #include <gmtl/Xforms.h>
 #include <gmtl/Generate.h>
