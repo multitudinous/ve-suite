@@ -3,6 +3,7 @@
 #include <ves/xplorer/device/GameControllerCallbacks.h>
 
 #include <switchwire/EventManager.h>
+#include <switchwire/OptionalMacros.h>
 
 namespace ves
 {
@@ -13,10 +14,15 @@ namespace device
 ////////////////////////////////////////////////////////////////////////////////
 GameController::GameController( unsigned int controllerID )
     :
-    m_controllerMask( controllerID )
+    m_controllerMask( controllerID ),
+    m_deadZone( 0.075 )
 {
     switchwire::EventManager::instance()->RegisterSignal( ( &m_grabControllSignal ),
         "GameController" + boost::lexical_cast< std::string >( controllerID ) + ".GrabControllerState" );
+
+    CONNECTSIGNALS_1( "%AnalogAxisDeadZoneChanged", void( const double& ),
+                     &GameController::SetAnalogAxisDeadZone,
+                     m_connections, any_SignalType, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 GameController::~GameController()
@@ -141,8 +147,9 @@ void GameController::ConnectInterfaces( device::GameControllerCallbacks* const c
       //Setup Rumble
      _speed = _rumble->createEffect(gadget::RumbleEffect::SINE);
      //std::cout << "*********************Try to create....****************" << std::endl;
-     if (_speed) {
-     std::cout << "Have a rumble effect " << _speed->load() << std::endl;
+     if( _speed )
+     {
+         std::cout << "Have a rumble effect " << _speed->load() << std::endl;
      }
 
     //All the buttons
@@ -408,9 +415,9 @@ void GameController::OnButton11Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 bool GameController::CheckDeadZone( const float& val ) const
 {
-    if( val < 0.53f )
+    if( val < 0.5 + m_deadZone )
     {
-        if( val > 0.47f )
+        if( val > 0.5 - m_deadZone )
         {
             return true;
         }
@@ -427,6 +434,11 @@ bool GameController::CheckTriggerDeadZone( const float& val ) const
     }
     
     return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::SetAnalogAxisDeadZone( const double& val )
+{
+    m_deadZone = val;
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

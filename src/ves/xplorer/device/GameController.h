@@ -50,6 +50,9 @@ private:
     ///Check deadzone for triggers
     bool CheckTriggerDeadZone( const float& val ) const;
 
+    ///Set the deadzone value
+    void SetAnalogAxisDeadZone( const double& val );
+
     ///Switchwire init list
     switchwire::ScopedConnectionList m_connections;
 
@@ -99,6 +102,10 @@ private:
     //list of names.
     unsigned int m_controllerMask;
     
+    ///The deadzone used to control the float value of the analog axis
+    ///of game controllers 
+    double m_deadZone;
+
     ///Callback for the position data from the controller
     void OnPositionEvent( gmtl::Matrix44f mat );
     

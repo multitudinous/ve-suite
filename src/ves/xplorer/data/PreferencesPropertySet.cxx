@@ -296,6 +296,20 @@ void PreferencesPropertySet::CreateSkeleton()
                            false ) );
         m_liveObjects.push_back( p );
     }
+    
+    {
+        AddProperty( "AnalogDeadZone", 0.075,  "Dead Zone Value" );
+        SetPropertyAttribute( "AnalogDeadZone", "minimumValue", 0.000 );
+        SetPropertyAttribute( "AnalogDeadZone", "maximumValue", 1.000 );
+        SetPropertyAttribute( "AnalogDeadZone", "DisplayPrecision", 3 );
+
+        GetProperty( "AnalogDeadZone" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< double const& >( m_UUIDString,
+                                                                                     GetProperty( "AnalogDeadZone" ),
+                                                                                     "PreferencesPropertySet.AnalogAxisDeadZoneChanged",
+                                                                                     false ) );
+        m_liveObjects.push_back( p );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::EnableNearFarRatio( propertystore::PropertyPtr& property )
