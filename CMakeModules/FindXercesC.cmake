@@ -31,7 +31,7 @@ find_path(
     XERCESC_INCLUDE_DIR
     NAMES xercesc/util/XercesVersion.hpp
     PATHS ${XERCESC_ROOT_DIR}
-    PATH_SUFFIXES include
+    PATH_SUFFIXES include src
     NO_DEFAULT_PATH
 )
 
@@ -42,30 +42,41 @@ find_path(
 )
 
 # Look for the library, preferentially searching below XERCESC_ROOT_DIR
-find_library(
-    XERCESC_LIBRARY
-    NAMES xerces-c xerces-c_3
-    PATHS ${XERCESC_ROOT_DIR}
-    PATH_SUFFIXES lib64 lib32 lib
-    NO_DEFAULT_PATH
-)
+macro( FindLib returnVal postfix )
+    find_library(
+        ${returnVal}
+        NAMES xerces-c${postfix} xerces-c_3${postfix}
+        PATHS ${XERCESC_ROOT_DIR}
+        PATH_SUFFIXES lib64 lib32 lib
+            Build/Win64/VC10/Release
+            Build/Win64/VC10/Debug
+        NO_DEFAULT_PATH
+    )
+    find_library(
+        ${returnVal}
+        NAMES xerces-c${postfix} xerces-c_3${postfix}
+    )
+endmacro()
 
-find_library(
-    XERCESC_LIBRARY
-    NAMES xerces-c xerces-c_3
-)
+FindLib( XERCESC_LIBRARY "" )
+FindLib( XERCESC_LIBRARY_DEBUG D )
+
+if( XERCESC_LIBRARY_DEBUG )
+    set( XERCESC_LIBRARIES optimized ${XERCESC_LIBRARY} debug ${XERCESC_LIBRARY_DEBUG} )
+else()
+    set( XERCESC_LIBRARIES ${XERCESC_LIBRARY} )
+endif()
 
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(
     XercesC
     DEFAULT_MSG
-    XERCESC_LIBRARY
+    XERCESC_LIBRARIES
     XERCESC_INCLUDE_DIR
 )
 
 if (XERCESC_FOUND)
-    set(XERCESC_LIBRARIES ${XERCESC_LIBRARY})
     set(XERCESC_INCLUDE_DIRS ${XERCESC_INCLUDE_DIR})
 else (XERCESC_FOUND)
     set(XERCESC_LIBRARIES)
@@ -75,5 +86,6 @@ endif (XERCESC_FOUND)
 
 mark_as_advanced(
     XERCESC_LIBRARY
+    XERCESC_LIBRARY_DEBUG
     XERCESC_INCLUDE_DIR
 )

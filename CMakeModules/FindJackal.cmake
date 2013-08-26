@@ -43,12 +43,19 @@ if( MSVC )
     string( REGEX REPLACE "[.]" "_" JACKAL_VERSION_STRING ${jccl_FLAGPOLL_MODULE_VERSION} )
     find_library( JACKAL_LIBRARY NAMES "jccl-${JACKAL_VERSION_STRING}"
                   HINTS ${jccl_FLAGPOLL_LIBRARY_DIRS} )
+    find_library( JACKAL_LIBRARY_DEBUG NAMES "jccl_d-${JACKAL_VERSION_STRING}"
+                  HINTS ${jccl_FLAGPOLL_LIBRARY_DIRS} )
     find_package_handle_standard_args( Jackal
                                        REQUIRED_VARS JACKAL_LIBRARY_DIRS JACKAL_INCLUDE_DIR
                                        VERSION_VAR jccl_FLAGPOLL_MODULE_VERSION
                                        FAIL_MESSAGE ${JACKAL_FAIL_MESSAGE} )
-    set( JACKAL_LIBRARIES ${JACKAL_LIBRARY} ${VAPOR_LIBRARIES} )
+    if( JACKAL_LIBRARY_DEBUG )
+        set( JACKAL_LIBRARIES optimized ${JACKAL_LIBRARY} debug ${JACKAL_LIBRARY_DEBUG} ${VAPOR_LIBRARIES} )
+    else()
+        set( JACKAL_LIBRARIES ${JACKAL_LIBRARY} ${VAPOR_LIBRARIES} )
+    endif()
     mark_as_advanced( JACKAL_LIBRARY )
+    mark_as_advanced( JACKAL_LIBRARY_DEBUG )
     mark_as_advanced( JACKAL_LIBRARY_DIRS )
     link_directories( ${JACKAL_LIBRARY_DIRS} )
 else()

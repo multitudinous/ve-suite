@@ -27,12 +27,20 @@ if( MSVC )
     string( REGEX REPLACE "[.]" "_" CPPDOM_VERSION_STRING ${cppdom_FLAGPOLL_MODULE_VERSION} )
     find_library( CPPDOM_LIBRARY NAMES "cppdom-${CPPDOM_VERSION_STRING}"
                   HINTS ${cppdom_FLAGPOLL_LIBRARY_DIRS} )
+    find_library( CPPDOM_LIBRARY_DEBUG NAMES "cppdom_d-${CPPDOM_VERSION_STRING}"
+                  HINTS ${cppdom_FLAGPOLL_LIBRARY_DIRS} )
     find_package_handle_standard_args( CppDOM
                                        REQUIRED_VARS CPPDOM_LIBRARY CPPDOM_INCLUDE_DIR
                                        VERSION_VAR cppdom_FLAGPOLL_MODULE_VERSION
                                        FAIL_MESSAGE ${CPPDOM_FAIL_MESSAGE} )
-    set( CPPDOM_LIBRARIES ${CPPDOM_LIBRARY} )
+    if( CPPDOM_LIBRARY_DEBUG )
+        set( CPPDOM_LIBRARIES optimized ${CPPDOM_LIBRARY} debug ${CPPDOM_LIBRARY_DEBUG} )
+    else()
+        set( CPPDOM_LIBRARIES ${CPPDOM_LIBRARY} )
+    endif()
     mark_as_advanced( CPPDOM_LIBRARY_DIRS )
+    mark_as_advanced( CPPDOM_LIBRARY )
+    mark_as_advanced( CPPDOM_LIBRARY_DEBUG )
     link_directories( ${CPPDOM_LIBRARY_DIRS} )
 else()    
     find_library( CPPDOM_LIBRARY NAMES ${cppdom_FLAGPOLL_LIBRARY_NAMES}
