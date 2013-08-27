@@ -55,16 +55,16 @@ if( MSVC )
     if( VRJUGGLER_LIBRARY_DEBUG )
         set( VRJUGGLER_LIBRARIES optimized ${VRJUGGLER_LIBRARY} debug ${VRJUGGLER_LIBRARY_DEBUG}
                              ${VAPOR_LIBRARIES}
-                             ${JACKAL_LIBRARY}
-                             ${SONIX_LIBRARY}
-                             ${GADGETEER_LIBRARY}
+                             ${JACKAL_LIBRARIES}
+                             ${SONIX_LIBRARIES}
+                             ${GADGETEER_LIBRARIES}
                              ${Boost_PROGRAM_OPTIONS_LIBRARY} )
     else()
         set( VRJUGGLER_LIBRARIES ${VRJUGGLER_LIBRARY}
                              ${VAPOR_LIBRARIES}
-                             ${JACKAL_LIBRARY}
-                             ${SONIX_LIBRARY}
-                             ${GADGETEER_LIBRARY}
+                             ${JACKAL_LIBRARIES}
+                             ${SONIX_LIBRARIES}
+                             ${GADGETEER_LIBRARIES}
                              ${Boost_PROGRAM_OPTIONS_LIBRARY} )
     endif()
     mark_as_advanced( VRJUGGLER_LIBRARY )
