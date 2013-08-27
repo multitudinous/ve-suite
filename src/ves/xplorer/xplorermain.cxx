@@ -79,6 +79,7 @@ BOOL __stdcall DllMain( HINSTANCE module, DWORD reason, LPVOID reserved )
         try
         {
             fs::path base_dir;
+            fs::path lib_base_dir;
 
             // If VRKIT_BASE_DIR is not set, look up the path to this DLL
             // and use it to provide a default setting for that environment
@@ -90,6 +91,7 @@ BOOL __stdcall DllMain( HINSTANCE module, DWORD reason, LPVOID reserved )
                 GetModuleFileName( module, tmppath, sizeof( tmppath ) );
 
                 const fs::path dll_path( tmppath, fs::native );
+                lib_base_dir = dll_path.branch_path();
                 base_dir = dll_path.branch_path().branch_path();
 #if defined(VRKIT_DEBUG) && ! defined(_DEBUG)
                 // The debug DLL linked against the release runtime is in
@@ -182,7 +184,7 @@ BOOL __stdcall DllMain( HINSTANCE module, DWORD reason, LPVOID reserved )
 #endif
                 const fs::path lib_subdir( std::string( "lib" ) + bit_suffix );
 
-                fs::path plugin_dir( base_dir / lib_subdir / "xplorer" / "plugins" );
+                fs::path plugin_dir( lib_base_dir / "xplorer" / "plugins" );
 #if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
                 const std::string plugin_dir_str =
                     plugin_dir.string();
@@ -251,6 +253,7 @@ extern "C" void __attribute( ( constructor ) ) vrkitLibraryInit()
 
     const fs::path lib_subdir( std::string( "lib" ) + bit_suffix );
 
+    fs::path pluginBasePath;
     // If VRKIT_BASE_DIR is not set, look up the path to this shared library
     // and use it to provide a default setting for that environment variable.
     if( NULL == env_dir )
@@ -263,7 +266,6 @@ extern "C" void __attribute( ( constructor ) ) vrkitLibraryInit()
 #else
             dladdr( reinterpret_cast<void*>( &vrkitLibraryInit ), &info );
 #endif
-
         // NOTE: dladdr(3) really does return a non-zero value on success.
         if( 0 != result )
         {
@@ -274,13 +276,13 @@ extern "C" void __attribute( ( constructor ) ) vrkitLibraryInit()
 
                 // Get the directory containing this shared library.
                 const fs::path lib_path = lib_file.branch_path();
-
+                pluginBasePath = lib_path;
                 // Start the search for the root of the vrkit installation in the
                 // parent of the directory containing this shared library.
                 base_dir = lib_path.branch_path();
 
-                bool found( false );
-                while( ! found && ! base_dir.empty() )
+                //bool found( false );
+                /*while( ! found && ! base_dir.empty() )
                 {
                     try
                     {
@@ -299,9 +301,9 @@ extern "C" void __attribute( ( constructor ) ) vrkitLibraryInit()
                     {
                         base_dir = base_dir.branch_path();
                     }
-                }
+                }*/
 
-                if( found )
+                //if( found )
                 {
                     setenv( "XPLORER_BASE_DIR",
                             base_dir.string().c_str(), 1 );
@@ -321,6 +323,8 @@ extern "C" void __attribute( ( constructor ) ) vrkitLibraryInit()
         try
         {
             base_dir = fs::path( env_dir );
+            
+            pluginBasePath = base_dir / lib_subdir;
         }
         catch( fs::filesystem_error& ex )
         {
@@ -341,7 +345,7 @@ extern "C" void __attribute( ( constructor ) ) vrkitLibraryInit()
 
         // Construct the values for XPLORER_DATA_DIR and XPLORER_PLUGINS_DIR.
         const fs::path plugin_dir =
-            base_dir / lib_subdir / versioned_dir_name / "plugins";
+            pluginBasePath / versioned_dir_name / "plugins";
         const fs::path data_dir =
             base_dir / "share" / "vesuite" / versioned_dir_name;
 
