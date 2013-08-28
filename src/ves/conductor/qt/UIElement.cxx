@@ -205,65 +205,38 @@ void UIElement::SendInteractionEvent( switchwire::InteractionEvent& event )
     boost::ignore_unused_variable_warning( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SendButtonPressEvent( gadget::Keys button, int x, int y, int state )
+void UIElement::SendButtonPressEvent( gadget::Keys , int , int , int  )
 {
-    boost::ignore_unused_variable_warning( button );
-    boost::ignore_unused_variable_warning( x );
-    boost::ignore_unused_variable_warning( y );
-    boost::ignore_unused_variable_warning( state );
     LOG_WARNING( "SendButtonPressEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SendButtonReleaseEvent( gadget::Keys button, int x, int y, int state )
+void UIElement::SendButtonReleaseEvent( gadget::Keys , int , int , int  )
 {
-    boost::ignore_unused_variable_warning( button );
-    boost::ignore_unused_variable_warning( x );
-    boost::ignore_unused_variable_warning( y );
-    boost::ignore_unused_variable_warning( state );
     LOG_WARNING( "SendButtonReleaseEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SendDoubleClickEvent( gadget::Keys button, int x, int y, int state )
+void UIElement::SendDoubleClickEvent( gadget::Keys , int , int , int  )
 {
-    boost::ignore_unused_variable_warning( button );
-    boost::ignore_unused_variable_warning( x );
-    boost::ignore_unused_variable_warning( y );
-    boost::ignore_unused_variable_warning( state );
     LOG_WARNING( "SendDoubleClickEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SendMouseMoveEvent( int x, int y, int z, int state )
+void UIElement::SendMouseMoveEvent( int , int , int , int  )
 {
-    boost::ignore_unused_variable_warning( x );
-    boost::ignore_unused_variable_warning( y );
-    boost::ignore_unused_variable_warning( z );
-    boost::ignore_unused_variable_warning( state );
     LOG_WARNING( "SendMouseMoveEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SendKeyPressEvent( gadget::Keys key, int modifierMask, char unicode )
+void UIElement::SendKeyPressEvent( gadget::Keys , int , char  )
 {
-    boost::ignore_unused_variable_warning( key );
-    boost::ignore_unused_variable_warning( modifierMask );
-    boost::ignore_unused_variable_warning( unicode );
     LOG_WARNING( "SendKeyPressEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SendKeyReleaseEvent( gadget::Keys key, int modifierMask, char unicode )
+void UIElement::SendKeyReleaseEvent( gadget::Keys , int , char  )
 {
-    boost::ignore_unused_variable_warning( key );
-    boost::ignore_unused_variable_warning( modifierMask );
-    boost::ignore_unused_variable_warning( unicode );
     LOG_WARNING( "SendKeyReleaseEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::SendScrollEvent( int deltaX, int deltaY, int x, int y, int state )
+void UIElement::SendScrollEvent( int , int , int , int , int  )
 {
-    boost::ignore_unused_variable_warning( deltaX );
-    boost::ignore_unused_variable_warning( deltaY );
-    boost::ignore_unused_variable_warning( x );
-    boost::ignore_unused_variable_warning( y );
-    boost::ignore_unused_variable_warning( state );
     LOG_WARNING( "SendScrollEvent If you see this we have problems." );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -310,10 +283,17 @@ void UIElement::PushUIMatrix( osg::Matrixf const& matrix )
 ////////////////////////////////////////////////////////////////////////////////
 osg::Matrixf UIElement::PopUIMatrix()
 {
-    mUIMatrices.pop_back();
-    osg::Matrixf last = GetUIMatrix();
-    mUIMatrixDirty = true;
-    return last;
+    if( mUIMatrices.size() > 1 )
+    {
+        mUIMatrices.pop_back();
+        osg::Matrixf last = GetUIMatrix();
+        mUIMatrixDirty = true;
+        return last;
+    }
+    else
+    {
+        return osg::Matrixf();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::MoveCanvas( float dx, float dy, float dz )
@@ -324,11 +304,26 @@ void UIElement::MoveCanvas( float dx, float dy, float dz )
     mUIMatrixDirty = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIElement::ResizeCanvas( int width, int height )
+void UIElement::ResizeCanvas( int dx, int dy )
 {
-    boost::ignore_unused_variable_warning( width );
-    boost::ignore_unused_variable_warning( height );
-    LOG_WARNING( "ResizeCanvas If you see this we have problems." );
+    osg::Texture2D* texture = static_cast<osg::Texture2D*>(mGeode->getOrCreateStateSet()->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )->asTexture());
+    osg::Image* oldImage = texture->getImage();
+    oldImage->allocateImage( GetImageWidth(), GetImageHeight(), 1, GL_RGB, GL_UNSIGNED_BYTE );
+
+    // This example code shows how to do a simple UI scaling. It's not useful for
+    // anything that requires mouse interaction since there is no transform
+    // being performed from UIManager coordinates to element coordinates.
+    /*
+    osg::Matrixf trans;
+    float x, y = 0.0;
+    x = GetUIMatrix().getScale().x();
+    y = GetUIMatrix().getScale().y();
+    std::cout << "Scale: " << x << ", " << y << std::endl << std::flush;
+    trans.makeScale( GetUIMatrix().getScale().x() + dx, GetUIMatrix().getScale().y() - dy, 1 );
+    trans.setTrans( GetUIMatrix().getTrans() );
+    mUIMatrices[ mUIMatrices.size() - 1 ] = trans;
+    mUIMatrixDirty = true;
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElement::Update()
@@ -367,9 +362,13 @@ void UIElement::Update()
         osg::Vec3d trans = tempUIMatrix.getTrans();
         osg::Vec3d scale = tempUIMatrix.getScale();
 
+        // Debug code to check the scale.
+        //std::cout << "Update: " << scale.x() << ", " << scale.y() << ", " << scale.z() << std::endl << std::flush;
+
         osg::Matrixd const& windowMat =
             ves::xplorer::scenegraph::SceneManager::instance()->
             GetCurrentGLTransformInfo()->GetInvertedWindowMatrixOSG();
+
         osg::Vec3 min = trans * windowMat;
         osg::Vec3 max = trans + scale;
 
@@ -381,6 +380,14 @@ void UIElement::Update()
         m_vertices->at( 1 ) = osg::Vec3( max.x(), min.y(), -1.0 ); //lr
         m_vertices->at( 2 ) = osg::Vec3( max.x(), max.y(), -1.0 ); //ur
         m_vertices->at( 3 ) = osg::Vec3( min.x(), max.y(), -1.0 ); //ul
+
+        // Debug code to check the coordinates of the quad's vertices.
+        //std::cout << "Update: " << min.x() << ", " << min.y() << ", " << max.x() << ", " << max.y() << std::endl << std::flush;
+
+        // Debug code to confirm the expectation that the texture coords never change.
+        //osg::Vec2Array* tc = static_cast<osg::Vec2Array*>(mGeode->getDrawable( 0 )->asGeometry()->getTexCoordArray( 0 ));
+        /*std::cout << "Update: (" << tc->at(0)[0] << ", " << tc->at(0)[1] << "), (" << tc->at(1)[0] << ", " << tc->at(1)[1] << "), "
+                  << "(" << tc->at(2)[0] << ", " << tc->at(2)[1] << "), " << "(" << tc->at(3)[0] << ", " << tc->at(3)[1] << ") " << std::endl << std::flush;*/
 
         mGeode->getDrawable( 0 )->dirtyDisplayList();
         mGeode->dirtyBound();

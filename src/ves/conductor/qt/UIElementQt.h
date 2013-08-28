@@ -55,9 +55,14 @@
 #include <QtGui/QLabel>
 #include <QtCore/QTime>
 
+// Don't try to use these two defines simultaneously
+//#define FULL_IMAGE_DEBUG
+//#define UITEXTURE_DEBUG
+
 namespace Ui
 {
 class titlebar;
+class BottomBorder;
 }
 
 namespace ves
@@ -174,6 +179,8 @@ private:
 
     QWidget* mTitlebar;
     Ui::titlebar* mQTitlebar;
+    QWidget* m_BottomBorder;
+    Ui::BottomBorder* m_QBottomBorder;
     QMap<QString, QImage>   update_cache;
     QMap<QString, QRect>  m_captureList;
     QMutex* m_captureListMutex;
@@ -184,6 +191,10 @@ private:
 #ifdef FULL_IMAGE_DEBUG
     QLabel* m_imgCurrentLabel;
     QLabel* m_imgPreviousLabel;
+#endif
+
+#ifdef UITEXTURE_DEBUG
+    QLabel* m_imgCurrentLabel;
 #endif
 
     QTime m_paintTime;
@@ -205,6 +216,8 @@ protected Q_SLOTS:
     void _onMinimizeButtonClicked();
     void _onTitlebarPressed();
     void _onOpacitySliderValueChanged( int opacity );
+    void _onResizeButtonPressed();
+    void _onResizeButtonReleased();
     void RefreshWidgetFilterList();
     void _raise();
     void _lower();

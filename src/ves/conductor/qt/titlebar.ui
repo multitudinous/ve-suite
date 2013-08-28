@@ -13,6 +13,11 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget { 
+	background:rgba(0, 0, 0,0);
+}</string>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <property name="spacing">
     <number>0</number>
@@ -25,8 +30,8 @@
      <property name="styleSheet">
       <string notr="true">QFrame { 
 	background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(0, 0, 0, 255), stop: 0.5 rgba(75,75,75,255), stop:0.51 rgba(100,100,100,255), stop:1 rgba(200, 200, 200, 255));
-	/*border-top-left-radius: 5px;
-	border-top-right-radius: 5px;*/
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 }</string>
      </property>
      <property name="frameShape">

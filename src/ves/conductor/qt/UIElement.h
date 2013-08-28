@@ -151,11 +151,11 @@ public:
     //virtual unsigned char* RenderElementToImage();
     virtual osg::Image* RenderElementToImage();
     ////////////////////////////////////////////////////////////////////////////////
-    // Should return true if rendered image changed in the most recent call to
-    // RenderElementToImage; otherwise false. This is intended as a way to allow
-    // callers to determine whether they can use a stored copy of the previously-
-    // rendered image or must update to the new one pointed to by
-    // RenderElementToImage
+    /// Should return true if rendered image changed in the most recent call to
+    /// RenderElementToImage; otherwise false. This is intended as a way to allow
+    /// callers to determine whether they can use a stored copy of the previously-
+    /// rendered image or must update to the new one pointed to by
+    /// RenderElementToImage
     ////////////////////////////////////////////////////////////////////////////////
     virtual bool IsDirty();
     ////////////////////////////////////////////////////////////////////////////////
@@ -168,8 +168,8 @@ public:
     ////////////////////////////////////////////////////////////////////////////////
     virtual void Initialize();
     ////////////////////////////////////////////////////////////////////////////////
-    // Should return true if image *size* has changed since last call to
-    // RenderElementToImage; otherwise false.
+    /// Should return true if image *size* has changed since last call to
+    /// RenderElementToImage; otherwise false.
     ////////////////////////////////////////////////////////////////////////////////
     virtual bool SizeDirty();
 

@@ -69,6 +69,9 @@ protected:
     mutable bool doSubload;                   // true if should do a subload copy with next subload() callback for the texture.
     mutable std::vector< osg::ref_ptr< osg::Image > > subImgs;  // a pointer to an image to overlay onto the texture for this.
 
+    mutable int m_textureWidth;     // width of texture image
+    mutable int m_textureHeight;    // height of texture image
+
     typedef std::set< unsigned int > ContextSet;
     mutable ContextSet _contexts;
     bool m_enabled;

@@ -38,6 +38,7 @@
 // --- VES includes --- //
 #include <ves/conductor/qt/UIElementQt.h>
 #include <ves/conductor/qt/ui_titlebar.h>
+#include <ves/conductor/qt/ui_BottomBorder.h>
 #include <switchwire/InteractionEvent.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -64,6 +65,7 @@
 #include <ves/conductor/qt/UIManager.h>
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QWheelEvent>
+#include <QtGui/QCursor>
 
 #include <boost/concept_check.hpp>
 
@@ -138,15 +140,24 @@ UIElementQt::UIElementQt( QWidget* parent )
     m_captureListMutex = new QMutex();
     _setupKeyMap();
 
+    // Set up the window's titlebar
     mQTitlebar = new Ui::titlebar();
     mTitlebar = new QWidget( 0 );
     mQTitlebar->setupUi( mTitlebar );
     QList<QWidget*> widgets = mTitlebar->findChildren<QWidget*>();
-    Q_FOREACH( QWidget * widget, widgets )
-    widget->installEventFilter( this );
+    Q_FOREACH( QWidget* widget, widgets )
+        widget->installEventFilter( this );
     // Hide the "hide" button for now. May bring this back later on once
     // we have a clear way to manage hiding an element vs. hiding all of UI
     mQTitlebar->HideButton->hide();
+
+    // Set up the window's bottom bar
+    m_QBottomBorder = new Ui::BottomBorder();
+    m_BottomBorder = new QWidget( 0 );
+    m_QBottomBorder->setupUi( m_BottomBorder );
+    QList<QWidget*> bbwidgets = m_BottomBorder->findChildren<QWidget*>();
+    Q_FOREACH( QWidget* widget, bbwidgets )
+        widget->installEventFilter( this );
 
     Initialize();
     PostConstructor();
@@ -161,6 +172,11 @@ UIElementQt::UIElementQt( QWidget* parent )
     bl->addWidget( m_imgPreviousLabel );
     imgDialog->resize( 450, 250 );
     imgDialog->show();
+#endif
+
+#ifdef UITEXTURE_DEBUG
+    m_imgCurrentLabel = new QLabel( 0 );
+    m_imgCurrentLabel->show();
 #endif
 
 }
@@ -198,6 +214,7 @@ void UIElementQt::CleanupSlot()
     delete mTimer;
     delete mImageMutex;
     delete mQTitlebar;
+    delete m_QBottomBorder;
     LOG_INFO( "CleanupSlot end" );
     mInitialized = false;
 }
@@ -293,6 +310,10 @@ void UIElementQt::Initialize()
         QObject::connect( mQTitlebar->TitleFrame,
                           SIGNAL( doubleClicked() ), this,
                           SLOT( _onMinimizeButtonClicked() ) );
+        connect( m_QBottomBorder->m_sizeButton, SIGNAL( pressed() ),
+                 this, SLOT( _onResizeButtonPressed() ) );
+        connect( m_QBottomBorder->m_sizeButton, SIGNAL( released() ),
+                 this, SLOT( _onResizeButtonReleased() ) );
 
         mInitialized = true;
     }
@@ -321,12 +342,12 @@ int UIElementQt::GetElementHeight()
 ////////////////////////////////////////////////////////////////////////////////
 const osg::Vec4f UIElementQt::GetTextureCoordinates()
 {
-    osg::Vec4f m_coordinates;
+    osg::Vec4f coordinates;
 
     // Vec4f.set takes args in order x, y, z, w, thus the odd placement of mLeft
-    m_coordinates.set( mTextureRight, mTextureBottom,
+    coordinates.set( mTextureRight, mTextureBottom,
                        mTextureTop, mTextureLeft );
-    return m_coordinates;
+    return coordinates;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::SendInteractionEvent( switchwire::InteractionEvent& )
@@ -460,9 +481,8 @@ UIElementQt::GetDamagedAreas()
 
 #ifdef FULL_IMAGE_DEBUG
     QPixmap markupImage( QPixmap::fromImage( *mImage ) );
-#endif
-
     bool some_update = false;
+#endif
     int index = 0;
 
     // Protect capture list against simultaneous read/write
@@ -492,7 +512,9 @@ UIElementQt::GetDamagedAreas()
             if( update_cache[key] != fragment )
             {
                 is_update = true;
+#ifdef FULL_IMAGE_DEBUG
                 some_update = true;
+#endif
             }
             //clock_gettime(CLOCK_MONOTONIC, &ttt);
             //std::cout << "Comp: " << ttt.tv_nsec - tt.tv_nsec << std::endl << std::flush;
@@ -501,7 +523,9 @@ UIElementQt::GetDamagedAreas()
         {
             // If the region is not in the update cache, then it *must* be an update
             is_update = true;
+#ifdef FULL_IMAGE_DEBUG
             some_update = true;
+#endif
         }
 
         update_cache[key] = fragment;
@@ -599,8 +623,13 @@ void UIElementQt::SetWidget( QWidget* widget )
     mWidth = m_initialImageSize.first;
     mHeight = m_initialImageSize.second;
 
+#ifdef UITEXTURE_DEBUG
+    m_imgCurrentLabel->resize( mWidth, mHeight );
+#endif
+
     // Create a scene and a view to add this widget into
-    mGraphicsScene = new QGraphicsScene( 0, 0, mWidth, mHeight );
+    //mGraphicsScene = new QGraphicsScene( 0, 0, mWidth, mHeight );
+    mGraphicsScene = new QGraphicsScene(  );
     this->setScene( mGraphicsScene );
 
     // Force the scene to be aligned into the top-left corner of the view.
@@ -613,8 +642,15 @@ void UIElementQt::SetWidget( QWidget* widget )
     titlebar->show();
     mTitlebar->move( 0, 0 );
 
-    //Now resize the respective widget to account for the title bar
-    mWidget->resize( mWidth, mHeight - mTitlebar->height() );
+    // Add our internal bottom bar to the bottom of the widget
+    QGraphicsProxyWidget* BottomBorder = mGraphicsScene->addWidget( m_BottomBorder );
+    m_BottomBorder->resize( mWidth, m_BottomBorder->height() );
+    BottomBorder->show();
+    m_BottomBorder->move( 0, mHeight - m_BottomBorder->height() );
+
+    //Now resize the respective widget to account for the title bar and bottom bar
+    mWidget->resize( mWidth, mHeight - mTitlebar->height() - m_BottomBorder->height() );
+
 
     // Add the widget to the scene.
     // NB: We don't have to explicitly create mGraphicsProxyWidget since
@@ -668,6 +704,9 @@ void UIElementQt::SetWidget( QWidget* widget )
     QApplication::sendEvent( mGraphicsScene, &ev );
 
     RefreshWidgetFilterList();
+
+    // Useful for debugging interaction issues with UI
+    //this->show();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::RefreshWidgetFilterList()
@@ -795,14 +834,26 @@ void UIElementQt::ResizeCanvas( int width, int height )
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_resizeCanvas( int width, int height )
 {
-    boost::ignore_unused_variable_warning( width );
-    boost::ignore_unused_variable_warning( height );
+    // Resize all our widgets
+    mWidget->resize( width, height - mTitlebar->height() - m_BottomBorder->height()  );
+    // Widgets can't be resized to smaller than their minimum size, so after we
+    // attempt the resize above, we read back out its final width to use for
+    // titlebar and such.
+    int finalWidth = mWidget->width();
+    int finalHeight = mWidget->height() + mTitlebar->height() + m_BottomBorder->height();
+    mTitlebar->resize( finalWidth, mTitlebar->height() );
+    m_BottomBorder->resize( finalWidth, m_BottomBorder->height() );
+    m_BottomBorder->move( 0, finalHeight - m_BottomBorder->height() );
 
-    //    mWidget->resize( width, height - mTitlebar->height()  );
-    //    mTitlebar->resize( width, mTitlebar->height() );
-    //    UpdateSize();
-    //    mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
-    //    this->resize( mWidth, mHeight );
+    // Resize image used for texture and set new UIMatrix
+    UpdateSize();
+
+    // Resize the underlying osg::Image bound to the texture
+    UIElement::ResizeCanvas( finalWidth, finalHeight );
+
+    // Clear out stuff related to region damaging.
+    update_cache.clear();
+    m_firstRender = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::UpdateSize()
@@ -818,6 +869,11 @@ void UIElementQt::UpdateSize()
         mHeight += mTitlebar->height();
     }
 
+    if( m_BottomBorder->isVisible() )
+    {
+        mHeight += m_BottomBorder->height();
+    }
+
     mGraphicsScene->setSceneRect( 0, 0, mWidth, mHeight );
 
     // Make the view and the scene coincident.
@@ -828,23 +884,13 @@ void UIElementQt::UpdateSize()
 
     osg::Matrixf tempUI;
     tempUI.makeScale( mWidth, mHeight, 1 );
-    //We assume the the ui is positioned at 0,0
-    //tempUI.setTrans( 0, 0, 0 );
     tempUI.setTrans( GetUIMatrix().getTrans() );
+    PopUIMatrix();
     PushUIMatrix( tempUI );
 
-    /*osg::Matrixd const& windowMat =
-        ves::xplorer::scenegraph::SceneManager::instance()->
-        GetCurrentGLTransformInfo()->GetInvertedWindowMatrixOSG();
-    osg::Vec3 max = osg::Vec3( mWidth, mHeight, 1.0 ) * windowMat;
-
-    //This assumes that we are spanning the whole ui the height of the screen
-    m_vertices->at( 0 ) = osg::Vec3(   -1.0f,   -1.0f, 1.0 ); //ll
-    m_vertices->at( 1 ) = osg::Vec3( max.x(),   -1.0f, 1.0 ); //lr
-    m_vertices->at( 2 ) = osg::Vec3( max.x(), max.y(), 1.0 ); //ur
-    m_vertices->at( 3 ) = osg::Vec3(   -1.0f, max.y(), 1.0 ); //ul*/
     // Delete the image and flipped image object if the required texture size
     // has changed.
+
     if( ( mWidth != old_Width ) || ( mHeight != old_Height ) )
     {
         m_sizeHasChanged = true;
@@ -888,6 +934,7 @@ void UIElementQt::UpdateSize()
             mImageFlipped = new QImage( mImageWidth, mImageHeight, QImage::Format_ARGB32_Premultiplied );
         }
     } // Leave critical section
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::FreeOldWidgets()
@@ -968,6 +1015,10 @@ void UIElementQt::_render()
     } // Leave critical section
 
     mImageDirty = true;
+
+#ifdef UITEXTURE_DEBUG
+    m_imgCurrentLabel->setPixmap( QPixmap::fromImage( *mImage ) );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_buttonPressEvent( gadget::Keys button, int x, int y, int state )
@@ -1350,6 +1401,7 @@ void UIElementQt::_onHideButtonClicked()
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::_onMinimizeButtonClicked()
 {
+    //QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     ves::conductor::UIManager::instance()->MinimizeElement( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1361,6 +1413,16 @@ void UIElementQt::_onTitlebarPressed()
 void UIElementQt::_onOpacitySliderValueChanged( int opacity )
 {
     ves::conductor::UIManager::instance()->SetOpacity( opacity / 100.0f );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElementQt::_onResizeButtonPressed()
+{
+    ves::conductor::UIManager::instance()->InitiateResizeElement( this );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIElementQt::_onResizeButtonReleased()
+{
+    std::cout << "ResizeButtonReleased" << std::endl << std::flush;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIElementQt::Raise()
@@ -1389,11 +1451,13 @@ void UIElementQt::ShowTitlebar( bool show )
     {
         mTitlebar->show();
         mWidget->move( 0, mTitlebar->height() );
+        m_BottomBorder->move( 0, mTitlebar->height() + mWidget->height() );
     }
     else if( !show && mTitlebar->isVisible() )
     {
         mTitlebar->hide();
         mWidget->move( 0, 0 );
+        m_BottomBorder->move( 0, mWidget->height() );
     }
     UpdateSize();
 }

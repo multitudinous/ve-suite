@@ -119,6 +119,9 @@ cppSources += lib_env.qt_rcc(source)
 source = [pj(buildSrcDir,'titlebar.ui')]
 cppHeaders = lib_env.qt_uic(source)
 
+source = [pj(buildSrcDir,'BottomBorder.ui')]
+cppHeaders = lib_env.qt_uic(source)
+
 source = [pj(buildSrcDir,'RecentFiles.ui')]
 cppHeaders += lib_env.qt_uic(source)
 

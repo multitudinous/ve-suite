@@ -200,8 +200,8 @@ public:
     ///Sets the projection matrix when not in Ortho2D mode
     void SetProjectionMatrix( osg::Matrixd& matrix );
 
-    // Returns true if the point (x,y) is over a quad associated with a UIElement,
-    // false otherwise.
+    /// Returns true if the point (x,y) is over a quad associated with a UIElement,
+    /// false otherwise.
     bool Ortho2DTestPointerCoordinates( int x, int y );
     ///Test the coordinates in 3d space and create x and y pixel coordinates
     bool Test3DPointerCoordinates( int& x, int& y );
@@ -215,6 +215,9 @@ public:
     /// Let UIManager know that we should begin moving element. This will usually
     /// be called after a click on an element's titlebar or some similar operation.
     void InitiateMoveElement( UIElement* element );
+
+    /// Let UIManager know that we should begin resizing an element.
+    void InitiateResizeElement( UIElement* element );
 
     /// Minimize only the specific element passed as the argument
     void MinimizeElement( UIElement* element );
@@ -353,6 +356,9 @@ private:
     float mMinimizeXOffset;
 
     UIElement* mMoveElement;
+    UIElement* m_resizeElement;
+    double m_resizeElementX;
+    double m_resizeElementY;
     std::vector< UIElement* > m_MinimizeElements;
     std::vector< UIElement* > m_UnminimizeElements;
 
@@ -409,7 +415,7 @@ private:
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_lineSegmentIntersector;
     ///The selected node for non desktop mode
     osg::ref_ptr< osg::Node > m_selectedUINode;
-    ///The cooresponding selected UIElement
+    ///The corresponding selected UIElement
     UIElement* m_selectedUIElement;
     ///The selected point for non desktop mode
     osg::Vec3d m_intersectionPoint;

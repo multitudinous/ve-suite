@@ -36,13 +36,15 @@ void TextureSubloader::load( const osg::Texture2D& texture, osg::State& ) const
     const osg::Image* image = texture.getImage();
     if( image )
     {
+        m_textureWidth = image->s();
+        m_textureHeight = image->t();
         // texture must have an image to work with.
-        glTexImage2D( GL_TEXTURE_2D, 0, image->getPixelFormat(), image->s(), image->t(), 0, image->getPixelFormat(), image->getDataType(), image->data() );
+        glTexImage2D( GL_TEXTURE_2D, 0, image->getPixelFormat(), m_textureWidth, m_textureHeight, 0, image->getPixelFormat(), image->getDataType(), image->data() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 // overlay the image onto the texture. A necessary override of osg::Texture2D::SubloadCallback (overrides a pure virtual).
-void TextureSubloader::subload( const osg::Texture2D&, osg::State& ) const
+void TextureSubloader::subload( const osg::Texture2D& texture, osg::State& ) const
 {
     if( !m_enabled )
     {
@@ -60,6 +62,19 @@ void TextureSubloader::subload( const osg::Texture2D&, osg::State& ) const
         return;
     }
     _contexts.insert( contextID );*/
+
+    // Test whether texture size has changed since last subload. If so,
+    // re-bind the new texture image.
+    const osg::Image* image = texture.getImage();
+    if( image )
+    {
+        if( (image->s() != m_textureWidth ) || ( image->t() != m_textureHeight ) )
+        {
+            m_textureWidth = image->s();
+            m_textureHeight = image->t();
+            glTexImage2D( GL_TEXTURE_2D, 0, image->getPixelFormat(), m_textureWidth, m_textureHeight, 0, image->getPixelFormat(), image->getDataType(), image->data() );
+        }
+    }
 
     osg::ref_ptr< osg::Image > subImg;
     int xOffset = 0;
@@ -84,7 +99,7 @@ void TextureSubloader::subload( const osg::Texture2D&, osg::State& ) const
         subImg = 0;                      // don't hold on to the image pointer any longer.
     }
 
-    // completed the subload. Need another call to DoImageUpdate() before the next one.
+    // completed the subload. Need another call to AddUpdate() before the next one.
     doSubload = false;
 }
 ////////////////////////////////////////////////////////////////////////////////

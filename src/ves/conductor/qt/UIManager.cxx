@@ -116,6 +116,7 @@ UIManager::UIManager() :
     mCurrentZPointer( 0 ),
     mMinimizeXOffset( 10.0f ),
     mMoveElement( 0 ),
+    m_resizeElement( 0 ),
     mMouseInsideUI( true ), // We start out true, since no Qt events will happen
     // if we start out false. And that means no UI would
     // ever appear.
@@ -219,8 +220,6 @@ UIManager::~UIManager()
         mUIGroup->removeUpdateCallback( mUIUpdateCallback.get() );
     }
 
-    //std::cout << this->referenceCount() << std::endl;
-
     // Ideally we would call RemoveAllElements, but this causes a crash,
     // I think because this detructor is called from the wrong thread to
     // allow touching Qt widgets. Instead, we use DestroyUI to set a flag which
@@ -233,7 +232,6 @@ UIManager::~UIManager()
 
     // All other memory allocated on the heap by this class should be attached
     // to an osg::ref_ptr and so should automatically manage its lifetime
-    //std::cout << " UI manager destructor" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::DestroyUI()
@@ -259,7 +257,7 @@ osg::Geode* UIManager::AddElement( UIElement* element )
         mNodesToAdd.push_back( m_rttQuadTransform.get() );
     }
 
-    // Move the element so that its top-left corer is at the top-left portion of the
+    // Move the element so that its top-left corner is at the top-left portion of the
     // UI area
     double elementHeight = element->GetElementHeight();
     element->MoveCanvas( 0, mTop - elementHeight, 0 );
@@ -430,11 +428,6 @@ void UIManager::Update()
     }
     else if( mHide )
     {
-        //osgDB::ReaderWriter::Options* options = new osgDB::ReaderWriter::Options;
-        //options->setOptionString( "includeImageFileInIVEFile" );
-        //osgDB::writeNodeFile( *m_sceneDebugCamera, "outfile.ive", options );
-        //osgDB::writeNodeFile( *mUIGroup, "outfile.ive", options );
-        //mHide = false;
         _hideAll();
     }
 
@@ -458,7 +451,6 @@ void UIManager::HideAllElements()
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::ShowAllElements( /*bool showOnlyActive*/ )
 {
-    //boost::ignore_unused_variable_warning( showOnlyActive );
     // May not be able to touch scenegraph directly at the moment;
     // Set show flag to be discovered during update
     mShow = true;
@@ -576,7 +568,6 @@ void UIManager::Initialize( osg::Group* )
     {
         stateset->setRenderBinDetails( 99, "RenderBin" );
 
-        //stateset->setNestRenderBins( false );
         //Set depth test to always pass and don't write to the depth buffer
         stateset->setMode(
             GL_LIGHTING,
@@ -586,11 +577,6 @@ void UIManager::Initialize( osg::Group* )
             GL_DEPTH_TEST,
             osg::StateAttribute::OFF |
             osg::StateAttribute::OVERRIDE );
-        /*osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-        depth->setFunction( osg::Depth::ALWAYS );
-        depth->setWriteMask( true );
-        stateset->setAttributeAndModes( depth.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );*/
 
         mUIGroup->setCullingActive( false );
     }
@@ -667,7 +653,7 @@ void UIManager::_insertNodesToAdd()
         }
         else
         {
-            LOG_INFO("UIManager::_insertNodesToAdd : no elements yet " << mElements.size() );
+            LOG_WARNING( "UIManager::_insertNodesToAdd : no elements yet " << mElements.size() );
         }
 
     }
@@ -686,13 +672,14 @@ void UIManager::_repaintChildren()
         UIElement* element = ( *z_order );
         if( element->IsVisible() )
         {
+            element->Update();
             float uiAspectRatio =
                 float( element->GetImageHeight() ) / float( element->GetImageWidth() );
             m_aspectRatioUniform->set( uiAspectRatio );
-            element->Update();
 
             ///This code must be left here to correctly update the UI.
             osg::ref_ptr< osg::Image > image_Data = element->RenderElementToImage();
+            //std::cout << "_repaintChildren returned image: " << image_Data->s() << ", " << image_Data->t() << std::endl << std::flush;
 
             // Only reset the image if element tells us it has changed since
             // last time
@@ -706,6 +693,8 @@ void UIManager::_repaintChildren()
                     // Use texture subload, but don't use region damaging --
                     // just push the entire texture as a subload
                     subloader->AddUpdate( image_Data.get(), 0, 0 );
+                    //osg::Image* tim = element->GetGeode()->getOrCreateStateSet()->getTextureAttribute( 0, osg::StateAttribute::TEXTURE )->asTexture()->getImage(0);
+                    //std::cout << "\tTexImage: " << tim->s() << ", " << tim->t() << std::endl << std::flush;
                 }
                 else
                 {
@@ -803,9 +792,7 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
     // Walk through every visible quad we own, in descending z-order,
     // and see if the point lies on it
     UIElement* tempElement = 0;
-    //ElementMap_type::const_iterator map_iterator = mElements.begin();
     std::list<UIElement*>::const_iterator list_iterator = m_zOrder.begin();
-    //while( map_iterator != mElements.end() )
     while( list_iterator != m_zOrder.end() )
     {
         // If the quad isn't visible, treat it as though the pointer can't be
@@ -819,7 +806,6 @@ bool UIManager::Ortho2DTestPointerCoordinates( int x, int y )
                 return true;
             }
         }
-        //++map_iterator;
         ++list_iterator;
     }
 
@@ -878,7 +864,6 @@ void UIManager::_doMinimize()
         {
             _doMinMaxElement( *it, true );
             ++it;
-            //mMinimizeElement = 0;
         }
         m_MinimizeElements.clear();
     }
@@ -1047,6 +1032,14 @@ void UIManager::InitiateMoveElement( UIElement* element )
     mMoveElement = element;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void UIManager::InitiateResizeElement( UIElement* element )
+{
+    m_resizeElement = element;
+    //std::cout << element->GetUICorners().w() << ", " << element->GetUICorners().x() << ", " << element->GetUICorners().y() << ", " << element->GetUICorners().z() << std::endl << std::flush;
+    m_resizeElementX = element->GetUICorners().x();
+    m_resizeElementY = element->GetUICorners().w();
+}
+////////////////////////////////////////////////////////////////////////////////
 void UIManager::MinimizeElement( UIElement* element )
 {
     mMinimize = true;
@@ -1094,7 +1087,7 @@ void UIManager::ToggleElementVisibility( UIElement* element )
 ////////////////////////////////////////////////////////////////////////////////
 bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
 {
-    //LOG_INFO("UIManager::ButtonPressEvent");
+    LOG_TRACE("UIManager::ButtonPressEvent");
     if( !_okayToSendEvent() )
     {
         return false;
@@ -1154,12 +1147,10 @@ bool UIManager::ButtonPressEvent( gadget::Keys button, int x, int y, int state )
         y = m_selectedUIElement->GetElementHeight() - y;
         m_mousePointUniform->set( m_selectedUIElement->GetTextureCoords( x, y ) );
         m_selectedUIElement->SendButtonPressEvent( button, x, y, state );
-        //LOG_INFO("UIManager::SendButtonPressEvent");
     }
     else
     {
         mUnminimize = true;
-        //mUnminimizeElement = m_selectedUIElement;
         m_UnminimizeElements.push_back( m_selectedUIElement );
     }
 
@@ -1184,6 +1175,14 @@ bool UIManager::ButtonReleaseEvent( gadget::Keys button, int x, int y, int state
     {
         m_updateBBoxes = true;
         mMoveElement = 0;
+        return false;
+    }
+
+    // If we're resizing an element, end the resize and sink the event
+    if( m_resizeElement )
+    {
+        m_updateBBoxes = true;
+        m_resizeElement = 0;
         return false;
     }
 
@@ -1259,10 +1258,21 @@ bool UIManager::MouseMoveEvent( int x, int y, int z, int state )
     mCurrentXPointer = x;
     mCurrentYPointer = y;
 
-    // If an element move operation is in progress, handle that and sink the event
+    // If an element move is in progress, handle that and sink the event
     if( mMoveElement )
     {
         mMoveElement->MoveCanvas( mDxPointer, mDyPointer );
+        return false;
+    }
+
+    // If an element resize is in progress, handle that and sink the event
+    if( m_resizeElement )
+    {
+        // Have to translate the element up or down since the y coordinate
+        // is flipped between the two relevant systems
+        m_resizeElement->MoveCanvas( 0, mDyPointer );
+        // Note the opposite signs required on dx and dy
+        m_resizeElement->ResizeCanvas( x - m_resizeElementX, m_resizeElementY - y );
         return false;
     }
 
@@ -1528,10 +1538,7 @@ bool UIManager::TestWandIntersection()
         m_intersectionPoint = tempIntersection.getLocalIntersectPoint();
 
         m_selectedUINode = *( tempIntersection.nodePath.rbegin() );
-        //LOG_INFO( "UIManager::TestWandIntersection " << m_intersectionPoint.x() << " " << m_intersectionPoint.y() );
-        //std::cout << "Wand intersection at " << m_intersectionPoint
-        //    << " with the this UI node "
-        //    << m_selectedUINode->getName() << std::endl;
+
         return true;
     }
     return false;
@@ -1582,7 +1589,7 @@ void UIManager::UpdateUIQuadPosition()
     gmtl::Point3d headPoint =
         gmtl::makeTrans< gmtl::Point3d >( vxs::SceneManager::instance()->GetHeadMatrix() );
     gmtl::Matrix44d worldMat =
-        vxs::SceneManager::instance()->GetInvertedNavMatrix();//GetGlobalViewMatrix();
+        vxs::SceneManager::instance()->GetInvertedNavMatrix();
     gmtl::Point3d transformPoint = gmtl::Point3d( 0.0, 8.0, -2.0 );
     transformPoint += headPoint;
 
@@ -1600,5 +1607,4 @@ void UIManager::UpdateUIQuadPosition()
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-}
-}
+}} // namespace
