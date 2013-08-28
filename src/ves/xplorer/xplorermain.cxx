@@ -351,7 +351,6 @@ extern "C" void __attribute( ( constructor ) ) vrkitLibraryInit()
 
         // We use the overwrite value of 0 as a way around testing whether the
         // environment variable is already set.
-#if (BOOST_VERSION >= 104600) && (BOOST_FILESYSTEM_VERSION == 3)
         setenv( "XPLORER_DATA_DIR",
                 data_dir.string().c_str(), 0 );
         setenv( "XPLORER_PLUGINS_DIR",
@@ -360,16 +359,7 @@ extern "C" void __attribute( ( constructor ) ) vrkitLibraryInit()
                   << data_dir.string() << std::endl;
         std::cout << "XPLORER_PLUGINS_DIR="
                   << plugin_dir.string() << std::endl;
-#else
-        setenv( "XPLORER_DATA_DIR",
-                data_dir.native_directory_string().c_str(), 0 );
-        setenv( "XPLORER_PLUGINS_DIR",
-                plugin_dir.native_directory_string().c_str(), 0 );
-        std::cout << "XPLORER_DATA_DIR="
-                  << data_dir.native_directory_string() << std::endl;
-        std::cout << "XPLORER_PLUGINS_DIR="
-                  << plugin_dir.native_directory_string() << std::endl;
-#endif
+
     }
 }
 #endif  /* defined(WIN32) || defined(WIN64) */
