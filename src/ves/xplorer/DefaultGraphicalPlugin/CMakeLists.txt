@@ -22,7 +22,9 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer_default)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer_scenegraph)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${XERCESC_LIBRARIES})
 
-set_target_properties( ${VES_TARGET_NAME} PROPERTIES SUFFIX ".bundle")
+if(APPLE)
+    set_target_properties( ${VES_TARGET_NAME} PROPERTIES SUFFIX ".bundle")
+endif()
 
 include(VESModuleInstall)
 
