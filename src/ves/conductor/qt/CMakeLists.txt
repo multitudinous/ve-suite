@@ -71,6 +71,7 @@ QT4_ADD_RESOURCES( RCCED ${QRC_FILES} )
 list(APPEND srcs ${RCCED})
 
 set( UI_FILES
+    BottomBorder.ui
     titlebar.ui
     RecentFiles.ui
     TreeTab.ui
