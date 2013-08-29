@@ -6,7 +6,13 @@ if(APPLE)
 list(APPEND srcs 
     VESDelegate.mm
     CocoaHelper.mm
-    CocoaScreenResolution.mm)
+    CocoaScreenResolution.mm
+    vrjuggler.plist
+    Info.plist
+    ${PROJECT_SOURCE_DIR}/dist/installerImages/ve_icon128x128.icns
+    ${PROJECT_SOURCE_DIR}/dist/darwin/PkgInfo
+)
+
 find_library(APPKIT_LIBRARY AppKit)
 endif()
 
@@ -64,4 +70,12 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_conductor_qtui)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${APPKIT_LIBRARY})
 
 include(VESModuleInstall)
+
+if(APPLE)
+    set_target_properties(${VES_TARGET_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
+    SET_SOURCE_FILES_PROPERTIES(vrjuggler.plist PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    SET_SOURCE_FILES_PROPERTIES(${PROJECT_SOURCE_DIR}/dist/installerImages/ve_icon128x128.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    SET_SOURCE_FILES_PROPERTIES(${PROJECT_SOURCE_DIR}/dist/darwin/PkgInfo PROPERTIES MACOSX_PACKAGE_LOCATION Resources/..)
+    SET_SOURCE_FILES_PROPERTIES(Info.plist PROPERTIES MACOSX_PACKAGE_LOCATION Resources/..)
+endif(APPLE)
 
