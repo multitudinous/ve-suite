@@ -628,8 +628,8 @@ void UIElementQt::SetWidget( QWidget* widget )
 #endif
 
     // Create a scene and a view to add this widget into
-    //mGraphicsScene = new QGraphicsScene( 0, 0, mWidth, mHeight );
-    mGraphicsScene = new QGraphicsScene(  );
+    mGraphicsScene = new QGraphicsScene( 0, 0, mWidth, mHeight );
+    //mGraphicsScene = new QGraphicsScene(  );
     this->setScene( mGraphicsScene );
 
     // Force the scene to be aligned into the top-left corner of the view.
