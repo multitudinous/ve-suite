@@ -2,6 +2,7 @@ file( GLOB srcs "*.cxx" )
 file( GLOB hdrs "*.h" )
 
 add_definitions( -DSVN_VES_REVISION=\"\\\"9999\\\"\" )
+add_definitions(-DDISABLE_VPR_PROFILE)
 if(APPLE)
 list(APPEND srcs 
     VESDelegate.mm

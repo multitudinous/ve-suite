@@ -1,5 +1,6 @@
 add_definitions(-DVE_GUIPLUGINS_LIBRARY 
                 -DVE_CONDUCTOR_QTUI_LIBRARY)
+add_definitions(-DDISABLE_VPR_PROFILE)
 
 file( GLOB_RECURSE srcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cxx" )
 #file( GLOB_RECURSE hdrs "*.h" )
