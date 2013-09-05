@@ -140,6 +140,8 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QDialog>
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QStyle>
+#include <QtGui/QStyleFactory>
 #include <QtCore/QDir>
 
 //// --- Boost includes --- //
@@ -1309,6 +1311,14 @@ void App::LoadUI()
     CONNECTSIGNAL_1( "UIManager.EnterLeaveUI", void( bool ), &App::UIEnterLeave,
                      m_connections, highest_Priority );
 
+    {
+        QStringList uiStyles = QStyleFactory::keys();
+        for( size_t i = 0; i < uiStyles.size(); ++i )
+        {
+            ( *logStream ).critical() << "System styles " << uiStyles.at(i).toLocal8Bit().constData() << std::endl;
+        }
+    }
+
     // Create the Qt application event subsystem
     QApplication::setDesktopSettingsAware( true );
 #if defined( VES_QT_APP )
@@ -1319,6 +1329,11 @@ void App::LoadUI()
 //#else
 //    m_qtApp = new ves::xplorer::VESQtApplication( argc, argv, this );
 //#endif
+
+    {
+        QString styleName = QApplication::style()->objectName();
+        ( *logStream ).critical() << "Active UI style " << styleName.toLocal8Bit().constData() << std::endl;
+    }
 
 #ifdef VES_QT_RENDER_DEBUG
     QPushButton*  button = new QPushButton( "Test" );
