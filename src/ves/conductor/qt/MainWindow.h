@@ -397,6 +397,7 @@ private:
 
     std::vector< std::string > m_GeometryExtensions;
     std::vector< std::string > m_DataExtensions;
+	std::vector< std::string > m_LfxDataExtensions;
 
     /// Stores absolute path of currently open file so it can be saved out
     /// when the save action is triggered.

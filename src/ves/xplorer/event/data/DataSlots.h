@@ -106,6 +106,9 @@ void LoadTransientTimeSteps( const std::string& filename );
 ///Create vtk data set by loading a file
 void LoadDatasetFromFile( const std::string& filename );
 
+///Create lfx data set by loading a database file (file ext lfxtd), or texture folder file (lfxtf)
+void LoadLfxDataFromFile( const std::string& filename );
+
 ///Loads surface files
 void LoadSurfaceFiles( std::string precomputedSurfaceDir );
 

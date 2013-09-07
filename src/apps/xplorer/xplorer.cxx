@@ -132,7 +132,7 @@ int main( int argc, char* argv[] )
     po::options_description& general_desc = kernel->getGeneralOptions();
     po::options_description& cluster_desc = kernel->getClusterOptions();
     xplorer_desc.add( general_desc ).add( cluster_desc );
-    po::options_description& config_desc = kernel->getConfigOptions();
+	po::options_description& config_desc = kernel->getConfigOptions();
     xplorer_desc.add( config_desc );
 
     xplorer_desc.add_options()( "VESRTT", po::bool_switch(),
@@ -262,7 +262,7 @@ int main( int argc, char* argv[] )
     }
 
     if( vm.count( "SignalLogPath" ) )
-    {
+    { 
         std::string logPath = vm["SignalLogPath"].as< std::string >();
         SetupSignalRegistryLog( logPath );
     }

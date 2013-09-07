@@ -241,6 +241,11 @@ ModelHandler::ModelHandler()
                     &ves::xplorer::event::data::LoadDatasetFromFile,
                     m_connections, any_SignalType, normal_Priority );
 
+	CONNECTSIGNALS_STATIC( "%LoadLfxDataFromFile",
+                    void ( std::string const& ),
+                    &ves::xplorer::event::data::LoadLfxDataFromFile,
+                    m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_STATIC( "LoadDatasetFromFile.DatafileLoaded",
                     void ( std::string const& ),
                     &ves::xplorer::event::data::LoadTransientTimeSteps,

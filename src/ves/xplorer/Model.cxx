@@ -90,6 +90,8 @@
 ///This must be here due to boost header conflicts on windows
 #include <ves/xplorer/Debug.h>
 
+
+#include <latticefx/core/DataSet.h>
 #include <latticefx/core/vtk/DataSet.h>
 
 #include <switchwire/EventManager.h>
@@ -278,6 +280,100 @@ void Model::SetID( const std::string& id )
 {
     modelID = id;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+lfx::core::DataSetPtr Model::GetLfxDataSet( int dataset )
+{
+    // Check and see if we have any datasets
+    // if not return null
+    // to get the last added dataset pass in -1
+    if( _lfxDataSets.empty() )
+    {
+        return lfx::core::DataSetPtr();
+    }
+    else if( dataset == -1 )
+    {
+        return _lfxDataSets.back();
+    }
+    else
+    {
+        return _lfxDataSets.at( dataset );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+unsigned int Model::GetIndexOfLfxDataSet( std::string dataSetName )
+{
+    unsigned int dataSetIndex = 0;
+    for( size_t i = 0; i < _lfxDataSets.size(); ++i )
+    {
+        if( _lfxDataSets.at( i )->getName() == dataSetName )
+        {
+            dataSetIndex = i;
+            break;
+        }
+    }
+    return dataSetIndex;
+}
+////////////////////////////////////////////////////////////////////////////////
+unsigned int Model::GetNumberOfLfxDataSets( void )
+{
+    return _lfxDataSets.size();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::CreateLfxDataSet()
+{
+    lfx::core::DataSetPtr tempPtr = lfx::core::DataSetPtr( new lfx::core::DataSet() );
+    _lfxDataSets.push_back( tempPtr );
+}
+////////////////////////////////////////////////////////////////////////////////
+int Model::GetKeyForLfxDataSet( lfx::core::DataSetPtr input )
+{
+    int key = -1;
+    for( unsigned int i = 0; i < mVTKDataSets.size(); ++i )
+    {
+        if( _lfxDataSets.at( i ) == input )
+        {
+            key = i;
+            break;
+        }
+    }
+
+    return key;
+}
+////////////////////////////////////////////////////////////////////////////////
+lfx::core::DataSetPtr Model::GetActiveLfxDataSet( void )
+{
+	return _activeLfxDataSet;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetActiveLfxDataSet( lfx::core::DataSetPtr ds )
+{
+	_activeLfxDataSet =  ds;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::DeleteLfxDataSet( std::string dataSetName )
+{
+    for( std::vector< lfx::core::DataSetPtr >::iterator iter = _lfxDataSets.begin();
+            iter != _lfxDataSets.end(); ++iter )
+    {
+        if( ( *iter )->getName() == dataSetName )
+        {
+            vprDEBUG( vesDBG, 1 ) << "Deleting " << ( *iter )->getName()
+                                  << std::endl << vprDEBUG_FLUSH;
+            _lfxDataSets.erase( iter );
+            break;
+        }
+        else
+        {
+            vprDEBUG( vesDBG, 1 ) << ( *iter )->getName()
+                                  << " is available not " << dataSetName
+                                  << std::endl << vprDEBUG_FLUSH;
+        }
+    }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 lfx::core::vtk::DataSetPtr Model::GetCfdDataSet( int dataset )
 {
@@ -693,7 +789,7 @@ void Model::VesFileLoaded( const std::string& filename )
             transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Rotation_X" ) ) );
             transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Rotation_Y" ) ) );
             transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Scale_X" ) ) );
-            transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Scale_Y" ) ) );
+            transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Scale_Y" ) ) ); 
             transformVec.push_back( boost::any_cast< double >( set.GetPropertyValue( "Transform_Scale_Z" ) ) );
             
             ves::xplorer::event::data::TransformDatasetNode( uuidString, transformVec );

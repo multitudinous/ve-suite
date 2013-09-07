@@ -47,6 +47,7 @@
 
 #include <switchwire/ScopedConnectionList.h>
 
+#include <latticefx/core/DataSetPtr.h>
 #include <latticefx/core/vtk/DataSetPtr.h>
 
 #include <vrj/vrjParam.h>
@@ -154,6 +155,19 @@ public:
     ///four type models right now (experiment, simulation, design, and geometry)
     void setModelType( ModelTypeIndex );
 
+	///\@{
+	lfx::core::DataSetPtr GetLfxDataSet( int );
+    unsigned int GetIndexOfLfxDataSet( std::string dataSetName );
+    unsigned int GetNumberOfLfxDataSets( void );
+    std::string GetLfxDataSetFileName( int );
+    void CreateLfxDataSet( void );
+    int GetKeyForLfxDataSet( lfx::core::DataSetPtr );
+    lfx::core::DataSetPtr GetActiveLfxDataSet( void );
+    void SetActiveLfxDataSet( lfx::core::DataSetPtr );
+    ///Delete the named dataset
+    void DeleteLfxDataSet( std::string dataSetName );
+    ///\@}
+
     ///\@{
     lfx::core::vtk::DataSetPtr GetCfdDataSet( int );
     unsigned int GetIndexOfDataSet( std::string dataSetName );
@@ -238,6 +252,8 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased;
     typedef std::vector< ves::xplorer::scenegraph::CADEntity* > GeometoryDataSetList;
     GeometoryDataSetList mGeomDataSets;
+	typedef std::vector< lfx::core::DataSetPtr > LfxDataSetList;
+    LfxDataSetList _lfxDataSets;
     typedef std::vector< lfx::core::vtk::DataSetPtr > VTKDataSetList;
     VTKDataSetList mVTKDataSets;
 
@@ -250,6 +266,7 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
     ///Active dataset
     lfx::core::vtk::DataSetPtr activeDataSet;
+	lfx::core::DataSetPtr _activeLfxDataSet;
 
     //the information for following three variables should be transfered from cfdApp
     ModelTypeIndex mModelType;

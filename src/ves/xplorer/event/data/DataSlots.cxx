@@ -59,6 +59,7 @@
 #include <string>
 #include <vector>
 
+#include <latticefx/core/DataSet.h>
 #include <latticefx/core/vtk/DataSet.h>
 #include <latticefx/utils/vtk/fileIO.h>
 #include <latticefx/utils/vtk/VTKFileHandler.h>
@@ -726,6 +727,377 @@ void LoadDatasetFromFile( const std::string& filename )
             }
         }
     }
+}
+
+bool LoadLfxDataSet( lfx::core::DataSetPtr dsp, const std::string& dbFile, const std::string& diskPath, const std::string& recipeFile )
+{
+    if( !( dbFile.empty() ) )
+    {
+        if( !dsp->loadDsFromCrunchstore( dbFile ) ) return false;
+    }
+    else if( !( diskPath.empty() ) )
+    {
+        if( !dsp->loadDsFromFolder( diskPath ) )  return false;
+    }
+	else
+	{
+		return false;
+	}
+
+	if( recipeFile.empty() ) return true; 
+
+	std::string err;
+	if( !dsp->loadPipeline( recipeFile, &err ) )
+	{
+		return false;
+	}
+
+	/*
+    LoadHierarchyPtr loader( new LoadHierarchy() );
+    if( nopage )
+        // Not paging. Load the data.
+        loader->setLoadData( true );
+    loader->setDB( dbBase );
+    dsp->addPreprocess( loader );
+
+    VolumeRendererPtr renderOp( new VolumeRenderer() );
+    if( !nopage )
+        renderOp->setDB( dbBase );
+    renderOp->setVolumeDims( dims );
+    renderOp->setRenderMode( VolumeRenderer::RAY_TRACED );
+    renderOp->setMaxSamples( 400.f );
+    renderOp->setTransparencyEnable( useIso ? false : true );
+
+    renderOp->addInput( "volumedata" );
+    dsp->setRenderer( renderOp );
+
+    osg::ref_ptr< osg::Image > tfImage( lfx::core::loadImageFromDat( "01.dat", LFX_ALPHA_RAMP_0_TO_1 ) );
+    renderOp->setTransferFunction( tfImage.get() );
+    renderOp->setTransferFunctionDestination( Renderer::TF_RGBA );
+
+    // Render when alpha values are greater than 0.15.
+    renderOp->setHardwareMaskInputSource( Renderer::HM_SOURCE_ALPHA );
+    renderOp->setHardwareMaskOperator( useIso ? Renderer::HM_OP_EQ : Renderer::HM_OP_GT );
+    renderOp->setHardwareMaskReference( isoVal );
+    if( useIso )
+    {
+        renderOp->setHardwareMaskEpsilon( 0.02 );
+    }
+
+	return( dsp );
+	*/
+
+	return true;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool ProcessLfxConfigFile( const std::string& filename, std::string *pathDbFile, std::string *pathDbFolder, std::string *pathRecipe )
+{
+	std::ifstream in( filename, std::ios::in );
+
+	if( !in.is_open() ) return false;
+	
+	if( in.eof() ) return false;
+
+	std::string line;
+	std::getline( in, line );
+
+	boost::filesystem::path path( line );
+	if( boost::filesystem::is_directory( path ) )
+	{
+		*pathDbFolder = line;
+	}
+	else if( boost::filesystem::exists( path ) )
+	{
+		std::string ext = path.extension().string();
+		if( ext != ".lfxtd" ) return false;
+		
+		*pathDbFile = line;
+	}
+	else
+	{
+		return false;
+	}
+
+	// is there a second line with a recipe file
+	if( in.eof() ) return true;
+
+	std::getline( in, line );
+	path = line;
+	if( boost::filesystem::exists( path ) && !boost::filesystem::is_directory( path ) )
+	{
+		std::string ext = path.extension().string();
+		if( ext == ".lfxrs" )
+		{
+			*pathRecipe = line;
+		}
+	}
+	
+	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ProcessLfxFileType( const std::string& filename, std::string *pathDbFile, std::string *pathDbFolder, std::string *pathRecipe )
+{
+	// lets determine what type of file it is..
+	boost::filesystem::path path( filename );
+	std::string ext = path.extension().string();
+	if( ext == ".lfxtd" )
+	{
+		*pathDbFile = filename;
+		return true;
+	}
+	else if( ext == ".lfxcf" )
+	{
+		return ProcessLfxConfigFile( filename, pathDbFile, pathDbFolder, pathRecipe );
+	}
+	
+	vprDEBUG( vesDBG, 0 ) << "|\tlfx file = " << filename << " has an unrecognized extension." << std::endl << vprDEBUG_FLUSH;
+	return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LoadLfxDataFromFile( const std::string& filename )
+{
+	ves::xplorer::Model* activeModel = ModelHandler::instance()->GetActiveModel();
+    if( !activeModel )
+    {
+        return;
+    }
+
+	std::string pathDbFile, pathDbFolder, pathRecipe;
+	if( !ProcessLfxFileType( filename, &pathDbFile, &pathDbFolder, &pathRecipe ) )
+	{
+		return;
+	}
+
+	std::string dataName = "LFX_DATA_FILE";
+
+	ves::open::xml::ParameterBlockPtr mParamBlock;
+    ves::open::xml::model::ModelPtr veModel( ves::xplorer::ModelHandler::instance()->GetActiveModel()->GetModelData() );
+	mParamBlock = veModel->GetInformationPacket( -1 );
+    mParamBlock->SetName( filename );
+
+	// Load a vtk file
+	ves::open::xml::DataValuePairPtr tempDVP = mParamBlock->GetProperty( dataName );
+	if( !tempDVP )
+    {
+		tempDVP = mParamBlock->GetProperty( -1 );
+	}
+    tempDVP->SetData( dataName, filename );
+
+
+
+	size_t numInfoPackets = veModel->GetNumberOfInformationPackets();
+    for( size_t i = 0; i < numInfoPackets; ++i )
+    {
+        ves::open::xml::ParameterBlockPtr tempInfoPacket = veModel->GetInformationPacket( i );
+
+        if( !tempInfoPacket->GetProperty( dataName ) )
+        {
+            continue;
+        }
+      
+        size_t currentNumberOfDataSets = activeModel->GetNumberOfLfxDataSets();
+        bool foundDataSet = false;
+
+        //check to see if dataset is already on this particular model
+        for( size_t j = 0; j < currentNumberOfDataSets; ++j )
+        {
+            if( tempInfoPacket->GetProperty( dataName )->GetID() ==
+                    activeModel->GetLfxDataSet( j )->getUUID( dataName ) )
+            {
+                foundDataSet = true;
+                break;
+            }
+        }
+
+        if( foundDataSet )
+        {
+            std::cout << "|\tSkipping load of dataset: "
+                      << tempInfoPacket->GetProperty( dataName )->GetID()
+                      << std::endl;
+            continue;
+        }
+
+        //////////////////////////////////////////////////////////////
+        // get data set name...
+        std::string lfx_filein = tempInfoPacket->GetProperty( dataName )->GetDataString();
+
+        ///////////////////////////////////////////////////////////////
+        //If not already there lets create a new dataset
+        activeModel->CreateLfxDataSet();
+        // Pass in -1 to GetLfxDataSet to get the last dataset added
+        lfx::core::DataSetPtr lastDataAdded = activeModel->GetLfxDataSet( -1 );
+        vprDEBUG( vesDBG, 0 )
+                << "|\t*************Now starting to load new data************ "
+                << std::endl << vprDEBUG_FLUSH;
+
+		// TODO:
+		/*
+        //Setup the transform for the dataset
+        {
+            ves::open::xml::TransformPtr dataTransform = tempInfoPacket->GetTransform();
+            std::vector< double > translation = dataTransform->GetTranslationArray()->GetArray();
+            std::vector< double > rotation = dataTransform->GetRotationArray()->GetArray();
+            std::vector< double > scale = dataTransform->GetScaleArray()->GetArray();
+
+            osg::ref_ptr< osg::PositionAttitudeTransform > transform = lastDataAdded->GetDCS();
+            transform->setScale( osg::Vec3d( scale[ 0 ], scale[ 1 ], scale[ 2 ] ) );
+            transform->setPosition( osg::Vec3d( translation[ 0 ], translation[ 1 ], translation[ 2 ] ) );
+            {
+                osg::ref_ptr< osgwTools::Orientation > tempQuat = new osgwTools::Orientation();
+                transform->setAttitude( tempQuat->getQuat( rotation[ 0 ], rotation[ 1 ], rotation[ 2 ] ) );
+            }
+        }
+		*/
+
+        vprDEBUG( vesDBG, 0 ) << "|\tlfx file = " << lfx_filein
+                              << std::endl << vprDEBUG_FLUSH;
+        lastDataAdded->setName( lfx_filein );
+        lastDataAdded->setUUID( dataName, tempInfoPacket->GetProperty( dataName )->GetID() );
+
+		if( !LoadLfxDataSet( lastDataAdded, pathDbFile, pathDbFolder, pathRecipe ) )
+		{
+			 activeModel->DeleteLfxDataSet(  lfx_filein );
+
+			 vprDEBUG( vesDBG, 0 )
+                << "|\tFailed to load lfxDataSet " << lfx_filein
+                << std::endl << vprDEBUG_FLUSH;
+			 return;
+		}
+
+		/*
+        ves::open::xml::DataValuePairPtr stringDVP =
+            tempInfoPacket->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
+        std::vector< std::string > vecStringArray;
+        if( stringDVP )
+        {
+            ves::open::xml::OneDStringArrayPtr stringArray =
+                boost::dynamic_pointer_cast <
+                ves::open::xml::OneDStringArray > (
+                    stringDVP->GetDataXMLObject() );
+            vecStringArray = stringArray->GetArray();
+            lastDataAdded->SetActiveDataArrays( vecStringArray );
+        }
+
+        //////////////////////////////////////////////////////////////
+        if( tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" ) )
+        {
+            std::string precomputedDataSliceDir =
+                tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->
+                GetDataString();
+            lastDataAdded->
+                    SetPrecomputedDataSliceDir( precomputedDataSliceDir );
+            lastDataAdded->SetUUID( "VTK_PRECOMPUTED_DIR_PATH",
+                                    tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->
+                                    GetID() );
+        }
+        //////////////////////////////////////////////////////////////
+        if( tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" ) )
+        {
+            std::string precomputedSurfaceDir =
+                tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->
+                GetDataString();
+            lastDataAdded->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
+            lastDataAdded->SetUUID( "VTK_SURFACE_DIR_PATH",
+                                    tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->
+                                    GetID() );
+        }
+
+        ves::xplorer::event::data::LoadSurfaceFiles( lastDataAdded->GetPrecomputedSurfaceDir() );
+        //////////////////////////////////////////////////////////////
+        //Load texture datasets
+        if( tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" ) )
+        {
+            vprDEBUG( vesDBG, 0 ) << "|\tCreating texture dataset."
+                                  << std::endl << vprDEBUG_FLUSH;
+            activeModel->CreateTextureDataSet();
+            size_t numProperties = tempInfoPacket->GetNumberOfProperties();
+            for( size_t j = 0; j < numProperties; ++j )
+            {
+                if( tempInfoPacket->GetProperty( j )->GetDataName() ==
+                        std::string( "VTK_TEXTURE_DIR_PATH" ) )
+                {
+                    activeModel->AddDataSetToTextureDataSet( 0,
+                            tempInfoPacket->GetProperty( j )->GetDataString() );
+                    std::ostringstream textId;
+                    textId << "VTK_SURFACE_DIR_PATH_" << j;
+                    lastDataAdded->SetUUID( textId.str(), tempInfoPacket->
+                                            GetProperty( "VTK_TEXTURE_DIR_PATH" )->GetID() );
+                }
+            }
+        }
+		*/
+
+		/*
+        //Now load up the dataset
+        {
+            const std::string tempDataSetFilename =
+                lastDataAdded->GetFileName();
+            std::cout << "|\tLoading data for file "
+                      << tempDataSetFilename
+                      << std::endl;
+            lastDataAdded->SetArrow(
+                ves::xplorer::ModelHandler::instance()->GetArrow() );
+            //Check and see if the data is part of a transient series
+            if( tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" ) )
+            {
+                std::string precomputedSurfaceDir =
+                    tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" )->
+                    GetDataString();
+                lastDataAdded->LoadTransientData( precomputedSurfaceDir );
+                std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetTransientDataSets();
+                for( size_t i = 0; i < dataSetVector.size(); ++i )
+                {
+                    ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ], tempInfoPacket );
+                }
+            }
+            else
+            {
+                lastDataAdded->LoadData();
+                std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetChildDataSets();
+                for( size_t i = 0; i < dataSetVector.size(); ++i )
+                {
+                    ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ], tempInfoPacket );
+                }
+                ves::xplorer::event::data::WriteDatabaseEntry( lastDataAdded, tempInfoPacket );
+            }
+            //If the data load failed
+            if( !lastDataAdded->GetDataSet() )
+            {
+                std::cout << "|\tData failed to load." << std::endl;
+                activeModel->DeleteDataSet( tempDataSetFilename );
+            }
+            else
+            {
+                std::cout << "|\tData is loaded for file "
+                          << tempDataSetFilename
+                          << std::endl;
+                if( lastDataAdded->GetParent() == lastDataAdded )
+                {
+                    activeModel->GetDCS()->
+                        addChild( lastDataAdded->GetDCS() );
+                    activeModel->SetActiveDataSet( lfx::core::vtk::DataSetPtr() );
+                }
+                switchwire::SingleShotSignal< void, const std::string& >( "LoadDatasetFromFile.DatafileLoaded", tempDataSetFilename );
+            }
+        }
+        //////////////////////////////////////////////////////////////
+        if( tempInfoPacket->GetProperty( "Create Surface Wrap" ) )
+        {
+            unsigned int surfaceToggle = 0;
+            tempInfoPacket->GetProperty( "Create Surface Wrap" )->
+                GetData( surfaceToggle );
+            if( surfaceToggle )
+            {
+                //Create surface
+                lastDataAdded->CreateSurfaceWrap();
+            }
+        }
+			*/
+    }
+
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void LoadSurfaceFiles( std::string precomputedSurfaceDir )
