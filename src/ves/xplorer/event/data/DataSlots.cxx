@@ -826,7 +826,7 @@ bool ProcessLfxConfigFile( const std::string& filename, std::string *pathDbFile,
 	if( boost::filesystem::exists( path ) && !boost::filesystem::is_directory( path ) )
 	{
 		std::string ext = path.extension().string();
-		if( ext == ".lfxrs" )
+		if( ext == ".lfxrf" )
 		{
 			*pathRecipe = line;
 		}

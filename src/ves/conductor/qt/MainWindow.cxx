@@ -391,7 +391,7 @@ MainWindow::MainWindow( QWidget* parent, const std::string& features ) :
     m_GeometryExtensions.push_back( "png" );
 
 	m_LfxDataExtensions.push_back( "lfxtd" ); // lfx texture database
-	//m_LfxDataExtensions.push_back( "lfxrs" ); // lfx recipe support
+	//m_LfxDataExtensions.push_back( "lfxrf" ); // lfx recipe file
 	//m_LfxDataExtensions.push_back( "lfxtf" ); // lfx texture folder
 	m_LfxDataExtensions.push_back( "lfxcf" ); // lfx config file - must contain (texture database file or texture folder) and optional recipe support file on the next line
 
