@@ -36,6 +36,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
+#include <ves/util/GNUCompilerGuards.h>
 
 #include <ves/xplorer/DeviceHandlerPtr.h>
 
@@ -58,9 +59,11 @@
 
 #include <gmtl/Point.h>
 
+DIAG_OFF(unused-parameter)
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Event/AnalogEventInterface.h>
 #include <gadget/Event/DigitalEventInterface.h>
+DIAG_ON(unused-parameter)
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
