@@ -62,9 +62,9 @@ class TransferPhysicsDataCallback;
 // --- VR Juggler Includes --- //
 #include <gmtl/Matrix.h>
 #include <gmtl/Quat.h>
-#include <boost/mpl/for_each.hpp>
-#include <boost/mpl/range_c.hpp>
-#include <boost/lambda/lambda.hpp>
+//#include <boost/mpl/for_each.hpp>
+//#include <boost/mpl/range_c.hpp>
+//#include <boost/lambda/lambda.hpp>
 
 // --- Bullet Includes --- //
 class btRigidBody;

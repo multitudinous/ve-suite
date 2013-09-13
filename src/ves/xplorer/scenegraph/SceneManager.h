@@ -35,6 +35,7 @@
 
 // --- VES Includes --- //
 #include <ves/VEConfig.h>
+#include <ves/util/GNUCompilerGuards.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
 
@@ -72,7 +73,9 @@ class System;
 
 #include <vpr/Util/Singleton.h>
 
+DIAG_OFF(unused-parameter)
 #include <gadget/Type/PositionInterface.h>
+DIAG_ON(unused-parameter)
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Point.h>
