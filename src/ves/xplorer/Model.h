@@ -33,6 +33,8 @@
 #ifndef VE_XPLORER_MODEL_H
 #define VE_XPLORER_MODEL_H
 
+#include <ves/util/GNUCompilerGuards.h>
+
 #include <ves/xplorer/ModelPtr.h>
 #include <ves/xplorer/GlobalBase.h>
 
@@ -53,7 +55,10 @@
 #include <vrj/vrjParam.h>
 
 #include <vpr/Sync/Mutex.h>
+
+DIAG_OFF(unused-parameter)
 #include <vpr/Thread/Thread.h>
+DIAG_ON(unused-parameter)
 
 #include <osg/ref_ptr>
 #include <osg/StateSet>
