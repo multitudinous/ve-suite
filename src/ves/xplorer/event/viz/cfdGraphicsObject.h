@@ -97,11 +97,15 @@ public:
     };///<types of viz objects possible to add to scene
 
     ///Set parent node to add "graphics node" to
-    ///\param input
+    ///The parent node is typically the lfx::core::vtk::DataSet transform. This is
+    ///typically obtained from the lfx::core::vtk::DataSet::GetDCS method.
+    ///\param input The PAT node from the DataSet.
     void SetParentNode( osg::PositionAttitudeTransform* const input );
 
     ///node the parent node will be added to
-    ///\param input
+    ///The world node is typically the DCS used by the model. This is
+    ///obtained through the ModelHandler::instance()->GetActiveModel()->GetDCS() calls.
+    ///\param input The world DCS node.
     void SetWorldNode( ves::xplorer::scenegraph::DCS* const input );
 
     ///set model pointer to be able to grab
