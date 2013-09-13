@@ -98,13 +98,16 @@ public:
 
     ///Set parent node to add "graphics node" to
     ///The parent node is typically the lfx::core::vtk::DataSet transform. This is
-    ///typically obtained from the lfx::core::vtk::DataSet::GetDCS method.
+    ///typically obtained from the lfx::core::vtk::DataSet::GetDCS method. The
+    ///parent node is a child of the world node and has all of the viz associated with
+    ///a given dataset under it.
     ///\param input The PAT node from the DataSet.
     void SetParentNode( osg::PositionAttitudeTransform* const input );
 
     ///node the parent node will be added to
     ///The world node is typically the DCS used by the model. This is
     ///obtained through the ModelHandler::instance()->GetActiveModel()->GetDCS() calls.
+    ///The world node has all viz nodes associated with a given model under it.
     ///\param input The world DCS node.
     void SetWorldNode( ves::xplorer::scenegraph::DCS* const input );
 
