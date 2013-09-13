@@ -58,6 +58,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include <latticefx/core/DataSet.h>
 #include <latticefx/core/vtk/DataSet.h>
@@ -792,7 +793,7 @@ bool LoadLfxDataSet( lfx::core::DataSetPtr dsp, const std::string& dbFile, const
 ////////////////////////////////////////////////////////////////////////////////
 bool ProcessLfxConfigFile( const std::string& filename, std::string *pathDbFile, std::string *pathDbFolder, std::string *pathRecipe )
 {
-	std::ifstream in( filename, std::ios::in );
+	std::ifstream in( filename.c_str(), std::ios::in );
 
 	if( !in.is_open() ) return false;
 	
