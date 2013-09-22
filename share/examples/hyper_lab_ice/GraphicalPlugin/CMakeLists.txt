@@ -1,9 +1,13 @@
 file( GLOB srcs "*.cxx" )
 file( GLOB hdrs "*.h" )
 
+if(EXISTS "RenderPrep.cpp")
 list(APPEND srcs 
     RenderPrep.cpp
 )
+add_definitions( -DNETL_DEMO )
+endif()
+
 list(APPEND hdrs 
     zmq.hpp
 )
