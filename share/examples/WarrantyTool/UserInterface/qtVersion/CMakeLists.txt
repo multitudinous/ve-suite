@@ -3,6 +3,9 @@
 file( GLOB srcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cxx" )
 #file( GLOB hdrs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h" )
 
+list(APPEND srcs 
+    csvparser.cpp
+)
 set(VES_TARGET_NAME WarrantyUIqt)
 set(VES_TARGET_VERSION ${ves_VERSION})
 set(VES_TARGET_EXPORT ${PROJECT_NAME}-targets)
