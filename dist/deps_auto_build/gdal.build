@@ -3,6 +3,7 @@ BASE_DIR="${DEV_BASE_DIR}/gdal-1.8.0"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_URL=http://download.osgeo.org/gdal/gdal-1.8.0.tar.gz
+SOURCE_URL=http://download.osgeo.org/gdal/1.10.0/gdal-1.10.0.tar.gz
 SOURCE_FORMAT=tgz
 
 SOURCE_DIR="${BASE_DIR}"
