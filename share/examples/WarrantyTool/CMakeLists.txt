@@ -1,0 +1,2 @@
+add_subdirectory(GraphicalPlugin)
+add_subdirectory(UserInterface/qtVersion)

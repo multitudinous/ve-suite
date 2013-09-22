@@ -40,7 +40,9 @@
 #include <string>
 #include <vector>
 
+#ifndef Q_MOC_RUN
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
+#endif
 
 namespace Ui {
     class QueryResults;

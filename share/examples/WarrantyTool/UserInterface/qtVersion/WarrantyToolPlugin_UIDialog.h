@@ -46,9 +46,11 @@
 
 #include <osg/Node>
 
+#ifndef Q_MOC_RUN
 #include <switchwire/ScopedConnectionList.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
+#endif
 
 namespace Ui {
     class WarrantyToolPlugin_UIDialog;
