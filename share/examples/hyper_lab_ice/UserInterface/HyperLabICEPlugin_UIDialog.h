@@ -38,7 +38,9 @@
 #include <QtCore/QStringList>
 #include <QtGui/QListWidgetItem>
 
+#ifndef Q_MOC_RUN
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
+#endif
 
 #include <string>
 #include <vector>

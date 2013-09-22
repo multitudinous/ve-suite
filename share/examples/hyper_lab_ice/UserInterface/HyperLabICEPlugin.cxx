@@ -34,8 +34,6 @@
 #include "HyperLabICEPlugin.h"
 #include "HyperLabICEPlugin_UIDialog.h"
 
-#include <osg/Geode>
-
 namespace ves
 {
 namespace conductor

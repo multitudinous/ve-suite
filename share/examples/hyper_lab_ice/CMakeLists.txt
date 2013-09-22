@@ -1,0 +1,5 @@
+add_subdirectory(GraphicalPlugin)
+if(WIN32)
+    add_subdirectory(opc_client)
+endif()
+add_subdirectory(UserInterface)
