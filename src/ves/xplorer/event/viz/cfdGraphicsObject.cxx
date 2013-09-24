@@ -100,6 +100,16 @@ void cfdGraphicsObject::SetWorldNode( ves::xplorer::scenegraph::DCS* const input
     worldNode = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void cfdGraphicsObject::SetLfxDataSet( lfx::core::DataSetPtr const dataset )
+{
+    m_lfxDataset = dataset;
+}
+////////////////////////////////////////////////////////////////////////////////
+lfx::core::DataSetPtr cfdGraphicsObject::GetLfxDataSet()
+{
+    return m_lfxDataset;
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdGraphicsObject::SetDataSet( lfx::core::vtk::DataSetPtr const dataset )
 {
     m_dataset = dataset;
@@ -201,7 +211,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
     {
         ;
     }
-    else if( type == LFX )
+    else if( type == LFX_VTK )
     {
         // is parent on graph
         if( !worldNode->containsNode( parentNode.get() ) )
@@ -235,6 +245,47 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             << std::endl << vprDEBUG_FLUSH;
         }
     }
+	else if( type == LFX_DS )
+    {
+		lfx::core::DataSetPtr ptr = model->GetActiveLfxDataSet();
+		if( !ptr ) return;
+
+		osg::PositionAttitudeTransform *node = (osg::PositionAttitudeTransform *)ptr->getSceneData();
+		//m_lfxGroup = node;
+
+        //Get transient state from lfx dataset
+        if( ptr->isTemporalData() )
+        {
+            m_transient = true;
+            // Play the time series animation
+            //m_playControl = lfx::core::PlayControlPtr( new lfx::core::PlayControl() );
+            m_playControl->addScene( node );
+            m_playControl->setTimeRange( ptr->getTimeRange() );
+        }
+
+
+		if( parentNode == NULL )
+		{
+			parentNode = node;
+		}
+
+		// is parent on graph
+        if( !worldNode->containsNode( parentNode.get() ) )
+        {
+            vprDEBUG( vesDBG, 1 ) << "|\t\tAdding parentNode to worldDCS"
+                                  << std::endl << vprDEBUG_FLUSH;
+            worldNode->addChild( parentNode.get() );
+        }
+
+		/*
+		if( !parentNode->containsNode( node ) )
+		{
+			vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active scene data node to worldDCS for LFX_DS " << std::endl << vprDEBUG_FLUSH;
+			parentNode->addChild( node );
+        }
+		*/
+    }
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdGraphicsObject::SetTypeOfViz( VizType x )
@@ -545,7 +596,7 @@ void cfdGraphicsObject::RemoveGeodeFromDCS()
             parent->removeChild( m_animation.get() );
         }
     }
-    else if( type == LFX )
+    else if( type == LFX_VTK || type == LFX_DS )
     {
         osg::ref_ptr< osg::Group > tempGroup = m_lfxGroup->getParent( 0 );
         tempGroup->removeChild( m_lfxGroup.get() );

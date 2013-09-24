@@ -36,6 +36,7 @@
 #include <string>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
+#include <latticefx/core/DataSet.h>
 
 namespace ves
 {
@@ -82,6 +83,9 @@ void UpdateROIBounds( std::string const& uuid, std::vector< double > const& roi 
 
 ///
 void TurnOnBBox( bool const& enable );
+
+///
+lfx::core::DataSetPtr activateLfxDataSet( std::string const& activeDataset );
 
 ///
 void ActivateTBDataset( std::string const& activeDataset );

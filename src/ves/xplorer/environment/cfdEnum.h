@@ -174,6 +174,7 @@ enum cfdGeodeEnum
 
     //biv -- these are for texture based visualization
     VIS_OPTION,
+	LFX_VOLUME_DATASET,
     TEXTURE_BASED_VISUALIZATION,
     CLASSIC_VISUALIZATION,
     SHOW_TEXTURE_BBOX,

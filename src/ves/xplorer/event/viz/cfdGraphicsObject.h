@@ -12,7 +12,7 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Library General Public License for more details.
@@ -48,6 +48,7 @@
 // --- C/C++ Libraries --- //
 #include <vector>
 
+#include <latticefx/core/DataSetPtr.h>
 #include <latticefx/core/vtk/DataSetPtr.h>
 #include <latticefx/core/PlayControl.h>
 
@@ -93,7 +94,7 @@ public:
 
     enum VizType
     {
-        TRANSIENT, TEXTURE, CLASSIC, LFX, OTHER
+        TRANSIENT, TEXTURE, CLASSIC, LFX_DS, LFX_VTK, OTHER
     };///<types of viz objects possible to add to scene
 
     ///Set parent node to add "graphics node" to
@@ -115,6 +116,13 @@ public:
     ///transient info and the switch node
     ///\param input
     void SetActiveModel( Model* const input );
+
+	///Set the lfx dataset used for this viz options
+    ///\param dataset The dataset for this viz object
+    void SetLfxDataSet( lfx::core::DataSetPtr const dataset );
+
+	///Get lfx dataset for this viz option
+    lfx::core::DataSetPtr GetLfxDataSet();
 
     ///Set the dataset used for this viz options
     ///\param dataset The dataset for this viz object
@@ -171,8 +179,13 @@ protected:
     // animated features
     osg::ref_ptr< osg::Sequence > m_animation;
     ves::xplorer::Model* model;///<Xplorer cfd model.
+
+	///The lfx dataset used for this viz option
+    lfx::core::DataSetPtr m_lfxDataset;
+
     ///The dataset used for this viz option
     lfx::core::vtk::DataSetPtr m_dataset;
+
     ///The uuid for the current feature
     std::string m_uuid;
     ///lfx viz group node

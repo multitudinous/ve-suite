@@ -61,6 +61,10 @@
 #include <fstream>
 
 #include <latticefx/core/DataSet.h>
+#include <latticefx/core/VolumeRenderer.h>
+#include <latticefx/core/HierarchyUtils.h>
+#include <latticefx/core/TransferFunctionUtils.h>
+
 #include <latticefx/core/vtk/DataSet.h>
 #include <latticefx/utils/vtk/fileIO.h>
 #include <latticefx/utils/vtk/VTKFileHandler.h>
@@ -745,27 +749,40 @@ bool LoadLfxDataSet( lfx::core::DataSetPtr dsp, const std::string& dbFile, const
 		return false;
 	}
 
-	if( recipeFile.empty() ) return true; 
-
-	std::string err;
-	if( !dsp->loadPipeline( recipeFile, &err ) )
+	if( !recipeFile.empty() )
 	{
-		return false;
+
+		std::string err;
+		if( !dsp->loadPipeline( recipeFile, &err ) )
+		{
+			return false;
+		}
+
+		return true;
 	}
 
-	/*
-    LoadHierarchyPtr loader( new LoadHierarchy() );
+	// TODO: SOME OF THESE SETTINGS WILL NEED TO BE PASSED IN FROM THE GUI AND SET IN VolumeVisFeatureMaker::AddPlane
+	bool nopage = false;
+	bool useIso = false;
+	float isoVal = 0.15;
+	osg::Vec3 dims( 50., 50., 50. );
+
+	lfx::core::LoadHierarchyPtr loader( new lfx::core::LoadHierarchy() );
     if( nopage )
-        // Not paging. Load the data.
+	{
+		// Not paging. Load the data.
         loader->setLoadData( true );
-    loader->setDB( dbBase );
+	}
+	loader->setDB( dsp->getDB() );
     dsp->addPreprocess( loader );
 
-    VolumeRendererPtr renderOp( new VolumeRenderer() );
+    lfx::core::VolumeRendererPtr renderOp( new lfx::core::VolumeRenderer() );
     if( !nopage )
-        renderOp->setDB( dbBase );
+	{
+        renderOp->setDB( dsp->getDB() );
+	}
     renderOp->setVolumeDims( dims );
-    renderOp->setRenderMode( VolumeRenderer::RAY_TRACED );
+    renderOp->setRenderMode( lfx::core::VolumeRenderer::RAY_TRACED );
     renderOp->setMaxSamples( 400.f );
     renderOp->setTransparencyEnable( useIso ? false : true );
 
@@ -774,19 +791,16 @@ bool LoadLfxDataSet( lfx::core::DataSetPtr dsp, const std::string& dbFile, const
 
     osg::ref_ptr< osg::Image > tfImage( lfx::core::loadImageFromDat( "01.dat", LFX_ALPHA_RAMP_0_TO_1 ) );
     renderOp->setTransferFunction( tfImage.get() );
-    renderOp->setTransferFunctionDestination( Renderer::TF_RGBA );
+    renderOp->setTransferFunctionDestination( lfx::core::Renderer::TF_RGBA );
 
     // Render when alpha values are greater than 0.15.
-    renderOp->setHardwareMaskInputSource( Renderer::HM_SOURCE_ALPHA );
-    renderOp->setHardwareMaskOperator( useIso ? Renderer::HM_OP_EQ : Renderer::HM_OP_GT );
+    renderOp->setHardwareMaskInputSource( lfx::core::Renderer::HM_SOURCE_ALPHA );
+    renderOp->setHardwareMaskOperator( useIso ? lfx::core::Renderer::HM_OP_EQ : lfx::core::Renderer::HM_OP_GT );
     renderOp->setHardwareMaskReference( isoVal );
     if( useIso )
     {
         renderOp->setHardwareMaskEpsilon( 0.02 );
     }
-
-	return( dsp );
-	*/
 
 	return true;
 }

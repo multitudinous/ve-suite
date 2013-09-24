@@ -186,7 +186,13 @@ public:
     ///\param vizKey The key to a specific viz object
     cfdObjects* GetVizObject( VizKeyPair const& vizKey );
 
+	bool GetLfxDataObjReady() { return m_lfxDataObjReady; }
+	void SetLfxDataObjReady( bool b, const std::string &uuid ) {  m_lfxuuid = uuid; m_lfxDataObjReady = b; }
+
 private:
+
+	void ReadyLfxDataObj();
+
     ///Set the flag to tell sshandler that actors are ready
     ///- to be used by the addvis eh
     ///\param actorsReady Bool that tells sshandler to add geodes
@@ -222,7 +228,7 @@ private:
 
     ///multi map to hold graphics objects
     ///the key is the viz type and the value is cfdGraphicsObject
-    std::multimap< int, cfdGraphicsObject* > graphicsObjects;
+    std::multimap< int, cfdGraphicsObject* > m_graphicsObjects;
     ///The event handler for commands.
     std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;
     ///The mp of graphics objects with unique ids to be tied to the ui
@@ -240,6 +246,9 @@ private:
     lfx::core::PlayControlPtr m_playControl;
     ///Previous time tag
     double m_frameTime;
+	/// LfxDataObject Ready
+	bool m_lfxDataObjReady;
+	std::string m_lfxuuid;
 };
 }
 }

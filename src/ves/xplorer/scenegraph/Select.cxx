@@ -34,6 +34,7 @@
 // --- VES Includes --- //
 #include <ves/xplorer/scenegraph/Select.h>
 #include <ves/xplorer/scenegraph/AutoTransform.h>
+#include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
 #include <osg/Node>
@@ -75,6 +76,26 @@ osgUtil::LineSegmentIntersector::Intersections& TestForIntersections(
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* FindVESObject( osg::NodePath& nodePath )
 {
+	unsigned int totsize = nodePath.size();
+	for (unsigned int i=0; i< totsize; i++)
+	{
+		osg::Node *node = nodePath[nodePath.size()-1];
+		osg::Node::DescriptionList descList = node->getDescriptions();
+		for( size_t i = 0; i < descList.size(); ++i )
+        {
+            if( descList.at( i ) == "VE_XML_ID" )
+            {
+				return node;
+            }
+        }
+
+		//Trim the node path
+        nodePath.pop_back();
+	}
+
+	/*
+	// was getting unexpected crashes with reverse_iterator, seemed that rbegin would always point to a garbage iterator
+	// 
     for( osg::NodePath::reverse_iterator itr = nodePath.rbegin();
             itr != nodePath.rend(); ++itr )
     {
@@ -89,6 +110,7 @@ osg::Node* FindVESObject( osg::NodePath& nodePath )
         //Trim the node path
         nodePath.pop_back();
     }
+	*/
 
     return NULL;
 }

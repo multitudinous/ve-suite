@@ -25,7 +25,7 @@
  * -----------------------------------------------------------------
  * Date modified: $Date$
  * Version:       $Rev$
- * Author:        $Author$
+ * Author:        $Author$ 
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
@@ -127,7 +127,8 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     m_logger( Poco::Logger::get( "xplorer.SteadyStateVizHandler" ) ),
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) ),
     m_playControl( lfx::core::PlayControlPtr( new lfx::core::PlayControl() ) ),
-    m_frameTime( 0.0 )
+    m_frameTime( 0.0 ),
+	m_lfxDataObjReady( false )
 {
     vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
     vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
@@ -243,14 +244,14 @@ void SteadyStateVizHandler::DeleteVizFeature( std::string const& featureUUID )
     }
 
     for( std::multimap< int, cfdGraphicsObject* >::iterator
-            itr = graphicsObjects.begin();
-            itr != graphicsObjects.end(); ++itr )
+            itr = m_graphicsObjects.begin();
+            itr != m_graphicsObjects.end(); ++itr )
     {
         if( itr->second->GetUUID() == featureUUID )
         {
             itr->second->RemoveGeodeFromDCS();
             delete itr->second;
-            graphicsObjects.erase( itr );
+            m_graphicsObjects.erase( itr );
             break;
         }
     }
@@ -312,8 +313,8 @@ std::vector< cfdGraphicsObject* > SteadyStateVizHandler::GetGraphicsObjectsOfTyp
 
     //Search map for other object types with the same type as this one
     std::multimap< int, cfdGraphicsObject* >::iterator itr;
-    for( itr = graphicsObjects.lower_bound( type );
-            itr != graphicsObjects.upper_bound( type ); ++itr )
+    for( itr = m_graphicsObjects.lower_bound( type );
+            itr != m_graphicsObjects.upper_bound( type ); ++itr )
     {
         if( itr->second )
         {
@@ -345,12 +346,12 @@ void SteadyStateVizHandler::ClearVisObjects()
                           << std::endl << vprDEBUG_FLUSH;
 
     for( std::multimap< int, cfdGraphicsObject* >::iterator
-            pos = graphicsObjects.begin(); pos != graphicsObjects.end(); ++pos )
+            pos = m_graphicsObjects.begin(); pos != m_graphicsObjects.end(); ++pos )
     {
         pos->second->RemoveGeodeFromDCS();
         delete pos->second;
     }
-    graphicsObjects.clear();
+    m_graphicsObjects.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::InitScene()
@@ -368,6 +369,47 @@ void SteadyStateVizHandler::InitScene()
     m_vizThread = new vpr::Thread( boost::bind( static_cast< void ( SteadyStateVizHandler::* )() >( &SteadyStateVizHandler::CreateActorThread ), boost::ref( *this ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void SteadyStateVizHandler::ReadyLfxDataObj()
+{
+	// TODO: DO I NEED AN OBJECT IN THE m_visObjectSGQueue or is this new FLAG METHOD OK TO TRIGGER THIS METHOD
+
+	lfx::core::DataSetPtr ds = ModelHandler::instance()->GetActiveModel()->GetActiveLfxDataSet();
+	if( !ds ) return;
+
+	// if object needs updated then already have a graphics object
+	cfdGraphicsObject* const temp = new cfdGraphicsObject();
+	temp->SetTypeOfViz( cfdGraphicsObject::LFX_DS );
+   
+            
+	temp->SetPlayControl( m_playControl );
+	//temp->SetParentNode( ds->GetDCS() );
+    temp->SetLfxDataSet( ds );
+    temp->SetActiveModel( ModelHandler::instance()->GetActiveModel() );
+	temp->SetWorldNode( ModelHandler::instance()->GetActiveModel()->GetDCS() );
+	//temp->SetGeodes( tempVisObject ); // TODO: THIS SEEMS IMPORTANT right now handling it in AddGraphicsObjectToSceneGraph
+	temp->SetUUID( m_lfxuuid );
+    temp->AddGraphicsObjectToSceneGraph();
+
+         
+
+	//First check to see if we are updating a feature or if this is
+	//a brand new feature
+    DeleteVizFeature( temp->GetUUID() );
+
+	// TODO: figure this out
+	m_graphicsObjects.insert( std::make_pair( (int)LFX_VOLUME_DATASET, temp ) );
+	graphics_objects_map::value_type p = std::make_pair( vpr::GUID( temp->GetUUID() ), temp );
+    m_graphicsObjectMap.insert( p );
+     
+
+	// Resetting these variables is very important
+	// tempVisObject->SetUpdateFlag( false );
+    // tempVisObject->ClearGeodes();
+	vprDEBUG( vesDBG, 2 ) << "|\tDone Creating Objects" << std::endl << vprDEBUG_FLUSH;
+
+	m_lfxDataObjReady = false;
+}
+////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::PreFrameUpdate()
 {
     const double clockTime = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentTime();
@@ -383,7 +425,12 @@ void SteadyStateVizHandler::PreFrameUpdate()
         itr->second->PreFrameUpdate();
     }*/
 
-    //Check any virtual objects need to be updated
+	if( GetLfxDataObjReady() )
+	{
+		ReadyLfxDataObj();
+	}
+
+    //Check any virtual objects need to be updated 
     if( actorsAreReady && transientActors )
     {
         vprDEBUG( vesDBG, 3 ) << "|\tUpdating Viz Feature"
@@ -402,14 +449,14 @@ void SteadyStateVizHandler::PreFrameUpdate()
             cfdGraphicsObject* const temp = new cfdGraphicsObject();
             if( tempVisObject->GetLFXDataSet() )
             {
-                temp->SetTypeOfViz( cfdGraphicsObject::LFX );
+                temp->SetTypeOfViz( cfdGraphicsObject::LFX_VTK );
             }
             else
             {
                 temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             }
             temp->SetPlayControl( m_playControl );
-            temp->SetParentNode( tempVisObject->GetActiveDataSet()->GetDCS() );
+            //temp->SetParentNode( tempVisObject->GetActiveDataSet()->GetDCS() );
             temp->SetDataSet( tempVisObject->GetActiveDataSet() );
             temp->SetActiveModel( ModelHandler::instance()->GetActiveModel() );
             temp->SetWorldNode( ModelHandler::instance()->GetActiveModel()->GetDCS() );
@@ -440,7 +487,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
             //a brand new feature
             DeleteVizFeature( temp->GetUUID() );
 
-            graphicsObjects.insert( std::make_pair( tempVisObject->GetObjectType(), temp ) );
+            m_graphicsObjects.insert( std::make_pair( tempVisObject->GetObjectType(), temp ) );
             graphics_objects_map::value_type p = std::make_pair( vpr::GUID( temp->GetUUID() ), temp );
             m_graphicsObjectMap.insert( p );
             /*std::cout << temp->GetUUID() << " " << p.first.toString() << std::endl;

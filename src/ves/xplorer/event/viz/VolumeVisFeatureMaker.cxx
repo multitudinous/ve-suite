@@ -36,6 +36,9 @@
 
 #include <propertystore/PropertySet.h>
 #include <ves/xplorer/data/VolumeVisPropertySet.h>
+#include <ves/xplorer/Debug.h>
+
+#include <ves/xplorer/SteadyStateVizHandler.h>
 
 #include <boost/any.hpp>
 
@@ -56,7 +59,7 @@ VolumeVisFeatureMaker::VolumeVisFeatureMaker( const VolumeVisFeatureMaker& orig 
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VolumeVisFeatureMaker::~VolumeVisFeatureMaker()
+VolumeVisFeatureMaker::~VolumeVisFeatureMaker() 
 {
     ;
 }
@@ -68,11 +71,107 @@ void VolumeVisFeatureMaker::Update( const::std::string& recordUUID )
     propertystore::PropertySetPtr ptr = propertystore::PropertySetPtr( new xplorer::data::VolumeVisPropertySet() );
     ptr->SetUUID( recordUUID );
     ptr->Load();
-    AddPlane( ptr );
+    if( AddPlaneLfxDs( ptr ) ) return;
+	AddPlaneLfxVtk( ptr );
     //Execute( ptr );
 }
+
 ////////////////////////////////////////////////////////////////////////////////
-void VolumeVisFeatureMaker::AddPlane( propertystore::PropertySetPtr& set )
+bool VolumeVisFeatureMaker::AddPlaneLfxDs( propertystore::PropertySetPtr& set )
+{
+
+    std::string const currentScalar = boost::any_cast<std::string >
+                                      ( set->GetPropertyValue( "DataSet_ScalarData" ) );
+
+    std::string const currentDataset = boost::any_cast<std::string >
+                                       ( set->GetPropertyValue( "DataSet" ) );
+
+    double minimumValue =
+        boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Min" ) );
+
+    double maximumValue =
+        boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Max" ) );
+	
+	using namespace ves::xplorer::event::volume;
+	lfx::core::DataSetPtr ds = activateLfxDataSet( currentDataset );
+    if( !ds ) return false; // we don't have an lfx::core::DataSet
+
+	lfx::core::RendererPtr rp = ds->getRenderer();
+	if( !rp ) return true;
+
+	std::stringstream ss;
+	rp->dumpUniformInfo( ss, true );
+	std::string str = ss.str();
+	vprDEBUG( vesDBG, 0 )
+		<< "|\tLfxDataSet Uniform Info " << std::endl << str;
+
+	std::string uuid = set->GetUUIDAsString();
+	ves::xplorer::SteadyStateVizHandler::instance()->SetLfxDataObjReady( true, uuid );
+
+	return true;
+
+	//activeObject->SetCursorType( NONE );
+    //activeObject->SetUpdateFlag( false );
+    //call back over to ssvishandler to set the flags
+    //SteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
+    //SteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );
+	
+
+	// VisFeatureMakerBase::Execute( propertystore::PropertySetPtr set )
+	 // SteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
+
+	/*
+	PUBLIC UNIFORMS
+
+	Available uniforms:
+tf1d	SAMPLER_1D	1D transfer function sampler unit.
+	Default: 0
+tfRange	FLOAT_VEC2	Transfer function input range (x=min, y=max).
+	Default: 0 1
+tfDest	FLOAT_VEC4	Transfer function destination as rgba mask.
+	Default: 0 0 0 1
+hmEpsilon	FLOAT	Hardware mask comparison epsilon.
+	Default: 0
+volumeNumPlanes	FLOAT	Number of planes to render the volume.
+	Default: 0
+volumeMaxSamples	FLOAT	Max ray Samples for ray traced rendering.
+	Default: 0
+volumeTransparency	FLOAT	Alpha coefficient, default: 1.0.
+	Default: 0
+volumeTransparencyEnable	BOOL	Blending enable, default: true.
+	Default: 0
+volumeClipPlaneEnable0	INT	Clip plane 0: 1=enabled, 0=disabled.
+	Default: 0
+volumeClipPlaneEnable1	INT	Clip plane 1: 1=enabled, 0=disabled.
+	Default: 0
+volumeClipPlaneEnable2	INT	Clip plane 2: 1=enabled, 0=disabled.
+	Default: 0
+volumeClipPlaneEnable3	INT	Clip plane 3: 1=enabled, 0=disabled.
+	Default: 0
+volumeClipPlaneEnable4	INT	Clip plane 4: 1=enabled, 0=disabled.
+	Default: 0
+volumeClipPlaneEnable5	INT	Clip plane 5: 1=enabled, 0=disabled.
+	Default: 0
+
+
+	*/
+
+
+	/*
+	// replace these...  pass data down to lattice fx...
+	// 
+    using namespace ves::xplorer::event::volume;
+    //1. ActivateTextureVisualization - TB_ACTIVATE
+    ActivateTBDataset( currentDataset );
+    //2. _updateActiveScalar - TB_ACTIVE_SOLUTION
+    UpdateTBSolution( currentScalar, "Scalar", minimumValue, maximumValue );
+    //3. TB_SCALAR_RANGE
+    UpdateScalarRange( minimumValue, maximumValue );
+	*/
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void VolumeVisFeatureMaker::AddPlaneLfxVtk( propertystore::PropertySetPtr& set )
 {
 
     std::string const currentScalar = boost::any_cast<std::string >
@@ -87,6 +186,10 @@ void VolumeVisFeatureMaker::AddPlane( propertystore::PropertySetPtr& set )
     double maximumValue =
         boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Max" ) );
 
+	// replace these...  pass data down to lattice fx...
+	// 
+
+
     using namespace ves::xplorer::event::volume;
     //1. ActivateTextureVisualization - TB_ACTIVATE
     ActivateTBDataset( currentDataset );
@@ -95,4 +198,6 @@ void VolumeVisFeatureMaker::AddPlane( propertystore::PropertySetPtr& set )
     //3. TB_SCALAR_RANGE
     UpdateScalarRange( minimumValue, maximumValue );
 }
+
+
 ////////////////////////////////////////////////////////////////////////////////

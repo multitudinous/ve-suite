@@ -150,6 +150,21 @@ void TurnOnBBox( bool const& enable )
 {
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateBoundingBox( enable );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+lfx::core::DataSetPtr activateLfxDataSet( std::string const& activeDataset )
+{
+	ves::xplorer::Model* activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+	if( activeModel == NULL ) return lfx::core::DataSetPtr();
+
+	int idx =  activeModel->GetIndexOfLfxDataSet( activeDataset );
+	lfx::core::DataSetPtr dataSet = activeModel->GetLfxDataSet( idx );
+	if( !dataSet ) return dataSet;
+
+	activeModel->SetActiveLfxDataSet( dataSet );
+	return dataSet;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 void ActivateTBDataset( std::string const& activeDataset )
 {

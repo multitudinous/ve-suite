@@ -323,7 +323,7 @@ unsigned int Model::GetNumberOfLfxDataSets( void )
 ////////////////////////////////////////////////////////////////////////////////
 void Model::CreateLfxDataSet()
 {
-    lfx::core::DataSetPtr tempPtr = lfx::core::DataSetPtr( new lfx::core::DataSet() );
+	lfx::core::DataSetPtr tempPtr = lfx::core::DataSetPtr( new lfx::core::DataSet("lfx.core.dataset", new osg::PositionAttitudeTransform()) );
     _lfxDataSets.push_back( tempPtr );
 }
 ////////////////////////////////////////////////////////////////////////////////

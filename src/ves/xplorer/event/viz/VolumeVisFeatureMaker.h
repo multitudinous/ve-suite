@@ -56,7 +56,8 @@ public:
 
 protected:
     ///Called by the update function
-    void AddPlane( propertystore::PropertySetPtr& set );
+    bool AddPlaneLfxDs( propertystore::PropertySetPtr& set );
+	void AddPlaneLfxVtk( propertystore::PropertySetPtr& set );
 
 private:
 
