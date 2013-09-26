@@ -103,7 +103,8 @@ bool VolumeVisFeatureMaker::AddPlaneLfxDs( propertystore::PropertySetPtr& set )
 	rp->dumpUniformInfo( ss, true );
 	std::string str = ss.str();
 	vprDEBUG( vesDBG, 0 )
-		<< "|\tLfxDataSet Uniform Info " << std::endl << str;
+		<< "|\tLfxDataSet Uniform Info " << std::endl << str
+        << std::endl << vprDEBUG_FLUSH;
 
 	std::string uuid = set->GetUUIDAsString();
 	ves::xplorer::SteadyStateVizHandler::instance()->SetLfxDataObjReady( true, uuid );
