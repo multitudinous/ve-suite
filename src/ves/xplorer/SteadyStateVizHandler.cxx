@@ -379,7 +379,6 @@ void SteadyStateVizHandler::ReadyLfxDataObj()
 	// if object needs updated then already have a graphics object
 	cfdGraphicsObject* const temp = new cfdGraphicsObject();
 	temp->SetTypeOfViz( cfdGraphicsObject::LFX_DS );
-   
             
 	temp->SetPlayControl( m_playControl );
 	//temp->SetParentNode( ds->GetDCS() );
@@ -390,8 +389,6 @@ void SteadyStateVizHandler::ReadyLfxDataObj()
 	temp->SetUUID( m_lfxuuid );
     temp->AddGraphicsObjectToSceneGraph();
 
-         
-
 	//First check to see if we are updating a feature or if this is
 	//a brand new feature
     DeleteVizFeature( temp->GetUUID() );
@@ -400,7 +397,6 @@ void SteadyStateVizHandler::ReadyLfxDataObj()
 	m_graphicsObjects.insert( std::make_pair( (int)LFX_VOLUME_DATASET, temp ) );
 	graphics_objects_map::value_type p = std::make_pair( vpr::GUID( temp->GetUUID() ), temp );
     m_graphicsObjectMap.insert( p );
-     
 
 	// Resetting these variables is very important
 	// tempVisObject->SetUpdateFlag( false );

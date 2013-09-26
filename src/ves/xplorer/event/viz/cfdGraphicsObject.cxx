@@ -250,7 +250,8 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
 		lfx::core::DataSetPtr ptr = model->GetActiveLfxDataSet();
 		if( !ptr ) return;
 
-		osg::PositionAttitudeTransform *node = (osg::PositionAttitudeTransform *)ptr->getSceneData();
+        osg::ref_ptr< osg::Node > node = ptr->getSceneData();
+        parentNode = static_cast< osg::PositionAttitudeTransform* >( node.get() );
 		//m_lfxGroup = node;
 
         //Get transient state from lfx dataset
@@ -262,12 +263,6 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             m_playControl->addScene( node );
             m_playControl->setTimeRange( ptr->getTimeRange() );
         }
-
-
-		if( parentNode == NULL )
-		{
-			parentNode = node;
-		}
 
 		// is parent on graph
         if( !worldNode->containsNode( parentNode.get() ) )

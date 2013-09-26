@@ -79,7 +79,7 @@ osg::Node* FindVESObject( osg::NodePath& nodePath )
 	unsigned int totsize = nodePath.size();
 	for (unsigned int i=0; i< totsize; i++)
 	{
-		osg::Node *node = nodePath[nodePath.size()-1];
+		osg::Node* node = nodePath[nodePath.size()-1];
 		osg::Node::DescriptionList descList = node->getDescriptions();
 		for( size_t i = 0; i < descList.size(); ++i )
         {
