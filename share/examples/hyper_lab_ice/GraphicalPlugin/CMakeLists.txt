@@ -12,6 +12,8 @@ list(APPEND hdrs
     zmq.hpp
 )
 
+add_definitions( -DVE_USER_PLUGIN_LIBRARY )
+
 set(VES_PUBLIC_HEADERS ${hdrs} )
 
 set(VES_TARGET_NAME HyperLabICEGP)

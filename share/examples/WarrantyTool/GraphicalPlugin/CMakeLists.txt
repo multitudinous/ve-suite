@@ -5,6 +5,8 @@ list(APPEND srcs
     csvparser.cpp
 )
 
+add_definitions( -DVE_USER_PLUGIN_LIBRARY )
+
 set(VES_PUBLIC_HEADERS ${hdrs} )
 
 set(VES_TARGET_NAME WarrantyToolGP)
