@@ -260,7 +260,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             m_transient = true;
             // Play the time series animation
             //m_playControl = lfx::core::PlayControlPtr( new lfx::core::PlayControl() );
-            m_playControl->addScene( node );
+            m_playControl->addScene( node.get() );
             m_playControl->setTimeRange( ptr->getTimeRange() );
         }
 
