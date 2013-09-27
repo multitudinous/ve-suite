@@ -803,5 +803,15 @@ cfdObjects* SteadyStateVizHandler::GetVizObject( VizKeyPair const& vizKey )
     return iter->second->CreateCopy();
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool SteadyStateVizHandler::GetLfxDataObjReady() 
+{ 
+	return m_lfxDataObjReady; 
+}
+////////////////////////////////////////////////////////////////////////////////
+void SteadyStateVizHandler::SetLfxDataObjReady( bool b, const std::string &uuid ) 
+{  
+	m_lfxuuid = uuid; m_lfxDataObjReady = b; 
+}
+////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
 } // end ves

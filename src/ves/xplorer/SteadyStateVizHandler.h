@@ -186,8 +186,8 @@ public:
     ///\param vizKey The key to a specific viz object
     cfdObjects* GetVizObject( VizKeyPair const& vizKey );
 
-	bool GetLfxDataObjReady() { return m_lfxDataObjReady; }
-	void SetLfxDataObjReady( bool b, const std::string &uuid ) {  m_lfxuuid = uuid; m_lfxDataObjReady = b; }
+	bool GetLfxDataObjReady();
+	void SetLfxDataObjReady( bool b, const std::string &uuid );
 
 private:
 
