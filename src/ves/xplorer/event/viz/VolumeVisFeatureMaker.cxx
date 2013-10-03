@@ -42,6 +42,10 @@
 
 #include <boost/any.hpp>
 
+#include <latticefx/core/VolumeRenderer.h>
+#include <latticefx/core/HierarchyUtils.h>
+#include <latticefx/core/TransferFunctionUtils.h>
+
 using namespace ves::conductor;
 using namespace ves;
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,10 +97,51 @@ bool VolumeVisFeatureMaker::AddPlaneLfxDs( propertystore::PropertySetPtr& set )
         boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Max" ) );
 	
 	using namespace ves::xplorer::event::volume;
-	lfx::core::DataSetPtr ds = activateLfxDataSet( currentDataset );
-    if( !ds ) return false; // we don't have an lfx::core::DataSet
+	lfx::core::DataSetPtr dsp = activateLfxDataSet( currentDataset );
+    if( !dsp ) return false; // we don't have an lfx::core::DataSet
 
-	lfx::core::RendererPtr rp = ds->getRenderer();
+	// TODO: SOME OF THESE SETTINGS WILL NEED TO BE PASSED IN FROM THE GUI AND SET IN VolumeVisFeatureMaker::AddPlane
+	bool nopage = false;
+	bool useIso = false;
+	float isoVal = 0.15f;
+	osg::Vec3 dims( 50., 50., 50. );
+
+	lfx::core::LoadHierarchyPtr loader( new lfx::core::LoadHierarchy() );
+    if( nopage )
+	{
+		// Not paging. Load the data.
+        loader->setLoadData( true );
+	}
+	loader->setDB( dsp->getDB() );
+    dsp->addPreprocess( loader );
+
+    lfx::core::VolumeRendererPtr renderOp( new lfx::core::VolumeRenderer() );
+    if( !nopage )
+	{
+        renderOp->setDB( dsp->getDB() );
+	}
+    renderOp->setVolumeDims( dims );
+    renderOp->setRenderMode( lfx::core::VolumeRenderer::RAY_TRACED );
+    renderOp->setMaxSamples( 400.f );
+    renderOp->setTransparencyEnable( useIso ? false : true );
+
+    renderOp->addInput( "volumedata" );
+    dsp->setRenderer( renderOp );
+
+    osg::ref_ptr< osg::Image > tfImage( lfx::core::loadImageFromDat( "01.dat", LFX_ALPHA_RAMP_0_TO_1 ) );
+    renderOp->setTransferFunction( tfImage.get() );
+    renderOp->setTransferFunctionDestination( lfx::core::Renderer::TF_RGBA );
+
+    // Render when alpha values are greater than 0.15.
+    renderOp->setHardwareMaskInputSource( lfx::core::Renderer::HM_SOURCE_ALPHA );
+    renderOp->setHardwareMaskOperator( useIso ? lfx::core::Renderer::HM_OP_EQ : lfx::core::Renderer::HM_OP_GT );
+    renderOp->setHardwareMaskReference( isoVal );
+    if( useIso )
+    {
+        renderOp->setHardwareMaskEpsilon( 0.02f );
+    }
+
+	lfx::core::RendererPtr rp = dsp->getRenderer();
 	if( !rp ) return true;
 
 	std::stringstream ss;
@@ -108,6 +153,13 @@ bool VolumeVisFeatureMaker::AddPlaneLfxDs( propertystore::PropertySetPtr& set )
 
 	std::string uuid = set->GetUUIDAsString();
 	ves::xplorer::SteadyStateVizHandler::instance()->SetLfxDataObjReady( true, uuid );
+
+		/*
+	std::ofstream fs;
+	fs.open("dump_lfxdataset.txt");
+	dsp->dumpState(fs);
+	fs.close();
+	*/
 
 	return true;
 
