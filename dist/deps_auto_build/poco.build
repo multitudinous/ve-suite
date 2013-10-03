@@ -1,9 +1,9 @@
 PACKAGE_NAME=POCO
-BASE_DIR="${DEV_BASE_DIR}/poco-1.5.1-all"
+BASE_DIR="${DEV_BASE_DIR}/poco-1.5.2-all"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
-SOURCE_URL=http://pocoproject.org/releases/poco-1.5.1/poco-1.5.1-all.tar.gz
+SOURCE_URL=http://pocoproject.org/releases/poco-1.5.2/poco-1.5.2-all.tar.gz
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
