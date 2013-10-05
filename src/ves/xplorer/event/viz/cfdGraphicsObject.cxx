@@ -33,6 +33,12 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/camera/CameraManager.h>
+#include <ves/xplorer/scenegraph/camera/CameraObject.h>
+#include <ves/xplorer/scenegraph/GLTransformInfo.h>
+
+
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/event/viz/cfdStreamers.h>
 #include <ves/xplorer/event/viz/cfdPolyData.h>
@@ -41,11 +47,14 @@
 #include <ves/xplorer/Debug.h>
 
 #include <latticefx/core/DataSet.h>
+#include <latticefx/core/PagingThread.h>
+#include <osgwTools/shapes.h>
 
 // --- OSG Includes --- //
 #include <osg/BlendFunc>
 #include <osg/Sequence>
 #include <osg/PositionAttitudeTransform>
+#include <osg/Viewport>
 
 //#include <osgDB/WriteFile>
 
@@ -254,6 +263,24 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
         parentNode = static_cast< osg::PositionAttitudeTransform* >( node.get() );
 		//m_lfxGroup = node;
 
+#if 0
+		// render a sphere for the volume for debugging purposes
+		osg::Vec3d posOrig = parentNode->getPosition();
+
+		osg::BoundingSphere s = node->getBound();
+		osg::Vec3d c = s.center();
+		double r = s.radius();
+
+		
+		parentNode = osg::ref_ptr<osg::PositionAttitudeTransform>( new osg::PositionAttitudeTransform() );
+		parentNode->setPosition( c );
+
+		osg::Geometry *sphere( osgwTools::makeGeodesicSphere( s.radius() ) );
+		osg::Geode* geod = new osg::Geode();
+		geod->addDrawable( sphere );
+		parentNode->addChild( geod );
+#endif
+
         //Get transient state from lfx dataset
         if( ptr->isTemporalData() )
         {
@@ -268,16 +295,48 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
         if( !worldNode->containsNode( parentNode.get() ) )
         {
             vprDEBUG( vesDBG, 1 ) << "|\t\tAdding parentNode to worldDCS"
-                                  << std::endl << vprDEBUG_FLUSH;
+                                  << std::endl << vprDEBUG_FLUSH; 
             worldNode->addChild( parentNode.get() );
         }
 
+		// set up lfx paging!
+
 		/*
-		if( !parentNode->containsNode( node ) )
+		ves::xplorer::scenegraph::GLTransformInfoPtr transinfo = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentGLTransformInfo();
+
+		ves::xplorer::scenegraph::SceneManager* sm = ves::xplorer::scenegraph::SceneManager::instance();
+		ves::xplorer::scenegraph::camera::CameraManager& cm = sm->GetCameraManager();
+		ves::xplorer::scenegraph::camera::CameraObject *camobj = cm.GetActiveCameraObject();
+		osg::Camera& cam = camobj->GetCamera();
+
+		// Really we would need to change the projection matrix and viewport
+		// in an event handler that catches window size changes. We're cheating.
+		lfx::core::PagingThread* pageThread( lfx::core::PagingThread::instance() );
+		pageThread->setTransforms( cam.getProjectionMatrix(), cam.getViewport() );
+		*/
+
+
+		/*
+		ves::xplorer::scenegraph::GLTransformInfoPtr transinfo = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentGLTransformInfo();
+		ves::xplorer::scenegraph::SceneManager::instance()->GetCameraManager()
+
+		osg::Viewport *vp = new osg::Viewport(transinfo->GetViewportOriginX(), transinfo->GetViewportOriginY(), transinfo->GetViewportWidth(), transinfo->GetViewportHeight());
+	
+		// Really we would need to change the projection matrix and viewport
+		// in an event handler that catches window size changes. We're cheating.
+		lfx::core::PagingThread* pageThread( lfx::core::PagingThread::instance() );
+		pageThread->setTransforms( transinfo->GetProjectionMatrixOSG(), vp );
+
+		delete vp;
+		*/
+		/*
+		osg::Vec3d eye, center, up;
+		while( !viewer.done() )
 		{
-			vprDEBUG( vesDBG, 1 ) << "|\t\tAdding active scene data node to worldDCS for LFX_DS " << std::endl << vprDEBUG_FLUSH;
-			parentNode->addChild( node );
-        }
+			tbm->getInverseMatrix().getLookAt( eye, center, up );
+			pageThread->setTransforms( osg::Vec3( eye ) );
+			viewer.frame();
+		}
 		*/
     }
 
