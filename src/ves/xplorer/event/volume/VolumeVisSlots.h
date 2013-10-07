@@ -85,7 +85,7 @@ void UpdateROIBounds( std::string const& uuid, std::vector< double > const& roi 
 void TurnOnBBox( bool const& enable );
 
 ///
-lfx::core::DataSetPtr activateLfxDataSet( std::string const& activeDataset );
+lfx::core::DataSetPtr activateLfxDataSet( std::string const& activeDataset, bool activate=true );
 
 ///
 void ActivateTBDataset( std::string const& activeDataset );
@@ -100,6 +100,9 @@ void UpdateScalarRange( double const& minRange, double const& maxRange );
 ///Get the set active texture dataset. We assume there is only one texture
 ///dataset per model.
 ves::xplorer::volume::cfdTextureDataSet* SetActiveTextureDataset();
+
+///Update the an lfx dataset property usually a uniform value
+void UpdateLfxProperty(const std::string &dataSetName, const std::string &propName, const boost::any &value, int vloc);
 
 } // namespace cad
 } // namespace event

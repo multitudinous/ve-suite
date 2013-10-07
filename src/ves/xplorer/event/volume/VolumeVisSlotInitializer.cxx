@@ -106,6 +106,11 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
                            void( std::string const&, std::vector< bool > const& ),
                            &HideVizFeature,
                            m_connections, any_SignalType, normal_Priority );
+
+	CONNECTSIGNALS_STATIC( "%TBETUpdateLfxProperty",
+                           void( std::string const&, std::string const&, const boost::any&, int ),
+                           &UpdateLfxProperty,
+                           m_connections, any_SignalType, normal_Priority );
 }
 
 } // namespace cad

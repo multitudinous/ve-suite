@@ -83,19 +83,20 @@ void VolumeVisFeatureMaker::Update( const::std::string& recordUUID )
 ////////////////////////////////////////////////////////////////////////////////
 bool VolumeVisFeatureMaker::AddPlaneLfxDs( propertystore::PropertySetPtr& set )
 {
+	// TODO: NEED TO FIGURE OUT HOW TO SET THESE OR IF WE ARE EVEN USING THESE PROPERTIES IN dataslots.css WriteDatabaseEntry
+	/*
+    std::string const currentScalar = boost::any_cast<std::string >( set->GetPropertyValue( "DataSet_ScalarData" ) );
 
-    std::string const currentScalar = boost::any_cast<std::string >
-                                      ( set->GetPropertyValue( "DataSet_ScalarData" ) );
-
-    std::string const currentDataset = boost::any_cast<std::string >
-                                       ( set->GetPropertyValue( "DataSet" ) );
-
-    double minimumValue =
+	double minimumValue =
         boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Min" ) );
 
     double maximumValue =
         boost::any_cast<double>( set->GetPropertyValue( "DataSet_ScalarRange_Max" ) );
-	
+	*/
+
+	std::string const currentDataset = boost::any_cast<std::string >
+                                       ( set->GetPropertyValue( "DataSet" ) );
+
 	using namespace ves::xplorer::event::volume;
 	lfx::core::DataSetPtr dsp = activateLfxDataSet( currentDataset );
     if( !dsp ) return false; // we don't have an lfx::core::DataSet
@@ -144,12 +145,14 @@ bool VolumeVisFeatureMaker::AddPlaneLfxDs( propertystore::PropertySetPtr& set )
 	lfx::core::RendererPtr rp = dsp->getRenderer();
 	if( !rp ) return true;
 
+	/*
 	std::stringstream ss;
 	rp->dumpUniformInfo( ss, true );
 	std::string str = ss.str();
 	vprDEBUG( vesDBG, 0 )
 		<< "|\tLfxDataSet Uniform Info " << std::endl << str
         << std::endl << vprDEBUG_FLUSH;
+	*/
 
 	std::string uuid = set->GetUUIDAsString();
 	ves::xplorer::SteadyStateVizHandler::instance()->SetLfxDataObjReady( true, uuid );

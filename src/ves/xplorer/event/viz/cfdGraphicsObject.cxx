@@ -263,7 +263,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
         parentNode = static_cast< osg::PositionAttitudeTransform* >( node.get() );
 		//m_lfxGroup = node;
 
-#if 0
+#if 1
 		// render a sphere for the volume for debugging purposes
 		osg::Vec3d posOrig = parentNode->getPosition();
 
@@ -271,14 +271,16 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
 		osg::Vec3d c = s.center();
 		double r = s.radius();
 
-		
-		parentNode = osg::ref_ptr<osg::PositionAttitudeTransform>( new osg::PositionAttitudeTransform() );
-		parentNode->setPosition( c );
+		osg::ref_ptr<osg::PositionAttitudeTransform> parentNode2( new osg::PositionAttitudeTransform() );
+		//parentNode = osg::ref_ptr<osg::PositionAttitudeTransform>( new osg::PositionAttitudeTransform() );
+		parentNode2->setPosition( c );
 
 		osg::Geometry *sphere( osgwTools::makeGeodesicSphere( s.radius() ) );
 		osg::Geode* geod = new osg::Geode();
 		geod->addDrawable( sphere );
-		parentNode->addChild( geod );
+		parentNode2->addChild( geod );
+		worldNode->addChild( parentNode2.get() );
+
 #endif
 
         //Get transient state from lfx dataset

@@ -49,6 +49,36 @@ namespace xplorer
 {
 namespace data
 {
+
+class VE_DATA_EXPORTS IVisProps
+{
+public:
+	class Prop
+	{
+	public:
+		Prop();
+		Prop(const std::string &name, const boost::any &value, const std::string &dispName)
+		{
+			_name = name;
+			_value = value;
+			_dispName = dispName;
+		}
+
+		std::string _name;
+		boost::any	_value;
+		std::string _dispName;
+	};
+
+	typedef boost::shared_ptr<Prop> PropPtr;
+
+public:
+	IVisProps(){}
+	virtual void UpdateProperty( const std::string &name, const boost::any &value ) = 0;
+	virtual void GetProperties(std::vector< PropPtr > *pProps) = 0;
+};
+
+typedef boost::shared_ptr<IVisProps> IVisPropsPtr;
+
 /*!\file VolumeVisPropertySet.h
  * \class ves::xplorer::data::VolumeVisPropertySet
  * \namespace ves::xplorer::data
@@ -74,6 +104,11 @@ protected:
     ///Slot connected to the value change of  display seed points
     ///\param property The bool value for the seed point display flag
     //void UpdateSeedPointDisplay( propertystore::PropertyPtr property );
+
+	virtual void CreateSkeletonLfxDs();
+	void AddPropertyLfx( const std::string &name, const boost::any &value, const std::string &dispname );
+	void AddPropertyFloats( const std::string &typeName, const std::string &itemName,  std::vector<float> &v );
+
     ///Create the skeleton
     virtual void CreateSkeleton();
 
@@ -83,11 +118,16 @@ protected:
 
     void UpdateScalar( propertystore::PropertyPtr property );
 
+	void UpdateLfxUniform( propertystore::PropertyPtr property );
+
     ///????
     ves::util::TwoDoubleSignal_type m_updateTBETScalarRange;
     ///????
     typedef switchwire::Event< void ( std::string const&, std::string const&, double const&, double const& ) > UpdateScalar_type;
     UpdateScalar_type m_updateTBETScalar;
+	///????
+    typedef switchwire::Event< void ( const std::string&, const std::string&, const boost::any&, int ) > UpdateLfxProp_type;
+    UpdateLfxProp_type m_updateLfxProp;
     /*
         ///Update signal to control turning off and on seed points
         typedef switchwire::Event< void ( const std::string&, const bool ) > ActivateSeedPointsSignal_type;
@@ -99,6 +139,9 @@ protected:
         typedef switchwire::Event< void ( const std::string& ) > UpdateActiveDataSetSignal_type;
         UpdateActiveDataSetSignal_type m_activeDataSet;
     */
+
+protected:
+	IVisPropsPtr _visProps;
 };
 
 } // namespace data

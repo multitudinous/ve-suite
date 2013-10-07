@@ -152,7 +152,7 @@ void TurnOnBBox( bool const& enable )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-lfx::core::DataSetPtr activateLfxDataSet( std::string const& activeDataset )
+lfx::core::DataSetPtr activateLfxDataSet( std::string const& activeDataset, bool activate )
 {
 	ves::xplorer::Model* activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
 	if( activeModel == NULL ) return lfx::core::DataSetPtr();
@@ -161,7 +161,11 @@ lfx::core::DataSetPtr activateLfxDataSet( std::string const& activeDataset )
 	lfx::core::DataSetPtr dataSet = activeModel->GetLfxDataSet( idx );
 	if( !dataSet ) return dataSet;
 
-	activeModel->SetActiveLfxDataSet( dataSet );
+	if( activate )
+	{
+		activeModel->SetActiveLfxDataSet( dataSet );
+	}
+
 	return dataSet;
 }
 
@@ -274,6 +278,122 @@ void UpdateTBSolution( std::string const& dataName, std::string const& dataType,
 
     ves::xplorer::TextureBasedVizHandler::instance()->UpdateGraph();
 }
+////////////////////////////////////////////////////////////////////////////////
+void GetFloat(const boost::any &value, float *pf)
+{
+	*pf = static_cast<float>( boost::any_cast<double>( value ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void UpdateLfxProperty(const std::string &dataSetName, const std::string &propName, const boost::any &value, int vloc)
+{
+	lfx::core::DataSetPtr pds = activateLfxDataSet( dataSetName, false );
+	if( !pds.get() )
+	{
+		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxProperty - failed to find the dataset: " << dataSetName << std::endl << vprDEBUG_FLUSH;
+		return;
+	}
+
+	lfx::core::RendererPtr prender = pds->getRenderer();
+	if( !prender.get() )
+	{
+		// vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxUniform - no renderer is in the dataset: " << dataSetName << std::endl << vprDEBUG_FLUSH;
+		return;
+	}
+
+
+	lfx::core::Renderer::UniformInfo &ui  = prender->getUniform( propName );
+	if( ui._prototype->getName() != propName )
+	{
+		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxUniform - uniform: " << propName << " not found!" << std::endl << vprDEBUG_FLUSH;
+		return;
+	}
+
+	// TODO: DEAL WITH NON UNIFORM NAMED PROPERTIES, IE: Hide, DataSet
+
+	
+	switch( ui._prototype->getType() )
+	{
+	case osg::Uniform::FLOAT_MAT4:
+		{
+			osg::Matrixf mat;
+			ui._prototype->get( mat );
+
+			if (vloc > -1 && vloc < 16)
+			{
+				GetFloat( value, &(mat.ptr()[vloc]) );
+				ui._prototype->set( mat );
+			}
+	
+			break;
+		}
+	case osg::Uniform::FLOAT_VEC2:
+		{
+			osg::Vec2f vec2;
+			ui._prototype->get( vec2 );
+
+			if( vloc > -1 && vloc < 2 )
+			{
+				GetFloat( value, &vec2[vloc] );
+				ui._prototype->set( vec2 );
+			}
+			break;
+		}
+	case osg::Uniform::FLOAT_VEC3:
+		{
+			osg::Vec3f vec3;
+			ui._prototype->get( vec3 );
+
+			if( vloc > -1 && vloc < 3 )
+			{
+				GetFloat( value, &vec3[vloc] );
+				ui._prototype->set( vec3 );
+			}
+			break;
+		}
+	case osg::Uniform::FLOAT_VEC4:
+		{
+			osg::Vec4f vec4;
+			ui._prototype->get( vec4 );
+
+			if( vloc > -1 && vloc < 4 )
+			{
+				GetFloat( value, &vec4[vloc] );
+				ui._prototype->set( vec4 );
+			}
+			break;
+		}
+	case osg::Uniform::FLOAT:
+		{
+			float f = 0;
+			GetFloat( value, &f );
+			ui._prototype->set( f );
+			break;
+		}
+	case osg::Uniform::SAMPLER_1D:
+	case osg::Uniform::SAMPLER_2D:
+	case osg::Uniform::SAMPLER_3D:
+	case osg::Uniform::INT:
+		{
+			// TODO: this probably doesn't make sense for samplers!
+			int i = boost::any_cast<int>( value );
+			ui._prototype->set( i );
+			break;
+		}
+	case osg::Uniform::BOOL:
+		{
+			bool b = boost::any_cast<bool>( value );
+			ui._prototype->set( b );
+			break;
+		}
+	default:
+		{
+			vprDEBUG( vesDBG, 0 ) << "|\tunsupported uniform type: " << propName << std::endl << vprDEBUG_FLUSH;
+			break;
+		}
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace volume
 } // namespace event
