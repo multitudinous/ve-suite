@@ -398,6 +398,67 @@ void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet, ves::open::xml::Par
     }
     set.Save();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void WriteDatabaseEntry( lfx::core::DataSetPtr dataSet )
+{
+	xplorer::data::DatasetPropertySet set;
+
+    bool tempLoad = set.LoadByKey( "Filename", dataSet->getName() );
+    const std::string& dataSetUUID = dataSet->getUUID( "LFX_DATA_FILE" );
+
+    if( !tempLoad && !dataSetUUID.empty() )
+    {
+        set.SetUUID( dataSetUUID );
+    }
+
+ 
+    osg::Vec2d tr = dataSet->getTimeRange();
+	std::vector< std::string > scalarNames, vectorNames;
+	scalarNames.push_back("s0"); // TODO: need to get these from the dataset.. but the load hierarchy probab
+
+    set.SetPropertyValue( "Filename", dataSet->getName() );
+    set.SetPropertyValue( "StepLength", 0 );
+    set.SetPropertyValue( "MaxTime", tr[1] );
+    set.SetPropertyValue( "TimeStep", 0 );
+    set.SetPropertyValue( "Type", 0 );
+    set.SetPropertyValue( "PrecomputedDataSliceDir", 0 );
+    set.SetPropertyValue( "PrecomputedSurfaceDir", 0 );
+    set.SetPropertyValue( "ScalarNames", scalarNames ); // TODO: 
+    set.SetPropertyValue( "VectorNames", vectorNames ); // TODO:
+
+	// TODO: FIGURE OUT MINS AN MAXS
+	/*
+    std::vector< double > ScalarMins;
+    std::vector< double > ScalarMaxes;
+    for( int index = 0; index < dataSet->GetNumberOfScalars(); ++index )
+    {
+        double* range = dataSet->GetActualScalarRange( index );
+        ScalarMins.push_back( range[0] );
+        ScalarMaxes.push_back( range[1] );
+    }
+    set.SetPropertyValue( "ScalarMins", ScalarMins );
+    set.SetPropertyValue( "ScalarMaxes", ScalarMaxes );
+	*/
+
+	// NOTE: set to 0
+	set.SetPropertyValue( "Transform_Translation_X", 0.0 );
+	set.SetPropertyValue( "Transform_Translation_Y", 0.0 );
+    set.SetPropertyValue( "Transform_Translation_Z", 0.0 );
+    set.SetPropertyValue( "Transform_Rotation_X", 0.0 );
+	set.SetPropertyValue( "Transform_Rotation_Y", 0.0 );
+    set.SetPropertyValue( "Transform_Rotation_Z", 0.0 );
+           
+    set.SetPropertyValue( "Transform_Scale_Uniform", true );
+
+	// set to 1
+	set.SetPropertyValue( "Transform_Scale_X", 1.0 );
+    set.SetPropertyValue( "Transform_Scale_Y", 1.0 );
+    set.SetPropertyValue( "Transform_Scale_Z", 1.0 );
+    
+    set.Save();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 void LoadTransientData( const std::string& uuid, const bool& load )
 {
@@ -937,135 +998,8 @@ void LoadLfxDataFromFile( const std::string& filename )
 			 return;
 		}
 
-		/*
-        ves::open::xml::DataValuePairPtr stringDVP =
-            tempInfoPacket->GetProperty( "VTK_ACTIVE_DATA_ARRAYS" );
-        std::vector< std::string > vecStringArray;
-        if( stringDVP )
-        {
-            ves::open::xml::OneDStringArrayPtr stringArray =
-                boost::dynamic_pointer_cast <
-                ves::open::xml::OneDStringArray > (
-                    stringDVP->GetDataXMLObject() );
-            vecStringArray = stringArray->GetArray();
-            lastDataAdded->SetActiveDataArrays( vecStringArray );
-        }
-
-        //////////////////////////////////////////////////////////////
-        if( tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" ) )
-        {
-            std::string precomputedDataSliceDir =
-                tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->
-                GetDataString();
-            lastDataAdded->
-                    SetPrecomputedDataSliceDir( precomputedDataSliceDir );
-            lastDataAdded->SetUUID( "VTK_PRECOMPUTED_DIR_PATH",
-                                    tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" )->
-                                    GetID() );
-        }
-        //////////////////////////////////////////////////////////////
-        if( tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" ) )
-        {
-            std::string precomputedSurfaceDir =
-                tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->
-                GetDataString();
-            lastDataAdded->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
-            lastDataAdded->SetUUID( "VTK_SURFACE_DIR_PATH",
-                                    tempInfoPacket->GetProperty( "VTK_SURFACE_DIR_PATH" )->
-                                    GetID() );
-        }
-
-        ves::xplorer::event::data::LoadSurfaceFiles( lastDataAdded->GetPrecomputedSurfaceDir() );
-        //////////////////////////////////////////////////////////////
-        //Load texture datasets
-        if( tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" ) )
-        {
-            vprDEBUG( vesDBG, 0 ) << "|\tCreating texture dataset."
-                                  << std::endl << vprDEBUG_FLUSH;
-            activeModel->CreateTextureDataSet();
-            size_t numProperties = tempInfoPacket->GetNumberOfProperties();
-            for( size_t j = 0; j < numProperties; ++j )
-            {
-                if( tempInfoPacket->GetProperty( j )->GetDataName() ==
-                        std::string( "VTK_TEXTURE_DIR_PATH" ) )
-                {
-                    activeModel->AddDataSetToTextureDataSet( 0,
-                            tempInfoPacket->GetProperty( j )->GetDataString() );
-                    std::ostringstream textId;
-                    textId << "VTK_SURFACE_DIR_PATH_" << j;
-                    lastDataAdded->SetUUID( textId.str(), tempInfoPacket->
-                                            GetProperty( "VTK_TEXTURE_DIR_PATH" )->GetID() );
-                }
-            }
-        }
-		*/
-
-		/*
-        //Now load up the dataset
-        {
-            const std::string tempDataSetFilename =
-                lastDataAdded->GetFileName();
-            std::cout << "|\tLoading data for file "
-                      << tempDataSetFilename
-                      << std::endl;
-            lastDataAdded->SetArrow(
-                ves::xplorer::ModelHandler::instance()->GetArrow() );
-            //Check and see if the data is part of a transient series
-            if( tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" ) )
-            {
-                std::string precomputedSurfaceDir =
-                    tempInfoPacket->GetProperty( "VTK_TRANSIENT_SERIES" )->
-                    GetDataString();
-                lastDataAdded->LoadTransientData( precomputedSurfaceDir );
-                std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetTransientDataSets();
-                for( size_t i = 0; i < dataSetVector.size(); ++i )
-                {
-                    ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ], tempInfoPacket );
-                }
-            }
-            else
-            {
-                lastDataAdded->LoadData();
-                std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetChildDataSets();
-                for( size_t i = 0; i < dataSetVector.size(); ++i )
-                {
-                    ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ], tempInfoPacket );
-                }
-                ves::xplorer::event::data::WriteDatabaseEntry( lastDataAdded, tempInfoPacket );
-            }
-            //If the data load failed
-            if( !lastDataAdded->GetDataSet() )
-            {
-                std::cout << "|\tData failed to load." << std::endl;
-                activeModel->DeleteDataSet( tempDataSetFilename );
-            }
-            else
-            {
-                std::cout << "|\tData is loaded for file "
-                          << tempDataSetFilename
-                          << std::endl;
-                if( lastDataAdded->GetParent() == lastDataAdded )
-                {
-                    activeModel->GetDCS()->
-                        addChild( lastDataAdded->GetDCS() );
-                    activeModel->SetActiveDataSet( lfx::core::vtk::DataSetPtr() );
-                }
-                switchwire::SingleShotSignal< void, const std::string& >( "LoadDatasetFromFile.DatafileLoaded", tempDataSetFilename );
-            }
-        }
-        //////////////////////////////////////////////////////////////
-        if( tempInfoPacket->GetProperty( "Create Surface Wrap" ) )
-        {
-            unsigned int surfaceToggle = 0;
-            tempInfoPacket->GetProperty( "Create Surface Wrap" )->
-                GetData( surfaceToggle );
-            if( surfaceToggle )
-            {
-                //Create surface
-                lastDataAdded->CreateSurfaceWrap();
-            }
-        }
-			*/
+		// insert the dataset info into the database
+		WriteDatabaseEntry( lastDataAdded );
     }
 
 
