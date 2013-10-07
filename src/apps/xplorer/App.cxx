@@ -158,6 +158,10 @@
 // --- STL Includes --- //
 #include <iostream>
 
+// --- latticefx Includes --- //
+#include <latticefx/core/Log.h>
+#include <latticefx/core/LogMacros.h>
+
 using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::xplorer;
@@ -196,6 +200,13 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO( "Starting App" );
+
+#ifdef _DEBUG
+
+	lfx::core::Log::instance()->setPriority( lfx::core::Log::PrioTrace,  lfx::core::Log::Console );
+    //Log::instance()->setPriority( Log::PrioInfo, Log::Console );
+    lfx::core::Log::instance()->setPriority( lfx::core::Log::PrioTrace, "lfx.core.page" );
+#endif
 
     {
         //OSG specific settings
