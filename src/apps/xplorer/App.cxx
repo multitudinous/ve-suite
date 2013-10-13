@@ -418,7 +418,8 @@ void App::contextInit()
         //Setup the lfx basic texture sizing
         {
             const vrj::ViewportPtr viewport =
-                vrj::opengl::DrawManager::instance()->currentUserData()->getViewport();
+                vrj::opengl::DrawManager::instance()->currentUserData()->
+                getGlWindow()->getDisplay()->getViewport(0);
             //Get and set the GLTransformInfo associated w/ this viewport and context
             scenegraph::GLTransformInfoPtr glTI =
                 m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
@@ -428,10 +429,9 @@ void App::contextInit()
 			int y = glTI->GetViewportOriginY();
 			int w = glTI->GetViewportWidth();
 			int h = glTI->GetViewportHeight();
-			osg::Viewport *vp = new osg::Viewport(x, y, w, h);
+            osg::ref_ptr< osg::Viewport > vp = new osg::Viewport(x, y, w, h);
             
-            
-            lfx::core::PagingThread::instance()->setTransforms( projectionMatrixOSG, vp );
+            lfx::core::PagingThread::instance()->setTransforms( projectionMatrixOSG, vp.get() );
         }
         //ves::conductor::UIManager::instance()->AddUIToNode( camera );
         m_numContexts += 1;
