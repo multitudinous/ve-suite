@@ -302,7 +302,7 @@ void UpdateLfxProperty(const std::string &dataSetName, const std::string &propNa
 	}
 
 
-	lfx::core::Renderer::UniformInfo &ui  = prender->getUniform( propName );
+	/*lfx::core::Renderer::UniformInfo &ui  = prender->getUniform( propName );
 	if( ui._prototype->getName() != propName )
 	{
 		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxUniform - uniform: " << propName << " not found!" << std::endl << vprDEBUG_FLUSH;
@@ -391,7 +391,7 @@ void UpdateLfxProperty(const std::string &dataSetName, const std::string &propNa
 			vprDEBUG( vesDBG, 0 ) << "|\tunsupported uniform type: " << propName << std::endl << vprDEBUG_FLUSH;
 			break;
 		}
-	}
+	}*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
