@@ -263,7 +263,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
         parentNode = static_cast< osg::PositionAttitudeTransform* >( node.get() );
 		//m_lfxGroup = node;
 
-#if 1
+#if 0
 		// render a sphere for the volume for debugging purposes
 		osg::Vec3d posOrig = parentNode->getPosition();
 
