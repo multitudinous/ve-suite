@@ -413,7 +413,23 @@ void App::contextInit()
         *mViewportsChanged = false;
         m_sceneGLTransformInfo->Initialize();
         mSceneRenderToTexture->InitializeRTT();
+        
+        //Setup the lfx basic texture sizing
+        {
+            const vrj::ViewportPtr viewport =
+                vrj::opengl::DrawManager::instance()->currentUserData()->getViewport();
+            //Get and set the GLTransformInfo associated w/ this viewport and context
+            scenegraph::GLTransformInfoPtr glTI =
+                m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
+            const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
 
+            //glTI->GetViewportOriginX();
+            //glTI->GetViewportOriginY();
+            //glTI->GetViewportWidth();
+            //glTI->GetViewportHeight();
+            
+            //lfx::core::PagingThread::instance()->setTransforms( projectionMatrixOSG, svCamera->getViewport() );
+        }
         //ves::conductor::UIManager::instance()->AddUIToNode( camera );
         m_numContexts += 1;
     }
@@ -1220,6 +1236,10 @@ void App::draw()
         {
             sv->setViewport( &( glTI->GetBdfxRTTViewport() ) );
         }
+        
+        //Update the pageing thread
+        //viewMatrixOSG
+        //lfx::core::PagingThread::instance()->setTransforms( osg::Vec3( eye ) );
     }
     else
     {
