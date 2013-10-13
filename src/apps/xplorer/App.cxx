@@ -161,6 +161,7 @@
 // --- latticefx Includes --- //
 #include <latticefx/core/Log.h>
 #include <latticefx/core/LogMacros.h>
+#include <latticefx/core/PagingThread.h>
 
 using namespace ves::open::xml;
 using namespace ves::conductor;
@@ -423,12 +424,14 @@ void App::contextInit()
                 m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
             const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
 
-            //glTI->GetViewportOriginX();
-            //glTI->GetViewportOriginY();
-            //glTI->GetViewportWidth();
-            //glTI->GetViewportHeight();
+			int x = glTI->GetViewportOriginX();
+			int y = glTI->GetViewportOriginY();
+			int w = glTI->GetViewportWidth();
+			int h = glTI->GetViewportHeight();
+			osg::Viewport *vp = new osg::Viewport(x, y, w, h);
             
-            //lfx::core::PagingThread::instance()->setTransforms( projectionMatrixOSG, svCamera->getViewport() );
+            
+            lfx::core::PagingThread::instance()->setTransforms( projectionMatrixOSG, vp );
         }
         //ves::conductor::UIManager::instance()->AddUIToNode( camera );
         m_numContexts += 1;
@@ -1238,8 +1241,9 @@ void App::draw()
         }
         
         //Update the pageing thread
-        //viewMatrixOSG
-        //lfx::core::PagingThread::instance()->setTransforms( osg::Vec3( eye ) );
+		osg::Vec3d eye, center, up;
+		viewMatrixOSG.getLookAt( eye, center, up );
+        lfx::core::PagingThread::instance()->setTransforms( osg::Vec3( eye ) );
     }
     else
     {
