@@ -48,7 +48,7 @@
 
 #include <latticefx/core/DataSet.h>
 #include <latticefx/core/PagingThread.h>
-#include <osgwTools/shapes.h>
+#include <osgwTools/Shapes.h>
 
 // --- OSG Includes --- //
 #include <osg/BlendFunc>
