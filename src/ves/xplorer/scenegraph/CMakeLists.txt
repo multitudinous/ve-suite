@@ -53,7 +53,7 @@ list( APPEND ${VES_TARGET_NAME}_BOOST_DEPS ${Boost_PROGRAM_OPTIONS_LIBRARY} )
 list( APPEND ${VES_TARGET_NAME}_BOOST_DEPS ${Boost_REGEX_LIBRARY} )
 
 add_library(${VES_TARGET_NAME} SHARED ${srcs} ${VES_PUBLIC_HEADERS})
-target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${POCO_LIBRARIES})
+#target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${POCO_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${${VES_TARGET_NAME}_BOOST_DEPS} )
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${OSG_LIBRARIES} ${switchwire_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${propertystore_LIBRARIES})
