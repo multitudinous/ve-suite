@@ -56,7 +56,7 @@
 #include <osg/PositionAttitudeTransform>
 #include <osg/Viewport>
 
-//#include <osgDB/WriteFile>
+#include <osgDB/WriteFile>
 
 #include <latticefx/core/vtk/DataSet.h>
 
@@ -260,7 +260,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
 		if( !ptr ) return;
 
         osg::ref_ptr< osg::Node > node = ptr->getSceneData();
-        parentNode = static_cast< osg::PositionAttitudeTransform* >( node.get() );
+        parentNode = dynamic_cast< osg::PositionAttitudeTransform* >( node.get() );
 		//m_lfxGroup = node;
 
 #if 0
@@ -301,47 +301,8 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             worldNode->addChild( parentNode.get() );
         }
 
-		// set up lfx paging!
-
-		/*
-		ves::xplorer::scenegraph::GLTransformInfoPtr transinfo = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentGLTransformInfo();
-
-		ves::xplorer::scenegraph::SceneManager* sm = ves::xplorer::scenegraph::SceneManager::instance();
-		ves::xplorer::scenegraph::camera::CameraManager& cm = sm->GetCameraManager();
-		ves::xplorer::scenegraph::camera::CameraObject *camobj = cm.GetActiveCameraObject();
-		osg::Camera& cam = camobj->GetCamera();
-
-		// Really we would need to change the projection matrix and viewport
-		// in an event handler that catches window size changes. We're cheating.
-		lfx::core::PagingThread* pageThread( lfx::core::PagingThread::instance() );
-		pageThread->setTransforms( cam.getProjectionMatrix(), cam.getViewport() );
-		*/
-
-
-		/*
-		ves::xplorer::scenegraph::GLTransformInfoPtr transinfo = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentGLTransformInfo();
-		ves::xplorer::scenegraph::SceneManager::instance()->GetCameraManager()
-
-		osg::Viewport *vp = new osg::Viewport(transinfo->GetViewportOriginX(), transinfo->GetViewportOriginY(), transinfo->GetViewportWidth(), transinfo->GetViewportHeight());
-	
-		// Really we would need to change the projection matrix and viewport
-		// in an event handler that catches window size changes. We're cheating.
-		lfx::core::PagingThread* pageThread( lfx::core::PagingThread::instance() );
-		pageThread->setTransforms( transinfo->GetProjectionMatrixOSG(), vp );
-
-		delete vp;
-		*/
-		/*
-		osg::Vec3d eye, center, up;
-		while( !viewer.done() )
-		{
-			tbm->getInverseMatrix().getLookAt( eye, center, up );
-			pageThread->setTransforms( osg::Vec3( eye ) );
-			viewer.frame();
-		}
-		*/
+        //osgDB::writeNodeFile( *(ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()), "lfx_volume_data.osg" );
     }
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdGraphicsObject::SetTypeOfViz( VizType x )

@@ -388,6 +388,8 @@ void SteadyStateVizHandler::ReadyLfxDataObj()
 	//temp->SetGeodes( tempVisObject ); // TODO: THIS SEEMS IMPORTANT right now handling it in AddGraphicsObjectToSceneGraph
 	temp->SetUUID( m_lfxuuid );
     temp->AddGraphicsObjectToSceneGraph();
+    m_frameTime = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentTime();
+    m_playControl->setAnimationTime( 0.0 );
 
 	//First check to see if we are updating a feature or if this is
 	//a brand new feature
