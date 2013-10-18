@@ -52,6 +52,7 @@
 #include <osg/FrameStamp>
 #include <osg/Matrix>
 #include <osg/Switch>
+#include <osg/Texture2D>
 
 #include <osgwMx/MxCore.h>
 
@@ -320,6 +321,12 @@ public:
     ///Check whether to use the master node as the controller for the UI
     bool IsDesktopClusterControl() const;
 
+    ///Set the RTT depth texture to be used by other areas of the code
+    void SetDepthTexture( osg::Texture2D* depthTexture );
+    
+    ///Get the depth texture
+    osg::Texture2D* GetDepthTexture();
+
 protected:
     ///Create the model for the logo
     void _createLogo();
@@ -503,6 +510,9 @@ private:
     
     ///Set if the master node in cluster mode is used for desktop control
     bool m_isDesktopClusterControl;
+    
+    ///The RTT depth texture
+    osg::ref_ptr< osg::Texture2D > m_depthTexture;
 };
 } //end scenegraph
 } //end xplorer

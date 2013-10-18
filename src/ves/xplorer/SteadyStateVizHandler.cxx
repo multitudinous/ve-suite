@@ -97,6 +97,8 @@
 
 #include <latticefx/core/vtk/DataSet.h>
 
+#include <osgwTools/MultiCameraProjectionMatrix.h>
+
 #include <ves/xplorer/data/DatabaseManager.h>
 
 #include <switchwire/EventManager.h>
@@ -376,6 +378,9 @@ void SteadyStateVizHandler::ReadyLfxDataObj()
 	lfx::core::DataSetPtr ds = ModelHandler::instance()->GetActiveModel()->GetActiveLfxDataSet();
 	if( !ds ) return;
 
+    //Make sure the lfx camera is ready to go
+    InitializeLfxCamera();
+    
 	// if object needs updated then already have a graphics object
 	cfdGraphicsObject* const temp = new cfdGraphicsObject();
 	temp->SetTypeOfViz( cfdGraphicsObject::LFX_DS );
@@ -812,7 +817,56 @@ bool SteadyStateVizHandler::GetLfxDataObjReady()
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::SetLfxDataObjReady( bool b, const std::string &uuid ) 
 {  
-	m_lfxuuid = uuid; m_lfxDataObjReady = b; 
+	m_lfxuuid = uuid;
+    m_lfxDataObjReady = b;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SteadyStateVizHandler::InitializeLfxCamera()
+{
+    if( m_lfxCam.valid() )
+    {
+        return;
+    }
+    
+    //
+    // Step 1: Create a Camera for rendering the LatticeFX volume.
+    //
+    m_lfxCam = new osg::Camera;
+    m_lfxCam->setName( "latticeFX-VolumeCamera" );
+    
+    m_lfxCam->setClearMask( 0 );
+    m_lfxCam->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER, osg::Camera::FRAME_BUFFER );
+    
+    m_lfxCam->setReferenceFrame( osg::Camera::RELATIVE_RF );
+    m_lfxCam->setRenderOrder( osg::Camera::POST_RENDER );
+
+    //
+    // Step 2:
+    // Create a cull callback on the lfx Camera that will create a projection
+    // matrix uniform with near & far planes that encompass both the lfx Camera
+    // and the root Camera.
+    osgwTools::MultiCameraProjectionMatrix* subCullCB( new osgwTools::MultiCameraProjectionMatrix() );
+    m_lfxCam->setCullCallback( subCullCB );
+
+    //
+    // Step 3:
+    // Add uniforms required by Lfx ray traced volume rendering shaders,
+    // which Lfx itself is unable to set. The application MUST specify
+    // this uniforms.
+    //
+    osg::ref_ptr< osg::Texture2D > depthTex =
+        scenegraph::SceneManager::instance()->GetDepthTexture();
+    osg::Vec2f winSize( depthTex->getTextureWidth(), depthTex->getTextureHeight() );
+    osg::ref_ptr< osg::Uniform > windowSize = new osg::Uniform( "windowSize", winSize );
+
+    osg::StateSet* stateSet( m_lfxCam->getOrCreateStateSet() );
+    
+    stateSet->addUniform( windowSize.get() );
+    
+    stateSet->setTextureAttributeAndModes( 1, depthTex.get() );
+    osg::Uniform* uniform = new osg::Uniform( osg::Uniform::SAMPLER_2D, "sceneDepth" );
+    uniform->set( 1 );
+    stateSet->addUniform( uniform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer

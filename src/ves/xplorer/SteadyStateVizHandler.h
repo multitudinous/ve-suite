@@ -186,8 +186,13 @@ public:
     ///\param vizKey The key to a specific viz object
     cfdObjects* GetVizObject( VizKeyPair const& vizKey );
 
+    ///Get the bool providing the state of the lfx volume call
 	bool GetLfxDataObjReady();
+    ///Set the data triggering the creation of volume viz data
 	void SetLfxDataObjReady( bool b, const std::string &uuid );
+
+    ///Initialize the LFX cam
+    void InitializeLfxCamera();
 
 private:
 
@@ -248,7 +253,10 @@ private:
     double m_frameTime;
 	/// LfxDataObject Ready
 	bool m_lfxDataObjReady;
+    ///The uuid of the lfx volume viz data
 	std::string m_lfxuuid;
+    ///The lfx volume camer
+    osg::ref_ptr< osg::Camera > m_lfxCam;
 };
 }
 }
