@@ -132,7 +132,7 @@ public:
     lfx::core::vtk::DataSetPtr GetDataSet();
 
     ///add "child node" to scene graph
-    void AddGraphicsObjectToSceneGraph();
+    void AddGraphicsObjectToSceneGraph( osg::Camera *plfxCam=NULL );
 
     ///Set type of viz: trans, classic, texture
     ///\param VizType

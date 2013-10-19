@@ -392,7 +392,7 @@ void SteadyStateVizHandler::ReadyLfxDataObj()
 	temp->SetWorldNode( ModelHandler::instance()->GetActiveModel()->GetDCS() );
 	//temp->SetGeodes( tempVisObject ); // TODO: THIS SEEMS IMPORTANT right now handling it in AddGraphicsObjectToSceneGraph
 	temp->SetUUID( m_lfxuuid );
-    temp->AddGraphicsObjectToSceneGraph();
+    temp->AddGraphicsObjectToSceneGraph( m_lfxCam.get() );
     m_frameTime = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentTime();
     m_playControl->setAnimationTime( 0.0 );
 

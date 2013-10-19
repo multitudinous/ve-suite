@@ -129,7 +129,7 @@ lfx::core::vtk::DataSetPtr cfdGraphicsObject::GetDataSet()
     return m_dataset;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
+void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( osg::Camera *plfxCam )
 {
     if( type == CLASSIC )
     {
@@ -259,9 +259,27 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
 		lfx::core::DataSetPtr ptr = model->GetActiveLfxDataSet();
 		if( !ptr ) return;
 
+		if( !plfxCam )
+		{
+			vprDEBUG( vesDBG, 1 ) << "|\t\tUnExpected Error: LfxCamera node is required" << std::endl << vprDEBUG_FLUSH; 
+			return;
+		}
+
+		if( !worldNode->containsNode( plfxCam ) )
+		{
+			vprDEBUG( vesDBG, 1 ) << "|\t\tAdding LfxCamera to worldDCS" << std::endl << vprDEBUG_FLUSH; 
+			worldNode->addChild( plfxCam );
+		}
+
         osg::ref_ptr< osg::Node > node = ptr->getSceneData();
         parentNode = dynamic_cast< osg::PositionAttitudeTransform* >( node.get() );
 		//m_lfxGroup = node;
+
+		if( !plfxCam->containsNode( parentNode.get() ) )
+		{
+			vprDEBUG( vesDBG, 1 ) << "|\t\tAdding parentNode to LfxCamera" << std::endl << vprDEBUG_FLUSH; 
+            plfxCam ->addChild( parentNode.get() );
+		}
 
 #if 0
 		// render a sphere for the volume for debugging purposes
@@ -291,14 +309,6 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
             //m_playControl = lfx::core::PlayControlPtr( new lfx::core::PlayControl() );
             m_playControl->addScene( node.get() );
             m_playControl->setTimeRange( ptr->getTimeRange() );
-        }
-
-		// is parent on graph
-        if( !worldNode->containsNode( parentNode.get() ) )
-        {
-            vprDEBUG( vesDBG, 1 ) << "|\t\tAdding parentNode to worldDCS"
-                                  << std::endl << vprDEBUG_FLUSH; 
-            worldNode->addChild( parentNode.get() );
         }
 
         //osgDB::writeNodeFile( *(ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()), "lfx_volume_data.osg" );
