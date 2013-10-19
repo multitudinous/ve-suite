@@ -1240,10 +1240,28 @@ void App::draw()
             sv->setViewport( &( glTI->GetBdfxRTTViewport() ) );
         }
         
-        //Update the pageing thread
+        //Update the paging thread
 		osg::Vec3d eye, center, up;
 		viewMatrixOSG.getLookAt( eye, center, up );
-        lfx::core::PagingThread::instance()->setTransforms( osg::Vec3( eye ) );
+		if( glTI )
+		{
+			// really only need to set the projection matrix and viewport when it changes, but not sure how to do that.
+			// so updating every frame for now.
+			const osg::Matrixd pm = glTI->GetProjectionMatrixOSG();
+
+			int x = glTI->GetViewportOriginX();
+			int y = glTI->GetViewportOriginY();
+			int w = glTI->GetViewportWidth();
+			int h = glTI->GetViewportHeight();
+            osg::ref_ptr< osg::Viewport > vp = new osg::Viewport(x, y, w, h);
+			lfx::core::PagingThread::instance()->setTransforms( osg::Vec3( eye ), pm, vp.get() );
+		}
+		else
+		{
+			lfx::core::PagingThread::instance()->setTransforms( osg::Vec3( eye ) );
+		}
+
+		
     }
     else
     {
