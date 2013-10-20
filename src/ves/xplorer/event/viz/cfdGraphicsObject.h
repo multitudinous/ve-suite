@@ -103,7 +103,7 @@ public:
     ///parent node is a child of the world node and has all of the viz associated with
     ///a given dataset under it.
     ///\param input The PAT node from the DataSet.
-    void SetParentNode( osg::PositionAttitudeTransform* const input );
+    void SetParentNode( osg::Group* const input );
 
     ///node the parent node will be added to
     ///The world node is typically the DCS used by the model. This is
@@ -132,7 +132,7 @@ public:
     lfx::core::vtk::DataSetPtr GetDataSet();
 
     ///add "child node" to scene graph
-    void AddGraphicsObjectToSceneGraph( osg::Camera *plfxCam=NULL );
+    void AddGraphicsObjectToSceneGraph();
 
     ///Set type of viz: trans, classic, texture
     ///\param VizType
@@ -142,7 +142,7 @@ public:
     void SetGeodes( ves::xplorer::cfdObjects* const input );
 
     ///Return parent node for a this object
-    osg::PositionAttitudeTransform* GetParentNode();
+    osg::Group* GetParentNode();
 
     ///Clear geodes vector and geode from memory and the graph
     void RemoveGeodeFromDCS();
@@ -171,7 +171,7 @@ public:
 protected:
     ///SceneGraph Geode
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;
-    osg::ref_ptr< osg::PositionAttitudeTransform > parentNode;///<SceneGraph parent node.
+    osg::ref_ptr< osg::Group > parentNode;///<SceneGraph parent node.
     ves::xplorer::scenegraph::DCS* worldNode;///<SceneGraph world node.
     VizType type;///<Type of viz: trans, classic, texture.
 

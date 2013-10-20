@@ -376,7 +376,10 @@ void SteadyStateVizHandler::ReadyLfxDataObj()
 	// TODO: DO I NEED AN OBJECT IN THE m_visObjectSGQueue or is this new FLAG METHOD OK TO TRIGGER THIS METHOD
 
 	lfx::core::DataSetPtr ds = ModelHandler::instance()->GetActiveModel()->GetActiveLfxDataSet();
-	if( !ds ) return;
+	if( !ds )
+    {
+        return;
+    }
 
     //Make sure the lfx camera is ready to go
     InitializeLfxCamera();
@@ -384,15 +387,14 @@ void SteadyStateVizHandler::ReadyLfxDataObj()
 	// if object needs updated then already have a graphics object
 	cfdGraphicsObject* const temp = new cfdGraphicsObject();
 	temp->SetTypeOfViz( cfdGraphicsObject::LFX_DS );
-            
 	temp->SetPlayControl( m_playControl );
-	//temp->SetParentNode( ds->GetDCS() );
+	temp->SetParentNode( m_lfxCam.get() );
     temp->SetLfxDataSet( ds );
     temp->SetActiveModel( ModelHandler::instance()->GetActiveModel() );
 	temp->SetWorldNode( ModelHandler::instance()->GetActiveModel()->GetDCS() );
-	//temp->SetGeodes( tempVisObject ); // TODO: THIS SEEMS IMPORTANT right now handling it in AddGraphicsObjectToSceneGraph
 	temp->SetUUID( m_lfxuuid );
-    temp->AddGraphicsObjectToSceneGraph( m_lfxCam.get() );
+
+    temp->AddGraphicsObjectToSceneGraph();
     m_frameTime = ves::xplorer::scenegraph::SceneManager::instance()->GetCurrentTime();
     m_playControl->setAnimationTime( 0.0 );
 
@@ -405,9 +407,6 @@ void SteadyStateVizHandler::ReadyLfxDataObj()
 	graphics_objects_map::value_type p = std::make_pair( vpr::GUID( temp->GetUUID() ), temp );
     m_graphicsObjectMap.insert( p );
 
-	// Resetting these variables is very important
-	// tempVisObject->SetUpdateFlag( false );
-    // tempVisObject->ClearGeodes();
 	vprDEBUG( vesDBG, 2 ) << "|\tDone Creating Objects" << std::endl << vprDEBUG_FLUSH;
 
 	m_lfxDataObjReady = false;
@@ -459,7 +458,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
                 temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             }
             temp->SetPlayControl( m_playControl );
-            //temp->SetParentNode( tempVisObject->GetActiveDataSet()->GetDCS() );
+            temp->SetParentNode( tempVisObject->GetActiveDataSet()->GetDCS() );
             temp->SetDataSet( tempVisObject->GetActiveDataSet() );
             temp->SetActiveModel( ModelHandler::instance()->GetActiveModel() );
             temp->SetWorldNode( ModelHandler::instance()->GetActiveModel()->GetDCS() );

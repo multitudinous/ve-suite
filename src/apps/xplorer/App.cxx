@@ -414,25 +414,7 @@ void App::contextInit()
         *mViewportsChanged = false;
         m_sceneGLTransformInfo->Initialize();
         mSceneRenderToTexture->InitializeRTT();
-        
-        //Setup the lfx basic texture sizing
-        {
-            const vrj::ViewportPtr viewport =
-                vrj::opengl::DrawManager::instance()->currentUserData()->
-                getGlWindow()->getDisplay()->getViewport(0);
-            //Get and set the GLTransformInfo associated w/ this viewport and context
-            scenegraph::GLTransformInfoPtr glTI =
-                m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
-            const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
 
-			int x = glTI->GetViewportOriginX();
-			int y = glTI->GetViewportOriginY();
-			int w = glTI->GetViewportWidth();
-			int h = glTI->GetViewportHeight();
-            osg::ref_ptr< osg::Viewport > vp = new osg::Viewport(x, y, w, h);
-            
-            lfx::core::PagingThread::instance()->setTransforms( projectionMatrixOSG, vp.get() );
-        }
         //ves::conductor::UIManager::instance()->AddUIToNode( camera );
         m_numContexts += 1;
     }
@@ -1048,6 +1030,24 @@ void App::contextPreDraw()
                 {
                     m_render = true;
                 }
+
+                //Setup the lfx basic texture sizing
+                {
+                    const vrj::ViewportPtr viewport =
+                        vrj::opengl::DrawManager::instance()->currentUserData()->
+                        getGlWindow()->getDisplay()->getViewport(0);
+                    //Get and set the GLTransformInfo associated w/ this viewport and context
+                    scenegraph::GLTransformInfoPtr glTI =
+                        m_sceneGLTransformInfo->GetGLTransformInfo( viewport );
+                    const osg::Matrixd projectionMatrixOSG = glTI->GetProjectionMatrixOSG();
+                    
+                    int x = glTI->GetViewportOriginX();
+                    int y = glTI->GetViewportOriginY();
+                    int w = glTI->GetViewportWidth();
+                    int h = glTI->GetViewportHeight();
+                    osg::ref_ptr< osg::Viewport > vp = new osg::Viewport(x, y, w, h);
+                    lfx::core::PagingThread::instance()->setTransforms( projectionMatrixOSG, vp.get() );
+                }
             }
 
             *mViewportsChanged = true;
@@ -1243,25 +1243,13 @@ void App::draw()
         //Update the paging thread
 		osg::Vec3d eye, center, up;
 		viewMatrixOSG.getLookAt( eye, center, up );
-		if( glTI )
-		{
-			// really only need to set the projection matrix and viewport when it changes, but not sure how to do that.
-			// so updating every frame for now.
-			const osg::Matrixd pm = glTI->GetProjectionMatrixOSG();
-
-			int x = glTI->GetViewportOriginX();
-			int y = glTI->GetViewportOriginY();
-			int w = glTI->GetViewportWidth();
-			int h = glTI->GetViewportHeight();
-            osg::ref_ptr< osg::Viewport > vp = new osg::Viewport(x, y, w, h);
-			lfx::core::PagingThread::instance()->setTransforms( osg::Vec3( eye ), pm, vp.get() );
-		}
-		else
-		{
-			lfx::core::PagingThread::instance()->setTransforms( osg::Vec3( eye ) );
-		}
-
-		
+        // really only need to set the projection matrix and viewport when
+        // it changes, but not sure how to do that. so updating every frame for now.
+        //osg::ref_ptr< osg::Viewport > vp =
+        //    new osg::Viewport(glTI->GetViewportOriginX(), glTI->GetViewportOriginY(),
+        //                      glTI->GetViewportWidth(), glTI->GetViewportHeight());
+        //lfx::core::PagingThread::instance()->setTransforms( osg::Vec3( eye ), projectionMatrixOSG, vp.get() );
+        lfx::core::PagingThread::instance()->setTransforms( osg::Vec3( eye ) );
     }
     else
     {

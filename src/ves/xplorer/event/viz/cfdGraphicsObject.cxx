@@ -99,7 +99,7 @@ cfdGraphicsObject& cfdGraphicsObject::operator=( const cfdGraphicsObject& input 
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdGraphicsObject::SetParentNode( osg::PositionAttitudeTransform* const input )
+void cfdGraphicsObject::SetParentNode( osg::Group* const input )
 {
     parentNode = input;
 }
@@ -129,7 +129,7 @@ lfx::core::vtk::DataSetPtr cfdGraphicsObject::GetDataSet()
     return m_dataset;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( osg::Camera *plfxCam )
+void cfdGraphicsObject::AddGraphicsObjectToSceneGraph()
 {
     if( type == CLASSIC )
     {
@@ -257,28 +257,28 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( osg::Camera *plfxCam )
 	else if( type == LFX_DS )
     {
 		lfx::core::DataSetPtr ptr = model->GetActiveLfxDataSet();
-		if( !ptr ) return;
+		if( !ptr )
+        {
+            return;
+        }
 
-		if( !plfxCam )
+		if( !parentNode.valid() )
 		{
 			vprDEBUG( vesDBG, 1 ) << "|\t\tUnExpected Error: LfxCamera node is required" << std::endl << vprDEBUG_FLUSH; 
 			return;
 		}
 
-		if( !worldNode->containsNode( plfxCam ) )
+		if( !worldNode->containsNode( parentNode.get() ) )
 		{
 			vprDEBUG( vesDBG, 1 ) << "|\t\tAdding LfxCamera to worldDCS" << std::endl << vprDEBUG_FLUSH; 
-			worldNode->addChild( plfxCam );
+			worldNode->addChild( parentNode.get() );
 		}
 
-        osg::ref_ptr< osg::Node > node = ptr->getSceneData();
-        parentNode = dynamic_cast< osg::PositionAttitudeTransform* >( node.get() );
-		//m_lfxGroup = node;
-
-		if( !plfxCam->containsNode( parentNode.get() ) )
+        osg::ref_ptr< osg::Node > lfxNode = ptr->getSceneData();
+		if( !parentNode->containsNode( lfxNode.get() ) )
 		{
 			vprDEBUG( vesDBG, 1 ) << "|\t\tAdding parentNode to LfxCamera" << std::endl << vprDEBUG_FLUSH; 
-            plfxCam ->addChild( parentNode.get() );
+            parentNode->addChild( lfxNode.get() );
 		}
 
 #if 0
@@ -307,7 +307,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( osg::Camera *plfxCam )
             m_transient = true;
             // Play the time series animation
             //m_playControl = lfx::core::PlayControlPtr( new lfx::core::PlayControl() );
-            m_playControl->addScene( node.get() );
+            m_playControl->addScene( lfxNode.get() );
             m_playControl->setTimeRange( ptr->getTimeRange() );
         }
 
@@ -391,7 +391,7 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* const input )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::PositionAttitudeTransform* cfdGraphicsObject::GetParentNode()
+osg::Group* cfdGraphicsObject::GetParentNode()
 {
     return parentNode.get();
 }

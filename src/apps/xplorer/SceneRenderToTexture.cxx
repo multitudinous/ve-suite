@@ -491,11 +491,14 @@ void SceneRenderToTexture::InitRTTCamera(
         //glowMap->setSubloadCallback( new Subload2DCallback() );
 
         //Set up interleaved depth/stencil buffer
-        osg::ref_ptr< osg::Texture2D > depthStencilMap = CreateViewportTexture(
-                   GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
-                   osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
-                   viewportDimensions );
-        scenegraph::SceneManager::instance()->SetDepthTexture( depthStencilMap.get() );
+        if( !m_depthTexture.valid() )
+        {
+            m_depthTexture = CreateViewportTexture(
+                       GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
+                       osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
+                       viewportDimensions );
+            scenegraph::SceneManager::instance()->SetDepthTexture( m_depthTexture.get() );
+        }
 
         //Attach a texture and use it as the render target
         //If you set one buffer to multisample, they all get set to multisample
@@ -517,7 +520,7 @@ void SceneRenderToTexture::InitRTTCamera(
             0, 0, false, maxSamples, maxSamples );
         //Use interleaved depth/stencil renderbuffer
         rttCamera->attach(
-            osg::Camera::PACKED_DEPTH_STENCIL_BUFFER, depthStencilMap.get(),
+            osg::Camera::PACKED_DEPTH_STENCIL_BUFFER, m_depthTexture.get(),
             0, 0, false, maxSamples, maxSamples );
         //rttCamera->attach(
         //    osg::Camera::PACKED_DEPTH_STENCIL_BUFFER, GL_DEPTH_STENCIL_EXT );

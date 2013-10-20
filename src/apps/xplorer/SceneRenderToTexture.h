@@ -233,6 +233,9 @@ private:
     
     ///Window name
     std::string m_desktopWindowName;
+    
+    ///The depth texture is shared across all of the rtt pipelines
+    osg::ref_ptr< osg::Texture2D > m_depthTexture;
 };
 } //end xplorer
 } //end ves
