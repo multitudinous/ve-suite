@@ -1266,8 +1266,10 @@ void App::draw()
     {
         //vpr::Guard< vpr::Mutex > sv_guard( mValueLock );
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->cull", 20 );
-        //Not sure if it should be used - came from osgViewer::Renderer::cull/draw
-        //sv->inheritCullSettings( *(sv->getCamera()) );
+        // Comes from osgViewer::Renderer::cull/draw.
+        // Must be done to copy CullSetting values from Camera into CullVisitor.
+        // Required for latticeFx volume rendering. See osgwTools::MultiCameraProjectionMatrix.
+        sv->inheritCullSettings( *(sv->getCamera()) );
         sv->cull();
     }
     //Profile the draw call
