@@ -834,7 +834,10 @@ void SteadyStateVizHandler::InitializeLfxCamera()
     m_lfxCam->setName( "latticeFX-VolumeCamera" );
     
     m_lfxCam->setClearMask( 0 );
-    m_lfxCam->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER, osg::Camera::FRAME_BUFFER );
+    m_lfxCam->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER_OBJECT );
+    // TBD Need to attach the color buffer(s) that VES wants us to render into.
+    //m_lfxCam->attach( ... );
+    //m_lfxCam->attach( ... );
     
     m_lfxCam->setReferenceFrame( osg::Camera::RELATIVE_RF );
     m_lfxCam->setRenderOrder( osg::Camera::POST_RENDER );
