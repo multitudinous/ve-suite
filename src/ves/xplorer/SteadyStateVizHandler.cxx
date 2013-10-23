@@ -827,6 +827,8 @@ void SteadyStateVizHandler::InitializeLfxCamera()
         return;
     }
     
+    std::vector< osg::ref_ptr< osg::Texture2D > > rttTex =
+        scenegraph::SceneManager::instance()->GetRTTTextures();
     //
     // Step 1: Create a Camera for rendering the LatticeFX volume.
     //
@@ -836,6 +838,13 @@ void SteadyStateVizHandler::InitializeLfxCamera()
     m_lfxCam->setClearMask( 0 );
     m_lfxCam->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT, osg::Camera::FRAME_BUFFER_OBJECT );
     // TBD Need to attach the color buffer(s) that VES wants us to render into.
+    m_lfxCam->attach(
+                      osg::Camera::COLOR_BUFFER0, rttTex[0].get(),
+                     0, 0);//, false, maxSamples, maxSamples );
+    m_lfxCam->attach(
+                      osg::Camera::COLOR_BUFFER1, rttTex[1].get(),
+                     0, 0);//, false, maxSamples, maxSamples );
+
     //m_lfxCam->attach( ... );
     //m_lfxCam->attach( ... );
     
@@ -856,16 +865,15 @@ void SteadyStateVizHandler::InitializeLfxCamera()
     // which Lfx itself is unable to set. The application MUST specify
     // this uniforms.
     //
-    osg::ref_ptr< osg::Texture2D > depthTex =
-        scenegraph::SceneManager::instance()->GetDepthTexture();
-    osg::Vec2f winSize( depthTex->getTextureWidth(), depthTex->getTextureHeight() );
+
+    osg::Vec2f winSize( rttTex[2]->getTextureWidth(), rttTex[2]->getTextureHeight() );
     osg::ref_ptr< osg::Uniform > windowSize = new osg::Uniform( "windowSize", winSize );
 
     osg::StateSet* stateSet( m_lfxCam->getOrCreateStateSet() );
     
     stateSet->addUniform( windowSize.get() );
     
-    stateSet->setTextureAttributeAndModes( 1, depthTex.get() );
+    stateSet->setTextureAttributeAndModes( 1, rttTex[2].get() );
     osg::Uniform* uniform = new osg::Uniform( osg::Uniform::SAMPLER_2D, "sceneDepth" );
     uniform->set( 1 );
     stateSet->addUniform( uniform );

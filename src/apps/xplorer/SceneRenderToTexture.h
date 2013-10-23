@@ -236,6 +236,12 @@ private:
     
     ///The depth texture is shared across all of the rtt pipelines
     osg::ref_ptr< osg::Texture2D > m_depthTexture;
+    ///The depth texture is shared across all of the rtt pipelines
+    osg::ref_ptr< osg::Texture2D > m_colorTexture;
+    ///The depth texture is shared across all of the rtt pipelines
+    osg::ref_ptr< osg::Texture2D > m_glowTexture;
+
+    std::vector< osg::ref_ptr< osg::Texture2D > > m_rttTextures;
 };
 } //end xplorer
 } //end ves

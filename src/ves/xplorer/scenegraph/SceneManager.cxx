@@ -982,13 +982,14 @@ double SceneManager::GetCurrentTime() const
     return m_vrjHead->getTimeStamp().secd();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneManager::SetDepthTexture( osg::Texture2D* depthTexture )
+void SceneManager::SetRTTTextures( std::vector< osg::ref_ptr< osg::Texture2D > >& depthTexture )
 {
-    m_depthTexture = depthTexture;
+    m_rttTextures = depthTexture;
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Texture2D* SceneManager::GetDepthTexture()
+std::vector< osg::ref_ptr< osg::Texture2D > > SceneManager::GetRTTTextures()
 {
-    return m_depthTexture.get();
+    return m_rttTextures;
 }
 ////////////////////////////////////////////////////////////////////////////////

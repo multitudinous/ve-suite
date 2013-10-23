@@ -477,19 +477,27 @@ void SceneRenderToTexture::InitRTTCamera(
         //Set up the color map
         //Most GPUs prefer the BGRA format
         //http://www.opengl.org/wiki/Common_Mistakes
-        osg::ref_ptr< osg::Texture2D > colorMap = CreateViewportTexture(
-                    GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
-                    osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
-                    viewportDimensions );
-        //colorMap->setSubloadCallback( new Subload2DCallback() );
-
+        if( !m_colorTexture.valid() )
+        {
+            m_colorTexture = CreateViewportTexture(
+                        GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
+                        osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
+                        viewportDimensions );
+            //colorMap->setSubloadCallback( new Subload2DCallback() );
+            m_rttTextures.push_back( m_colorTexture.get() );
+        }
+        
         //Set up the glow map
-        osg::ref_ptr< osg::Texture2D > glowMap = CreateViewportTexture(
-                    GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
-                    osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
-                    viewportDimensions );
-        //glowMap->setSubloadCallback( new Subload2DCallback() );
-
+        if( !m_glowTexture.valid() )
+        {
+            m_glowTexture = CreateViewportTexture(
+                        GL_RGBA8, GL_BGRA, GL_UNSIGNED_BYTE,
+                        osg::Texture2D::LINEAR, osg::Texture2D::CLAMP_TO_EDGE,
+                        viewportDimensions );
+            //glowMap->setSubloadCallback( new Subload2DCallback() );
+            m_rttTextures.push_back( m_glowTexture.get() );
+        }
+        
         //Set up interleaved depth/stencil buffer
         if( !m_depthTexture.valid() )
         {
@@ -497,8 +505,11 @@ void SceneRenderToTexture::InitRTTCamera(
                        GL_DEPTH24_STENCIL8_EXT, GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT,
                        osg::Texture2D::NEAREST, osg::Texture2D::CLAMP_TO_EDGE,
                        viewportDimensions );
-            scenegraph::SceneManager::instance()->SetDepthTexture( m_depthTexture.get() );
+            m_rttTextures.push_back( m_depthTexture.get() );
+
+            scenegraph::SceneManager::instance()->SetRTTTextures( m_rttTextures );
         }
+
 
         //Attach a texture and use it as the render target
         //If you set one buffer to multisample, they all get set to multisample
@@ -513,10 +524,10 @@ void SceneRenderToTexture::InitRTTCamera(
 #endif
 
         rttCamera->attach(
-            osg::Camera::COLOR_BUFFER0, colorMap.get(),
+            osg::Camera::COLOR_BUFFER0, m_colorTexture.get(),
             0, 0, false, maxSamples, maxSamples );
         rttCamera->attach(
-            osg::Camera::COLOR_BUFFER1, glowMap.get(),
+            osg::Camera::COLOR_BUFFER1, m_glowTexture.get(),
             0, 0, false, maxSamples, maxSamples );
         //Use interleaved depth/stencil renderbuffer
         rttCamera->attach(
@@ -542,10 +553,10 @@ void SceneRenderToTexture::InitRTTCamera(
             clearQuadCamera->setClearMask( 0 );
             clearQuadCamera->setClearColor( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
             clearQuadCamera->attach(
-                osg::Camera::COLOR_BUFFER0, colorMap.get(),
+                osg::Camera::COLOR_BUFFER0, m_colorTexture.get(),
                 0, 0, false, maxSamples, maxSamples );
             clearQuadCamera->attach(
-                osg::Camera::COLOR_BUFFER1, glowMap.get(),
+                osg::Camera::COLOR_BUFFER1, m_glowTexture.get(),
                 0, 0, false, maxSamples, maxSamples );
             //Use interleaved depth/stencil renderbuffer
             clearQuadCamera->attach(

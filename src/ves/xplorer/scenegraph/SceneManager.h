@@ -322,10 +322,10 @@ public:
     bool IsDesktopClusterControl() const;
 
     ///Set the RTT depth texture to be used by other areas of the code
-    void SetDepthTexture( osg::Texture2D* depthTexture );
+    void SetRTTTextures( std::vector< osg::ref_ptr< osg::Texture2D > >& depthTexture );
     
     ///Get the depth texture
-    osg::Texture2D* GetDepthTexture();
+    std::vector< osg::ref_ptr< osg::Texture2D > > GetRTTTextures();
 
 protected:
     ///Create the model for the logo
@@ -512,7 +512,7 @@ private:
     bool m_isDesktopClusterControl;
     
     ///The RTT depth texture
-    osg::ref_ptr< osg::Texture2D > m_depthTexture;
+    std::vector< osg::ref_ptr< osg::Texture2D > > m_rttTextures;
 };
 } //end scenegraph
 } //end xplorer
