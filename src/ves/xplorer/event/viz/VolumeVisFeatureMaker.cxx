@@ -107,14 +107,32 @@ bool VolumeVisFeatureMaker::AddPlaneLfxDs( propertystore::PropertySetPtr& set )
 	float isoVal = 0.15f;
 	osg::Vec3 dims( 50., 50., 50. );
 
-	lfx::core::LoadHierarchyPtr loader( new lfx::core::LoadHierarchy() );
-    if( nopage )
+	lfx::core::LoadHierarchy::DataTypeInfoMap chanTypeMap;
+	lfx::core::LoadHierarchy::identifyScalarsVectors( dsp->getDB().get(), &chanTypeMap );
+
+	lfx::core::OperationBase::StringList chanList;
+	lfx::core::LoadHierarchy::DataTypeInfoMap::iterator it = chanTypeMap.begin();
+	while( it != chanTypeMap.end() )
 	{
-		// Not paging. Load the data.
-        loader->setLoadData( true );
+		lfx::core::LoadHierarchy::DataTypeInfoPtr dataType = it->second;
+		lfx::core::LoadHierarchyPtr loader( new lfx::core::LoadHierarchy(dataType->typeName, dataType->typeName, dataType) );
+		it++;
+
+		if( nopage )
+		{
+			// Not paging. Load the data.
+			loader->setLoadData( true );
+		}
+
+		loader->setDB( dsp->getDB() );
+		dsp->addPreprocess( loader );
+		chanList.push_back( loader->getChannelName() );
 	}
-	loader->setDB( dsp->getDB() );
-    dsp->addPreprocess( loader );
+
+	if( !chanList.size() ) chanList.push_back( "volumedata" );
+
+	std::string currentChannel = boost::any_cast<std::string >( set->GetPropertyValue( "Channel" ) );
+	if( !currentChannel.size() ) currentChannel = chanList[0];
 
     lfx::core::VolumeRendererPtr renderOp( new lfx::core::VolumeRenderer() );
     if( !nopage )
@@ -126,7 +144,8 @@ bool VolumeVisFeatureMaker::AddPlaneLfxDs( propertystore::PropertySetPtr& set )
     renderOp->setMaxSamples( 400.f );
     renderOp->setTransparencyEnable( useIso ? false : true );
 
-    renderOp->addInput( "volumedata" );
+    renderOp->setInputs( chanList );
+	renderOp->setInputNameAlias( lfx::core::VolumeRenderer::VOLUME_DATA, currentChannel );
     dsp->setRenderer( renderOp );
 
     osg::ref_ptr< osg::Image > tfImage( lfx::core::loadImageFromDat( "01.dat", LFX_ALPHA_RAMP_0_TO_1 ) );
@@ -141,6 +160,20 @@ bool VolumeVisFeatureMaker::AddPlaneLfxDs( propertystore::PropertySetPtr& set )
     {
         renderOp->setHardwareMaskEpsilon( 0.02f );
     }
+
+	/*
+	std::vector<xplorer::data::VizBasePropertySet::SLfxPropValues> vprops;
+	((xplorer::data::VizBasePropertySet *)set.get())->GetRendererLfxValues( &vprops );
+
+	for( size_t i=0; i<vprops.size(); i++ )
+	{
+		xplorer::data::VizBasePropertySet::SLfxPropValues *pv = &vprops[i];
+		UpdateLfxRenderProp(pv->dataSetName, pv->propType, pv->v1, pv->v2);
+	}
+	*/
+
+	((xplorer::data::VizBasePropertySet *)set.get())->UpdateRendererLfxValues();
+	
 
 	lfx::core::RendererPtr rp = dsp->getRenderer();
 	if( !rp ) return true;

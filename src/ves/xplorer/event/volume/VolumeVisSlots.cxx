@@ -47,6 +47,7 @@
 #include <ves/xplorer/Debug.h>
 
 #include <latticefx/core/vtk/DataSet.h>
+#include <latticefx/core/VolumeRenderer.h>
 
 namespace ves
 {
@@ -285,113 +286,102 @@ void GetFloat(const boost::any &value, float *pf)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateLfxProperty(const std::string &dataSetName, const std::string &propName, const boost::any &value, int vloc)
+lfx::core::RendererPtr GetLfxRenderer( const std::string &dataSetName, lfx::core::DataSetPtr &pds )
 {
-	lfx::core::DataSetPtr pds = activateLfxDataSet( dataSetName, false );
+	pds = activateLfxDataSet( dataSetName, false );
 	if( !pds.get() )
 	{
-		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxProperty - failed to find the dataset: " << dataSetName << std::endl << vprDEBUG_FLUSH;
-		return;
+		vprDEBUG( vesDBG, 0 ) << "|\tGetLfxRenderer - failed to find the dataset: " << dataSetName << std::endl << vprDEBUG_FLUSH;
+		return lfx::core::RendererPtr();
 	}
 
 	lfx::core::RendererPtr prender = pds->getRenderer();
 	if( !prender.get() )
 	{
 		// vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxUniform - no renderer is in the dataset: " << dataSetName << std::endl << vprDEBUG_FLUSH;
-		return;
 	}
 
+	return prender;
+}
 
-	/*lfx::core::Renderer::UniformInfo &ui  = prender->getUniform( propName );
-	if( ui._prototype->getName() != propName )
+////////////////////////////////////////////////////////////////////////////////
+lfx::core::RendererPtr GetLfxRenderer( const std::string &dataSetName )
+{
+	lfx::core::DataSetPtr pds;
+	return GetLfxRenderer( dataSetName, pds );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void UpdateLfxChannel( const std::string &dataSetName, const std::string &chanName )
+{
+	lfx::core::DataSetPtr ds;
+	lfx::core::RendererPtr r = GetLfxRenderer( dataSetName, ds );
+	if( !r.get() ) return;
+
+	// TODO: FIGURE OUT HOW TO SET THE INPUT NAME FOR THE RENDERER TYPE
+
+	std::string curName = r->getInputNameAlias( lfx::core::VolumeRenderer::VOLUME_DATA );
+	if( curName != chanName )
 	{
-		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxUniform - uniform: " << propName << " not found!" << std::endl << vprDEBUG_FLUSH;
-		return;
+		r->setInputNameAlias( lfx::core::VolumeRenderer::VOLUME_DATA, chanName );
+		ds->setRenderer( r ); // force dirty
+		ds->updateAll(); // update now with new channel data.
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void UpdateLfxRenderProp(const std::string &dataSetName, int propType, boost::any value1, boost::any value2)
+{
+	lfx::core::DataSetPtr ds;
+	lfx::core::RendererPtr r = GetLfxRenderer( dataSetName, ds );
+	if( !r.get() ) return;
+
+	std::string s;
+	float f;
+	osg::Vec2f v2f;
+
+	if (propType > lfx::core::Renderer::PT_ENUM_BEGIN && propType < lfx::core::Renderer::PT_ENUM_END)
+	{
+		s = boost::any_cast<std::string>( value1 );
+	}
+	else if (propType > lfx::core::Renderer::PT_FLOAT_BEGIN && propType < lfx::core::Renderer::PT_FLOAT_END)
+	{
+		GetFloat( value1, &f );
+	}
+	else if (propType > lfx::core::Renderer::PT_FLOATRNG_BEGIN && propType < lfx::core::Renderer::PT_FLOATRNG_END)
+	{
+		GetFloat( value1, &v2f[0] );
+		GetFloat( value2, &v2f[1] );
 	}
 
-	// TODO: DEAL WITH NON UNIFORM NAMED PROPERTIES, IE: Hide, DataSet
-
-	
-	switch( ui._prototype->getType() )
+	switch( propType )
 	{
-	case osg::Uniform::FLOAT_MAT4:
-		{
-			osg::Matrixf mat;
-			ui._prototype->get( mat );
-
-			if (vloc > -1 && vloc < 16)
-			{
-				GetFloat( value, &(mat.ptr()[vloc]) );
-				ui._prototype->set( mat );
-			}
-	
-			break;
-		}
-	case osg::Uniform::FLOAT_VEC2:
-		{
-			osg::Vec2f vec2;
-			ui._prototype->get( vec2 );
-
-			if( vloc > -1 && vloc < 2 )
-			{
-				GetFloat( value, &vec2[vloc] );
-				ui._prototype->set( vec2 );
-			}
-			break;
-		}
-	case osg::Uniform::FLOAT_VEC3:
-		{
-			osg::Vec3f vec3;
-			ui._prototype->get( vec3 );
-
-			if( vloc > -1 && vloc < 3 )
-			{
-				GetFloat( value, &vec3[vloc] );
-				ui._prototype->set( vec3 );
-			}
-			break;
-		}
-	case osg::Uniform::FLOAT_VEC4:
-		{
-			osg::Vec4f vec4;
-			ui._prototype->get( vec4 );
-
-			if( vloc > -1 && vloc < 4 )
-			{
-				GetFloat( value, &vec4[vloc] );
-				ui._prototype->set( vec4 );
-			}
-			break;
-		}
-	case osg::Uniform::FLOAT:
-		{
-			float f = 0;
-			GetFloat( value, &f );
-			ui._prototype->set( f );
-			break;
-		}
-	case osg::Uniform::SAMPLER_1D:
-	case osg::Uniform::SAMPLER_2D:
-	case osg::Uniform::SAMPLER_3D:
-	case osg::Uniform::INT:
-		{
-			// TODO: this probably doesn't make sense for samplers!
-			int i = boost::any_cast<int>( value );
-			ui._prototype->set( i );
-			break;
-		}
-	case osg::Uniform::BOOL:
-		{
-			bool b = boost::any_cast<bool>( value );
-			ui._prototype->set( b );
-			break;
-		}
+		// enums
+	case lfx::core::Renderer::PT_TF_DST:
+		r->setTransferFunctionDestination( r->getEnumFromNameTrans( s ) );
+		break;
+	case lfx::core::Renderer::PT_HM_SRC:
+		r->setHardwareMaskInputSource( r->getEnumFromNameMaskInput( s ) );
+		break;
+	case lfx::core::Renderer::PT_HM_OPE:
+		r->setHardwareMaskOperator( r->getEnumFromNameHardwareMaskOperator( s ) );
+		break;
+		// floats
+	case lfx::core::Renderer::PT_HM_REF:
+		r->setHardwareMaskReference( f );
+		break;
+	case lfx::core::Renderer::PT_HM_EPS:
+		r->setHardwareMaskEpsilon( f );
+		break;
+	// float range
+	case lfx::core::Renderer::PT_TF_INR:
+		r->setTransferFunctionInputRange( v2f );
+		break;
 	default:
-		{
-			vprDEBUG( vesDBG, 0 ) << "|\tunsupported uniform type: " << propName << std::endl << vprDEBUG_FLUSH;
-			break;
-		}
-	}*/
+		vprDEBUG( vesDBG, 0 ) << "|\tunrecognized lfx::core::Renderer::PropType: " << propType << std::endl << vprDEBUG_FLUSH;
+	}
+
+	ds->updateRendererUniforms(); // refresh uniforms down in osg
 }
 
 ////////////////////////////////////////////////////////////////////////////////

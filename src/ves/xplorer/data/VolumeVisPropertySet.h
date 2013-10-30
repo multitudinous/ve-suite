@@ -50,6 +50,7 @@ namespace xplorer
 namespace data
 {
 
+	/*
 class VE_DATA_EXPORTS IVisProps
 {
 public:
@@ -78,6 +79,7 @@ public:
 };
 
 typedef boost::shared_ptr<IVisProps> IVisPropsPtr;
+*/
 
 /*!\file VolumeVisPropertySet.h
  * \class ves::xplorer::data::VolumeVisPropertySet
@@ -106,8 +108,6 @@ protected:
     //void UpdateSeedPointDisplay( propertystore::PropertyPtr property );
 
 	virtual void CreateSkeletonLfxDs();
-	void AddPropertyLfx( const std::string &name, const boost::any &value, const std::string &dispname );
-	void AddPropertyFloats( const std::string &typeName, const std::string &itemName,  std::vector<float> &v );
 
     ///Create the skeleton
     virtual void CreateSkeleton();
@@ -118,16 +118,18 @@ protected:
 
     void UpdateScalar( propertystore::PropertyPtr property );
 
+	void UpdateLfxDataset( propertystore::PropertyPtr property );
+	void UpdateLfxChannel( propertystore::PropertyPtr property );
 	void UpdateLfxUniform( propertystore::PropertyPtr property );
+	
 
     ///????
     ves::util::TwoDoubleSignal_type m_updateTBETScalarRange;
     ///????
     typedef switchwire::Event< void ( std::string const&, std::string const&, double const&, double const& ) > UpdateScalar_type;
     UpdateScalar_type m_updateTBETScalar;
-	///????
-    typedef switchwire::Event< void ( const std::string&, const std::string&, const boost::any&, int ) > UpdateLfxProp_type;
-    UpdateLfxProp_type m_updateLfxProp;
+
+
     /*
         ///Update signal to control turning off and on seed points
         typedef switchwire::Event< void ( const std::string&, const bool ) > ActivateSeedPointsSignal_type;
@@ -140,8 +142,6 @@ protected:
         UpdateActiveDataSetSignal_type m_activeDataSet;
     */
 
-protected:
-	IVisPropsPtr _visProps;
 };
 
 } // namespace data

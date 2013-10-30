@@ -101,10 +101,13 @@ void UpdateScalarRange( double const& minRange, double const& maxRange );
 ///dataset per model.
 ves::xplorer::volume::cfdTextureDataSet* SetActiveTextureDataset();
 
-///Update the an lfx dataset property usually a uniform value
-void UpdateLfxProperty(const std::string &dataSetName, const std::string &propName, const boost::any &value, int vloc);
+///Update an lfx channel
+void UpdateLfxChannel( const std::string &dataSetName, const std::string &chanName );
+
+void UpdateLfxRenderProp(const std::string &dataSetName, int propType, boost::any value1, boost::any value2);
 
 } // namespace cad
 } // namespace event
 } // namespace xplorer
 } // namespace ves
+  

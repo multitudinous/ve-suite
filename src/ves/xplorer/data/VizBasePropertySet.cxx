@@ -34,15 +34,20 @@
 #include <ves/xplorer/data/DatasetPropertySet.h>
 #include <propertystore/Property.h>
 
+#include <ves/xplorer/Debug.h>
 #include <ves/util/Exception.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <iostream>
 
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
+
+#include <latticefx/core/DataSet.h>
+#include <latticefx/core/Renderer.h>
 
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,6 +61,23 @@ VizBasePropertySet::VizBasePropertySet()
     m_deleteVizSignal =
         reinterpret_cast< ves::util::StringSignal_type* >
         ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VizBasePropertySet.DeleteVizFeature" ) );
+
+	///Signal to update an Lfx channel
+    {
+        std::string name( "VizBasePropertySet" );
+        name += boost::lexical_cast<std::string>( this );
+        name += ".TBETUpdateLfxChannel";
+        switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxChan ), name, switchwire::EventManager::unspecified_SignalType );
+    }
+
+	///Signal to update an Lfx render property
+    {
+        std::string name( "VizBasePropertySet" );
+        name += boost::lexical_cast<std::string>( this );
+        name += ".TBETUpdateLfxRenderProp";
+        switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxRenderProp ), name, switchwire::EventManager::unspecified_SignalType );
+    }
+	
 }
 ////////////////////////////////////////////////////////////////////////////////
 VizBasePropertySet::VizBasePropertySet( const VizBasePropertySet& orig )
@@ -378,4 +400,260 @@ void VizBasePropertySet::EnableLiveProperties( bool live )
     // turning on for all derived classes that do not override this method again
     // and explicitly call PropertySet::EnableLiveProperties.
 }
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::CreateSkeletonLfxDs( lfx::core::Renderer *prender )
+{
+	std::string currentDataSet = "";
+
+	_lfxValueProps.clear();
+
+    AddProperty( "Hide", false, "Toggle Viz Off" );
+
+	// add dataset property
+	AddProperty( "DataSet", std::string(""), "Data Set" );
+    PSVectorOfStrings enumValues;
+
+	enumValues = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( "Dataset", "Filename" );
+    if( enumValues.empty() )
+    {
+        enumValues.push_back( "No datasets loaded" );
+	}
+	else
+	{
+		currentDataSet = enumValues[0];
+	}
+	SetPropertyAttribute( "DataSet", "enumValues", enumValues );
+	GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateLfxDataSet, this, _1 ) );
+
+
+	// add a channel property
+	AddProperty( "Channel", std::string(""), "Channel" );
+	InitLfxChannelOptions();
+	GetProperty( "Channel" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateLfxChannel, this, _1 ) );
+
+	if( !prender ) return;
+
+	// use renderer's interface to get and set properties, don't deal with uniforms directly
+
+	std::vector< std::string > enumNames;
+	lfx::core::Renderer::PropType propType;
+	std::string sval;
+
+	propType = lfx::core::Renderer::PT_TF_INR;
+	const osg::Vec2f tfRange = prender->getTransferFunctionInputRange();
+	AddPropFloat( "TF_INR_MIN", "TransferFunction Min", tfRange[0], propType );
+	AddPropFloat( "TF_INR_MAX", "TransferFunction Max", tfRange[1], propType );
+
+	propType = lfx::core::Renderer::PT_TF_DST;
+	enumNames.clear();
+	prender->getEnumListTrans( &enumNames );
+	sval = prender->getEnumName( prender->getTransferFunctionDestination() );
+	AddPropEnum( "TF_DST", "TransferFunction Destination", sval, propType, enumNames );
+
+	propType = lfx::core::Renderer::PT_HM_SRC;
+	enumNames.clear();
+	prender->getEnumListMaskInput( &enumNames );
+	sval = prender->getEnumName( prender->getHardwareMaskInputSource() );
+	AddPropEnum( "HM_SRC", "HardwareMask Input Source",  sval, propType, enumNames );
+
+	propType = lfx::core::Renderer::PT_HM_REF;
+	AddPropFloat( "HM_REF", "HardwareMask Reference", prender->getHardwareMaskReference(), propType );
+
+	propType = lfx::core::Renderer::PT_HM_EPS;
+	AddPropFloat( "HM_EPS", "HardwareMask Epsilon", prender->getHardwareMaskEpsilon(), propType );
+	
+	propType = lfx::core::Renderer::PT_HM_OPE;
+	enumNames.clear();
+	prender->getEnumListHardwareMaskOperator( &enumNames );
+	sval = prender->getEnumName( (lfx::core::Renderer::HardwareMaskOperator)prender->getHardwareMaskOperator() );
+	AddPropEnum( "HM_OPE", "HardwareMask Operator",  sval, propType, enumNames );
+
+	/*
+	///How to control vis animations????
+    AddProperty( "AnimationControls", boost::any(), "Animation Controls" );
+    SetPropertyAttribute( "AnimationControls", "isUIGroupOnly", true );
+    SetPropertyAttribute( "AnimationControls", "setExpanded", true );
+    AddProperty( "AnimationControls_Controls", std::string(""), "Controls" );
+    enumValues.clear();
+    enumValues.push_back( "Play" );
+    enumValues.push_back( "Stop" );
+    enumValues.push_back( "Step Forward" );
+    enumValues.push_back( "Step Back" );
+    SetPropertyAttribute( "AnimationControls_Controls", "enumValues", enumValues );
+
+    AddProperty( "AnimationControls_Duration", 0.0, "Duration" );
+    SetPropertyAttribute( "AnimationControls_Duration", "minimumValue", 0.0 );
+    SetPropertyAttribute( "AnimationControls_Duration", "maximumValue", 100.0 );
+	*/
+}
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::AddPropEnum( const std::string &propName, const std::string &propDisp, const std::string &defValue, int propType, const std::vector<std::string> &enumValues )
+{
+	AddProperty( propName, defValue, propDisp );
+	SetPropertyAttribute( propName, "enumValues", enumValues );
+	GetProperty( propName )->SetAttribute( "proptype", propType );
+	GetProperty( propName )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateLfxValue, this, _1 ) );
+
+	_lfxValueProps.push_back( propName );
+}
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::AddPropFloat( const std::string &propName, const std::string &propDisp, float value, int propType )
+{
+	AddProperty( propName, (double)value, propDisp );
+	GetProperty( propName )->SetAttribute( "proptype", propType );
+	GetProperty( propName )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateLfxValue, this, _1 ) );
+
+	_lfxValueProps.push_back( propName );
+}
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::InitLfxChannelOptions()
+{
+    try
+	{
+		PSVectorOfStrings enumValues;
+		const std::string selectedDataset = GetDatumValue< std::string >( "DataSet" );
+		DatasetPropertySet dataset;
+		dataset.LoadByKey( "Filename", selectedDataset );
+		enumValues = dataset.GetDatumValue< std::vector< std::string > >( "Channels" );
+		if( enumValues.empty() )
+		{
+			enumValues.push_back( "No channels available" );
+		}
+		SetPropertyAttribute( "Channel", "enumValues", enumValues );
+	}
+	catch( ... )
+	{
+		PSVectorOfStrings enumValues;
+		enumValues.push_back( "No channels available" );
+		SetPropertyAttribute( "Channel", "enumValues", enumValues );
+	}
+    //VES_END_TRY( "An error occured with setting the selected scalar" )
+}
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::UpdateLfxDataSet( propertystore::PropertyPtr property )
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::UpdateLfxChannel( propertystore::PropertyPtr property )
+{
+	propertystore::PropertyPtr propds = GetProperty( "DataSet" );
+	if( !propds.get() )
+	{
+		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxChannel - no DataSet property was found!" << std::endl << vprDEBUG_FLUSH;
+		return;
+	}
+
+	std::string dataSetName = boost::any_cast<std::string>( propds->GetValue() );
+	std::string channel = boost::any_cast<std::string>( property->GetValue() );
+	m_updateLfxChan.signal( dataSetName, channel );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::UpdateLfxValue( propertystore::PropertyPtr prop )
+{
+	propertystore::PropertyPtr propds = GetProperty( "DataSet" );
+	if( !propds.get() )
+	{
+		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxValue- no DataSet property was found!" << std::endl << vprDEBUG_FLUSH;
+		return;
+	}
+
+	std::string dataSetName = boost::any_cast<std::string>( propds->GetValue() );
+
+	crunchstore::DatumPtr proptype = prop->GetAttribute( "proptype" );
+	if( !proptype.get() )
+	{
+		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxValue - propname not found. unknown property!" << std::endl << vprDEBUG_FLUSH;
+		return;
+	}
+
+	int propType = boost::any_cast<int>( proptype->GetValue() );
+	boost::any v1, v2;
+
+	if( propType == lfx::core::Renderer::PT_TF_INR )
+	{
+		v1 = GetProperty( "TF_INR_MIN" )->GetValue();
+		v2 = GetProperty( "TF_INR_MAX" )->GetValue();
+	}
+	else
+	{
+		v1 = prop->GetValue();
+	}
+
+	
+	m_updateLfxRenderProp.signal( dataSetName, propType, v1, v2 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::UpdateRendererLfxValues()
+{
+	for( size_t i=0; i<_lfxValueProps.size(); i++ )
+	{
+		propertystore::PropertyPtr prop = GetProperty( _lfxValueProps[i] );
+		if( !prop.get() )
+		{
+			vprDEBUG( vesDBG, 0 ) << "|\tUpdateRendereLfxValues- failed to find the property: " << _lfxValueProps[i] << std::endl << vprDEBUG_FLUSH;
+			continue;
+		}
+
+		UpdateLfxValue( prop  );
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::GetRendererLfxValues( std::vector<SLfxPropValues> *v )
+{
+	for( size_t i=0; i<_lfxValueProps.size(); i++ )
+	{
+		propertystore::PropertyPtr prop = GetProperty( _lfxValueProps[i] );
+		if( !prop.get() )
+		{
+			vprDEBUG( vesDBG, 0 ) << "|\tUpdateRendereLfxValues- failed to find the property: " << _lfxValueProps[i] << std::endl << vprDEBUG_FLUSH;
+			continue;
+		}
+
+		SLfxPropValues pv;
+		if( GetLfxValues( prop, &pv ) )
+		{
+			v->push_back( pv );
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool VizBasePropertySet::GetLfxValues( propertystore::PropertyPtr prop, SLfxPropValues *pv )
+{
+	propertystore::PropertyPtr propds = GetProperty( "DataSet" );
+	if( !propds.get() )
+	{
+		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxValue- no DataSet property was found!" << std::endl << vprDEBUG_FLUSH;
+		return false;
+	}
+
+	pv->dataSetName = boost::any_cast<std::string>( propds->GetValue() );
+
+	crunchstore::DatumPtr proptype = prop->GetAttribute( "proptype" );
+	if( !proptype.get() )
+	{
+		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxValue - propname not found. unknown property!" << std::endl << vprDEBUG_FLUSH;
+		return false;
+	}
+
+	pv->propType = boost::any_cast<int>( proptype->GetValue() );
+	boost::any v1, v2;
+
+	if( pv->propType == lfx::core::Renderer::PT_TF_INR )
+	{
+		pv->v1 = GetProperty( "TF_INR_MIN" )->GetValue();
+		pv->v2 = GetProperty( "TF_INR_MAX" )->GetValue();
+	}
+	else
+	{
+		pv->v1 = prop->GetValue();
+	}
+
+	return true;
+}
+
 ////////////////////////////////////////////////////////////////////////////////

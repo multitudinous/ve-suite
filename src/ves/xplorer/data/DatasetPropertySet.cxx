@@ -150,6 +150,9 @@ void DatasetPropertySet::CreateSkeleton()
     AddProperty( "VectorNames", stringVector, "Vector Names" );
     SetPropertyAttribute( "VectorNames", "userVisible", false );
 
+    AddProperty( "Channels", stringVector, "Channels" );
+    SetPropertyAttribute( "Channels", "userVisible", false );
+
     std::vector< double > doubleVector;
     AddProperty( "ScalarMins", doubleVector, "Scalar Mins" );
     SetPropertyAttribute( "ScalarMins", "userVisible", false );

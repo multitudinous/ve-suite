@@ -37,6 +37,7 @@
 #include <propertystore/MakeLive.h>
 
 #include <ves/xplorer/Debug.h>
+#include <ves/util/Exception.h>
 
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
@@ -75,16 +76,6 @@ VolumeVisPropertySet::VolumeVisPropertySet()
 
         switchwire::EventManager::instance()->RegisterSignal(
             ( &m_updateTBETScalar ),
-            name, switchwire::EventManager::unspecified_SignalType );
-    }
-	///Signal to update an Lfx Property
-    {
-        std::string name( "VolumeVisPropertySet" );
-        name += boost::lexical_cast<std::string>( this );
-        name += ".TBETUpdateLfxProperty";
-
-        switchwire::EventManager::instance()->RegisterSignal(
-            ( &m_updateLfxProp ),
             name, switchwire::EventManager::unspecified_SignalType );
     }
 
@@ -156,243 +147,33 @@ void VolumeVisPropertySet::UpdateScalar( propertystore::PropertyPtr property )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ParseLfxVectorName( const std::string &fullname, std::string *ptypeName, std::string *pname, int *ploc )
-{
-	size_t posType = fullname.find( '_' );
-	if( posType <= 0 || posType >= fullname.size() ) return false;
-
-	size_t posLoc = fullname.rfind( '_' );
-	if( posLoc < 0 || (posLoc+1) >= fullname.size() ) return false;
-
-	if((posType+1) >= posLoc ) return false;
-
-	// get the type
-	std::string typeName = "";
-	for( int i=0; i<posType; i++ )
-	{
-		typeName.push_back( fullname.at( i ) );
-	}
-
-	if( ptypeName ) *ptypeName = typeName;
-
-	// get the name
-	std::string name = "";
-	for( int i=posType+1; i<posLoc; i++ )
-	{
-		name.push_back( fullname.at( i ) );
-	}
-
-	if( pname ) *pname = name;
-
-	// get the loc
-	std::string num = "";
-	for( int i=posLoc+1; i<fullname.size(); i++ )
-	{
-		num.push_back( fullname.at( i ) );
-	}
-
-	int loc = atoi( num.c_str() );
-	if( ploc ) *ploc = loc;
-
-	return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void VolumeVisPropertySet::UpdateLfxUniform( propertystore::PropertyPtr prop )
-{
-	crunchstore::DatumPtr propname = prop->GetAttribute( "propname" );
-	if( !propname.get() )
-	{
-		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxUniform - propname not found. unknown property!" << std::endl << vprDEBUG_FLUSH;
-		return;
-	}
-
-	propertystore::PropertyPtr propds = GetProperty( "DataSet" );
-	if( !propds.get() )
-	{
-		vprDEBUG( vesDBG, 0 ) << "|\tUpdateLfxUniform - no DataSet property was found!" << std::endl << vprDEBUG_FLUSH;
-		return;
-	}
-
-	std::string dataSetName = boost::any_cast<std::string>( propds->GetValue() );
-	std::string fullname = boost::any_cast<std::string>( propname->GetValue() );
-	std::string typeName, uniformName;
-	int vloc = 0;
-
-	if( !ParseLfxVectorName( fullname, &typeName, &uniformName, &vloc ) )
-	{
-		uniformName = fullname;
-	}
-
-	m_updateLfxProp.signal( dataSetName, uniformName, prop->GetValue(), vloc );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void VolumeVisPropertySet::AddPropertyLfx( const std::string &name, const boost::any &value, const std::string &dispname )
-{
-	AddProperty( name, value, dispname );
-	GetProperty( name )->SetAttribute( "propname", name );
-	GetProperty( name )->SignalValueChanged.connect( boost::bind( &VolumeVisPropertySet::UpdateLfxUniform, this, _1 ) );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void VolumeVisPropertySet::AddPropertyFloats( const std::string &typeName, const std::string &itemName,  std::vector<float> &v )
-{
-	std::string baseName = typeName;
-	baseName += "_";
-	baseName += itemName;
-
-	for( unsigned int i=0; i<v.size(); i++ )
-	{
-		std::ostringstream ss;
-		ss << baseName << "_" << i;
-		std::string name = ss.str();
-		AddPropertyLfx( name, v[i], name );
-	}
-}
-////////////////////////////////////////////////////////////////////////////////
 void VolumeVisPropertySet::CreateSkeletonLfxDs()
 {
-    AddProperty( "Hide", false, "Toggle Viz Off" );
+	bool nopage = false;
+	bool useIso = false;
+	float isoVal = 0.15f;
+	osg::Vec3 dims( 50., 50., 50. );
 
-	// add dataset property
-	AddProperty( "DataSet", std::string(""), "Data Set" );
-    PSVectorOfStrings enumValues;
+    lfx::core::VolumeRendererPtr renderOp( new lfx::core::VolumeRenderer() );
+    renderOp->setVolumeDims( dims );
+    renderOp->setRenderMode( lfx::core::VolumeRenderer::RAY_TRACED );
+    renderOp->setMaxSamples( 400.f );
+    renderOp->setTransparencyEnable( useIso ? false : true );
 
-	// TODO: FIND OUT WHERE DATASETS GET ADDED TO THE DATABASEMANAGER!
-	enumValues = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( "Dataset", "Filename" );
-    if( enumValues.empty() )
+    //osg::ref_ptr< osg::Image > tfImage( lfx::core::loadImageFromDat( "01.dat", LFX_ALPHA_RAMP_0_TO_1 ) );
+    //renderOp->setTransferFunction( tfImage.get() );
+    renderOp->setTransferFunctionDestination( lfx::core::Renderer::TF_RGBA );
+
+    // Render when alpha values are greater than 0.15.
+    renderOp->setHardwareMaskInputSource( lfx::core::Renderer::HM_SOURCE_ALPHA );
+    renderOp->setHardwareMaskOperator( useIso ? lfx::core::Renderer::HM_OP_EQ : lfx::core::Renderer::HM_OP_GT );
+    renderOp->setHardwareMaskReference( isoVal );
+    if( useIso )
     {
-        enumValues.push_back( "No datasets loaded" );
-	}
-	SetPropertyAttribute( "DataSet", "enumValues", enumValues );
+        renderOp->setHardwareMaskEpsilon( 0.02f );
+    }
 
-	lfx::core::VolumeRendererPtr vr(new lfx::core::VolumeRenderer());
-	lfx::core::Renderer::UniformInfoVector uiv = vr->getUniforms();
-	
-	BOOST_FOREACH( const lfx::core::Renderer::UniformInfo & info, uiv )
-	{
-		if( info._access != lfx::core::Renderer::UniformInfo::PUBLIC )
-		{
-			continue;
-		}
-        
-		std::string name = info._prototype->getName();
-		osg::Uniform::Type type = info._prototype->getType();
-		std::string typeName = lfx::core::Renderer::uniformTypeAsString( type  );
-
-		// Display the default value.  
-		switch( info._prototype->getType() )
-		{
-		case osg::Uniform::FLOAT_MAT4:
-			{
-				osg::Matrix mat;
-				info._prototype->get( mat );
-
-				std::vector<float> v;
-				for (int i=0; i<16; i++)
-				{
-					v.push_back(mat.ptr()[i]);
-				}
-
-				AddPropertyFloats("mat4x4", name, v);
-				break;
-			}
-		case osg::Uniform::FLOAT_VEC2:
-			{
-				osg::Vec2f vec2;
-				info._prototype->get( vec2 );
-
-				std::vector<float> v;
-				for (int i=0; i<2; i++)
-				{
-					v.push_back(vec2[i]);
-				}
-
-				AddPropertyFloats("vec2", name, v);
-				break;
-			}
-		case osg::Uniform::FLOAT_VEC3:
-			{
-				osg::Vec3f vec3;
-				info._prototype->get( vec3 );
-
-				std::vector<float> v;
-				for (int i=0; i<3; i++)
-				{
-					v.push_back(vec3[i]);
-				}
-
-				AddPropertyFloats("vec3", name, v);
-				break;
-			}
-		case osg::Uniform::FLOAT_VEC4:
-			{
-				osg::Vec4f vec4;
-				info._prototype->get( vec4 );
-				
-				std::vector<float> v;
-				for (int i=0; i<4; i++)
-				{
-					v.push_back(vec4[i]);
-				}
-
-				AddPropertyFloats("vec4", name, v);
-				break;
-			}
-		case osg::Uniform::FLOAT:
-			{
-				float f;
-				info._prototype->get( f );
-				AddPropertyLfx(name, f, name);
-				break;
-			}
-		case osg::Uniform::SAMPLER_1D:
-		case osg::Uniform::SAMPLER_2D:
-		case osg::Uniform::SAMPLER_3D:
-		case osg::Uniform::INT:
-			{
-				int i;
-				info._prototype->get( i );
-				AddPropertyLfx(name, i, name);
-				break;
-			}
-		case osg::Uniform::BOOL:
-			{
-				bool b;
-				info._prototype->get( b );
-				AddPropertyLfx(name, b, name);
-				break;
-			}
-		default:
-			{
-				vprDEBUG( vesDBG, 0 ) << "|\tunsupported uniform type: " << name << std::endl << vprDEBUG_FLUSH;
-				continue;
-				break;
-			}
-		}
-	}
-
-	// TODO:  TRANSFER FUNCTION
-
-	/*
-	///How to control vis animations????
-    AddProperty( "AnimationControls", boost::any(), "Animation Controls" );
-    SetPropertyAttribute( "AnimationControls", "isUIGroupOnly", true );
-    SetPropertyAttribute( "AnimationControls", "setExpanded", true );
-    AddProperty( "AnimationControls_Controls", std::string(""), "Controls" );
-    enumValues.clear();
-    enumValues.push_back( "Play" );
-    enumValues.push_back( "Stop" );
-    enumValues.push_back( "Step Forward" );
-    enumValues.push_back( "Step Back" );
-    SetPropertyAttribute( "AnimationControls_Controls", "enumValues", enumValues );
-
-    AddProperty( "AnimationControls_Duration", 0.0, "Duration" );
-    SetPropertyAttribute( "AnimationControls_Duration", "minimumValue", 0.0 );
-    SetPropertyAttribute( "AnimationControls_Duration", "maximumValue", 100.0 );
-	*/
-
+	VizBasePropertySet::CreateSkeletonLfxDs( renderOp.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -39,6 +39,8 @@
 
 #include <ves/VEConfig.h>
 
+namespace lfx{ namespace core{ class Renderer; } }
+
 namespace ves
 {
 namespace xplorer
@@ -85,17 +87,48 @@ public:
     ///\param TableName The TableName we are deleting
     virtual bool Remove(  );
 
+	struct SLfxPropValues
+	{
+		std::string dataSetName;
+		int propType;
+		boost::any v1;
+		boost::any v2;
+	};
+
+	virtual void UpdateRendererLfxValues();
+	virtual void GetRendererLfxValues( std::vector<SLfxPropValues> *pv );
+
 protected:
     ///Registration of this property set for a child case
     ///\param tableName The table to be registered
     ///\post The PropertySet can now populate this table or read this table
     void RegisterPropertySet( std::string const& tableName );
+	///Create the latticefx dataset property skeleton for populating this PropertSet
+	virtual void CreateSkeletonLfxDs( lfx::core::Renderer *prender );
     ///Create the skeleton for populating this PropertSet
     virtual void CreateSkeleton()
     {
         ;
     }
 
+	void AddPropEnum( const std::string &propName, const std::string &propDisp, const std::string &defValue, int propType, const std::vector<std::string> &values );
+	void AddPropFloat( const std::string &propName, const std::string &propDisp, float value, int propType );
+
+	void InitLfxChannelOptions();
+
+	void UpdateLfxDataSet( propertystore::PropertyPtr property );
+	void UpdateLfxChannel( propertystore::PropertyPtr property );
+	void UpdateLfxValue( propertystore::PropertyPtr property );
+
+	bool GetLfxValues( propertystore::PropertyPtr property, SLfxPropValues *pv );
+
+	typedef switchwire::Event< void ( const std::string&, const std::string& ) > UpdateLfxChan_type;
+    UpdateLfxChan_type m_updateLfxChan;
+
+	typedef switchwire::Event< void ( const std::string&, int, boost::any, boost::any ) > UpdateLfxRenderProp_type;
+    UpdateLfxRenderProp_type m_updateLfxRenderProp;
+
+	std::vector< std::string > _lfxValueProps;
     ///Signal to generate deleting a viz feature
     //typedef switchwire::Event< void ( std::string const& ) > DeleteVizFeatureSignal_type;
     ///The delete viz signal

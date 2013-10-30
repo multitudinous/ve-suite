@@ -65,6 +65,7 @@
 #include <latticefx/core/vtk/DataSet.h>
 #include <latticefx/utils/vtk/fileIO.h>
 #include <latticefx/utils/vtk/VTKFileHandler.h>
+#include <latticefx/core/HierarchyUtils.h>
 
 #include <osgwTools/Orientation.h>
 #include <osgwTools/Quat.h>
@@ -414,8 +415,10 @@ void WriteDatabaseEntry( lfx::core::DataSetPtr dataSet )
 
  
     osg::Vec2d tr = dataSet->getTimeRange();
-	std::vector< std::string > scalarNames, vectorNames;
-	scalarNames.push_back("s0"); // TODO: need to get these from the dataset.. but the load hierarchy probab
+	std::vector< std::string > channelNames;
+
+	lfx::core::DBBasePtr db = dataSet->getDB();
+	lfx::core::LoadHierarchy::identifyScalarsVectors( db.get(), NULL, &channelNames );
 
     set.SetPropertyValue( "Filename", dataSet->getName() );
     set.SetPropertyValue( "StepLength", 0 );
@@ -424,18 +427,20 @@ void WriteDatabaseEntry( lfx::core::DataSetPtr dataSet )
     set.SetPropertyValue( "Type", 0 );
     set.SetPropertyValue( "PrecomputedDataSliceDir", 0 );
     set.SetPropertyValue( "PrecomputedSurfaceDir", 0 );
-    set.SetPropertyValue( "ScalarNames", scalarNames ); // TODO: 
-    set.SetPropertyValue( "VectorNames", vectorNames ); // TODO:
+    set.SetPropertyValue( "Channels", channelNames );
 
-	// TODO: FIGURE OUT MINS AN MAXS
+	
+	// dont't think we need min and max like vtk, because I believe the min and max values are a vec2 uniform that will automatically
+	// get wired up.
+
 	/*
+	// min - max defaults to 0-1
     std::vector< double > ScalarMins;
     std::vector< double > ScalarMaxes;
-    for( int index = 0; index < dataSet->GetNumberOfScalars(); ++index )
+    for( int index = 0; index < scalarNames.size(); ++index )
     {
-        double* range = dataSet->GetActualScalarRange( index );
-        ScalarMins.push_back( range[0] );
-        ScalarMaxes.push_back( range[1] );
+        ScalarMins.push_back( 0 );
+        ScalarMaxes.push_back( 1 );
     }
     set.SetPropertyValue( "ScalarMins", ScalarMins );
     set.SetPropertyValue( "ScalarMaxes", ScalarMaxes );
