@@ -1,0 +1,60 @@
+PACKAGE_NAME=ICU
+BASE_DIR="${DEV_BASE_DIR}/icu"
+
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_FORMAT=zip
+SOURCE_URL=http://download.icu-project.org/files/icu4c/4.8.1.1/icu4c-4_8_1_1-src.zip
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+
+VES_INSTALL_PARAMS+=( lib )
+
+case $PLATFORM in
+  Windows)
+    # ./buildwin.cmd  90 build shared release Win32 nosamples devenv
+
+    unset PROJ_STR
+    unset BUILD_TARGET
+    unset PREBUILD_METHOD
+    BUILD_METHOD=devenv
+    MSVC_CONFIG=Release
+    if [ ${ARCH} = "32-bit" ]; then
+      MSVC_PLATFORM=Win32
+      #PLATFORM_SUFFIX=
+      INSTALL_DIR_BIN=bin
+      INSTALL_DIR_LIB=lib
+    else
+      MSVC_PLATFORM=x64
+      PLATFORM_SUFFIX=_x64
+      INSTALL_DIR_BIN=bin64
+      INSTALL_DIR_LIB=lib64
+    fi
+
+    #ICU solution
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/source/allinone/allinone.sln" )
+
+    #POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && \
+    #  cp -R ../Foundation/include ${INSTALL_DIR}/. && \
+    #  cp -R ../XML/include ${INSTALL_DIR}/. && \
+    #  cp -R ../JSON/include ${INSTALL_DIR}/. && \
+    #  cp -R ../Util/include ${INSTALL_DIR}/. && \
+    #  cp -R ../Net/include ${INSTALL_DIR}/. && \
+    #  cp -R ../Data/include ${INSTALL_DIR}/. && \
+    #  cp -R ../Data/SQLite/include ${INSTALL_DIR}/. && \
+    #  cp -R ../Data/ODBC/include ${INSTALL_DIR}/. && \
+    #  cp -R ../Zip/include ${INSTALL_DIR}/. && \
+    #  cp -R -T ../${INSTALL_DIR_BIN} ${INSTALL_DIR}/bin && \
+    #  cp -R -T ../${INSTALL_DIR_LIB} ${INSTALL_DIR}/lib"
+
+    #SKIP_FPC_INSTALL="no"
+    #FPC_FILE=POCO.fpc
+    ;;
+  Darwin | Linux)
+    POST_RETRIEVAL_METHOD="chmod +x ./source/runConfigureICU ./source/configure ./source/install-sh"
+    PREBUILD_METHOD=configure
+    CONFIGURE=../source/configure
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    ;;
+esac
