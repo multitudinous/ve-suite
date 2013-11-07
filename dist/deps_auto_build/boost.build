@@ -26,6 +26,7 @@ fi
 BJAM_PARAMS+=( --without-python )
 BJAM_PARAMS+=( --without-wave )
 BJAM_PARAMS+=( --without-graph_parallel )
+BJAM_PARAMS+=( -sICU_PATH="${ICU_INSTALL_DIR}" )
 
 VES_INSTALL_PARAMS+=( lib )
 
@@ -46,6 +47,7 @@ case $PLATFORM in
 
     BJAM_PREBUILD=./bootstrap.sh
     BJAM_PARAMS+=( toolset=darwin )
+
     ;;
   Linux)
     SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_53_0.tar.bz2
