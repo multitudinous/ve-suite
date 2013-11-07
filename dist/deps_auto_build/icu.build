@@ -17,7 +17,7 @@ case $PLATFORM in
 
     unset PROJ_STR
     unset BUILD_TARGET
-    unset PREBUILD_METHOD
+    PREBUILD_METHOD=custom
     BUILD_METHOD=devenv
     MSVC_CONFIG=Release
     if [ ${ARCH} = "32-bit" ]; then
@@ -32,21 +32,17 @@ case $PLATFORM in
       INSTALL_DIR_LIB=lib64
     fi
 
+    #POST_RETRIEVAL_METHOD="${DEVENV} /Upgrade ${SOURCE_DIR}/source/allinone/allinone.sln"
+    CUSTOM_PREBUILD="${DEVENV} /Upgrade ${SOURCE_DIR}/source/allinone/allinone.sln"
+
     #ICU solution
     MSVC_SOLUTION+=( "${SOURCE_DIR}/source/allinone/allinone.sln" )
 
-    #POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && \
-    #  cp -R ../Foundation/include ${INSTALL_DIR}/. && \
-    #  cp -R ../XML/include ${INSTALL_DIR}/. && \
-    #  cp -R ../JSON/include ${INSTALL_DIR}/. && \
-    #  cp -R ../Util/include ${INSTALL_DIR}/. && \
-    #  cp -R ../Net/include ${INSTALL_DIR}/. && \
-    #  cp -R ../Data/include ${INSTALL_DIR}/. && \
-    #  cp -R ../Data/SQLite/include ${INSTALL_DIR}/. && \
-    #  cp -R ../Data/ODBC/include ${INSTALL_DIR}/. && \
-    #  cp -R ../Zip/include ${INSTALL_DIR}/. && \
-    #  cp -R -T ../${INSTALL_DIR_BIN} ${INSTALL_DIR}/bin && \
-    #  cp -R -T ../${INSTALL_DIR_LIB} ${INSTALL_DIR}/lib"
+    POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && \
+      cp -R ../include ${INSTALL_DIR}/. && \
+      cp -R ../lib ${INSTALL_DIR}/. && \
+      cp -R ../bin ${INSTALL_DIR}/. && \
+      rm -rf ../include ../bin ../lib"
 
     #SKIP_FPC_INSTALL="no"
     #FPC_FILE=POCO.fpc
