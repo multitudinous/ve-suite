@@ -13,6 +13,12 @@ case $PLATFORM in
   Windows)
     unset PROJ_STR
     unset BUILD_TARGET
+    SOURCE_URL=http://vesuite.org/external/deps/non-admin/win-x86/msvc_11.0/gdal-1.9.0.zip
+    SOURCE_FORMAT=zip
+    BASE_DIR="${DEV_BASE_DIR}/gdal-1.9.0"
+    SOURCE_DIR="${BASE_DIR}"
+    BUILD_DIR="${BASE_DIR}"
+    INSTALL_DIR="${BASE_DIR}"
     ;;
   Darwin)
     PREBUILD_METHOD=configure

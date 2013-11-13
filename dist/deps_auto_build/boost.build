@@ -14,7 +14,7 @@ BUILD_METHOD=bjam
 BJAM=./bjam
 
 BJAM_PARAMS+=( variant=release )
-BJAM_PARAMS+=( link=shared )
+BJAM_PARAMS+=( link=shared,static )
 BJAM_PARAMS+=( threading=multi )
 BJAM_PARAMS+=( runtime-link=shared )
 BJAM_PARAMS+=( --prefix="${INSTALL_DIR}" )
