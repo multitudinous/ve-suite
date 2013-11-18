@@ -53,6 +53,8 @@ case $PLATFORM in
     SCONS_PARAMS+=( BOOST_LIBS="${BOOST_INSTALL_DIR}/lib" )
     SCONS_PARAMS+=( DEMO=False )
     SCONS_PARAMS+=( CPP_TESTS=False )
+    SCONS_PARAMS+=( FRAMEWORK_PYTHON=False )
+    SCONS_PARAMS+=( BINDINGS=none )
     #THREADING=multi
     #SCONS_PARAMS+=( --config=force )
     ;;
