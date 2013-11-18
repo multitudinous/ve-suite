@@ -1,0 +1,29 @@
+PACKAGE_NAME=cairo
+BASE_DIR="${DEV_BASE_DIR}/cairo-1.12.16"
+
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_URL=http://cairographics.org/releases/cairo-1.12.16.tar.xz
+SOURCE_FORMAT=xz
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+
+case $PLATFORM in
+  Windows)
+    unset PROJ_STR
+    unset BUILD_TARGET
+    ;;
+  Darwin)
+    export PKG_CONFIG_PATH=${PNG_INSTALL_DIR}/lib/pkgconfig:${pixman_INSTALL_DIR}/lib/pkgconfig/:${freetype_INSTALL_DIR}/lib/pkgconfig
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    ;;
+  Linux)
+    export PKG_CONFIG_PATH=${PNG_INSTALL_DIR}/lib/pkgconfig:${pixman_INSTALL_DIR}/lib/pkgconfig/:${freetype_INSTALL_DIR}/lib/pkgconfig
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    ;;
+esac

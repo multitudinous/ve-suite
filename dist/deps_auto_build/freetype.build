@@ -1,0 +1,31 @@
+PACKAGE_NAME=freetype
+BASE_DIR="${DEV_BASE_DIR}/freetype-2.5.0"
+
+SOURCE_RETRIEVAL_METHOD=wget
+SOURCE_URL=http://download.savannah.gnu.org/releases/freetype/freetype-2.5.0.1.tar.gz
+SOURCE_FORMAT=tgz
+
+SOURCE_DIR="${BASE_DIR}"
+BUILD_DIR="${BASE_DIR}/build-${ARCH}"
+INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
+
+case $PLATFORM in
+  Windows)
+    unset PROJ_STR
+    unset BUILD_TARGET
+    ;;
+  Darwin)
+    export PATH=${PATH}:${PNG_INSTALL_DIR}/bin
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    POST_BUILD_METHOD="make install"
+    ;;
+  Linux)
+    export PATH=${PATH}:${PNG_INSTALL_DIR}/bin
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    POST_BUILD_METHOD="make install"
+    ;;
+esac
