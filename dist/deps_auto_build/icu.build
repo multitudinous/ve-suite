@@ -40,9 +40,9 @@ case $PLATFORM in
 
     POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && \
       cp -R ../include ${INSTALL_DIR}/. && \
-      cp -R ../lib ${INSTALL_DIR}/. && \
-      cp -R ../bin ${INSTALL_DIR}/. && \
-      rm -rf ../include ../bin ../lib"
+      cp -R ../${INSTALL_DIR_BIN} ${INSTALL_DIR}/. && \
+      cp -R ../${INSTALL_DIR_LIB} ${INSTALL_DIR}/. && \
+      rm -rf ../include ../${INSTALL_DIR_BIN} ../${INSTALL_DIR_LIB}"
 
     #SKIP_FPC_INSTALL="no"
     #FPC_FILE=POCO.fpc
