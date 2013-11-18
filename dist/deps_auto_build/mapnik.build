@@ -31,13 +31,14 @@ case $PLATFORM in
     unset BUILD_TARGET
     ;;
   Darwin)
+    INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
     SOURCE_URL=http://mapnik.s3.amazonaws.com/dist/v2.2.0/mapnik-v2.2.0.tar.bz2
     SOURCE_FORMAT=tgz
     export PKG_CONFIG_PATH=${PNG_INSTALL_DIR}/lib/pkgconfig:${pixman_INSTALL_DIR}/lib/pkgconfig:${cairo_INSTALL_DIR}/lib/pkgconfig
     export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:${proj_INSTALL_DIR}/lib/pkgconfig:${ICU_INSTALL_DIR}/lib/pkgconfig:${freetype_INSTALL_DIR}/lib/pkgconfig
     SKIP_PREBUILD=yes
     BUILD_METHOD=scons
-    SCONS_PARAMS+=( prefix="${INSTALL_DIR}" )
+    SCONS_PARAMS+=( PREFIX="${INSTALL_DIR}" )
     SCONS_PARAMS+=( PROJ_INCLUDES="${proj_INSTALL_DIR}/include" )
     SCONS_PARAMS+=( PROJ_LIBS="${proj_INSTALL_DIR}/lib" )
     SCONS_PARAMS+=( ICU_INCLUDES="${ICU_INSTALL_DIR}/include" )
@@ -47,18 +48,23 @@ case $PLATFORM in
     SCONS_PARAMS+=( GDAL_CONFIG="${gdal_INSTALL_DIR}/bin/gdal-config" )
     SCONS_PARAMS+=( TIFF=no )
     SCONS_PARAMS+=( JPEG=no )
-    SCONS_PARAMS+=( ICU_LIB_NAME=libicuuc.dylib )
+    SCONS_PARAMS+=( ICU_LIB_NAME=icuuc )
     SCONS_PARAMS+=( BOOST_INCLUDES="${BOOST_INSTALL_DIR}/include" )
     SCONS_PARAMS+=( BOOST_LIBS="${BOOST_INSTALL_DIR}/lib" )
+    SCONS_PARAMS+=( DEMO=False )
+    SCONS_PARAMS+=( CPP_TESTS=False )
+    #THREADING
+    SCONS_PARAMS+=( --config=force )
     ;;
   Linux)
+    INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
     export PKG_CONFIG_PATH=${PNG_INSTALL_DIR}/lib/pkgconfig:${pixman_INSTALL_DIR}/lib/pkgconfig:${cairo_INSTALL_DIR}/lib/pkgconfig
     export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:${proj_INSTALL_DIR}/lib/pkgconfig:${ICU_INSTALL_DIR}/lib/pkgconfig:${freetype_INSTALL_DIR}/lib/pkgconfig
     SOURCE_URL=http://mapnik.s3.amazonaws.com/dist/v2.2.0/mapnik-v2.2.0.tar.bz2
     SOURCE_FORMAT=tgz
     SKIP_PREBUILD=yes
     BUILD_METHOD=scons
-    SCONS_PARAMS+=( prefix="${INSTALL_DIR}" )
+    SCONS_PARAMS+=( PREFIX="${INSTALL_DIR}" )
     SCONS_PARAMS+=( PROJ_INCLUDES="${proj_INSTALL_DIR}/include" )
     SCONS_PARAMS+=( PROJ_LIBS="${proj_INSTALL_DIR}/lib" )
     SCONS_PARAMS+=( ICU_INCLUDES="${ICU_INSTALL_DIR}/include" )
