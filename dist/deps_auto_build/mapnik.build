@@ -46,7 +46,8 @@ case $PLATFORM in
     SCONS_PARAMS+=( PNG_INCLUDES="${PNG_INSTALL_DIR}/include" )
     SCONS_PARAMS+=( PNG_LIBS="${PNG_INSTALL_DIR}/lib" )
     SCONS_PARAMS+=( GDAL_CONFIG="${gdal_INSTALL_DIR}/bin/gdal-config" )
-    SCONS_PARAMS+=( TIFF=no )
+    SCONS_PARAMS+=( TIFF_INCLUDES="${tiff_INSTALL_DIR}/include" )
+    SCONS_PARAMS+=( TIFF_LIBS="${tiff_INSTALL_DIR}/lib" )
     SCONS_PARAMS+=( JPEG=no )
     SCONS_PARAMS+=( ICU_LIB_NAME=icuuc )
     SCONS_PARAMS+=( BOOST_INCLUDES="${BOOST_INSTALL_DIR}/include" )
@@ -55,8 +56,10 @@ case $PLATFORM in
     SCONS_PARAMS+=( CPP_TESTS=False )
     SCONS_PARAMS+=( FRAMEWORK_PYTHON=False )
     SCONS_PARAMS+=( BINDINGS=none )
-    #THREADING=multi
+    #SCONS_PARAMS+=( USE_CONFIG=False )
+    SCONS_PARAMS+=( FREETYPE_CONFIG="${freetype_INSTALL_DIR}/bin/freetype-config" )
     #SCONS_PARAMS+=( --config=force )
+    #THREADING=multi
     ;;
   Linux)
     INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
