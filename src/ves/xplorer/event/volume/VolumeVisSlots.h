@@ -104,7 +104,8 @@ ves::xplorer::volume::cfdTextureDataSet* SetActiveTextureDataset();
 ///Update an lfx channel
 void UpdateLfxChannel( const std::string &dataSetName, const std::string &chanName );
 
-void UpdateLfxRenderProp(const std::string &dataSetName, int propType, boost::any value1, boost::any value2);
+///Update an lfx Render Property
+void UpdateLfxRenderProp( const std::string &renderSetType, const std::string &dataSetName, int propType, boost::any value1, boost::any value2 );
 
 } // namespace cad
 } // namespace event

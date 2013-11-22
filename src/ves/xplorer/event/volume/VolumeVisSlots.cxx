@@ -286,13 +286,32 @@ void GetFloat(const boost::any &value, float *pf)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-lfx::core::RendererPtr GetLfxRenderer( const std::string &dataSetName, lfx::core::DataSetPtr &pds )
+lfx::core::RendererPtr GetLfxRenderer( const std::string &renderSetType, const std::string &dataSetName, lfx::core::DataSetPtr &pds )
 {
-	pds = activateLfxDataSet( dataSetName, false );
-	if( !pds.get() )
+	if( renderSetType == "vol" )
 	{
-		vprDEBUG( vesDBG, 0 ) << "|\tGetLfxRenderer - failed to find the dataset: " << dataSetName << std::endl << vprDEBUG_FLUSH;
-		return lfx::core::RendererPtr();
+		pds = activateLfxDataSet( dataSetName, false );
+		if( !pds.get() )
+		{
+			vprDEBUG( vesDBG, 0 ) << "|\tGetLfxRenderer - failed to find the dataset: " << dataSetName << std::endl << vprDEBUG_FLUSH;
+			return lfx::core::RendererPtr();
+		}
+	}
+	else
+	{
+		ves::xplorer::Model* activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+		if( activeModel == NULL )
+		{
+			vprDEBUG( vesDBG, 0 ) << "|\tGetLfxRenderer - failed to find the active model for renderer type: " << renderSetType << std::endl << vprDEBUG_FLUSH;
+			return lfx::core::RendererPtr();
+		}
+
+		pds = activeModel->GetVtkRenderSet( renderSetType );
+		if( !pds.get() )
+		{
+			vprDEBUG( vesDBG, 0 ) << "|\tGetLfxRenderer - failed to find the dataset for renderer type: " << renderSetType << std::endl << vprDEBUG_FLUSH;
+			return lfx::core::RendererPtr();
+		}
 	}
 
 	lfx::core::RendererPtr prender = pds->getRenderer();
@@ -305,17 +324,17 @@ lfx::core::RendererPtr GetLfxRenderer( const std::string &dataSetName, lfx::core
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-lfx::core::RendererPtr GetLfxRenderer( const std::string &dataSetName )
+lfx::core::RendererPtr GetLfxRenderer( const std::string &renderSetType, const std::string &dataSetName )
 {
 	lfx::core::DataSetPtr pds;
-	return GetLfxRenderer( dataSetName, pds );
+	return GetLfxRenderer( renderSetType, dataSetName, pds );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void UpdateLfxChannel( const std::string &dataSetName, const std::string &chanName )
 {
 	lfx::core::DataSetPtr ds;
-	lfx::core::RendererPtr r = GetLfxRenderer( dataSetName, ds );
+	lfx::core::RendererPtr r = GetLfxRenderer( "vol", dataSetName, ds );
 	if( !r.get() ) return;
 
 	// TODO: FIGURE OUT HOW TO SET THE INPUT NAME FOR THE RENDERER TYPE
@@ -324,16 +343,16 @@ void UpdateLfxChannel( const std::string &dataSetName, const std::string &chanNa
 	if( curName != chanName )
 	{
 		r->setInputNameAlias( lfx::core::VolumeRenderer::VOLUME_DATA, chanName );
-		ds->setRenderer( r ); // force dirty
+		ds->setRenderer( r ); // force dirty  
 		ds->updateAll(); // update now with new channel data.
 	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateLfxRenderProp(const std::string &dataSetName, int propType, boost::any value1, boost::any value2)
+void UpdateLfxRenderProp(const std::string &renderSetType, const std::string &dataSetName, int propType, boost::any value1, boost::any value2)
 {
 	lfx::core::DataSetPtr ds;
-	lfx::core::RendererPtr r = GetLfxRenderer( dataSetName, ds );
+	lfx::core::RendererPtr r = GetLfxRenderer( renderSetType, dataSetName, ds );
 	if( !r.get() ) return;
 
 	std::string s;

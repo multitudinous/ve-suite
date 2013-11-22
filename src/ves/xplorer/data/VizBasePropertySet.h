@@ -104,7 +104,8 @@ protected:
     ///\post The PropertySet can now populate this table or read this table
     void RegisterPropertySet( std::string const& tableName );
 	///Create the latticefx dataset property skeleton for populating this PropertSet
-	virtual void CreateSkeletonLfxDs( lfx::core::Renderer *prender );
+	virtual void CreateSkeletonLfxDsRenderer( const std::string &renderSetType, lfx::core::Renderer *prender ); // this is used by VTK::DataSet to set the uniforms on the underlying Core::DataSet
+	virtual void CreateSkeletonLfxDsVolume( lfx::core::Renderer *prender ); // this is used by Core::DataSet only and calls CreateSkeletonLfxDsRenderer, for texture volume type only
     ///Create the skeleton for populating this PropertSet
     virtual void CreateSkeleton()
     {
@@ -125,7 +126,7 @@ protected:
 	typedef switchwire::Event< void ( const std::string&, const std::string& ) > UpdateLfxChan_type;
     UpdateLfxChan_type m_updateLfxChan;
 
-	typedef switchwire::Event< void ( const std::string&, int, boost::any, boost::any ) > UpdateLfxRenderProp_type;
+	typedef switchwire::Event< void ( const std::string&, const std::string&, int, boost::any, boost::any ) > UpdateLfxRenderProp_type;
     UpdateLfxRenderProp_type m_updateLfxRenderProp;
 
 	std::vector< std::string > _lfxValueProps;
@@ -135,6 +136,8 @@ protected:
     ves::util::StringSignal_type* m_deleteVizSignal;
     ///The add viz signal
     ves::util::TwoStringSignal_type* m_addVizSignal;
+
+	std::string _renderSetType;
 
 
 private:

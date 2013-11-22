@@ -401,35 +401,12 @@ void VizBasePropertySet::EnableLiveProperties( bool live )
     // and explicitly call PropertySet::EnableLiveProperties.
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VizBasePropertySet::CreateSkeletonLfxDs( lfx::core::Renderer *prender )
+void VizBasePropertySet::CreateSkeletonLfxDsRenderer( const std::string &renderSetType, lfx::core::Renderer *prender )
 {
 	std::string currentDataSet = "";
 
+	_renderSetType = renderSetType;
 	_lfxValueProps.clear();
-
-    AddProperty( "Hide", false, "Toggle Viz Off" );
-
-	// add dataset property
-	AddProperty( "DataSet", std::string(""), "Data Set" );
-    PSVectorOfStrings enumValues;
-
-	enumValues = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( "Dataset", "Filename" );
-    if( enumValues.empty() )
-    {
-        enumValues.push_back( "No datasets loaded" );
-	}
-	else
-	{
-		currentDataSet = enumValues[0];
-	}
-	SetPropertyAttribute( "DataSet", "enumValues", enumValues );
-	GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateLfxDataSet, this, _1 ) );
-
-
-	// add a channel property
-	AddProperty( "Channel", std::string(""), "Channel" );
-	InitLfxChannelOptions();
-	GetProperty( "Channel" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateLfxChannel, this, _1 ) );
 
 	if( !prender ) return;
 
@@ -467,6 +444,75 @@ void VizBasePropertySet::CreateSkeletonLfxDs( lfx::core::Renderer *prender )
 	prender->getEnumListHardwareMaskOperator( &enumNames );
 	sval = prender->getEnumName( (lfx::core::Renderer::HardwareMaskOperator)prender->getHardwareMaskOperator() );
 	AddPropEnum( "HM_OPE", "HardwareMask Operator",  sval, propType, enumNames );
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::CreateSkeletonLfxDsVolume( lfx::core::Renderer *prender )
+{
+	std::string currentDataSet = "";
+
+    AddProperty( "Hide", false, "Toggle Viz Off" );
+
+	// add dataset property
+	AddProperty( "DataSet", std::string(""), "Data Set" );
+    PSVectorOfStrings enumValues;
+
+	enumValues = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( "Dataset", "Filename" );
+    if( enumValues.empty() )
+    {
+        enumValues.push_back( "No datasets loaded" );
+	}
+	else
+	{
+		currentDataSet = enumValues[0];
+	}
+	SetPropertyAttribute( "DataSet", "enumValues", enumValues );
+	GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateLfxDataSet, this, _1 ) );
+
+
+	// add a channel property
+	AddProperty( "Channel", std::string(""), "Channel" );
+	InitLfxChannelOptions();
+	GetProperty( "Channel" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateLfxChannel, this, _1 ) );
+
+	CreateSkeletonLfxDsRenderer( "vol", prender );
+
+	/*
+	// use renderer's interface to get and set properties, don't deal with uniforms directly
+
+	std::vector< std::string > enumNames;
+	lfx::core::Renderer::PropType propType;
+	std::string sval;
+
+	propType = lfx::core::Renderer::PT_TF_INR;
+	const osg::Vec2f tfRange = prender->getTransferFunctionInputRange();
+	AddPropFloat( "TF_INR_MIN", "TransferFunction Min", tfRange[0], propType );
+	AddPropFloat( "TF_INR_MAX", "TransferFunction Max", tfRange[1], propType );
+
+	propType = lfx::core::Renderer::PT_TF_DST;
+	enumNames.clear();
+	prender->getEnumListTrans( &enumNames );
+	sval = prender->getEnumName( prender->getTransferFunctionDestination() );
+	AddPropEnum( "TF_DST", "TransferFunction Destination", sval, propType, enumNames );
+
+	propType = lfx::core::Renderer::PT_HM_SRC;
+	enumNames.clear();
+	prender->getEnumListMaskInput( &enumNames );
+	sval = prender->getEnumName( prender->getHardwareMaskInputSource() );
+	AddPropEnum( "HM_SRC", "HardwareMask Input Source",  sval, propType, enumNames );
+
+	propType = lfx::core::Renderer::PT_HM_REF;
+	AddPropFloat( "HM_REF", "HardwareMask Reference", prender->getHardwareMaskReference(), propType );
+
+	propType = lfx::core::Renderer::PT_HM_EPS;
+	AddPropFloat( "HM_EPS", "HardwareMask Epsilon", prender->getHardwareMaskEpsilon(), propType );
+	
+	propType = lfx::core::Renderer::PT_HM_OPE;
+	enumNames.clear();
+	prender->getEnumListHardwareMaskOperator( &enumNames );
+	sval = prender->getEnumName( (lfx::core::Renderer::HardwareMaskOperator)prender->getHardwareMaskOperator() );
+	AddPropEnum( "HM_OPE", "HardwareMask Operator",  sval, propType, enumNames );
+	*/
 
 	/*
 	///How to control vis animations????
@@ -582,7 +628,7 @@ void VizBasePropertySet::UpdateLfxValue( propertystore::PropertyPtr prop )
 	}
 
 	
-	m_updateLfxRenderProp.signal( dataSetName, propType, v1, v2 );
+	m_updateLfxRenderProp.signal( _renderSetType, dataSetName, propType, v1, v2 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

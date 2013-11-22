@@ -186,6 +186,11 @@ public:
     void DeleteDataSet( std::string dataSetName );
     ///\@}
 
+	///\@{
+	lfx::core::DataSetPtr GetVtkRenderSet( const std::string &type );
+	void SetVtkRenderSet( const std::string &type, lfx::core::DataSetPtr ds );
+	///\@}
+
 
     ves::xplorer::scenegraph::CADEntity* GetGeomDataSet( int );
     unsigned int GetNumberOfGeomDataSets( void );
@@ -272,6 +277,12 @@ private:
     ///Active dataset
     lfx::core::vtk::DataSetPtr activeDataSet;
 	lfx::core::DataSetPtr _activeLfxDataSet;
+
+	/// These are lfx datasets used for rendering vtk data. The model only knows about the lfx::core::vtk::DataSet, 
+	/// but when updating lfx::core::Renderer properties, we need the lfx::core::DataSet, so these will be set for iso, con, vec, str, pol.. ect
+	typedef std::map< std::string, lfx::core::DataSetPtr > VtkRenderSetMap;
+	VtkRenderSetMap _vtkRenderSetMap;
+
 
     //the information for following three variables should be transfered from cfdApp
     ModelTypeIndex mModelType;

@@ -708,6 +708,19 @@ void Model::DeleteDataSet( std::string dataSetName )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+lfx::core::DataSetPtr Model::GetVtkRenderSet( const std::string &type )
+{
+	VtkRenderSetMap::iterator it = _vtkRenderSetMap.find (type);
+	if( it == _vtkRenderSetMap.end() ) return lfx::core::DataSetPtr();
+
+	return it->second;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetVtkRenderSet( const std::string &type, lfx::core::DataSetPtr ds )
+{
+	_vtkRenderSetMap[type] = ds;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Model::RenderTextualDisplay( bool onOff )
 {
     if( onOff )

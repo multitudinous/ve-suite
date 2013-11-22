@@ -41,6 +41,8 @@
 #include <iostream>
 #include <ves/xplorer/data/DatabaseManager.h>
 
+#include <latticefx/core/vtk/VTKSurfaceRenderer.h>
+
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 IsosurfacePropertySet::IsosurfacePropertySet()
@@ -49,7 +51,7 @@ IsosurfacePropertySet::IsosurfacePropertySet()
     SetTypeName( "Isosurface" );
     RegisterPropertySet( GetTypeName() );
 
-    CreateSkeleton();
+    CreateSkeletonLfxDs();
 }
 ////////////////////////////////////////////////////////////////////////////////
 IsosurfacePropertySet::IsosurfacePropertySet( const IsosurfacePropertySet& orig )
@@ -66,6 +68,16 @@ IsosurfacePropertySet::~IsosurfacePropertySet()
 propertystore::PropertySetPtr IsosurfacePropertySet::CreateNew()
 {
     return propertystore::PropertySetPtr( new IsosurfacePropertySet() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void IsosurfacePropertySet::CreateSkeletonLfxDs()
+{
+	CreateSkeleton();
+
+	// TODO: set any other defaults for the renderer here
+	lfx::core::vtk::VTKSurfaceRendererPtr renderOp( new lfx::core::vtk::VTKSurfaceRenderer() );
+	renderOp->setTransferFunctionDestination( lfx::core::Renderer::TF_RGBA );
+	VizBasePropertySet::CreateSkeletonLfxDsRenderer( "iso", renderOp.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IsosurfacePropertySet::CreateSkeleton()

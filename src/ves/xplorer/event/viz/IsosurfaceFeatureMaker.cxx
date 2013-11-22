@@ -35,6 +35,11 @@
 #include <propertystore/PropertySet.h>
 #include <ves/xplorer/data/IsosurfacePropertySet.h>
 
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/Model.h>
+
+#include <latticefx/core/vtk/DataSet.h>
+
 #include <boost/any.hpp>
 
 using namespace ves::conductor;
@@ -63,11 +68,29 @@ void IsosurfaceFeatureMaker::Update( const::std::string& recordUUID )
 {
     // For now we won't worry about how to discover an existing plane that needs
     // to be deleted, moved, etc. We will just create a new one
-    propertystore::PropertySetPtr ptr = propertystore::PropertySetPtr( new xplorer::data::IsosurfacePropertySet() );
+    propertystore::PropertySetPtr ptr = propertystore::PropertySetPtr( new xplorer:: data::IsosurfacePropertySet() );
     ptr->SetUUID( recordUUID );
     ptr->Load();
     //Call into VisFeatureMakerBase
     Execute( ptr );
 }
+
+/*
 ////////////////////////////////////////////////////////////////////////////////
+bool IsosurfaceFeatureMaker::AddPlaneLfxVtkDs( propertystore::PropertySetPtr& set )
+{
+	if( !SetActiveDataSet( set ) ) return false;
+
+	ves::xplorer::Model* activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+	if (!activeModel ) return false;
+
+	lfx::core::vtk::DataSetPtr ds = activeModel->GetActiveDataSet();
+	if( !ds.get() ) return false;
+
+
+	return true;
+}
+*/
+////////////////////////////////////////////////////////////////////////////////
+
 

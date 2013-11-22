@@ -56,6 +56,8 @@ public:
 
 protected:
 
+	// bool AddPlaneLfxVtkDs( propertystore::PropertySetPtr& set );
+
 private:
 
 };

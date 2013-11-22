@@ -113,7 +113,7 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
                            m_connections, any_SignalType, normal_Priority );
 
 	CONNECTSIGNALS_STATIC( "%TBETUpdateLfxRenderProp",
-                           void( std::string const&, int, boost::any, boost::any  ),
+                           void( std::string const&, std::string const&, int, boost::any, boost::any  ),
                            &UpdateLfxRenderProp,
                            m_connections, any_SignalType, normal_Priority );
 }

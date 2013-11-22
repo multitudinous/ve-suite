@@ -35,6 +35,7 @@
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/data/VizBasePropertySet.h>
 #include <ves/xplorer/event/data/DataSetScalarBar.h>
 
 #include <propertystore/PropertySet.h>
@@ -57,7 +58,7 @@
 #include <latticefx/core/vtk/ChannelDatavtkDataObject.h>
 #include <latticefx/core/vtk/VTKSurfaceRenderer.h>
 #include <latticefx/core/vtk/VTKIsoSurfaceRTP.h>
-#include <latticefx/core/vtk/DataSet.h>
+#include <latticefx/core/vtk/DataSet.h> 
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
@@ -351,6 +352,11 @@ void cfdIsosurface::CreateLFXPlane()
     renderOp->addInput( "vtkDataObject" );
     m_dsp->setRenderer( renderOp );
     m_dsp->setDirty();
+
+	// update the uniforms to match whats in the gui
+	xplorer::data::VizBasePropertySet *set = dynamic_cast<xplorer::data::VizBasePropertySet *>(m_propertySet.get());
+	if( set ) set->UpdateRendererLfxValues();
+
     //Now force an update of the lfx pipeline
     bool success = m_dsp->updateAll();
     
@@ -358,5 +364,8 @@ void cfdIsosurface::CreateLFXPlane()
     {
         std::cout << "Some sort of problem with lfx " << std::endl;
     }
+
+	Model* activeModel = ModelHandler::instance()->GetActiveModel();
+	activeModel->SetVtkRenderSet( "iso", m_dsp );
 }
 ///////////////////////////////////////////////////////////////////////////

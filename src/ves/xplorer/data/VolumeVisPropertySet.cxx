@@ -173,7 +173,7 @@ void VolumeVisPropertySet::CreateSkeletonLfxDs()
         renderOp->setHardwareMaskEpsilon( 0.02f );
     }
 
-	VizBasePropertySet::CreateSkeletonLfxDs( renderOp.get() );
+	VizBasePropertySet::CreateSkeletonLfxDsVolume( renderOp.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
