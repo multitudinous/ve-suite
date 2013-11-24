@@ -13,6 +13,8 @@ case $PLATFORM in
   Windows)
     unset PROJ_STR
     unset BUILD_TARGET
+    SOURCE_URL=http://sqlite.org/2013/sqlite-dll-win32-x86-3080100.zip
+    SOURCE_FORMAT=zip
     ;;
   Darwin)
     PREBUILD_METHOD=configure
