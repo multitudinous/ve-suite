@@ -13,6 +13,32 @@ case $PLATFORM in
   Windows)
     unset PROJ_STR
     unset BUILD_TARGET
+    PREBUILD_METHOD=custom
+    BUILD_METHOD=devenv
+    MSVC_CONFIG=Release
+    if [ ${ARCH} = "32-bit" ]; then
+      MSVC_PLATFORM=Win32
+      #PLATFORM_SUFFIX=
+      INSTALL_DIR_BIN=bin
+      INSTALL_DIR_LIB=lib
+    else
+      MSVC_PLATFORM=x64
+      PLATFORM_SUFFIX=_x64
+      INSTALL_DIR_BIN=bin64
+      INSTALL_DIR_LIB=lib64
+    fi
+
+    #POST_RETRIEVAL_METHOD="${DEVENV} /Upgrade ${SOURCE_DIR}/source/allinone/allinone.sln"
+    CUSTOM_PREBUILD="${DEVENV} /Upgrade ${SOURCE_DIR}/builds/win32/vc2010/freetype.sln"
+
+    #freetype solution
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/builds/win32/vc2010/freetype.sln" )
+
+    #POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && \
+    #  cp -R ../include ${INSTALL_DIR}/. && \
+    #  cp -R ../${INSTALL_DIR_BIN} ${INSTALL_DIR}/. && \
+    #  cp -R ../${INSTALL_DIR_LIB} ${INSTALL_DIR}/. && \
+    #  rm -rf ../include ../${INSTALL_DIR_BIN} ../${INSTALL_DIR_LIB}"
     ;;
   Darwin)
     export PATH=${PATH}:${PNG_INSTALL_DIR}/bin
