@@ -112,6 +112,7 @@ void IsosurfacePropertySet::CreateSkeleton()
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
     GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
+	GetProperty( "DataSet_VectorData" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorData, this, _1 ) );
 
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
@@ -209,6 +210,8 @@ void IsosurfacePropertySet::UpdateColorByScalarDataRange( propertystore::Propert
         SetPropertyValue( "ColorByScalar_ScalarRange_Min", min );
         SetPropertyValue( "ColorByScalar_ScalarRange_Max", max );
     }
+
+	UpdateColorByScalarData( property );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool IsosurfacePropertySet::ValidateColorByScalarMinMax( propertystore::PropertyPtr property, boost::any value )

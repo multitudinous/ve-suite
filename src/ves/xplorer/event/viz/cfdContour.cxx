@@ -139,6 +139,10 @@ cfdContour::~cfdContour()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdContour::Update( void )
 {
+	CreateLFXPlane();
+    this->updateFlag = true;
+    return;
+
     if( this->cursorType == CUBE )
     {
         /*

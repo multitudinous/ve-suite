@@ -42,6 +42,8 @@
 #include <iostream>
 #include <ves/xplorer/data/DatabaseManager.h>
 
+#include <latticefx/core/vtk/VTKSurfaceRenderer.h>
+
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 ContourPlanePropertySet::ContourPlanePropertySet()
@@ -50,7 +52,7 @@ ContourPlanePropertySet::ContourPlanePropertySet()
     SetTypeName( "ContourPlane" );
     RegisterPropertySet( GetTypeName() );
 
-    CreateSkeleton();
+    CreateSkeletonLfxDs();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ContourPlanePropertySet::ContourPlanePropertySet( const ContourPlanePropertySet& orig )
@@ -67,6 +69,16 @@ ContourPlanePropertySet::~ContourPlanePropertySet()
 propertystore::PropertySetPtr ContourPlanePropertySet::CreateNew()
 {
     return propertystore::PropertySetPtr( new ContourPlanePropertySet );
+}
+////////////////////////////////////////////////////////////////////////////////
+void ContourPlanePropertySet::CreateSkeletonLfxDs()
+{
+	CreateSkeleton();
+
+	// TODO: set any other defaults for the renderer here
+	lfx::core::vtk::VTKSurfaceRendererPtr renderOp( new lfx::core::vtk::VTKSurfaceRenderer() );
+	renderOp->setTransferFunctionDestination( lfx::core::Renderer::TF_RGBA );
+	VizBasePropertySet::CreateSkeletonLfxDsRenderer( "con", renderOp.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ContourPlanePropertySet::CreateSkeleton()
@@ -224,7 +236,7 @@ void ContourPlanePropertySet::CreateSkeleton()
     {
         AddProperty( "Advanced_Greyscale", false, "Greyscale" );
         /*std::vector< propertystore::PropertyPtr > greyscale;
-        greyscale.push_back( GetProperty( "Advanced_Greyscale" ) );
+        greyscale.push_back( GetProperty( "Advanced_Greyscale" ) ); 
         const std::string slotName =
             boost::lexical_cast<std::string>( this ) +".SetContourPlaneGreyscale";
         propertystore::MakeLiveBasePtr p( new propertystore::MakeLiveLinked< bool >(

@@ -702,5 +702,8 @@ void cfdContourBase::CreateLFXPlane()
     {
         std::cout << "Some sort of problem with lfx " << std::endl;
     }
+
+	Model* activeModel = ModelHandler::instance()->GetActiveModel();
+	activeModel->SetVtkRenderSet( "con", m_dsp );
 }
 ////////////////////////////////////////////////////////////////////////////////

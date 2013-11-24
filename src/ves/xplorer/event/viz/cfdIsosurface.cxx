@@ -360,7 +360,7 @@ void cfdIsosurface::CreateLFXPlane()
     //Now force an update of the lfx pipeline
     bool success = m_dsp->updateAll();
     
-    if( !success )
+    if( !success )  
     {
         std::cout << "Some sort of problem with lfx " << std::endl;
     }

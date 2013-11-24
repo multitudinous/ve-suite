@@ -101,6 +101,15 @@ void UpdateScalarRange( double const& minRange, double const& maxRange );
 ///dataset per model.
 ves::xplorer::volume::cfdTextureDataSet* SetActiveTextureDataset();
 
+///Update an lfx vtk scalar
+void UpdateLfxVtkScalar( const std::string &renderSetType, const std::string &scalarName );
+
+///Update an lfx vtk vector
+void UpdateLfxVtkVector( const std::string &renderSetType, const std::string &vectorName );
+
+///Update an lfx colorbyscalar
+void UpdateLfxVtkColorByScalar( const std::string &renderSetType, const std::string &scalarName );
+
 ///Update an lfx channel
 void UpdateLfxChannel( const std::string &dataSetName, const std::string &chanName );
 

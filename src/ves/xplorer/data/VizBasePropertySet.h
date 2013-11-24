@@ -74,6 +74,10 @@ public:
     void UpdateScalarDataRange( propertystore::PropertyPtr property );
     ///Update method
     void UpdateVectorDataOptions( propertystore::PropertyPtr property );
+	///Update method
+	void UpdateVectorData( propertystore::PropertyPtr property );
+	///Update method
+	void UpdateColorByScalarData( propertystore::PropertyPtr property );
     ///Update method for enabling surface tools
     void UpdateDirectionSelection( propertystore::PropertyPtr property );
     /// Override from PropertySet
@@ -104,6 +108,7 @@ protected:
     ///\post The PropertySet can now populate this table or read this table
     void RegisterPropertySet( std::string const& tableName );
 	///Create the latticefx dataset property skeleton for populating this PropertSet
+	///\ renderSetTypes are vol, iso, con, vec, str, pol
 	virtual void CreateSkeletonLfxDsRenderer( const std::string &renderSetType, lfx::core::Renderer *prender ); // this is used by VTK::DataSet to set the uniforms on the underlying Core::DataSet
 	virtual void CreateSkeletonLfxDsVolume( lfx::core::Renderer *prender ); // this is used by Core::DataSet only and calls CreateSkeletonLfxDsRenderer, for texture volume type only
     ///Create the skeleton for populating this PropertSet
@@ -117,14 +122,19 @@ protected:
 
 	void InitLfxChannelOptions();
 
+	void UpdateScalarData( propertystore::PropertyPtr property );
+
 	void UpdateLfxDataSet( propertystore::PropertyPtr property );
 	void UpdateLfxChannel( propertystore::PropertyPtr property );
 	void UpdateLfxValue( propertystore::PropertyPtr property );
 
 	bool GetLfxValues( propertystore::PropertyPtr property, SLfxPropValues *pv );
 
-	typedef switchwire::Event< void ( const std::string&, const std::string& ) > UpdateLfxChan_type;
-    UpdateLfxChan_type m_updateLfxChan;
+	typedef switchwire::Event< void ( const std::string&, const std::string& ) > Update_2str;
+    Update_2str m_updateLfxVtkScalar;
+	Update_2str m_updateLfxVtkVector;
+	Update_2str m_updateLfxVtkColorByScalar;
+	Update_2str m_updateLfxChan;
 
 	typedef switchwire::Event< void ( const std::string&, const std::string&, int, boost::any, boost::any ) > UpdateLfxRenderProp_type;
     UpdateLfxRenderProp_type m_updateLfxRenderProp;

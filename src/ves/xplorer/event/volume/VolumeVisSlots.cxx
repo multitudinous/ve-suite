@@ -46,8 +46,13 @@
 
 #include <ves/xplorer/Debug.h>
 
-#include <latticefx/core/vtk/DataSet.h>
 #include <latticefx/core/VolumeRenderer.h>
+#include <latticefx/core/RTPOperation.h>
+#include <latticefx/core/vtk/DataSet.h>
+#include <latticefx/core/vtk/VTKSurfaceRenderer.h>
+#include <latticefx/core/vtk/VTKBaseRTP.h>
+
+#include <boost/foreach.hpp>
 
 namespace ves
 {
@@ -330,6 +335,95 @@ lfx::core::RendererPtr GetLfxRenderer( const std::string &renderSetType, const s
 	return GetLfxRenderer( renderSetType, dataSetName, pds );
 }
 
+////////////////////////////////////////////////////////////////////////////////
+enum EVtkDataUpdateType
+{
+	E_VTK_DUT_Scalar,
+	E_VTK_DUT_Vector,
+	E_VTK_DUT_Color
+};
+void UpdateLfxVtkScalarOrVector( const std::string &renderSetType, const std::string &name, EVtkDataUpdateType type )
+{
+	lfx::core::DataSetPtr ds;
+	lfx::core::RendererPtr r = GetLfxRenderer( renderSetType, "", ds );
+	if( !r.get() ) return;
+
+	lfx::core::vtk::VTKSurfaceRenderer *psr = dynamic_cast<lfx::core::vtk::VTKSurfaceRenderer *>( r.get() );
+	if( !psr ) return;
+
+	std::string curName;
+	if( type == E_VTK_DUT_Scalar )
+	{
+		curName = psr->GetActiveScalar();
+		psr->SetActiveScalar( name );
+	}
+	else if( type == E_VTK_DUT_Vector )
+	{
+		curName = psr->GetActiveVector();
+		psr->SetActiveVector( name );
+	}
+	else
+	{
+		curName = psr->GetColorByScalar();
+		psr->SetColorByScalar( name );
+	}
+
+	if( curName == name ) return;
+	
+	bool rtpDirty = false;
+	lfx::core::RTPOperationList& oplist = ds->getOperations();
+	BOOST_FOREACH( lfx::core::RTPOperationPtr op, oplist  )
+	{
+		lfx::core::vtk::VTKBaseRTP *prtp = dynamic_cast<lfx::core::vtk::VTKBaseRTP *>( op.get() );
+		if( !prtp ) continue;
+
+		if( type == E_VTK_DUT_Scalar )
+		{
+			std::string cur = prtp->GetActiveScalar();
+			if( cur.size() )
+			{
+				prtp->SetActiveScalar( name );
+				rtpDirty = true;
+			}
+		}
+		else if( type == E_VTK_DUT_Vector )
+		{
+			std::string cur = prtp->GetActiveVector();
+			if( cur.size() )
+			{
+				prtp->SetActiveVector( name );
+				rtpDirty = true;
+			}
+		}
+	}
+
+	
+	//psr->FullRefresh();
+
+	int dirty =  lfx::core::DataSet::RENDERER_DIRTY;
+	if( rtpDirty ) dirty |= lfx::core::DataSet::RTPOPERATION_DIRTY;
+	ds->setDirty( dirty );
+	ds->updateAll(); // update now with new channel data.
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void UpdateLfxVtkScalar( const std::string &renderSetType, const std::string &scalarName )
+{
+	 UpdateLfxVtkScalarOrVector( renderSetType, scalarName, E_VTK_DUT_Scalar );
+}
+
+//////////////////////////////////////////////////////////////////////////////// 
+void UpdateLfxVtkVector( const std::string &renderSetType, const std::string &vectorName )
+{
+	UpdateLfxVtkScalarOrVector( renderSetType, vectorName, E_VTK_DUT_Vector );
+}
+
+//////////////////////////////////////////////////////////////////////////////// 
+void UpdateLfxVtkColorByScalar( const std::string &renderSetType, const std::string &scalarName )
+{
+	UpdateLfxVtkScalarOrVector( renderSetType, scalarName, E_VTK_DUT_Color );
+}
+ 
 ////////////////////////////////////////////////////////////////////////////////
 void UpdateLfxChannel( const std::string &dataSetName, const std::string &chanName )
 {

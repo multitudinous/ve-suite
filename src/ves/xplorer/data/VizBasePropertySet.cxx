@@ -62,6 +62,30 @@ VizBasePropertySet::VizBasePropertySet()
         reinterpret_cast< ves::util::StringSignal_type* >
         ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VizBasePropertySet.DeleteVizFeature" ) );
 
+	///Signal to update an Lfx Vtk scalar
+    {
+        std::string name( "VizBasePropertySet" );
+        name += boost::lexical_cast<std::string>( this );
+        name += ".TBETUpdateLfxVtkScalar";
+        switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxVtkScalar ), name, switchwire::EventManager::unspecified_SignalType );
+    }
+
+	///Signal to update an Lfx Vtk vector
+    {
+        std::string name( "VizBasePropertySet" );
+        name += boost::lexical_cast<std::string>( this );
+        name += ".TBETUpdateLfxVtkVector";
+        switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxVtkVector ), name, switchwire::EventManager::unspecified_SignalType );
+    }
+
+	///Signal to update an Lfx Vtk scalar
+    {
+        std::string name( "VizBasePropertySet" );
+        name += boost::lexical_cast<std::string>( this );
+        name += ".TBETUpdateLfxVtkColorByScalar";
+        switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxVtkColorByScalar ), name, switchwire::EventManager::unspecified_SignalType );
+    }
+	
 	///Signal to update an Lfx channel
     {
         std::string name( "VizBasePropertySet" );
@@ -293,6 +317,9 @@ void VizBasePropertySet::UpdateScalarDataRange( propertystore::PropertyPtr prope
         SetPropertyValue( "DataSet_ScalarRange_Min", min );
         SetPropertyValue( "DataSet_ScalarRange_Max", max );
     }
+
+
+	UpdateScalarData( property );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VizBasePropertySet::UpdateVectorDataOptions( propertystore::PropertyPtr property )
@@ -309,6 +336,24 @@ void VizBasePropertySet::UpdateVectorDataOptions( propertystore::PropertyPtr pro
         enumValues.push_back( "No vectors available" );
     }
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
+}
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::UpdateScalarData( propertystore::PropertyPtr property )
+{
+    std::string selectedScalar = GetDatumValue< std::string >( "DataSet_ScalarData" );
+	m_updateLfxVtkScalar.signal( _renderSetType, selectedScalar );
+}
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::UpdateVectorData( propertystore::PropertyPtr property )
+{
+    std::string selectedVector = GetDatumValue< std::string >( "DataSet_VectorData" );
+	m_updateLfxVtkVector.signal( _renderSetType, selectedVector );
+}
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::UpdateColorByScalarData( propertystore::PropertyPtr property )
+{
+    std::string selectedScalar = GetDatumValue< std::string >( "ColorByScalar" );
+	m_updateLfxVtkColorByScalar.signal( _renderSetType, selectedScalar );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VizBasePropertySet::UpdateModeOptions( propertystore::PropertyPtr property )
@@ -427,23 +472,26 @@ void VizBasePropertySet::CreateSkeletonLfxDsRenderer( const std::string &renderS
 	sval = prender->getEnumName( prender->getTransferFunctionDestination() );
 	AddPropEnum( "TF_DST", "TransferFunction Destination", sval, propType, enumNames );
 
-	propType = lfx::core::Renderer::PT_HM_SRC;
-	enumNames.clear();
-	prender->getEnumListMaskInput( &enumNames );
-	sval = prender->getEnumName( prender->getHardwareMaskInputSource() );
-	AddPropEnum( "HM_SRC", "HardwareMask Input Source",  sval, propType, enumNames );
+	if( renderSetType == "vol" )
+	{
+		propType = lfx::core::Renderer::PT_HM_SRC;
+		enumNames.clear();
+		prender->getEnumListMaskInput( &enumNames );
+		sval = prender->getEnumName( prender->getHardwareMaskInputSource() );
+		AddPropEnum( "HM_SRC", "HardwareMask Input Source",  sval, propType, enumNames );
 
-	propType = lfx::core::Renderer::PT_HM_REF;
-	AddPropFloat( "HM_REF", "HardwareMask Reference", prender->getHardwareMaskReference(), propType );
+		propType = lfx::core::Renderer::PT_HM_REF;
+		AddPropFloat( "HM_REF", "HardwareMask Reference", prender->getHardwareMaskReference(), propType );
 
-	propType = lfx::core::Renderer::PT_HM_EPS;
-	AddPropFloat( "HM_EPS", "HardwareMask Epsilon", prender->getHardwareMaskEpsilon(), propType );
+		propType = lfx::core::Renderer::PT_HM_EPS;
+		AddPropFloat( "HM_EPS", "HardwareMask Epsilon", prender->getHardwareMaskEpsilon(), propType );
 	
-	propType = lfx::core::Renderer::PT_HM_OPE;
-	enumNames.clear();
-	prender->getEnumListHardwareMaskOperator( &enumNames );
-	sval = prender->getEnumName( (lfx::core::Renderer::HardwareMaskOperator)prender->getHardwareMaskOperator() );
-	AddPropEnum( "HM_OPE", "HardwareMask Operator",  sval, propType, enumNames );
+		propType = lfx::core::Renderer::PT_HM_OPE;
+		enumNames.clear();
+		prender->getEnumListHardwareMaskOperator( &enumNames );
+		sval = prender->getEnumName( (lfx::core::Renderer::HardwareMaskOperator)prender->getHardwareMaskOperator() );
+		AddPropEnum( "HM_OPE", "HardwareMask Operator",  sval, propType, enumNames );
+	}
 
 }
 ////////////////////////////////////////////////////////////////////////////////
