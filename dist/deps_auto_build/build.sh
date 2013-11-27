@@ -119,7 +119,7 @@ function wget()
 {
   case $PLATFORM in
     Windows)
-      WGET_METHOD=$( which wget )
+      WGET_METHOD=$( which wget )" --no-check-certificate"
       ;;
     Darwin)
       WGET_METHOD=$( which curl )
