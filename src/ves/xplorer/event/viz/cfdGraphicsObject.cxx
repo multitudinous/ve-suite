@@ -625,9 +625,12 @@ void cfdGraphicsObject::RemoveGeodeFromDCS()
     }
     else if( type == LFX_VTK || type == LFX_DS )
     {
-        osg::ref_ptr< osg::Group > tempGroup = m_lfxGroup->getParent( 0 );
-        tempGroup->removeChild( m_lfxGroup.get() );
-        m_lfxGroup = 0;
+		if (m_lfxGroup.get() != NULL)
+		{
+			osg::ref_ptr< osg::Group > tempGroup = m_lfxGroup->getParent( 0 );
+			tempGroup->removeChild( m_lfxGroup.get() );
+			m_lfxGroup = 0;
+		}
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
