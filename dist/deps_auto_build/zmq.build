@@ -1,9 +1,10 @@
 PACKAGE_NAME=zmq
-BASE_DIR="${DEV_BASE_DIR}/zeromq-3.2.3"
+BASE_DIR="${DEV_BASE_DIR}/zeromq-4.0.3"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
 SOURCE_URL=http://download.zeromq.org/zeromq-3.2.3.tar.gz
+SOURCE_URL=http://download.zeromq.org/zeromq-4.0.3.tar.gz
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
