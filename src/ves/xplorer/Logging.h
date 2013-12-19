@@ -56,7 +56,7 @@ typedef ves::util::ClassPtrDef<Poco::LogStream>::type  LogStreamPtr;
 //#define CREATE_LOG_STREAM m_LogStream = LogStreamPtr( new Poco::LogStream::LogStream( m_Logger ) )
 
 #define _LOG_CALL( prio, msg ) do {if( m_logger.prio() ){ (*m_logStream).prio() << msg << std::endl; } } while( 0 )
-#define _STATIC_LOG_CALL( prio, name, msg ) do { Poco::Logger& logger = Poco::Logger::get( name ); if( logger.prio() ){Poco::LogStream logstream( logger ); logstream.information() << msg << std::endl; } } while( 0 )
+#define _STATIC_LOG_CALL( prio, name, msg ) do { Poco::Logger& logger = Poco::Logger::get( name ); if( logger.prio() ){Poco::LogStream logstream( logger ); logstream.prio() << msg << std::endl; } } while( 0 )
 
 /// Use these logging macros in classes that have a dedicated m_logger and m_logStream.
 /// This method has faster execution that the static method below since the log
