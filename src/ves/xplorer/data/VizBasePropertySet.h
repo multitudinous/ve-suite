@@ -117,6 +117,8 @@ protected:
         ;
     }
 
+	void AddPropRtpMask();
+	void AddPropRtpRoi();
 	void AddPropEnum( const std::string &propName, const std::string &propDisp, const std::string &defValue, int propType, const std::vector<std::string> &values );
 	void AddPropFloat( const std::string &propName, const std::string &propDisp, float value, int propType );
 
@@ -127,6 +129,7 @@ protected:
 	void UpdateLfxDataSet( propertystore::PropertyPtr property );
 	void UpdateLfxChannel( propertystore::PropertyPtr property );
 	void UpdateLfxValue( propertystore::PropertyPtr property );
+	void UpdateLfxValue( propertystore::PropertyPtr prop, bool init=false );
 
 	bool GetLfxValues( propertystore::PropertyPtr property, SLfxPropValues *pv );
 

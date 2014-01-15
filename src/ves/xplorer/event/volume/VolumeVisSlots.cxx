@@ -53,6 +53,8 @@
 #include <latticefx/core/vtk/VTKBaseRTP.h>
 
 #include <boost/foreach.hpp>
+#include <boost/limits.hpp>
+#include <boost/numeric/conversion/bounds.hpp>
 
 namespace ves
 {
@@ -443,6 +445,62 @@ void UpdateLfxChannel( const std::string &dataSetName, const std::string &chanNa
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void UpdateLfxVtkRtp( lfx::core::DataSetPtr ds, const std::string &renderSetType, int propType, float f )
+{
+	if( !ds.get() ) return;
+
+	bool rtpDirty = false;
+	lfx::core::RTPOperationList& oplist = ds->getOperations();
+	BOOST_FOREACH( lfx::core::RTPOperationPtr op, oplist  )
+	{
+		lfx::core::vtk::VTKBaseRTP *prtp = dynamic_cast<lfx::core::vtk::VTKBaseRTP *>( op.get() );
+		if( !prtp ) continue;
+
+		if( propType  == lfx::core::Renderer::PT_RTP_PTMASK )
+		{
+			prtp->SetMaskValue( f );
+			rtpDirty = true;
+		}
+		else if( propType >= lfx::core::Renderer::PT_RTP_ROIBOX_X_MIN && propType <= lfx::core::Renderer::PT_RTP_ROIBOX_Z_MAX )
+		{
+			int loc = propType - lfx::core::Renderer::PT_RTP_ROIBOX_X_MIN;
+			if( loc < 0 || loc > 5 )
+			{
+				vprDEBUG( vesDBG, 0 ) << "|\tunrecognized lfx::core::Renderer ROI box index, should be [0-5] but calculated: " << loc << ", unabled to update ROI box." << std::endl << vprDEBUG_FLUSH;
+				return;
+			}
+
+			std::vector<double>& box = prtp->GetRoiBox();
+
+			// see if we have a valid box
+			if( box.size() < 6 )
+			{
+				// clear and fill with default values
+				box.clear();
+
+				float min = boost::numeric::bounds<float>::lowest();
+				float max = boost::numeric::bounds<float>::highest();
+				for( int i=0; i<3; i++ )
+				{
+					box.push_back(min);
+					box.push_back(max);
+				}
+			}
+
+			box[loc] = f;
+			rtpDirty = true;
+		}
+	}
+
+	// update
+	if( rtpDirty )
+	{
+		ds->setDirty( lfx::core::DataSet::RTPOPERATION_DIRTY );
+		ds->updateAll(); // update now with new channel data.
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void UpdateLfxRenderProp(const std::string &renderSetType, const std::string &dataSetName, int propType, boost::any value1, boost::any value2)
 {
 	lfx::core::DataSetPtr ds;
@@ -453,18 +511,25 @@ void UpdateLfxRenderProp(const std::string &renderSetType, const std::string &da
 	float f;
 	osg::Vec2f v2f;
 
-	if (propType > lfx::core::Renderer::PT_ENUM_BEGIN && propType < lfx::core::Renderer::PT_ENUM_END)
+	if( propType > lfx::core::Renderer::PT_ENUM_BEGIN && propType < lfx::core::Renderer::PT_ENUM_END )
 	{
 		s = boost::any_cast<std::string>( value1 );
 	}
-	else if (propType > lfx::core::Renderer::PT_FLOAT_BEGIN && propType < lfx::core::Renderer::PT_FLOAT_END)
+	else if( propType > lfx::core::Renderer::PT_FLOAT_BEGIN && propType < lfx::core::Renderer::PT_FLOAT_END )
 	{
 		GetFloat( value1, &f );
 	}
-	else if (propType > lfx::core::Renderer::PT_FLOATRNG_BEGIN && propType < lfx::core::Renderer::PT_FLOATRNG_END)
+	else if( propType > lfx::core::Renderer::PT_FLOATRNG_BEGIN && propType < lfx::core::Renderer::PT_FLOATRNG_END )
 	{
 		GetFloat( value1, &v2f[0] );
 		GetFloat( value2, &v2f[1] );
+	}
+
+	// is this an rtp property
+	if( propType > lfx::core::Renderer::PT_RTP_BEGIN && propType < lfx::core::Renderer::PT_RTP_END )
+	{
+		UpdateLfxVtkRtp( ds, renderSetType, propType, f );
+		return;
 	}
 
 	switch( propType )

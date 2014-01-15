@@ -73,6 +73,9 @@
 #include <vtkRibbonFilter.h>
 
 #include <latticefx/core/vtk/DataSet.h>
+#include <latticefx/core/vtk/ChannelDatavtkDataObject.h>
+#include <latticefx/core/vtk/VTKStreamlineRenderer.h>
+#include <latticefx/core/vtk/VTKStreamlineRTP.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -89,23 +92,23 @@ cfdStreamers::cfdStreamers()
     integ( vtkRungeKutta4::New() ),
     seedPoints( 0 ),
     points( 0 ),
-    integrationDirection( 0 ),
-    streamArrows( 0 ),
+    m_integrationDirection( 0 ),
+    m_streamArrows( 0 ),
     m_streamRibbons( 0 ),
-    propagationTime( -1 ),
-    integrationStepLength( -1 ),
-    lineDiameter( 1.0f ),
-    arrowDiameter( 1 ),
-    particleDiameter( 1.0f ),
-    xValue( 4 ),
-    yValue( 4 ),
-    zValue( 4 ),
-    xMinBB( 0 ),
-    yMinBB( 0 ),
-    zMinBB( 0 ),
-    xMaxBB( 1 ),
-    yMaxBB( 1 ),
-    zMaxBB( 1 )
+    m_propagationTime( -1 ),
+    m_integrationStepLength( -1 ),
+    m_lineDiameter( 1.0f ),
+    m_arrowDiameter( 1 ),
+    m_particleDiameter( 1.0f ),
+    m_xValue( 4 ),
+    m_yValue( 4 ),
+    m_zValue( 4 ),
+    m_xMinBB( 0 ),
+    m_yMinBB( 0 ),
+    m_zMinBB( 0 ),
+    m_xMaxBB( 1 ),
+    m_yMaxBB( 1 ),
+    m_zMaxBB( 1 )
 {
     ;
 }
@@ -132,23 +135,23 @@ cfdStreamers::cfdStreamers( cfdStreamers const& src )
     integ( vtkRungeKutta4::New() ),
     seedPoints( 0 ),
     points( 0 ),
-    integrationDirection( 0 ),
-    streamArrows( 0 ),
+    m_integrationDirection( 0 ),
+    m_streamArrows( 0 ),
     m_streamRibbons( 0 ),
-    propagationTime( -1 ),
-    integrationStepLength( -1 ),
-    lineDiameter( 1.0f ),
-    arrowDiameter( 1 ),
-    particleDiameter( 1.0f ),
-    xValue( 4 ),
-    yValue( 4 ),
-    zValue( 4 ),
-    xMinBB( 0 ),
-    yMinBB( 0 ),
-    zMinBB( 0 ),
-    xMaxBB( 1 ),
-    yMaxBB( 1 ),
-    zMaxBB( 1 )
+    m_propagationTime( -1 ),
+    m_integrationStepLength( -1 ),
+    m_lineDiameter( 1.0f ),
+    m_arrowDiameter( 1 ),
+    m_particleDiameter( 1.0f ),
+    m_xValue( 4 ),
+    m_yValue( 4 ),
+    m_zValue( 4 ),
+    m_xMinBB( 0 ),
+    m_yMinBB( 0 ),
+    m_zMinBB( 0 ),
+    m_xMaxBB( 1 ),
+    m_yMaxBB( 1 ),
+    m_zMaxBB( 1 )
 {
     ;
 }
@@ -160,7 +163,11 @@ cfdObjects* cfdStreamers::CreateCopy()
 //////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::Update()
 {
-    if( seedPoints == NULL )
+	CreateLFXPlane();
+    this->updateFlag = true;
+    return;
+
+    if( seedPoints == NULL ) 
     {
         vprDEBUG( vesDBG, 0 ) << "|\tcfdStreamers::Update : No Cursor Type Selected"
                               << std::endl << vprDEBUG_FLUSH;
@@ -169,23 +176,23 @@ void cfdStreamers::Update()
     }
 
     vprDEBUG( vesDBG, 0 ) << "|\tcfdStreamers::Update : "
-                          << " Prop Time : " << propagationTime
-                          << " Integration Step Length : " << integrationStepLength
-                          << " Integration Direction : " << integrationDirection
+                          << " Prop Time : " << m_propagationTime
+                          << " Integration Step Length : " << m_integrationStepLength
+                          << " Integration Direction : " << m_integrationDirection
                           << std::endl << vprDEBUG_FLUSH;
 
     //tubeFilter->SetRadius( lineDiameter );
     //tubeFilter->SetNumberOfSides( 3 );
     //tubeFilter->SidesShareVerticesOn();
 
-    if( propagationTime == -1 )
+    if( m_propagationTime == -1 )
     {
-        propagationTime = 10.0f * GetActiveDataSet()->GetMaxTime();
+       m_propagationTime = 10.0f * GetActiveDataSet()->GetMaxTime();
     }
 
-    if( integrationStepLength == -1 )
+    if( m_integrationStepLength == -1 )
     {
-        integrationStepLength = 0.050f;
+        m_integrationStepLength = 0.050f;
     }
 
     vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
@@ -193,20 +200,20 @@ void cfdStreamers::Update()
 
     streamTracer->SetInputConnection( c2p->GetOutputPort() );
     //overall length of streamline
-    streamTracer->SetMaximumPropagation( propagationTime );
+    streamTracer->SetMaximumPropagation( m_propagationTime );
 
     // typically < 1
-    streamTracer->SetMaximumIntegrationStep( integrationStepLength );
+    streamTracer->SetMaximumIntegrationStep( m_integrationStepLength );
 
-    if( integrationDirection == 0 )
+    if( m_integrationDirection == 0 )
     {
         streamTracer->SetIntegrationDirectionToBoth();
     }
-    else if( integrationDirection == 1 )
+    else if( m_integrationDirection == 1 )
     {
         streamTracer->SetIntegrationDirectionToForward();
     }
-    else if( integrationDirection == 2 )
+    else if( m_integrationDirection == 2 )
     {
         streamTracer->SetIntegrationDirectionToBackward();
     }
@@ -233,18 +240,22 @@ void cfdStreamers::Update()
     cleanPD->SetInputConnection( streamTracer->GetOutputPort() );
 
     vtkRibbonFilter* ribbon = 0;
+
+	// DON"T NEED TO WORRY ABOUT THIS FOR NOW.. 
     if( m_streamRibbons )
     {
         ribbon = vtkRibbonFilter::New();
         //ribbon->SetWidthFactor( arrowDiameter * 0.25);
-        ribbon->SetWidth( arrowDiameter );
+        ribbon->SetWidth( m_arrowDiameter );
         ribbon->SetInputConnection( cleanPD->GetOutputPort() );
         ribbon->SetInputArrayToProcess( 0, 0, 0,
                                         vtkDataObject::FIELD_ASSOCIATION_POINTS,
                                         "Vorticity" );
     }
 
-    if( streamArrows )
+
+	// DON"T NEED TO WORRY ABOUT THIS FOR NOW
+    if( m_streamArrows )
     {
         // Stream Points Section
         vtkConeSource* cone = 0;
@@ -273,7 +284,7 @@ void cfdStreamers::Update()
         cones->SetInputConnection( 0, ptmask->GetOutputPort() );
         cones->SetInputConnection( 1, cone->GetOutputPort() );
         //cones->SetSource( cone->GetOutput() );
-        cones->SetScaleFactor( arrowDiameter );
+        cones->SetScaleFactor( m_arrowDiameter );
         //cones->SetScaleModeToScaleByVector();
         cones->SetScaleModeToDataScalingOff();
         //cones->SetColorModeToColorByScalar();
@@ -368,6 +379,7 @@ void cfdStreamers::Update()
     }
     else
     {
+		// no need to worry about RIBBON
         if( ribbon )
         {
             mapper->SetInputConnection( ribbon->GetOutputPort() );
@@ -399,7 +411,7 @@ void cfdStreamers::Update()
         vtkActor* temp = vtkActor::New();
         temp->SetMapper( mapper );
         temp->GetProperty()->SetSpecularPower( 20.0f );
-        temp->GetProperty()->SetLineWidth( lineDiameter );
+        temp->GetProperty()->SetLineWidth( m_lineDiameter );
         //test to see if there is enough memory, if not, filters are deleted
         try
         {
@@ -430,7 +442,7 @@ void cfdStreamers::Update()
         try
         {
             OSGStreamlineStage* tempStage = new OSGStreamlineStage();
-            tempStage->SetParticleDiameter( int( particleDiameter ) );
+            tempStage->SetParticleDiameter( int( m_particleDiameter ) );
             //This is a multiplier to create extra points using
             //linear interplation to smooth out the animation
             int mult = 10;
@@ -485,22 +497,22 @@ vtkPolyData* cfdStreamers::GetStreamersOutput()
 //////////////////////////////////////////////////////////////////////////////////
 double cfdStreamers::GetArrowDiameter()
 {
-    return arrowDiameter;
+    return m_arrowDiameter;
 }
 //////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::SetIntegrationDirection( int value )
 {
-    integrationDirection = value;
+    m_integrationDirection = value;
 }
 //////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::SetPropagationTime( double value )
 {
-    propagationTime = value * ( 100.0f * GetActiveDataSet()->GetMaxTime() / 20.0f );
+    m_propagationTime = value * ( 100.0f * GetActiveDataSet()->GetMaxTime() / 20.0f );
 }
 //////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::SetIntegrationStepLength( int value )
 {
-    integrationStepLength = ( float )value * ( 0.050f ) / 50.0f;
+    m_integrationStepLength = ( float )value * ( 0.050f ) / 50.0f;
 }
 //////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::UpdateCommand()
@@ -563,7 +575,7 @@ void cfdStreamers::UpdateCommand()
     activeModelDVP->GetData( opacity );
     vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_ARROW\t" << opacity
                           << std::endl << vprDEBUG_FLUSH;
-    streamArrows = opacity;
+    m_streamArrows = opacity;
 
     /////////////////////
     activeModelDVP = objectCommand->GetDataValuePair( "Integration Step Size" );
@@ -597,19 +609,19 @@ void cfdStreamers::UpdateCommand()
 
     // this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
     // note that multiplying by 0.005 is the same as dividing by 200, or the range
-    lineDiameter = ( diameter + 110 ) * 0.005 *  20;
-    particleDiameter = lineDiameter;
+    m_lineDiameter = ( diameter + 110 ) * 0.005 *  20;
+    m_particleDiameter = m_lineDiameter;
 
     vprDEBUG( vesDBG, 1 ) << "|\t\tNew Streamline Diameter : "
-                          << lineDiameter << std::endl << vprDEBUG_FLUSH;
+                          << m_lineDiameter << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
     activeModelDVP =
         objectCommand->GetDataValuePair( "Sphere/Arrow/Particle Size" );
-    activeModelDVP->GetData( arrowDiameter );
-    arrowDiameter = localLineDiameter * 60.0f * arrowDiameter;
+    activeModelDVP->GetData( m_arrowDiameter );
+    m_arrowDiameter = localLineDiameter * 60.0f * m_arrowDiameter;
     vprDEBUG( vesDBG, 1 ) << "|\t\tNew Arrow Diameter : "
-                          << arrowDiameter << std::endl << vprDEBUG_FLUSH;
+                          << m_arrowDiameter << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
     activeModelDVP = objectCommand->GetDataValuePair( "Use Last Seed Pt" );
@@ -623,32 +635,32 @@ void cfdStreamers::UpdateCommand()
     //if 1 is there then they all are there
     if( activeModelDVP )
     {
-        activeModelDVP->GetData( xMaxBB );
-        vprDEBUG( vesDBG, 0 ) << "|\t\txMaxBB : " << xMaxBB << std::endl << vprDEBUG_FLUSH;
+        activeModelDVP->GetData( m_xMaxBB );
+        vprDEBUG( vesDBG, 0 ) << "|\t\txMaxBB : " << m_xMaxBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Max_Y_BB" );
-        activeModelDVP->GetData( yMaxBB );
-        vprDEBUG( vesDBG, 0 ) << "|\t\tyMaxBB : " << yMaxBB << std::endl << vprDEBUG_FLUSH;
+        activeModelDVP->GetData( m_yMaxBB );
+        vprDEBUG( vesDBG, 0 ) << "|\t\tyMaxBB : " << m_yMaxBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Max_Z_BB" );
-        activeModelDVP->GetData( zMaxBB );
-        vprDEBUG( vesDBG, 0 ) << "|\t\tzMaxBB : " << zMaxBB << std::endl << vprDEBUG_FLUSH;
+        activeModelDVP->GetData( m_zMaxBB );
+        vprDEBUG( vesDBG, 0 ) << "|\t\tzMaxBB : " << m_zMaxBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Min_X_BB" );
-        activeModelDVP->GetData( xMinBB );
-        vprDEBUG( vesDBG, 0 ) << "|\t\txMinBB : " << xMinBB << std::endl << vprDEBUG_FLUSH;
+        activeModelDVP->GetData( m_xMinBB );
+        vprDEBUG( vesDBG, 0 ) << "|\t\txMinBB : " << m_xMinBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Min_Y_BB" );
-        activeModelDVP->GetData( yMinBB );
-        vprDEBUG( vesDBG, 0 ) << "|\t\tyMinBB : " << yMinBB << std::endl << vprDEBUG_FLUSH;
+        activeModelDVP->GetData( m_yMinBB );
+        vprDEBUG( vesDBG, 0 ) << "|\t\tyMinBB : " << m_yMinBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Min_Z_BB" );
-        activeModelDVP->GetData( zMinBB );
-        vprDEBUG( vesDBG, 0 ) << "|\t\tzMinBB : " << zMinBB << std::endl << vprDEBUG_FLUSH;
+        activeModelDVP->GetData( m_zMinBB );
+        vprDEBUG( vesDBG, 0 ) << "|\t\tzMinBB : " << m_zMinBB << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Num_X_Points" );
-        activeModelDVP->GetData( xValue );
-        vprDEBUG( vesDBG, 0 ) << "|\t\tX Points : " << xValue << std::endl << vprDEBUG_FLUSH;
+        activeModelDVP->GetData( m_xValue );
+        vprDEBUG( vesDBG, 0 ) << "|\t\tX Points : " << m_xValue << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Num_Y_Points" );
-        activeModelDVP->GetData( yValue );
-        vprDEBUG( vesDBG, 0 ) << "|\t\tY Points : " << yValue << std::endl << vprDEBUG_FLUSH;
+        activeModelDVP->GetData( m_yValue );
+        vprDEBUG( vesDBG, 0 ) << "|\t\tY Points : " << m_yValue << std::endl << vprDEBUG_FLUSH;
         activeModelDVP = objectCommand->GetDataValuePair( "Num_Z_Points" );
-        activeModelDVP->GetData( zValue );
-        vprDEBUG( vesDBG, 0 ) << "|\t\tZ Points : " << zValue << std::endl << vprDEBUG_FLUSH;
+        activeModelDVP->GetData( m_zValue );
+        vprDEBUG( vesDBG, 0 ) << "|\t\tZ Points : " << m_zValue << std::endl << vprDEBUG_FLUSH;
     }
 
     /////////////////////
@@ -693,12 +705,12 @@ void cfdStreamers::CreateSeedPoints()
     double yDiff = bounds[ 3 ] - bounds[ 2 ];
     double zDiff = bounds[ 5 ] - bounds[ 4 ];
 
-    double xMin = bounds[ 0 ] + ( xDiff * xMinBB );
-    double xMax = bounds[ 0 ] + ( xDiff * xMaxBB );
-    double yMin = bounds[ 2 ] + ( yDiff * yMinBB );
-    double yMax = bounds[ 2 ] + ( yDiff * yMaxBB );
-    double zMin = bounds[ 4 ] + ( zDiff * zMinBB );
-    double zMax = bounds[ 4 ] + ( zDiff * zMaxBB );
+    double xMin = bounds[ 0 ] + ( xDiff * m_xMinBB );
+    double xMax = bounds[ 0 ] + ( xDiff * m_xMaxBB );
+    double yMin = bounds[ 2 ] + ( yDiff * m_yMinBB );
+    double yMax = bounds[ 2 ] + ( yDiff * m_yMaxBB );
+    double zMin = bounds[ 4 ] + ( zDiff * m_zMinBB );
+    double zMax = bounds[ 4 ] + ( zDiff * m_zMaxBB );
 
     double xLoc = 0;
     double yLoc = 0;
@@ -708,17 +720,17 @@ void cfdStreamers::CreateSeedPoints()
     //insert evenly spaced points inside bounding box
     points = vtkPoints::New();
 
-    double deltaX = ( xValue == 1 ) ? 0 : ( xMax - xMin ) / double( xValue - 1 );
-    double deltaY = ( yValue == 1 ) ? 0 : ( yMax - yMin ) / double( yValue - 1 );
-    double deltaZ = ( zValue == 1 ) ? 0 : ( zMax - zMin ) / double( zValue - 1 );
+    double deltaX = ( m_xValue == 1 ) ? 0 : ( xMax - xMin ) / double( m_xValue - 1 );
+    double deltaY = ( m_yValue == 1 ) ? 0 : ( yMax - yMin ) / double( m_yValue - 1 );
+    double deltaZ = ( m_zValue == 1 ) ? 0 : ( zMax - zMin ) / double( m_zValue - 1 );
 
-    for( unsigned int i = 0; i < xValue; ++i )
+    for( unsigned int i = 0; i < m_xValue; ++i )
     {
         xLoc = xMin + ( i * deltaX );
-        for( unsigned int j = 0; j < yValue; ++j )
+        for( unsigned int j = 0; j < m_yValue; ++j )
         {
             yLoc = yMin + ( j * deltaY );
-            for( unsigned int k = 0; k < zValue; ++k )
+            for( unsigned int k = 0; k < m_zValue; ++k )
             {
                 //points added in ptMin + length*iteration/(number of equal segments)
                 //where (number of equal segments) = ptValue+1
@@ -808,8 +820,8 @@ void cfdStreamers::UpdatePropertySet()
                           << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
-    streamArrows = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseStreamArrows" ) );
-    vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_ARROW\t" << streamArrows
+    m_streamArrows = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseStreamArrows" ) );
+    vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_ARROW\t" << m_streamArrows
                           << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
@@ -831,33 +843,33 @@ void cfdStreamers::UpdatePropertySet()
 
     // this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
     // note that multiplying by 0.005 is the same as dividing by 200, or the range
-    lineDiameter = ( diameter + 110 ) * 0.005 *  20;
-    particleDiameter = lineDiameter;
+    m_lineDiameter = ( diameter + 110 ) * 0.005 *  20;
+    m_particleDiameter = m_lineDiameter;
 
     vprDEBUG( vesDBG, 1 ) << "|\t\tNew Streamline Diameter : "
-                          << lineDiameter << std::endl << vprDEBUG_FLUSH;
+                          << m_lineDiameter << std::endl << vprDEBUG_FLUSH;
 
     /////////////////////
-    arrowDiameter = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_SphereArrowParticleSize" ) );
-    arrowDiameter = localLineDiameter * 60.0f * arrowDiameter;
+    m_arrowDiameter = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_SphereArrowParticleSize" ) );
+    m_arrowDiameter = localLineDiameter * 60.0f * m_arrowDiameter;
     vprDEBUG( vesDBG, 1 ) << "|\t\tNew Arrow Diameter : "
-                          << arrowDiameter << std::endl << vprDEBUG_FLUSH;
+                          << m_arrowDiameter << std::endl << vprDEBUG_FLUSH;
 
     ////////////////////
     //Set the number of seed points in each direction and get the %BB info
     //Extract the advanced settings from the commands
-    xMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_XMax" ) );
-    xMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_XMin" ) );
+    m_xMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_XMax" ) );
+    m_xMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_XMin" ) );
 
-    yMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_YMax" ) );
-    yMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_YMin" ) );
+    m_yMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_YMax" ) );
+    m_yMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_YMin" ) );
 
-    zMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_ZMax" ) );
-    zMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_ZMin" ) );
+    m_zMaxBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_ZMax" ) );
+    m_zMinBB = boost::any_cast<double>( m_propertySet->GetPropertyValue( "SeedPoints_Bounds_ZMin" ) );
 
-    xValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInX" ) );
-    yValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInY" ) );
-    zValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInZ" ) );
+    m_xValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInX" ) );
+    m_yValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInY" ) );
+    m_zValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInZ" ) );
 
     /////////////////////
     m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
@@ -879,5 +891,69 @@ void cfdStreamers::UpdatePropertySet()
     {
         CreateArbSurface();
     }
+}
+///////////////////////////////////////////////////////////////////////////
+void cfdStreamers::CreateLFXPlane()
+{
+    m_dsp = lfx::core::DataSetPtr( new lfx::core::DataSet() );
+
+	if( !GetActiveDataSet().get() )
+	{
+		vprDEBUG( vesDBG, 1 ) << "|\t\tNo active dataset : " << std::endl << vprDEBUG_FLUSH;
+		return;
+	}
+
+	// let get the properties we need
+
+	std::string vector = GetActiveDataSet()->GetActiveVectorName();
+	std::string scalar = GetActiveDataSet()->GetActiveScalarName();
+
+    lfx::core::vtk::ChannelDatavtkDataObjectPtr dobjPtr( new lfx::core::vtk::ChannelDatavtkDataObject( GetActiveDataSet()->GetDataSet(), "vtkDataObject" ) );
+    m_dsp->addChannel( dobjPtr );
+
+	std::vector<double> bounds;
+	bounds.resize(6);
+	GetActiveDataSet()->GetBounds(&bounds[0]);
+
+	float maxTime = GetActiveDataSet()->GetMaxTime();
+	lfx::core::vtk::VTKStreamlineRTPPtr rtp( new lfx::core::vtk::VTKStreamlineRTP() );
+	rtp->setMaxTime( maxTime );
+	rtp->SetActiveVector( vector );
+    rtp->SetActiveScalar( scalar );
+	rtp->setDatasetBounds( &bounds[0] );
+	rtp->setSeedPtsBox( m_xMinBB, m_xMaxBB, m_yMinBB, m_yMaxBB, m_zMinBB, m_zMaxBB );
+	rtp->setSeedPtsCount( m_xValue, m_yValue, m_zValue );
+	rtp->setIntegrationDir( m_integrationDirection );
+	rtp->setIntegrationStepLen( m_integrationStepLength );
+	rtp->setStreamArrows( m_streamArrows );
+	rtp->setStreamRibbons( m_streamRibbons );
+	rtp->setPropagationTime( m_propagationTime );
+	rtp->setLineDiameter( m_lineDiameter );
+	rtp->setArrowDiameter( m_arrowDiameter );
+	rtp->setParticleDiameter( m_particleDiameter );
+    rtp->addInput( "vtkDataObject" );
+
+    m_dsp->addOperation( rtp );
+
+	lfx::core::vtk::VTKStreamlineRendererPtr renderOp( new lfx::core::vtk::VTKStreamlineRenderer() );
+    renderOp->SetActiveVector( vector );
+    renderOp->SetActiveScalar( scalar );
+    renderOp->addInput( "vtkPolyData" );
+    renderOp->addInput( "vtkDataObject" );
+	renderOp->addInput( "positions" );
+	//renderOp->setHardwareMaskOperator( lfx::core::Renderer::HM_OP_OFF );
+	//renderOp->setAnimationEnable( false );
+    m_dsp->setRenderer( renderOp );
+	m_dsp->setDirty();
+	bool success = m_dsp->updateAll();
+    
+    if( !success )
+    {
+		vprDEBUG( vesDBG, 1 ) << "|\t\tSome sort of problem with lfx : "
+                          << std::endl << vprDEBUG_FLUSH;
+    }
+
+	Model* activeModel = ModelHandler::instance()->GetActiveModel();
+	activeModel->SetVtkRenderSet( "str", m_dsp );
 }
 ///////////////////////////////////////////////////////////////////////////

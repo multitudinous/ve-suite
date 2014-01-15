@@ -99,6 +99,8 @@ private:
     void CreateSeedPoints();
     void CreateArbSurface();
 
+	void CreateLFXPlane();
+
     vtkStreamTracer* streamTracer;
     vtkTubeFilter* tubeFilter;
     vtkPolyDataMapper* mapper;
@@ -106,26 +108,26 @@ private:
     vtkPolyData* seedPoints;///>PolyData for the seed points
     vtkPoints* points;///>Seed Points raw data
 
-    int integrationDirection;
-    int streamArrows;
+    int m_integrationDirection;
+    int m_streamArrows;
     int m_streamRibbons;
 
-    float propagationTime;
-    float integrationStepLength;
-    float lineDiameter;
-    double arrowDiameter;
-    float particleDiameter;
+    float m_propagationTime;
+    float m_integrationStepLength;
+    float m_lineDiameter;
+    double m_arrowDiameter;
+    float m_particleDiameter;
 
-    unsigned int xValue;///>number of points for x direction
-    unsigned int yValue;///>number of points for y direction
-    unsigned int zValue;///>number of points for z direction
+    unsigned int m_xValue;///>number of points for x direction
+    unsigned int m_yValue;///>number of points for y direction
+    unsigned int m_zValue;///>number of points for z direction
 
-    double xMinBB;///>number of points for x direction
-    double yMinBB;///>number of points for y direction
-    double zMinBB;///>number of points for z direction
-    double xMaxBB;///>number of points for x direction
-    double yMaxBB;///>number of points for y direction
-    double zMaxBB;///>number of points for z direction
+    double m_xMinBB;///>number of points for x direction
+    double m_yMinBB;///>number of points for y direction
+    double m_zMinBB;///>number of points for z direction
+    double m_xMaxBB;///>number of points for x direction
+    double m_yMaxBB;///>number of points for y direction
+    double m_zMaxBB;///>number of points for z direction
 };
 }
 }

@@ -36,6 +36,8 @@
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <propertystore/MakeLive.h>
 
+#include <latticefx/core/vtk/VTKStreamlineRenderer.h>
+
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 
@@ -86,7 +88,7 @@ StreamlinePropertySet::StreamlinePropertySet()
 
     RegisterPropertySet( GetTypeName() );
 
-    CreateSkeleton();
+    CreateSkeletonLfxDs();
 }
 ////////////////////////////////////////////////////////////////////////////////
 StreamlinePropertySet::StreamlinePropertySet( const StreamlinePropertySet& orig )
@@ -103,6 +105,16 @@ StreamlinePropertySet::~StreamlinePropertySet()
 propertystore::PropertySetPtr StreamlinePropertySet::CreateNew()
 {
     return propertystore::PropertySetPtr( new StreamlinePropertySet );
+}
+////////////////////////////////////////////////////////////////////////////////
+void StreamlinePropertySet::CreateSkeletonLfxDs()
+{
+	CreateSkeleton();
+
+	// TODO: set any other defaults for the renderer here
+	lfx::core::vtk::VTKStreamlineRendererPtr renderOp( new lfx::core::vtk::VTKStreamlineRenderer() );
+	renderOp->setTransferFunctionDestination( lfx::core::Renderer::TF_RGBA );
+	VizBasePropertySet::CreateSkeletonLfxDsRenderer( "stm", renderOp.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void StreamlinePropertySet::CreateSkeleton()

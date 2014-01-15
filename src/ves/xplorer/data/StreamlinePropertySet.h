@@ -71,7 +71,9 @@ protected:
     ///Slot connected to the value change of  display seed points
     ///\param property The bool value for the seed point display flag
     void UpdateSeedPointDisplay( propertystore::PropertyPtr property );
-    ///Create the skeleton
+
+	///Create the skeleton
+	virtual void CreateSkeletonLfxDs();
     virtual void CreateSkeleton();
 
     ///Update signal to control turning off and on seed points

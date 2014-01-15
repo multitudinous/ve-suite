@@ -49,6 +49,7 @@
 #include <latticefx/core/DataSet.h>
 #include <latticefx/core/Renderer.h>
 
+
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 VizBasePropertySet::VizBasePropertySet()
@@ -446,6 +447,43 @@ void VizBasePropertySet::EnableLiveProperties( bool live )
     // and explicitly call PropertySet::EnableLiveProperties.
 }
 ////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::AddPropRtpMask()
+{
+	/*
+	AddProperty( "RTP_Point_Mask", 1.0, "Point Mask" );
+    SetPropertyAttribute( "RTP_Point_Mask", "minimumValue",   1.0 );
+    SetPropertyAttribute( "RTP_Point_Mask", "maximumValue", 300.0 );
+	SetPropertyAttribute( "RTP_Point_Mask", "proptype", lfx::core::Renderer::PT_RTP_PTMASK );
+	GetProperty( "RTP_Point_Mask" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorData, this, _1 ) );
+	*/
+
+	AddPropFloat( "RTP_Point_Mask", "Point Mask", 1.0f, lfx::core::Renderer::PT_RTP_PTMASK );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::AddPropRtpRoi()
+{
+	/*
+	AddProperty( "RTP_Point_Mask", 1.0, "Point Mask" );
+    SetPropertyAttribute( "RTP_Point_Mask", "minimumValue",   1.0 );
+    SetPropertyAttribute( "RTP_Point_Mask", "maximumValue", 300.0 );
+	SetPropertyAttribute( "RTP_Point_Mask", "proptype", lfx::core::Renderer::PT_RTP_PTMASK );
+	GetProperty( "RTP_Point_Mask" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorData, this, _1 ) );
+	*/
+
+	return;
+
+	float min = boost::numeric::bounds<float>::lowest();
+	float max = boost::numeric::bounds<float>::highest();
+	AddPropFloat( "RTP_ROI_X_MIN", "ROIBOX X Min", min, lfx::core::Renderer::PT_RTP_ROIBOX_X_MIN );
+	AddPropFloat( "RTP_ROI_X_MAX", "ROIBOX X Max", max, lfx::core::Renderer::PT_RTP_ROIBOX_X_MAX );
+	AddPropFloat( "RTP_ROI_Y_MIN", "ROIBOX Y Min", min, lfx::core::Renderer::PT_RTP_ROIBOX_Y_MIN );
+	AddPropFloat( "RTP_ROI_Y_MAX", "ROIBOX Y Max", max, lfx::core::Renderer::PT_RTP_ROIBOX_Y_MAX );
+	AddPropFloat( "RTP_ROI_Z_MIN", "ROIBOX Z Min", min, lfx::core::Renderer::PT_RTP_ROIBOX_Z_MIN );
+	AddPropFloat( "RTP_ROI_Z_MAX", "ROIBOX Z Max", max, lfx::core::Renderer::PT_RTP_ROIBOX_Z_MAX );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void VizBasePropertySet::CreateSkeletonLfxDsRenderer( const std::string &renderSetType, lfx::core::Renderer *prender )
 {
 	std::string currentDataSet = "";
@@ -491,6 +529,11 @@ void VizBasePropertySet::CreateSkeletonLfxDsRenderer( const std::string &renderS
 		prender->getEnumListHardwareMaskOperator( &enumNames );
 		sval = prender->getEnumName( (lfx::core::Renderer::HardwareMaskOperator)prender->getHardwareMaskOperator() );
 		AddPropEnum( "HM_OPE", "HardwareMask Operator",  sval, propType, enumNames );
+	}
+	else
+	{
+		AddPropRtpMask();
+		AddPropRtpRoi();
 	}
 
 }
@@ -646,6 +689,11 @@ void VizBasePropertySet::UpdateLfxChannel( propertystore::PropertyPtr property )
 ////////////////////////////////////////////////////////////////////////////////
 void VizBasePropertySet::UpdateLfxValue( propertystore::PropertyPtr prop )
 {
+	UpdateLfxValue( prop, false );
+}
+
+void VizBasePropertySet::UpdateLfxValue( propertystore::PropertyPtr prop, bool init )
+{
 	propertystore::PropertyPtr propds = GetProperty( "DataSet" );
 	if( !propds.get() )
 	{
@@ -691,7 +739,7 @@ void VizBasePropertySet::UpdateRendererLfxValues()
 			continue;
 		}
 
-		UpdateLfxValue( prop  );
+		UpdateLfxValue( prop, true );
 	}
 }
 
