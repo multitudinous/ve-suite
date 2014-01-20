@@ -49,8 +49,10 @@
 #include <latticefx/core/VolumeRenderer.h>
 #include <latticefx/core/RTPOperation.h>
 #include <latticefx/core/vtk/DataSet.h>
-#include <latticefx/core/vtk/VTKSurfaceRenderer.h>
+#include <latticefx/core/vtk/IVTKRenderer.h>
 #include <latticefx/core/vtk/VTKBaseRTP.h>
+#include <latticefx/core/vtk/VTKStreamlineRTP.h>
+#include <latticefx/core/vtk/VTKStreamlineRenderer.h>
 
 #include <boost/foreach.hpp>
 #include <boost/limits.hpp>
@@ -338,6 +340,72 @@ lfx::core::RendererPtr GetLfxRenderer( const std::string &renderSetType, const s
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void UpdateLfxVtkStreamline( const std::vector<double> &seedPtsBox, const std::vector<int>  &seedPtsCount, int integrationDir, float integrationStepLen, float propTime, float pointSize )
+{
+	lfx::core::DataSetPtr ds;
+	lfx::core::RendererPtr r = GetLfxRenderer( "str", "", ds );
+	if( !ds.get() ) return;
+
+	lfx::core::vtk::VTKStreamlineRenderer *sr = dynamic_cast<lfx::core::vtk::VTKStreamlineRenderer *>( r.get() );
+	if( !sr ) return;
+
+	bool rtpDirty = false;
+
+	if( sr->setImageScale( pointSize ) ) rtpDirty = true;
+
+	lfx::core::RTPOperationList& oplist = ds->getOperations();
+	BOOST_FOREACH( lfx::core::RTPOperationPtr op, oplist  )
+	{
+		lfx::core::vtk::VTKStreamlineRTP *prtp = dynamic_cast<lfx::core::vtk::VTKStreamlineRTP *>( op.get() );
+		if( !prtp ) continue;
+
+		if( prtp->setSeedPtsBox( seedPtsBox ) ) rtpDirty = true;
+		if( prtp->setSeedPtsCount( seedPtsCount ) ) rtpDirty = true;
+		if( prtp->setIntegrationDir( integrationDir ) ) rtpDirty = true;
+		if( prtp->setIntegrationStepLen( integrationStepLen ) ) rtpDirty = true;
+		if( prtp->setPropagationTime( propTime ) ) rtpDirty = true;
+	}
+
+			// only update if we have to
+	if( !rtpDirty ) return;
+
+	sr->FullRefresh();
+	int dirty =  lfx::core::DataSet::RENDERER_DIRTY | lfx::core::DataSet::RTPOPERATION_DIRTY;
+	ds->setDirty( dirty );
+	ds->updateAll(); // update now with new channel data.
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void UpdateLfxVtkScalarRange( const std::string &renderSetType, double min, double max )
+{
+	lfx::core::DataSetPtr ds;
+	lfx::core::RendererPtr r = GetLfxRenderer( renderSetType, "", ds );
+	if( !ds.get() ) return;
+
+	bool rtpDirty = false;
+	lfx::core::RTPOperationList& oplist = ds->getOperations();
+	BOOST_FOREACH( lfx::core::RTPOperationPtr op, oplist  )
+	{
+		lfx::core::vtk::VTKBaseRTP *prtp = dynamic_cast<lfx::core::vtk::VTKBaseRTP *>( op.get() );
+		if( !prtp ) continue;
+
+		// lets only update if we have to
+		double curmin, curmax;
+		prtp->GetMinMaxScalarRangeValue( &curmin, &curmax );
+		if ( fabs( curmin - min ) <= .001 && fabs( curmax - max ) <= .001 ) continue;
+
+		prtp->SetMinMaxScalarRangeValue( min, max );
+		rtpDirty = true;
+	}
+
+	if( !rtpDirty ) return;
+
+	int dirty =  lfx::core::DataSet::RENDERER_DIRTY | lfx::core::DataSet::RTPOPERATION_DIRTY;
+	ds->setDirty( dirty );
+	ds->updateAll(); // update now with new channel data.
+}
+
+////////////////////////////////////////////////////////////////////////////////
 enum EVtkDataUpdateType
 {
 	E_VTK_DUT_Scalar,
@@ -350,7 +418,7 @@ void UpdateLfxVtkScalarOrVector( const std::string &renderSetType, const std::st
 	lfx::core::RendererPtr r = GetLfxRenderer( renderSetType, "", ds );
 	if( !r.get() ) return;
 
-	lfx::core::vtk::VTKSurfaceRenderer *psr = dynamic_cast<lfx::core::vtk::VTKSurfaceRenderer *>( r.get() );
+	lfx::core::vtk::IVTKRenderer *psr = dynamic_cast<lfx::core::vtk::IVTKRenderer *>( r.get() );
 	if( !psr ) return;
 
 	std::string curName;
@@ -400,7 +468,7 @@ void UpdateLfxVtkScalarOrVector( const std::string &renderSetType, const std::st
 	}
 
 	
-	//psr->FullRefresh();
+	//psr->FullRefresh();  
 
 	int dirty =  lfx::core::DataSet::RENDERER_DIRTY;
 	if( rtpDirty ) dirty |= lfx::core::DataSet::RTPOPERATION_DIRTY;

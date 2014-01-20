@@ -63,6 +63,14 @@ VizBasePropertySet::VizBasePropertySet()
         reinterpret_cast< ves::util::StringSignal_type* >
         ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "VizBasePropertySet.DeleteVizFeature" ) );
 
+	///Signal to update an Lfx Vtk scalar range
+    {
+        std::string name( "VizBasePropertySet" );
+        name += boost::lexical_cast<std::string>( this );
+        name += ".TBETUpdateLfxVtkScalarRange";
+        switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxVtkScalarRange ), name, switchwire::EventManager::unspecified_SignalType );
+    }
+	
 	///Signal to update an Lfx Vtk scalar
     {
         std::string name( "VizBasePropertySet" );
@@ -322,6 +330,27 @@ void VizBasePropertySet::UpdateScalarDataRange( propertystore::PropertyPtr prope
 
 	UpdateScalarData( property );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::UpdateScalarDataRangeMin( propertystore::PropertyPtr property )
+{
+    boost::ignore_unused_variable_warning( property );
+
+	double min = GetDatumValue< double >( "DataSet_ScalarRange_Min" );
+	double max= GetDatumValue< double >( "DataSet_ScalarRange_Max" );
+	m_updateLfxVtkScalarRange.signal( _renderSetType, min, max );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void VizBasePropertySet::UpdateScalarDataRangeMax( propertystore::PropertyPtr property )
+{
+    boost::ignore_unused_variable_warning( property );
+
+	double min = GetDatumValue< double >( "DataSet_ScalarRange_Min" );
+	double max= GetDatumValue< double >( "DataSet_ScalarRange_Max" );
+	m_updateLfxVtkScalarRange.signal( _renderSetType, min, max );
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 void VizBasePropertySet::UpdateVectorDataOptions( propertystore::PropertyPtr property )
 {

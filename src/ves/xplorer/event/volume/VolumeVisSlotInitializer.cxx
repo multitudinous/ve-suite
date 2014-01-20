@@ -107,6 +107,16 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
                            &HideVizFeature,
                            m_connections, any_SignalType, normal_Priority );
 
+	CONNECTSIGNALS_STATIC( "%TBETUpdateLfxVtkStreamline",
+                           void( const std::vector<double>&, const std::vector<int>&, int, float, float, float ),
+                           &UpdateLfxVtkStreamline,
+                           m_connections, any_SignalType, normal_Priority );
+
+	CONNECTSIGNALS_STATIC( "%TBETUpdateLfxVtkScalarRange",
+                           void( std::string const&, double, double  ),
+                           &UpdateLfxVtkScalarRange,
+                           m_connections, any_SignalType, normal_Priority );
+
 	CONNECTSIGNALS_STATIC( "%TBETUpdateLfxVtkScalar",
                            void( std::string const&, std::string const&  ),
                            &UpdateLfxVtkScalar,

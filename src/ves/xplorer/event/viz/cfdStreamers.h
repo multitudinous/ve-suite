@@ -92,6 +92,9 @@ public:
     ///Set integration setp length
     void SetIntegrationStepLength( int );
 
+	///Set point size
+    void SetPointSize( double size );
+
     void UpdatePropertySet();
 
 private:
@@ -114,6 +117,8 @@ private:
 
     float m_propagationTime;
     float m_integrationStepLength;
+	float m_pointSize;
+
     float m_lineDiameter;
     double m_arrowDiameter;
     float m_particleDiameter;

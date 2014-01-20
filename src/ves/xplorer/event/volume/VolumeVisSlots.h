@@ -101,19 +101,25 @@ void UpdateScalarRange( double const& minRange, double const& maxRange );
 ///dataset per model.
 ves::xplorer::volume::cfdTextureDataSet* SetActiveTextureDataset();
 
-///Update an lfx vtk scalar
+///Update lfx vtk streamline data
+void UpdateLfxVtkStreamline( const std::vector<double> &seedPtsBox, const std::vector<int>  &seedPtsCount, int integrationDir, float integrationStepLen, float propTime, float pointSize );
+
+///Update lfx vtk scalar range
+void UpdateLfxVtkScalarRange( const std::string &renderSetType, double min, double max );
+
+///Update lfx vtk scalar
 void UpdateLfxVtkScalar( const std::string &renderSetType, const std::string &scalarName );
 
-///Update an lfx vtk vector
+///Update lfx vtk vector
 void UpdateLfxVtkVector( const std::string &renderSetType, const std::string &vectorName );
 
-///Update an lfx colorbyscalar
+///Update lfx colorbyscalar
 void UpdateLfxVtkColorByScalar( const std::string &renderSetType, const std::string &scalarName );
 
-///Update an lfx channel
+///Update lfx channel
 void UpdateLfxChannel( const std::string &dataSetName, const std::string &chanName );
 
-///Update an lfx Render Property
+///Update lfx Render Property
 void UpdateLfxRenderProp( const std::string &renderSetType, const std::string &dataSetName, int propType, boost::any value1, boost::any value2 );
 
 } // namespace cad

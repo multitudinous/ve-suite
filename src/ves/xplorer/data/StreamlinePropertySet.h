@@ -72,6 +72,8 @@ protected:
     ///\param property The bool value for the seed point display flag
     void UpdateSeedPointDisplay( propertystore::PropertyPtr property );
 
+	void UpdateStreamline( propertystore::PropertyPtr property );
+
 	///Create the skeleton
 	virtual void CreateSkeletonLfxDs();
     virtual void CreateSkeleton();
@@ -85,6 +87,9 @@ protected:
     ///Update signal to control changing the active dataset
     typedef switchwire::Event< void ( const std::string& ) > UpdateActiveDataSetSignal_type;
     UpdateActiveDataSetSignal_type m_activeDataSet;
+
+	typedef switchwire::Event< void ( const std::vector<double>&, const std::vector<int>&, int, float, float, float ) > Update_Streamline;
+	Update_Streamline m_updateLfxVtkStreamline;
 };
 
 } // namespace data

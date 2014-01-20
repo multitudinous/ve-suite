@@ -97,6 +97,7 @@ cfdStreamers::cfdStreamers()
     m_streamRibbons( 0 ),
     m_propagationTime( -1 ),
     m_integrationStepLength( -1 ),
+	m_pointSize( .2f ),
     m_lineDiameter( 1.0f ),
     m_arrowDiameter( 1 ),
     m_particleDiameter( 1.0f ),
@@ -515,6 +516,12 @@ void cfdStreamers::SetIntegrationStepLength( int value )
     m_integrationStepLength = ( float )value * ( 0.050f ) / 50.0f;
 }
 //////////////////////////////////////////////////////////////////////////////////
+void cfdStreamers::SetPointSize( double size )
+{
+    m_pointSize = (float)size;
+}
+
+//////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::UpdateCommand()
 {
     UpdatePropertySet();
@@ -814,6 +821,7 @@ void cfdStreamers::UpdatePropertySet()
         SetIntegrationDirection( 0 );
     }
 
+	/*
     /////////////////////
     m_streamRibbons = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseStreamRibbons" ) );
     vprDEBUG( vesDBG, 0 ) << "|\t\tUse Stream Ribbons\t" << m_streamRibbons
@@ -823,14 +831,20 @@ void cfdStreamers::UpdatePropertySet()
     m_streamArrows = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseStreamArrows" ) );
     vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_ARROW\t" << m_streamArrows
                           << std::endl << vprDEBUG_FLUSH;
+	*/
 
     /////////////////////
     SetIntegrationStepLength( static_cast< int >( boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_IntegrationStepSize" ) ) ) );
-
+	 
     /////////////////////
     SetPropagationTime( boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_PropogationTime" ) ) );
 
+	/////////////////////
+	SetPointSize( boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_PointSize" ) ) );
+
     /////////////////////
+
+	/*
     double streamDiamter = boost::any_cast<double>( m_propertySet->GetPropertyValue( "Advanced_Diameter" ) );
     vprDEBUG( vesDBG, 0 ) << "|\t\tSTREAMLINE_DIAMETER\t"
                           << streamDiamter << std::endl << vprDEBUG_FLUSH;
@@ -855,6 +869,8 @@ void cfdStreamers::UpdatePropertySet()
     vprDEBUG( vesDBG, 1 ) << "|\t\tNew Arrow Diameter : "
                           << m_arrowDiameter << std::endl << vprDEBUG_FLUSH;
 
+	*/
+
     ////////////////////
     //Set the number of seed points in each direction and get the %BB info
     //Extract the advanced settings from the commands
@@ -871,17 +887,16 @@ void cfdStreamers::UpdatePropertySet()
     m_yValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInY" ) );
     m_zValue = boost::any_cast<int>( m_propertySet->GetPropertyValue( "SeedPoints_NumberOfPointsInZ" ) );
 
+	/*
     /////////////////////
     m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
 
     //Extract the surface flag
     //activeModelDVP = objectCommand->GetDataValuePair( "SURF Tools" );
     bool hasSurface = false;
-    /*if( activeModelDVP )
-    {
-        hasSurface = true;
-    	activeModelDVP->GetData( m_surfDataset );
-    }*/
+
+    // if( activeModelDVP ) { hasSurface = true; activeModelDVP->GetData( m_surfDataset ); }
+
     /////////////////////
     if( !hasSurface )
     {
@@ -891,6 +906,7 @@ void cfdStreamers::UpdatePropertySet()
     {
         CreateArbSurface();
     }
+	*/
 }
 ///////////////////////////////////////////////////////////////////////////
 void cfdStreamers::CreateLFXPlane()
@@ -925,12 +941,15 @@ void cfdStreamers::CreateLFXPlane()
 	rtp->setSeedPtsCount( m_xValue, m_yValue, m_zValue );
 	rtp->setIntegrationDir( m_integrationDirection );
 	rtp->setIntegrationStepLen( m_integrationStepLength );
+	rtp->setPropagationTime( m_propagationTime );
+
+	// currently these are not used and do nothing
 	rtp->setStreamArrows( m_streamArrows );
 	rtp->setStreamRibbons( m_streamRibbons );
-	rtp->setPropagationTime( m_propagationTime );
 	rtp->setLineDiameter( m_lineDiameter );
 	rtp->setArrowDiameter( m_arrowDiameter );
 	rtp->setParticleDiameter( m_particleDiameter );
+
     rtp->addInput( "vtkDataObject" );
 
     m_dsp->addOperation( rtp );
@@ -938,6 +957,7 @@ void cfdStreamers::CreateLFXPlane()
 	lfx::core::vtk::VTKStreamlineRendererPtr renderOp( new lfx::core::vtk::VTKStreamlineRenderer() );
     renderOp->SetActiveVector( vector );
     renderOp->SetActiveScalar( scalar );
+	renderOp->setImageScale( m_pointSize );
     renderOp->addInput( "vtkPolyData" );
     renderOp->addInput( "vtkDataObject" );
 	renderOp->addInput( "positions" );

@@ -32,9 +32,10 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/data/StreamlinePropertySet.h>
 #include <ves/xplorer/data/DatasetPropertySet.h>
-#include <propertystore/Property.h>
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/Debug.h>
 #include <propertystore/MakeLive.h>
+#include <propertystore/Property.h>
 
 #include <latticefx/core/vtk/VTKStreamlineRenderer.h>
 
@@ -83,6 +84,14 @@ StreamlinePropertySet::StreamlinePropertySet()
             ( &m_activeDataSet ),
             name, switchwire::EventManager::unspecified_SignalType );
     }
+	///Signal to update an Lfx Vtk streamline
+    {
+        std::string name( "StreamlinePropertySet" );
+        name += boost::lexical_cast<std::string>( this );
+        name += ".TBETUpdateLfxVtkStreamline";
+        switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxVtkStreamline ), name, switchwire::EventManager::unspecified_SignalType );
+    
+	}
 
     SetTypeName( "Streamline" );
 
@@ -114,7 +123,7 @@ void StreamlinePropertySet::CreateSkeletonLfxDs()
 	// TODO: set any other defaults for the renderer here
 	lfx::core::vtk::VTKStreamlineRendererPtr renderOp( new lfx::core::vtk::VTKStreamlineRenderer() );
 	renderOp->setTransferFunctionDestination( lfx::core::Renderer::TF_RGBA );
-	VizBasePropertySet::CreateSkeletonLfxDsRenderer( "stm", renderOp.get() );
+	VizBasePropertySet::CreateSkeletonLfxDsRenderer( "str", renderOp.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void StreamlinePropertySet::CreateSkeleton()
@@ -141,6 +150,9 @@ void StreamlinePropertySet::CreateSkeleton()
     GetProperty( "DataSet_ScalarRange_Max" )->SetDisabled();
 
     GetProperty( "DataSet_ScalarData" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRange, this, _1 ) );
+
+	GetProperty( "DataSet_ScalarRange_Min" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRangeMin, this, _1 ) );
+	GetProperty( "DataSet_ScalarRange_Max" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateScalarDataRangeMax, this, _1 ) );
     GetProperty( "DataSet_ScalarRange_Min" )->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
     GetProperty( "DataSet_ScalarRange_Max" )->SignalRequestValidation.connect( boost::bind( &VizBasePropertySet::ValidateScalarMinMax, this, _1, _2 ) );
 
@@ -175,19 +187,25 @@ void StreamlinePropertySet::CreateSkeleton()
     enumValues.push_back( "Forward" );
     enumValues.push_back( "Both" );
     SetPropertyAttribute( "IntegrationDirection", "enumValues", enumValues );
+	GetProperty( "IntegrationDirection" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
 
     ///Seed point controls
     AddProperty( "SeedPoints", boost::any(), "Seed Points" );
     SetPropertyAttribute( "SeedPoints", "isUIGroupOnly", true );
     SetPropertyAttribute( "SeedPoints", "setExpanded", true );
+	/*
     AddProperty( "SeedPoints_DisplaySeedPoints", false, "Display Seed Points" );
     GetProperty( "SeedPoints_DisplaySeedPoints" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateSeedPointDisplay, this, _1 ) );
+	*/
     AddProperty( "SeedPoints_NumberOfPointsInX", 5, "Number of Points in X" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInX", "minimumValue",   0 );
     AddProperty( "SeedPoints_NumberOfPointsInY", 5, "Number of Points in Y" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInY", "minimumValue",   0 );
     AddProperty( "SeedPoints_NumberOfPointsInZ", 1, "Number of Points in Z" );
     SetPropertyAttribute( "SeedPoints_NumberOfPointsInZ", "minimumValue",   0 );
+	GetProperty( "SeedPoints_NumberOfPointsInX" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
+	GetProperty( "SeedPoints_NumberOfPointsInY" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
+	GetProperty( "SeedPoints_NumberOfPointsInZ" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
 
     // Link the three NumberOfPointsIn... properties together and have them
     // fire a signal with signature void( std::vector<int> ) whose tail is
@@ -223,13 +241,22 @@ void StreamlinePropertySet::CreateSkeleton()
     AddProperty( "SeedPoints_Bounds_ZMax", 1.0, "Z Maximum" );
     SetPropertyAttribute( "SeedPoints_Bounds_ZMax", "minimumValue",   0.0 );
     SetPropertyAttribute( "SeedPoints_Bounds_ZMax", "maximumValue", 1.0 );
+	GetProperty( "SeedPoints_Bounds_XMin" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
+	GetProperty( "SeedPoints_Bounds_XMax" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
+	GetProperty( "SeedPoints_Bounds_YMin" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
+	GetProperty( "SeedPoints_Bounds_YMax" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
+	GetProperty( "SeedPoints_Bounds_ZMin" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
+	GetProperty( "SeedPoints_Bounds_ZMax" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
 
+	/*
     ///General streamline properties
     AddProperty( "UseGPUTools", false, "Use GPU Tools" );
     AddProperty( "UseStreamArrows", false, "Use Stream Arrows" );
     AddProperty( "UseStreamRibbons", false, "Use Stream Ribbons" );
     AddProperty( "UseLastSeedPoints", false, "Use Last Seed Points" );
+	*/
 
+	/*
     ///Old values that are no longer used by the vis code
     AddProperty( "CursorDirection", std::string(""), "Cursor Direction" );
     enumValues.clear();
@@ -240,6 +267,7 @@ void StreamlinePropertySet::CreateSkeleton()
     enumValues.clear();
     enumValues.push_back( "none" );
     SetPropertyAttribute( "CursortType", "enumValues", enumValues );
+	*/
 
     //AddProperty( "StreamlineSize", 0.5, "Streamline Size" );
     //AddProperty( "NumberOfPointsPerPlane", 2.0, "Number of Points Per Plane" );
@@ -247,18 +275,28 @@ void StreamlinePropertySet::CreateSkeleton()
     ///Advanced settings
     AddProperty( "Advanced", boost::any(), "Advanced" );
     SetPropertyAttribute( "Advanced", "isUIGroupOnly", true );
+
     AddProperty( "Advanced_PropogationTime", 100.0, "Propogation Time" );
     SetPropertyAttribute( "Advanced_PropogationTime", "minimumValue", 1.0 );
     SetPropertyAttribute( "Advanced_PropogationTime", "maximumValue", 100.0 );
-    AddProperty( "Advanced_IntegrationStepSize", 1000.0f, "Integration Step Size" );
+	GetProperty( "Advanced_PropogationTime" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
+
+    AddProperty( "Advanced_IntegrationStepSize", 1000.0, "Integration Step Size" );
     SetPropertyAttribute( "Advanced_IntegrationStepSize", "minimumValue", 1.0 );
     SetPropertyAttribute( "Advanced_IntegrationStepSize", "maximumValue", 5000.0 );
+	GetProperty( "Advanced_IntegrationStepSize" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
+
+	AddProperty( "Advanced_PointSize", 0.2, "Point Size" );
+	GetProperty( "Advanced_PointSize" )->SignalValueChanged.connect( boost::bind( &StreamlinePropertySet::UpdateStreamline, this, _1 ) );
+
+	/*
     AddProperty( "Advanced_Diameter", -80.0f, "Diameter" );
     SetPropertyAttribute( "Advanced_Diameter", "minimumValue", -100.0 );
     SetPropertyAttribute( "Advanced_Diameter", "maximumValue", 100.0 );
     AddProperty( "Advanced_SphereArrowParticleSize", 5.0f, "Sphere/Arrow/Particle Size" );
     SetPropertyAttribute( "Advanced_VectorThreshold", "minimumValue", 1.0 );
     SetPropertyAttribute( "Advanced_VectorThreshold", "maximumValue", 50.0 );
+	*/
 
     /*
     AddProperty( "Advanced_VectorScale", 200.0, "Vector Scale" );
@@ -331,5 +369,47 @@ void StreamlinePropertySet::EnableLiveProperties( bool live )
                                                          "HideVizFeature", true ) );
         m_liveObjects.push_back( p );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StreamlinePropertySet::UpdateStreamline( propertystore::PropertyPtr property )
+{
+	try
+	{
+		std::vector<double> seedPointBounds;
+		seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_XMin" ) ) );
+		seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_XMax" ) ) );
+		seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_YMin" ) ) );
+		seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_YMax" ) ) );
+		seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_ZMin" ) ) );
+		seedPointBounds.push_back( boost::any_cast<double>( GetPropertyValue( "SeedPoints_Bounds_ZMax" ) ) );
+
+		std::vector<int> seedPointNum;
+		seedPointNum.push_back( boost::any_cast<int>( GetPropertyValue( "SeedPoints_NumberOfPointsInX" ) ) );
+		seedPointNum.push_back( boost::any_cast<int>( GetPropertyValue( "SeedPoints_NumberOfPointsInY" ) ) );
+		seedPointNum.push_back( boost::any_cast<int>( GetPropertyValue( "SeedPoints_NumberOfPointsInZ" ) ) );
+	
+		float len = (float)boost::any_cast<double>( GetPropertyValue( "Advanced_IntegrationStepSize" ) );
+		float pt = (float)boost::any_cast<double>( GetPropertyValue( "Advanced_PropogationTime" ) );
+		float ps = (float)boost::any_cast<double>( GetPropertyValue( "Advanced_PointSize" ) );
+
+		int dir = 0;
+		std::string dirType = boost::any_cast<std::string>( GetPropertyValue( "IntegrationDirection" ) );
+		if( !dirType.compare( "Forward" ) )
+		{
+			dir = 1;
+		}
+		else if( !dirType.compare( "Backward" ) )
+		{
+			dir = 2;
+		}
+
+		m_updateLfxVtkStreamline.signal( seedPointBounds, seedPointNum, dir, len, pt, ps );
+	}
+	catch( ... )
+	{
+		vprDEBUG( vesDBG, 0 ) << "|\tStreamlinePropertySet::UpdateStreamline - UnExpected Exception!"
+                          << std::endl << vprDEBUG_FLUSH;
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
