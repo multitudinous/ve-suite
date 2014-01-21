@@ -467,8 +467,11 @@ void UpdateLfxVtkScalarOrVector( const std::string &renderSetType, const std::st
 		}
 	}
 
-	
-	//psr->FullRefresh();  
+	lfx::core::vtk::VTKStreamlineRenderer *sr = dynamic_cast<lfx::core::vtk::VTKStreamlineRenderer *>( r.get() );
+	if( sr )
+	{
+		psr->FullRefresh();
+	}
 
 	int dirty =  lfx::core::DataSet::RENDERER_DIRTY;
 	if( rtpDirty ) dirty |= lfx::core::DataSet::RTPOPERATION_DIRTY;

@@ -160,6 +160,7 @@ void StreamlinePropertySet::CreateSkeleton()
     enumValues.clear();
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
+	GetProperty( "DataSet_VectorData" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorData, this, _1 ) );
     GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
 
     // Now that DataSet subproperties exist, we can initialize the values in
