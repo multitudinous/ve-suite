@@ -63,6 +63,9 @@
 #include <vtkPointData.h>
 
 #include <latticefx/core/vtk/DataSet.h>
+#include <latticefx/core/vtk/ChannelDatavtkDataObject.h>
+#include <latticefx/core/vtk/VTKVectorFieldRTP.h>
+#include <latticefx/core/vtk/VTKVectorRenderer.h>
 
 using namespace ves::xplorer;
 
@@ -660,5 +663,53 @@ void cfdVectorBase::UpdatePropertySet()
     {
     	activeModelDVP->GetData( m_surfDataset );
     }*/
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdVectorBase::CreateLFXPlane()
+{
+    m_dsp = lfx::core::DataSetPtr( new lfx::core::DataSet() );
+    
+    //1st Step
+    lfx::core::vtk::ChannelDatavtkDataObjectPtr dobjPtr( new lfx::core::vtk::ChannelDatavtkDataObject( GetActiveDataSet()->GetDataSet(), "vtkDataObject" ) );
+    m_dsp->addChannel( dobjPtr );
+    
+    lfx::core::vtk::VTKVectorFieldRTPPtr rtp( new lfx::core::vtk::VTKVectorFieldRTP() );
+
+	/*
+    if( xyz == 0 )
+    {
+        contourRTP->SetPlaneDirection( lfx::core::vtk::CuttingPlane::X_PLANE );
+    }
+    else if( xyz == 1 )
+    {
+        contourRTP->SetPlaneDirection( lfx::core::vtk::CuttingPlane::Y_PLANE );
+    }
+    else if( xyz == 2 )
+    {
+        contourRTP->SetPlaneDirection( lfx::core::vtk::CuttingPlane::Z_PLANE );
+    }
+	*/
+    rtp->SetRequestedValue( requestedValue );
+    rtp->addInput( "vtkDataObject" );
+    m_dsp->addOperation( rtp );
+
+    //Try the vtkActor renderer
+    lfx::core::vtk::VTKVectorRendererPtr renderOp( new lfx::core::vtk::VTKVectorRenderer() );
+    renderOp->SetActiveVector( GetActiveDataSet()->GetActiveVectorName() );
+    renderOp->SetActiveScalar( GetActiveDataSet()->GetActiveScalarName() );
+    renderOp->addInput( "vtkPolyData" );
+	renderOp->addInput( "vtkDataObject" );
+    m_dsp->setRenderer( renderOp );
+    m_dsp->setDirty();
+    //Now force an update of the lfx pipeline
+    bool success = m_dsp->updateAll();
+    
+    if( !success )
+    {
+        std::cout << "Some sort of problem with lfx " << std::endl;
+    }
+
+	Model* activeModel = ModelHandler::instance()->GetActiveModel();
+	activeModel->SetVtkRenderSet( "vec", m_dsp );
 }
 ////////////////////////////////////////////////////////////////////////////////

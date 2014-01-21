@@ -68,6 +68,7 @@ public:
 
 protected:
     ///Create the skeleton
+	virtual void CreateSkeletonLfxDs();
     virtual void CreateSkeleton();
 
 private:

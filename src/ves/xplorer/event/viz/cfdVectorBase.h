@@ -103,6 +103,7 @@ public:
     void UpdatePropertySet();
 
 protected:
+	void CreateLFXPlane();
     void CreateArbSurface();
 
     vtkGlyph3D* glyph;

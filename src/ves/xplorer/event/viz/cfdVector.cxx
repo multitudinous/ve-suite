@@ -171,6 +171,10 @@ cfdObjects* cfdVector::CreateCopy()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVector::Update( void )
 {
+	CreateLFXPlane();
+    this->updateFlag = true;
+    return;
+
     if( this->cursorType == ARROW )
     {
 #ifdef USE_OMP

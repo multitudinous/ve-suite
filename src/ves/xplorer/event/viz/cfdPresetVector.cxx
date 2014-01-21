@@ -98,6 +98,13 @@ cfdObjects* cfdPresetVector::CreateCopy()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdPresetVector::Update( void )
 {
+	// TODO: VTKVectorFieldGlyphRTP (HAS MASK)
+	// add mask as PROPERTY
+	CreateLFXPlane();
+    this->updateFlag = true;
+    return;
+
+
     vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::ActiveDataSet = "
                           << this->GetActiveDataSet()
                           << std::endl << vprDEBUG_FLUSH;
@@ -205,6 +212,7 @@ void cfdPresetVector::Update( void )
     }
     else
     {
+		// TODO: LATTICEFX STUFF HERE!
         float scaleFactor = GetVectorScaleFactor() ;
         try
         {

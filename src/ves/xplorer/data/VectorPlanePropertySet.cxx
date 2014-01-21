@@ -42,6 +42,8 @@
 #include <iostream>
 #include <ves/xplorer/data/DatabaseManager.h>
 
+#include <latticefx/core/vtk/VTKActorRenderer.h>
+
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 VectorPlanePropertySet::VectorPlanePropertySet()
@@ -52,7 +54,7 @@ VectorPlanePropertySet::VectorPlanePropertySet()
     SetTypeName( "VectorPlane" );
     RegisterPropertySet( GetTypeName() );
 
-    CreateSkeleton();
+    CreateSkeletonLfxDs();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VectorPlanePropertySet::VectorPlanePropertySet( const VectorPlanePropertySet& orig )
@@ -69,6 +71,16 @@ VectorPlanePropertySet::~VectorPlanePropertySet()
 propertystore::PropertySetPtr VectorPlanePropertySet::CreateNew()
 {
     return propertystore::PropertySetPtr( new VectorPlanePropertySet );
+}
+////////////////////////////////////////////////////////////////////////////////
+void VectorPlanePropertySet::CreateSkeletonLfxDs()
+{
+	CreateSkeleton();
+
+	// TODO: set any other defaults for the renderer here
+	lfx::core::vtk::VTKActorRendererPtr renderOp( new lfx::core::vtk::VTKActorRenderer() );
+	renderOp->setTransferFunctionDestination( lfx::core::Renderer::TF_RGBA );
+	VizBasePropertySet::CreateSkeletonLfxDsRenderer( "vec", renderOp.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VectorPlanePropertySet::CreateSkeleton()
@@ -103,6 +115,7 @@ void VectorPlanePropertySet::CreateSkeleton()
     enumValues.push_back( "Select Vector Data" );
     SetPropertyAttribute( "DataSet_VectorData", "enumValues", enumValues );
     GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorDataOptions, this, _1 ) );
+	GetProperty( "DataSet_VectorData" )->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateVectorData, this, _1 ) );
 
     // Now that DataSet subproperties exist, we can initialize the values in
     // the dataset enum. If we had tried to do this beforehand, none of the
@@ -199,6 +212,7 @@ void VectorPlanePropertySet::CreateSkeleton()
                 slotName ) );
         m_liveObjects.push_back( p );*/
     }
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VectorPlanePropertySet::EnableLiveProperties( bool live )
