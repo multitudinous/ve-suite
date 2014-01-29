@@ -43,7 +43,7 @@
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
 #include <vtkPointData.h>
-#include <vtkPolyData.h>
+#include <vtkPolyData.h> 
 #include <vtkDataSet.h>
 #include <vtkCutter.h>
 #include <vtkGlyph3D.h>

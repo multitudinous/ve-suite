@@ -66,6 +66,7 @@
 #include <latticefx/core/vtk/ChannelDatavtkDataObject.h>
 #include <latticefx/core/vtk/VTKVectorFieldRTP.h>
 #include <latticefx/core/vtk/VTKVectorRenderer.h>
+#include <latticefx/core/vtk/VTKVectorFieldGlyphRTP.h>
 
 using namespace ves::xplorer;
 
@@ -649,7 +650,10 @@ void cfdVectorBase::UpdatePropertySet()
 
     SetScaleByVectorFlag( static_cast< int >( boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Advanced_ScaleByVectorMagnitude" ) ) ) );
 
+	/*
+	// No Longer USED
     m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
+	*/
 
     bool vectorGreyscale = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "Advanced_Greyscale" ) );
     GetActiveDataSet()->SetGreyscaleFlag( vectorGreyscale );
@@ -673,7 +677,8 @@ void cfdVectorBase::CreateLFXPlane()
     lfx::core::vtk::ChannelDatavtkDataObjectPtr dobjPtr( new lfx::core::vtk::ChannelDatavtkDataObject( GetActiveDataSet()->GetDataSet(), "vtkDataObject" ) );
     m_dsp->addChannel( dobjPtr );
     
-    lfx::core::vtk::VTKVectorFieldRTPPtr rtp( new lfx::core::vtk::VTKVectorFieldRTP() );
+    //lfx::core::vtk::VTKVectorFieldRTPPtr rtp( new lfx::core::vtk::VTKVectorFieldRTP() );
+	lfx::core::vtk::VTKVectorFieldGlyphRTPPtr rtp( new lfx::core::vtk::VTKVectorFieldGlyphRTP() );
 
 	/*
     if( xyz == 0 )

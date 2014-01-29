@@ -53,6 +53,7 @@
 #include <latticefx/core/vtk/VTKBaseRTP.h>
 #include <latticefx/core/vtk/VTKStreamlineRTP.h>
 #include <latticefx/core/vtk/VTKStreamlineRenderer.h>
+#include <latticefx/core/vtk/VTKVectorRenderer.h>
 
 #include <boost/foreach.hpp>
 #include <boost/limits.hpp>
@@ -431,6 +432,12 @@ void UpdateLfxVtkScalarOrVector( const std::string &renderSetType, const std::st
 	{
 		curName = psr->GetActiveVector();
 		psr->SetActiveVector( name );
+
+		lfx::core::vtk::VTKVectorRenderer *vr = dynamic_cast<lfx::core::vtk::VTKVectorRenderer *>( r.get() );
+		if( vr )
+		{
+			psr->FullRefresh();
+		}
 	}
 	else
 	{

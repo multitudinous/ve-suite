@@ -98,8 +98,15 @@ cfdObjects* cfdPresetVector::CreateCopy()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdPresetVector::Update( void )
 {
-	// TODO: VTKVectorFieldGlyphRTP (HAS MASK)
-	// add mask as PROPERTY
+	if( GetObjectType() != BY_SURFACE )
+	{
+		int idebug = 1;
+	}
+	else
+	{
+		int idebug = 2;
+	}
+
 	CreateLFXPlane();
     this->updateFlag = true;
     return;
