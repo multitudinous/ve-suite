@@ -21,7 +21,7 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- *
+ * 
  * -----------------------------------------------------------------
  * Date modified: $Date$
  * Version:       $Rev$
@@ -53,6 +53,22 @@ VectorPlanePropertySet::VectorPlanePropertySet()
     SetDataManager( DatabaseManager::instance()->GetDataManager() );
     SetTypeName( "VectorPlane" );
     RegisterPropertySet( GetTypeName() );
+
+	///Signal to update an Lfx Vtk Vector ThreshHold
+    {
+        std::string name( "VectorPlanePropertySet" );
+        name += boost::lexical_cast<std::string>( this );
+        name += ".TBETUpdateLfxVtkVectorThreshHold";
+		switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxVtkVectorThreshold ), name, switchwire::EventManager::unspecified_SignalType );
+    }
+	{
+        std::string name( "VectorPlanePropertySet" );
+        name += boost::lexical_cast<std::string>( this );
+        name += ".TBETUpdateLfxVtkVectorPlaneDirection";
+		switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxVtkVectorDirection ), name, switchwire::EventManager::unspecified_SignalType );
+    }
+
+	
 
     CreateSkeletonLfxDs();
 }
@@ -140,10 +156,11 @@ void VectorPlanePropertySet::CreateSkeleton()
     enumValues.push_back( "x" );
     enumValues.push_back( "y" );
     enumValues.push_back( "z" );
-    enumValues.push_back( "By Wand" );
+    // enumValues.push_back( "By Wand" ); // TODO: not sure what By Wand is
     enumValues.push_back( "All" );
     enumValues.push_back( "By Surface" );
     SetPropertyAttribute( "Direction", "enumValues", enumValues );
+	GetProperty( "Direction" )->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateDirection, this, _1 ) );
 
     AddProperty( "DataMapping", std::string(""), "Data Mapping" );
     enumValues.clear();
@@ -186,10 +203,11 @@ void VectorPlanePropertySet::CreateSkeleton()
     AddProperty( "Advanced_VectorThreshold", boost::any(), "Vector Threshold" );
     SetPropertyAttribute( "Advanced_VectorThreshold", "isUIGroupOnly", true );
     SetPropertyAttribute( "Advanced_VectorThreshold", "setExpanded", true );
-    AddProperty( "Advanced_VectorThreshold_Min",   1.0f, "Vector Threshold Min" );
-    AddProperty( "Advanced_VectorThreshold_Max", 100.0f, "Vector Threshold Max" );
-    //SetPropertyAttribute( "Advanced_VectorThreshold", "minimumValue", 0.0 );
-    //SetPropertyAttribute( "Advanced_VectorThreshold", "maximumValue", 1.0 );
+    AddProperty( "Advanced_VectorThreshold_Min",   1.0, "Vector Threshold Min" );
+    AddProperty( "Advanced_VectorThreshold_Max", 100.0, "Vector Threshold Max" );
+	GetProperty( "Advanced_VectorThreshold_Min" )->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateThreshHold, this, _1 ) );
+	GetProperty( "Advanced_VectorThreshold_Max" )->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateThreshHold, this, _1 ) );
+    
 
     AddProperty( "Advanced_VectorScale", 200.0, "Vector Scale" );
     SetPropertyAttribute( "Advanced_VectorScale", "minimumValue",   1.0 );
@@ -236,5 +254,46 @@ void VectorPlanePropertySet::EnableLiveProperties( bool live )
                                                          "HideVizFeature", true ) );
         m_liveObjects.push_back( p );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void VectorPlanePropertySet::UpdateThreshHold( propertystore::PropertyPtr property )
+{
+    boost::ignore_unused_variable_warning( property );
+
+	double min = GetDatumValue< double >( "Advanced_VectorThreshold_Min" );
+	double max = GetDatumValue< double >( "Advanced_VectorThreshold_Max" );
+
+	m_updateLfxVtkVectorThreshold.signal( min, max );
+}
+////////////////////////////////////////////////////////////////////////////////
+void VectorPlanePropertySet::UpdateDirection( propertystore::PropertyPtr property )
+{
+    boost::ignore_unused_variable_warning( property );
+
+	std::string strdir = GetDatumValue< std::string >( "Direction" );
+
+	int dir = 0;
+	if( !strdir.compare( "x" ) )
+	{
+		dir = 0;
+	}
+	else if( !strdir.compare( "y" ) )
+	{
+		dir = 1;
+	}
+	else if( !strdir.compare( "z" ) )
+	{
+		dir = 2;
+	}
+	else if( !strdir.compare( "All" ) )
+	{
+		dir = 3;
+	}
+	else if( !strdir.compare( "By Surface" ) )
+	{
+		dir = 4;
+	}
+
+	m_updateLfxVtkVectorDirection.signal( dir );
 }
 ////////////////////////////////////////////////////////////////////////////////

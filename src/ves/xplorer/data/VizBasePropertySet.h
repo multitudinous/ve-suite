@@ -137,10 +137,12 @@ protected:
 
 	bool GetLfxValues( propertystore::PropertyPtr property, SLfxPropValues *pv );
 
+	typedef switchwire::Event< void ( int ) > Update_int;
+	typedef switchwire::Event< void ( double, double ) > Update_2dbl;
 	typedef switchwire::Event< void ( const std::string&, double, double ) > Update_str2dbl;
-	Update_str2dbl m_updateLfxVtkScalarRange;
-
 	typedef switchwire::Event< void ( const std::string&, const std::string& ) > Update_2str;
+
+	Update_str2dbl m_updateLfxVtkScalarRange;
     Update_2str m_updateLfxVtkScalar;
 	Update_2str m_updateLfxVtkVector;
 	Update_2str m_updateLfxVtkColorByScalar;

@@ -171,7 +171,7 @@ cfdObjects* cfdVector::CreateCopy()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVector::Update( void )
 {
-	CreateLFXPlane();
+	CreateLFXPlane(10, -1);
     this->updateFlag = true;
     return;
 

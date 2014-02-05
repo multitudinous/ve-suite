@@ -669,7 +669,7 @@ void cfdVectorBase::UpdatePropertySet()
     }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVectorBase::CreateLFXPlane()
+void cfdVectorBase::CreateLFXPlane( int numSteps, int planeDirection )
 {
     m_dsp = lfx::core::DataSetPtr( new lfx::core::DataSet() );
     
@@ -677,23 +677,17 @@ void cfdVectorBase::CreateLFXPlane()
     lfx::core::vtk::ChannelDatavtkDataObjectPtr dobjPtr( new lfx::core::vtk::ChannelDatavtkDataObject( GetActiveDataSet()->GetDataSet(), "vtkDataObject" ) );
     m_dsp->addChannel( dobjPtr );
     
-    //lfx::core::vtk::VTKVectorFieldRTPPtr rtp( new lfx::core::vtk::VTKVectorFieldRTP() );
-	lfx::core::vtk::VTKVectorFieldGlyphRTPPtr rtp( new lfx::core::vtk::VTKVectorFieldGlyphRTP() );
+	lfx::core::vtk::VTKVectorFieldRTPPtr rtp( new lfx::core::vtk::VTKVectorFieldRTP() );
 
-	/*
-    if( xyz == 0 )
-    {
-        contourRTP->SetPlaneDirection( lfx::core::vtk::CuttingPlane::X_PLANE );
-    }
-    else if( xyz == 1 )
-    {
-        contourRTP->SetPlaneDirection( lfx::core::vtk::CuttingPlane::Y_PLANE );
-    }
-    else if( xyz == 2 )
-    {
-        contourRTP->SetPlaneDirection( lfx::core::vtk::CuttingPlane::Z_PLANE );
-    }
-	*/
+	rtp->SetPlaneDirection( planeDirection );
+	rtp->SetRequestedValue( requestedValue );
+	rtp->setVectorRatioFactor( GetVectorRatioFactor() );
+	rtp->setVectorThreshHold( _vectorThreshHoldValues[0], _vectorThreshHoldValues[1] );
+	rtp->setNumberOfSteps( numSteps );
+	rtp->setPlaneOrigin( this->origin );
+	rtp->setPlaneNormal( this->normal );
+	rtp->SetActiveVector( GetActiveDataSet()->GetActiveVectorName() );
+	rtp->SetActiveScalar( GetActiveDataSet()->GetActiveScalarName() );
     rtp->SetRequestedValue( requestedValue );
     rtp->addInput( "vtkDataObject" );
     m_dsp->addOperation( rtp );

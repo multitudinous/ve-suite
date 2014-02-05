@@ -71,7 +71,12 @@ protected:
 	virtual void CreateSkeletonLfxDs();
     virtual void CreateSkeleton();
 
+	void UpdateThreshHold( propertystore::PropertyPtr property );
+	void UpdateDirection( propertystore::PropertyPtr property );
+
 private:
+	Update_2dbl m_updateLfxVtkVectorThreshold;
+	Update_int m_updateLfxVtkVectorDirection;
 };
 } // namespace data
 } // namespace xplorer

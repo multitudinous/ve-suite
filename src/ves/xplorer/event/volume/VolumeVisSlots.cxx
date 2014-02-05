@@ -53,6 +53,7 @@
 #include <latticefx/core/vtk/VTKBaseRTP.h>
 #include <latticefx/core/vtk/VTKStreamlineRTP.h>
 #include <latticefx/core/vtk/VTKStreamlineRenderer.h>
+#include <latticefx/core/vtk/VTKVectorFieldRTP.h>
 #include <latticefx/core/vtk/VTKVectorRenderer.h>
 
 #include <boost/foreach.hpp>
@@ -338,6 +339,70 @@ lfx::core::RendererPtr GetLfxRenderer( const std::string &renderSetType, const s
 {
 	lfx::core::DataSetPtr pds;
 	return GetLfxRenderer( renderSetType, dataSetName, pds );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// X_PLANE = 0, Y_PLANE = 1, Z_PLANE = 2, ALL = 3, SURFACE = 4
+////////////////////////////////////////////////////////////////////////////////
+void UpdateLfxVtkVectorPlaneDirection( int direction )
+{
+	lfx::core::DataSetPtr ds;
+	lfx::core::RendererPtr r = GetLfxRenderer( "vec", "", ds );
+	if( !ds.get() ) return;
+
+	lfx::core::vtk::VTKVectorRenderer *sr = dynamic_cast<lfx::core::vtk::VTKVectorRenderer *>( r.get() );
+	if( !sr ) return;
+
+	bool rtpDirty = false;
+
+	lfx::core::RTPOperationList& oplist = ds->getOperations();
+	BOOST_FOREACH( lfx::core::RTPOperationPtr op, oplist  )
+	{
+		lfx::core::vtk::VTKVectorFieldRTP *prtp = dynamic_cast<lfx::core::vtk::VTKVectorFieldRTP *>( op.get() );
+		if( !prtp ) continue;
+
+		// TODO: IF THIS IS "ALL" TYPE WE NEED ORIGIN AND NORMAL
+		// TODO: NEED TO FIGURE OUT SURFACE TYPE 4
+		if( prtp->SetPlaneDirection( direction ) ) rtpDirty = true;
+	}
+
+	// only update if we have to
+	if( !rtpDirty ) return;
+
+	sr->FullRefresh();
+	int dirty =  lfx::core::DataSet::RENDERER_DIRTY | lfx::core::DataSet::RTPOPERATION_DIRTY;
+	ds->setDirty( dirty );
+	ds->updateAll(); // update now
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void UpdateLfxVtkVectorThreshHold( double min, double max )
+{
+	lfx::core::DataSetPtr ds;
+	lfx::core::RendererPtr r = GetLfxRenderer( "vec", "", ds );
+	if( !ds.get() ) return;
+
+	lfx::core::vtk::VTKVectorRenderer *sr = dynamic_cast<lfx::core::vtk::VTKVectorRenderer *>( r.get() );
+	if( !sr ) return;
+
+	bool rtpDirty = false;
+
+	lfx::core::RTPOperationList& oplist = ds->getOperations();
+	BOOST_FOREACH( lfx::core::RTPOperationPtr op, oplist  )
+	{
+		lfx::core::vtk::VTKVectorFieldRTP *prtp = dynamic_cast<lfx::core::vtk::VTKVectorFieldRTP *>( op.get() );
+		if( !prtp ) continue;
+
+		if( prtp->setVectorThreshHold( min, max ) ) rtpDirty = true;
+	}
+
+			// only update if we have to
+	if( !rtpDirty ) return;
+
+	sr->FullRefresh();
+	int dirty =  lfx::core::DataSet::RENDERER_DIRTY | lfx::core::DataSet::RTPOPERATION_DIRTY;
+	ds->setDirty( dirty );
+	ds->updateAll(); // update now
 }
 
 ////////////////////////////////////////////////////////////////////////////////

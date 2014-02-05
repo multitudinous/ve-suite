@@ -98,16 +98,7 @@ cfdObjects* cfdPresetVector::CreateCopy()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdPresetVector::Update( void )
 {
-	if( GetObjectType() != BY_SURFACE )
-	{
-		int idebug = 1;
-	}
-	else
-	{
-		int idebug = 2;
-	}
-
-	CreateLFXPlane();
+	CreateLFXPlane( numSteps, xyz );
     this->updateFlag = true;
     return;
 
