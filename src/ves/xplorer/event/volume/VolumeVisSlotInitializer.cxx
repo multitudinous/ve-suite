@@ -107,14 +107,9 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
                            &HideVizFeature,
                            m_connections, any_SignalType, normal_Priority );
 
-	CONNECTSIGNALS_STATIC( "%TBETUpdateLfxVtkVectorPlaneDirection",
-                           void( int ),
-                           &UpdateLfxVtkVectorPlaneDirection,
-                           m_connections, any_SignalType, normal_Priority );
-
-	CONNECTSIGNALS_STATIC( "%TBETUpdateLfxVtkVectorThreshHold",
-                           void( double, double ),
-                           &UpdateLfxVtkVectorThreshHold,
+	CONNECTSIGNALS_STATIC( "%TBETUpdateLfxVtkVectorData",
+                           void( double, double, double, double, int ),
+                           &UpdateLfxVtkVectorData,
                            m_connections, any_SignalType, normal_Priority );
 
 	CONNECTSIGNALS_STATIC( "%TBETUpdateLfxVtkStreamline",

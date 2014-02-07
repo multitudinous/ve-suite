@@ -688,7 +688,6 @@ void cfdVectorBase::CreateLFXPlane( int numSteps, int planeDirection )
 	rtp->setPlaneNormal( this->normal );
 	rtp->SetActiveVector( GetActiveDataSet()->GetActiveVectorName() );
 	rtp->SetActiveScalar( GetActiveDataSet()->GetActiveScalarName() );
-    rtp->SetRequestedValue( requestedValue );
     rtp->addInput( "vtkDataObject" );
     m_dsp->addOperation( rtp );
 

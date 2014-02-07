@@ -101,11 +101,8 @@ void UpdateScalarRange( double const& minRange, double const& maxRange );
 ///dataset per model.
 ves::xplorer::volume::cfdTextureDataSet* SetActiveTextureDataset();
 
-///Update lfx vtk vector plane direction
-void UpdateLfxVtkVectorPlaneDirection( int direction );
-
-///Update lfx vtk vector threshhold
-void UpdateLfxVtkVectorThreshHold( double min, double max );
+///Update lfx vtk vector data
+void UpdateLfxVtkVectorData( double threshMin, double threshMax, double requestedValue, double vectorRatio, int planeDir );
 
 ///Update lfx vtk streamline data
 void UpdateLfxVtkStreamline( const std::vector<double> &seedPtsBox, const std::vector<int>  &seedPtsCount, int integrationDir, float integrationStepLen, float propTime, float pointSize );

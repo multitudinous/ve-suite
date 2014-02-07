@@ -73,10 +73,13 @@ protected:
 
 	void UpdateThreshHold( propertystore::PropertyPtr property );
 	void UpdateDirection( propertystore::PropertyPtr property );
+	void UpdatePlaneLocation( propertystore::PropertyPtr property );
+	void UpdateVectorRatio( propertystore::PropertyPtr property );
+	void UpdateVector();
 
 private:
-	Update_2dbl m_updateLfxVtkVectorThreshold;
-	Update_int m_updateLfxVtkVectorDirection;
+	typedef switchwire::Event< void ( double, double, double, double, int ) > Update_vectorData;
+	Update_vectorData m_updateLfxVtkVectorData;
 };
 } // namespace data
 } // namespace xplorer

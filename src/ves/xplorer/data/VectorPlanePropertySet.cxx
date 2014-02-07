@@ -54,21 +54,13 @@ VectorPlanePropertySet::VectorPlanePropertySet()
     SetTypeName( "VectorPlane" );
     RegisterPropertySet( GetTypeName() );
 
-	///Signal to update an Lfx Vtk Vector ThreshHold
+	///Signal to update an Lfx Vtk VectorData
     {
         std::string name( "VectorPlanePropertySet" );
         name += boost::lexical_cast<std::string>( this );
-        name += ".TBETUpdateLfxVtkVectorThreshHold";
-		switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxVtkVectorThreshold ), name, switchwire::EventManager::unspecified_SignalType );
+        name += ".TBETUpdateLfxVtkVectorData";
+		switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxVtkVectorData ), name, switchwire::EventManager::unspecified_SignalType );
     }
-	{
-        std::string name( "VectorPlanePropertySet" );
-        name += boost::lexical_cast<std::string>( this );
-        name += ".TBETUpdateLfxVtkVectorPlaneDirection";
-		switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxVtkVectorDirection ), name, switchwire::EventManager::unspecified_SignalType );
-    }
-
-	
 
     CreateSkeletonLfxDs();
 }
@@ -158,10 +150,11 @@ void VectorPlanePropertySet::CreateSkeleton()
     enumValues.push_back( "z" );
     // enumValues.push_back( "By Wand" ); // TODO: not sure what By Wand is
     enumValues.push_back( "All" );
-    enumValues.push_back( "By Surface" );
+    enumValues.push_back( "By Surface" ); // TODO: need to support vectors by Surface with LFX, currently not implemented.
     SetPropertyAttribute( "Direction", "enumValues", enumValues );
 	GetProperty( "Direction" )->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateDirection, this, _1 ) );
 
+	// TODO: This is for an ARBSurface
     AddProperty( "DataMapping", std::string(""), "Data Mapping" );
     enumValues.clear();
     enumValues.push_back( "Map Scalar Data" );
@@ -185,8 +178,8 @@ void VectorPlanePropertySet::CreateSkeleton()
         mode->SignalValueChanged.connect( boost::bind( &VizBasePropertySet::UpdateModeOptions, this, _1 ) );
     }
 
+	// TODO: this sets a flag in cfdObjects.. usePreCalcData to true, but not finding where that is used anywhere
     AddProperty( "Mode_UseNearestPrecomputedPlane", false, "Use Nearest Precomputed Plane" );
-
     AddProperty( "Mode_CyclePrecomputedSurfaces", false, "Cycle Precomputed Surfaces" );
     // We disable this one by default since the selected Mode,
     // "Specify a Single Plane", does not support this option.
@@ -196,6 +189,7 @@ void VectorPlanePropertySet::CreateSkeleton()
     AddProperty( "PlaneLocation", 50.00, "Plane Location" );
     SetPropertyAttribute( "PlaneLocation", "minimumValue", 0.00 );
     SetPropertyAttribute( "PlaneLocation", "maximumValue", 100.00 );
+	GetProperty( "PlaneLocation" )->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdatePlaneLocation, this, _1 ) );
 
     AddProperty( "Advanced", boost::any(), "Advanced" );
     SetPropertyAttribute( "Advanced", "isUIGroupOnly", true );
@@ -208,7 +202,7 @@ void VectorPlanePropertySet::CreateSkeleton()
 	GetProperty( "Advanced_VectorThreshold_Min" )->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateThreshHold, this, _1 ) );
 	GetProperty( "Advanced_VectorThreshold_Max" )->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateThreshHold, this, _1 ) );
     
-
+	// TODO: This is currently not supported in LFX
     AddProperty( "Advanced_VectorScale", 200.0, "Vector Scale" );
     SetPropertyAttribute( "Advanced_VectorScale", "minimumValue",   1.0 );
     SetPropertyAttribute( "Advanced_VectorScale", "maximumValue", 400.0 );
@@ -216,22 +210,13 @@ void VectorPlanePropertySet::CreateSkeleton()
     AddProperty( "Advanced_VectorRatio", 1.0, "Vector Ratio" );
     SetPropertyAttribute( "Advanced_VectorRatio", "minimumValue",   1.0 );
     SetPropertyAttribute( "Advanced_VectorRatio", "maximumValue", 200.0 );
+	GetProperty( "Advanced_VectorRatio" )->SignalValueChanged.connect( boost::bind( &VectorPlanePropertySet::UpdateVectorRatio, this, _1 ) );
 
+	// TODO: this is a vtkGlpyh setting and currently not supported in LFX
     AddProperty( "Advanced_ScaleByVectorMagnitude", false, "Scale By Vector Magnitude" );
 
-    {
-        AddProperty( "Advanced_Greyscale", false, "Greyscale" );
-        /*std::vector< propertystore::PropertyPtr > greyscale;
-        greyscale.push_back( GetProperty( "Advanced_Greyscale" ) );
-        const std::string slotName =
-            boost::lexical_cast<std::string>( this ) +".SetVectorPlaneGreyscale";
-        propertystore::MakeLiveBasePtr p( new propertystore::MakeLiveLinked< bool >(
-                m_UUIDString,
-                greyscale,
-                slotName ) );
-        m_liveObjects.push_back( p );*/
-    }
-
+	// TODO: this gets set on the dataset so it should keep doing whatever it was doing before, not sure what happens if its changed on actively rendering vectors though.
+    AddProperty( "Advanced_Greyscale", false, "Greyscale" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VectorPlanePropertySet::EnableLiveProperties( bool live )
@@ -259,41 +244,58 @@ void VectorPlanePropertySet::EnableLiveProperties( bool live )
 void VectorPlanePropertySet::UpdateThreshHold( propertystore::PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
-
-	double min = GetDatumValue< double >( "Advanced_VectorThreshold_Min" );
-	double max = GetDatumValue< double >( "Advanced_VectorThreshold_Max" );
-
-	m_updateLfxVtkVectorThreshold.signal( min, max );
+	UpdateVector();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VectorPlanePropertySet::UpdateDirection( propertystore::PropertyPtr property )
 {
     boost::ignore_unused_variable_warning( property );
-
+	UpdateVector();
+}
+////////////////////////////////////////////////////////////////////////////////
+void VectorPlanePropertySet::UpdatePlaneLocation( propertystore::PropertyPtr property )
+{
+	boost::ignore_unused_variable_warning( property );
+	UpdateVector();
+}
+////////////////////////////////////////////////////////////////////////////////
+void VectorPlanePropertySet::UpdateVectorRatio( propertystore::PropertyPtr property )
+{
+	boost::ignore_unused_variable_warning( property );
+	UpdateVector();
+}
+////////////////////////////////////////////////////////////////////////////////
+void VectorPlanePropertySet::UpdateVector()
+{
 	std::string strdir = GetDatumValue< std::string >( "Direction" );
 
-	int dir = 0;
+	double threshHoldMin = GetDatumValue< double >( "Advanced_VectorThreshold_Min" );
+	double threshHoldMax = GetDatumValue< double >( "Advanced_VectorThreshold_Max" );
+	double requestedValue = GetDatumValue< double >( "PlaneLocation" );
+	double vectorRatio = GetDatumValue< double >( "Advanced_VectorRatio" );
+
+	int planeDir = 0;
 	if( !strdir.compare( "x" ) )
 	{
-		dir = 0;
+		planeDir = 0;
 	}
 	else if( !strdir.compare( "y" ) )
 	{
-		dir = 1;
+		planeDir = 1;
 	}
 	else if( !strdir.compare( "z" ) )
 	{
-		dir = 2;
+		planeDir = 2;
 	}
 	else if( !strdir.compare( "All" ) )
 	{
-		dir = 3;
+		planeDir = 3;
 	}
 	else if( !strdir.compare( "By Surface" ) )
 	{
-		dir = 4;
+		planeDir = 4;
 	}
 
-	m_updateLfxVtkVectorDirection.signal( dir );
+	m_updateLfxVtkVectorData.signal( threshHoldMin, threshHoldMax, requestedValue, vectorRatio, planeDir);
 }
 ////////////////////////////////////////////////////////////////////////////////
