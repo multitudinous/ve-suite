@@ -736,7 +736,7 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     objectType.second.second = std::string( "Single" );
     cfdPresetVector* z_vector = new cfdPresetVector( 3, 10 );
     z_vector->SetObjectType( Z_VECTOR );
-    m_visObjectMap[ objectType ] = z_vector;
+    m_visObjectMap[ objectType ] = z_vector; 
 
     //
     // Initiate the surface vector.
@@ -750,10 +750,10 @@ void SteadyStateVizHandler::CreateVizObjectMap()
     m_visObjectMap[ objectType ] = surface_vector;
 
     //
-    // Initiate the streamlines.
+    // Initiate the streamlines. 
     //
     objectType.first = std::string( "UPDATE_STREAMLINE_SETTINGS" );
-    objectType.second.first = std::string( "" );
+    objectType.second.first = std::string( "" ); 
     objectType.second.second = std::string( "" );
     cfdStreamers* streamlines = new cfdStreamers();
     streamlines->SetObjectType( STREAMLINES );

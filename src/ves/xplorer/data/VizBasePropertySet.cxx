@@ -442,6 +442,7 @@ bool VizBasePropertySet::ValidateScalarMinMax( propertystore::PropertyPtr proper
 
     if( castMin < castMax )
     {
+		m_updateLfxVtkScalarRange.signal( _renderSetType, castMin, castMax );
         return true;
     }
     else

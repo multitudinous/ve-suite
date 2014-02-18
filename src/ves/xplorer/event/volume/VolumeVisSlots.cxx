@@ -429,16 +429,17 @@ void UpdateLfxVtkScalarRange( const std::string &renderSetType, double min, doub
 		lfx::core::vtk::VTKBaseRTP *prtp = dynamic_cast<lfx::core::vtk::VTKBaseRTP *>( op.get() );
 		if( !prtp ) continue;
 
-		// lets only update if we have to
-		double curmin, curmax;
-		prtp->GetMinMaxScalarRangeValue( &curmin, &curmax );
-		if ( fabs( curmin - min ) <= .001 && fabs( curmax - max ) <= .001 ) continue;
-
-		prtp->SetMinMaxScalarRangeValue( min, max );
-		rtpDirty = true;
+		if( prtp->SetMinMaxScalarRangeValue( min, max ) ) rtpDirty = true;
 	}
 
 	if( !rtpDirty ) return;
+
+	// on some vtk renderers need a full refresh
+	lfx::core::vtk::IVTKRenderer *vr = dynamic_cast<lfx::core::vtk::IVTKRenderer *>( r.get() );
+	if( vr != NULL )
+	{
+		vr->FullRefresh();
+	}
 
 	int dirty =  lfx::core::DataSet::RENDERER_DIRTY | lfx::core::DataSet::RTPOPERATION_DIRTY;
 	ds->setDirty( dirty );
@@ -513,10 +514,11 @@ void UpdateLfxVtkScalarOrVector( const std::string &renderSetType, const std::st
 		}
 	}
 
-	lfx::core::vtk::VTKStreamlineRenderer *sr = dynamic_cast<lfx::core::vtk::VTKStreamlineRenderer *>( r.get() );
-	if( sr )
+	// on some vtk renderers need a full refresh
+	lfx::core::vtk::IVTKRenderer *vr = dynamic_cast<lfx::core::vtk::IVTKRenderer *>( r.get() );
+	if( vr != NULL )
 	{
-		psr->FullRefresh();
+		vr->FullRefresh();
 	}
 
 	int dirty =  lfx::core::DataSet::RENDERER_DIRTY;
