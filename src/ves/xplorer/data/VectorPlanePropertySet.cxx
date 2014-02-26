@@ -42,7 +42,7 @@
 #include <iostream>
 #include <ves/xplorer/data/DatabaseManager.h>
 
-#include <latticefx/core/vtk/VTKActorRenderer.h>
+#include <latticefx/core/vtk/VTKVectorRenderer.h>
 
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +86,7 @@ void VectorPlanePropertySet::CreateSkeletonLfxDs()
 	CreateSkeleton();
 
 	// TODO: set any other defaults for the renderer here
-	lfx::core::vtk::VTKActorRendererPtr renderOp( new lfx::core::vtk::VTKActorRenderer() );
+	lfx::core::vtk::VTKVectorRendererPtr renderOp( new lfx::core::vtk::VTKVectorRenderer() );
 	renderOp->setTransferFunctionDestination( lfx::core::Renderer::TF_RGBA );
 	VizBasePropertySet::CreateSkeletonLfxDsRenderer( "vec", renderOp.get() );
 }

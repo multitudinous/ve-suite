@@ -928,7 +928,7 @@ void cfdStreamers::CreateLFXPlane()
     m_dsp->addChannel( dobjPtr );
 
 	std::vector<double> bounds;
-	bounds.resize(6);
+	bounds.resize(6, 0);
 	GetActiveDataSet()->GetBounds(&bounds[0]);
 
 	float maxTime = GetActiveDataSet()->GetMaxTime();

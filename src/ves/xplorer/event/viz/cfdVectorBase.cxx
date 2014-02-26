@@ -677,8 +677,8 @@ void cfdVectorBase::CreateLFXPlane( int numSteps, int planeDirection )
     lfx::core::vtk::ChannelDatavtkDataObjectPtr dobjPtr( new lfx::core::vtk::ChannelDatavtkDataObject( GetActiveDataSet()->GetDataSet(), "vtkDataObject" ) );
     m_dsp->addChannel( dobjPtr );
     
+	// vector field rtp
 	lfx::core::vtk::VTKVectorFieldRTPPtr rtp( new lfx::core::vtk::VTKVectorFieldRTP() );
-
 	rtp->SetPlaneDirection( planeDirection );
 	rtp->SetRequestedValue( requestedValue );
 	rtp->setVectorRatioFactor( GetVectorRatioFactor() );
@@ -691,7 +691,7 @@ void cfdVectorBase::CreateLFXPlane( int numSteps, int planeDirection )
     rtp->addInput( "vtkDataObject" );
     m_dsp->addOperation( rtp );
 
-    //Try the vtkActor renderer
+    // vector renderer
     lfx::core::vtk::VTKVectorRendererPtr renderOp( new lfx::core::vtk::VTKVectorRenderer() );
     renderOp->SetActiveVector( GetActiveDataSet()->GetActiveVectorName() );
     renderOp->SetActiveScalar( GetActiveDataSet()->GetActiveScalarName() );
