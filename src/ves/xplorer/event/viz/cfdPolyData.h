@@ -85,6 +85,19 @@ public:
     void UpdatePropertySet();
 
 private:
+
+	enum EPolyDataType
+	{
+		Error = 0,
+		Polyline = 1,
+		Spheres = 2,
+		Points = 3,
+		Surface = 4
+	};
+
+	EPolyDataType getPolyDataType();
+	void CreateLFXPlane();
+
     ///Sphere scaling.
     float GetSphereScaleFactor();
     ///String to hold color by scalar.

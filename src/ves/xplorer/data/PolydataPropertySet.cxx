@@ -41,6 +41,8 @@
 #include <iostream>
 #include <ves/xplorer/data/DatabaseManager.h>
 
+#include <latticefx/core/vtk/VTKVectorRenderer.h>
+
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
 PolydataPropertySet::PolydataPropertySet()
@@ -50,7 +52,7 @@ PolydataPropertySet::PolydataPropertySet()
 
     RegisterPropertySet( GetTypeName() );
 
-    CreateSkeleton();
+    CreateSkeletonLfxDs();
 }
 ////////////////////////////////////////////////////////////////////////////////
 PolydataPropertySet::PolydataPropertySet( const PolydataPropertySet& orig )
@@ -60,13 +62,25 @@ PolydataPropertySet::PolydataPropertySet( const PolydataPropertySet& orig )
 }
 ////////////////////////////////////////////////////////////////////////////////
 PolydataPropertySet::~PolydataPropertySet()
-{
+{  
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 propertystore::PropertySetPtr PolydataPropertySet::CreateNew()
 {
     return propertystore::PropertySetPtr( new PolydataPropertySet );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PolydataPropertySet::CreateSkeletonLfxDs()
+{
+	CreateSkeleton();
+
+	// TODO: see cfdPolyData::getPolyDataType()
+	// get the type for the dataset then either init with a vector or surface renderer
+	//
+	lfx::core::vtk::VTKVectorRendererPtr renderOp( new lfx::core::vtk::VTKVectorRenderer() );
+	renderOp->setTransferFunctionDestination( lfx::core::Renderer::TF_RGBA );
+	VizBasePropertySet::CreateSkeletonLfxDsRenderer( "pol", renderOp.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PolydataPropertySet::CreateSkeleton()
@@ -124,6 +138,7 @@ void PolydataPropertySet::CreateSkeleton()
     enumValues.clear();
     enumValues.push_back( "Select Scalar Data" );
     SetPropertyAttribute( "ColorByScalar", "enumValues", enumValues );
+	
 
     AddProperty( "ColorByScalar_ScalarRange", boost::any(), "Scalar Range" );
     SetPropertyAttribute( "ColorByScalar_ScalarRange", "isUIGroupOnly", true );
@@ -139,6 +154,7 @@ void PolydataPropertySet::CreateSkeleton()
     GetProperty( "ColorByScalar_ScalarRange_Min" )->SignalRequestValidation.connect( boost::bind( &PolydataPropertySet::ValidateColorByScalarMinMax, this, _1, _2 ) );
     GetProperty( "ColorByScalar_ScalarRange_Max" )->SignalRequestValidation.connect( boost::bind( &PolydataPropertySet::ValidateColorByScalarMinMax, this, _1, _2 ) );
 
+	/*
     AddProperty( "WarpedScaleFactor", 1.0, "Warped Scale Factor" );
     SetPropertyAttribute( "WarpedScaleFactor", "minimumValue",  0.01 );
     SetPropertyAttribute( "WarpedScaleFactor", "maximumValue", 100.0 );
@@ -151,6 +167,8 @@ void PolydataPropertySet::CreateSkeleton()
     AddProperty( "UseWarpedSurface", false, "Use Warped Surface" );
     AddProperty( "ParticleData", false, "Particles" );
     AddProperty( "TwoSidedLighting", false, "Two Sided Lighting" );
+	*/
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PolydataPropertySet::UpdateColorByScalarDataRange( propertystore::PropertyPtr property )
@@ -188,6 +206,8 @@ void PolydataPropertySet::UpdateColorByScalarDataRange( propertystore::PropertyP
         SetPropertyValue( "ColorByScalar_ScalarRange_Min", min );
         SetPropertyValue( "ColorByScalar_ScalarRange_Max", max );
     }
+
+	UpdateColorByScalarData( property );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool PolydataPropertySet::ValidateColorByScalarMinMax( propertystore::PropertyPtr property, boost::any value )

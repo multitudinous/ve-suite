@@ -32,6 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdPolyData.h>
 #include <ves/xplorer/event/viz/OSGWarpedSurfaceStage.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelHandler.h>
 
 #include <ves/xplorer/environment/cfdEnum.h>
 
@@ -56,6 +58,11 @@
 #include <vtkPolyDataNormals.h>
 
 #include <latticefx/core/vtk/DataSet.h>
+#include <latticefx/core/vtk/ChannelDatavtkDataObject.h>
+#include <latticefx/core/vtk/VTKVectorFieldRTP.h>
+#include <latticefx/core/vtk/VTKVectorRenderer.h>
+#include <latticefx/core/vtk/VTKContourSliceRTP.h>
+#include <latticefx/core/vtk/VTKSurfaceRenderer.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -112,6 +119,30 @@ cfdObjects* cfdPolyData::CreateCopy()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdPolyData::Update()
 {
+	if( GetActiveDataSet() == NULL )
+    {
+        vprDEBUG( vesDBG, 0 )
+                << "cfdPolyData has no data so setting updateFlag to false"
+                << std::endl << vprDEBUG_FLUSH;
+        this->updateFlag = false;
+        return;
+    }
+
+	if( !GetActiveDataSet()->GetDataSet()->IsA( "vtkPolyData" ) )
+    {
+        std::cerr << "ERROR: Activate a polydata file to use this function"
+                  << std::endl;
+        this->updateFlag = false;
+        return;
+    }
+
+	CreateLFXPlane();
+    this->updateFlag = true;
+    return;
+
+
+
+
     if( GetActiveDataSet() == NULL )
     {
         vprDEBUG( vesDBG, 0 )
@@ -227,7 +258,7 @@ void cfdPolyData::Update()
         temp->GetProperty()->SetRepresentationToPoints();
         temp->GetProperty()->SetPointSize( 4 * this->GetSphereScaleFactor() );
     }
-    else
+    else 
     {
         vprDEBUG( vesDBG, 1 ) << " IS POLYDATA SURFACE"
                               << std::endl << vprDEBUG_FLUSH;
@@ -358,6 +389,7 @@ void cfdPolyData::UpdateCommand()
 {
     UpdatePropertySet();
     return;
+
     //Call base method - currently does nothing
     cfdObjects::UpdateCommand();
 
@@ -419,12 +451,319 @@ float cfdPolyData::GetSphereScaleFactor()
 void cfdPolyData::UpdatePropertySet()
 {
     //Extract the isosurface value
-    warpedContourScale = boost::any_cast<double>( m_propertySet->GetPropertyValue( "WarpedScaleFactor" ) );
-
     colorByScalar = boost::any_cast<std::string >( m_propertySet->GetPropertyValue( "ColorByScalar" ) );
 
+	/*
+	warpedContourScale = boost::any_cast<double>( m_propertySet->GetPropertyValue( "WarpedScaleFactor" ) );
     warpSurface = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseWarpedSurface" ) );
-
     m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
+	*/
+
 }
+///////////////////////////////////////////////////////////////////////////
+cfdPolyData::EPolyDataType cfdPolyData::getPolyDataType()
+{
+	EPolyDataType etype = EPolyDataType::Error;
+
+	if( !GetActiveDataSet().get() ) return etype;
+
+	vtkPolyData* pd = GetActiveDataSet()->GetPolyData();
+	if( pd == NULL ) return etype;
+    vtkCellTypes* types = vtkCellTypes::New();
+    pd->GetCellTypes( types );
+
+	if( pd->GetCellType( 0 ) == VTK_POLY_LINE && types->GetNumberOfTypes() == 1 )
+    {
+		vprDEBUG( vesDBG, 1 ) << " IS A POLYLINE" << std::endl << vprDEBUG_FLUSH;
+		etype = EPolyDataType::Polyline;
+	}
+	else if( pd->GetCellType( 0 ) == VTK_VERTEX &&
+             types->GetNumberOfTypes() == 1 &&
+             GetParticleOption() == 1 )
+    {
+        vprDEBUG( vesDBG, 1 ) << " IS VERTEX-BASED: variably sized spheres" << std::endl << vprDEBUG_FLUSH;
+		etype = EPolyDataType::Spheres;
+	}
+	else if( pd->GetCellType( 0 ) == VTK_VERTEX &&
+             types->GetNumberOfTypes() == 1 && 
+             GetParticleOption() == 0 )
+    {
+        vprDEBUG( vesDBG, 1 ) << " IS VERTEX-BASED: point cloud" << std::endl << vprDEBUG_FLUSH;
+        etype = EPolyDataType::Points;
+    }
+    else 
+    {
+        vprDEBUG( vesDBG, 1 ) << " IS POLYDATA SURFACE" << std::endl << vprDEBUG_FLUSH;
+		etype = EPolyDataType::Surface;
+	}
+
+	types->Delete();
+
+	return etype;
+}
+///////////////////////////////////////////////////////////////////////////
+void cfdPolyData::CreateLFXPlane()
+{
+	EPolyDataType ptype = getPolyDataType();
+	if( ptype == EPolyDataType::Error )
+	{
+		vprDEBUG( vesDBG, 1 ) << "|\t\tNo active dataset or unexpected error occured : " << std::endl << vprDEBUG_FLUSH;
+		return;
+	}
+
+	if( ptype == EPolyDataType::Polyline )
+	{
+		// NOTE: WE NEED POLYLINE RENDERING SUPPORTED ADDED TO LFX, SHOULD BE TRIVIAL.
+
+		vprDEBUG( vesDBG, 1 ) << "|\t\tPolyline Rendering supported needs to be added to LFX : " << std::endl << vprDEBUG_FLUSH;
+		return;
+	}
+
+	m_dsp = lfx::core::DataSetPtr( new lfx::core::DataSet() );
+
+	//1st Step
+	lfx::core::vtk::ChannelDatavtkDataObjectPtr dobjPtr( new lfx::core::vtk::ChannelDatavtkDataObject( GetActiveDataSet()->GetDataSet(), "vtkDataObject" ) );
+	m_dsp->addChannel( dobjPtr );
+
+	std::string vector = GetActiveDataSet()->GetActiveVectorName();
+	std::string scalar = GetActiveDataSet()->GetActiveScalarName();
+
+	if( ptype == EPolyDataType::Spheres || ptype == EPolyDataType::Points )
+	{
+		// vector field rtp
+		lfx::core::vtk::VTKVectorFieldRTPPtr rtp( new lfx::core::vtk::VTKVectorFieldRTP() );
+		/*
+		rtp->SetPlaneDirection( planeDirection );
+		rtp->SetRequestedValue( requestedValue );
+		rtp->setVectorRatioFactor( GetVectorRatioFactor() );
+		rtp->setVectorThreshHold( _vectorThreshHoldValues[0], _vectorThreshHoldValues[1] );
+		rtp->setNumberOfSteps( numSteps );
+		rtp->setPlaneOrigin( this->origin );
+		rtp->setPlaneNormal( this->normal );
+		*/
+		rtp->SetActiveVector( vector );
+		rtp->SetActiveScalar( scalar );
+		rtp->addInput( "vtkDataObject" );
+		m_dsp->addOperation( rtp );
+
+		// vector renderer
+		lfx::core::vtk::VTKVectorRendererPtr renderOp( new lfx::core::vtk::VTKVectorRenderer() );
+		renderOp->SetActiveVector( vector );
+		renderOp->SetActiveScalar( scalar );
+		renderOp->addInput( "vtkPolyData" );
+		renderOp->addInput( "vtkDataObject" );
+		
+		// set point style
+		if( ptype == EPolyDataType::Spheres )
+			renderOp->setPointStyle( lfx::core::VectorRenderer::PointStyle::SPHERES );
+		else
+			renderOp->setPointStyle( lfx::core::VectorRenderer::PointStyle::SIMPLE_POINTS );
+
+		m_dsp->setRenderer( renderOp );
+
+	}
+	else // surface
+	{
+		// contour slice rtp
+		lfx::core::vtk::VTKContourSliceRTPPtr rtp( new lfx::core::vtk::VTKContourSliceRTP() );
+		rtp->SetPlaneDirection( lfx::core::vtk::CuttingPlane::Y_PLANE );
+		rtp->SetRequestedValue( 50.0 );
+		rtp->addInput( "vtkDataObject" );
+		m_dsp->addOperation( rtp );
+
+		// surface renderer
+		lfx::core::vtk::VTKSurfaceRendererPtr renderOp( new lfx::core::vtk::VTKSurfaceRenderer() );
+		renderOp->SetActiveVector( vector );
+		renderOp->SetActiveScalar( scalar );
+		renderOp->addInput( "vtkPolyDataMapper" );
+		renderOp->addInput( "vtkDataObject" );
+		m_dsp->setRenderer( renderOp );
+	}
+	
+	m_dsp->setDirty();
+	bool success = m_dsp->updateAll();
+    
+    if( !success )
+    {
+		vprDEBUG( vesDBG, 1 ) << "|\t\tSome sort of problem with lfx : "
+                          << std::endl << vprDEBUG_FLUSH;
+    }
+
+	Model* activeModel = ModelHandler::instance()->GetActiveModel();
+	activeModel->SetVtkRenderSet( "pol", m_dsp );
+}
+
+/*
+vtkActor* temp = vtkActor::New();
+    vtkPolyData* pd = this->GetActiveDataSet()->GetPolyData();
+    vtkCellTypes* types = vtkCellTypes::New();
+    pd->GetCellTypes( types );
+
+    if( pd->GetCellType( 0 ) == VTK_POLY_LINE &&
+            types->GetNumberOfTypes() == 1 )
+    {
+        vprDEBUG( vesDBG, 1 ) << " IS A STREAMLINE"
+                              << std::endl << vprDEBUG_FLUSH;
+        vtkTubeFilter* polyTubes = vtkTubeFilter::New();
+        polyTubes->SetNumberOfSides( 3 );
+        polyTubes->SetInput( pd );
+        polyTubes->SetRadius( .05 );
+        polyTubes->Update();
+        this->map->SetInputConnection( polyTubes->GetOutputPort() );
+        polyTubes->Delete();
+        temp->GetProperty()->SetRepresentationToSurface();
+    }
+    else if( pd->GetCellType( 0 ) == VTK_VERTEX &&
+             types->GetNumberOfTypes() == 1 &&
+             GetParticleOption() == 1 )
+    {
+        vprDEBUG( vesDBG, 1 ) << " IS VERTEX-BASED: variably sized spheres"
+                              << std::endl << vprDEBUG_FLUSH;
+
+        vtkSphereSource* sphereSrc   = vtkSphereSource::New();
+        sphereSrc->SetThetaResolution( 3 ); // default is 8
+        sphereSrc->SetPhiResolution( 3 );   // default is 8
+        //this->sphereSrc->SetRadius( 0.5f );
+
+        vtkGlyph3D* sphereGlyph = vtkGlyph3D::New();
+        sphereGlyph->SetInput( pd );
+        sphereGlyph->SetSource( sphereSrc->GetOutput() );
+        sphereGlyph->Update();
+
+        vprDEBUG( vesDBG, 1 ) << " Using scalar data from "
+                              << pd->GetPointData()->GetScalars()->GetName()
+                              << std::endl << vprDEBUG_FLUSH;
+        //sphereGlyph->SelectInputScalars( pd->GetPointData()->GetScalars()->GetName() );
+        sphereGlyph->SetScaleModeToScaleByScalar();
+        sphereGlyph->SetColorModeToColorByScalar();
+
+        // this attempts to set size of largest particle proportional
+        // to the diagonal length of the entire dataset
+
+        float len = 1.0f; //this->GetActiveDataSet()->GetLength();
+        // if there is only one point, then len equals zero...
+        if( len == 0.0 )
+        {
+            len = 1.0;
+        }
+
+        vprDEBUG( vesDBG, 2 ) << " diagonalLength = " << len
+                              << std::endl << vprDEBUG_FLUSH;
+
+        ///this may need to be changed--biv
+        unsigned int numPts = this->GetActiveDataSet()->GetNumberOfPoints();
+        vprDEBUG( vesDBG, 2 ) << " numPts = " << numPts
+                              << std::endl << vprDEBUG_FLUSH;
+        float scaleFactor = 0.0;
+        if( numPts != 0 )
+        {
+            scaleFactor = this->GetSphereScaleFactor() * 20.0 * len / ( float )numPts;
+        }
+        sphereGlyph->SetScaleFactor( scaleFactor );
+
+        sphereGlyph->ClampingOn();
+        double range[ 2 ];
+        this->GetActiveDataSet()->GetParent()->GetUserRange( range );
+        // move bottom of range back 10% so that low valued spheres do not completely disappear
+        range[0] = range[0] - ( range[1] - range[0] ) * 0.1;
+        vprDEBUG( vesDBG, 1 ) << " clamping range: "
+                              << range[0] << " : " << range[1]
+                              << std::endl << vprDEBUG_FLUSH;
+        sphereGlyph->SetRange( range );
+        //sphereGlyph->SetRange( this->GetActiveDataSet()->GetParent()->GetUserRange() );
+
+        this->map->SetInputConnection( sphereGlyph->GetOutputPort() );
+        sphereSrc->Delete();
+        sphereGlyph->Delete();
+        temp->GetProperty()->SetRepresentationToSurface();
+    }
+    else if( pd->GetCellType( 0 ) == VTK_VERTEX &&
+             types->GetNumberOfTypes() == 1 && 
+             GetParticleOption() == 0 )
+    {
+        vprDEBUG( vesDBG, 1 ) << " IS VERTEX-BASED: point cloud"
+                              << std::endl << vprDEBUG_FLUSH;
+        this->map->SetColorModeToMapScalars();
+        this->map->SetInput( pd );
+        temp->GetProperty()->SetRepresentationToPoints();
+        temp->GetProperty()->SetPointSize( 4 * this->GetSphereScaleFactor() );
+    } 
+    else 
+    {
+        vprDEBUG( vesDBG, 1 ) << " IS POLYDATA SURFACE"
+                              << std::endl << vprDEBUG_FLUSH;
+
+        if( m_gpuTools )
+        {
+            ;
+        }
+        else if( warpSurface )
+        {
+            vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
+            normalGen->SetInput( pd );
+            normalGen->NonManifoldTraversalOn();
+            normalGen->AutoOrientNormalsOn();
+            normalGen->ConsistencyOn();
+            normalGen->SplittingOn();
+
+            this->warper->SetInput( normalGen->GetOutput() );
+            this->warper->SetScaleFactor( warpedContourScale );
+            this->warper->Update();//can this go???
+            this->map->SetInputConnection( warper->GetOutputPort() );
+            warpSurface = false;
+            normalGen->Delete();
+        }
+        else
+        {
+            vtkPolyDataNormals* normalGen = vtkPolyDataNormals::New();
+            normalGen->SetInput( pd );
+            normalGen->NonManifoldTraversalOn();
+            normalGen->AutoOrientNormalsOn();
+            normalGen->ConsistencyOn();
+            normalGen->SplittingOn();
+
+            this->map->SetInput( normalGen->GetOutput() );
+            normalGen->Delete();
+        }
+        temp->GetProperty()->SetRepresentationToSurface();
+    }
+
+    types->Delete();
+
+    if( pd->GetPointData() )
+    {
+        if( pd->GetPointData()->GetScalars(
+                    GetActiveDataSet()->GetActiveScalarName().c_str() )->
+                GetLookupTable() != NULL )
+        {
+            vprDEBUG( vesDBG, 1 ) << " A lookup table ("
+                                  << pd->GetPointData()->GetScalars(
+                                      GetActiveDataSet()->GetActiveScalarName().c_str() )->
+                                  GetLookupTable()
+                                  << ")is being read from the vtk file"
+                                  << std::endl << vprDEBUG_FLUSH;
+            double range[ 2 ];
+            pd->GetPointData()->GetScalars(
+                GetActiveDataSet()->GetActiveScalarName().c_str() )->
+            GetRange( range );
+            this->map->SetScalarRange( range );
+            this->map->SetLookupTable( pd->GetPointData()->GetScalars(
+                                           GetActiveDataSet()->GetActiveScalarName().c_str() )->
+                                       GetLookupTable() );
+        }
+        else
+        {
+            double* range = GetActiveDataSet()->GetParent()->GetUserRange();
+            vprDEBUG( vesDBG, 1 ) << "setting mapper using parent "
+                                  << this->GetActiveDataSet()->GetParent()
+                                  << ", range = " << range[0] << " : " << range[1]
+                                  << std::endl << vprDEBUG_FLUSH;
+
+            this->map->SetScalarRange( this->GetActiveDataSet()
+                                       ->GetParent()->GetUserRange() );
+            this->map->SetLookupTable( this->GetActiveDataSet()
+                                       ->GetParent()->GetLookupTable() );
+        }
+    }
+	*/
 ///////////////////////////////////////////////////////////////////////////

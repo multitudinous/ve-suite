@@ -71,6 +71,7 @@ protected:
     ///Update the color by scalar
     void UpdateColorByScalarDataRange( propertystore::PropertyPtr property );
     ///Create the skeleton
+	virtual void CreateSkeletonLfxDs();
     virtual void CreateSkeleton();
 };
 
