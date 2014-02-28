@@ -62,6 +62,7 @@
 #include <latticefx/core/vtk/VTKVectorFieldRTP.h>
 #include <latticefx/core/vtk/VTKVectorRenderer.h>
 #include <latticefx/core/vtk/VTKContourSliceRTP.h>
+#include <latticefx/core/vtk/VTKPolyDataSurfaceRTP.h>
 #include <latticefx/core/vtk/VTKSurfaceRenderer.h>
 
 #include <ves/xplorer/Debug.h>
@@ -453,11 +454,9 @@ void cfdPolyData::UpdatePropertySet()
     //Extract the isosurface value
     colorByScalar = boost::any_cast<std::string >( m_propertySet->GetPropertyValue( "ColorByScalar" ) );
 
-	/*
 	warpedContourScale = boost::any_cast<double>( m_propertySet->GetPropertyValue( "WarpedScaleFactor" ) );
     warpSurface = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseWarpedSurface" ) );
-    m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
-	*/
+    // m_gpuTools = boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
 
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -564,10 +563,8 @@ void cfdPolyData::CreateLFXPlane()
 	}
 	else // surface
 	{
-		// contour slice rtp
-		lfx::core::vtk::VTKContourSliceRTPPtr rtp( new lfx::core::vtk::VTKContourSliceRTP() );
-		rtp->SetPlaneDirection( lfx::core::vtk::CuttingPlane::Y_PLANE );
-		rtp->SetRequestedValue( 50.0 );
+		// polydata surface rtp
+		lfx::core::vtk::VTKPolyDataSurfaceRTPPtr rtp( new lfx::core::vtk::VTKPolyDataSurfaceRTP( this->warpSurface, this->warpedContourScale ) );
 		rtp->addInput( "vtkDataObject" );
 		m_dsp->addOperation( rtp );
 

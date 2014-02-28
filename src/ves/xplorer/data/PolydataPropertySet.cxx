@@ -154,20 +154,21 @@ void PolydataPropertySet::CreateSkeleton()
     GetProperty( "ColorByScalar_ScalarRange_Min" )->SignalRequestValidation.connect( boost::bind( &PolydataPropertySet::ValidateColorByScalarMinMax, this, _1, _2 ) );
     GetProperty( "ColorByScalar_ScalarRange_Max" )->SignalRequestValidation.connect( boost::bind( &PolydataPropertySet::ValidateColorByScalarMinMax, this, _1, _2 ) );
 
-	/*
+	// only applicable for surface polydata
     AddProperty( "WarpedScaleFactor", 1.0, "Warped Scale Factor" );
     SetPropertyAttribute( "WarpedScaleFactor", "minimumValue",  0.01 );
     SetPropertyAttribute( "WarpedScaleFactor", "maximumValue", 100.0 );
 
+	/*
     AddProperty( "Opacity", 0.0, "Opacity" );
     SetPropertyAttribute( "Opacity", "minimumValue",   0.0 );
     SetPropertyAttribute( "Opacity", "maximumValue", 100.0 );
-
-    AddProperty( "UseGPUTools", false, "Use GPU Tools" );
-    AddProperty( "UseWarpedSurface", false, "Use Warped Surface" );
-    AddProperty( "ParticleData", false, "Particles" );
-    AddProperty( "TwoSidedLighting", false, "Two Sided Lighting" );
 	*/
+
+    //AddProperty( "UseGPUTools", false, "Use GPU Tools" );
+    AddProperty( "UseWarpedSurface", false, "Use Warped Surface" ); // only applicable for surface polydata
+    //AddProperty( "ParticleData", false, "Particles" );
+    //AddProperty( "TwoSidedLighting", false, "Two Sided Lighting" );
 
 }
 ////////////////////////////////////////////////////////////////////////////////
