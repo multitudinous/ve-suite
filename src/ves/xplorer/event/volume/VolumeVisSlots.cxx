@@ -55,6 +55,7 @@
 #include <latticefx/core/vtk/VTKStreamlineRenderer.h>
 #include <latticefx/core/vtk/VTKVectorFieldRTP.h>
 #include <latticefx/core/vtk/VTKVectorRenderer.h>
+#include <latticefx/core/vtk/VTKPolyDataSurfaceRTP.h>
 
 #include <boost/foreach.hpp>
 #include <boost/limits.hpp>
@@ -339,6 +340,37 @@ lfx::core::RendererPtr GetLfxRenderer( const std::string &renderSetType, const s
 {
 	lfx::core::DataSetPtr pds;
 	return GetLfxRenderer( renderSetType, dataSetName, pds );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void UpdateLfxVtkPolyData( bool useWarpedSurface, double warpedScaleFactor )
+{
+	lfx::core::DataSetPtr ds;
+	lfx::core::RendererPtr r = GetLfxRenderer( "pol", "", ds );
+	if( !ds.get() ) return;
+
+	lfx::core::vtk::IVTKRenderer *vtkr = dynamic_cast<lfx::core::vtk::IVTKRenderer *>( r.get() );
+	if( !vtkr ) return;
+
+	bool rtpDirty = false;
+
+	lfx::core::RTPOperationList& oplist = ds->getOperations();
+	BOOST_FOREACH( lfx::core::RTPOperationPtr op, oplist  )
+	{
+		lfx::core::vtk::VTKPolyDataSurfaceRTP *prtp = dynamic_cast<lfx::core::vtk::VTKPolyDataSurfaceRTP *>( op.get() );
+		if( !prtp ) continue;
+
+		if( prtp->setWarpSurface( useWarpedSurface ) ) rtpDirty = true;
+		if( prtp->setWarpedContourScale( warpedScaleFactor ) ) rtpDirty = true;
+	}
+
+	// only update if we have to
+	if( !rtpDirty ) return;
+
+	vtkr->FullRefresh();
+	int dirty =  lfx::core::DataSet::RENDERER_DIRTY | lfx::core::DataSet::RTPOPERATION_DIRTY;
+	ds->setDirty( dirty );
+	ds->updateAll(); // update now
 }
 
 ////////////////////////////////////////////////////////////////////////////////

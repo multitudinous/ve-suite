@@ -52,6 +52,16 @@ PolydataPropertySet::PolydataPropertySet()
 
     RegisterPropertySet( GetTypeName() );
 
+	///Signal to update an Lfx Vtk VectorData
+    {
+        std::string name( "PolydataPropertySet" );
+        name += boost::lexical_cast<std::string>( this );
+        name += ".TBETUpdateLfxVtkPolyData";
+		switchwire::EventManager::instance()->RegisterSignal( ( &m_updateLfxVtkPolyData ), name, switchwire::EventManager::unspecified_SignalType );
+    }
+
+	
+
     CreateSkeletonLfxDs();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -155,9 +165,13 @@ void PolydataPropertySet::CreateSkeleton()
     GetProperty( "ColorByScalar_ScalarRange_Max" )->SignalRequestValidation.connect( boost::bind( &PolydataPropertySet::ValidateColorByScalarMinMax, this, _1, _2 ) );
 
 	// only applicable for surface polydata
+	AddProperty( "UseWarpedSurface", false, "Use Warped Surface" );
+	GetProperty( "UseWarpedSurface" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateWarping, this, _1 ) );
+
     AddProperty( "WarpedScaleFactor", 1.0, "Warped Scale Factor" );
     SetPropertyAttribute( "WarpedScaleFactor", "minimumValue",  0.01 );
     SetPropertyAttribute( "WarpedScaleFactor", "maximumValue", 100.0 );
+	GetProperty( "WarpedScaleFactor" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateWarping, this, _1 ) );
 
 	/*
     AddProperty( "Opacity", 0.0, "Opacity" );
@@ -166,7 +180,7 @@ void PolydataPropertySet::CreateSkeleton()
 	*/
 
     //AddProperty( "UseGPUTools", false, "Use GPU Tools" );
-    AddProperty( "UseWarpedSurface", false, "Use Warped Surface" ); // only applicable for surface polydata
+    
     //AddProperty( "ParticleData", false, "Particles" );
     //AddProperty( "TwoSidedLighting", false, "Two Sided Lighting" );
 
@@ -259,5 +273,13 @@ void PolydataPropertySet::EnableLiveProperties( bool live )
                                                          "HideVizFeature", true ) );
         m_liveObjects.push_back( p );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PolydataPropertySet::UpdateWarping( propertystore::PropertyPtr property )
+{
+	bool warpSurface = GetDatumValue< bool >( "UseWarpedSurface" );
+	double warpScaleFactor = GetDatumValue< double >( "WarpedScaleFactor" );
+
+	m_updateLfxVtkPolyData.signal( warpSurface, warpScaleFactor );
 }
 ////////////////////////////////////////////////////////////////////////////////

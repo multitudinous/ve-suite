@@ -70,9 +70,15 @@ protected:
     bool ValidateColorByScalarMinMax( propertystore::PropertyPtr property, boost::any value );
     ///Update the color by scalar
     void UpdateColorByScalarDataRange( propertystore::PropertyPtr property );
+	///Update warping
+    void UpdateWarping( propertystore::PropertyPtr property );
     ///Create the skeleton
 	virtual void CreateSkeletonLfxDs();
     virtual void CreateSkeleton();
+
+private:
+	typedef switchwire::Event< void ( bool, double ) > Update_polyData;
+	Update_polyData m_updateLfxVtkPolyData;
 };
 
 } // namespace data
