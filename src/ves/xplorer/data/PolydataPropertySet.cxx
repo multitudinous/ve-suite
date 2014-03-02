@@ -138,11 +138,7 @@ void PolydataPropertySet::CreateSkeleton()
     }
 
     SetPropertyAttribute( "DataSet", "enumValues", enumValues );
-    // Now that DataSet has choices loaded, force an update on the available
-    // scalar and vector data
-    propertystore::PropertyPtr nullPtr;
-    UpdateScalarDataOptions( nullPtr );
-    //UpdateVectorDataOptions( nullPtr );
+  
 
     AddProperty( "ColorByScalar", std::string(""), "Color By Scalar" );
     enumValues.clear();
@@ -163,6 +159,12 @@ void PolydataPropertySet::CreateSkeleton()
     GetProperty( "ColorByScalar" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateColorByScalarDataRange, this, _1 ) );
     GetProperty( "ColorByScalar_ScalarRange_Min" )->SignalRequestValidation.connect( boost::bind( &PolydataPropertySet::ValidateColorByScalarMinMax, this, _1, _2 ) );
     GetProperty( "ColorByScalar_ScalarRange_Max" )->SignalRequestValidation.connect( boost::bind( &PolydataPropertySet::ValidateColorByScalarMinMax, this, _1, _2 ) );
+
+	// Now that DataSet has choices loaded and ColorByScalar has been added, force an update on the available
+    // scalar and vector data
+    propertystore::PropertyPtr nullPtr;
+    UpdateScalarDataOptions( nullPtr );
+    //UpdateVectorDataOptions( nullPtr );
 
 	// only applicable for surface polydata
 	AddProperty( "UseWarpedSurface", false, "Use Warped Surface" );
@@ -260,7 +262,7 @@ void PolydataPropertySet::EnableLiveProperties( bool live )
         m_liveObjects.clear();
         return;
     }
-    else if( !m_liveObjects.empty() )
+    else if( !m_liveObjects.empty() ) 
     {
         // Properties are already live
         return;
