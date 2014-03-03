@@ -59,9 +59,8 @@
 
 #include <latticefx/core/vtk/DataSet.h>
 #include <latticefx/core/vtk/ChannelDatavtkDataObject.h>
-#include <latticefx/core/vtk/VTKVectorFieldRTP.h>
-#include <latticefx/core/vtk/VTKVectorRenderer.h>
-#include <latticefx/core/vtk/VTKContourSliceRTP.h>
+#include <latticefx/core/vtk/VTKPolyDataPointsRTP.h>
+#include <latticefx/core/vtk/VTKPointRenderer.h>
 #include <latticefx/core/vtk/VTKPolyDataSurfaceRTP.h>
 #include <latticefx/core/vtk/VTKSurfaceRenderer.h>
 
@@ -471,6 +470,28 @@ cfdPolyData::EPolyDataType cfdPolyData::getPolyDataType()
     vtkCellTypes* types = vtkCellTypes::New();
     pd->GetCellTypes( types );
 
+	/*
+	// debug
+	int cellcount = pd->GetNumberOfCells();
+	for( int i=0; i<cellcount; i++)
+	{
+		int type = pd->GetCellType( i );
+		switch( type )
+		{
+		case VTK_POLY_LINE:
+			vprDEBUG( vesDBG, 1 ) << "|\t\tcell " << i << "IS A POLYLINE" << std::endl << vprDEBUG_FLUSH;
+			break;
+		case VTK_VERTEX:
+			vprDEBUG( vesDBG, 1 ) << "|\t\tcell " << i << "IS VERTEX-BASED: variably sized spheres" << std::endl << vprDEBUG_FLUSH;
+			break;
+		default:
+			vprDEBUG( vesDBG, 1 ) << "|\t\tcell " << i << "IS SURFACE" << std::endl << vprDEBUG_FLUSH;
+			break;
+		}
+	}
+	// end debug
+	*/
+
 	if( pd->GetCellType( 0 ) == VTK_POLY_LINE && types->GetNumberOfTypes() == 1 )
     {
 		vprDEBUG( vesDBG, 1 ) << "|\t\tIS A POLYLINE" << std::endl << vprDEBUG_FLUSH;
@@ -537,34 +558,20 @@ void cfdPolyData::CreateLFXPlane()
 
 	if( ptype == EPolyDataType::Spheres || ptype == EPolyDataType::Points )
 	{
-		// vector field rtp
-		lfx::core::vtk::VTKVectorFieldRTPPtr rtp( new lfx::core::vtk::VTKVectorFieldRTP() );
-		/*
-		rtp->SetPlaneDirection( planeDirection );
-		rtp->SetRequestedValue( requestedValue );
-		rtp->setVectorRatioFactor( GetVectorRatioFactor() );
-		rtp->setVectorThreshHold( _vectorThreshHoldValues[0], _vectorThreshHoldValues[1] );
-		rtp->setNumberOfSteps( numSteps );
-		rtp->setPlaneOrigin( this->origin );
-		rtp->setPlaneNormal( this->normal );
-		*/
+		// polydata points rtp
+		lfx::core::vtk::VTKPolyDataPointsRTPPtr rtp( new lfx::core::vtk::VTKPolyDataPointsRTP() );
 		rtp->SetActiveVector( vector );
 		rtp->SetActiveScalar( scalar );
 		rtp->addInput( "vtkDataObject" );
 		m_dsp->addOperation( rtp );
 
 		// vector renderer
-		lfx::core::vtk::VTKVectorRendererPtr renderOp( new lfx::core::vtk::VTKVectorRenderer() );
+		bool renderSpheres = ( ptype == EPolyDataType::Spheres );
+		lfx::core::vtk::VTKPointRendererPtr renderOp( new lfx::core::vtk::VTKPointRenderer( renderSpheres ) );
 		renderOp->SetActiveVector( vector );
 		renderOp->SetActiveScalar( scalar );
 		renderOp->addInput( "vtkPolyData" );
 		renderOp->addInput( "vtkDataObject" );
-		
-		// set point style
-		if( ptype == EPolyDataType::Spheres )
-			renderOp->setPointStyle( lfx::core::VectorRenderer::PointStyle::SPHERES );
-		else
-			renderOp->setPointStyle( lfx::core::VectorRenderer::PointStyle::SIMPLE_POINTS );
 
 		m_dsp->setRenderer( renderOp );
 

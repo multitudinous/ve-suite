@@ -77,7 +77,7 @@ protected:
     virtual void CreateSkeleton();
 
 private:
-	typedef switchwire::Event< void ( bool, double ) > Update_polyData;
+	typedef switchwire::Event< void ( bool, double, bool ) > Update_polyData;
 	Update_polyData m_updateLfxVtkPolyData;
 };
 

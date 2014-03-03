@@ -108,7 +108,7 @@ VolumeVisSlotInitializer::VolumeVisSlotInitializer()
                            m_connections, any_SignalType, normal_Priority );
 
 	CONNECTSIGNALS_STATIC( "%TBETUpdateLfxVtkPolyData",
-                           void( bool, double ),
+                           void( bool, double, bool ),
                            &UpdateLfxVtkPolyData,
                            m_connections, any_SignalType, normal_Priority );
 

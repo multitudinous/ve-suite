@@ -55,6 +55,7 @@
 #include <latticefx/core/vtk/VTKStreamlineRenderer.h>
 #include <latticefx/core/vtk/VTKVectorFieldRTP.h>
 #include <latticefx/core/vtk/VTKVectorRenderer.h>
+#include <latticefx/core/vtk/VTKPointRenderer.h>
 #include <latticefx/core/vtk/VTKPolyDataSurfaceRTP.h>
 
 #include <boost/foreach.hpp>
@@ -343,7 +344,7 @@ lfx::core::RendererPtr GetLfxRenderer( const std::string &renderSetType, const s
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateLfxVtkPolyData( bool useWarpedSurface, double warpedScaleFactor )
+void UpdateLfxVtkPolyData( bool useWarpedSurface, double warpedScaleFactor, bool pointSpheres )
 {
 	lfx::core::DataSetPtr ds;
 	lfx::core::RendererPtr r = GetLfxRenderer( "pol", "", ds );
@@ -354,6 +355,14 @@ void UpdateLfxVtkPolyData( bool useWarpedSurface, double warpedScaleFactor )
 
 	bool rtpDirty = false;
 
+	// if we are rendering points or spheres lets update the renderer
+	lfx::core::vtk::VTKPointRenderer *pr = dynamic_cast<lfx::core::vtk::VTKPointRenderer *>( r.get() );
+	if( pr )
+	{
+		if( pr->setRenderSpheres( pointSpheres ) ) rtpDirty = true;
+	}
+
+	// update warp settings
 	lfx::core::RTPOperationList& oplist = ds->getOperations();
 	BOOST_FOREACH( lfx::core::RTPOperationPtr op, oplist  )
 	{

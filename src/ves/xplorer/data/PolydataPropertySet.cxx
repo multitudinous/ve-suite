@@ -175,6 +175,9 @@ void PolydataPropertySet::CreateSkeleton()
     SetPropertyAttribute( "WarpedScaleFactor", "maximumValue", 100.0 );
 	GetProperty( "WarpedScaleFactor" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateWarping, this, _1 ) );
 
+	AddProperty( "ParticleData", false, "Particles" );
+	GetProperty( "ParticleData" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateWarping, this, _1 ) );
+
 	/*
     AddProperty( "Opacity", 0.0, "Opacity" );
     SetPropertyAttribute( "Opacity", "minimumValue",   0.0 );
@@ -183,7 +186,7 @@ void PolydataPropertySet::CreateSkeleton()
 
     //AddProperty( "UseGPUTools", false, "Use GPU Tools" );
     
-    //AddProperty( "ParticleData", false, "Particles" );
+ 
     //AddProperty( "TwoSidedLighting", false, "Two Sided Lighting" );
 
 }
@@ -281,7 +284,8 @@ void PolydataPropertySet::UpdateWarping( propertystore::PropertyPtr property )
 {
 	bool warpSurface = GetDatumValue< bool >( "UseWarpedSurface" );
 	double warpScaleFactor = GetDatumValue< double >( "WarpedScaleFactor" );
+	bool particleData = GetDatumValue< bool >( "ParticleData" );
 
-	m_updateLfxVtkPolyData.signal( warpSurface, warpScaleFactor );
+	m_updateLfxVtkPolyData.signal( warpSurface, warpScaleFactor, particleData );
 }
 ////////////////////////////////////////////////////////////////////////////////

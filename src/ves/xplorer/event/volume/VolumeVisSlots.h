@@ -102,7 +102,7 @@ void UpdateScalarRange( double const& minRange, double const& maxRange );
 ves::xplorer::volume::cfdTextureDataSet* SetActiveTextureDataset();
 
 ///Update lfx vtk polydata
-void UpdateLfxVtkPolyData( bool useWarpedSurface, double warpedScaleFactor );
+void UpdateLfxVtkPolyData( bool useWarpedSurface, double warpedScaleFactor, bool pointSpheres );
 
 ///Update lfx vtk vector data
 void UpdateLfxVtkVectorData( double threshMin, double threshMax, double requestedValue, double vectorRatio, int planeDir );
