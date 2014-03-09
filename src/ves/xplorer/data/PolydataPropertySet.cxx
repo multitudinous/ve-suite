@@ -175,8 +175,14 @@ void PolydataPropertySet::CreateSkeleton()
     SetPropertyAttribute( "WarpedScaleFactor", "maximumValue", 100.0 );
 	GetProperty( "WarpedScaleFactor" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateWarping, this, _1 ) );
 
+	//
+	// TODO: Particle Data really needs it own PropertySet and space in the GUI so lets not worry about updating it for now.
+	//       - When checked this currently uses ParticleAnimation.cxx to create the rendering pipeline,
+	//		 - After getting its own place in the gui, this can then be restore to set the particle flag, so cfdPolyData can decide to render points or spheres on
+	//		    on vtk POLYDATA vertex data.
+	//
 	AddProperty( "ParticleData", false, "Particles" );
-	GetProperty( "ParticleData" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateWarping, this, _1 ) );
+	//GetProperty( "ParticleData" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateWarping, this, _1 ) ); 
 
 	/*
     AddProperty( "Opacity", 0.0, "Opacity" );

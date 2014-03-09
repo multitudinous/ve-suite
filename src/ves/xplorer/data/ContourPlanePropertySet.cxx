@@ -175,7 +175,7 @@ void ContourPlanePropertySet::CreateSkeleton()
     enumValues.push_back( "Use All Precomputed Surfaces" );
     SetPropertyAttribute( "Mode", "enumValues", enumValues );
 
-    AddProperty( "UseGPUTools", false, "Use GPU Tools" );
+    //AddProperty( "UseGPUTools", false, "Use GPU Tools" );
 
     // Connect SignalValueChanged of "Mode" to a function that enables and disables
     // its sub-properties as appropriate

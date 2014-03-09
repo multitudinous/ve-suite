@@ -656,10 +656,12 @@ void cfdContourBase::UpdatePropertySet()
      activeModelDVP->GetData( m_surfDataset );
      }*/
 
+	/*
     if( m_propertySet->PropertyExists( "UseGPUTools" ) )
     {
         ;//unsigned int checkBox = boost::any_cast<bool>( set.GetPropertyValue( "UseGPUTools" ) );
     }
+	*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::CreateLFXPlane()

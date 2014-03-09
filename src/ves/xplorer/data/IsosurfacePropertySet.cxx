@@ -150,7 +150,7 @@ void IsosurfacePropertySet::CreateSkeleton()
     SetPropertyAttribute( "IsosurfaceValue", "minimumValue",   0.0 );
     SetPropertyAttribute( "IsosurfaceValue", "maximumValue", 100.0 );
 
-    AddProperty( "UseGPUTools", false, "Use GPU Tools" );
+    //AddProperty( "UseGPUTools", false, "Use GPU Tools" );
 
     AddProperty( "Advanced", boost::any(), "Advanced" );
     SetPropertyAttribute( "Advanced", "isUIGroupOnly", true );

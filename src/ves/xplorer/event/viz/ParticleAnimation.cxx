@@ -149,7 +149,7 @@ void ParticleAnimation::UpdateCommand()
 {
     UpdatePropertySet();
     return;
-
+	 
     //Call base method - currently does nothing
     cfdObjects::UpdateCommand();
 
@@ -224,8 +224,8 @@ void ParticleAnimation::UpdatePropertySet()
     warpSurface =
         boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseWarpedSurface" ) );
 
-    m_gpuTools =
-        boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
+    //m_gpuTools =
+      //  boost::any_cast<bool>( m_propertySet->GetPropertyValue( "UseGPUTools" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ParticleAnimation::CreateLFXPlane()
@@ -379,7 +379,7 @@ double conversionFactor = 0.00328084;
     {
         std::vector< std::pair< std::string, std::vector< double > > >* tempScalarData = &m_dataCollection.at( i );
         osg::ref_ptr< osg::FloatArray > radArray( new osg::FloatArray );
-        //radArray->resize( samplesPerTime );
+        //radArray->resize( samplesPerTime );  
         osg::ref_ptr< osg::FloatArray > depthArray( new osg::FloatArray );
         //depthArray->resize( samplesPerTime );
         std::vector< double >* diamArray = 0;
