@@ -150,6 +150,9 @@ void DatasetPropertySet::CreateSkeleton()
     AddProperty( "VectorNames", stringVector, "Vector Names" );
     SetPropertyAttribute( "VectorNames", "userVisible", false );
 
+	AddProperty( "TransientScalarNames", stringVector, "Transient Scalar Names" );
+    SetPropertyAttribute( "TransientScalarNames", "userVisible", false );
+
     AddProperty( "Channels", stringVector, "Channels" );
     SetPropertyAttribute( "Channels", "userVisible", false );
 

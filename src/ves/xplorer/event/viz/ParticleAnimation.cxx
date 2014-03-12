@@ -243,8 +243,12 @@ void ParticleAnimation::CreateLFXPlane()
     }
 
     {
+
+		std::string diamName = boost::any_cast< std::string >( m_propertySet->GetPropertyValue( "Particles_DiameterData" ) );
+		std::string vmagName = boost::any_cast< std::string >( m_propertySet->GetPropertyValue( "Particles_VmagData" ) );
+
         transientSeries = GetActiveDataSet()->GetTransientDataSets();
-        m_dsp = createInstanced( transientSeries, "test", "test", dbBase );
+        m_dsp = createInstanced( transientSeries, diamName, vmagName, dbBase );
         //Now force an update of the lfx pipeline
         bool success = m_dsp->updateAll();
         
@@ -256,8 +260,8 @@ void ParticleAnimation::CreateLFXPlane()
 }
 ////////////////////////////////////////////////////////////////////////////////
 lfx::core::DataSetPtr ParticleAnimation::createInstanced( const std::vector< lfx::core::vtk::DataSetPtr >& transData,
-                                      const std::string& activeScalar,
-                                      const std::string& activeVector,
+									  const std::string& diameterNameString,
+									  const std::string& vmagNameString,
                                       lfx::core::DBBasePtr dbBase )
 {
     std::vector< std::vector< std::pair< vtkIdType, double* > > >  m_pointCollection;
@@ -268,11 +272,11 @@ lfx::core::DataSetPtr ParticleAnimation::createInstanced( const std::vector< lfx
     
     std::vector< lfx::core::vtk::DataSetPtr > m_transientDataSet;
     m_transientDataSet = transData;
-    std::string m_activeVector = activeVector;
-    std::string m_activeScalar = activeScalar;
+    //std::string m_activeVector = activeVector;
+    //std::string m_activeScalar = activeScalar;
     
-std::string diameterNameString = "Diameter";
-std::string vmagNameString = "MotionVector_magnitude";
+//std::string diameterNameString = "Diameter";
+//std::string vmagNameString = "VelocityMagnitude"; //"MotionVector_magnitude";
 double conversionFactor = 0.00328084;
 
     lfx::vtk_utils::FindVertexCellsCallback* findVertexCellsCbk =
@@ -397,7 +401,7 @@ double conversionFactor = 0.00328084;
                 //std::cout << tempScalarData->at( j ).second.size() << std::endl;
                 vmagArray = &tempScalarData->at( j ).second;
             }
-            //std::cout << " scalar name " << tempScalarData->at( j ).first << " " << tempScalarData->at( j ).second.size() << std::endl;
+            std::cout << " scalar name " << tempScalarData->at( j ).first << " " << tempScalarData->at( j ).second.size() << std::endl;
         }
         
         
@@ -447,6 +451,9 @@ double conversionFactor = 0.00328084;
         dsp->addChannel( radData, i * 0.25 );
         lfx::core::ChannelDataOSGArrayPtr depthData( new lfx::core::ChannelDataOSGArray( "depth", depthArray.get() ) );
         dsp->addChannel( depthData, i * 0.25 );
+
+		
+		std::cout << " vmag depth array size: " << depthArray->size() << std::endl;
     }
     //341 - 343
     lfx::core::VectorRendererPtr renderOp( new lfx::core::VectorRenderer() );

@@ -181,9 +181,25 @@ void PolydataPropertySet::CreateSkeleton()
 	//		 - After getting its own place in the gui, this can then be restore to set the particle flag, so cfdPolyData can decide to render points or spheres on
 	//		    on vtk POLYDATA vertex data.
 	//
-	AddProperty( "ParticleData", false, "Particles" );
-	//GetProperty( "ParticleData" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateWarping, this, _1 ) ); 
 
+	AddProperty( "Particles", std::string(""), "Particle Animation" );
+	AddProperty( "Particles_ParticlesOn", false, "Particles" );
+	GetProperty( "Particles_ParticlesOn" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateParticleData, this, _1 ) ); 
+	
+	AddProperty( "Particles_DiameterData", std::string(""), "Diameter Data" );
+    enumValues.clear();
+    enumValues.push_back( "Select Diameter Data" );
+    SetPropertyAttribute( "Particles_DiameterData", "enumValues", enumValues );
+
+	AddProperty( "Particles_VmagData", std::string(""), "Vmag Data" );
+    enumValues.clear();
+    enumValues.push_back( "Select Vmag Data" );
+    SetPropertyAttribute( "Particles_VmagData", "enumValues", enumValues );
+    GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateTransientDataOptions, this, _1 ) );
+
+	// update to disable or enable diam and vmag
+	UpdateParticleData( propertystore::PropertyPtr() );
+	UpdateTransientDataOptions( propertystore::PropertyPtr() );
 	/*
     AddProperty( "Opacity", 0.0, "Opacity" );
     SetPropertyAttribute( "Opacity", "minimumValue",   0.0 );
@@ -290,8 +306,72 @@ void PolydataPropertySet::UpdateWarping( propertystore::PropertyPtr property )
 {
 	bool warpSurface = GetDatumValue< bool >( "UseWarpedSurface" );
 	double warpScaleFactor = GetDatumValue< double >( "WarpedScaleFactor" );
-	bool particleData = GetDatumValue< bool >( "ParticleData" );
+	bool particlesOn = GetDatumValue< bool >( "Particles_ParticlesOn" ); // TODO: remove - this is not needed here
 
-	m_updateLfxVtkPolyData.signal( warpSurface, warpScaleFactor, particleData );
+	m_updateLfxVtkPolyData.signal( warpSurface, warpScaleFactor, particlesOn );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PolydataPropertySet::UpdateParticleData( propertystore::PropertyPtr property )
+{
+	bool particlesOn = GetDatumValue< bool >( "Particles_ParticlesOn" );
+
+	SetPropertyEnabled( "Particles_DiameterData", particlesOn );
+	SetPropertyEnabled( "Particles_VmagData", particlesOn );
+}
+////////////////////////////////////////////////////////////////////////////////
+// TODO: THIS IS FOR PARTICLE DATA ONLY.. PARTICLE DATA NEEDS ITS OWN PROPERTYSET and GUI PAGE
+void PolydataPropertySet::UpdateTransientDataOptions( propertystore::PropertyPtr property )
+{
+    boost::ignore_unused_variable_warning( property );
+
+    PSVectorOfStrings enumValues;
+    std::string selectedDataset = boost::any_cast<std::string > ( GetPropertyValue( "DataSet" ) );
+    DatasetPropertySet dataset;
+    dataset.LoadByKey( "Filename", selectedDataset );
+    enumValues = boost::any_cast< std::vector<std::string> >( dataset.GetPropertyValue( "TransientScalarNames" ) );
+    if( enumValues.empty() )
+    {
+        enumValues.push_back( "No data available" );
+    }
+
+	// make sure properties are enabled to get the name change updates
+	SetPropertyEnabled( "Particles_DiameterData", true );
+	SetPropertyEnabled( "Particles_VmagData", true );
+
+	std::string curDiam = boost::any_cast< std::string >( GetPropertyValue( "Particles_DiameterData" ) );
+	std::string curVmag = boost::any_cast< std::string >( GetPropertyValue( "Particles_VmagData" ) );
+
+	SetPropertyAttribute( "Particles_DiameterData", "enumValues", enumValues );
+    SetPropertyAttribute( "Particles_VmagData", "enumValues", enumValues );
+
+	bool setDiam = false, setVmag = false;
+	for( size_t i=0; i<enumValues.size(); i++ )
+	{
+		std::string name = enumValues.at(i);
+		if( !setDiam && ( curDiam == name || name.at(0) == 'd' || name.at(0) == 'D' ) )
+		{
+			SetPropertyValue( "Particles_DiameterData", name );
+			setDiam  = true;
+		}
+		else if( !setVmag || curVmag == name )
+		{
+			SetPropertyValue( "Particles_VmagData", name );
+			setVmag  = true;
+		}
+	}
+
+	std::string name = enumValues.at(0);
+	if( !setDiam )
+	{
+		SetPropertyValue( "Particles_DiameterData", name );
+	}
+	if( !setVmag )
+	{
+		SetPropertyValue( "Particles_VmagData", name );
+	}
+
+
+	// restore enabled state
+	UpdateParticleData( propertystore::PropertyPtr() );
 }
 ////////////////////////////////////////////////////////////////////////////////

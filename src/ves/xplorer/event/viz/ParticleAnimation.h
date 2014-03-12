@@ -92,8 +92,8 @@ private:
     float GetSphereScaleFactor();
     ///
     lfx::core::DataSetPtr createInstanced( const std::vector< lfx::core::vtk::DataSetPtr >& transData,
-                                          const std::string& activeScalar,
-                                          const std::string& activeVector,
+										  const std::string& diameterNameString,
+										  const std::string& vmagNameString,
                                           lfx::core::DBBasePtr dbBase );
 
     ///String to hold color by scalar.

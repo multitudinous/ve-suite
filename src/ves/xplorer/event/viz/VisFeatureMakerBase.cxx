@@ -112,9 +112,9 @@ void VisFeatureMakerBase::Execute( propertystore::PropertySetPtr set )
             boost::any_cast< std::string >( set->GetPropertyValue( "Direction" ) );
     }
 
-    if( set->PropertyExists( "ParticleData" ) )
+    if( set->PropertyExists( "Particles_ParticlesOn" ) )
     {
-        if( boost::any_cast< bool >( set->GetPropertyValue( "ParticleData" ) ) )
+        if( boost::any_cast< bool >( set->GetPropertyValue( "Particles_ParticlesOn" ) ) )
         {
             direction = "PARTICLE_VIZ";
         }

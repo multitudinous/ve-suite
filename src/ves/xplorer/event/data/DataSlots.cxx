@@ -344,6 +344,7 @@ void WriteDatabaseEntry( lfx::core::vtk::DataSetPtr dataSet, ves::open::xml::Par
     set.SetPropertyValue( "PrecomputedSurfaceDir", dataSet->GetPrecomputedSurfaceDir() );
     set.SetPropertyValue( "ScalarNames", dataSet->GetScalarNames() );
     set.SetPropertyValue( "VectorNames", dataSet->GetVectorNames() );
+	set.SetPropertyValue( "TransientScalarNames", dataSet->GetTransientScalarNames() );
 
     std::vector< double > ScalarMins;
     std::vector< double > ScalarMaxes;
@@ -755,7 +756,7 @@ void LoadDatasetFromFile( const std::string& filename )
             else
             {
                 lastDataAdded->LoadData();
-                std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetChildDataSets();
+                 std::vector< lfx::core::vtk::DataSetPtr > dataSetVector = lastDataAdded->GetChildDataSets();
                 for( size_t i = 0; i < dataSetVector.size(); ++i )
                 {
                     ves::xplorer::event::data::WriteDatabaseEntry( dataSetVector[ i ], tempInfoPacket );

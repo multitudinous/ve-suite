@@ -72,6 +72,10 @@ protected:
     void UpdateColorByScalarDataRange( propertystore::PropertyPtr property );
 	///Update warping
     void UpdateWarping( propertystore::PropertyPtr property );
+	//Update particle data
+	void UpdateParticleData( propertystore::PropertyPtr property );
+	//Update transient data options for particle data
+	void PolydataPropertySet::UpdateTransientDataOptions( propertystore::PropertyPtr property );
     ///Create the skeleton
 	virtual void CreateSkeletonLfxDs();
     virtual void CreateSkeleton();
