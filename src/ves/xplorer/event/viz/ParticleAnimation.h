@@ -94,6 +94,7 @@ private:
     lfx::core::DataSetPtr createInstanced( const std::vector< lfx::core::vtk::DataSetPtr >& transData,
 										  const std::string& diameterNameString,
 										  const std::string& vmagNameString,
+										  double conversionFactor,
                                           lfx::core::DBBasePtr dbBase );
 
     ///String to hold color by scalar.

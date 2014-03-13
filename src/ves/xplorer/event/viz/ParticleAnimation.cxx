@@ -247,8 +247,11 @@ void ParticleAnimation::CreateLFXPlane()
 		std::string diamName = boost::any_cast< std::string >( m_propertySet->GetPropertyValue( "Particles_DiameterData" ) );
 		std::string vmagName = boost::any_cast< std::string >( m_propertySet->GetPropertyValue( "Particles_VmagData" ) );
 
+		//double conversionFactor = 0.00328084;
+		double conversionFactor = boost::any_cast< double >( m_propertySet->GetPropertyValue( "Particles_ConversionFactor" ) );
+		
         transientSeries = GetActiveDataSet()->GetTransientDataSets();
-        m_dsp = createInstanced( transientSeries, diamName, vmagName, dbBase );
+        m_dsp = createInstanced( transientSeries, diamName, vmagName, conversionFactor, dbBase );
         //Now force an update of the lfx pipeline
         bool success = m_dsp->updateAll();
         
@@ -262,6 +265,7 @@ void ParticleAnimation::CreateLFXPlane()
 lfx::core::DataSetPtr ParticleAnimation::createInstanced( const std::vector< lfx::core::vtk::DataSetPtr >& transData,
 									  const std::string& diameterNameString,
 									  const std::string& vmagNameString,
+									  double conversionFactor,
                                       lfx::core::DBBasePtr dbBase )
 {
     std::vector< std::vector< std::pair< vtkIdType, double* > > >  m_pointCollection;
@@ -272,12 +276,6 @@ lfx::core::DataSetPtr ParticleAnimation::createInstanced( const std::vector< lfx
     
     std::vector< lfx::core::vtk::DataSetPtr > m_transientDataSet;
     m_transientDataSet = transData;
-    //std::string m_activeVector = activeVector;
-    //std::string m_activeScalar = activeScalar;
-    
-//std::string diameterNameString = "Diameter";
-//std::string vmagNameString = "VelocityMagnitude"; //"MotionVector_magnitude";
-double conversionFactor = 0.00328084;
 
     lfx::vtk_utils::FindVertexCellsCallback* findVertexCellsCbk =
         new lfx::vtk_utils::FindVertexCellsCallback();

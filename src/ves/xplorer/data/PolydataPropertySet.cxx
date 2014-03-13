@@ -195,7 +195,13 @@ void PolydataPropertySet::CreateSkeleton()
     enumValues.clear();
     enumValues.push_back( "Select Vmag Data" );
     SetPropertyAttribute( "Particles_VmagData", "enumValues", enumValues );
-    GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateTransientDataOptions, this, _1 ) );
+
+	AddProperty( "Particles_ConversionFactor", 0.00328084, "Conversion Factor" );
+	//SetPropertyAttribute( "Particles_ConversionFactor", "minimumValue",  0.000001 );
+    //SetPropertyAttribute( "Particles_ConversionFactor", "maximumValue", 100.0 );
+	SetPropertyAttribute( "Particles_ConversionFactor", "DisplayPrecision", 8 );
+	
+	GetProperty( "DataSet" )->SignalValueChanged.connect( boost::bind( &PolydataPropertySet::UpdateTransientDataOptions, this, _1 ) );
 
 	// update to disable or enable diam and vmag
 	UpdateParticleData( propertystore::PropertyPtr() );
@@ -317,6 +323,7 @@ void PolydataPropertySet::UpdateParticleData( propertystore::PropertyPtr propert
 
 	SetPropertyEnabled( "Particles_DiameterData", particlesOn );
 	SetPropertyEnabled( "Particles_VmagData", particlesOn );
+	SetPropertyEnabled( "Particles_ConversionFactor", particlesOn );
 }
 ////////////////////////////////////////////////////////////////////////////////
 // TODO: THIS IS FOR PARTICLE DATA ONLY.. PARTICLE DATA NEEDS ITS OWN PROPERTYSET and GUI PAGE
