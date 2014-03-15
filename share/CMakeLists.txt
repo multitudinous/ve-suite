@@ -106,8 +106,8 @@ install(
 )
 
 add_subdirectory(examples)
+add_subdirectory(tools)
 
 # Directories still left to complete
     #examples
-    #tools
     #scripts
