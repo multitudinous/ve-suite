@@ -70,11 +70,11 @@ class vtkPolyData;
 #include <queue>
 #include <map>
 
-#if defined(__GNUC__) && __GNUC__ >= 4
-#  include <tr1/unordered_map>
-#elif defined(_MSC_VER) && _MSC_VER >= 1500
-#  include <unordered_map>
-#endif
+//#if defined(__GNUC__) && __GNUC__ >= 4
+//#  include <tr1/unordered_map>
+//#elif defined(_MSC_VER) && _MSC_VER >= 1500
+#include <unordered_map>
+//#endif
 
 namespace ves
 {
@@ -237,7 +237,7 @@ private:
     ///The event handler for commands.
     std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;
     ///The mp of graphics objects with unique ids to be tied to the ui
-    typedef std::tr1::unordered_map<vpr::GUID, cfdGraphicsObject*, vpr::GUID::hash> graphics_objects_map;
+    typedef std::unordered_map<vpr::GUID, cfdGraphicsObject*, vpr::GUID::hash> graphics_objects_map;
     graphics_objects_map m_graphicsObjectMap;
     /// Required to be able to connect up to signals.
     switchwire::ScopedConnectionList m_connections;
