@@ -63,6 +63,8 @@ public:
     ///Destructor
     virtual ~PreferencesPropertySet();
 
+	void UpdateBackgroundColor( bool use, const std::vector<double> &color );
+
 private:
     ///Enable method
     void EnableNearFarRatio( propertystore::PropertyPtr& property );

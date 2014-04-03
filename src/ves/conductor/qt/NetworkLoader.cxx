@@ -381,6 +381,7 @@ void NetworkLoader::LoadVesFile( const std::string& fileName )
         {
             cadSet.SetPropertyValue( "Physics_Enable", true );
         }
+
         ++idIter;
     }
 

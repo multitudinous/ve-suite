@@ -830,6 +830,58 @@ void Model::VesFileLoaded( const std::string& filename )
         ++idIter;
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void Model::LoadPreferencesProperties( bool *pUseBg, std::vector< double > *pcolor )
+{
+	*pUseBg = false;
+
+	xplorer::eventmanager::EventFactory* factory = xplorer::eventmanager::EventFactory::instance();
+
+	std::vector< double > color;
+	pcolor->push_back(0);
+	pcolor->push_back(0);
+	pcolor->push_back(0);
+	pcolor->push_back(1);
+
+	if( !ves::xplorer::data::DatabaseManager::instance()->TableExists( "XplorerPreferences" ) ) return;
+
+	// note: always get the last item in the vector as multiple entries are inserted in chronological order, the last, being the most recent.
+	std::vector<std::string> res = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( "XplorerPreferences", "UsePreferredBackgroundColor" );
+	if( res.empty() || res[res.size()-1].compare( "1" ) )
+	{
+		/*
+		factory->GetSignalByType< ves::util::BoolAndDoubleVectorSignal_type >
+                ( "PreferencesPropertySet.UsePreferredBackgroundColor" )->
+                    signal( false, *pcolor );
+		*/
+
+		return;
+	}
+
+	// use preferred background color
+	*pUseBg = true;
+
+	res = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( "XplorerPreferences", "UsePreferredBackgroundColor_Red" );
+	if( !res.empty() )
+	{
+		(*pcolor)[0] = atof( res[res.size()-1].c_str() );
+	}
+
+	res = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( "XplorerPreferences", "UsePreferredBackgroundColor_Green" );
+	if( !res.empty() )
+	{
+		(*pcolor)[1] = atof( res[res.size()-1].c_str() );
+	}
+
+	res = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( "XplorerPreferences", "UsePreferredBackgroundColor_Blue" );
+	if( !res.empty() )
+	{
+		(*pcolor)[2] = atof( res[res.size()-1].c_str() );
+	}
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
 } // end ves

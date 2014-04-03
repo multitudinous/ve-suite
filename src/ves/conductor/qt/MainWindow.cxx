@@ -774,11 +774,15 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
             ves::conductor::NetworkLoader* loader =
                 ves::conductor::NetworkLoader::createNetworkLoader();
             loader->LoadVesFile( file.string() );
+			OnVesLoaderFinished();
+
             // Destructor for loader is private; object autodeletes when done
             // processing.
 
             // Keep the absolute filepath since CWD may change out from under us
             m_saveFileName = fileNames.at( index );
+
+
         }
         // Remove the dot from the head of extension so we can compare to our
         // vectors of other file extensions
@@ -820,6 +824,18 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
             LoadDataFile( file.string() );
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainWindow::OnVesLoaderFinished()
+{
+	ves::xplorer::Model* activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+	if( !activeModel ) return;
+
+	bool useBgColor = false;
+	std::vector< double > color;
+	activeModel->LoadPreferencesProperties( &useBgColor, &color );
+
+	if( m_preferencesTab ) m_preferencesTab->UpdateBackgroundColor( useBgColor, color );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::LoadGeometryFile( std::string filename )
@@ -1059,6 +1075,8 @@ void MainWindow::SaveSytemToFile( ves::open::xml::model::SystemPtr system, std::
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.WriteXMLDocument( nodes, fileName, "Network" );
+
+	//ves::conductor::XMLDataBufferEngine::instance()->SaveVESData( vesFileName );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

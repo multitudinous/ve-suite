@@ -249,6 +249,9 @@ public:
     ///Get the dataset handler for this model
     ves::xplorer::ModelDatasetHandler* GetModelDatasetHandler();
 
+	///Get the dataset handler for this model
+	void LoadPreferencesProperties( bool *pUseBg, std::vector< double > *pcolor );
+
 private:
     ///Slot called when the ves file has been loaded completely
     void VesFileLoaded( const std::string& filename );

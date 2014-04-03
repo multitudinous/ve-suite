@@ -149,6 +149,9 @@ protected:
     /// switchwire slot that opens the file @c filename
     void OpenFileSlot( const std::string& filename );
 
+	/// called after a ves file is loaded
+	void OnVesLoaderFinished();
+
 protected Q_SLOTS:
 
     void on_actionRecent_triggered();

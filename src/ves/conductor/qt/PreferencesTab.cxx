@@ -78,6 +78,14 @@ void PreferencesTab::changeEvent( QEvent* e )
         break;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesTab::UpdateBackgroundColor( bool use, const std::vector<double> &color )
+{
+	if( !m_propertySet ) return;
+
+	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->UpdateBackgroundColor( use, color );
+	ui->preferencesPropertyBrowser->RefreshAllValues();
+}
 
 } // namespace conductor
 } // namespace ves

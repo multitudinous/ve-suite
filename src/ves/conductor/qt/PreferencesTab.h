@@ -67,6 +67,8 @@ public:
     PreferencesTab( QWidget* parent = 0 );
     ~PreferencesTab();
 
+	void UpdateBackgroundColor( bool use, const std::vector<double> &color );
+
 protected:
     void changeEvent( QEvent* e );
 

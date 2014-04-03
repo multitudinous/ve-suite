@@ -92,6 +92,16 @@ PreferencesPropertySet::~PreferencesPropertySet()
 {
     ;
 }
+///////////////////////////////////////////////////////////////////// ///////////
+void PreferencesPropertySet::UpdateBackgroundColor( bool use, const std::vector<double> &color )
+{
+	GetProperty( "UsePreferredBackgroundColor" )->SetValue( use );
+	EnableBackgroundColor( GetProperty( "UsePreferredBackgroundColor" ) );
+
+	GetProperty( "UsePreferredBackgroundColor_Red" )->SetValue( color[0] );
+	GetProperty( "UsePreferredBackgroundColor_Green" )->SetValue( color[1] );
+	GetProperty( "UsePreferredBackgroundColor_Blue" )->SetValue( color[2] );
+}
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::CreateSkeleton()
 {
