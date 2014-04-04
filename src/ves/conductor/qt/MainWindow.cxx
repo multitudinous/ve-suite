@@ -1075,8 +1075,6 @@ void MainWindow::SaveSytemToFile( ves::open::xml::model::SystemPtr system, std::
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.WriteXMLDocument( nodes, fileName, "Network" );
-
-	//ves::conductor::XMLDataBufferEngine::instance()->SaveVESData( vesFileName );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
