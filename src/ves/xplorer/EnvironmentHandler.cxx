@@ -246,6 +246,11 @@ EnvironmentHandler::EnvironmentHandler()
                            &ves::xplorer::event::environment::UpdateBackgroundColor,
                            m_connections, any_SignalType, normal_Priority );
 
+	CONNECTSIGNALS_STATIC( "%UpdateCamera",
+                           void( std::vector< double > const & view, std::vector< double > const & pos ),
+                           &ves::xplorer::event::environment::UpdateCamera,
+                           m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_STATIC( "%SetResetStartPosition",
                            void(  ),
                            &ves::xplorer::event::environment::SetResetStartPosition,

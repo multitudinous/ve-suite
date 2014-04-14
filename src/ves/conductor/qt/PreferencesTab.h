@@ -67,12 +67,14 @@ public:
     PreferencesTab( QWidget* parent = 0 );
     ~PreferencesTab();
 
-	void UpdateBackgroundColor( bool use, const std::vector<double> &color );
+	void UpdateBackgroundColorValues( bool use, const std::vector<double> &color, bool refreshGui=true );
+	void UpdateCameraValues( double view[3], double pos[3], bool refreshGui=true );
 
 protected:
     void changeEvent( QEvent* e );
 
 protected Q_SLOTS:
+	void onSaveCamera();
 
 private:
     Ui::PreferencesTab* ui;

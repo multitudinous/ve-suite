@@ -63,7 +63,8 @@ public:
     ///Destructor
     virtual ~PreferencesPropertySet();
 
-	void UpdateBackgroundColor( bool use, const std::vector<double> &color );
+	void UpdateBackgroundColorValues( bool use, const std::vector<double> &color );
+	void UpdateCameraValues( double view[3], double pos[3] );
 
 private:
     ///Enable method
@@ -75,12 +76,14 @@ private:
 
     ///Relay method for passing signals on to xplorer
     void UpdateBackgroundColor( propertystore::PropertyPtr& property );
+	///Relay method for passing signals on to xplorer
+	void UpdateCamera( propertystore::PropertyPtr& property );
     ///Relay method for passing signals on to xplorer
     //void UpdateNavEqualZero( propertystore::PropertyPtr property );
     ///Relay method for passing signals on to xplorer
     //void UpdateNavGreaterZero( propertystore::PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    //void UpdateShutdownXplorer( propertystore::PropertyPtr property );
+    //void UpdateShutdownXplorer( propertystore::PropertyPtr property ); 
     ///Relay method for passing signals on to xplorer
     //void UpdatePhysicsDebugger( propertystore::PropertyPtr property );
     ///Relay method for passing signals on to xplorer
@@ -106,6 +109,7 @@ private:
 
     ///Update signal
     ves::util::BoolAndDoubleVectorSignal_type* m_backgroundColor;
+	ves::util::TwoDoubleVectorsSignal_type* m_updateCamera;
 
     ///Update signal for check box preferences
     //    typedef switchwire::Event< void ( bool const& ) > CheckValueSignal_type;

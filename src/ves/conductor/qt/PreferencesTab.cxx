@@ -31,14 +31,12 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/qt/PreferencesTab.h>
-
 #include <ves/conductor/qt/ui_PreferencesTab.h>
 
 #include <ves/xplorer/data/PreferencesPropertySet.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 
-
-
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <iostream>
 
@@ -79,11 +77,30 @@ void PreferencesTab::changeEvent( QEvent* e )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesTab::UpdateBackgroundColor( bool use, const std::vector<double> &color )
+void PreferencesTab::UpdateBackgroundColorValues( bool use, const std::vector<double> &color, bool refreshGui )
 {
 	if( !m_propertySet ) return;
 
-	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->UpdateBackgroundColor( use, color );
+	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->UpdateBackgroundColorValues( use, color );
+	if( refreshGui ) ui->preferencesPropertyBrowser->RefreshAllValues();
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesTab::UpdateCameraValues( double view[3], double pos[3], bool refreshGui )
+{
+	if( !m_propertySet ) return;
+
+	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->UpdateCameraValues( view, pos );
+	if( refreshGui ) ui->preferencesPropertyBrowser->RefreshAllValues();
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesTab::onSaveCamera()
+{
+	osgwMx::MxCore& viewmat =  ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
+	osg::Vec3d view = viewmat.getDir();
+	osg::Vec3d pos = viewmat.getPosition();
+
+
+	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->UpdateCameraValues( view._v, pos._v );
 	ui->preferencesPropertyBrowser->RefreshAllValues();
 }
 

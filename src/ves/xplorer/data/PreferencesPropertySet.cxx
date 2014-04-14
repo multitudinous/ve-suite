@@ -76,6 +76,12 @@ PreferencesPropertySet::PreferencesPropertySet()
         m_backgroundColor = reinterpret_cast< ves::util::BoolAndDoubleVectorSignal_type* >
                             ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) );
     }
+	 ///Signal to Update Camera
+    {
+        m_updateCamera = reinterpret_cast< ves::util::TwoDoubleVectorsSignal_type* >
+                            ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UpdateCamera" ) );
+    }
+	
 
     SetTypeName( "XplorerPreferences" );
     CreateSkeleton();
@@ -93,7 +99,7 @@ PreferencesPropertySet::~PreferencesPropertySet()
     ;
 }
 ///////////////////////////////////////////////////////////////////// ///////////
-void PreferencesPropertySet::UpdateBackgroundColor( bool use, const std::vector<double> &color )
+void PreferencesPropertySet::UpdateBackgroundColorValues( bool use, const std::vector<double> &color )
 {
 	GetProperty( "UsePreferredBackgroundColor" )->SetValue( use );
 	EnableBackgroundColor( GetProperty( "UsePreferredBackgroundColor" ) );
@@ -101,6 +107,18 @@ void PreferencesPropertySet::UpdateBackgroundColor( bool use, const std::vector<
 	GetProperty( "UsePreferredBackgroundColor_Red" )->SetValue( color[0] );
 	GetProperty( "UsePreferredBackgroundColor_Green" )->SetValue( color[1] );
 	GetProperty( "UsePreferredBackgroundColor_Blue" )->SetValue( color[2] );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateCameraValues( double view[3], double pos[3] )
+{
+	GetProperty( "Camera_ViewX" )->SetValue( view[0] );
+	GetProperty( "Camera_ViewY" )->SetValue( view[1] );
+	GetProperty( "Camera_ViewZ" )->SetValue( view[2] );
+	GetProperty( "Camera_PosX" )->SetValue( pos[0] );
+	GetProperty( "Camera_PosY" )->SetValue( pos[1] );
+	GetProperty( "Camera_PosZ" )->SetValue( pos[2] );
+
+	UpdateCamera( propertystore::PropertyPtr() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::CreateSkeleton()
@@ -320,6 +338,37 @@ void PreferencesPropertySet::CreateSkeleton()
                                                                                      false ) );
         m_liveObjects.push_back( p );
     }
+
+	// camera properties
+	AddProperty( "Camera", boost::any(), "Camera" );
+    SetPropertyAttribute( "Camera", "isUIGroupOnly", true );
+	SetPropertyAttribute( "Camera", "setExpanded", true );
+
+	std::string propname;
+	propname = "Camera_ViewX";
+	AddProperty( propname, 0.0, "View X" );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+	propname = "Camera_ViewY";
+	AddProperty( propname, 0.0, "View Y" );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+	propname = "Camera_ViewZ";
+	AddProperty( propname, 0.0, "View Z" );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+	propname = "Camera_PosX";
+	AddProperty( propname, 0.0, "Position X" );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+	propname = "Camera_PosY";
+	AddProperty( propname, 0.0, "Position Y" );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+	propname = "Camera_PosZ";
+	AddProperty( propname, 0.0, "Position Z" );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::EnableNearFarRatio( propertystore::PropertyPtr& property )
@@ -387,6 +436,19 @@ void PreferencesPropertySet::UpdateBackgroundColor( propertystore::PropertyPtr& 
     colors.push_back( b );
 
     m_backgroundColor->signal( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateCamera( propertystore::PropertyPtr& )
+{
+	std::vector< double > view, pos;
+	view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewX" ) ) );
+	view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewY" ) ) );
+	view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewZ" ) ) );
+	pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosX" ) ) );
+	pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosY" ) ) );
+	pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosZ" ) ) );
+	
+	m_updateCamera->signal( view, pos );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::SaveChanges( propertystore::PropertyPtr& )

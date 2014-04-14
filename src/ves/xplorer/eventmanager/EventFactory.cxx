@@ -97,6 +97,12 @@ EventFactory::EventFactory():
                          switchwire::EventManager::unspecified_SignalType );
     m_signals[ "PreferencesPropertySet.UsePreferredBackgroundColor" ] = &m_changeBackgroundColorSignal;
 
+	///Signal for Camera Update
+    evm->RegisterSignal( &m_updateCameraSignal, "PreferencesPropertySet.UpdateCamera",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "PreferencesPropertySet.UpdateCamera" ] = &m_updateCameraSignal;
+
+	
     // Update Network
     evm->RegisterSignal( &m_updateNetworkSignal, "UpdateNetwork",
                          switchwire::EventManager::unspecified_SignalType );

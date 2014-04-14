@@ -115,6 +115,15 @@ void UpdateBackgroundColor( bool const, std::vector< double > const& color )
             GetHeadsUpDisplay()->SetTextColor( color );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void UpdateCamera( std::vector< double > const& view,  std::vector< double > const& pos )
+{
+	osgwMx::MxCore& viewmat =  ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
+	osg::Vec3d vdir( view[0], view[1], view[2] );
+	osg::Vec3d vpos( pos[0], pos[1], pos[2] );
+	viewmat.setDir( vdir );
+	viewmat.setPosition( vpos );
+}
+////////////////////////////////////////////////////////////////////////////////
 void SetResetStartPosition( )
 {
 

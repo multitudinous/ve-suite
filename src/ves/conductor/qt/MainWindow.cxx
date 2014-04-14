@@ -830,13 +830,15 @@ void MainWindow::OnVesLoaderFinished()
 {
 	ves::xplorer::Model* activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
 	if( !activeModel ) return;
-
+	if( !m_preferencesTab ) return;
 	bool useBgColor = false;
 	std::vector< double > color;
-	activeModel->LoadPreferencesProperties( &useBgColor, &color );
+	double cview[3], cpos[3];
+	activeModel->LoadPreferencesProperties( &useBgColor, &color, cview, cpos );
 
-	if( m_preferencesTab ) m_preferencesTab->UpdateBackgroundColor( useBgColor, color );
-}
+	m_preferencesTab->UpdateBackgroundColorValues( useBgColor, color );
+	m_preferencesTab->UpdateCameraValues( cview, cpos, true );
+} 
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::LoadGeometryFile( std::string filename )
 {
