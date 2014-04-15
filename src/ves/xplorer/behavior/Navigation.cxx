@@ -123,7 +123,8 @@ Navigation::Navigation()
     mDeltaRotation( 0.0, 0.0, 0.0, 1.0 ),
     mDeltaTranslation( 0.0, 0.0, 0.0 ),
     mCenterPointThreshold( 0.1 ),
-    mCenterPointJump( 10.0 )
+    mCenterPointJump( 10.0 ),
+	m_zoomSpeed( 1.0 )
 {
     CONNECTSIGNALS_4_COMBINER( "KeyboardMouse.MouseMove", bool( int, int, int, int ),
                                switchwire::BooleanPropagationCombiner, &Navigation::ProcessNavigation,
@@ -156,6 +157,11 @@ Navigation::Navigation()
 Navigation::~Navigation()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Navigation::SetZoomSpeed( double s )
+{
+	m_zoomSpeed = s;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Navigation::RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState )
@@ -327,6 +333,8 @@ void Navigation::Zoom( double dy )
         //std::cout << newCenter << std::endl;
         m_sceneManager.GetMxCoreViewMatrix().setOrbitCenterPoint( newCenter );
     }
+
+	dy *= m_zoomSpeed;
     double d = ( viewlength * ( 1 / ( 1 - dy * 2 ) ) ) - viewlength;
     mDeltaTranslation.mData[ 1 ] = d;
     //m_sceneManager.GetCenterPoint().mData[ 1 ] += d;

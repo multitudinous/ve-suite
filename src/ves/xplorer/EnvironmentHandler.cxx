@@ -251,6 +251,11 @@ EnvironmentHandler::EnvironmentHandler()
                            &ves::xplorer::event::environment::UpdateCamera,
                            m_connections, any_SignalType, normal_Priority );
 
+	CONNECTSIGNALS_STATIC( "%UpdateZoomSpeed",
+                           void( double speed ),
+                           &ves::xplorer::event::environment::UpdateZoomSpeed,
+                           m_connections, any_SignalType, normal_Priority );
+
     CONNECTSIGNALS_STATIC( "%SetResetStartPosition",
                            void(  ),
                            &ves::xplorer::event::environment::SetResetStartPosition,

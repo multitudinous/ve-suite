@@ -833,11 +833,12 @@ void MainWindow::OnVesLoaderFinished()
 	if( !m_preferencesTab ) return;
 	bool useBgColor = false;
 	std::vector< double > color;
-	double cview[3], cpos[3];
-	activeModel->LoadPreferencesProperties( &useBgColor, &color, cview, cpos );
+	double cview[3], cpos[3], zspeed = 1.0;
+	activeModel->LoadPreferencesProperties( &useBgColor, &color, cview, cpos, &zspeed );
 
-	m_preferencesTab->UpdateBackgroundColorValues( useBgColor, color );
-	m_preferencesTab->UpdateCameraValues( cview, cpos, true );
+	m_preferencesTab->SetBackgroundColorValues( useBgColor, color, false );
+	m_preferencesTab->SetCameraValues( cview, cpos, false );
+	m_preferencesTab->SetZoomSpeed( zspeed, true );
 } 
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::LoadGeometryFile( std::string filename )

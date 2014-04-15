@@ -236,7 +236,7 @@ public:
     ves::open::xml::model::ModelPtr GetModelData();
 
     ///Set the VE-Open Model for this Model
-    void SetModelData( ves::open::xml::model::ModelPtr tempModelData );
+    void SetModelData( ves::open::xml::model::ModelPtr tempModelData );  
 
     ///Dynamically load data from unit
     void ActiveLoadingThread();
@@ -250,7 +250,7 @@ public:
     ves::xplorer::ModelDatasetHandler* GetModelDatasetHandler();
 
 	///Get the dataset handler for this model
-	void LoadPreferencesProperties( bool *pUseBg, std::vector< double > *pcolor, double cameraView[3], double cameraPos[3] );
+	void LoadPreferencesProperties( bool *pUseBg, std::vector< double > *pcolor, double cameraView[3], double cameraPos[3], double *zspeed );
 
 private:
     ///Slot called when the ves file has been loaded completely

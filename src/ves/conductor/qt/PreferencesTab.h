@@ -67,8 +67,9 @@ public:
     PreferencesTab( QWidget* parent = 0 );
     ~PreferencesTab();
 
-	void UpdateBackgroundColorValues( bool use, const std::vector<double> &color, bool refreshGui=true );
-	void UpdateCameraValues( double view[3], double pos[3], bool refreshGui=true );
+	void SetBackgroundColorValues( bool use, const std::vector<double> &color, bool refreshGui=true );
+	void SetCameraValues( double view[3], double pos[3], bool refreshGui=true );
+	void SetZoomSpeed( double speed, bool refreshGui=true );
 
 protected:
     void changeEvent( QEvent* e );

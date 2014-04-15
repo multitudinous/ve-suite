@@ -77,19 +77,27 @@ void PreferencesTab::changeEvent( QEvent* e )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesTab::UpdateBackgroundColorValues( bool use, const std::vector<double> &color, bool refreshGui )
+void PreferencesTab::SetBackgroundColorValues( bool use, const std::vector<double> &color, bool refreshGui )
 {
 	if( !m_propertySet ) return;
 
-	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->UpdateBackgroundColorValues( use, color );
+	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->SetBackgroundColorValues( use, color );
 	if( refreshGui ) ui->preferencesPropertyBrowser->RefreshAllValues();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesTab::UpdateCameraValues( double view[3], double pos[3], bool refreshGui )
+void PreferencesTab::SetCameraValues( double view[3], double pos[3], bool refreshGui )
 {
 	if( !m_propertySet ) return;
 
-	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->UpdateCameraValues( view, pos );
+	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->SetCameraValues( view, pos );
+	if( refreshGui ) ui->preferencesPropertyBrowser->RefreshAllValues();
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesTab::SetZoomSpeed( double speed, bool refreshGui )
+{
+	if( !m_propertySet ) return;
+
+	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->SetZoomSpeed( speed );
 	if( refreshGui ) ui->preferencesPropertyBrowser->RefreshAllValues();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +108,7 @@ void PreferencesTab::onSaveCamera()
 	osg::Vec3d pos = viewmat.getPosition();
 
 
-	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->UpdateCameraValues( view._v, pos._v );
+	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->SetCameraValues( view._v, pos._v );
 	ui->preferencesPropertyBrowser->RefreshAllValues();
 }
 

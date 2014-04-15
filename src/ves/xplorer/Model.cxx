@@ -840,9 +840,10 @@ double Model::loadPropertyDouble(const char *tbl, const char *col, double defaul
 	return atof( res[res.size()-1].c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::LoadPreferencesProperties( bool *pUseBg, std::vector< double > *pcolor, double cameraView[3], double cameraPos[3] )
+void Model::LoadPreferencesProperties( bool *pUseBg, std::vector< double > *pcolor, double cameraView[3], double cameraPos[3], double *zspeed )
 {
 	*pUseBg = false;
+	*zspeed = 1.0;
 
 	xplorer::eventmanager::EventFactory* factory = xplorer::eventmanager::EventFactory::instance();
 
@@ -861,6 +862,9 @@ void Model::LoadPreferencesProperties( bool *pUseBg, std::vector< double > *pcol
 	cameraPos[0] = loadPropertyDouble( tbl, "Camera_PosX");
 	cameraPos[1] = loadPropertyDouble( tbl, "Camera_PosY");
 	cameraPos[2] = loadPropertyDouble( tbl, "Camera_PosZ");
+
+	// load zoom speed setting
+	*zspeed = loadPropertyDouble( tbl, "Camera_ZoomSpeed");
 
 	// load color settings
 	(*pcolor)[0] = loadPropertyDouble( tbl, "UsePreferredBackgroundColor_Red");

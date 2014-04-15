@@ -306,7 +306,7 @@ lfx::core::RendererPtr GetLfxRenderer( const std::string &renderSetType, const s
 		pds = activateLfxDataSet( dataSetName, false );
 		if( !pds.get() )
 		{
-			vprDEBUG( vesDBG, 0 ) << "|\tGetLfxRenderer - failed to find the dataset: " << dataSetName << std::endl << vprDEBUG_FLUSH;
+			// vprDEBUG( vesDBG, 0 ) << "|\tGetLfxRenderer - failed to find the dataset: " << dataSetName << std::endl << vprDEBUG_FLUSH;
 			return lfx::core::RendererPtr();
 		}
 	}
@@ -322,7 +322,7 @@ lfx::core::RendererPtr GetLfxRenderer( const std::string &renderSetType, const s
 		pds = activeModel->GetVtkRenderSet( renderSetType );
 		if( !pds.get() )
 		{
-			vprDEBUG( vesDBG, 0 ) << "|\tGetLfxRenderer - failed to find the dataset for renderer type: " << renderSetType << std::endl << vprDEBUG_FLUSH;
+			//vprDEBUG( vesDBG, 0 ) << "|\tGetLfxRenderer - failed to find the dataset for renderer type: " << renderSetType << std::endl << vprDEBUG_FLUSH;
 			return lfx::core::RendererPtr();
 		}
 	}

@@ -94,6 +94,8 @@ public:
     ///Destructor
     ~Navigation();
 
+	void SetZoomSpeed( double s );
+
 private:
     ///Rotates an object about the y-axis
     void Twist( double dx, double dy );
@@ -211,6 +213,8 @@ private:
     ///The distance the center point jumps along the +y axis
     ///Do not allocate memory 'new' for this pointer
     double mCenterPointJump;
+
+	double m_zoomSpeed;
 };
 
 }

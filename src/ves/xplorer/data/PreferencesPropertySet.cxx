@@ -76,10 +76,21 @@ PreferencesPropertySet::PreferencesPropertySet()
         m_backgroundColor = reinterpret_cast< ves::util::BoolAndDoubleVectorSignal_type* >
                             ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) );
     }
-	 ///Signal to Update Camera
+	///Signal to Update Camera
     {
         m_updateCamera = reinterpret_cast< ves::util::TwoDoubleVectorsSignal_type* >
                             ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UpdateCamera" ) );
+    }
+
+	///Signal to Update Zoom Speed
+    {
+		std::string name( "PreferencesPropertySet" );
+        name += boost::lexical_cast<std::string>( this );
+        name += ".UpdateZoomSpeed";
+
+        switchwire::EventManager::instance()->RegisterSignal(
+            ( &m_updateZoomSpeed ),
+            name, switchwire::EventManager::unspecified_SignalType );
     }
 	
 
@@ -99,7 +110,7 @@ PreferencesPropertySet::~PreferencesPropertySet()
     ;
 }
 ///////////////////////////////////////////////////////////////////// ///////////
-void PreferencesPropertySet::UpdateBackgroundColorValues( bool use, const std::vector<double> &color )
+void PreferencesPropertySet::SetBackgroundColorValues( bool use, const std::vector<double> &color )
 {
 	GetProperty( "UsePreferredBackgroundColor" )->SetValue( use );
 	EnableBackgroundColor( GetProperty( "UsePreferredBackgroundColor" ) );
@@ -109,7 +120,7 @@ void PreferencesPropertySet::UpdateBackgroundColorValues( bool use, const std::v
 	GetProperty( "UsePreferredBackgroundColor_Blue" )->SetValue( color[2] );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateCameraValues( double view[3], double pos[3] )
+void PreferencesPropertySet::SetCameraValues( double view[3], double pos[3] )
 {
 	GetProperty( "Camera_ViewX" )->SetValue( view[0] );
 	GetProperty( "Camera_ViewY" )->SetValue( view[1] );
@@ -119,6 +130,13 @@ void PreferencesPropertySet::UpdateCameraValues( double view[3], double pos[3] )
 	GetProperty( "Camera_PosZ" )->SetValue( pos[2] );
 
 	UpdateCamera( propertystore::PropertyPtr() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::SetZoomSpeed( double speed )
+{
+	GetProperty( "Camera_ZoomSpeed" )->SetValue( speed );
+
+	UpdateZoomSpeed( propertystore::PropertyPtr() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::CreateSkeleton()
@@ -369,6 +387,13 @@ void PreferencesPropertySet::CreateSkeleton()
 	AddProperty( propname, 0.0, "Position Z" );
 	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
 	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+
+	propname = "Camera_ZoomSpeed";
+	AddProperty( propname, 1.0, "Zoom Speed" );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateZoomSpeed, this, _1 ) );
+	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+	SetPropertyAttribute( propname, "minimumValue", 0.01 );
+    SetPropertyAttribute( propname, "maximumValue", 100.00 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::EnableNearFarRatio( propertystore::PropertyPtr& property )
@@ -449,6 +474,13 @@ void PreferencesPropertySet::UpdateCamera( propertystore::PropertyPtr& )
 	pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosZ" ) ) );
 	
 	m_updateCamera->signal( view, pos );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::UpdateZoomSpeed( propertystore::PropertyPtr& )
+{
+	double speed = boost::any_cast<double>( GetPropertyValue( "Camera_ZoomSpeed" ) );
+	
+	m_updateZoomSpeed.signal( speed );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::SaveChanges( propertystore::PropertyPtr& )
