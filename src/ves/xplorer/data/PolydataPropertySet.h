@@ -75,7 +75,7 @@ protected:
 	//Update particle data
 	void UpdateParticleData( propertystore::PropertyPtr property );
 	//Update transient data options for particle data
-	void PolydataPropertySet::UpdateTransientDataOptions( propertystore::PropertyPtr property );
+	void UpdateTransientDataOptions( propertystore::PropertyPtr property );
     ///Create the skeleton
 	virtual void CreateSkeletonLfxDs();
     virtual void CreateSkeleton();
