@@ -71,16 +71,16 @@ INSTALLER_ROOT_DIR=$(mktemp -d /tmp/ves-installer-rootdir.XXXXXX)
 INSTALLER_PAYLOAD_DIR="${INSTALLER_ROOT_DIR}/installer/payload"
 INSTALLER_EXTRA_PAYLOAD_DIR="${INSTALLER_PAYLOAD_DIR}/extra"
 
-if [ ! -e "${VES_INSTALL_PREFIX}/include/ves/VEConfig.h" ]
+if [ ! -e "${VES_SOURCE_TREE_DIR}/src/ves/VEConfig.h" ]
 then
     echo "ERROR! Can't find VEConfig.h, bailing out!"
     rm -rf ${INSTALLER_ROOT_DIR}
     exit 1
 fi
 
-ves_major_version=$(awk '/VES_MAJOR_VERSION/ {print $3;}' ${VES_INSTALL_PREFIX}/include/ves/VEConfig.h)
-ves_minor_version=$(awk '/VES_MINOR_VERSION/ {print $3;}' ${VES_INSTALL_PREFIX}/include/ves/VEConfig.h)
-ves_patch_version=$(awk '/VES_PATCH_VERSION/ {print $3;}' ${VES_INSTALL_PREFIX}/include/ves/VEConfig.h)
+ves_major_version=$(awk '/VES_MAJOR_VERSION/ {print $3;}' ${VES_SOURCE_TREE_DIR}/src/ves/VEConfig.h)
+ves_minor_version=$(awk '/VES_MINOR_VERSION/ {print $3;}' ${VES_SOURCE_TREE_DIR}/src/ves/VEConfig.h)
+ves_patch_version=$(awk '/VES_PATCH_VERSION/ {print $3;}' ${VES_SOURCE_TREE_DIR}/src/ves/VEConfig.h)
 
 svn_revision_number=$(svnversion ${VES_SOURCE_TREE_DIR})
 
