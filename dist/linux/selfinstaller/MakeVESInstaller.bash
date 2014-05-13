@@ -82,16 +82,7 @@ ves_major_version=$(awk '/VES_MAJOR_VERSION/ {print $3;}' ${VES_SOURCE_TREE_DIR}
 ves_minor_version=$(awk '/VES_MINOR_VERSION/ {print $3;}' ${VES_SOURCE_TREE_DIR}/src/ves/VEConfig.h)
 ves_patch_version=$(awk '/VES_PATCH_VERSION/ {print $3;}' ${VES_SOURCE_TREE_DIR}/src/ves/VEConfig.h)
 
-svn_revision_number=$(svnversion ${VES_SOURCE_TREE_DIR})
-
-if [[ "${svn_revision_number}" == *:* ]]
-then
-    echo "ERROR!. svnversion reports that your working copy at"
-    echo "${VES_SOURCE_TREE_DIR} is a mixed-revision working copy."
-    echo "Update your working copy and try again."
-    rm -rf ${INSTALLER_ROOT_DIR}
-    exit 1
-fi 
+git_revision=$(git --git-dir ${VES_SOURCE_TREE_DIR}/.git rev-parse HEAD | cut -c1-10)
 
 if [ ! -z "${extra_filename_string}" ]
 then
@@ -99,7 +90,7 @@ then
     extra_filename_string="-${extra_filename_string}"
 fi
 
-installer_file_name="VE-SuiteInstall-${ves_major_version}.${ves_minor_version}.${ves_patch_version}-r${svn_revision_number}${extra_filename_string}.bash"
+installer_file_name="VE-SuiteInstall-${ves_major_version}.${ves_minor_version}.${ves_patch_version}-${git_revision}${extra_filename_string}.bash"
 
 echo "Creating temporary directory structure at ${INSTALLER_ROOT_DIR}..."
 mkdir -p ${INSTALLER_EXTRA_PAYLOAD_DIR}
