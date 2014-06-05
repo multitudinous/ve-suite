@@ -43,20 +43,25 @@ then
     exit 1
 fi
 
-# check for 2.5 GiB of free space in /tmp
-if [ $(df -P /tmp | awk 'FNR == 2 {print $4}') -lt 2621440 ]
+if [ ! -d ~/.tmp ]
+then
+    mkdir ~/.tmp
+fi
+
+# check for 2.5 GiB of free space in ~/.tmp
+if [ $(df -P ~/.tmp | awk 'FNR == 2 {print $4}') -lt 2621440 ]
 then
     echo "ERROR!"
     echo "  The VE-Suite installer needs at least 2.5 GiB"
-    echo "  of free space in /tmp to decompress its payload."
-    echo "  Free some space on the volume containing /tmp"
+    echo "  of free space in ${HOME}/.tmp to decompress its payload."
+    echo "  Free some space on the volume containing ${HOME}/.tmp"
     echo "  and try again."
     exit 1
 fi
 
 echo "Decompressing..."
 
-DECOMPRESS_DIR=$(mktemp -d /tmp/ves-installer-decompress-dir.XXXXXX)
+DECOMPRESS_DIR=$(mktemp -d "${HOME}/.tmp/ves-installer-decompress-dir.XXXXXX")
 ARCHIVE=$(awk '/^__ARCHIVE_BELOW_THIS_LINE__/ { print NR + 1; exit 0; }' $0)
 
 tail -n+${ARCHIVE} $0 | bzcat | tar x -C ${DECOMPRESS_DIR}
