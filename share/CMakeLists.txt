@@ -94,7 +94,7 @@ install(
     PATTERN ".DS_Store" EXCLUDE
 )
 
-# Tectures for the osgEphemeris library
+# Textures for the osgEphemeris library
 install(
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/osg-textures/
     DESTINATION ${shareRoot}
@@ -108,6 +108,14 @@ install(
 add_subdirectory(examples)
 #add_subdirectory(tools)
 
-# Directories still left to complete
-    #examples
-    #scripts
+# icons and .desktop files for Linux (ignore everything else for now)
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+    DESTINATION ${shareRoot}
+    FILES_MATCHING
+    PATTERN "*.png"
+    PATTERN "*.xml"
+    PATTERN "*.desktop"
+    PATTERN ".DS_Store" EXCLUDE
+)
+
