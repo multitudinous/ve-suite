@@ -122,6 +122,12 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC osgQtTree)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_open_xml)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer_default)
 
+# explicitly link to the pthread library on Linux
+# fixes link failure for ves_xplorer with GCC 4.7
+if( ${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND CMAKE_COMPILER_IS_GNUCXX )
+    target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC pthread)
+endif()
+
 include(VESModuleInstall)
 
 #install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
