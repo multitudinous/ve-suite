@@ -17,20 +17,21 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="ves::conductor::VesTreePropertyBrowser" name="preferencesPropertyBrowser" native="true">
-       <widget class="QPushButton" name="btnPrefPropsSaveCamera">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>270</y>
-          <width>131</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Save Camera State</string>
-        </property>
-       </widget>
+      <widget class="ves::conductor::VesTreePropertyBrowser" name="preferencesPropertyBrowser" native="true"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnPrefPropsSaveCamera">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>270</y>
+         <width>131</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save Camera State</string>
+       </property>
       </widget>
      </item>
     </layout>
