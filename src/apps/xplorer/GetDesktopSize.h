@@ -77,7 +77,7 @@ std::pair< int, int > GetDesktopSize()
     int w = 0, h = 0;
     getScreenSize(&w, &h);
     getRootWindowSize(&w, &h);
-    desktopSize = std::make_pair< int, int >( w, h );
+    desktopSize = std::make_pair( w, h );
 #elif defined( VPR_OS_Darwin )
     desktopSize = getScreenResolution();
 #endif
