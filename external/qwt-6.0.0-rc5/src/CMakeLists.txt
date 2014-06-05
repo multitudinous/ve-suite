@@ -7,6 +7,16 @@ add_definitions(-DQWT_NO_SVG)
 file( GLOB srcs "*.cpp" )
 file( GLOB hdrs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h" )
 
+# workaround for conflicts between C++11 and the connect() macro
+# in old Qt releases
+# see "User-defined literals and whitespace" at:
+# http://gcc.gnu.org/gcc-4.7/porting_to.html
+if( CMAKE_COMPILER_IS_GNUCXX )
+    set_source_files_properties( ${srcs}
+                                 PROPERTIES
+                                 COMPILE_FLAGS "-std=c++03" )
+endif()
+
 #set(VES_PRIVATE_HEADERS ${hdrs})
 set(VES_PUBLIC_HEADERS ${hdrs} )
 
