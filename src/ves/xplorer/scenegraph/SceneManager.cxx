@@ -696,7 +696,23 @@ void SceneManager::PrePhysicsLatePreFrameUpdate()
                                   m_deltaHeadLocation.mData[ 1 ],
                                   m_deltaHeadLocation.mData[ 2 ] );
 
-    m_viewMatrix->setPosition( m_viewMatrix->getPosition() + deltaHeadPosition );
+    // extract the orientation component of the current view matrix
+    osg::Matrixd viewOrientationMatrix =  m_viewMatrix->getOrientationMatrix();
+
+    // the viewOrientationMatrix will have the results of any nav rotations done with the
+    // joystick/gamepad "baked" into it. Since navigation can change the reference coordinate
+    // frame, we'll need to apply the inverse rotation to the head tracker position delta to
+    // keep things consistent. Head tracker positions are in "Z-up" space, so we also need
+    // to apply the same Z-up transformation to the inverted view orientation matrix.
+    osg::Matrixd inverseViewOrientationMatrix = osg::Matrixd::inverse( viewOrientationMatrix )
+                                                * osg::Matrixd( m_zUpTransform.getData() );
+
+    // we can think of deltaHeadPosition as a "direction vector" whose magnitude is the amount
+    // the head has moved since the last frame. Before adding the delta to our view matrix, we
+    // need to apply the counter-rotation we calculated above to it.
+    osg::Vec3d rotatedDeltaHeadPosition = inverseViewOrientationMatrix * deltaHeadPosition;
+
+    m_viewMatrix->setPosition( m_viewMatrix->getPosition() + rotatedDeltaHeadPosition );
 
     ///This is the distance from the VR Juggler defined ground plane to the
     ///users head so we do not care what coordinate system they are relative to.
