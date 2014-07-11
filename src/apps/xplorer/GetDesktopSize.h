@@ -37,6 +37,8 @@ int getRootWindowSize(int *w, int *h)
     return 0;
 }
 
+// This code is redundant. Only getRootWindowSize() is actually being used. 
+/*
 int getScreenSize(int *w, int*h)
 {
     
@@ -61,6 +63,7 @@ int getScreenSize(int *w, int*h)
     XCloseDisplay( pdsp );
     return 0;
 }
+*/
 #endif
 
 std::pair< int, int > GetDesktopSize()
@@ -75,7 +78,7 @@ std::pair< int, int > GetDesktopSize()
     desktopSize = std::pair< int, int >( desktopWidth, desktopHeight );
 #elif defined( VPR_OS_Linux )
     int w = 0, h = 0;
-    getScreenSize(&w, &h);
+    //getScreenSize(&w, &h);
     getRootWindowSize(&w, &h);
     desktopSize = std::make_pair( w, h );
 #elif defined( VPR_OS_Darwin )
