@@ -51,6 +51,9 @@ PreferencesTab::PreferencesTab( QWidget* parent ) :
 {
     ui->setupUi( this );
 
+    QPushButton *grab_button = qFindChild< QPushButton* >( this, "btnGrabCurrentCameraState" );
+    connect( grab_button, SIGNAL( clicked() ), this, SLOT( onSaveCamera() ) );
+
     m_propertySet = propertystore::PropertySetPtr( new ves::xplorer::data::PreferencesPropertySet() );
 
     m_propertySet->Save();
