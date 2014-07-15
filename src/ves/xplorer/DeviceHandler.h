@@ -177,8 +177,6 @@ public:
     ///Get the group node that is holding the devices
     osg::Group* GetDeviceGroup();
 
-	ves::xplorer::behavior::NavigationPtr GetNavigation();
-
 protected:
 
 private:

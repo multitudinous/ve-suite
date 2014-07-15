@@ -359,7 +359,3 @@ osg::Group* DeviceHandler::GetDeviceGroup()
     return m_deviceGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::behavior::NavigationPtr DeviceHandler::GetNavigation()
-{
-	return m_navSlot;
-}

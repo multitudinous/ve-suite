@@ -40,7 +40,6 @@
 
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/DeviceHandler.h>
-#include <ves/xplorer/behavior/Navigation.h>
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
@@ -127,10 +126,8 @@ void UpdateCamera( std::vector< double > const& view,  std::vector< double > con
 ////////////////////////////////////////////////////////////////////////////////
 void UpdateZoomSpeed( double speedFactor )
 {
-	ves::xplorer::behavior::NavigationPtr nav = ves::xplorer::DeviceHandler::instance()->GetNavigation();
-	if( !nav ) return;
-
-	nav->SetZoomSpeed( speedFactor );
+    ves::xplorer::scenegraph::SceneManager::instance()->
+        GetMxCoreViewMatrix().setMoveScale( osg::Vec3d( speedFactor, speedFactor, speedFactor ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
