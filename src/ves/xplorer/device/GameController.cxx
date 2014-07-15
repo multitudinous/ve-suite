@@ -145,7 +145,7 @@ void GameController::ConnectInterfaces( device::GameControllerCallbacks* const c
         m_analogAxis5EventInterface.addCallback<gadget::event::normalized_analog_event_tag>( boost::bind( &GameControllerCallbacks::OnAxis5Event, controller, _1 ) );
     
       //Setup Rumble
-     _speed = _rumble->createEffect(gadget::RumbleEffect::SINE);
+     //_speed = _rumble->createEffect(gadget::RumbleEffect::SINE);
      //std::cout << "*********************Try to create....****************" << std::endl;
      if( _speed )
      {
