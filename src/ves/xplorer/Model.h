@@ -249,15 +249,9 @@ public:
     ///Get the dataset handler for this model
     ves::xplorer::ModelDatasetHandler* GetModelDatasetHandler();
 
-	///Get the dataset handler for this model
-	void LoadPreferencesProperties( bool *pUseBg, std::vector< double > *pcolor, double cameraView[3], double cameraPos[3], double *zspeed );
-
 private:
     ///Slot called when the ves file has been loaded completely
     void VesFileLoaded( const std::string& filename );
-
-	///Helper routine to load a property double value from the db
-	double loadPropertyDouble(const char *tbl, const char *col, double defaultValue=0.0);
 
     vpr::Thread* loadDataTh;
     vpr::Mutex mValueLock;

@@ -774,15 +774,11 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
             ves::conductor::NetworkLoader* loader =
                 ves::conductor::NetworkLoader::createNetworkLoader();
             loader->LoadVesFile( file.string() );
-			OnVesLoaderFinished();
-
             // Destructor for loader is private; object autodeletes when done
             // processing.
 
             // Keep the absolute filepath since CWD may change out from under us
             m_saveFileName = fileNames.at( index );
-
-
         }
         // Remove the dot from the head of extension so we can compare to our
         // vectors of other file extensions
@@ -825,21 +821,6 @@ void MainWindow::onFileOpenSelected( const QStringList& fileNames )
         }
     }
 }
-////////////////////////////////////////////////////////////////////////////////
-void MainWindow::OnVesLoaderFinished()
-{
-	ves::xplorer::Model* activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-	if( !activeModel ) return;
-	if( !m_preferencesTab ) return;
-	bool useBgColor = false;
-	std::vector< double > color;
-	double cview[3], cpos[3], zspeed = 1.0;
-	activeModel->LoadPreferencesProperties( &useBgColor, &color, cview, cpos, &zspeed );
-
-	m_preferencesTab->SetBackgroundColorValues( useBgColor, color, false );
-	m_preferencesTab->SetCameraValues( cview, cpos, false );
-	m_preferencesTab->SetZoomSpeed( zspeed, true );
-} 
 ////////////////////////////////////////////////////////////////////////////////
 void MainWindow::LoadGeometryFile( std::string filename )
 {

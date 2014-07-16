@@ -109,39 +109,6 @@ PreferencesPropertySet::~PreferencesPropertySet()
 {
     ;
 }
-///////////////////////////////////////////////////////////////////// ///////////
-void PreferencesPropertySet::SetBackgroundColorValues( bool use, const std::vector<double> &color )
-{
-	GetProperty( "UsePreferredBackgroundColor" )->SetValue( use );
-
-    propertystore::PropertyPtr preferredBgColor = GetProperty( "UsePreferredBackgroundColor" );
-	EnableBackgroundColor( preferredBgColor );
-
-	GetProperty( "UsePreferredBackgroundColor_Red" )->SetValue( color[0] );
-	GetProperty( "UsePreferredBackgroundColor_Green" )->SetValue( color[1] );
-	GetProperty( "UsePreferredBackgroundColor_Blue" )->SetValue( color[2] );
-}
-////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::SetCameraValues( double view[3], double pos[3] )
-{
-	GetProperty( "Camera_ViewX" )->SetValue( view[0] );
-	GetProperty( "Camera_ViewY" )->SetValue( view[1] );
-	GetProperty( "Camera_ViewZ" )->SetValue( view[2] );
-	GetProperty( "Camera_PosX" )->SetValue( pos[0] );
-	GetProperty( "Camera_PosY" )->SetValue( pos[1] );
-	GetProperty( "Camera_PosZ" )->SetValue( pos[2] );
-
-    propertystore::PropertyPtr emptyProperty;
-	UpdateCamera( emptyProperty );
-}
-////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::SetZoomSpeed( double speed )
-{
-	GetProperty( "Camera_ZoomSpeed" )->SetValue( speed );
-
-    propertystore::PropertyPtr emptyProperty;
-	UpdateZoomSpeed( emptyProperty );
-}
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::CreateSkeleton()
 {

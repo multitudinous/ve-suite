@@ -63,10 +63,6 @@ public:
     ///Destructor
     virtual ~PreferencesPropertySet();
 
-	void SetBackgroundColorValues( bool use, const std::vector<double> &color );
-	void SetCameraValues( double view[3], double pos[3] );
-	void SetZoomSpeed( double speed );
-
 private:
     ///Enable method
     void EnableNearFarRatio( propertystore::PropertyPtr& property );

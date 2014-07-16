@@ -38,6 +38,8 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
+#include <switchwire/OptionalMacros.h>
+
 #include <iostream>
 
 namespace ves
@@ -53,6 +55,11 @@ PreferencesTab::PreferencesTab( QWidget* parent ) :
 
     QPushButton *grab_button = qFindChild< QPushButton* >( this, "btnGrabCurrentCameraState" );
     connect( grab_button, SIGNAL( clicked() ), this, SLOT( onSaveCamera() ) );
+
+    CONNECTSIGNAL_0( "%VesFileLoaded",
+                     void( std::string const & ),
+                     &PreferencesTab::reloadPreferencesPropertySet,
+                     m_connections, normal_Priority );
 
     m_propertySet = propertystore::PropertySetPtr( new ves::xplorer::data::PreferencesPropertySet() );
 
@@ -80,39 +87,41 @@ void PreferencesTab::changeEvent( QEvent* e )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesTab::SetBackgroundColorValues( bool use, const std::vector<double> &color, bool refreshGui )
-{
-	if( !m_propertySet ) return;
-
-	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->SetBackgroundColorValues( use, color );
-	if( refreshGui ) ui->preferencesPropertyBrowser->RefreshAllValues();
-}
-////////////////////////////////////////////////////////////////////////////////
-void PreferencesTab::SetCameraValues( double view[3], double pos[3], bool refreshGui )
-{
-	if( !m_propertySet ) return;
-
-	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->SetCameraValues( view, pos );
-	if( refreshGui ) ui->preferencesPropertyBrowser->RefreshAllValues();
-}
-////////////////////////////////////////////////////////////////////////////////
-void PreferencesTab::SetZoomSpeed( double speed, bool refreshGui )
-{
-	if( !m_propertySet ) return;
-
-	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->SetZoomSpeed( speed );
-	if( refreshGui ) ui->preferencesPropertyBrowser->RefreshAllValues();
-}
-////////////////////////////////////////////////////////////////////////////////
 void PreferencesTab::onSaveCamera()
 {
-	osgwMx::MxCore& viewmat =  ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
-	osg::Vec3d view = viewmat.getDir();
-	osg::Vec3d pos = viewmat.getPosition();
+    osgwMx::MxCore& viewmat =  ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
+    osg::Vec3d view = viewmat.getDir();
+    osg::Vec3d pos = viewmat.getPosition();
 
+    m_propertySet->GetProperty( "Camera_ViewX" )->SetValue( view[0] );
+    m_propertySet->GetProperty( "Camera_ViewY" )->SetValue( view[1] );
+    m_propertySet->GetProperty( "Camera_ViewZ" )->SetValue( view[2] );
+    m_propertySet->GetProperty( "Camera_PosX" )->SetValue( pos[0] );
+    m_propertySet->GetProperty( "Camera_PosY" )->SetValue( pos[1] );
+    m_propertySet->GetProperty( "Camera_PosZ" )->SetValue( pos[2] );
 
-	(( ves::xplorer::data::PreferencesPropertySet* ) m_propertySet.get() )->SetCameraValues( view._v, pos._v );
-	ui->preferencesPropertyBrowser->RefreshAllValues();
+    ui->preferencesPropertyBrowser->RefreshValues();
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesTab::reloadPreferencesPropertySet()
+{
+    ves::xplorer::data::DatabaseManager* db_manager = ves::xplorer::data::DatabaseManager::instance();
+
+    propertystore::PropertySetPtr prefs( new ves::xplorer::data::PreferencesPropertySet() );
+
+    if( db_manager->TableExists( "XplorerPreferences" ) )
+    {
+        std::vector< std::string > uuids = db_manager->GetStringVector( "XplorerPreferences", "uuid" );
+
+        prefs->SetUUID( uuids.back() );
+        prefs->Load();
+    }
+
+    m_propertySet = prefs;
+    m_propertySet->Save();
+
+    ui->preferencesPropertyBrowser->ParsePropertySet( m_propertySet );
+    ui->preferencesPropertyBrowser->RefreshValues();
 }
 
 } // namespace conductor

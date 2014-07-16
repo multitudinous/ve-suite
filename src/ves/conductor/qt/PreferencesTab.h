@@ -40,6 +40,7 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QModelIndex>
 
+#include <switchwire/ScopedConnectionList.h>
 
 namespace Ui
 {
@@ -67,12 +68,9 @@ public:
     PreferencesTab( QWidget* parent = 0 );
     ~PreferencesTab();
 
-	void SetBackgroundColorValues( bool use, const std::vector<double> &color, bool refreshGui=true );
-	void SetCameraValues( double view[3], double pos[3], bool refreshGui=true );
-	void SetZoomSpeed( double speed, bool refreshGui=true );
-
 protected:
     void changeEvent( QEvent* e );
+    void reloadPreferencesPropertySet();
 
 protected Q_SLOTS:
 	void onSaveCamera();
@@ -81,7 +79,7 @@ private:
     Ui::PreferencesTab* ui;
 
     propertystore::PropertySetPtr m_propertySet;
-
+    switchwire::ScopedConnectionList m_connections;
     //PropertyBrowser* m_featureBrowser;
 };
 

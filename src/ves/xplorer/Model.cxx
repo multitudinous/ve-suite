@@ -831,58 +831,5 @@ void Model::VesFileLoaded( const std::string& filename )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-double Model::loadPropertyDouble(const char *tbl, const char *col, double defaultValue)
-{
-	if( !ves::xplorer::data::DatabaseManager::instance()->TableExists( tbl ) ) return defaultValue;
-	std::vector<std::string> res = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( tbl, col );
-	if( res.empty() ) return defaultValue;
-
-	return atof( res[res.size()-1].c_str() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Model::LoadPreferencesProperties( bool *pUseBg, std::vector< double > *pcolor, double cameraView[3], double cameraPos[3], double *zspeed )
-{
-	*pUseBg = false;
-	*zspeed = 1.0;
-
-	xplorer::eventmanager::EventFactory* factory = xplorer::eventmanager::EventFactory::instance();
-
-	const char tbl[] = "XplorerPreferences";
-
-	std::vector< double > color;
-	pcolor->push_back(0);
-	pcolor->push_back(0);
-	pcolor->push_back(0);
-	pcolor->push_back(1);
-
-	// load camera settings
-	cameraView[0] = loadPropertyDouble( tbl, "Camera_ViewX");
-	cameraView[1] = loadPropertyDouble( tbl, "Camera_ViewY");
-	cameraView[2] = loadPropertyDouble( tbl, "Camera_ViewZ");
-	cameraPos[0] = loadPropertyDouble( tbl, "Camera_PosX");
-	cameraPos[1] = loadPropertyDouble( tbl, "Camera_PosY");
-	cameraPos[2] = loadPropertyDouble( tbl, "Camera_PosZ");
-
-	// load zoom speed setting
-	*zspeed = loadPropertyDouble( tbl, "Camera_ZoomSpeed");
-
-	// load color settings
-	(*pcolor)[0] = loadPropertyDouble( tbl, "UsePreferredBackgroundColor_Red");
-	(*pcolor)[1] = loadPropertyDouble( tbl, "UsePreferredBackgroundColor_Green");
-	(*pcolor)[2] = loadPropertyDouble( tbl, "UsePreferredBackgroundColor_Blue");
-
-	if( !ves::xplorer::data::DatabaseManager::instance()->TableExists( tbl ) ) return;
-
-
-	// note: always get the last item in the vector as multiple entries are inserted in chronological order, the last, being the most recent.
-	std::vector<std::string> res = ves::xplorer::data::DatabaseManager::instance()->GetStringVector( tbl, "UsePreferredBackgroundColor" );
-	if( !res.empty() || !res[res.size()-1].compare( "1" ) )
-	{
-		// use preferred background color
-		*pUseBg = true;
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
 } // end ves
