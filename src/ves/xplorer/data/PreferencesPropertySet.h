@@ -72,11 +72,11 @@ private:
     void EnableDraggerScaling( propertystore::PropertyPtr& property );
 
     ///Relay method for passing signals on to xplorer
-    void UpdateBackgroundColor( propertystore::PropertyPtr& property );
+    void PropagateBackgroundColorChanged();
     ///Relay method for passing signals on to xplorer
-    void UpdateCamera( propertystore::PropertyPtr& property );
+    void PropagateCameraPositionOrientationChanged();
     ///Relay method for passing signals on to xplorer
-    void UpdateZoomSpeed( propertystore::PropertyPtr& property );
+    void PropagateCameraMoveScaleFactorChanged();
     ///Relay method for passing signals on to xplorer
     //void UpdateNavEqualZero( propertystore::PropertyPtr property );
     ///Relay method for passing signals on to xplorer
@@ -90,9 +90,9 @@ private:
     ///Relay method for passing signals on to xplorer
     //void UpdateScreenAlignedNormals( propertystore::PropertyPtr property );
     ///Relay method for passing signals on to xplorer
-    void UpdateDraggerScaling( propertystore::PropertyPtr& property );
+    void PropagateDraggerScalingChanged();
     ///Relay method for passing signals on to xplorer
-    void UpdateNearFarRatio( propertystore::PropertyPtr& property );
+    void PropagateNearFarRatioChanged();
     ///Relay method for passing signals on to xplorer
     //void UpdateLODScaling( propertystore::PropertyPtr property );
     void SaveChanges( propertystore::PropertyPtr& property );

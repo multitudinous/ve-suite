@@ -138,7 +138,7 @@ void PreferencesPropertySet::CreateSkeleton()
     SetPropertyAttribute( "NearFarRatio_Ratio", "minimumValue", 0.000000 );
     SetPropertyAttribute( "NearFarRatio_Ratio", "maximumValue", 1.000000 );
     GetProperty( "NearFarRatio_Ratio" )->SetDisabled();
-    GetProperty( "NearFarRatio_Ratio" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateNearFarRatio, this, _1 ) );
+    GetProperty( "NearFarRatio_Ratio" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateNearFarRatioChanged, this ) );
     GetProperty( "NearFarRatio_Ratio" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
     SetPropertyAttribute( "NearFarRatio_Ratio", "DisplayPrecision", 8 );
 
@@ -154,7 +154,7 @@ void PreferencesPropertySet::CreateSkeleton()
     SetPropertyAttribute( "DraggerScaling_Scale", "minimumValue", 0.00 );
     SetPropertyAttribute( "DraggerScaling_Scale", "maximumValue", 100.00 );
     GetProperty( "DraggerScaling_Scale" )->SetDisabled();
-    GetProperty( "DraggerScaling_Scale" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateDraggerScaling, this, _1 ) );
+    GetProperty( "DraggerScaling_Scale" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateDraggerScalingChanged, this ) );
     GetProperty( "DraggerScaling_Scale" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
 
@@ -169,21 +169,21 @@ void PreferencesPropertySet::CreateSkeleton()
     SetPropertyAttribute( "UsePreferredBackgroundColor_Red", "minimumValue", 0.00 );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Red", "maximumValue", 1.00 );
     GetProperty( "UsePreferredBackgroundColor_Red" )->SetDisabled();
-    GetProperty( "UsePreferredBackgroundColor_Red" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateBackgroundColor, this, _1 ) );
+    GetProperty( "UsePreferredBackgroundColor_Red" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateBackgroundColorChanged, this ) );
     GetProperty( "UsePreferredBackgroundColor_Red" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
     AddProperty( "UsePreferredBackgroundColor_Green", 0.0, "Green" );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Green", "minimumValue", 0.00 );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Green", "maximumValue", 1.00 );
     GetProperty( "UsePreferredBackgroundColor_Green" )->SetDisabled();
-    GetProperty( "UsePreferredBackgroundColor_Green" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateBackgroundColor, this, _1 ) );
+    GetProperty( "UsePreferredBackgroundColor_Green" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateBackgroundColorChanged, this ) );
     GetProperty( "UsePreferredBackgroundColor_Green" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
     AddProperty( "UsePreferredBackgroundColor_Blue", 0.0, "Blue" );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Blue", "minimumValue", 0.00 );
     SetPropertyAttribute( "UsePreferredBackgroundColor_Blue", "maximumValue", 1.00 );
     GetProperty( "UsePreferredBackgroundColor_Blue" )->SetDisabled();
-    GetProperty( "UsePreferredBackgroundColor_Blue" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateBackgroundColor, this, _1 ) );
+    GetProperty( "UsePreferredBackgroundColor_Blue" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateBackgroundColorChanged, this ) );
     GetProperty( "UsePreferredBackgroundColor_Blue" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
 
@@ -341,15 +341,15 @@ void PreferencesPropertySet::CreateSkeleton()
 
             {
                 AddProperty( "Camera_Position_X", 0.0, "x" );
-                GetProperty( "Camera_Position_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_Position_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateCameraPositionOrientationChanged, this ) );
                 GetProperty( "Camera_Position_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
                 AddProperty( "Camera_Position_Y", 0.0, "y" );
-                GetProperty( "Camera_Position_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_Position_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateCameraPositionOrientationChanged, this ) );
                 GetProperty( "Camera_Position_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
                 AddProperty( "Camera_Position_Z", 0.0, "z" );
-                GetProperty( "Camera_Position_Z" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_Position_Z" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateCameraPositionOrientationChanged, this ) );
                 GetProperty( "Camera_Position_Z" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
             }
 
@@ -359,21 +359,21 @@ void PreferencesPropertySet::CreateSkeleton()
 
             {
                 AddProperty( "Camera_ViewDirection_X", 0.0, "x" );
-                GetProperty( "Camera_ViewDirection_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_ViewDirection_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateCameraPositionOrientationChanged, this ) );
                 GetProperty( "Camera_ViewDirection_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
                 AddProperty( "Camera_ViewDirection_Y", 0.0, "y" );
-                GetProperty( "Camera_ViewDirection_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_ViewDirection_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateCameraPositionOrientationChanged, this ) );
                 GetProperty( "Camera_ViewDirection_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
                 AddProperty( "Camera_ViewDirection_Z", 0.0, "z" );
-                GetProperty( "Camera_ViewDirection_Z" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_ViewDirection_Z" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateCameraPositionOrientationChanged, this ) );
                 GetProperty( "Camera_ViewDirection_Z" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
             }
         }
 
         AddProperty( "Camera_MoveScaleFactor", 1.0, "Movement Scale Factor" );
-        GetProperty( "Camera_MoveScaleFactor" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateZoomSpeed, this, _1 ) );
+        GetProperty( "Camera_MoveScaleFactor" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateCameraMoveScaleFactorChanged, this ) );
         GetProperty( "Camera_MoveScaleFactor" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         SetPropertyAttribute( "Camera_MoveScaleFactor", "minimumValue", 0.01 );
         SetPropertyAttribute( "Camera_MoveScaleFactor", "maximumValue", 100.00 );
@@ -393,8 +393,7 @@ void PreferencesPropertySet::EnableNearFarRatio( propertystore::PropertyPtr& pro
         GetProperty( "NearFarRatio_Ratio" )->SetDisabled();
     }
 
-    propertystore::PropertyPtr ptr = GetProperty( "NearFarRatio_Ratio" );
-    UpdateNearFarRatio( ptr );
+    PropagateNearFarRatioChanged();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::EnableBackgroundColor( propertystore::PropertyPtr& property )
@@ -414,7 +413,7 @@ void PreferencesPropertySet::EnableBackgroundColor( propertystore::PropertyPtr& 
         GetProperty( "UsePreferredBackgroundColor_Green" )->SetDisabled();
     }
 
-    UpdateBackgroundColor( property );
+    PropagateBackgroundColorChanged();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::EnableDraggerScaling( propertystore::PropertyPtr& property )
@@ -430,11 +429,10 @@ void PreferencesPropertySet::EnableDraggerScaling( propertystore::PropertyPtr& p
         GetProperty( "DraggerScaling_Scale" )->SetDisabled();
     }
 
-    propertystore::PropertyPtr ptr = GetProperty( "DraggerScaling_Scale" );
-    UpdateDraggerScaling( ptr );
+    PropagateDraggerScalingChanged();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateBackgroundColor( propertystore::PropertyPtr& )
+void PreferencesPropertySet::PropagateBackgroundColorChanged()
 {
     double r = boost::any_cast<double>( GetPropertyValue( "UsePreferredBackgroundColor_Red" ) );
     double g = boost::any_cast<double>( GetPropertyValue( "UsePreferredBackgroundColor_Green" ) );
@@ -447,12 +445,14 @@ void PreferencesPropertySet::UpdateBackgroundColor( propertystore::PropertyPtr& 
     m_backgroundColor->signal( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateCamera( propertystore::PropertyPtr& )
+void PreferencesPropertySet::PropagateCameraPositionOrientationChanged()
 {
     std::vector< double > view, pos;
+
     view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewDirection_X" ) ) );
     view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewDirection_Y" ) ) );
     view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewDirection_Z" ) ) );
+
     pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_Position_X" ) ) );
     pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_Position_Y" ) ) );
     pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_Position_Z" ) ) );
@@ -460,7 +460,7 @@ void PreferencesPropertySet::UpdateCamera( propertystore::PropertyPtr& )
     m_updateCamera->signal( view, pos );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateZoomSpeed( propertystore::PropertyPtr& )
+void PreferencesPropertySet::PropagateCameraMoveScaleFactorChanged()
 {
     double speed = boost::any_cast<double>( GetPropertyValue( "Camera_MoveScaleFactor" ) );
 
@@ -472,13 +472,15 @@ void PreferencesPropertySet::SaveChanges( propertystore::PropertyPtr& )
     Save();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateDraggerScaling( propertystore::PropertyPtr& property )
+void PreferencesPropertySet::PropagateDraggerScalingChanged()
 {
-    m_draggerScaling.signal( boost::any_cast<bool>( GetPropertyValue( "DraggerScaling" ) ), boost::any_cast<double>( property->GetValue() ) );
+    m_draggerScaling.signal( boost::any_cast<bool>( GetPropertyValue( "DraggerScaling" ) ),
+                             boost::any_cast<double>( GetPropertyValue( "DraggerScaling_Scale" ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::UpdateNearFarRatio( propertystore::PropertyPtr& property )
+void PreferencesPropertySet::PropagateNearFarRatioChanged()
 {
-    m_nearFarRatio.signal( boost::any_cast<bool>( GetPropertyValue( "NearFarRatio" ) ), boost::any_cast<double>( property->GetValue() ) );
+    m_nearFarRatio.signal( boost::any_cast<bool>( GetPropertyValue( "NearFarRatio" ) ),
+                           boost::any_cast<double>( GetPropertyValue( "NearFarRatio_Ratio" ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
