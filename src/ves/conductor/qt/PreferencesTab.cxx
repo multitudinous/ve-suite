@@ -54,7 +54,7 @@ PreferencesTab::PreferencesTab( QWidget* parent ) :
     ui->setupUi( this );
 
     QPushButton *grab_button = qFindChild< QPushButton* >( this, "btnGrabCurrentCameraState" );
-    connect( grab_button, SIGNAL( clicked() ), this, SLOT( onSaveCamera() ) );
+    connect( grab_button, SIGNAL( clicked() ), this, SLOT( onGrabCurrentCameraState() ) );
 
     CONNECTSIGNAL_0( "VesFileLoaded",
                      void( std::string const & ),
@@ -87,7 +87,7 @@ void PreferencesTab::changeEvent( QEvent* e )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesTab::onSaveCamera()
+void PreferencesTab::onGrabCurrentCameraState()
 {
     osgwMx::MxCore& viewmat =  ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
     osg::Vec3d view = viewmat.getDir();
