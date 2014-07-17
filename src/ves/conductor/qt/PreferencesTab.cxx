@@ -113,8 +113,7 @@ void PreferencesTab::reloadPreferencesPropertySet()
     {
         std::vector< std::string > uuids = db_manager->GetStringVector( "XplorerPreferences", "uuid" );
 
-        prefs->SetUUID( uuids.back() );
-        prefs->Load();
+        prefs->LoadByKey( "uuid", uuids.back() );
     }
 
     m_propertySet = prefs;
