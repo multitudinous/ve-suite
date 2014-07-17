@@ -93,12 +93,12 @@ void PreferencesTab::onSaveCamera()
     osg::Vec3d view = viewmat.getDir();
     osg::Vec3d pos = viewmat.getPosition();
 
-    m_propertySet->GetProperty( "Camera_ViewX" )->SetValue( view[0] );
-    m_propertySet->GetProperty( "Camera_ViewY" )->SetValue( view[1] );
-    m_propertySet->GetProperty( "Camera_ViewZ" )->SetValue( view[2] );
-    m_propertySet->GetProperty( "Camera_PosX" )->SetValue( pos[0] );
-    m_propertySet->GetProperty( "Camera_PosY" )->SetValue( pos[1] );
-    m_propertySet->GetProperty( "Camera_PosZ" )->SetValue( pos[2] );
+    m_propertySet->GetProperty( "Camera_ViewDirection_X" )->SetValue( view[0] );
+    m_propertySet->GetProperty( "Camera_ViewDirection_Y" )->SetValue( view[1] );
+    m_propertySet->GetProperty( "Camera_ViewDirection_Z" )->SetValue( view[2] );
+    m_propertySet->GetProperty( "Camera_Position_X" )->SetValue( pos[0] );
+    m_propertySet->GetProperty( "Camera_Position_Y" )->SetValue( pos[1] );
+    m_propertySet->GetProperty( "Camera_Position_Z" )->SetValue( pos[2] );
 
     ui->preferencesPropertyBrowser->RefreshValues();
 }

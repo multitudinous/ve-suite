@@ -329,42 +329,55 @@ void PreferencesPropertySet::CreateSkeleton()
     }
 
     // camera properties
-    AddProperty( "Camera", boost::any(), "Camera" );
-    SetPropertyAttribute( "Camera", "isUIGroupOnly", true );
-    SetPropertyAttribute( "Camera", "setExpanded", true );
+    {
+        AddProperty( "Camera", boost::any(), "Camera" );
+        SetPropertyAttribute( "Camera", "isUIGroupOnly", true );
+        SetPropertyAttribute( "Camera", "setExpanded", true );
 
-    std::string propname;
-    propname = "Camera_ViewX";
-    AddProperty( propname, 0.0, "View X" );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-    propname = "Camera_ViewY";
-    AddProperty( propname, 0.0, "View Y" );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-    propname = "Camera_ViewZ";
-    AddProperty( propname, 0.0, "View Z" );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-    propname = "Camera_PosX";
-    AddProperty( propname, 0.0, "Position X" );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-    propname = "Camera_PosY";
-    AddProperty( propname, 0.0, "Position Y" );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-    propname = "Camera_PosZ";
-    AddProperty( propname, 0.0, "Position Z" );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        {
+            AddProperty( "Camera_Position", boost::any(), "Position" );
+            SetPropertyAttribute( "Camera_Position", "isUIGroupOnly", true );
+            SetPropertyAttribute( "Camera_Position", "setExpanded", true );
 
-    propname = "Camera_ZoomSpeed";
-    AddProperty( propname, 1.0, "Zoom Speed" );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateZoomSpeed, this, _1 ) );
-    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-    SetPropertyAttribute( propname, "minimumValue", 0.01 );
-    SetPropertyAttribute( propname, "maximumValue", 100.00 );
+            {
+                AddProperty( "Camera_Position_X", 0.0, "x" );
+                GetProperty( "Camera_Position_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_Position_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+
+                AddProperty( "Camera_Position_Y", 0.0, "y" );
+                GetProperty( "Camera_Position_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_Position_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+
+                AddProperty( "Camera_Position_Z", 0.0, "z" );
+                GetProperty( "Camera_Position_Z" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_Position_Z" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+            }
+
+            AddProperty( "Camera_ViewDirection", boost::any(), "View Direction" );
+            SetPropertyAttribute( "Camera_ViewDirection", "isUIGroupOnly", true );
+            SetPropertyAttribute( "Camera_ViewDirection", "setExpanded", true );
+
+            {
+                AddProperty( "Camera_ViewDirection_X", 0.0, "x" );
+                GetProperty( "Camera_ViewDirection_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_ViewDirection_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+
+                AddProperty( "Camera_ViewDirection_Y", 0.0, "y" );
+                GetProperty( "Camera_ViewDirection_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_ViewDirection_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+
+                AddProperty( "Camera_ViewDirection_Z", 0.0, "z" );
+                GetProperty( "Camera_ViewDirection_Z" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+                GetProperty( "Camera_ViewDirection_Z" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+            }
+        }
+
+        AddProperty( "Camera_MoveScaleFactor", 1.0, "Movement Scale Factor" );
+        GetProperty( "Camera_MoveScaleFactor" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateZoomSpeed, this, _1 ) );
+        GetProperty( "Camera_MoveScaleFactor" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+        SetPropertyAttribute( "Camera_MoveScaleFactor", "minimumValue", 0.01 );
+        SetPropertyAttribute( "Camera_MoveScaleFactor", "maximumValue", 100.00 );
+    }  
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::EnableNearFarRatio( propertystore::PropertyPtr& property )
@@ -437,19 +450,19 @@ void PreferencesPropertySet::UpdateBackgroundColor( propertystore::PropertyPtr& 
 void PreferencesPropertySet::UpdateCamera( propertystore::PropertyPtr& )
 {
     std::vector< double > view, pos;
-    view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewX" ) ) );
-    view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewY" ) ) );
-    view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewZ" ) ) );
-    pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosX" ) ) );
-    pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosY" ) ) );
-    pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosZ" ) ) );
+    view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewDirection_X" ) ) );
+    view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewDirection_Y" ) ) );
+    view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewDirection_Z" ) ) );
+    pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_Position_X" ) ) );
+    pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_Position_Y" ) ) );
+    pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_Position_Z" ) ) );
 
     m_updateCamera->signal( view, pos );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateZoomSpeed( propertystore::PropertyPtr& )
 {
-    double speed = boost::any_cast<double>( GetPropertyValue( "Camera_ZoomSpeed" ) );
+    double speed = boost::any_cast<double>( GetPropertyValue( "Camera_MoveScaleFactor" ) );
 
     m_updateZoomSpeed.signal( speed );
 }
