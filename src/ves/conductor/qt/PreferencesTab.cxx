@@ -56,7 +56,7 @@ PreferencesTab::PreferencesTab( QWidget* parent ) :
     QPushButton *grab_button = qFindChild< QPushButton* >( this, "btnGrabCurrentCameraState" );
     connect( grab_button, SIGNAL( clicked() ), this, SLOT( onSaveCamera() ) );
 
-    CONNECTSIGNAL_0( "%VesFileLoaded",
+    CONNECTSIGNAL_0( "VesFileLoaded",
                      void( std::string const & ),
                      &PreferencesTab::reloadPreferencesPropertySet,
                      m_connections, normal_Priority );
