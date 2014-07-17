@@ -76,15 +76,15 @@ PreferencesPropertySet::PreferencesPropertySet()
         m_backgroundColor = reinterpret_cast< ves::util::BoolAndDoubleVectorSignal_type* >
                             ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) );
     }
-	///Signal to Update Camera
+    ///Signal to Update Camera
     {
         m_updateCamera = reinterpret_cast< ves::util::TwoDoubleVectorsSignal_type* >
-                            ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UpdateCamera" ) );
+                         ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UpdateCamera" ) );
     }
 
-	///Signal to Update Zoom Speed
+    ///Signal to Update Zoom Speed
     {
-		std::string name( "PreferencesPropertySet" );
+        std::string name( "PreferencesPropertySet" );
         name += boost::lexical_cast<std::string>( this );
         name += ".UpdateZoomSpeed";
 
@@ -328,42 +328,42 @@ void PreferencesPropertySet::CreateSkeleton()
         m_liveObjects.push_back( p );
     }
 
-	// camera properties
-	AddProperty( "Camera", boost::any(), "Camera" );
+    // camera properties
+    AddProperty( "Camera", boost::any(), "Camera" );
     SetPropertyAttribute( "Camera", "isUIGroupOnly", true );
-	SetPropertyAttribute( "Camera", "setExpanded", true );
+    SetPropertyAttribute( "Camera", "setExpanded", true );
 
-	std::string propname;
-	propname = "Camera_ViewX";
-	AddProperty( propname, 0.0, "View X" );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-	propname = "Camera_ViewY";
-	AddProperty( propname, 0.0, "View Y" );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-	propname = "Camera_ViewZ";
-	AddProperty( propname, 0.0, "View Z" );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-	propname = "Camera_PosX";
-	AddProperty( propname, 0.0, "Position X" );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-	propname = "Camera_PosY";
-	AddProperty( propname, 0.0, "Position Y" );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-	propname = "Camera_PosZ";
-	AddProperty( propname, 0.0, "Position Z" );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    std::string propname;
+    propname = "Camera_ViewX";
+    AddProperty( propname, 0.0, "View X" );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    propname = "Camera_ViewY";
+    AddProperty( propname, 0.0, "View Y" );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    propname = "Camera_ViewZ";
+    AddProperty( propname, 0.0, "View Z" );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    propname = "Camera_PosX";
+    AddProperty( propname, 0.0, "Position X" );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    propname = "Camera_PosY";
+    AddProperty( propname, 0.0, "Position Y" );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    propname = "Camera_PosZ";
+    AddProperty( propname, 0.0, "Position Z" );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateCamera, this, _1 ) );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
-	propname = "Camera_ZoomSpeed";
-	AddProperty( propname, 1.0, "Zoom Speed" );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateZoomSpeed, this, _1 ) );
-	GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
-	SetPropertyAttribute( propname, "minimumValue", 0.01 );
+    propname = "Camera_ZoomSpeed";
+    AddProperty( propname, 1.0, "Zoom Speed" );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::UpdateZoomSpeed, this, _1 ) );
+    GetProperty( propname )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
+    SetPropertyAttribute( propname, "minimumValue", 0.01 );
     SetPropertyAttribute( propname, "maximumValue", 100.00 );
 }
 ////////////////////////////////////////////////////////////////////////////////
