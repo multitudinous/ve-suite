@@ -73,7 +73,7 @@ protected:
     void reloadPreferencesPropertySet();
 
 protected Q_SLOTS:
-	void onSaveCamera();
+    void onSaveCamera();
 
 private:
     Ui::PreferencesTab* ui;
