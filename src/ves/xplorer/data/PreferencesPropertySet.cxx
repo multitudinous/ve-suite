@@ -436,22 +436,22 @@ void PreferencesPropertySet::UpdateBackgroundColor( propertystore::PropertyPtr& 
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateCamera( propertystore::PropertyPtr& )
 {
-	std::vector< double > view, pos;
-	view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewX" ) ) );
-	view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewY" ) ) );
-	view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewZ" ) ) );
-	pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosX" ) ) );
-	pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosY" ) ) );
-	pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosZ" ) ) );
-	
-	m_updateCamera->signal( view, pos );
+    std::vector< double > view, pos;
+    view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewX" ) ) );
+    view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewY" ) ) );
+    view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewZ" ) ) );
+    pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosX" ) ) );
+    pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosY" ) ) );
+    pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_PosZ" ) ) );
+
+    m_updateCamera->signal( view, pos );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::UpdateZoomSpeed( propertystore::PropertyPtr& )
 {
-	double speed = boost::any_cast<double>( GetPropertyValue( "Camera_ZoomSpeed" ) );
-	
-	m_updateZoomSpeed.signal( speed );
+    double speed = boost::any_cast<double>( GetPropertyValue( "Camera_ZoomSpeed" ) );
+
+    m_updateZoomSpeed.signal( speed );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::SaveChanges( propertystore::PropertyPtr& )
