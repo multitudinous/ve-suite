@@ -109,7 +109,7 @@ private:
     ///Update signal
     ves::util::BoolAndDoubleVectorSignal_type* m_backgroundColor;
     ves::util::TwoDoubleVectorsSignal_type* m_updateCamera;
-    switchwire::Event< void ( double ) > m_updateZoomSpeed;
+    ves::util::DoubleSignal_type m_updateZoomSpeed;
 
     ///Update signal for check box preferences
     //    typedef switchwire::Event< void ( bool const& ) > CheckValueSignal_type;
