@@ -63,6 +63,8 @@ public:
     ///Destructor
     virtual ~PreferencesPropertySet();
 
+    void GetCurrentCameraState();
+
 private:
     ///Enable method
     void EnableNearFarRatio( propertystore::PropertyPtr& property );

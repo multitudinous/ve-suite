@@ -38,6 +38,7 @@
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
 #include <ves/xplorer/eventmanager/EventFactory.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <boost/bind.hpp>
 #include <boost/concept_check.hpp>
@@ -470,6 +471,20 @@ void PreferencesPropertySet::PropagateCameraMoveScaleFactorChanged()
 void PreferencesPropertySet::SaveChanges( propertystore::PropertyPtr& )
 {
     Save();
+}
+////////////////////////////////////////////////////////////////////////////////
+void PreferencesPropertySet::GetCurrentCameraState()
+{
+    osgwMx::MxCore& viewmat = ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
+    osg::Vec3d view = viewmat.getDir();
+    osg::Vec3d pos = viewmat.getPosition();
+
+    GetProperty( "Camera_ViewDirection_X" )->SetValue( view[0] );
+    GetProperty( "Camera_ViewDirection_Y" )->SetValue( view[1] );
+    GetProperty( "Camera_ViewDirection_Z" )->SetValue( view[2] );
+    GetProperty( "Camera_Position_X" )->SetValue( pos[0] );
+    GetProperty( "Camera_Position_Y" )->SetValue( pos[1] );
+    GetProperty( "Camera_Position_Z" )->SetValue( pos[2] );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::PropagateDraggerScalingChanged()

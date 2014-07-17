@@ -36,8 +36,6 @@
 #include <ves/xplorer/data/PreferencesPropertySet.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 
-#include <ves/xplorer/scenegraph/SceneManager.h>
-
 #include <switchwire/OptionalMacros.h>
 
 #include <iostream>
@@ -89,16 +87,7 @@ void PreferencesTab::changeEvent( QEvent* e )
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesTab::onGrabCurrentCameraState()
 {
-    osgwMx::MxCore& viewmat =  ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix();
-    osg::Vec3d view = viewmat.getDir();
-    osg::Vec3d pos = viewmat.getPosition();
-
-    m_propertySet->GetProperty( "Camera_ViewDirection_X" )->SetValue( view[0] );
-    m_propertySet->GetProperty( "Camera_ViewDirection_Y" )->SetValue( view[1] );
-    m_propertySet->GetProperty( "Camera_ViewDirection_Z" )->SetValue( view[2] );
-    m_propertySet->GetProperty( "Camera_Position_X" )->SetValue( pos[0] );
-    m_propertySet->GetProperty( "Camera_Position_Y" )->SetValue( pos[1] );
-    m_propertySet->GetProperty( "Camera_Position_Z" )->SetValue( pos[2] );
+    static_cast< ves::xplorer::data::PreferencesPropertySet* >( m_propertySet.get() )->GetCurrentCameraState();
 
     ui->preferencesPropertyBrowser->RefreshValues();
 }
