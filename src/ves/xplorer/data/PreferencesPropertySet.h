@@ -108,9 +108,9 @@ private:
     ves::util::BoolAndDoubleSignal_type m_draggerScaling;
 
     ///Update signal
-    ves::util::BoolAndDoubleVectorSignal_type* m_backgroundColor;
-    ves::util::TwoDoubleVectorsSignal_type* m_updateCamera;
-    ves::util::DoubleSignal_type m_updateZoomSpeed;
+    ves::util::BoolAndDoubleVectorSignal_type* m_backgroundColorChangedSignal;
+    ves::util::TwoDoubleVectorsSignal_type* m_cameraPositionOrientationChangedSignal;
+    ves::util::DoubleSignal_type m_cameraMoveScaleFactorChangedSignal;
 
     ///Update signal for check box preferences
     //    typedef switchwire::Event< void ( bool const& ) > CheckValueSignal_type;

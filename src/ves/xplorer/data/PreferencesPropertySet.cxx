@@ -74,23 +74,25 @@ PreferencesPropertySet::PreferencesPropertySet()
     }
     ///Signal for Background Color
     {
-        m_backgroundColor = reinterpret_cast< ves::util::BoolAndDoubleVectorSignal_type* >
-                            ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) );
+        m_backgroundColorChangedSignal = reinterpret_cast< ves::util::BoolAndDoubleVectorSignal_type* >
+                                         ( xplorer::eventmanager::EventFactory::instance()->
+                                           GetSignal( "PreferencesPropertySet.UsePreferredBackgroundColor" ) );
     }
     ///Signal to Update Camera
     {
-        m_updateCamera = reinterpret_cast< ves::util::TwoDoubleVectorsSignal_type* >
-                         ( xplorer::eventmanager::EventFactory::instance()->GetSignal( "PreferencesPropertySet.UpdateCamera" ) );
+        m_cameraPositionOrientationChangedSignal = reinterpret_cast< ves::util::TwoDoubleVectorsSignal_type* >
+                                                   ( xplorer::eventmanager::EventFactory::instance()->
+                                                     GetSignal( "PreferencesPropertySet.CameraPositionOrientationChanged" ) );
     }
 
-    ///Signal to Update Zoom Speed
+    ///Signal to Update Camera Move Scale Factor
     {
         std::string name( "PreferencesPropertySet" );
         name += boost::lexical_cast<std::string>( this );
-        name += ".UpdateZoomSpeed";
+        name += ".CameraMoveScaleFactorChanged";
 
         switchwire::EventManager::instance()->RegisterSignal(
-            ( &m_updateZoomSpeed ),
+            ( &m_cameraMoveScaleFactorChangedSignal ),
             name, switchwire::EventManager::unspecified_SignalType );
     }
 	
@@ -443,7 +445,7 @@ void PreferencesPropertySet::PropagateBackgroundColorChanged()
     colors.push_back( g );
     colors.push_back( b );
 
-    m_backgroundColor->signal( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
+    m_backgroundColorChangedSignal->signal( boost::any_cast<bool>( GetPropertyValue( "UsePreferredBackgroundColor" ) ), colors );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::PropagateCameraPositionOrientationChanged()
@@ -458,14 +460,14 @@ void PreferencesPropertySet::PropagateCameraPositionOrientationChanged()
     pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_Position_Y" ) ) );
     pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_Position_Z" ) ) );
 
-    m_updateCamera->signal( view, pos );
+    m_cameraPositionOrientationChangedSignal->signal( view, pos );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::PropagateCameraMoveScaleFactorChanged()
 {
-    double speed = boost::any_cast<double>( GetPropertyValue( "Camera_MoveScaleFactor" ) );
+    double scale = boost::any_cast<double>( GetPropertyValue( "Camera_MoveScaleFactor" ) );
 
-    m_updateZoomSpeed.signal( speed );
+    m_cameraMoveScaleFactorChangedSignal.signal( scale );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::SaveChanges( propertystore::PropertyPtr& )

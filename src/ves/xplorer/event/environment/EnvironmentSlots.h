@@ -60,10 +60,10 @@ void DisplayCoordinateSystem( bool const& display );
 void SetAmbientAudioFile( std::string const& filename );
 ///Set the clear colors
 void UpdateBackgroundColor( bool const enable, std::vector< double > const& color );
-///Update the camera
-void UpdateCamera( std::vector< double > const& view,  std::vector< double > const& pos );
+///Update the camera position/orientation
+void UpdateCameraPositionOrientation( std::vector< double > const& view,  std::vector< double > const& pos );
 ///Update the movement speed
-void UpdateZoomSpeed( double speed );
+void UpdateCameraMoveScaleFactor( double scale );
 /// ??
 void SetResetStartPosition( );
 

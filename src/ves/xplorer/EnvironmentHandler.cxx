@@ -246,14 +246,14 @@ EnvironmentHandler::EnvironmentHandler()
                            &ves::xplorer::event::environment::UpdateBackgroundColor,
                            m_connections, any_SignalType, normal_Priority );
 
-	CONNECTSIGNALS_STATIC( "%UpdateCamera",
+    CONNECTSIGNALS_STATIC( "%CameraPositionOrientationChanged",
                            void( std::vector< double > const & view, std::vector< double > const & pos ),
-                           &ves::xplorer::event::environment::UpdateCamera,
+                           &ves::xplorer::event::environment::UpdateCameraPositionOrientation,
                            m_connections, any_SignalType, normal_Priority );
 
-	CONNECTSIGNALS_STATIC( "%UpdateZoomSpeed",
-                           void( double speed ),
-                           &ves::xplorer::event::environment::UpdateZoomSpeed,
+    CONNECTSIGNALS_STATIC( "%CameraMoveScaleFactorChanged",
+                           void( double scale ),
+                           &ves::xplorer::event::environment::UpdateCameraMoveScaleFactor,
                            m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_STATIC( "%SetResetStartPosition",
