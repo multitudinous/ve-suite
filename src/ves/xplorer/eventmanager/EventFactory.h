@@ -122,6 +122,10 @@ private:
     ///Change the active model in xplorer by specifing a uuid
     ves::util::StringSignal_type m_changeActiveModelSignal;
     ///
+    ves::util::BoolAndDoubleSignal_type m_nearFarRatioChangedSignal;
+    ///
+    ves::util::BoolAndDoubleSignal_type m_draggerScalingChangedSignal;
+    ///
     ves::util::BoolAndDoubleVectorSignal_type m_changeBackgroundColorSignal;
     ///
     ves::util::TwoDoubleVectorsSignal_type m_cameraPositionOrientationChangedSignal;

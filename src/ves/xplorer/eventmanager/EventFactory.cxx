@@ -92,6 +92,16 @@ EventFactory::EventFactory():
                          switchwire::EventManager::unspecified_SignalType );
     m_signals[ "CADPropertySet.CADAnimation" ] = &m_dynamicsDataCADNodeSignal;
 
+    ///Signal for Near-Far Ratio
+    evm->RegisterSignal( &m_nearFarRatioChangedSignal, "PreferencesPropertySet.NearFarRatio",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "PreferencesPropertySet.NearFarRatio" ] = &m_nearFarRatioChangedSignal;
+
+    ///Signal for Dragger Scaling
+    evm->RegisterSignal( &m_draggerScalingChangedSignal, "PreferencesPropertySet.DraggerScaling",
+                         switchwire::EventManager::unspecified_SignalType );
+    m_signals[ "PreferencesPropertySet.DraggerScaling" ] = &m_draggerScalingChangedSignal;
+
     ///Signal for Background Color
     evm->RegisterSignal( &m_changeBackgroundColorSignal, "PreferencesPropertySet.UsePreferredBackgroundColor",
                          switchwire::EventManager::unspecified_SignalType );

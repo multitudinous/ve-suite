@@ -104,8 +104,8 @@ private:
     void CreateSkeleton();
 
     ///Update signal containing new seed points dimensions
-    ves::util::BoolAndDoubleSignal_type m_nearFarRatio;
-    ves::util::BoolAndDoubleSignal_type m_draggerScaling;
+    ves::util::BoolAndDoubleSignal_type* m_nearFarRatioChangedSignal;
+    ves::util::BoolAndDoubleSignal_type* m_draggerScalingChangedSignal;
 
     ///Update signal
     ves::util::BoolAndDoubleVectorSignal_type* m_backgroundColorChangedSignal;

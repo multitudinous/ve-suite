@@ -54,23 +54,15 @@ PreferencesPropertySet::PreferencesPropertySet()
 
     ///Signal for Near-Far Ratio
     {
-        std::string name( "PreferencesPropertySet" );
-        name += boost::lexical_cast<std::string>( this );
-        name += ".NearFarRatio";
-
-        switchwire::EventManager::instance()->RegisterSignal(
-            ( &m_nearFarRatio ),
-            name, switchwire::EventManager::unspecified_SignalType );
+        m_nearFarRatioChangedSignal = reinterpret_cast< ves::util::BoolAndDoubleSignal_type* >
+                                      ( xplorer::eventmanager::EventFactory::instance()->
+                                        GetSignal( "PreferencesPropertySet.NearFarRatio" ) );
     }
     ///Signal for DraggerScaling
     {
-        std::string name( "PreferencesPropertySet" );
-        name += boost::lexical_cast<std::string>( this );
-        name += ".DraggerScaling";
-
-        switchwire::EventManager::instance()->RegisterSignal(
-            ( &m_draggerScaling ),
-            name, switchwire::EventManager::unspecified_SignalType );
+        m_draggerScalingChangedSignal = reinterpret_cast< ves::util::BoolAndDoubleSignal_type* >
+                                        ( xplorer::eventmanager::EventFactory::instance()->
+                                          GetSignal( "PreferencesPropertySet.DraggerScaling" ) );
     }
     ///Signal for Background Color
     {
@@ -477,13 +469,13 @@ void PreferencesPropertySet::GetCurrentCameraState()
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::PropagateDraggerScalingChanged()
 {
-    m_draggerScaling.signal( boost::any_cast<bool>( GetPropertyValue( "DraggerScaling" ) ),
-                             boost::any_cast<double>( GetPropertyValue( "DraggerScaling_Scale" ) ) );
+    m_draggerScalingChangedSignal->signal( boost::any_cast<bool>( GetPropertyValue( "DraggerScaling" ) ),
+                                           boost::any_cast<double>( GetPropertyValue( "DraggerScaling_Scale" ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::PropagateNearFarRatioChanged()
 {
-    m_nearFarRatio.signal( boost::any_cast<bool>( GetPropertyValue( "NearFarRatio" ) ),
-                           boost::any_cast<double>( GetPropertyValue( "NearFarRatio_Ratio" ) ) );
+    m_nearFarRatioChangedSignal->signal( boost::any_cast<bool>( GetPropertyValue( "NearFarRatio" ) ),
+                                         boost::any_cast<double>( GetPropertyValue( "NearFarRatio_Ratio" ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
