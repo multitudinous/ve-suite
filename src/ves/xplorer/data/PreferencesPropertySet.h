@@ -110,7 +110,6 @@ private:
     ///Update signal
     ves::util::BoolAndDoubleVectorSignal_type* m_backgroundColorChangedSignal;
     ves::util::TwoDoubleVectorsSignal_type* m_cameraPositionOrientationChangedSignal;
-    ves::util::DoubleSignal_type m_cameraMoveScaleFactorChangedSignal;
 
     ///Update signal for check box preferences
     //    typedef switchwire::Event< void ( bool const& ) > CheckValueSignal_type;

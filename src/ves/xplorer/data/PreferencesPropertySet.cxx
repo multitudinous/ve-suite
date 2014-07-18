@@ -85,18 +85,6 @@ PreferencesPropertySet::PreferencesPropertySet()
                                                      GetSignal( "PreferencesPropertySet.CameraPositionOrientationChanged" ) );
     }
 
-    ///Signal to Update Camera Move Scale Factor
-    {
-        std::string name( "PreferencesPropertySet" );
-        name += boost::lexical_cast<std::string>( this );
-        name += ".CameraMoveScaleFactorChanged";
-
-        switchwire::EventManager::instance()->RegisterSignal(
-            ( &m_cameraMoveScaleFactorChangedSignal ),
-            name, switchwire::EventManager::unspecified_SignalType );
-    }
-	
-
     SetTypeName( "XplorerPreferences" );
     CreateSkeleton();
 }
@@ -376,11 +364,16 @@ void PreferencesPropertySet::CreateSkeleton()
         }
 
         AddProperty( "Camera_MoveScaleFactor", 1.0, "Movement Scale Factor" );
-        GetProperty( "Camera_MoveScaleFactor" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateCameraMoveScaleFactorChanged, this ) );
         GetProperty( "Camera_MoveScaleFactor" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
         SetPropertyAttribute( "Camera_MoveScaleFactor", "minimumValue", 0.01 );
         SetPropertyAttribute( "Camera_MoveScaleFactor", "maximumValue", 100.00 );
-    }  
+
+        propertystore::MakeLiveBasePtr p( new propertystore::MakeLive< double >( m_UUIDString,
+                                                                                 GetProperty( "Camera_MoveScaleFactor" ),
+                                                                                 "PreferencesPropertySet.CameraMoveScaleFactorChanged",
+                                                                                 false ) );
+        m_liveObjects.push_back( p );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::EnableNearFarRatio( propertystore::PropertyPtr& property )
@@ -461,13 +454,6 @@ void PreferencesPropertySet::PropagateCameraPositionOrientationChanged()
     pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_Position_Z" ) ) );
 
     m_cameraPositionOrientationChangedSignal->signal( view, pos );
-}
-////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::PropagateCameraMoveScaleFactorChanged()
-{
-    double scale = boost::any_cast<double>( GetPropertyValue( "Camera_MoveScaleFactor" ) );
-
-    m_cameraMoveScaleFactorChangedSignal.signal( scale );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PreferencesPropertySet::SaveChanges( propertystore::PropertyPtr& )
