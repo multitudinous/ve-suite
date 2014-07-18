@@ -110,6 +110,7 @@ void PreferencesTab::reloadPreferencesPropertySet()
 
     ui->preferencesPropertyBrowser->ParsePropertySet( m_propertySet );
     ui->preferencesPropertyBrowser->RefreshValues();
+    m_propertySet->EmitValueChangedSignals();
 }
 
 } // namespace conductor
