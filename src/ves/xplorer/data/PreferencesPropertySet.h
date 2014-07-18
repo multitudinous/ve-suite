@@ -104,9 +104,8 @@ private:
     void CreateSkeleton();
 
     ///Update signal containing new seed points dimensions
-    typedef switchwire::Event< void ( bool const&, double const& ) > UpdateCheckAndValueSignal_type;
-    UpdateCheckAndValueSignal_type m_nearFarRatio;
-    UpdateCheckAndValueSignal_type m_draggerScaling;
+    ves::util::BoolAndDoubleSignal_type m_nearFarRatio;
+    ves::util::BoolAndDoubleSignal_type m_draggerScaling;
 
     ///Update signal
     ves::util::BoolAndDoubleVectorSignal_type* m_backgroundColor;

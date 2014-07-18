@@ -72,6 +72,8 @@ typedef switchwire::Event< void ( const bool, const std::vector< double >& ) > B
 ///Signal for 2 vectors
 typedef switchwire::Event< void ( const std::vector< double >&, const std::vector< double >& ) > TwoDoubleVectorsSignal_type;
 
+///Signal for a bool and a double
+typedef switchwire::Event< void ( bool const&, double const& ) > BoolAndDoubleSignal_type;
 }
 }
 #endif
