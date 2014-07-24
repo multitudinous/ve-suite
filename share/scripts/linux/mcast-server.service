@@ -1,0 +1,11 @@
+[Unit]
+Description=mcast-server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/ves/bin/mcast-server
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
