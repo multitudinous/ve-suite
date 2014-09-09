@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:officeooo="http://openoffice.org/2009/office" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2" office:mimetype="application/vnd.oasis.opendocument.text">
- <office:meta><meta:initial-creator>Karl Svec</meta:initial-creator><meta:creation-date>2014-09-09T10:45:29.662843816</meta:creation-date><dc:date>2014-09-09T16:44:03.148684988</dc:date><dc:creator>Karl Svec</dc:creator><meta:editing-duration>PT4H49M32S</meta:editing-duration><meta:editing-cycles>35</meta:editing-cycles><meta:generator>LibreOffice/4.2.6.2$Linux_X86_64 LibreOffice_project/420$Build-2</meta:generator><meta:document-statistic meta:table-count="2" meta:image-count="7" meta:object-count="0" meta:page-count="4" meta:paragraph-count="62" meta:word-count="488" meta:character-count="2708" meta:non-whitespace-character-count="2289"/></office:meta>
+ <office:meta><meta:initial-creator>Karl Svec</meta:initial-creator><meta:creation-date>2014-09-09T10:45:29.662843816</meta:creation-date><dc:date>2014-09-09T16:46:59.297127113</dc:date><dc:creator>Karl Svec</dc:creator><meta:editing-duration>PT4H49M32S</meta:editing-duration><meta:editing-cycles>36</meta:editing-cycles><meta:generator>LibreOffice/4.2.6.2$Linux_X86_64 LibreOffice_project/420$Build-2</meta:generator><meta:document-statistic meta:table-count="2" meta:image-count="7" meta:object-count="0" meta:page-count="4" meta:paragraph-count="62" meta:word-count="488" meta:character-count="2708" meta:non-whitespace-character-count="2289"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
-   <config:config-item config:name="ViewAreaTop" config:type="long">30480</config:config-item>
+   <config:config-item config:name="ViewAreaTop" config:type="long">21802</config:config-item>
    <config:config-item config:name="ViewAreaLeft" config:type="long">0</config:config-item>
    <config:config-item config:name="ViewAreaWidth" config:type="long">32572</config:config-item>
    <config:config-item config:name="ViewAreaHeight" config:type="long">29159</config:config-item>
@@ -13,12 +13,12 @@
    <config:config-item-map-indexed config:name="Views">
     <config:config-item-map-entry>
      <config:config-item config:name="ViewId" config:type="string">view2</config:config-item>
-     <config:config-item config:name="ViewLeft" config:type="long">10026</config:config-item>
-     <config:config-item config:name="ViewTop" config:type="long">41499</config:config-item>
+     <config:config-item config:name="ViewLeft" config:type="long">9052</config:config-item>
+     <config:config-item config:name="ViewTop" config:type="long">37532</config:config-item>
      <config:config-item config:name="VisibleLeft" config:type="long">0</config:config-item>
-     <config:config-item config:name="VisibleTop" config:type="long">30480</config:config-item>
+     <config:config-item config:name="VisibleTop" config:type="long">21802</config:config-item>
      <config:config-item config:name="VisibleRight" config:type="long">32570</config:config-item>
-     <config:config-item config:name="VisibleBottom" config:type="long">59637</config:config-item>
+     <config:config-item config:name="VisibleBottom" config:type="long">50959</config:config-item>
      <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutColumns" config:type="short">0</config:config-item>
      <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
@@ -81,7 +81,7 @@
    <config:config-item config:name="ConsiderTextWrapOnObjPos" config:type="boolean">false</config:config-item>
    <config:config-item config:name="CurrentDatabaseCommandType" config:type="int">0</config:config-item>
    <config:config-item config:name="RedlineProtectionKey" config:type="base64Binary"/>
-   <config:config-item config:name="Rsid" config:type="int">2004523</config:config-item>
+   <config:config-item config:name="Rsid" config:type="int">2016940</config:config-item>
    <config:config-item config:name="PrintProspectRTL" config:type="boolean">false</config:config-item>
    <config:config-item config:name="PrinterSetup" config:type="base64Binary"/>
    <config:config-item config:name="AlignTabStopPosition" config:type="boolean">true</config:config-item>
@@ -466,104 +466,107 @@
   <style:style style:name="P6" style:family="paragraph" style:parent-style-name="Text_20_body">
    <style:text-properties style:font-name="Liberation Serif" officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e" style:font-name-asian="WenQuanYi Zen Hei Sharp" style:font-name-complex="Lohit Devanagari"/>
   </style:style>
-  <style:style style:name="P7" style:family="paragraph" style:parent-style-name="Heading_20_2">
-   <style:text-properties officeooo:rsid="0016da4d" officeooo:paragraph-rsid="0016da4d"/>
+  <style:style style:name="P7" style:family="paragraph" style:parent-style-name="Text_20_body">
+   <style:text-properties officeooo:rsid="001e962b" officeooo:paragraph-rsid="001e962b"/>
   </style:style>
   <style:style style:name="P8" style:family="paragraph" style:parent-style-name="Heading_20_2">
-   <style:text-properties officeooo:rsid="0019e628" officeooo:paragraph-rsid="0019e628"/>
+   <style:text-properties officeooo:rsid="0016da4d" officeooo:paragraph-rsid="0016da4d"/>
   </style:style>
   <style:style style:name="P9" style:family="paragraph" style:parent-style-name="Heading_20_2">
+   <style:text-properties officeooo:rsid="0019e628" officeooo:paragraph-rsid="0019e628"/>
+  </style:style>
+  <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Heading_20_2">
    <style:text-properties officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e"/>
   </style:style>
-  <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Heading_20_1">
+  <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Heading_20_1">
    <style:paragraph-properties fo:break-before="page"/>
    <style:text-properties officeooo:rsid="001618f1" officeooo:paragraph-rsid="001618f1"/>
   </style:style>
-  <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Heading_20_1">
+  <style:style style:name="P12" style:family="paragraph" style:parent-style-name="Heading_20_1">
    <style:text-properties officeooo:paragraph-rsid="001618f1"/>
   </style:style>
-  <style:style style:name="P12" style:family="paragraph" style:parent-style-name="Heading_20_1">
+  <style:style style:name="P13" style:family="paragraph" style:parent-style-name="Heading_20_1">
    <style:text-properties officeooo:rsid="001618f1" officeooo:paragraph-rsid="001618f1"/>
   </style:style>
-  <style:style style:name="P13" style:family="paragraph" style:parent-style-name="Title">
+  <style:style style:name="P14" style:family="paragraph" style:parent-style-name="Title">
    <style:text-properties officeooo:rsid="001618f1" officeooo:paragraph-rsid="001618f1"/>
-  </style:style>
-  <style:style style:name="P14" style:family="paragraph" style:parent-style-name="Table_20_Contents">
-   <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
-   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="12pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" officeooo:rsid="0018ea03" officeooo:paragraph-rsid="0018ea03" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-overline-style="none" style:text-overline-color="font-color"/>
   </style:style>
   <style:style style:name="P15" style:family="paragraph" style:parent-style-name="Table_20_Contents">
    <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
-   <style:text-properties fo:color="#000000" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="12pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-overline-style="none" style:text-overline-color="font-color"/>
+   <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="12pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" officeooo:rsid="0018ea03" officeooo:paragraph-rsid="0018ea03" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-overline-style="none" style:text-overline-color="font-color"/>
   </style:style>
   <style:style style:name="P16" style:family="paragraph" style:parent-style-name="Table_20_Contents">
    <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
-   <style:text-properties fo:color="#000000" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="12pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-overline-style="none" style:text-overline-color="font-color"/>
+   <style:text-properties fo:color="#000000" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="12pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-overline-style="none" style:text-overline-color="font-color"/>
   </style:style>
   <style:style style:name="P17" style:family="paragraph" style:parent-style-name="Table_20_Contents">
    <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+   <style:text-properties fo:color="#000000" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="12pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-overline-style="none" style:text-overline-color="font-color"/>
+  </style:style>
+  <style:style style:name="P18" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+   <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
    <style:text-properties fo:color="#000000" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="12pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" officeooo:rsid="001c6fc6" officeooo:paragraph-rsid="001c6fc6" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="normal" style:text-overline-style="none" style:text-overline-color="font-color"/>
   </style:style>
-  <style:style style:name="P18" style:family="paragraph" style:parent-style-name="Table_20_Heading">
+  <style:style style:name="P19" style:family="paragraph" style:parent-style-name="Table_20_Heading">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
    <style:text-properties fo:color="#eeeeee" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Liberation Serif" fo:font-size="12pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="bold" style:text-overline-style="none" style:text-overline-color="font-color"/>
   </style:style>
-  <style:style style:name="P19" style:family="paragraph" style:parent-style-name="Contents_20_2">
+  <style:style style:name="P20" style:family="paragraph" style:parent-style-name="Contents_20_2">
    <style:paragraph-properties>
     <style:tab-stops>
      <style:tab-stop style:position="6.7283in" style:type="right" style:leader-style="dotted" style:leader-text="."/>
     </style:tab-stops>
    </style:paragraph-properties>
   </style:style>
-  <style:style style:name="P20" style:family="paragraph" style:parent-style-name="Contents_20_1">
+  <style:style style:name="P21" style:family="paragraph" style:parent-style-name="Contents_20_1">
    <style:paragraph-properties>
     <style:tab-stops>
      <style:tab-stop style:position="6.9252in" style:type="right" style:leader-style="dotted" style:leader-text="."/>
     </style:tab-stops>
    </style:paragraph-properties>
   </style:style>
-  <style:style style:name="P21" style:family="paragraph" style:parent-style-name="Standard">
+  <style:style style:name="P22" style:family="paragraph" style:parent-style-name="Standard">
    <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
   </style:style>
-  <style:style style:name="P22" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
+  <style:style style:name="P23" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L1">
    <style:text-properties officeooo:rsid="001618f1" officeooo:paragraph-rsid="001618f1"/>
   </style:style>
-  <style:style style:name="P23" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2"/>
-  <style:style style:name="P24" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
-   <style:text-properties officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e"/>
-  </style:style>
-  <style:style style:name="P25" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L4">
-   <style:text-properties officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e"/>
-  </style:style>
-  <style:style style:name="P26" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L5">
-   <style:text-properties officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e"/>
-  </style:style>
-  <style:style style:name="P27" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
-   <style:text-properties style:font-name="Liberation Serif" officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e" style:font-name-asian="WenQuanYi Zen Hei Sharp" style:font-name-complex="Lohit Devanagari"/>
-  </style:style>
-  <style:style style:name="P28" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L4">
-   <style:text-properties style:font-name="Liberation Serif" officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e" style:font-name-asian="WenQuanYi Zen Hei Sharp" style:font-name-complex="Lohit Devanagari"/>
-  </style:style>
-  <style:style style:name="P29" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2">
+  <style:style style:name="P24" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2"/>
+  <style:style style:name="P25" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L2">
    <style:text-properties officeooo:rsid="001e962b" officeooo:paragraph-rsid="001e962b"/>
   </style:style>
-  <style:style style:name="P30" style:family="paragraph" style:parent-style-name="Heading_20_1">
-   <style:text-properties officeooo:rsid="001618f1" officeooo:paragraph-rsid="001618f1"/>
+  <style:style style:name="P26" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
+   <style:text-properties officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e"/>
+  </style:style>
+  <style:style style:name="P27" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L4">
+   <style:text-properties officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e"/>
+  </style:style>
+  <style:style style:name="P28" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L5">
+   <style:text-properties officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e"/>
+  </style:style>
+  <style:style style:name="P29" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L3">
+   <style:text-properties style:font-name="Liberation Serif" officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e" style:font-name-asian="WenQuanYi Zen Hei Sharp" style:font-name-complex="Lohit Devanagari"/>
+  </style:style>
+  <style:style style:name="P30" style:family="paragraph" style:parent-style-name="Text_20_body" style:list-style-name="L4">
+   <style:text-properties style:font-name="Liberation Serif" officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e" style:font-name-asian="WenQuanYi Zen Hei Sharp" style:font-name-complex="Lohit Devanagari"/>
   </style:style>
   <style:style style:name="P31" style:family="paragraph" style:parent-style-name="Heading_20_1">
+   <style:text-properties officeooo:rsid="001618f1" officeooo:paragraph-rsid="001618f1"/>
+  </style:style>
+  <style:style style:name="P32" style:family="paragraph" style:parent-style-name="Heading_20_1">
    <style:paragraph-properties fo:break-before="page"/>
    <style:text-properties officeooo:rsid="001618f1" officeooo:paragraph-rsid="001618f1"/>
   </style:style>
-  <style:style style:name="P32" style:family="paragraph" style:parent-style-name="Heading_20_2">
+  <style:style style:name="P33" style:family="paragraph" style:parent-style-name="Heading_20_2">
    <style:text-properties officeooo:rsid="0016da4d" officeooo:paragraph-rsid="0016da4d"/>
   </style:style>
-  <style:style style:name="P33" style:family="paragraph" style:parent-style-name="Heading_20_2">
+  <style:style style:name="P34" style:family="paragraph" style:parent-style-name="Heading_20_2">
    <style:text-properties officeooo:rsid="0019e628" officeooo:paragraph-rsid="0019e628"/>
   </style:style>
-  <style:style style:name="P34" style:family="paragraph" style:parent-style-name="Heading_20_2">
+  <style:style style:name="P35" style:family="paragraph" style:parent-style-name="Heading_20_2">
    <style:text-properties officeooo:rsid="001baf6e" officeooo:paragraph-rsid="001baf6e"/>
   </style:style>
-  <style:style style:name="P35" style:family="paragraph">
+  <style:style style:name="P36" style:family="paragraph">
    <style:paragraph-properties fo:text-align="center"/>
   </style:style>
   <style:style style:name="T1" style:family="text">
@@ -599,8 +602,11 @@
   <style:style style:name="T11" style:family="text">
    <style:text-properties style:font-weight-complex="normal"/>
   </style:style>
+  <style:style style:name="T12" style:family="text">
+   <style:text-properties officeooo:rsid="001ec6ac"/>
+  </style:style>
   <style:style style:name="fr1" style:family="graphic" style:parent-style-name="Frame">
-   <style:graphic-properties style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="center" style:horizontal-rel="page" fo:background-color="transparent" style:background-transparency="100%" draw:fill="solid" draw:fill-gradient-name="Gradient_5f_5f_5f_20_5f_5f_5f_1" fo:padding="0in" fo:border="none" style:shadow="none" draw:shadow-opacity="100%">
+   <style:graphic-properties style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="center" style:horizontal-rel="page" fo:background-color="transparent" style:background-transparency="100%" draw:fill="solid" draw:fill-gradient-name="Gradient_5f_5f_5f_5f_5f_5f_5f_20_5f_5f_5f_5f_5f_5f_5f_1" fo:padding="0in" fo:border="none" style:shadow="none" draw:shadow-opacity="100%">
     <style:background-image/>
    </style:graphic-properties>
   </style:style>
@@ -922,11 +928,11 @@
      <text:p text:style-name="Frame_20_contents"/>
     </draw:text-box>
    </draw:frame>
-   <draw:rect text:anchor-type="page" text:anchor-page-number="1" draw:z-index="7" draw:style-name="gr1" draw:text-style-name="P35" svg:width="8.5004in" svg:height="2.0949in" svg:x="0in" svg:y="0in">
+   <draw:rect text:anchor-type="page" text:anchor-page-number="1" draw:z-index="7" draw:style-name="gr1" draw:text-style-name="P36" svg:width="8.5004in" svg:height="2.0949in" svg:x="0in" svg:y="0in">
     <text:p/>
    </draw:rect>
-   <text:p text:style-name="P13"/>
-   <text:p text:style-name="P13">VE-Suite 3.0 Quick Reference Guide</text:p>
+   <text:p text:style-name="P14"/>
+   <text:p text:style-name="P14">VE-Suite 3.0 Quick Reference Guide</text:p>
    <text:table-of-content text:style-name="Sect1" text:protected="true" text:name="Table of Contents1">
     <text:table-of-content-source text:outline-level="10">
      <text:index-title-template text:style-name="Contents_20_Heading">Table of Contents</text:index-title-template>
@@ -1015,83 +1021,83 @@
      <text:index-title text:style-name="Sect1" text:name="Table of Contents1_Head">
       <text:p text:style-name="Contents_20_Heading">Table of Contents</text:p>
      </text:index-title>
-     <text:p text:style-name="P20"><text:a xlink:type="simple" xlink:href="#__RefHeading__110_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Introduction<text:tab/>2</text:a></text:p>
-     <text:p text:style-name="P19"><text:a xlink:type="simple" xlink:href="#__RefHeading__126_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Conventions Used in This Guide<text:tab/>2</text:a></text:p>
-     <text:p text:style-name="P20"><text:a xlink:type="simple" xlink:href="#__RefHeading__122_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Projects<text:tab/>2</text:a></text:p>
-     <text:p text:style-name="P19"><text:a xlink:type="simple" xlink:href="#__RefHeading__112_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Creating a Project<text:tab/>2</text:a></text:p>
-     <text:p text:style-name="P19"><text:a xlink:type="simple" xlink:href="#__RefHeading__114_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Loading CAD Files<text:tab/>2</text:a></text:p>
-     <text:p text:style-name="P19"><text:a xlink:type="simple" xlink:href="#__RefHeading__130_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Saving a Project<text:tab/>3</text:a></text:p>
-     <text:p text:style-name="P19"><text:a xlink:type="simple" xlink:href="#__RefHeading__153_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Opening a Saved Project<text:tab/>3</text:a></text:p>
-     <text:p text:style-name="P20"><text:a xlink:type="simple" xlink:href="#__RefHeading__116_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Shortcut Keys<text:tab/>3</text:a></text:p>
-     <text:p text:style-name="P20"><text:a xlink:type="simple" xlink:href="#__RefHeading__118_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Icon Legend<text:tab/>3</text:a></text:p>
+     <text:p text:style-name="P21"><text:a xlink:type="simple" xlink:href="#__RefHeading__110_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Introduction<text:tab/>2</text:a></text:p>
+     <text:p text:style-name="P20"><text:a xlink:type="simple" xlink:href="#__RefHeading__126_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Conventions Used in This Guide<text:tab/>2</text:a></text:p>
+     <text:p text:style-name="P21"><text:a xlink:type="simple" xlink:href="#__RefHeading__122_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Projects<text:tab/>2</text:a></text:p>
+     <text:p text:style-name="P20"><text:a xlink:type="simple" xlink:href="#__RefHeading__112_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Creating a Project<text:tab/>2</text:a></text:p>
+     <text:p text:style-name="P20"><text:a xlink:type="simple" xlink:href="#__RefHeading__114_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Loading CAD Files<text:tab/>2</text:a></text:p>
+     <text:p text:style-name="P20"><text:a xlink:type="simple" xlink:href="#__RefHeading__130_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Saving a Project<text:tab/>3</text:a></text:p>
+     <text:p text:style-name="P20"><text:a xlink:type="simple" xlink:href="#__RefHeading__153_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Opening a Saved Project<text:tab/>3</text:a></text:p>
+     <text:p text:style-name="P21"><text:a xlink:type="simple" xlink:href="#__RefHeading__116_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Shortcut Keys<text:tab/>3</text:a></text:p>
+     <text:p text:style-name="P21"><text:a xlink:type="simple" xlink:href="#__RefHeading__118_1339516542" text:style-name="Index_20_Link" text:visited-style-name="Index_20_Link">Icon Legend<text:tab/>3</text:a></text:p>
     </text:index-body>
    </text:table-of-content>
    <text:p text:style-name="P1"/>
-   <text:h text:style-name="P10" text:outline-level="1"><text:bookmark-start text:name="__RefHeading__110_1339516542"/>Introduction<text:bookmark-end text:name="__RefHeading__110_1339516542"/></text:h>
+   <text:h text:style-name="P11" text:outline-level="1"><text:bookmark-start text:name="__RefHeading__110_1339516542"/>Introduction<text:bookmark-end text:name="__RefHeading__110_1339516542"/></text:h>
    <text:p text:style-name="P3">This VE-Suite 3.0 Quick Reference Guide provides the reader with the basic information needed to start using VE-Suite 3.0. This guide assumes that the reader already has some familiarity with earlier versions of VE-Suite, so the depth of information presented here is deliberately limited. This guide assumes that the reader already has VE-Suite 3.0 installed, so topics such as installing and configuring VE-Suite 3.0 are beyond the scope of this document.</text:p>
-   <text:h text:style-name="P7" text:outline-level="2"><text:bookmark-start text:name="__RefHeading__126_1339516542"/>Conventions Used in This Guide<text:bookmark-end text:name="__RefHeading__126_1339516542"/></text:h>
+   <text:h text:style-name="P8" text:outline-level="2"><text:bookmark-start text:name="__RefHeading__126_1339516542"/>Conventions Used in This Guide<text:bookmark-end text:name="__RefHeading__126_1339516542"/></text:h>
    <text:p text:style-name="P1"><text:span text:style-name="T4">The following typographical conventions are used in this guide</text:span>:</text:p>
-   <text:list xml:id="list8829047856702277230" text:style-name="L1">
+   <text:list xml:id="list2235539867507592007" text:style-name="L1">
     <text:list-item>
-     <text:p text:style-name="P22">a <text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Bold, Fixed-Width</text:span> typeface is used to refer to user interface elements such as buttons, menus, or menu items.</text:p>
+     <text:p text:style-name="P23"><text:span text:style-name="T12">A</text:span> <text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Bold, Fixed-Width</text:span> typeface is used to refer to user interface elements such as buttons, menus, or menu items.</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P22">An arrow symbol (<text:span text:style-name="T3">→</text:span>) appearing between references to user interface elements indicates that a sequence of actions should be performed, such as selecting a menu item after selecting the parent menu. For example, <text:span text:style-name="VES3QRG_5f_UserInterfaceRef">File</text:span> <text:span text:style-name="T3">→</text:span> <text:span text:style-name="VES3QRG_5f_UserInterfaceRef"><text:span text:style-name="T5">Open</text:span></text:span>.</text:p>
+     <text:p text:style-name="P23">An arrow symbol (<text:span text:style-name="T3">→</text:span>) appearing between references to user interface elements indicates that a sequence of actions should be performed, such as selecting a menu item after selecting the parent menu. For example, <text:span text:style-name="VES3QRG_5f_UserInterfaceRef">File</text:span> <text:span text:style-name="T3">→</text:span> <text:span text:style-name="VES3QRG_5f_UserInterfaceRef"><text:span text:style-name="T5">Open</text:span></text:span>.</text:p>
     </text:list-item>
    </text:list>
-   <text:h text:style-name="P12" text:outline-level="1"><text:bookmark-start text:name="__RefHeading__122_1339516542"/>Projects<text:bookmark-end text:name="__RefHeading__122_1339516542"/></text:h>
+   <text:h text:style-name="P13" text:outline-level="1"><text:bookmark-start text:name="__RefHeading__122_1339516542"/>Projects<text:bookmark-end text:name="__RefHeading__122_1339516542"/></text:h>
    <text:h text:style-name="Heading_20_2" text:outline-level="2"><text:bookmark-start text:name="__RefHeading__112_1339516542"/>Creating a Project<text:bookmark-end text:name="__RefHeading__112_1339516542"/></text:h>
    <text:p text:style-name="P4">In VE-Suite 3.0, creating a project means setting a working directory for all the data that will be used in the project. Any models or CAD data that are loaded into the new project will have their file paths stored relative to this working directory.</text:p>
    <text:p text:style-name="P4">T<text:span text:style-name="T8">o create a new project, do</text:span>:</text:p>
-   <text:list xml:id="list6265489268847430862" text:style-name="L2">
+   <text:list xml:id="list631891415908708087" text:style-name="L2">
     <text:list-item>
-     <text:p text:style-name="P23"><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">File</text:span> <text:span text:style-name="T3">→</text:span><text:span text:style-name="T2"> </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Ne</text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef"><text:span text:style-name="T8">w </text:span></text:span><text:span text:style-name="T10">(or, From the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef"><text:span text:style-name="T11">Recent Files</text:span></text:span><text:span text:style-name="T10"> tab, click the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef"><text:span text:style-name="T11">New Project...</text:span></text:span><text:span text:style-name="T10"> button)</text:span></text:p>
+     <text:p text:style-name="P24"><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">File</text:span> <text:span text:style-name="T3">→</text:span><text:span text:style-name="T2"> </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Ne</text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef"><text:span text:style-name="T8">w </text:span></text:span><text:span text:style-name="T10">(or, From the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef"><text:span text:style-name="T11">Recent Files</text:span></text:span><text:span text:style-name="T10"> tab, click the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef"><text:span text:style-name="T11">New Project...</text:span></text:span><text:span text:style-name="T10"> button)</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P29">Navigate to the desired working directory and click the <text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Choose</text:span> button</text:p>
+     <text:p text:style-name="P25">Navigate to the desired working directory and click the <text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Choose</text:span> button</text:p>
     </text:list-item>
    </text:list>
    <text:h text:style-name="Heading_20_2" text:outline-level="2"><text:bookmark-start text:name="__RefHeading__114_1339516542"/>Loading CAD <text:span text:style-name="T6">Files</text:span><text:bookmark-end text:name="__RefHeading__114_1339516542"/></text:h>
    <text:p text:style-name="P5">To load a CAD file into the project, do:</text:p>
-   <text:list xml:id="list1050914146496685521" text:style-name="L3">
+   <text:list xml:id="list8965139356207040213" text:style-name="L3">
     <text:list-item>
-     <text:p text:style-name="P24"><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">File</text:span> <text:span text:style-name="T3">→</text:span><text:span text:style-name="T2"> </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Open</text:span></text:p>
+     <text:p text:style-name="P26"><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">File</text:span> <text:span text:style-name="T3">→</text:span><text:span text:style-name="T2"> </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Open</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P27">Navigate to the CAD file</text:p>
+     <text:p text:style-name="P29">Navigate to the CAD file</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P24"><text:span text:style-name="T2">Select the CAD file and click the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Open</text:span><text:span text:style-name="T2"> button</text:span></text:p>
+     <text:p text:style-name="P26"><text:span text:style-name="T2">Select the CAD file and click the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Open</text:span><text:span text:style-name="T2"> button</text:span></text:p>
     </text:list-item>
    </text:list>
    <text:p text:style-name="P5"><text:span text:style-name="T2">After a CAD file is loaded, a tree-like representation of the CAD file will appear in the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Layers</text:span><text:span text:style-name="T2"> tab. </text:span><text:soft-page-break/><text:span text:style-name="T2">Properties of the items in the CAD file can be changed by first selecting the item in the tree view and then changing the values in the right-hand pane on the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Layers</text:span><text:span text:style-name="T2"> tab. Selected items will be highlighted with a magenta or red glow in the 3D scene. To center the camera on the selected item, click the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Fly</text:span><text:span text:style-name="T2"> button (see </text:span><text:span text:style-name="T2"><text:bookmark-ref text:reference-format="text" text:ref-name="__RefHeading__118_1339516542">Icon Legend</text:bookmark-ref></text:span><text:span text:style-name="T2"> on page </text:span><text:span text:style-name="T2"><text:bookmark-ref text:reference-format="page" text:ref-name="__RefHeading__118_1339516542">3</text:bookmark-ref></text:span><text:span text:style-name="T2">).</text:span></text:p>
-   <text:h text:style-name="P8" text:outline-level="2"><text:bookmark-start text:name="__RefHeading__130_1339516542"/>Saving a Project<text:bookmark-end text:name="__RefHeading__130_1339516542"/></text:h>
+   <text:h text:style-name="P9" text:outline-level="2"><text:bookmark-start text:name="__RefHeading__130_1339516542"/>Saving a Project<text:bookmark-end text:name="__RefHeading__130_1339516542"/></text:h>
    <text:p text:style-name="P5">To save a project, do:</text:p>
-   <text:list xml:id="list8802002242885079586" text:style-name="L4">
+   <text:list xml:id="list9178731575801516634" text:style-name="L4">
     <text:list-item>
-     <text:p text:style-name="P25"><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">File</text:span> <text:span text:style-name="T3">→</text:span><text:span text:style-name="T2"> </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Save</text:span></text:p>
+     <text:p text:style-name="P27"><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">File</text:span> <text:span text:style-name="T3">→</text:span><text:span text:style-name="T2"> </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Save</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P28">Navigate to the working directory you created for the project</text:p>
+     <text:p text:style-name="P30">Navigate to the working directory you created for the project</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P25"><text:span text:style-name="T2">Give the project a name and click the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Save</text:span><text:span text:style-name="T2"> button</text:span></text:p>
+     <text:p text:style-name="P27"><text:span text:style-name="T2">Give the project a name and click the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Save</text:span><text:span text:style-name="T2"> button</text:span></text:p>
     </text:list-item>
    </text:list>
-   <text:h text:style-name="P9" text:outline-level="2"><text:bookmark-start text:name="__RefHeading__153_1339516542"/>Opening a Saved Project<text:bookmark-end text:name="__RefHeading__153_1339516542"/></text:h>
+   <text:h text:style-name="P10" text:outline-level="2"><text:bookmark-start text:name="__RefHeading__153_1339516542"/>Opening a Saved Project<text:bookmark-end text:name="__RefHeading__153_1339516542"/></text:h>
    <text:p text:style-name="P5">To open a previously-saved project, do:</text:p>
-   <text:list xml:id="list2787439493783280617" text:style-name="L5">
+   <text:list xml:id="list1217930785972159256" text:style-name="L5">
     <text:list-item>
-     <text:p text:style-name="P26"><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">File</text:span> <text:span text:style-name="T3">→</text:span> <text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Open</text:span></text:p>
+     <text:p text:style-name="P28"><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">File</text:span> <text:span text:style-name="T3">→</text:span> <text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Open</text:span></text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P26">Navigate to the saved .ves project file</text:p>
+     <text:p text:style-name="P28">Navigate to the saved .ves project file</text:p>
     </text:list-item>
     <text:list-item>
-     <text:p text:style-name="P26">Click the <text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Open</text:span> button</text:p>
+     <text:p text:style-name="P28">Click the <text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Open</text:span> button</text:p>
     </text:list-item>
    </text:list>
-   <text:h text:style-name="P12" text:outline-level="1"><text:bookmark-start text:name="__RefHeading__116_1339516542"/>Shortcut Keys<text:bookmark-end text:name="__RefHeading__116_1339516542"/></text:h>
+   <text:h text:style-name="P13" text:outline-level="1"><text:bookmark-start text:name="__RefHeading__116_1339516542"/>Shortcut Keys<text:bookmark-end text:name="__RefHeading__116_1339516542"/></text:h>
    <table:table table:name="ShortcutKeys" table:style-name="ShortcutKeys">
     <table:table-column table:style-name="ShortcutKeys.A"/>
     <table:table-column table:style-name="ShortcutKeys.B"/>
@@ -1115,81 +1121,81 @@
     </table:table-row>
     <table:table-row table:style-name="ShortcutKeys.3">
      <table:table-cell table:style-name="ShortcutKeys.A3" office:value-type="string">
-      <text:p text:style-name="P14">F</text:p>
+      <text:p text:style-name="P15">F</text:p>
      </table:table-cell>
      <table:table-cell table:style-name="ShortcutKeys.B3" office:value-type="string">
-      <text:p text:style-name="P14">Frame all (desktop mode only)</text:p>
+      <text:p text:style-name="P15">Frame all (desktop mode only)</text:p>
      </table:table-cell>
     </table:table-row>
    </table:table>
    <text:p text:style-name="Standard"/>
-   <text:h text:style-name="P12" text:outline-level="1"><text:bookmark-start text:name="__RefHeading__118_1339516542"/>Icon Legend<text:bookmark-end text:name="__RefHeading__118_1339516542"/></text:h>
+   <text:h text:style-name="P13" text:outline-level="1"><text:bookmark-start text:name="__RefHeading__118_1339516542"/>Icon Legend<text:bookmark-end text:name="__RefHeading__118_1339516542"/></text:h>
    <table:table table:name="IconLegend" table:style-name="IconLegend">
     <table:table-column table:style-name="IconLegend.A"/>
     <table:table-column table:style-name="IconLegend.B"/>
     <table:table-header-rows>
      <table:table-row table:style-name="IconLegend.1">
       <table:table-cell table:style-name="IconLegend.A1" office:value-type="string">
-       <text:p text:style-name="P18">Icon</text:p>
+       <text:p text:style-name="P19">Icon</text:p>
       </table:table-cell>
       <table:table-cell table:style-name="IconLegend.B1" office:value-type="string">
-       <text:p text:style-name="P18">Description</text:p>
+       <text:p text:style-name="P19">Description</text:p>
       </table:table-cell>
      </table:table-row>
     </table:table-header-rows>
     <table:table-row table:style-name="IconLegend.2">
      <table:table-cell table:style-name="IconLegend.A2" office:value-type="string">
-      <text:p text:style-name="P15"><draw:frame draw:style-name="fr4" draw:name="Image2" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.2902in" draw:z-index="1"><draw:image xlink:href="../../../src/ves/conductor/xpm/flythrough.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+      <text:p text:style-name="P16"><draw:frame draw:style-name="fr4" draw:name="Image2" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.2902in" draw:z-index="1"><draw:image xlink:href="../../../src/ves/conductor/xpm/flythrough.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
        </draw:frame></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="IconLegend.B2" office:value-type="string">
-      <text:p text:style-name="P16">Fly to selected item <text:span text:style-name="T7">in Layers tab</text:span></text:p>
+      <text:p text:style-name="P17">Fly to selected item <text:span text:style-name="T7">in Layers tab</text:span></text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="IconLegend.2">
      <table:table-cell table:style-name="IconLegend.A2" office:value-type="string">
-      <text:p text:style-name="P15"><draw:frame draw:style-name="fr4" draw:name="Image3" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.3in" draw:z-index="2"><draw:image xlink:href="../../../src/ves/conductor/qt/images/remove.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+      <text:p text:style-name="P16"><draw:frame draw:style-name="fr4" draw:name="Image3" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.3in" draw:z-index="2"><draw:image xlink:href="../../../src/ves/conductor/qt/images/remove.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
        </draw:frame></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="IconLegend.B2" office:value-type="string">
-      <text:p text:style-name="P16">Remove selected item <text:span text:style-name="T7">in Layers tab</text:span></text:p>
+      <text:p text:style-name="P17">Remove selected item <text:span text:style-name="T7">in Layers tab</text:span></text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="IconLegend.2">
      <table:table-cell table:style-name="IconLegend.A2" office:value-type="string">
-      <text:p text:style-name="P15"><draw:frame draw:style-name="fr4" draw:name="Image4" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.3in" draw:z-index="3"><draw:image xlink:href="../../../src/ves/conductor/qt/images/refresh-32.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+      <text:p text:style-name="P16"><draw:frame draw:style-name="fr4" draw:name="Image4" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.3in" draw:z-index="3"><draw:image xlink:href="../../../src/ves/conductor/qt/images/refresh-32.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
        </draw:frame></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="IconLegend.B2" office:value-type="string">
-      <text:p text:style-name="P17">Refresh tree view in Layers tab</text:p>
+      <text:p text:style-name="P18">Refresh tree view in Layers tab</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="IconLegend.2">
      <table:table-cell table:style-name="IconLegend.A2" office:value-type="string">
-      <text:p text:style-name="P15"><draw:frame draw:style-name="fr4" draw:name="Image5" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.3in" draw:z-index="4"><draw:image xlink:href="../../../src/ves/conductor/xpm/ToolBar/TabsButton.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+      <text:p text:style-name="P16"><draw:frame draw:style-name="fr4" draw:name="Image5" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.3in" draw:z-index="4"><draw:image xlink:href="../../../src/ves/conductor/xpm/ToolBar/TabsButton.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
        </draw:frame></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="IconLegend.B2" office:value-type="string">
-      <text:p text:style-name="P17">Tabs pull-down menu</text:p>
+      <text:p text:style-name="P18">Tabs pull-down menu</text:p>
      </table:table-cell>
     </table:table-row>
     <table:table-row table:style-name="IconLegend.2">
      <table:table-cell table:style-name="IconLegend.A2" office:value-type="string">
-      <text:p text:style-name="P15"><draw:frame draw:style-name="fr4" draw:name="Image6" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.3in" draw:z-index="5"><draw:image xlink:href="../../../src/ves/conductor/xpm/ToolBar/SettingsButton.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+      <text:p text:style-name="P16"><draw:frame draw:style-name="fr4" draw:name="Image6" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.3in" draw:z-index="5"><draw:image xlink:href="../../../src/ves/conductor/xpm/ToolBar/SettingsButton.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
        </draw:frame></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="IconLegend.B2" office:value-type="string">
-      <text:p text:style-name="P17">Preferences</text:p>
+      <text:p text:style-name="P18">Preferences</text:p>
      </table:table-cell>
     </table:table-row>
     <text:soft-page-break/>
     <table:table-row table:style-name="IconLegend.2">
      <table:table-cell table:style-name="IconLegend.A7" office:value-type="string">
-      <text:p text:style-name="P15"><draw:frame draw:style-name="fr5" draw:name="Image7" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.3in" draw:z-index="6"><draw:image xlink:href="../../../src/ves/conductor/xpm/ToolBar/RecentDocument.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+      <text:p text:style-name="P16"><draw:frame draw:style-name="fr5" draw:name="Image7" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.3in" draw:z-index="6"><draw:image xlink:href="../../../src/ves/conductor/xpm/ToolBar/RecentDocument.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
        </draw:frame></text:p>
      </table:table-cell>
      <table:table-cell table:style-name="IconLegend.B7" office:value-type="string">
-      <text:p text:style-name="P17">Recent Files</text:p>
+      <text:p text:style-name="P18">Recent Files</text:p>
      </table:table-cell>
     </table:table-row>
    </table:table>
