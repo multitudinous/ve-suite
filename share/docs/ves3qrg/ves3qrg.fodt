@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:officeooo="http://openoffice.org/2009/office" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2" office:mimetype="application/vnd.oasis.opendocument.text">
- <office:meta><meta:initial-creator>Karl Svec</meta:initial-creator><meta:creation-date>2014-09-09T10:45:29.662843816</meta:creation-date><dc:date>2014-09-09T15:56:31.734375668</dc:date><dc:creator>Karl Svec</dc:creator><meta:editing-duration>PT4H37M1S</meta:editing-duration><meta:editing-cycles>32</meta:editing-cycles><meta:generator>LibreOffice/4.2.6.2$Linux_X86_64 LibreOffice_project/420$Build-2</meta:generator><meta:document-statistic meta:table-count="2" meta:image-count="7" meta:object-count="0" meta:page-count="3" meta:paragraph-count="61" meta:word-count="481" meta:character-count="2662" meta:non-whitespace-character-count="2249"/></office:meta>
+ <office:meta><meta:initial-creator>Karl Svec</meta:initial-creator><meta:creation-date>2014-09-09T10:45:29.662843816</meta:creation-date><dc:date>2014-09-09T16:01:30.579094957</dc:date><dc:creator>Karl Svec</dc:creator><meta:editing-duration>PT4H41M59S</meta:editing-duration><meta:editing-cycles>33</meta:editing-cycles><meta:generator>LibreOffice/4.2.6.2$Linux_X86_64 LibreOffice_project/420$Build-2</meta:generator><meta:document-statistic meta:table-count="2" meta:image-count="7" meta:object-count="0" meta:page-count="4" meta:paragraph-count="62" meta:word-count="482" meta:character-count="2663" meta:non-whitespace-character-count="2250"/></office:meta>
  <office:settings>
   <config:config-item-set config:name="ooo:view-settings">
    <config:config-item config:name="ViewAreaTop" config:type="long">0</config:config-item>
@@ -126,7 +126,6 @@
   <style:font-face style:name="WenQuanYi Zen Hei Sharp" svg:font-family="&apos;WenQuanYi Zen Hei Sharp&apos;" style:font-family-generic="system" style:font-pitch="variable"/>
  </office:font-face-decls>
  <office:styles>
-  <draw:gradient draw:name="Gray_20_Gradient_20_1" draw:display-name="Gray Gradient 1" draw:style="linear" draw:start-color="#1c1c1c" draw:end-color="#cccccc" draw:start-intensity="100%" draw:end-intensity="100%" draw:angle="0" draw:border="0%"/>
   <draw:gradient draw:name="VES3QRG-Gradient" draw:style="linear" draw:start-color="#036094" draw:end-color="#ffffff" draw:start-intensity="100%" draw:end-intensity="100%" draw:angle="0" draw:border="0%"/>
   <style:default-style style:family="graphic">
    <style:graphic-properties svg:stroke-color="#3465a4" draw:fill-color="#729fcf" fo:wrap-option="no-wrap" draw:shadow-offset-x="0.1181in" draw:shadow-offset-y="0.1181in" draw:start-line-spacing-horizontal="0.1114in" draw:start-line-spacing-vertical="0.1114in" draw:end-line-spacing-horizontal="0.1114in" draw:end-line-spacing-vertical="0.1114in" style:flow-with-text="false"/>
@@ -226,6 +225,17 @@
     <style:background-image/>
    </style:paragraph-properties>
    <style:text-properties fo:color="#eeeeee" fo:background-color="transparent" style:font-size-asian="10.5pt" style:font-weight-asian="normal"/>
+  </style:style>
+  <style:style style:name="Footer" style:family="paragraph" style:parent-style-name="Standard" style:class="extra">
+   <style:paragraph-properties text:number-lines="false" text:line-number="0">
+    <style:tab-stops>
+     <style:tab-stop style:position="3.4626in" style:type="center"/>
+     <style:tab-stop style:position="6.9252in" style:type="right"/>
+    </style:tab-stops>
+   </style:paragraph-properties>
+  </style:style>
+  <style:style style:name="VES3QRG-Footer" style:family="paragraph" style:parent-style-name="Footer" style:class="extra">
+   <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
   </style:style>
   <style:style style:name="Internet_20_link" style:display-name="Internet link" style:family="text">
    <style:text-properties fo:color="#000080" fo:language="zxx" fo:country="none" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" style:language-asian="zxx" style:country-asian="none" style:language-complex="zxx" style:country-complex="none"/>
@@ -860,11 +870,17 @@
     <style:footnote-sep style:width="0.0071in" style:distance-before-sep="0.0398in" style:distance-after-sep="0.0398in" style:line-style="solid" style:adjustment="left" style:rel-width="25%" style:color="#000000"/>
    </style:page-layout-properties>
    <style:header-style/>
-   <style:footer-style/>
+   <style:footer-style>
+    <style:header-footer-properties fo:min-height="0in" fo:margin-top="0.1965in"/>
+   </style:footer-style>
   </style:page-layout>
  </office:automatic-styles>
  <office:master-styles>
-  <style:master-page style:name="Standard" style:page-layout-name="pm1"/>
+  <style:master-page style:name="Standard" style:page-layout-name="pm1">
+   <style:footer>
+    <text:p text:style-name="VES3QRG-Footer"><text:page-number text:select-page="current">4</text:page-number></text:p>
+   </style:footer>
+  </style:master-page>
  </office:master-styles>
  <office:body>
   <office:text text:use-soft-page-breaks="true">
@@ -1025,7 +1041,7 @@
      <text:p text:style-name="P21"><text:span text:style-name="T2">Select the CAD file and click the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Open</text:span><text:span text:style-name="T2"> button</text:span></text:p>
     </text:list-item>
    </text:list>
-   <text:p text:style-name="P5"><text:span text:style-name="T2">After a CAD file is loaded, a tree-like representation of the CAD file will appear in the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Layers</text:span><text:span text:style-name="T2"> tab. Properties of the items in the CAD file can be changed by first selecting the item in the tree view and then changing the values in the right-hand pane on the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Layers</text:span><text:span text:style-name="T2"> tab. Selected items will be highlighted </text:span><text:soft-page-break/><text:span text:style-name="T2">with a magenta or red glow in the 3D scene. To center the camera on the selected item, click the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Fly</text:span><text:span text:style-name="T2"> button (see </text:span><text:span text:style-name="T2"><text:bookmark-ref text:reference-format="text" text:ref-name="__RefHeading__118_1339516542">Icon Legend</text:bookmark-ref></text:span><text:span text:style-name="T2"> on page </text:span><text:span text:style-name="T2"><text:bookmark-ref text:reference-format="page" text:ref-name="__RefHeading__118_1339516542">3</text:bookmark-ref></text:span><text:span text:style-name="T2">).</text:span></text:p>
+   <text:p text:style-name="P5"><text:span text:style-name="T2">After a CAD file is loaded, a tree-like representation of the CAD file will appear in the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Layers</text:span><text:span text:style-name="T2"> tab. </text:span><text:soft-page-break/><text:span text:style-name="T2">Properties of the items in the CAD file can be changed by first selecting the item in the tree view and then changing the values in the right-hand pane on the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Layers</text:span><text:span text:style-name="T2"> tab. Selected items will be highlighted with a magenta or red glow in the 3D scene. To center the camera on the selected item, click the </text:span><text:span text:style-name="VES3QRG_5f_UserInterfaceRef">Fly</text:span><text:span text:style-name="T2"> button (see </text:span><text:span text:style-name="T2"><text:bookmark-ref text:reference-format="text" text:ref-name="__RefHeading__118_1339516542">Icon Legend</text:bookmark-ref></text:span><text:span text:style-name="T2"> on page </text:span><text:span text:style-name="T2"><text:bookmark-ref text:reference-format="page" text:ref-name="__RefHeading__118_1339516542">3</text:bookmark-ref></text:span><text:span text:style-name="T2">).</text:span></text:p>
    <text:h text:style-name="P7" text:outline-level="2"><text:bookmark-start text:name="__RefHeading__130_1339516542"/>Saving a Project<text:bookmark-end text:name="__RefHeading__130_1339516542"/></text:h>
    <text:p text:style-name="P5">To save a project, do:</text:p>
    <text:list xml:id="list338262478337100550" text:style-name="L4">
@@ -1143,6 +1159,7 @@
       <text:p text:style-name="P15">Preferences</text:p>
      </table:table-cell>
     </table:table-row>
+    <text:soft-page-break/>
     <table:table-row table:style-name="IconLegend.2">
      <table:table-cell table:style-name="IconLegend.A7" office:value-type="string">
       <text:p text:style-name="P13"><draw:frame draw:style-name="fr5" draw:name="Image7" text:anchor-type="as-char" svg:width="0.3in" svg:height="0.3in" draw:z-index="6"><draw:image xlink:href="../../../src/ves/conductor/xpm/ToolBar/RecentDocument.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
