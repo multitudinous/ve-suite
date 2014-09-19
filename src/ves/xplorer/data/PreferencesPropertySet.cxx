@@ -345,7 +345,7 @@ void PreferencesPropertySet::CreateSkeleton()
                 GetProperty( "Camera_ViewDirection_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateCameraPositionOrientationChanged, this ) );
                 GetProperty( "Camera_ViewDirection_X" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
-                AddProperty( "Camera_ViewDirection_Y", 0.0, "y" );
+                AddProperty( "Camera_ViewDirection_Y", 1.0, "y" );
                 GetProperty( "Camera_ViewDirection_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::PropagateCameraPositionOrientationChanged, this ) );
                 GetProperty( "Camera_ViewDirection_Y" )->SignalValueChanged.connect( boost::bind( &PreferencesPropertySet::SaveChanges, this, _1 ) );
 
