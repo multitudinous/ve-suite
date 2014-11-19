@@ -45,6 +45,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <iostream>
+#include <limits>
 
 using namespace ves::xplorer::data;
 ////////////////////////////////////////////////////////////////////////////////
@@ -440,6 +441,20 @@ void PreferencesPropertySet::PropagateCameraPositionOrientationChanged()
     view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewDirection_X" ) ) );
     view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewDirection_Y" ) ) );
     view.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_ViewDirection_Z" ) ) );
+
+    osg::Vec3d view_vec( view[0], view[1], view[2] );
+
+    // sanity check - make sure we're not forwading bogus view vectors to the scenegraph
+    if( view_vec.isNaN() || view_vec.length() <= std::numeric_limits< double >::epsilon() )
+    {
+        GetProperty( "Camera_ViewDirection_X" )->SetValue( 0.0 );
+        GetProperty( "Camera_ViewDirection_Y" )->SetValue( 1.0 );
+        GetProperty( "Camera_ViewDirection_Z" )->SetValue( 0.0 );
+
+        view[0] = 0.0;
+        view[1] = 1.0;
+        view[2] = 0.0;
+    }
 
     pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_Position_X" ) ) );
     pos.push_back( boost::any_cast<double>( GetPropertyValue( "Camera_Position_Y" ) ) );
