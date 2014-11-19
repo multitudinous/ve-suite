@@ -252,7 +252,7 @@ private:
     double objLoc[ 3 ]; ///<Location with respect to data set (the actual location to interact with data
     double cursorLen; ///<Cursor length
 
-    double translationStepSize; ///<Size of translation step
+    const double translationStepSize = 0.15; ///<Size of translation step
     double rotationStepSize; ///<Size of rotation step
     ///Constants for the plane normal to the wand in world space
     double m_planeConstants[ 4 ];

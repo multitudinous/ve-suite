@@ -97,7 +97,6 @@ Wand::Wand()
     :
     Device( WAND ),
     cursorLen( 1.0 ),
-    translationStepSize( 0.15 ),
     rotationStepSize( 1.0 ),
     rotationFlag( 1 ),
     m_distance( 1000 ),
