@@ -1592,11 +1592,12 @@ void Wand::UpdateForwardAndUp()
     //m_sceneManager.GetMxCoreViewMatrix().setDir( dirVec );
     //std::cout << " wand dir " << vjVec << std::endl;
 
+    osg::Vec3d moveScale = m_sceneManager.GetMxCoreViewMatrix().getMoveScale();
 
     //vjVec.set( m_sceneManager.GetMxCoreViewMatrix().getDir().ptr() );
-    m_worldTrans[ 0 ] = vjVec.mData[ 0 ] * translationStepSize;
-    m_worldTrans[ 1 ] = vjVec.mData[ 1 ] * translationStepSize;
-    m_worldTrans[ 2 ] = vjVec.mData[ 2 ] * translationStepSize;
+    m_worldTrans[ 0 ] = vjVec.mData[ 0 ] * translationStepSize * moveScale.x();
+    m_worldTrans[ 1 ] = vjVec.mData[ 1 ] * translationStepSize * moveScale.y();
+    m_worldTrans[ 2 ] = vjVec.mData[ 2 ] * translationStepSize * moveScale.z();
 
     m_endPoint.set( tempWandPoint.mData[ 0 ] + vjVec.mData[ 0 ] * m_distance,
                     tempWandPoint.mData[ 1 ] + vjVec.mData[ 1 ] * m_distance,
