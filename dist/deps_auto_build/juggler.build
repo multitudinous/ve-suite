@@ -1,9 +1,8 @@
 PACKAGE_NAME=JUGGLER
-BASE_DIR="${DEV_BASE_DIR}/vrjuggler-trunk"
+BASE_DIR="${DEV_BASE_DIR}/vrjuggler-master"
 
 SOURCE_RETRIEVAL_METHOD=git
-SOURCE_URL=http://vrjuggler.googlecode.com/svn/juggler/trunk
-SOURCE_URL=https://code.google.com/p/vrjuggler/
+SOURCE_URL=https://github.com/vrjuggler/vrjuggler.git
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
