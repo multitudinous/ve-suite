@@ -3,7 +3,7 @@ BASE_DIR="${DEV_BASE_DIR}/yaml-cpp-0.3.0"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
-SOURCE_URL=http://yaml-cpp.googlecode.com/files/yaml-cpp-0.3.0.tar.gz
+SOURCE_URL=https://github.com/jbeder/yaml-cpp/archive/release-0.3.0.tar.gz
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"

@@ -1,9 +1,8 @@
 PACKAGE_NAME=OSG
 BASE_DIR="${DEV_BASE_DIR}/osg_2.8.5"
 
-SOURCE_RETRIEVAL_METHOD=svn
-SOURCE_URL=http://www.openscenegraph.org/svn/osg/OpenSceneGraph/branches/OpenSceneGraph-2.8/
-SOURCE_URL=http://osg-285.googlecode.com/svn/trunk
+SOURCE_RETRIEVAL_METHOD=git
+SOURCE_URL=https://github.com/mccdo/osg-285.git
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"

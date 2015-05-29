@@ -1,13 +1,9 @@
 PACKAGE_NAME=BULLET
-BASE_DIR="${DEV_BASE_DIR}/bullet-2.80"
+BASE_DIR="${DEV_BASE_DIR}/bullet-2.83.4"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
-SOURCE_URL=http://bullet.googlecode.com/files/bullet-2.77.tgz
-SOURCE_URL=http://bullet.googlecode.com/files/bullet-2.78-r2387.tgz
-SOURCE_URL=http://bullet.googlecode.com/files/bullet-2.79-rev2440.tgz
-SOURCE_URL=http://bullet.googlecode.com/files/bullet-2.80-rev2531.tgz
-# SOURCE_URL=http://bullet.googlecode.com/files/bullet-2.81-rev2613.tgz
+SOURCE_URL=https://github.com/bulletphysics/bullet3/archive/2.83.4.tar.gz
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"

@@ -1,8 +1,8 @@
 PACKAGE_NAME=propertystore
 BASE_DIR="${DEV_BASE_DIR}/propertystore"
 
-SOURCE_RETRIEVAL_METHOD=svn
-SOURCE_URL=http://propertystore.googlecode.com/svn/trunk/
+SOURCE_RETRIEVAL_METHOD=git
+SOURCE_URL=https://github.com/mccdo/propertystore.git
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"

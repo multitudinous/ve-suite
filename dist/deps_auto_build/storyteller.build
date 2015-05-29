@@ -1,8 +1,8 @@
 PACKAGE_NAME=storyteller
 BASE_DIR="${DEV_BASE_DIR}/storyteller"
 
-SOURCE_RETRIEVAL_METHOD=svn
-SOURCE_URL=http://storyteller.googlecode.com/svn/trunk/
+SOURCE_RETRIEVAL_METHOD=git
+SOURCE_URL=https://github.com/mccdo/storyteller.git
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"

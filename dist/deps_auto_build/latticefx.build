@@ -1,8 +1,8 @@
 PACKAGE_NAME=latticeFX
 BASE_DIR="${DEV_BASE_DIR}/latticefx"
 
-SOURCE_RETRIEVAL_METHOD=svn
-SOURCE_URL=http://latticefx.googlecode.com/svn/trunk
+SOURCE_RETRIEVAL_METHOD=git
+SOURCE_URL=https://github.com/mccdo/latticefx.git
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
