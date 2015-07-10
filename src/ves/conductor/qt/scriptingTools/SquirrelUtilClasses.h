@@ -39,11 +39,14 @@
 
 #include <ves/xplorer/data/ContourPlanePropertySet.h>
 #include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/Logging.h>
 #include <ves/conductor/qt/VisFeatureManager.h>
 
 #include <crunchstore/SQLiteTransactionKey.h>
 
 #include <vpr/System.h>
+
+#include <Poco/ConsoleChannel.h>
 
 namespace ves
 {
@@ -192,6 +195,51 @@ public:
     {
         vpr::System::msleep( time );
     }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+/** \brief The Logger class
+  * Allows the script to log messages to std::clog (which is typically mapped to
+  * std::cerr). Useful for debugging scripts.
+  * @code
+  * local logger = Logger();
+  * logger.Info( "hello from Squirrel" );
+  * @endcode
+**/
+class Logger
+{
+public:
+    Logger()
+        :
+        m_logger( Poco::Logger::create( "conductor.Squirrel" , new Poco::ConsoleChannel ) ),
+        m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
+    {
+        ;
+    }
+
+    void Info( const std::string& message )
+    {
+        LOG_INFO( message );
+    }
+
+    void Notice( const std::string& message )
+    {
+        LOG_NOTICE( message );
+    }
+
+    void Warning( const std::string& message )
+    {
+        LOG_WARNING( message );
+    }
+
+    void Error( const std::string& message )
+    {
+        LOG_ERROR( message );
+    }
+
+private:
+    Poco::Logger& m_logger;
+    ves::xplorer::LogStreamPtr m_logStream;
 };
 
 }} //ves::conductor

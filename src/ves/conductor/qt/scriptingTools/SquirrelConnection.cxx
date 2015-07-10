@@ -196,6 +196,13 @@ void SquirrelConnection::BindSpecialClasses()
     Sqrat::Class< Sleeper > sleepClass;
     sleepClass.Func( "Sleep", &Sleeper::Sleep );
     Sqrat::RootTable().Bind( "Sleeper", sleepClass );
+
+    Sqrat::Class< Logger > loggerClass;
+    loggerClass.Func( "Info", &Logger::Info );
+    loggerClass.Func( "Notice", &Logger::Notice );
+    loggerClass.Func( "Warning", &Logger::Warning );
+    loggerClass.Func( "Error", &Logger::Error );
+    Sqrat::RootTable().Bind( "Logger", loggerClass );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::runScript( const std::string& scriptText )
