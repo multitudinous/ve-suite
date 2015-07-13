@@ -211,7 +211,9 @@ class Logger
 public:
     Logger()
         :
-        m_logger( Poco::Logger::create( "conductor.Squirrel" , new Poco::ConsoleChannel ) ),
+        m_logger( Poco::Logger::has( "conductor.Squirrel" ) ?
+            Poco::Logger::get( "conductor.Squirrel" ) :
+            Poco::Logger::create( "conductor.Squirrel" , new Poco::ConsoleChannel ) ),
         m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
     {
         ;
