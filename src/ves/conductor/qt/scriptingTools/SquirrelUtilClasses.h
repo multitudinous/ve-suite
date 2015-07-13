@@ -244,4 +244,83 @@ private:
     ves::xplorer::LogStreamPtr m_logStream;
 };
 
+class AbstractEvent
+{
+public:
+    AbstractEvent() {}
+};
+
+// forward declaration
+class AbstractContext;
+
+////////////////////////////////////////////////////////////////////////////////
+/** \brief The AbstractState class
+  * Provides a framework for implementing the State design pattern
+  * https://en.wikipedia.org/wiki/State_pattern
+**/
+class AbstractState
+{
+public:
+    AbstractState() {}
+    virtual ~AbstractState() {}
+
+    virtual void enter( const AbstractContext& context )
+    {
+        std::cout << "enter()" << std::endl << std::flush;
+    }
+
+    virtual void exit( const AbstractContext& context )
+    {
+        std::cout << "exit()" << std::endl << std::flush;
+    }
+
+    virtual AbstractState* handleEvent( const AbstractContext& context, const AbstractEvent& event )
+    {
+        return static_cast< AbstractState* >( 0 );    
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+/** \brief The AbstractContext class
+  * Provides a framework for implementing the State design pattern
+  * https://en.wikipedia.org/wiki/State_pattern
+**/
+class AbstractContext
+{
+public:
+    AbstractContext() : m_state( static_cast< AbstractState* >( 0 ) ) {}
+
+    virtual ~AbstractContext()
+    {
+        if( m_state )
+        {
+            delete m_state;
+        }
+    }
+
+    void setInitialState( AbstractState* state )
+    {
+        m_state = state;
+        m_state->enter( *this );
+    }
+
+    virtual void handleEvent( const AbstractEvent& event )
+    {
+        if( m_state )
+        {
+            AbstractState* new_state = m_state->handleEvent( *this, event );
+            if( new_state )
+            {
+                m_state->exit( *this );
+                delete m_state;
+                m_state = new_state;
+                m_state->enter( *this );
+            }
+        }
+    }
+
+protected:
+    AbstractState* m_state; 
+};
+
 }} //ves::conductor

@@ -203,6 +203,26 @@ void SquirrelConnection::BindSpecialClasses()
     loggerClass.Func( "Warning", &Logger::Warning );
     loggerClass.Func( "Error", &Logger::Error );
     Sqrat::RootTable().Bind( "Logger", loggerClass );
+
+    {
+        Sqrat::Table namespaceTable;
+
+        Sqrat::Class< AbstractEvent > eventClass;
+        namespaceTable.Bind( "Event", eventClass );
+
+        namespaceTable.Bind( "State", Sqrat::Class< AbstractState >()
+            .Func( "enter", &AbstractState::enter )
+            .Func( "exit", &AbstractState::exit )
+            .Func( "handleEvent", &AbstractState::handleEvent )
+        );
+
+        namespaceTable.Bind( "Context", Sqrat::Class< AbstractContext >()
+            .Func( "setInitialState", &AbstractContext::setInitialState )
+            .Func( "handleEvent", &AbstractContext::handleEvent )
+        );
+
+        Sqrat::RootTable().Bind( "StateMachine", namespaceTable );
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::runScript( const std::string& scriptText )
