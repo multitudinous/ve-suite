@@ -211,9 +211,9 @@ void SquirrelConnection::BindSpecialClasses()
         namespaceTable.Bind( "Event", eventClass );
 
         namespaceTable.Bind( "State", Sqrat::Class< AbstractState >()
-            .Func( "enter", &AbstractState::enter )
-            .Func( "exit", &AbstractState::exit )
-            .Func( "handleEvent", &AbstractState::handleEvent )
+            .Func( "enter", &AbstractState::_enter )
+            .Func( "exit", &AbstractState::_exit )
+            .Func( "handleEvent", &AbstractState::_handleEvent )
         );
 
         namespaceTable.Bind( "Context", Sqrat::Class< AbstractContext >()

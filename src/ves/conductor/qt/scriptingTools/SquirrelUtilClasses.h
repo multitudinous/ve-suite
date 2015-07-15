@@ -46,6 +46,8 @@
 
 #include <vpr/System.h>
 
+#include <squirrel.h>
+#include <sqrat.h>
 #include <Poco/ConsoleChannel.h>
 
 namespace ves
@@ -244,6 +246,28 @@ private:
     ves::xplorer::LogStreamPtr m_logStream;
 };
 
+// see http://squirrel-lang.org/forums/default.aspx?g=posts&m=7099
+class BaseObject
+{
+public:
+    BaseObject()
+    {
+        m_vm = Sqrat::DefaultVM::Get();
+
+        sq_resetobject( &m_instance );
+            
+        // get the "this" pointer for the Squirrel object
+        sq_getstackobj( m_vm, 1, &m_instance );
+    }
+
+    ~BaseObject() {}
+
+protected:
+    HSQOBJECT m_instance;
+
+    HSQUIRRELVM m_vm;   
+};
+
 class AbstractEvent
 {
 public:
@@ -258,25 +282,66 @@ class AbstractContext;
   * Provides a framework for implementing the State design pattern
   * https://en.wikipedia.org/wiki/State_pattern
 **/
-class AbstractState
+class AbstractState : public BaseObject
 {
 public:
-    AbstractState() {}
-    virtual ~AbstractState() {}
+    AbstractState() : BaseObject() {}
 
-    virtual void enter( const AbstractContext& context )
+    ~AbstractState() {}
+
+    void _enter( AbstractContext* context )
     {
-        std::cout << "enter()" << std::endl << std::flush;
+        ; // dummy function - Squirrel subclasses that do not override enter() will call this
     }
 
-    virtual void exit( const AbstractContext& context )
+    void enter( AbstractContext* context )
     {
-        std::cout << "exit()" << std::endl << std::flush;
+        try
+        {
+            Sqrat::Function( m_instance, "enter" ).Execute<AbstractContext*>( context );
+        }
+        catch( Sqrat::Exception& e )
+        {
+            std::cerr << "Oops: " << e.Message() << std::endl << std::flush;
+        }
     }
 
-    virtual AbstractState* handleEvent( const AbstractContext& context, const AbstractEvent& event )
+    void _exit( AbstractContext* context )
     {
+        ; // dummy function - Squirrel subclasses that do not override exit() will call this
+    }
+
+    void exit( AbstractContext* context )
+    {
+        try
+        {
+            Sqrat::Function( m_instance, "exit" ).Execute<AbstractContext*>( context );
+        }
+        catch( Sqrat::Exception& e )
+        {
+            std::cerr << "Oops: " << e.Message() << std::endl << std::flush;
+        }
+    }
+
+    AbstractState* _handleEvent( AbstractContext* context, AbstractEvent* event )
+    {
+        // dummy function - Squirrel subclasses that do not override handleEvent() will call this
         return static_cast< AbstractState* >( 0 );    
+    }
+
+    AbstractState* handleEvent( AbstractContext* context, AbstractEvent* event )
+    {
+        // TODO: increment the reference count of the object returned by handleEvent()? 
+        try
+        {
+            AbstractState* new_state = Sqrat::Function( m_instance, "handleEvent" )
+                .Evaluate< AbstractState*, AbstractContext*, AbstractEvent* >( context, event );
+            return new_state;
+        }
+        catch( Sqrat::Exception& e )
+        {
+            std::cerr << "Oops: " << e.Message() << std::endl << std::flush;
+        }
     }
 };
 
@@ -294,27 +359,27 @@ public:
     {
         if( m_state )
         {
-            delete m_state;
+            //delete m_state;
         }
     }
 
     void setInitialState( AbstractState* state )
     {
         m_state = state;
-        m_state->enter( *this );
+        m_state->enter( this );
     }
 
-    virtual void handleEvent( const AbstractEvent& event )
+    virtual void handleEvent( AbstractEvent* event )
     {
         if( m_state )
         {
-            AbstractState* new_state = m_state->handleEvent( *this, event );
+            AbstractState* new_state = m_state->handleEvent( this, event );
             if( new_state )
             {
-                m_state->exit( *this );
-                delete m_state;
+                m_state->exit( this );
+                //delete m_state;
                 m_state = new_state;
-                m_state->enter( *this );
+                m_state->enter( this );
             }
         }
     }
