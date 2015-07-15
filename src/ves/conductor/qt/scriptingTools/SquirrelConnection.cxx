@@ -175,34 +175,33 @@ void SquirrelConnection::BindSpecialClasses()
     // Add any other map types require to the bottom of this block
     BindSQStdMap< std::string, std::string >( "StringStringMap" );
 
-    typedef VizPropertySetWrapper psw;
-    Sqrat::Class< psw > psClass;
-    psClass.Func( "CreateNewFeature", &psw::CreateNewFeature );
-    psClass.Func( "SetBoolPropertyValue", &psw::SetBoolPropertyValue );
-    psClass.Func( "SetIntPropertyValue", &psw::SetIntPropertyValue );
-    psClass.Func( "SetFloatPropertyValue", &psw::SetFloatPropertyValue );
-    psClass.Func( "SetDoublePropertyValue", &psw::SetDoublePropertyValue );
-    psClass.Func( "SetStringPropertyValue", &psw::SetStringPropertyValue );
-    psClass.Func( "Save", &psw::Save );
-    psClass.Func( "BulkSave", &psw::BulkSave );
-    psClass.Func( "GetUUIDAsString", &psw::GetUUIDAsString );
-    Sqrat::RootTable().Bind( "VizPropertySet", psClass );
+    Sqrat::RootTable().Bind( "VizPropertySet", Sqrat::Class< VizPropertySetWrapper >()
+        .Func( "CreateNewFeature", &VizPropertySetWrapper::CreateNewFeature )
+        .Func( "SetBoolPropertyValue", &VizPropertySetWrapper::SetBoolPropertyValue )
+        .Func( "SetIntPropertyValue", &VizPropertySetWrapper::SetIntPropertyValue )
+        .Func( "SetFloatPropertyValue", &VizPropertySetWrapper::SetFloatPropertyValue )
+        .Func( "SetDoublePropertyValue", &VizPropertySetWrapper::SetDoublePropertyValue )
+        .Func( "SetStringPropertyValue", &VizPropertySetWrapper::SetStringPropertyValue )
+        .Func( "Save", &VizPropertySetWrapper::Save )
+        .Func( "BulkSave", &VizPropertySetWrapper::BulkSave )
+        .Func( "GetUUIDAsString", &VizPropertySetWrapper::GetUUIDAsString )
+    );
 
-    Sqrat::Class< TweakStore > tsClass;
-    tsClass.Func( "OpenTransaction", &TweakStore::OpenTransaction );
-    tsClass.Func( "CloseTransaction", &TweakStore::CloseTransaction );
-    Sqrat::RootTable().Bind( "TweakStore", tsClass );
+    Sqrat::RootTable().Bind( "TweakStore", Sqrat::Class< TweakStore >()
+        .Func( "OpenTransaction", &TweakStore::OpenTransaction )
+        .Func( "CloseTransaction", &TweakStore::CloseTransaction )
+    );
 
-    Sqrat::Class< Sleeper > sleepClass;
-    sleepClass.Func( "Sleep", &Sleeper::Sleep );
-    Sqrat::RootTable().Bind( "Sleeper", sleepClass );
+    Sqrat::RootTable().Bind( "Sleeper", Sqrat::Class< Sleeper >()
+        .Func( "Sleep", &Sleeper::Sleep )
+    );
 
-    Sqrat::Class< Logger > loggerClass;
-    loggerClass.Func( "info", &Logger::info );
-    loggerClass.Func( "notice", &Logger::notice );
-    loggerClass.Func( "warning", &Logger::warning );
-    loggerClass.Func( "error", &Logger::error );
-    Sqrat::RootTable().Bind( "Logger", loggerClass );
+    Sqrat::RootTable().Bind( "Logger", Sqrat::Class< Logger >()
+        .Func( "info", &Logger::info )
+        .Func( "notice", &Logger::notice )
+        .Func( "warning", &Logger::warning )
+        .Func( "error", &Logger::error )
+    );
 
     {
         Sqrat::Table namespaceTable;
