@@ -221,22 +221,22 @@ public:
         ;
     }
 
-    void Info( const std::string& message )
+    void info( const std::string& message )
     {
         LOG_INFO( message );
     }
 
-    void Notice( const std::string& message )
+    void notice( const std::string& message )
     {
         LOG_NOTICE( message );
     }
 
-    void Warning( const std::string& message )
+    void warning( const std::string& message )
     {
         LOG_WARNING( message );
     }
 
-    void Error( const std::string& message )
+    void error( const std::string& message )
     {
         LOG_ERROR( message );
     }

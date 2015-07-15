@@ -198,10 +198,10 @@ void SquirrelConnection::BindSpecialClasses()
     Sqrat::RootTable().Bind( "Sleeper", sleepClass );
 
     Sqrat::Class< Logger > loggerClass;
-    loggerClass.Func( "Info", &Logger::Info );
-    loggerClass.Func( "Notice", &Logger::Notice );
-    loggerClass.Func( "Warning", &Logger::Warning );
-    loggerClass.Func( "Error", &Logger::Error );
+    loggerClass.Func( "info", &Logger::info );
+    loggerClass.Func( "notice", &Logger::notice );
+    loggerClass.Func( "warning", &Logger::warning );
+    loggerClass.Func( "error", &Logger::error );
     Sqrat::RootTable().Bind( "Logger", loggerClass );
 
     {
