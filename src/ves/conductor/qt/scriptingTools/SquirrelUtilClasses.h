@@ -280,8 +280,6 @@ class AbstractState : public BaseObject
 public:
     AbstractState() : BaseObject() {}
 
-    ~AbstractState() {}
-
     void _enter( AbstractContext* context )
     {
         ; // dummy function - Squirrel subclasses that do not override enter() will call this
@@ -347,21 +345,13 @@ class AbstractContext
 public:
     AbstractContext() : m_state( static_cast< AbstractState* >( 0 ) ) {}
 
-    virtual ~AbstractContext()
-    {
-        if( m_state )
-        {
-            //delete m_state;
-        }
-    }
-
     void setInitialState( AbstractState* state )
     {
         m_state = state;
         m_state->enter( this );
     }
 
-    virtual void handleEvent( AbstractEvent* event )
+    void handleEvent( AbstractEvent* event )
     {
         if( m_state )
         {
@@ -369,7 +359,6 @@ public:
             if( new_state )
             {
                 m_state->exit( this );
-                //delete m_state;
                 m_state = new_state;
                 m_state->enter( this );
             }
