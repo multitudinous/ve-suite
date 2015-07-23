@@ -251,21 +251,14 @@ class BaseObject
 {
 public:
     BaseObject()
+        // get a reference to the Squirrel instance from the top of the stack
+        : m_instance( Sqrat::DefaultVM::Get(), -1 )
     {
-        m_vm = Sqrat::DefaultVM::Get();
-
-        sq_resetobject( &m_instance );
-            
-        // get the "this" pointer for the Squirrel object
-        sq_getstackobj( m_vm, 1, &m_instance );
+        ;        
     }
 
-    ~BaseObject() {}
-
 protected:
-    HSQOBJECT m_instance;
-
-    HSQUIRRELVM m_vm;   
+    Sqrat::Var< Sqrat::Object& > m_instance;
 };
 
 class AbstractEvent
@@ -298,7 +291,7 @@ public:
     {
         try
         {
-            Sqrat::Function( m_instance, "enter" ).Execute<AbstractContext*>( context );
+            Sqrat::Function( m_instance.value, "enter" ).Execute< AbstractContext* >( context );
         }
         catch( Sqrat::Exception& e )
         {
@@ -315,7 +308,7 @@ public:
     {
         try
         {
-            Sqrat::Function( m_instance, "exit" ).Execute<AbstractContext*>( context );
+            Sqrat::Function( m_instance.value, "exit" ).Execute< AbstractContext* >( context );
         }
         catch( Sqrat::Exception& e )
         {
@@ -331,10 +324,9 @@ public:
 
     AbstractState* handleEvent( AbstractContext* context, AbstractEvent* event )
     {
-        // TODO: increment the reference count of the object returned by handleEvent()? 
         try
         {
-            AbstractState* new_state = Sqrat::Function( m_instance, "handleEvent" )
+            AbstractState* new_state = Sqrat::Function( m_instance.value, "handleEvent" )
                 .Evaluate< AbstractState*, AbstractContext*, AbstractEvent* >( context, event );
             return new_state;
         }
