@@ -261,35 +261,35 @@ protected:
     Sqrat::Var< Sqrat::Object& > m_instance;
 };
 
-class AbstractEvent
+class BaseEvent
 {
 public:
-    AbstractEvent() {}
+    BaseEvent() {}
 };
 
 // forward declaration
-class AbstractContext;
+class BaseContext;
 
 ////////////////////////////////////////////////////////////////////////////////
-/** \brief The AbstractState class
+/** \brief The BaseState class
   * Provides a framework for implementing the State design pattern
   * https://en.wikipedia.org/wiki/State_pattern
 **/
-class AbstractState : public BaseObject
+class BaseState : public BaseObject
 {
 public:
-    AbstractState() : BaseObject() {}
+    BaseState() : BaseObject() {}
 
-    void _enter( AbstractContext* context )
+    void _enter( BaseContext* context )
     {
         ; // dummy function - Squirrel subclasses that do not override enter() will call this
     }
 
-    void enter( AbstractContext* context )
+    void enter( BaseContext* context )
     {
         try
         {
-            Sqrat::Function( m_instance.value, "enter" ).Execute< AbstractContext* >( context );
+            Sqrat::Function( m_instance.value, "enter" ).Execute< BaseContext* >( context );
         }
         catch( Sqrat::Exception& e )
         {
@@ -297,16 +297,16 @@ public:
         }
     }
 
-    void _exit( AbstractContext* context )
+    void _exit( BaseContext* context )
     {
         ; // dummy function - Squirrel subclasses that do not override exit() will call this
     }
 
-    void exit( AbstractContext* context )
+    void exit( BaseContext* context )
     {
         try
         {
-            Sqrat::Function( m_instance.value, "exit" ).Execute< AbstractContext* >( context );
+            Sqrat::Function( m_instance.value, "exit" ).Execute< BaseContext* >( context );
         }
         catch( Sqrat::Exception& e )
         {
@@ -314,18 +314,18 @@ public:
         }
     }
 
-    AbstractState* _handleEvent( AbstractContext* context, AbstractEvent* event )
+    BaseState* _handleEvent( BaseContext* context, BaseEvent* event )
     {
         // dummy function - Squirrel subclasses that do not override handleEvent() will call this
-        return static_cast< AbstractState* >( 0 );    
+        return static_cast< BaseState* >( 0 );    
     }
 
-    AbstractState* handleEvent( AbstractContext* context, AbstractEvent* event )
+    BaseState* handleEvent( BaseContext* context, BaseEvent* event )
     {
         try
         {
-            AbstractState* new_state = Sqrat::Function( m_instance.value, "handleEvent" )
-                .Evaluate< AbstractState*, AbstractContext*, AbstractEvent* >( context, event );
+            BaseState* new_state = Sqrat::Function( m_instance.value, "handleEvent" )
+                .Evaluate< BaseState*, BaseContext*, BaseEvent* >( context, event );
             return new_state;
         }
         catch( Sqrat::Exception& e )
@@ -336,26 +336,26 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-/** \brief The AbstractContext class
+/** \brief The BaseContext class
   * Provides a framework for implementing the State design pattern
   * https://en.wikipedia.org/wiki/State_pattern
 **/
-class AbstractContext
+class BaseContext
 {
 public:
-    AbstractContext() : m_state( static_cast< AbstractState* >( 0 ) ) {}
+    BaseContext() : m_state( static_cast< BaseState* >( 0 ) ) {}
 
-    void setInitialState( AbstractState* state )
+    void setInitialState( BaseState* state )
     {
         m_state = state;
         m_state->enter( this );
     }
 
-    void handleEvent( AbstractEvent* event )
+    void handleEvent( BaseEvent* event )
     {
         if( m_state )
         {
-            AbstractState* new_state = m_state->handleEvent( this, event );
+            BaseState* new_state = m_state->handleEvent( this, event );
             if( new_state )
             {
                 m_state->exit( this );
@@ -366,7 +366,7 @@ public:
     }
 
 protected:
-    AbstractState* m_state; 
+    BaseState* m_state; 
 };
 
 }} //ves::conductor
