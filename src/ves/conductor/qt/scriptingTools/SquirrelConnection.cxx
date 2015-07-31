@@ -39,6 +39,8 @@
 #include <switchwire/squirrel/SQStdMap.h>
 #include <switchwire/squirrel/SQStdVector.h>
 
+#include <gadget/Type/DigitalData.h>
+
 namespace ves
 {
 namespace conductor
@@ -115,6 +117,13 @@ void SquirrelConnection::ExposeSignalSlotTypes( switchwire::SquirrelContext& sc 
             ( "BoolSlot", sc );
 
     ExposeSignalType_1
+            < void ( float const& ) >
+            ( "FloatSignal", sc );
+    ExposeSlotType_1
+            < void ( float const& ) >
+            ( "FloatSlot", sc );
+
+    ExposeSignalType_1
             < void ( double const& ) >
             ( "DoubleSignal", sc );
     ExposeSlotType_1
@@ -155,6 +164,17 @@ void SquirrelConnection::ExposeSignalSlotTypes( switchwire::SquirrelContext& sc 
     ExposeSlotType_2
             < void ( const bool, const std::vector< double >& ) >
             ( "BoolAndDoubleVectorSlot", sc );
+
+    // a special slot type for receiving "raw" game controller button events
+    ExposeSlotType_1
+            < void ( gadget::DigitalState::State ) >
+            ( "GameControllerButtonDigitalStateSlot", sc );
+
+    // can be used in place of FloatSlot if you want to make the intended use
+    // of the slot clearer
+    ExposeSlotType_1
+            < void ( float const& ) >
+            ( "GameControllerAxisAnalogSlot", sc );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::BindSpecialClasses()
@@ -221,7 +241,17 @@ void SquirrelConnection::BindSpecialClasses()
         );
 
         Sqrat::RootTable().Bind( "StateMachine", namespaceTable );
-    }    
+    }
+
+    {
+        Sqrat::Enumeration digitalState;
+        digitalState.Const( "OFF", gadget::DigitalState::OFF );
+        digitalState.Const( "ON", gadget::DigitalState::ON );
+        digitalState.Const( "TOGGLE_ON", gadget::DigitalState::TOGGLE_ON );
+        digitalState.Const( "TOGGLE_OFF", gadget::DigitalState::TOGGLE_OFF );
+
+        Sqrat::ConstTable().Enum( "DigitalState", digitalState );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::runScript( const std::string& scriptText )
