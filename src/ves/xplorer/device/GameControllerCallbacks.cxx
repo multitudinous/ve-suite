@@ -246,6 +246,48 @@ GameControllerCallbacks::GameControllerCallbacks()
     switchwire::EventManager::instance()->RegisterSignal(
         ( &m_hideShowUI ),
         "GameController.HideShowUI" );
+
+    m_gameControllerButtonSignalMap["GameController.Button0"] = new GameControllerButtonSignal_type;
+    m_gameControllerButtonSignalMap["GameController.Button1"] = new GameControllerButtonSignal_type;
+    m_gameControllerButtonSignalMap["GameController.Button2"] = new GameControllerButtonSignal_type;
+    m_gameControllerButtonSignalMap["GameController.Button3"] = new GameControllerButtonSignal_type;
+    m_gameControllerButtonSignalMap["GameController.Button4"] = new GameControllerButtonSignal_type;
+    m_gameControllerButtonSignalMap["GameController.Button5"] = new GameControllerButtonSignal_type;
+    m_gameControllerButtonSignalMap["GameController.Button6"] = new GameControllerButtonSignal_type;
+    m_gameControllerButtonSignalMap["GameController.Button7"] = new GameControllerButtonSignal_type;
+    m_gameControllerButtonSignalMap["GameController.Button8"] = new GameControllerButtonSignal_type;
+    m_gameControllerButtonSignalMap["GameController.Button9"] = new GameControllerButtonSignal_type;
+    m_gameControllerButtonSignalMap["GameController.Button10"] = new GameControllerButtonSignal_type;
+    m_gameControllerButtonSignalMap["GameController.Button11"] = new GameControllerButtonSignal_type;
+
+    m_gameControllerAnalogSignalMap["GameController.Axis0"] = new GameControllerAnalogSignal_type;
+    m_gameControllerAnalogSignalMap["GameController.Axis1"] = new GameControllerAnalogSignal_type;
+    m_gameControllerAnalogSignalMap["GameController.Axis2"] = new GameControllerAnalogSignal_type;
+    m_gameControllerAnalogSignalMap["GameController.Axis3"] = new GameControllerAnalogSignal_type;
+    m_gameControllerAnalogSignalMap["GameController.Axis4"] = new GameControllerAnalogSignal_type;
+    m_gameControllerAnalogSignalMap["GameController.Axis5"] = new GameControllerAnalogSignal_type;
+
+    // register "raw" button signals with EventManager
+    for( GameControllerButtonSignalMap_type::const_iterator
+            iter = m_gameControllerButtonSignalMap.begin();
+            iter != m_gameControllerButtonSignalMap.end(); ++iter )
+    {
+        switchwire::EventManager::instance()->RegisterSignal(
+            iter->second,
+            iter->first,
+            switchwire::EventManager::button_SignalType );
+    }
+
+    // register "raw" analog signals with EventManager
+    for( GameControllerAnalogSignalMap_type::const_iterator
+            iter = m_gameControllerAnalogSignalMap.begin();
+            iter != m_gameControllerAnalogSignalMap.end(); ++iter )
+    {
+        switchwire::EventManager::instance()->RegisterSignal(
+            iter->second,
+            iter->first,
+            switchwire::EventManager::input_SignalType );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 GameControllerCallbacks::~GameControllerCallbacks()
@@ -277,6 +319,8 @@ void GameControllerCallbacks::ProcessEvents( ves::open::xml::CommandPtr )
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnAxis0Event( const float event )
 {
+    m_gameControllerAnalogSignalMap["GameController.Axis0"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -314,6 +358,8 @@ void GameControllerCallbacks::OnAxis0Event( const float event )
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnAxis1Event( const float event )
 {
+    m_gameControllerAnalogSignalMap["GameController.Axis1"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -351,6 +397,8 @@ void GameControllerCallbacks::OnAxis1Event( const float event )
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnAxis2Event( const float event )
 {
+    m_gameControllerAnalogSignalMap["GameController.Axis2"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -395,6 +443,8 @@ void GameControllerCallbacks::OnAxis2Event( const float event )
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnAxis3Event( const float event )
 {
+    m_gameControllerAnalogSignalMap["GameController.Axis3"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -437,16 +487,20 @@ void GameControllerCallbacks::OnAxis3Event( const float event )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameControllerCallbacks::OnAxis4Event( const float )
+void GameControllerCallbacks::OnAxis4Event( const float event )
 {
+    m_gameControllerAnalogSignalMap["GameController.Axis4"]->signal( event );
+
     if( m_exit )
     {
         return;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameControllerCallbacks::OnAxis5Event( const float )
+void GameControllerCallbacks::OnAxis5Event( const float event )
 {
+    m_gameControllerAnalogSignalMap["GameController.Axis5"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -455,6 +509,8 @@ void GameControllerCallbacks::OnAxis5Event( const float )
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton0Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button0"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -493,6 +549,8 @@ void GameControllerCallbacks::OnButton0Event( gadget::DigitalState::State event 
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton1Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button1"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -527,6 +585,8 @@ void GameControllerCallbacks::OnButton1Event( gadget::DigitalState::State event 
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton2Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button2"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -561,6 +621,8 @@ void GameControllerCallbacks::OnButton2Event( gadget::DigitalState::State event 
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton3Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button3"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -595,6 +657,8 @@ void GameControllerCallbacks::OnButton3Event( gadget::DigitalState::State event 
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton4Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button4"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -629,6 +693,8 @@ void GameControllerCallbacks::OnButton4Event( gadget::DigitalState::State event 
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton5Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button5"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -661,6 +727,8 @@ void GameControllerCallbacks::OnButton5Event( gadget::DigitalState::State event 
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton6Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button6"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -692,6 +760,8 @@ void GameControllerCallbacks::OnButton6Event( gadget::DigitalState::State event 
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton7Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button7"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -723,6 +793,8 @@ void GameControllerCallbacks::OnButton7Event( gadget::DigitalState::State event 
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton8Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button8"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -755,6 +827,8 @@ void GameControllerCallbacks::OnButton8Event( gadget::DigitalState::State event 
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton9Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button9"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -786,6 +860,8 @@ void GameControllerCallbacks::OnButton9Event( gadget::DigitalState::State event 
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton10Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button10"]->signal( event );
+
     if( m_exit )
     {
         return;
@@ -829,6 +905,8 @@ void GameControllerCallbacks::OnButton10Event( gadget::DigitalState::State event
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnButton11Event( gadget::DigitalState::State event )
 {
+    m_gameControllerButtonSignalMap["GameController.Button11"]->signal( event );
+
     if( m_exit )
     {
         return;

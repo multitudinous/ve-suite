@@ -279,6 +279,18 @@ private:
     bool m_success;
     ///If the game controller is being used for nav or to move the cursor
     bool m_uiMode;
+
+    // "raw" button signal type
+    typedef switchwire::Event< void ( gadget::DigitalState::State ) > GameControllerButtonSignal_type;
+
+    // "raw" analog signal type
+    typedef switchwire::Event< void ( float ) > GameControllerAnalogSignal_type;
+
+    typedef std::map< std::string, GameControllerButtonSignal_type* > GameControllerButtonSignalMap_type;
+    typedef std::map< std::string, GameControllerAnalogSignal_type* > GameControllerAnalogSignalMap_type;
+
+    GameControllerButtonSignalMap_type m_gameControllerButtonSignalMap;
+    GameControllerAnalogSignalMap_type m_gameControllerAnalogSignalMap;
 };
 
 } //end device
