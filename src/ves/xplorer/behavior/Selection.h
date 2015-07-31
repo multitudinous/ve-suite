@@ -114,6 +114,8 @@ private:
     void SetCADSelection( bool const& flag );
     ///Highlight the last node in a node path
     void HighlightNode( osg::NodePath& nodePath );
+    ///Convert to the std::string representation of an osg::NodePath
+    void ConvertNodePathToString( osg::NodePath& nodePath );
 
     ///Selection start end point line
     osg::Vec3d m_startPoint;
@@ -125,6 +127,10 @@ private:
     ///Object picked
     typedef switchwire::Event< void ( osg::NodePath& ) > ObjectPickedSignal_type;
     ObjectPickedSignal_type m_objectPickedSignal;
+
+    /// Object picked (string representation of NodePath)
+    typedef switchwire::Event< void( std::string const& ) > ObjectPickedAsStringSignal_type;
+    ObjectPickedAsStringSignal_type m_objectPickedAsStringSignal;
 
     ///Physics simulator pointer
     scenegraph::PhysicsSimulator& m_physicsSimulator;

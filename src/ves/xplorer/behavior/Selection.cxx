@@ -84,6 +84,9 @@
 #include <osg/AutoTransform>
 #include <osg/io_utils>
 
+//osgWorks
+#include <osgwTools/NodePathUtils.h>
+
 //GMTL
 #include <gmtl/Matrix.h>
 #include <gmtl/AxisAngle.h>
@@ -158,6 +161,14 @@ Selection::Selection()
 
     switchwire::EventManager::instance()->RegisterSignal(
         ( &m_objectPickedSignal ),
+        "Selection.ObjectPickedSignal" );
+
+    CONNECTSIGNALS_1( "Selection.ObjectPickedSignal", void( osg::NodePath& ),
+                      &Selection::ConvertNodePathToString,
+                      m_connections, any_SignalType, normal_Priority );
+
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_objectPickedAsStringSignal ),
         "Selection.ObjectPickedSignal" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -529,6 +540,11 @@ void Selection::HighlightNode( osg::NodePath& nodePath )
     //Add shader code to have code highlighted
     osg::Vec3 enableGlow( 1.0, 0.0, 0.0 );
     geode_stateset->addUniform( new osg::Uniform( "glowColor", enableGlow ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Selection::ConvertNodePathToString( osg::NodePath& nodePath )
+{
+    m_objectPickedAsStringSignal.signal( osgwTools::nodePathToString( nodePath ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
