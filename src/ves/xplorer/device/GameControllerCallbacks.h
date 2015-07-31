@@ -281,6 +281,9 @@ private:
     bool m_uiMode;
 
     // "raw" button signal type
+    // this signal should only be used with Squirrel code; C++ slots should not be doing any conditional
+    // processing based on the button state; instead, subscribe C++ slots to a state-specific "void" signal
+    // (and create such signals if they are needed)
     typedef switchwire::Event< void ( gadget::DigitalState::State ) > GameControllerButtonSignal_type;
 
     // "raw" analog signal type
