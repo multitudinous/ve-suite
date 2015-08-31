@@ -169,7 +169,7 @@ Selection::Selection()
 
     switchwire::EventManager::instance()->RegisterSignal(
         ( &m_objectPickedAsStringSignal ),
-        "Selection.ObjectPickedSignal" );
+        "Selection.ObjectPickedSignalAsString" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Selection::~Selection()
