@@ -170,6 +170,14 @@ Selection::Selection()
     switchwire::EventManager::instance()->RegisterSignal(
         ( &m_objectPickedAsStringSignal ),
         "Selection.ObjectPickedSignalAsString" );
+
+    CONNECTSIGNAL_1( "Selection.ObjectPickedSignal", void( osg::NodePath& ),
+                     &Selection::GetNodeUUIDFromNodePath,
+                     m_connections, normal_Priority );
+
+    switchwire::EventManager::instance()->RegisterSignal(
+        ( &m_objectPickedNodeUUIDSignal ),
+        "Selection.ObjectPickedNodeUUIDSignal" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Selection::~Selection()
@@ -376,8 +384,8 @@ void Selection::ProcessSelection()
     //Now find the new selected object
     osg::NodePath nodePath = intersections.begin()->nodePath;
     m_objectPickedSignal.signal( nodePath );
-    osg::Node* vesObject = scenegraph::FindVESObject( nodePath );
-    boost::ignore_unused_variable_warning( vesObject );
+    //osg::Node* vesObject = scenegraph::FindVESObject( nodePath );
+    //boost::ignore_unused_variable_warning( vesObject );
 
     //HighlightAndSetManipulators alters nodePath, so copy it off first.
     osg::NodePath nodePathCopy( nodePath );
@@ -545,6 +553,26 @@ void Selection::HighlightNode( osg::NodePath& nodePath )
 void Selection::ConvertNodePathToString( osg::NodePath& nodePath )
 {
     m_objectPickedAsStringSignal.signal( osgwTools::nodePathToString( nodePath ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Selection::GetNodeUUIDFromNodePath( osg::NodePath& nodePath )
+{
+    osg::Node* node = scenegraph::FindVESObject( nodePath );
+    if( node )
+    {
+        // TODO: can I just assume that "VE_XML_ID" is the first element in the
+        // description list and that the second element contains the UUID, instead
+        // of iterating to find "VE_XML_ID"?
+        osg::Node::DescriptionList::const_iterator i = node->getDescriptions().begin();
+        for( i; i != node->getDescriptions().end(); ++i )
+        {
+            if( *i == "VE_XML_ID" )
+            {
+                m_objectPickedNodeUUIDSignal.signal( *(i + 1) );
+                break;
+            }
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
