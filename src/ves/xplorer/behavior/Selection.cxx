@@ -163,9 +163,9 @@ Selection::Selection()
         ( &m_objectPickedSignal ),
         "Selection.ObjectPickedSignal" );
 
-    CONNECTSIGNALS_1( "Selection.ObjectPickedSignal", void( osg::NodePath& ),
-                      &Selection::ConvertNodePathToString,
-                      m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNAL_1( "Selection.ObjectPickedSignal", void( osg::NodePath& ),
+                     &Selection::ConvertNodePathToString,
+                     m_connections, normal_Priority );
 
     switchwire::EventManager::instance()->RegisterSignal(
         ( &m_objectPickedAsStringSignal ),
