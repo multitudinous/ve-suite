@@ -205,7 +205,7 @@ public:
   * std::cerr). Useful for debugging scripts.
   * @code
   * local logger = Logger();
-  * logger.Info( "hello from Squirrel" );
+  * logger.info( "hello from Squirrel" );
   * @endcode
 **/
 class Logger
