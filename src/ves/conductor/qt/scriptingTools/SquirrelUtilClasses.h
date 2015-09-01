@@ -280,16 +280,16 @@ class BaseState : public BaseObject
 public:
     BaseState() : BaseObject() {}
 
-    void _enter( BaseContext* context )
+    void _onEnter( BaseContext* context )
     {
         ; // dummy function - Squirrel subclasses that do not override enter() will call this
     }
 
-    void enter( BaseContext* context )
+    void onEnter( BaseContext* context )
     {
         try
         {
-            Sqrat::Function( m_instance.value, "enter" ).Execute< BaseContext* >( context );
+            Sqrat::Function( m_instance.value, "onEnter" ).Execute< BaseContext* >( context );
         }
         catch( Sqrat::Exception& e )
         {
@@ -297,16 +297,16 @@ public:
         }
     }
 
-    void _exit( BaseContext* context )
+    void _onExit( BaseContext* context )
     {
         ; // dummy function - Squirrel subclasses that do not override exit() will call this
     }
 
-    void exit( BaseContext* context )
+    void onExit( BaseContext* context )
     {
         try
         {
-            Sqrat::Function( m_instance.value, "exit" ).Execute< BaseContext* >( context );
+            Sqrat::Function( m_instance.value, "onExit" ).Execute< BaseContext* >( context );
         }
         catch( Sqrat::Exception& e )
         {
@@ -314,17 +314,17 @@ public:
         }
     }
 
-    BaseState* _handleEvent( BaseContext* context, BaseEvent* event )
+    BaseState* _onEvent( BaseContext* context, BaseEvent* event )
     {
         // dummy function - Squirrel subclasses that do not override handleEvent() will call this
         return static_cast< BaseState* >( 0 );    
     }
 
-    BaseState* handleEvent( BaseContext* context, BaseEvent* event )
+    BaseState* onEvent( BaseContext* context, BaseEvent* event )
     {
         try
         {
-            BaseState* new_state = Sqrat::Function( m_instance.value, "handleEvent" )
+            BaseState* new_state = Sqrat::Function( m_instance.value, "onEvent" )
                 .Evaluate< BaseState*, BaseContext*, BaseEvent* >( context, event );
             return new_state;
         }
@@ -348,19 +348,19 @@ public:
     void setInitialState( BaseState* state )
     {
         m_state = state;
-        m_state->enter( this );
+        m_state->onEnter( this );
     }
 
     void handleEvent( BaseEvent* event )
     {
         if( m_state )
         {
-            BaseState* new_state = m_state->handleEvent( this, event );
+            BaseState* new_state = m_state->onEvent( this, event );
             if( new_state )
             {
-                m_state->exit( this );
+                m_state->onExit( this );
                 m_state = new_state;
-                m_state->enter( this );
+                m_state->onEnter( this );
             }
         }
     }

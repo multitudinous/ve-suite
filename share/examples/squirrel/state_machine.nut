@@ -29,17 +29,17 @@ class OnState extends StateMachine.State
         logger = Logger();
     }
 
-    function enter(context)
+    function onEnter(context)
     {
         logger.info("entering the 'on' state...");
     }
 
-    function exit(context)
+    function onExit(context)
     {
         logger.info("leaving the 'on' state...");
     }
 
-    function handleEvent(context, event)
+    function onEvent(context, event)
     {
         // transition to the 'off' state
         return OffState();
@@ -57,17 +57,17 @@ class OffState extends StateMachine.State
         logger = Logger();
     }
 
-    function enter(context)
+    function onEnter(context)
     {
         logger.info("entering the 'off' state...");
     }
 
-    function exit(context)
+    function onExit(context)
     {
         logger.info("leaving the 'off' state...");
     }
 
-    function handleEvent(context, event)
+    function onEvent(context, event)
     {
         // transition to the 'on' state
         return OnState();
