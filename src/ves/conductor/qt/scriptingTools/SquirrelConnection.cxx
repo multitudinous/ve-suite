@@ -217,10 +217,10 @@ void SquirrelConnection::BindSpecialClasses()
     );
 
     Sqrat::RootTable().Bind( "Logger", Sqrat::Class< Logger >()
-        .Func( "info", &Logger::info )
-        .Func( "notice", &Logger::notice )
-        .Func( "warning", &Logger::warning )
-        .Func( "error", &Logger::error )
+        .Func( "Info", &Logger::Info )
+        .Func( "Notice", &Logger::Notice )
+        .Func( "Warning", &Logger::Warning )
+        .Func( "Error", &Logger::Error )
     );
 
     {
@@ -230,14 +230,14 @@ void SquirrelConnection::BindSpecialClasses()
         namespaceTable.Bind( "Event", eventClass );
 
         namespaceTable.Bind( "State", Sqrat::Class< BaseState >()
-            .Func( "onEnter", &BaseState::_onEnter )
-            .Func( "onExit", &BaseState::_onExit )
-            .Func( "onEvent", &BaseState::_onEvent )
+            .Func( "OnEnter", &BaseState::_OnEnter )
+            .Func( "OnExit", &BaseState::_OnExit )
+            .Func( "OnEvent", &BaseState::_OnEvent )
         );
 
         namespaceTable.Bind( "Context", Sqrat::Class< BaseContext >()
-            .Func( "setInitialState", &BaseContext::setInitialState )
-            .Func( "handleEvent", &BaseContext::handleEvent )
+            .Func( "SetInitialState", &BaseContext::SetInitialState )
+            .Func( "HandleEvent", &BaseContext::HandleEvent )
         );
 
         Sqrat::RootTable().Bind( "StateMachine", namespaceTable );

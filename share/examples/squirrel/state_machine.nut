@@ -29,17 +29,17 @@ class OnState extends StateMachine.State
         logger = Logger();
     }
 
-    function onEnter(context)
+    function OnEnter(context)
     {
-        logger.info("entering the 'on' state...");
+        logger.Info("entering the 'on' state...");
     }
 
-    function onExit(context)
+    function OnExit(context)
     {
-        logger.info("leaving the 'on' state...");
+        logger.Info("leaving the 'on' state...");
     }
 
-    function onEvent(context, event)
+    function OnEvent(context, event)
     {
         // transition to the 'off' state
         return OffState();
@@ -57,17 +57,17 @@ class OffState extends StateMachine.State
         logger = Logger();
     }
 
-    function onEnter(context)
+    function OnEnter(context)
     {
-        logger.info("entering the 'off' state...");
+        logger.Info("entering the 'off' state...");
     }
 
-    function onExit(context)
+    function OnExit(context)
     {
-        logger.info("leaving the 'off' state...");
+        logger.Info("leaving the 'off' state...");
     }
 
-    function onEvent(context, event)
+    function OnEvent(context, event)
     {
         // transition to the 'on' state
         return OnState();
@@ -86,7 +86,7 @@ class ButtonPressEvent extends StateMachine.Event
 function Execute()
 {
     local toggle_button = ToggleButton();
-    toggle_button.setInitialState( OffState() );
+    toggle_button.SetInitialState( OffState() );
 
     local dummy_event = ButtonPressEvent();
 
@@ -96,8 +96,8 @@ function Execute()
 
     while(1)
     {
-       log.info("pressing the button...");
-       toggle_button.handleEvent( dummy_event );
+       log.Info("pressing the button...");
+       toggle_button.HandleEvent( dummy_event );
        sleeper.Sleep( 2000 );
     }
 } 

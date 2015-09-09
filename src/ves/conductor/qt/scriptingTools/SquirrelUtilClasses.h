@@ -222,22 +222,22 @@ public:
         ;
     }
 
-    void info( const std::string& message )
+    void Info( const std::string& message )
     {
         LOG_INFO( message );
     }
 
-    void notice( const std::string& message )
+    void Notice( const std::string& message )
     {
         LOG_NOTICE( message );
     }
 
-    void warning( const std::string& message )
+    void Warning( const std::string& message )
     {
         LOG_WARNING( message );
     }
 
-    void error( const std::string& message )
+    void Error( const std::string& message )
     {
         LOG_ERROR( message );
     }
@@ -281,16 +281,16 @@ class BaseState : public BaseObject
 public:
     BaseState() : BaseObject() {}
 
-    void _onEnter( BaseContext* context )
+    void _OnEnter( BaseContext* context )
     {
         ; // dummy function - Squirrel subclasses that do not override enter() will call this
     }
 
-    void onEnter( BaseContext* context )
+    void OnEnter( BaseContext* context )
     {
         try
         {
-            Sqrat::Function( m_instance.value, "onEnter" ).Execute< BaseContext* >( context );
+            Sqrat::Function( m_instance.value, "OnEnter" ).Execute< BaseContext* >( context );
         }
         catch( Sqrat::Exception& e )
         {
@@ -298,16 +298,16 @@ public:
         }
     }
 
-    void _onExit( BaseContext* context )
+    void _OnExit( BaseContext* context )
     {
         ; // dummy function - Squirrel subclasses that do not override exit() will call this
     }
 
-    void onExit( BaseContext* context )
+    void OnExit( BaseContext* context )
     {
         try
         {
-            Sqrat::Function( m_instance.value, "onExit" ).Execute< BaseContext* >( context );
+            Sqrat::Function( m_instance.value, "OnExit" ).Execute< BaseContext* >( context );
         }
         catch( Sqrat::Exception& e )
         {
@@ -315,17 +315,17 @@ public:
         }
     }
 
-    BaseState* _onEvent( BaseContext* context, BaseEvent* event )
+    BaseState* _OnEvent( BaseContext* context, BaseEvent* event )
     {
         // dummy function - Squirrel subclasses that do not override handleEvent() will call this
         return static_cast< BaseState* >( 0 );    
     }
 
-    BaseState* onEvent( BaseContext* context, BaseEvent* event )
+    BaseState* OnEvent( BaseContext* context, BaseEvent* event )
     {
         try
         {
-            BaseState* new_state = Sqrat::Function( m_instance.value, "onEvent" )
+            BaseState* new_state = Sqrat::Function( m_instance.value, "OnEvent" )
                 .Evaluate< BaseState*, BaseContext*, BaseEvent* >( context, event );
             return new_state;
         }
@@ -346,22 +346,22 @@ class BaseContext
 public:
     BaseContext() : m_state( static_cast< BaseState* >( 0 ) ) {}
 
-    void setInitialState( BaseState* state )
+    void SetInitialState( BaseState* state )
     {
         m_state = state;
-        m_state->onEnter( this );
+        m_state->OnEnter( this );
     }
 
-    void handleEvent( BaseEvent* event )
+    void HandleEvent( BaseEvent* event )
     {
         if( m_state )
         {
-            BaseState* new_state = m_state->onEvent( this, event );
+            BaseState* new_state = m_state->OnEvent( this, event );
             if( new_state )
             {
-                m_state->onExit( this );
+                m_state->OnExit( this );
                 m_state = new_state;
-                m_state->onEnter( this );
+                m_state->OnEnter( this );
             }
         }
     }
