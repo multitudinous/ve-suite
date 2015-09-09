@@ -38,6 +38,7 @@
 // C++ classes that must be exposed to the Squirrel engine.
 
 #include <ves/xplorer/data/ContourPlanePropertySet.h>
+#include <ves/xplorer/data/CADPropertySet.h>
 #include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/Logging.h>
 #include <ves/conductor/qt/VisFeatureManager.h>
@@ -368,5 +369,110 @@ public:
 protected:
     BaseState* m_state; 
 };
+////////////////////////////////////////////////////////////////////////////////
+class CADPropertySetWrapper
+{
+public:
+    CADPropertySetWrapper() : m_set( new ves::xplorer::data::CADPropertySet )
+    {
+        ;
+    }
 
+    void SetBoolPropertyValue( const std::string& key, bool value )
+    {
+        m_set->SetPropertyValue( key, value );
+    }
+
+    bool GetBoolPropertyValue( const std::string& key )
+    {
+        try
+        {
+            return boost::any_cast< bool >( m_set->GetPropertyValue( key ) );
+        }
+        catch( const boost::bad_any_cast& )
+        {
+            std::cerr << "Oops: no such bool property \"" << key << "\"" << std::endl << std::flush;
+        }
+    }
+
+    void SetIntPropertyValue( const std::string& key, int value )
+    {
+        m_set->SetPropertyValue( key, value );
+    }
+
+    int GetIntPropertyValue( const std::string& key )
+    {
+        try
+        {
+            return boost::any_cast< int >( m_set->GetPropertyValue( key ) );
+        }
+        catch( const boost::bad_any_cast& )
+        {
+            std::cerr << "Oops: no such int property \"" << key << "\"" << std::endl << std::flush;
+        }
+    }
+
+    void SetFloatPropertyValue( const std::string& key, float value )
+    {
+        m_set->SetPropertyValue( key, value );
+    }
+
+    float GetFloatPropertyValue( const std::string& key )
+    {
+        try
+        {
+            return boost::any_cast< float >( m_set->GetPropertyValue( key ) );
+        }
+        catch( const boost::bad_any_cast& )
+        {
+            std::cerr << "Oops: no such float property \"" << key << "\"" << std::endl << std::flush;
+        }
+    }
+
+    void SetDoublePropertyValue( const std::string& key, double value )
+    {
+        m_set->SetPropertyValue( key, value );
+    }
+
+    double GetDoublePropertyValue( const std::string& key )
+    {
+        try
+        {
+            return boost::any_cast< double >( m_set->GetPropertyValue( key ) );
+        }
+        catch( const boost::bad_any_cast& )
+        {
+            std::cerr << "Oops: no such double property \"" << key << "\"" << std::endl << std::flush;
+        }
+    }
+
+    void SetStringPropertyValue( const std::string& key, std::string value )
+    {
+        m_set->SetPropertyValue( key, value );
+    }
+
+    std::string GetStringPropertyValue( const std::string& key )
+    {
+        try
+        {
+            return boost::any_cast< std::string >( m_set->GetPropertyValue( key ) );
+        }
+        catch( const boost::bad_any_cast& )
+        {
+            std::cerr << "Oops: no such string property \"" << key << "\"" << std::endl << std::flush;
+        }
+    }
+
+    bool LoadByNodePath( const std::string& node_path )
+    {
+        return m_set->LoadByKey( "NodePath", node_path );
+    }
+
+    void Save()
+    {
+        m_set->Save();
+    }
+private:
+    propertystore::PropertySetPtr m_set;
+};
 }} //ves::conductor

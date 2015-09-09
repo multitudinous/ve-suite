@@ -252,6 +252,21 @@ void SquirrelConnection::BindSpecialClasses()
 
         Sqrat::ConstTable().Enum( "DigitalState", digitalState );
     }
+
+    Sqrat::RootTable().Bind( "CADPropertySet", Sqrat::Class< CADPropertySetWrapper >()
+        .Func( "SetBoolPropertyValue", &CADPropertySetWrapper::SetBoolPropertyValue )
+        .Func( "GetBoolPropertyValue", &CADPropertySetWrapper::GetBoolPropertyValue )
+        .Func( "SetIntPropertyValue", &CADPropertySetWrapper::SetIntPropertyValue )
+        .Func( "GetIntPropertyValue", &CADPropertySetWrapper::GetIntPropertyValue )
+        .Func( "SetFloatPropertyValue", &CADPropertySetWrapper::SetFloatPropertyValue )
+        .Func( "GetFloatPropertyValue", &CADPropertySetWrapper::GetFloatPropertyValue )
+        .Func( "SetDoublePropertyValue", &CADPropertySetWrapper::SetDoublePropertyValue )
+        .Func( "GetDoublePropertyValue", &CADPropertySetWrapper::GetDoublePropertyValue )
+        .Func( "SetStringPropertyValue", &CADPropertySetWrapper::SetStringPropertyValue )
+        .Func( "GetStringPropertyValue", &CADPropertySetWrapper::GetStringPropertyValue )
+        .Func( "LoadByNodePath", &CADPropertySetWrapper::LoadByNodePath )
+        .Func( "Save", &CADPropertySetWrapper::Save )
+    );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::runScript( const std::string& scriptText )
