@@ -283,7 +283,7 @@ public:
 
     void _OnEnter( BaseContext* context )
     {
-        ; // dummy function - Squirrel subclasses that do not override enter() will call this
+        ; // dummy function - Squirrel subclasses that do not override OnEnter() will call this
     }
 
     void OnEnter( BaseContext* context )
@@ -300,7 +300,7 @@ public:
 
     void _OnExit( BaseContext* context )
     {
-        ; // dummy function - Squirrel subclasses that do not override exit() will call this
+        ; // dummy function - Squirrel subclasses that do not override OnExit() will call this
     }
 
     void OnExit( BaseContext* context )
@@ -317,7 +317,7 @@ public:
 
     BaseState* _OnEvent( BaseContext* context, BaseEvent* event )
     {
-        // dummy function - Squirrel subclasses that do not override handleEvent() will call this
+        // dummy function - Squirrel subclasses that do not override OnEvent() will call this
         return static_cast< BaseState* >( 0 );    
     }
 
