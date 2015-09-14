@@ -93,7 +93,7 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DFREETYPE_LIBRARY="${VTK_INSTALL_DIR}/lib/${VTK_VERSION_DIR}/libvtkfreetype.so" )
     CMAKE_PARAMS+=( -DLIBXML2_LIBRARIES="${VTK_INSTALL_DIR}/lib/${VTK_VERSION_DIR}/libvtklibxml2.so" )
     CMAKE_PARAMS+=( -DZLIB_INCLUDE_DIR="/usr/include" )
-    CMAKE_PARAMS+=( -DZLIB_LIBRARY="/usr/lib64/libz.a" )
+    CMAKE_PARAMS+=( -DZLIB_LIBRARY="/usr/lib64/libz.so" )
     CMAKE_PARAMS+=( -DPNG_PNG_INCLUDE_DIR="/usr/include" )
     CMAKE_PARAMS+=( -DPNG_LIBRARY="/usr/lib64/libpng.so" )
     
