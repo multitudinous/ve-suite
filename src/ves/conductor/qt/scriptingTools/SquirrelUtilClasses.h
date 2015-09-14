@@ -373,7 +373,7 @@ protected:
 class CADPropertySetWrapper
 {
 public:
-    CADPropertySetWrapper() : m_set( new ves::xplorer::data::CADPropertySet )
+    CADPropertySetWrapper() : m_set( new ves::xplorer::data::CADPropertySet() )
     {
         ;
     }
@@ -463,9 +463,14 @@ public:
         }
     }
 
-    bool LoadByNodePath( const std::string& node_path )
+    void SetUUID( const std::string& uuid )
     {
-        return m_set->LoadByKey( "NodePath", node_path );
+        m_set->SetUUID( uuid );
+    }
+
+    bool Load()
+    {
+        return m_set->Load();
     }
 
     void Save()

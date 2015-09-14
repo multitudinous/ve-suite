@@ -264,7 +264,8 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "GetDoublePropertyValue", &CADPropertySetWrapper::GetDoublePropertyValue )
         .Func( "SetStringPropertyValue", &CADPropertySetWrapper::SetStringPropertyValue )
         .Func( "GetStringPropertyValue", &CADPropertySetWrapper::GetStringPropertyValue )
-        .Func( "LoadByNodePath", &CADPropertySetWrapper::LoadByNodePath )
+        .Func( "SetUUID", &CADPropertySetWrapper::SetUUID )
+        .Func( "Load", &CADPropertySetWrapper::Load )
         .Func( "Save", &CADPropertySetWrapper::Save )
     );
 }
