@@ -378,6 +378,11 @@ public:
         ;
     }
 
+    ~CADPropertySetWrapper()
+    {
+        delete m_set;
+    }
+
     void SetBoolPropertyValue( const std::string& key, bool value )
     {
         m_set->SetPropertyValue( key, value );
@@ -478,6 +483,8 @@ public:
         m_set->Save();
     }
 private:
-    propertystore::PropertySetPtr m_set;
+    // I get mysterious crashes if I use a propertystore::PropertySetPtr,
+    // so use a raw pointer instead.
+    ves::xplorer::data::CADPropertySet* m_set;
 };
 }} //ves::conductor
