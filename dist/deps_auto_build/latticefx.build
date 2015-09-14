@@ -61,8 +61,8 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -Dcrunchstore_DIR="${crunchstore_INSTALL_DIR}/lib64" )
- 
-    CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC" )
+    CMAKE_PARAMS+=( -DosgWorks_DIR="${OSGWORKS_INSTALL_DIR}/lib64" ) 
+    CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-fPIC -std=c++0x" )
     CMAKE_PARAMS+=( -DCMAKE_C_FLAGS="-fPIC" )
     ;;
 esac
