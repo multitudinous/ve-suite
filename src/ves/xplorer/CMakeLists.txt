@@ -11,6 +11,15 @@ add_definitions( -DVE_XPLORER_LIBRARY
 file( GLOB srcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cxx" )
 file( GLOB hdrs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h" )
 
+# selectively enable C++11 features (e.g. unordered_map) for source files that need it
+if( CMAKE_COMPILER_IS_GNUCXX )
+    set_source_files_properties( "${CMAKE_CURRENT_SOURCE_DIR}/SteadyStateVizHandler.cxx"
+                                 "${CMAKE_CURRENT_SOURCE_DIR}/event/viz/VisFeatureMakerBase.cxx"
+                                 "${CMAKE_CURRENT_SOURCE_DIR}/event/viz/VolumeVisFeatureMaker.cxx"
+                                 PROPERTIES
+                                 COMPILE_FLAGS "-std=c++11" )
+endif()
+
 set(XPLORER_SUB_DIRS event device environment network plugin behavior)
 foreach( it ${XPLORER_SUB_DIRS})
     file( GLOB_RECURSE tmpSrcs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${it}/*.cxx" )
@@ -22,6 +31,13 @@ foreach( it ${XPLORER_SUB_DIRS})
             FILES_MATCHING PATTERN "*.h"
             PATTERN ".svn" EXCLUDE)
 endforeach()
+
+# set -std=c++0x on event/viz/cfdPolyData.cxx to allow use of scoped enums
+if( CMAKE_COMPILER_IS_GNUCXX )
+    set_source_files_properties( "${CMAKE_CURRENT_SOURCE_DIR}/event/viz/cfdPolyData.cxx"
+                                 PROPERTIES
+                                 COMPILE_FLAGS "-std=c++0x" )
+endif()
 
 set(VES_PRIVATE_HEADERS ${hdrs})
 #set(VES_PUBLIC_HEADERS ${hdrs} )

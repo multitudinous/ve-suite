@@ -1,6 +1,13 @@
 file( GLOB srcs "*.cxx" )
 file( GLOB hdrs "*.h" )
 
+# selectively enable C++11 features (e.g. unordered_map) for source files that need it 
+if( CMAKE_COMPILER_IS_GNUCXX )
+    set_source_files_properties( "${CMAKE_CURRENT_SOURCE_DIR}/App.cxx"
+                                 PROPERTIES
+                                 COMPILE_FLAGS "-std=c++11" )
+endif()
+
 add_definitions( -DSVN_VES_REVISION=\"\\\"9999\\\"\" )
 add_definitions(-DDISABLE_VPR_PROFILE)
 if(APPLE)
