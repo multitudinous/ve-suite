@@ -35,9 +35,11 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QFileDialog>
 
+#ifndef Q_MOC_RUN
 #include <propertystore/ExternalStringSelect.h>
-
 #include <switchwire/ScopedConnectionList.h>
+#endif
+
 #include <ves/xplorer/Logging.h>
 
 #include <ves/VEConfig.h>

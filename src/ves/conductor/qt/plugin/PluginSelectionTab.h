@@ -35,7 +35,9 @@
 
 #define QT_NO_KEYWORDS
 
+#ifndef Q_MOC_RUN
 #include <switchwire/ScopedConnectionList.h>
+#endif
 
 #include <ves/xplorer/plugin/PluginBasePtr.h>
 

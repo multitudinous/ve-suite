@@ -36,10 +36,12 @@
 
 #include <QtGui/QDialog>
 
+#ifndef Q_MOC_RUN
 #include <propertystore/PropertySetPtr.h>
+#include <switchwire/ScopedConnectionList.h>
+#endif
 
 #include <ves/xplorer/Logging.h>
-#include <switchwire/ScopedConnectionList.h>
 
 #include <vector>
 #include <string>
