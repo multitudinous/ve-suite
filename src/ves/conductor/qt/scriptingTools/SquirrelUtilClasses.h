@@ -37,22 +37,27 @@
 // designed to encapsulate complex behaviors and/or reduce the total number of
 // C++ classes that must be exposed to the Squirrel engine.
 
-#include <ves/xplorer/data/ContourPlanePropertySet.h>
-#include <ves/xplorer/data/CADPropertySet.h>
-#include <ves/xplorer/data/DatabaseManager.h>
 #include <ves/xplorer/Logging.h>
-#include <ves/conductor/qt/VisFeatureManager.h>
 
-#include <crunchstore/SQLiteTransactionKey.h>
+#include <propertystore/PropertySetPtr.h>
 
-#include <vpr/System.h>
-
-#include <squirrel.h>
 #include <sqrat.h>
 #include <Poco/ConsoleChannel.h>
 
+namespace crunchstore
+{
+class SQLiteTransactionKey;
+}
+
 namespace ves
 {
+namespace xplorer
+{
+namespace data
+{
+class CADPropertySet;
+}
+}
 namespace conductor
 {
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,41 +70,22 @@ namespace conductor
 class TweakStore
 {
 public:
-    TweakStore()
-        : m_transactionKey( 0 )
-    {
-        ;
-    }
+    TweakStore();
 
-    ~TweakStore()
-    {
-        delete m_transactionKey;
-    }
+    ~TweakStore();
 
-    TweakStore( const TweakStore& rhs )
-    {
-        m_transactionKey = rhs.m_transactionKey;
-    }
+    TweakStore( const TweakStore& rhs );
 
     /// Begins a bulk transaction
-    void OpenTransaction()
-    {
-        m_transactionKey = new crunchstore::SQLiteTransactionKey( ves::xplorer::data::DatabaseManager::instance()->OpenBulkMode() );
-    }
+    void OpenTransaction();
 
     /// Ends a bulk transaction
-    void CloseTransaction()
-    {
-        ves::xplorer::data::DatabaseManager::instance()->CloseBulkMode( *m_transactionKey );
-    }
+    void CloseTransaction();
 
     /// Returns the transaction key required by crunchstore to manage bulk
     /// transactions. You should never need to call this method from inside a
     /// script.
-    crunchstore::SQLiteTransactionKey GetKey() const
-    {
-        return *m_transactionKey;
-    }
+    crunchstore::SQLiteTransactionKey GetKey() const;
 
 private:
     /// Stores the transaction key required by crunchstore
@@ -116,62 +102,35 @@ public:
     /// Creates a new viz feature of the type specified by @c featureType.
     /// Valid featureType strings are Contours, Vectors, Streamlines,
     /// Isosurfaces, Texture-based, and Polydata.
-    void CreateNewFeature( const std::string& featureType )
-    {
-        m_set = ves::conductor::VisFeatureManager::instance()->CreateNewFeature( featureType );
-    }
+    void CreateNewFeature( const std::string& featureType );
 
     /// Sets the value of property @c key to the bool @c value.
-    void SetBoolPropertyValue( const std::string& key, bool value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
+    void SetBoolPropertyValue( const std::string& key, bool value );
 
     /// Sets the value of property @c key to the int @c value.
-    void SetIntPropertyValue( const std::string& key, int value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
+    void SetIntPropertyValue( const std::string& key, int value );
 
     /// Sets the value of property @c key to the float @c value.
-    void SetFloatPropertyValue( const std::string& key, float value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
+    void SetFloatPropertyValue( const std::string& key, float value );
 
     /// Sets the value of property @c key to the double @c value.
-    void SetDoublePropertyValue( const std::string& key, double value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
+    void SetDoublePropertyValue( const std::string& key, double value );
 
     /// Sets the value of property @c key to the string @c value.
-    void SetStringPropertyValue( const std::string& key, std::string value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
+    void SetStringPropertyValue( const std::string& key, std::string value );
 
     /// Returns the UUID of the viz feature.
-    std::string GetUUIDAsString()
-    {
-        return m_set->GetUUIDAsString();
-    }
+    std::string GetUUIDAsString();
 
     /// Saves the viz feature.
-    void Save()
-    {
-        m_set->Save();
-    }
+    void Save();
 
     /// Saves the viz feature as part of the transaction opened using the
     /// passed TweakStore object
     // Trying to use a const reference to a TweakStore object works fine in
     // C++ but somehow accesses invalid memory when used in Squirrel. Normal
     // pointers work just fine though.
-    void BulkSave( TweakStore* tweakstore )
-    {
-        m_set->Save( tweakstore->GetKey() );
-    }
+    void BulkSave( TweakStore* tweakstore );
 
 private:
     propertystore::PropertySetPtr m_set;
@@ -194,10 +153,7 @@ class Sleeper
 {
 public:
     /// Sleep for @c time milliseconds
-    void Sleep( unsigned long time )
-    {
-        vpr::System::msleep( time );
-    }
+    void Sleep( unsigned long time );
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -212,35 +168,15 @@ public:
 class Logger
 {
 public:
-    Logger()
-        :
-        m_logger( Poco::Logger::has( "conductor.Squirrel" ) ?
-            Poco::Logger::get( "conductor.Squirrel" ) :
-            Poco::Logger::create( "conductor.Squirrel" , new Poco::ConsoleChannel ) ),
-        m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) )
-    {
-        ;
-    }
+    Logger();
 
-    void Info( const std::string& message )
-    {
-        LOG_INFO( message );
-    }
+    void Info( const std::string& message );
 
-    void Notice( const std::string& message )
-    {
-        LOG_NOTICE( message );
-    }
+    void Notice( const std::string& message );
 
-    void Warning( const std::string& message )
-    {
-        LOG_WARNING( message );
-    }
+    void Warning( const std::string& message );
 
-    void Error( const std::string& message )
-    {
-        LOG_ERROR( message );
-    }
+    void Error( const std::string& message );
 
 private:
     Poco::Logger& m_logger;
@@ -251,12 +187,7 @@ private:
 class BaseObject
 {
 public:
-    BaseObject()
-        // get a reference to the Squirrel instance from the top of the stack
-        : m_instance( Sqrat::DefaultVM::Get(), -1 )
-    {
-        ;        
-    }
+    BaseObject();
 
 protected:
     Sqrat::Var< Sqrat::Object& > m_instance;
@@ -265,7 +196,7 @@ protected:
 class BaseEvent
 {
 public:
-    BaseEvent() {}
+    BaseEvent();
 };
 
 // forward declaration
@@ -279,61 +210,19 @@ class BaseContext;
 class BaseState : public BaseObject
 {
 public:
-    BaseState() : BaseObject() {}
+    BaseState();
 
-    void _OnEnter( BaseContext* context )
-    {
-        ; // dummy function - Squirrel subclasses that do not override OnEnter() will call this
-    }
+    void _OnEnter( BaseContext* context );
 
-    void OnEnter( BaseContext* context )
-    {
-        try
-        {
-            Sqrat::Function( m_instance.value, "OnEnter" ).Execute< BaseContext* >( context );
-        }
-        catch( Sqrat::Exception& e )
-        {
-            std::cerr << "Oops: " << e.Message() << std::endl << std::flush;
-        }
-    }
+    void OnEnter( BaseContext* context );
 
-    void _OnExit( BaseContext* context )
-    {
-        ; // dummy function - Squirrel subclasses that do not override OnExit() will call this
-    }
+    void _OnExit( BaseContext* context );
 
-    void OnExit( BaseContext* context )
-    {
-        try
-        {
-            Sqrat::Function( m_instance.value, "OnExit" ).Execute< BaseContext* >( context );
-        }
-        catch( Sqrat::Exception& e )
-        {
-            std::cerr << "Oops: " << e.Message() << std::endl << std::flush;
-        }
-    }
+    void OnExit( BaseContext* context );
 
-    BaseState* _OnEvent( BaseContext* context, BaseEvent* event )
-    {
-        // dummy function - Squirrel subclasses that do not override OnEvent() will call this
-        return static_cast< BaseState* >( 0 );    
-    }
+    BaseState* _OnEvent( BaseContext* context, BaseEvent* event );
 
-    BaseState* OnEvent( BaseContext* context, BaseEvent* event )
-    {
-        try
-        {
-            BaseState* new_state = Sqrat::Function( m_instance.value, "OnEvent" )
-                .Evaluate< BaseState*, BaseContext*, BaseEvent* >( context, event );
-            return new_state;
-        }
-        catch( Sqrat::Exception& e )
-        {
-            std::cerr << "Oops: " << e.Message() << std::endl << std::flush;
-        }
-    }
+    BaseState* OnEvent( BaseContext* context, BaseEvent* event );
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -344,27 +233,11 @@ public:
 class BaseContext
 {
 public:
-    BaseContext() : m_state( static_cast< BaseState* >( 0 ) ) {}
+    BaseContext();
 
-    void SetInitialState( BaseState* state )
-    {
-        m_state = state;
-        m_state->OnEnter( this );
-    }
+    void SetInitialState( BaseState* state );
 
-    void HandleEvent( BaseEvent* event )
-    {
-        if( m_state )
-        {
-            BaseState* new_state = m_state->OnEvent( this, event );
-            if( new_state )
-            {
-                m_state->OnExit( this );
-                m_state = new_state;
-                m_state->OnEnter( this );
-            }
-        }
-    }
+    void HandleEvent( BaseEvent* event );
 
 protected:
     BaseState* m_state; 
@@ -373,115 +246,36 @@ protected:
 class CADPropertySetWrapper
 {
 public:
-    CADPropertySetWrapper() : m_set( new ves::xplorer::data::CADPropertySet() )
-    {
-        ;
-    }
+    CADPropertySetWrapper();
 
-    ~CADPropertySetWrapper()
-    {
-        delete m_set;
-    }
+    ~CADPropertySetWrapper();
 
-    void SetBoolPropertyValue( const std::string& key, bool value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
+    void SetBoolPropertyValue( const std::string& key, bool value );
 
-    bool GetBoolPropertyValue( const std::string& key )
-    {
-        try
-        {
-            return boost::any_cast< bool >( m_set->GetPropertyValue( key ) );
-        }
-        catch( const boost::bad_any_cast& )
-        {
-            std::cerr << "Oops: no such bool property \"" << key << "\"" << std::endl << std::flush;
-        }
-    }
+    bool GetBoolPropertyValue( const std::string& key );
 
-    void SetIntPropertyValue( const std::string& key, int value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
+    void SetIntPropertyValue( const std::string& key, int value );
 
-    int GetIntPropertyValue( const std::string& key )
-    {
-        try
-        {
-            return boost::any_cast< int >( m_set->GetPropertyValue( key ) );
-        }
-        catch( const boost::bad_any_cast& )
-        {
-            std::cerr << "Oops: no such int property \"" << key << "\"" << std::endl << std::flush;
-        }
-    }
+    int GetIntPropertyValue( const std::string& key );
 
-    void SetFloatPropertyValue( const std::string& key, float value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
+    void SetFloatPropertyValue( const std::string& key, float value );
 
-    float GetFloatPropertyValue( const std::string& key )
-    {
-        try
-        {
-            return boost::any_cast< float >( m_set->GetPropertyValue( key ) );
-        }
-        catch( const boost::bad_any_cast& )
-        {
-            std::cerr << "Oops: no such float property \"" << key << "\"" << std::endl << std::flush;
-        }
-    }
+    float GetFloatPropertyValue( const std::string& key );
 
-    void SetDoublePropertyValue( const std::string& key, double value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
+    void SetDoublePropertyValue( const std::string& key, double value );
 
-    double GetDoublePropertyValue( const std::string& key )
-    {
-        try
-        {
-            return boost::any_cast< double >( m_set->GetPropertyValue( key ) );
-        }
-        catch( const boost::bad_any_cast& )
-        {
-            std::cerr << "Oops: no such double property \"" << key << "\"" << std::endl << std::flush;
-        }
-    }
+    double GetDoublePropertyValue( const std::string& key );
 
-    void SetStringPropertyValue( const std::string& key, std::string value )
-    {
-        m_set->SetPropertyValue( key, value );
-    }
+    void SetStringPropertyValue( const std::string& key, std::string value );
 
-    std::string GetStringPropertyValue( const std::string& key )
-    {
-        try
-        {
-            return boost::any_cast< std::string >( m_set->GetPropertyValue( key ) );
-        }
-        catch( const boost::bad_any_cast& )
-        {
-            std::cerr << "Oops: no such string property \"" << key << "\"" << std::endl << std::flush;
-        }
-    }
+    std::string GetStringPropertyValue( const std::string& key );
 
-    void SetUUID( const std::string& uuid )
-    {
-        m_set->SetUUID( uuid );
-    }
+    void SetUUID( const std::string& uuid );
 
-    bool Load()
-    {
-        return m_set->Load();
-    }
+    bool Load();
 
-    void Save()
-    {
-        m_set->Save();
-    }
+    void Save();
+
 private:
     // I get mysterious crashes if I use a propertystore::PropertySetPtr,
     // so use a raw pointer instead.
