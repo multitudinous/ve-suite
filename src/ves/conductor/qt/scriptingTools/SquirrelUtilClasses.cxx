@@ -233,11 +233,6 @@ CADPropertySetWrapper::CADPropertySetWrapper()
     ;
 }
 
-CADPropertySetWrapper::~CADPropertySetWrapper()
-{
-    delete m_set;
-}
-
 void CADPropertySetWrapper::SetBoolPropertyValue( const std::string& key, bool value )
 {
     m_set->SetPropertyValue( key, value );

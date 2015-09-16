@@ -248,8 +248,6 @@ class CADPropertySetWrapper
 public:
     CADPropertySetWrapper();
 
-    ~CADPropertySetWrapper();
-
     void SetBoolPropertyValue( const std::string& key, bool value );
 
     bool GetBoolPropertyValue( const std::string& key );
@@ -279,8 +277,6 @@ public:
     void EnableLiveProperties( bool live );
 
 private:
-    // I get mysterious crashes if I use a propertystore::PropertySetPtr,
-    // so use a raw pointer instead.
-    ves::xplorer::data::CADPropertySet* m_set;
+    propertystore::PropertySetPtr m_set;
 };
 }} //ves::conductor
