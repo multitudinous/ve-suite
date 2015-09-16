@@ -276,6 +276,8 @@ public:
 
     void EmitValueChangedSignals();
 
+    void EnableLiveProperties( bool live );
+
 private:
     // I get mysterious crashes if I use a propertystore::PropertySetPtr,
     // so use a raw pointer instead.

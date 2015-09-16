@@ -267,6 +267,7 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "SetUUID", &CADPropertySetWrapper::SetUUID )
         .Func( "Load", &CADPropertySetWrapper::Load )
         .Func( "EmitValueChangedSignals", &CADPropertySetWrapper::EmitValueChangedSignals )
+        .Func( "EnableLiveProperties", &CADPropertySetWrapper::EnableLiveProperties )
     );
 }
 ////////////////////////////////////////////////////////////////////////////////

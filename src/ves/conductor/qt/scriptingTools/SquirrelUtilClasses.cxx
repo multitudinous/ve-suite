@@ -337,3 +337,8 @@ void CADPropertySetWrapper::EmitValueChangedSignals()
 {
     m_set->EmitValueChangedSignals();
 }
+
+void CADPropertySetWrapper::EnableLiveProperties( bool live )
+{
+    m_set->EnableLiveProperties( live );
+}
