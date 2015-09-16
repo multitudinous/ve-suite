@@ -113,9 +113,15 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${VRJUGGLER_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${XERCESC_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${BULLET_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${propertystore_LIBRARIES})
+
 if(Squirrel_FOUND AND Sqrat_FOUND)
-    target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${Squirrel_LIBRARY} ${Squirrel_STD_LIBRARY})
+    # on Windows, Squirrel is built as a shared library, so we have to link to it
+    # on other platforms, Squirrel and its standard library are statically linked into switchwire
+    if( MSVC )
+        target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${Squirrel_LIBRARY} ${Squirrel_STD_LIBRARY})
+    endif()
 endif()
+
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${storyteller_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC qwt)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC osgQtTree)
