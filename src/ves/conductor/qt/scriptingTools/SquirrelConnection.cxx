@@ -266,7 +266,7 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "GetStringPropertyValue", &CADPropertySetWrapper::GetStringPropertyValue )
         .Func( "SetUUID", &CADPropertySetWrapper::SetUUID )
         .Func( "Load", &CADPropertySetWrapper::Load )
-        .Func( "Save", &CADPropertySetWrapper::Save )
+        .Func( "EmitValueChangedSignals", &CADPropertySetWrapper::EmitValueChangedSignals )
     );
 }
 ////////////////////////////////////////////////////////////////////////////////

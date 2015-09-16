@@ -333,7 +333,7 @@ bool CADPropertySetWrapper::Load()
     return m_set->Load();
 }
 
-void CADPropertySetWrapper::Save()
+void CADPropertySetWrapper::EmitValueChangedSignals()
 {
-    m_set->Save();
+    m_set->EmitValueChangedSignals();
 }

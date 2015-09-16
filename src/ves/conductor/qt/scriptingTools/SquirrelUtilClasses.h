@@ -274,7 +274,7 @@ public:
 
     bool Load();
 
-    void Save();
+    void EmitValueChangedSignals();
 
 private:
     // I get mysterious crashes if I use a propertystore::PropertySetPtr,
