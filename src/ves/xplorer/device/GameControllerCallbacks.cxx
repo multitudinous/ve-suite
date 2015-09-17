@@ -957,7 +957,7 @@ void GameControllerCallbacks::ConfigureGameControllerDevices()
             vpr::System::getenv( "XPLORER_BASE_DIR", xplorerBaseDir );
             xplorerBaseDir += "/share/vesuite/vrj_configs/";
             jccl::Configuration* configuration = new jccl::Configuration();
-            if( joystickType == "Wireless 360 Controller" )
+            if( joystickType == "Wireless 360 Controller" || joystickType == "Generic X-Box pad" )
             {
                 configuration->load( xplorerBaseDir + "xbox_360_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
             }
