@@ -15,7 +15,8 @@ namespace device
 GameController::GameController( unsigned int controllerID )
     :
     m_controllerMask( controllerID ),
-    m_deadZone( 0.075 )
+    m_deadZone( 0.075 ),
+    m_previousHatState( gadget::HatState::CENTERED )
 {
     switchwire::EventManager::instance()->RegisterSignal( ( &m_grabControllSignal ),
         "GameController" + boost::lexical_cast< std::string >( controllerID ) + ".GrabControllerState" );
@@ -72,6 +73,9 @@ void GameController::InitInterfaces( const std::string deviceName )
     m_button10EventInterface.init( deviceName + "Digital10" );
     
     m_button11EventInterface.init( deviceName + "Digital11" );
+
+    //Hat
+    m_hat0EventInterface.init( deviceName + "Hat0" );
     
     //Setup the position events
     m_controllerPosition.init( deviceName + "Position" );
@@ -122,6 +126,9 @@ void GameController::InitInterfaces( const std::string deviceName )
     m_button10EventInterface.addCallback( boost::bind( &GameController::OnButton10Event, this, _1 ) );
     
     m_button11EventInterface.addCallback( boost::bind( &GameController::OnButton11Event, this, _1 ) );
+
+    //Hat
+    m_hat0EventInterface.addCallback( boost::bind( &GameController::OnHat0Event, this, _1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::ConnectInterfaces( device::GameControllerCallbacks* const controller )
@@ -176,7 +183,10 @@ void GameController::ConnectInterfaces( device::GameControllerCallbacks* const c
     m_button10EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton10Event, controller, _1 ) );
     
     m_button11EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton11Event, controller, _1 ) );
-    
+
+    //Hat
+    m_hat0EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnHat0Event, controller, _1 ) );
+
     //Position events
     m_controllerPosition.addCallback( boost::bind( &GameControllerCallbacks::OnPositionEvent, controller, _1 ) );
 }
@@ -223,6 +233,9 @@ void GameController::DisconnectInterfaces( device::GameControllerCallbacks* cons
     m_button10EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &GameControllerCallbacks::OnButton10Event, controller, _1 ) );
     
     m_button11EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &GameControllerCallbacks::OnButton11Event, controller, _1 ) );
+
+    //Hat
+    m_hat0EventInterface.removeCallback<gadget::event::hat_event_tag>( boost::bind( &GameControllerCallbacks::OnHat0Event, controller, _1 ) );
 
     //Position events
     m_controllerPosition.addCallback( boost::bind( &GameControllerCallbacks::OnPositionEvent, controller, _1 ) );
@@ -407,6 +420,15 @@ void GameController::OnButton10Event( gadget::DigitalState::State event )
 void GameController::OnButton11Event( gadget::DigitalState::State event )
 {
     if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    m_grabControllSignal.signal( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnHat0Event( gadget::HatState::State event )
+{
+    if( event == m_previousHatState )
     {
         return;
     }

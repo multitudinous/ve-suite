@@ -870,6 +870,11 @@ void GameControllerCallbacks::OnButton11Event( gadget::DigitalState::State event
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void GameControllerCallbacks::OnHat0Event( gadget::HatState::State event )
+{
+    // do nothing
+}
+////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
 {
     ///In quad buffered stereo this call returns a VPW matrix from a centered
