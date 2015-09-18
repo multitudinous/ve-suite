@@ -428,10 +428,14 @@ void GameController::OnButton11Event( gadget::DigitalState::State event )
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnHat0Event( gadget::HatState::State event )
 {
-    if( event == m_previousHatState )
+    gadget::HatState::State currentHatState = m_previousHatState;
+    m_previousHatState = event;
+
+    if( event == currentHatState )
     {
         return;
     }
+
     m_grabControllSignal.signal( m_controllerMask );
 }
 ////////////////////////////////////////////////////////////////////////////////
