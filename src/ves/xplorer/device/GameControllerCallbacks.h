@@ -290,11 +290,15 @@ private:
     // "raw" analog signal type
     typedef switchwire::Event< void ( float ) > GameControllerAnalogSignal_type;
 
+    // "raw" hat signal type
+    typedef switchwire::Event< void ( gadget::HatState::State ) > GameControllerHatSignal_type;
+
     typedef std::map< std::string, GameControllerButtonSignal_type* > GameControllerButtonSignalMap_type;
     typedef std::map< std::string, GameControllerAnalogSignal_type* > GameControllerAnalogSignalMap_type;
 
     GameControllerButtonSignalMap_type m_gameControllerButtonSignalMap;
     GameControllerAnalogSignalMap_type m_gameControllerAnalogSignalMap;
+    GameControllerHatSignal_type m_gameControllerHatSignal;
 };
 
 } //end device

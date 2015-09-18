@@ -288,6 +288,12 @@ GameControllerCallbacks::GameControllerCallbacks()
             iter->first,
             switchwire::EventManager::input_SignalType );
     }
+
+    // register "raw" hat signal with EventManager
+    switchwire::EventManager::instance()->RegisterSignal(
+        &m_gameControllerHatSignal,
+        "GameController.Hat0",
+        switchwire::EventManager::input_SignalType );
 }
 ////////////////////////////////////////////////////////////////////////////////
 GameControllerCallbacks::~GameControllerCallbacks()
@@ -950,7 +956,7 @@ void GameControllerCallbacks::OnButton11Event( gadget::DigitalState::State event
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnHat0Event( gadget::HatState::State event )
 {
-    // do nothing
+    m_gameControllerHatSignal.signal( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::SetStartEndPoint( osg::Vec3d& startPoint, osg::Vec3d& endPoint )
