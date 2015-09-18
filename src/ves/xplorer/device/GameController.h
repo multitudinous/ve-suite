@@ -3,6 +3,7 @@
 #include <ves/VEConfig.h>
 
 #include <ves/util/SimpleDataTypeSignalSignatures.h>
+#include <ves/xplorer/device/HatEventInterface.h>
 
 #include <switchwire/ScopedConnectionList.h>
 
@@ -92,7 +93,12 @@ private:
     GamePadClickInterface m_button12EventInterface;
     GamePadClickInterface m_button13EventInterface;
     GamePadClickInterface m_button14EventInterface;
-    
+
+    typedef gadget::HatEventInterface< gadget::event::all_events_tag,
+        gadget::event::synchronized_tag > GamePadHatInterface;
+    GamePadHatInterface m_hat0EventInterface;
+
+    gadget::HatState::State m_previousHatState;
     
     gadget::RumbleInterface _rumble;
 
@@ -152,6 +158,8 @@ private:
     void OnButton10Event( gadget::DigitalState::State event );
     /// All GameController events get delivered here
     void OnButton11Event( gadget::DigitalState::State event );
+
+    void OnHat0Event( gadget::HatState::State event );
 };
 } //end xplorer
 } //end ves
