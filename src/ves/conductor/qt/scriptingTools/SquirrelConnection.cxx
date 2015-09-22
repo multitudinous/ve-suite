@@ -282,34 +282,27 @@ void SquirrelConnection::BindSpecialClasses()
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::runScript( const std::string& scriptText )
 {
-    switchwire::SquirrelContext sc;
-    //Sqrat::SqratVM vm;
-    Sqrat::DefaultVM::Set( sc.GetVM().getVM() );
-
-    ExposeSignalSlotTypes( sc );
-    BindSpecialClasses();
-
-    sc.LoadScriptFromText( scriptText );
-    sc.ExecuteScript();
-
-    /*
     try
     {
-        Sqrat::Script script;
-        script.CompileString( scriptText );
-        script.Run();
+        switchwire::SquirrelContext sc;
+        //Sqrat::SqratVM vm;
+        Sqrat::DefaultVM::Set( sc.GetVM().getVM() );
+
+        ExposeSignalSlotTypes( sc );
+        BindSpecialClasses();
+
+        sc.LoadScriptFromText( scriptText );
+        sc.ExecuteScript();
     }
+    //TODO: push these messages out to a logger than than stderr
     catch( Sqrat::Exception& e )
     {
-        //TODO: push these message out to a logger rather than stdout
-        std::cout << "Sqrat exception: " << e.Message() << std::endl << std::flush;
-        return;
+        std::cerr << "Sqrat exception: " << e.Message() << std::endl << std::flush;
     }
     catch( ... )
     {
-        std::cout << "Unspecified Sqrat exception" << std::endl << std::flush;
-        return;
-    }*/
+        std::cerr << "Unspecified Sqrat exception" << std::endl << std::flush;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 }} //ves::conductor
