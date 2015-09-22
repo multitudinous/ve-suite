@@ -40,6 +40,7 @@
 #include <switchwire/squirrel/SQStdVector.h>
 
 #include <gadget/Type/DigitalData.h>
+#include <gadget/Type/HatData.h>
 
 namespace ves
 {
@@ -251,6 +252,17 @@ void SquirrelConnection::BindSpecialClasses()
         digitalState.Const( "TOGGLE_OFF", gadget::DigitalState::TOGGLE_OFF );
 
         Sqrat::ConstTable().Enum( "DigitalState", digitalState );
+    }
+
+    {
+        Sqrat::Enumeration hatState;
+        hatState.Const( "UP", gadget::HatState::UP );
+        hatState.Const( "DOWN", gadget::HatState::DOWN );
+        hatState.Const( "LEFT", gadget::HatState::LEFT );
+        hatState.Const( "RIGHT", gadget::HatState::RIGHT );
+        hatState.Const( "CENTERED", gadget::HatState::CENTERED );
+
+        Sqrat::ConstTable().Enum( "HatState", hatState );
     }
 
     Sqrat::RootTable().Bind( "CADPropertySet", Sqrat::Class< CADPropertySetWrapper >()
