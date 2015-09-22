@@ -269,6 +269,15 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "EmitValueChangedSignals", &CADPropertySetWrapper::EmitValueChangedSignals )
         .Func( "EnableLiveProperties", &CADPropertySetWrapper::EnableLiveProperties )
     );
+
+    typedef QueuedSignalReceiver< void( gadget::DigitalState::State ) > DigitalStateQueuedSignalReceiver_type;
+
+    Sqrat::RootTable().Bind( "DigitalStateQueuedSignalReceiver", Sqrat::Class< DigitalStateQueuedSignalReceiver_type >()
+        .Func( "ConnectToSignal", &DigitalStateQueuedSignalReceiver_type::ConnectToSignal )
+        .Func( "Disconnect", &DigitalStateQueuedSignalReceiver_type::Disconnect )
+        .Func( "Pending", &DigitalStateQueuedSignalReceiver_type::Pending )
+        .Func( "Pop", &DigitalStateQueuedSignalReceiver_type::Pop )
+    );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::runScript( const std::string& scriptText )

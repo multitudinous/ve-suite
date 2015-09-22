@@ -39,10 +39,16 @@
 
 #include <ves/xplorer/Logging.h>
 
+#include <switchwire/ScopedConnectionList.h>
+#include <switchwire/ConnectSignals.h>
 #include <propertystore/PropertySetPtr.h>
 
 #include <sqrat.h>
 #include <Poco/ConsoleChannel.h>
+
+#include <gadget/Type/DigitalData.h>
+
+#include <boost/thread/mutex.hpp>
 
 namespace crunchstore
 {
@@ -278,5 +284,78 @@ public:
 
 private:
     propertystore::PropertySetPtr m_set;
+};
+
+template< typename T > class QueuedSignalReceiverBase;
+
+template< typename ReturnType, typename ArgType >
+class QueuedSignalReceiverBase< ReturnType( ArgType ) >
+{
+public:
+    QueuedSignalReceiverBase()
+        : m_dataIsPending( false )
+    {
+        ;
+    }
+
+    QueuedSignalReceiverBase( const QueuedSignalReceiverBase& other )
+        : m_dataIsPending( false )
+    {
+        // don't copy anything from the other object
+    }
+
+    virtual void ConnectToSignal( const std::string& signal_name ) = 0;
+
+    void Disconnect()
+    {
+        m_connections.DropConnections();
+    }
+
+    bool Pending()
+    {
+        boost::mutex::scoped_lock scoped_lock( m_lock );
+        return m_dataIsPending;
+    }
+
+    ArgType Pop()
+    {
+        boost::mutex::scoped_lock scoped_lock( m_lock );
+        m_dataIsPending = false;
+        return m_data;
+    }
+
+    ReturnType _Slot( ArgType data )
+    {
+        boost::mutex::scoped_lock scoped_lock( m_lock );
+        m_data = data;
+        m_dataIsPending = true;
+    }
+
+protected:
+    ArgType m_data;
+    bool m_dataIsPending;
+
+    boost::mutex m_lock;
+
+    switchwire::ScopedConnectionList m_connections;
+};
+
+template< typename Signature >
+class QueuedSignalReceiver : public QueuedSignalReceiverBase< Signature >
+{
+public:
+    virtual void ConnectToSignal( const std::string& signal_name )
+    {
+        typedef boost::signals2::signal< Signature > signal_t;
+
+        typename signal_t::slot_type slot_functor( boost::bind( &QueuedSignalReceiver< Signature >::_Slot, this, _1 ) );
+
+        switchwire::SlotWrapperBasePtr slot_wrapper( new switchwire::SlotWrapper< signal_t >( &slot_functor ) );
+
+        switchwire::EventManager::instance()->ConnectSignal( signal_name,
+                                                             slot_wrapper,
+                                                             this->m_connections );
+
+    }
 };
 }} //ves::conductor
