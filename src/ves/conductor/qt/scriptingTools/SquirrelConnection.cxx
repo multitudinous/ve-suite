@@ -213,7 +213,7 @@ void SquirrelConnection::BindSpecialClasses()
     );
 
     Sqrat::RootTable().Bind( "Sleeper", Sqrat::Class< Sleeper >()
-        .Func( "Sleep", &Sleeper::Sleep )
+        .StaticFunc( "Sleep", &Sleeper::Sleep )
     );
 
     Sqrat::RootTable().Bind( "Logger", Sqrat::Class< Logger >()

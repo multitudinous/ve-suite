@@ -159,7 +159,7 @@ class Sleeper
 {
 public:
     /// Sleep for @c time milliseconds
-    void Sleep( unsigned long time );
+    static void Sleep( unsigned long time );
 };
 
 ////////////////////////////////////////////////////////////////////////////////

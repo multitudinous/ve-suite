@@ -7,23 +7,22 @@ function Execute()
 {
     VoidSignalMaker <- VoidSignal;
     VoidSignalMaker.RegisterSignal( "Script.FrameAll", "FrameAll" );
-    sleeper <- Sleeper();
 
     loadFiles();
-    sleeper.Sleep(1000);
+    Sleeper.Sleep(1000);
 
     FrameAll.signal();
-    sleeper.Sleep(1000);
+    Sleeper.Sleep(1000);
 
     createContourPlane( "TestPlane", 5.0 );
     showCube( false );
-    sleeper.Sleep(1500);
+    Sleeper.Sleep(1500);
 
     createContourPlane( "TestPlane", 36.0 );
     createContourPlane( "TestPlane", 75.0 );
     showCube( true );
     createContourPlane( "TestPlane", 95.0 );
-    sleeper.Sleep( 1500 );
+    Sleeper.Sleep( 1500 );
 
     showCube( false );
     createLotsOfContourPlanes( 200 );

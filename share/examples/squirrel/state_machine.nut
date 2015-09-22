@@ -90,14 +90,12 @@ function Execute()
 
     local dummy_event = ButtonPressEvent();
 
-    sleeper <- Sleeper;
-
     local log = Logger();
 
     while(1)
     {
        log.Info("pressing the button...");
        toggle_button.HandleEvent( dummy_event );
-       sleeper.Sleep( 2000 );
+       Sleeper.Sleep( 2000 );
     }
 } 
