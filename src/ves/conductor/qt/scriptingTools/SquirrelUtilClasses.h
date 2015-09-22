@@ -286,25 +286,40 @@ private:
     propertystore::PropertySetPtr m_set;
 };
 
-template< typename T > class QueuedSignalReceiverBase;
+template< typename T > class QueuedSignalReceiver;
 
 template< typename ReturnType, typename ArgType >
-class QueuedSignalReceiverBase< ReturnType( ArgType ) >
+class QueuedSignalReceiver< ReturnType( ArgType ) >
 {
 public:
-    QueuedSignalReceiverBase()
+    QueuedSignalReceiver()
         : m_dataIsPending( false )
     {
         ;
     }
 
-    QueuedSignalReceiverBase( const QueuedSignalReceiverBase& other )
+    // Sqrat's allocators expect bindable C++ objects to be copy-constructable
+    QueuedSignalReceiver( const QueuedSignalReceiver& other )
         : m_dataIsPending( false )
     {
-        // don't copy anything from the other object
+        ; // don't copy anything from the other object
     }
 
-    virtual void ConnectToSignal( const std::string& signal_name ) = 0;
+    void ConnectToSignal( const std::string& signal_name )
+    {
+        typedef ReturnType SignatureType( ArgType );
+
+        typedef boost::signals2::signal< SignatureType > signal_t;
+
+        typename signal_t::slot_type slot_functor( boost::bind( &QueuedSignalReceiver< SignatureType >::_Slot, this, _1 ) );
+
+        switchwire::SlotWrapperBasePtr slot_wrapper( new switchwire::SlotWrapper< signal_t >( &slot_functor ) );
+
+        switchwire::EventManager::instance()->ConnectSignal( signal_name,
+                                                             slot_wrapper,
+                                                             this->m_connections );
+
+    }
 
     void Disconnect()
     {
@@ -338,24 +353,5 @@ protected:
     boost::mutex m_lock;
 
     switchwire::ScopedConnectionList m_connections;
-};
-
-template< typename Signature >
-class QueuedSignalReceiver : public QueuedSignalReceiverBase< Signature >
-{
-public:
-    virtual void ConnectToSignal( const std::string& signal_name )
-    {
-        typedef boost::signals2::signal< Signature > signal_t;
-
-        typename signal_t::slot_type slot_functor( boost::bind( &QueuedSignalReceiver< Signature >::_Slot, this, _1 ) );
-
-        switchwire::SlotWrapperBasePtr slot_wrapper( new switchwire::SlotWrapper< signal_t >( &slot_functor ) );
-
-        switchwire::EventManager::instance()->ConnectSignal( signal_name,
-                                                             slot_wrapper,
-                                                             this->m_connections );
-
-    }
 };
 }} //ves::conductor
