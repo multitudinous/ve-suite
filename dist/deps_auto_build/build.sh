@@ -287,6 +287,7 @@ function unsetvars()
   unset POST_BUILD_METHOD
   unset SOURCE_REVISION
   unset GIT_BRANCH_VERSION
+  unset GIT_REVISION
   unset PREBUILD_METHOD
   unset FPC_FILE
   unset VES_INSTALL_PARAMS
@@ -392,7 +393,11 @@ function source_retrieval()
         cd "${BASE_DIR}";
         git checkout -t origin/${GIT_BRANCH_VERSION}
         git pull
-        echo "using custom command ${GIT_BRANCH_VERSION}" 
+        echo "using git branch ${GIT_BRANCH_VERSION}"
+      elif [ -n "${GIT_REVISION:+x}" ]; then
+        cd "${BASE_DIR}";
+        git checkout ${GIT_REVISION}
+        echo "using git revision ${GIT_REVISION}"
       fi 
       ;;
     private-svn)
