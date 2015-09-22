@@ -165,17 +165,6 @@ void SquirrelConnection::ExposeSignalSlotTypes( switchwire::SquirrelContext& sc 
     ExposeSlotType_2
             < void ( const bool, const std::vector< double >& ) >
             ( "BoolAndDoubleVectorSlot", sc );
-
-    // a special slot type for receiving "raw" game controller button events
-    ExposeSlotType_1
-            < void ( gadget::DigitalState::State ) >
-            ( "GameControllerButtonDigitalStateSlot", sc );
-
-    // can be used in place of FloatSlot if you want to make the intended use
-    // of the slot clearer
-    ExposeSlotType_1
-            < void ( float const& ) >
-            ( "GameControllerAxisAnalogSlot", sc );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::BindSpecialClasses()
