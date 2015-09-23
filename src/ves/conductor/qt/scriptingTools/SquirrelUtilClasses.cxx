@@ -158,7 +158,7 @@ void BaseState::OnEnter( BaseContext* context )
     }
     catch( Sqrat::Exception& e )
     {
-        std::cerr << "Oops: " << e.Message() << std::endl << std::flush;
+        std::cerr << "[BaseState::OnEnter] Oops: " << e.Message() << std::endl << std::flush;
     }
 }
 
@@ -175,7 +175,7 @@ void BaseState::OnExit( BaseContext* context )
     }
     catch( Sqrat::Exception& e )
     {
-        std::cerr << "Oops: " << e.Message() << std::endl << std::flush;
+        std::cerr << "[BaseState::OnExit] Oops: " << e.Message() << std::endl << std::flush;
     }
 }
 
@@ -195,7 +195,7 @@ BaseState* BaseState::OnEvent( BaseContext* context, BaseEvent* event )
     }
     catch( Sqrat::Exception& e )
     {
-        std::cerr << "Oops: " << e.Message() << std::endl << std::flush;
+        std::cerr << "[BaseState::OnEvent] Oops: " << e.Message() << std::endl << std::flush;
     }
 }
 
