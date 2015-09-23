@@ -297,6 +297,15 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "Pending", &FloatQueuedSignalReceiver_type::Pending )
         .Func( "Pop", &FloatQueuedSignalReceiver_type::Pop )
     );
+
+    typedef QueuedSignalReceiver< void( std::string ) > StringQueuedSignalReceiver_type;
+
+    Sqrat::RootTable().Bind( "StringQueuedSignalReceiver", Sqrat::Class< StringQueuedSignalReceiver_type >()
+        .Func( "ConnectToSignal", &StringQueuedSignalReceiver_type::ConnectToSignal )
+        .Func( "Disconnect", &StringQueuedSignalReceiver_type::Disconnect )
+        .Func( "Pending", &StringQueuedSignalReceiver_type::Pending )
+        .Func( "Pop", &StringQueuedSignalReceiver_type::Pop )
+    );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::runScript( const std::string& scriptText )

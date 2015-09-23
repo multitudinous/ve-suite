@@ -135,7 +135,7 @@ private:
     ObjectPickedAsStringSignal_type m_objectPickedAsStringSignal;
 
     /// Node UUID of the picked node
-    typedef switchwire::Event< void( std::string const& ) > ObjectPickedNodeUUIDSignal_type;
+    typedef switchwire::Event< void( std::string ) > ObjectPickedNodeUUIDSignal_type;
     ObjectPickedNodeUUIDSignal_type m_objectPickedNodeUUIDSignal;
 
     ///Physics simulator pointer
