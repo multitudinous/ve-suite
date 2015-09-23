@@ -197,6 +197,12 @@ BaseState* BaseState::OnEvent( BaseContext* context, BaseEvent* event )
     {
         std::cerr << "[BaseState::OnEvent] Oops: " << e.Message() << std::endl << std::flush;
     }
+
+    // if this point is reached, it means that the Squirrel subclass' OnEvent() method either
+    // returned 'null' or caused an exception
+    //
+    // in either case, return NULL to remain in the current state
+    return static_cast< BaseState* >( 0 );
 }
 
 // BaseContext
