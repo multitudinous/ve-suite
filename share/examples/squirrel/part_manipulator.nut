@@ -116,6 +116,8 @@ class ActiveState extends State//StateMachine.State
         //m_rightXAxisReceiver.ConnectToSignal( "GameController.Axis2" );
         m_rightYAxisReceiver.ConnectToSignal( "GameController.Axis3" );
 
+        m_cadPropertySet.EnableLiveProperties( true );
+
         // TODO: record the original position of the selected object
     }
 
@@ -125,6 +127,16 @@ class ActiveState extends State//StateMachine.State
         m_leftYAxisReceiver.Disconnect();
         //m_rightXAxisReceiver.Disconnect();
         m_rightYAxisReceiver.Disconnect();
+
+        // save our changes
+        /*if( m_cadPropertySet.Save() )
+        {
+            m_logger.Info( "CADPropertySet saved successfully" );
+        }
+        else
+        {
+            m_logger.Info( "Oops! Couldn't save the CADPropertySet" );
+        }*/
     }
 
     function OnEvent( context, event )
@@ -167,26 +179,30 @@ class ActiveState extends State//StateMachine.State
         // analog stick values are in the range [0, 1], with 0.5 meaning centered
         // use 2x - 1 to convert to the range [-1, 1]
 
-        local leftX_delta = 0.0;
-        local leftY_delta = 0.0;
-        local rightY_delta = 0.0;
+        local x_delta = 0.0;
+        local y_delta = 0.0;
+        local z_delta = 0.0;
 
         if( m_leftXAxisReceiver.Pending() )
         {
-            leftX_delta = ( 0.2 * m_leftXAxisReceiver.Pop() ) - 0.1;
+            x_delta = ( 0.2 * m_leftXAxisReceiver.Pop() ) - 0.1;
+            local x = m_cadPropertySet.GetDoublePropertyValue( "Transform_Translation_X" );
+            m_cadPropertySet.SetDoublePropertyValue( "Transform_Translation_X", x + x_delta );
         }
 
         if( m_leftYAxisReceiver.Pending() )
         {
-            leftY_delta = ( 0.2 * m_leftYAxisReceiver.Pop() ) - 0.1;
+            y_delta = ( 0.2 * m_leftYAxisReceiver.Pop() ) - 0.1;
+            local y = m_cadPropertySet.GetDoublePropertyValue( "Transform_Translation_Y" );
+            m_cadPropertySet.SetDoublePropertyValue( "Transform_Translation_Y", y + ( y_delta * -1.0 ) );
         }
 
         if( m_rightYAxisReceiver.Pending() )
         {
-            rightY_delta = ( 0.2 * m_rightYAxisReceiver.Pop() ) - 0.1;
+            z_delta = ( 0.2 * m_rightYAxisReceiver.Pop() ) - 0.1;
+            local z = m_cadPropertySet.GetDoublePropertyValue( "Transform_Translation_Z" );
+            m_cadPropertySet.SetDoublePropertyValue( "Transform_Translation_Z", z + ( z_delta * -1.0 ) );
         }
-
-        // TODO: update the CADPropertySet with the position deltas
     }
 
     m_nodeUUID = null;
