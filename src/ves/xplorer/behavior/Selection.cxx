@@ -557,6 +557,12 @@ void Selection::ConvertNodePathToString( osg::NodePath& nodePath )
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::GetNodeUUIDFromNodePath( osg::NodePath& nodePath )
 {
+    if( nodePath.empty() )
+    {
+        m_objectPickedNodeUUIDSignal.signal( "" );
+        return;
+    }
+
     osg::Node* node = scenegraph::FindVESObject( nodePath );
     if( node )
     {
