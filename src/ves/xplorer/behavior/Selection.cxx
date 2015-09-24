@@ -559,6 +559,7 @@ void Selection::GetNodeUUIDFromNodePath( osg::NodePath& nodePath )
 {
     if( nodePath.empty() )
     {
+        // signal with an empty string to indicate that no object was selected
         m_objectPickedNodeUUIDSignal.signal( "" );
         return;
     }
