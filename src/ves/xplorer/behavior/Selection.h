@@ -131,7 +131,7 @@ private:
     ObjectPickedSignal_type m_objectPickedSignal;
 
     /// Object picked (string representation of NodePath)
-    typedef switchwire::Event< void( std::string const& ) > ObjectPickedAsStringSignal_type;
+    typedef switchwire::Event< void( std::string ) > ObjectPickedAsStringSignal_type;
     ObjectPickedAsStringSignal_type m_objectPickedAsStringSignal;
 
     /// Node UUID of the picked node
