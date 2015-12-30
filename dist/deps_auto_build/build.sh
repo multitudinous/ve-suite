@@ -23,7 +23,7 @@ VES_30_PACKAGES+=("boost")
 VES_30_PACKAGES+=("juggler")
 VES_30_PACKAGES+=("osgbullet")
 VES_30_PACKAGES+=("bullet")
-VES_30_PACKAGES+=("ace+tao")
+#VES_30_PACKAGES+=("ace+tao")
 VES_30_PACKAGES+=("cppdom")
 VES_30_PACKAGES+=("sdl")
 VES_30_PACKAGES+=("osgworks")
@@ -797,7 +797,7 @@ function e()
     #if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
     #if [ ! -d "${BUILD_DIR}" ]; then echo "${BUILD_DIR} non existent."; return; fi
     if [ -z "${INSTALL_DIR}" ]; then echo "INSTALL_DIR undefined in package $package"; return; fi
-    if [ ! -d "${INSTALL_DIR}" ]; then echo "${INSTALL_DIR} non existent."; return; fi
+    #if [ ! -d "${INSTALL_DIR}" ]; then echo "${INSTALL_DIR} non existent."; return; fi
     if [ ! -d "${DEPS_INSTALL_DIR}" ]; then mkdir -p "${DEPS_INSTALL_DIR}"; fi
     
     case $PLATFORM in
