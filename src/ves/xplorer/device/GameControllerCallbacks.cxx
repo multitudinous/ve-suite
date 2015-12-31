@@ -127,7 +127,7 @@ GameControllerCallbacks::GameControllerCallbacks()
     m_buttonMap( new osgwMx::FunctionalMap() ),
     m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() ),
     m_success( false ),
-    m_analogControlMode( NAV )
+    m_analogControlMode( AnalogControlMode::NAV )
 {
     ConfigureGameControllerDevices();
 
@@ -344,7 +344,7 @@ void GameControllerCallbacks::OnAxis0Event( const float event )
     //float y = normalizeAxisValue( devState.lY );
     switch( m_analogControlMode )
     {
-        case NAV:
+        case AnalogControlMode::NAV:
         {
             bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY,
                            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
@@ -385,7 +385,7 @@ void GameControllerCallbacks::OnAxis1Event( const float event )
     //float y = normalizeAxisValue( devState.lY );
     switch( m_analogControlMode )
     {
-        case NAV:
+        case AnalogControlMode::NAV:
         {
             bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY,
                            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
@@ -431,7 +431,7 @@ void GameControllerCallbacks::OnAxis2Event( const float event )
     m_rightStickX = ( ( event - 0.0f ) / 0.5f ) - 1.f;
     switch( m_analogControlMode )
     {
-        case NAV:
+        case AnalogControlMode::NAV:
         {
             m_rightStickX *= -1.0;
 
@@ -477,7 +477,7 @@ void GameControllerCallbacks::OnAxis3Event( const float event )
     m_rightStickY = ( ( event - 0.0f ) / 0.5f ) - 1.f;
     switch( m_analogControlMode )
     {
-        case NAV:
+        case AnalogControlMode::NAV:
         {
             m_rightStickY *= -1.0;
 
