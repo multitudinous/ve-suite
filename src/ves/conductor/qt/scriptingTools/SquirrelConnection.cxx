@@ -35,6 +35,8 @@
 #if SWITCHWIRE_HAVE_SQUIRREL
 #include <ves/conductor/qt/scriptingTools/SquirrelUtilClasses.h>
 
+#include <ves/xplorer/device/GameControllerCallbacks.h>
+
 #include <switchwire/squirrel/Events.h>
 #include <switchwire/squirrel/SQStdMap.h>
 #include <switchwire/squirrel/SQStdVector.h>
@@ -252,6 +254,15 @@ void SquirrelConnection::BindSpecialClasses()
         hatState.Const( "CENTERED", gadget::HatState::CENTERED );
 
         Sqrat::ConstTable().Enum( "HatState", hatState );
+    }
+
+    {
+        Sqrat::Enumeration analogControlMode;
+        analogControlMode.Const( "NAV", ves::xplorer::device::GameControllerCallbacks::AnalogControlMode::NAV );
+        analogControlMode.Const( "UI", ves::xplorer::device::GameControllerCallbacks::AnalogControlMode::UI );
+        analogControlMode.Const( "USER_DEFINED", ves::xplorer::device::GameControllerCallbacks::AnalogControlMode::USER_DEFINED );
+
+        Sqrat::ConstTable().Enum( "AnalogControlMode", analogControlMode );
     }
 
     Sqrat::RootTable().Bind( "CADPropertySet", Sqrat::Class< CADPropertySetWrapper >()
