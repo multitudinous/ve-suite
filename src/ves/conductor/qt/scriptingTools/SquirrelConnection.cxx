@@ -265,7 +265,7 @@ void SquirrelConnection::BindSpecialClasses()
         Sqrat::ConstTable().Enum( "AnalogControlMode", analogControlMode );
     }
 
-    Sqrat::RootTable().Bind( "CADPropertySet", Sqrat::Class< CADPropertySetWrapper >()
+    /*Sqrat::RootTable().Bind( "CADPropertySet", Sqrat::Class< CADPropertySetWrapper >()
         .Func( "SetBoolPropertyValue", &CADPropertySetWrapper::SetBoolPropertyValue )
         .Func( "GetBoolPropertyValue", &CADPropertySetWrapper::GetBoolPropertyValue )
         .Func( "SetIntPropertyValue", &CADPropertySetWrapper::SetIntPropertyValue )
@@ -280,7 +280,7 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "Load", &CADPropertySetWrapper::Load )
         .Func( "EmitValueChangedSignals", &CADPropertySetWrapper::EmitValueChangedSignals )
         .Func( "EnableLiveProperties", &CADPropertySetWrapper::EnableLiveProperties )
-    );
+    );*/
 
     typedef QueuedSignalReceiver< void( gadget::DigitalState::State ) > DigitalStateQueuedSignalReceiver_type;
 
