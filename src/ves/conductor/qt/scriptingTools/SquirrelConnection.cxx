@@ -282,7 +282,7 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "EnableLiveProperties", &CADPropertySetWrapper::EnableLiveProperties )
     );*/
 
-    typedef QueuedSignalReceiver< void( gadget::DigitalState::State ) > DigitalStateQueuedSignalReceiver_type;
+    typedef QueuedSignalReceiver< gadget::DigitalState::State > DigitalStateQueuedSignalReceiver_type;
 
     Sqrat::RootTable().Bind( "DigitalStateQueuedSignalReceiver", Sqrat::Class< DigitalStateQueuedSignalReceiver_type >()
         .Func( "ConnectToSignal", &DigitalStateQueuedSignalReceiver_type::ConnectToSignal )
@@ -291,7 +291,7 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "Pop", &DigitalStateQueuedSignalReceiver_type::Pop )
     );
 
-    typedef QueuedSignalReceiver< void( gadget::HatState::State ) > HatStateQueuedSignalReceiver_type;
+    typedef QueuedSignalReceiver< gadget::HatState::State > HatStateQueuedSignalReceiver_type;
 
     Sqrat::RootTable().Bind( "HatStateQueuedSignalReceiver", Sqrat::Class< HatStateQueuedSignalReceiver_type >()
         .Func( "ConnectToSignal", &HatStateQueuedSignalReceiver_type::ConnectToSignal )
@@ -300,7 +300,7 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "Pop", &HatStateQueuedSignalReceiver_type::Pop )
     );
 
-    typedef QueuedSignalReceiver< void( float ) > FloatQueuedSignalReceiver_type;
+    typedef QueuedSignalReceiver< float > FloatQueuedSignalReceiver_type;
 
     Sqrat::RootTable().Bind( "FloatQueuedSignalReceiver", Sqrat::Class< FloatQueuedSignalReceiver_type >()
         .Func( "ConnectToSignal", &FloatQueuedSignalReceiver_type::ConnectToSignal )
@@ -309,7 +309,7 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "Pop", &FloatQueuedSignalReceiver_type::Pop )
     );
 
-    typedef QueuedSignalReceiver< void( std::string ) > StringQueuedSignalReceiver_type;
+    typedef QueuedSignalReceiver< std::string > StringQueuedSignalReceiver_type;
 
     Sqrat::RootTable().Bind( "StringQueuedSignalReceiver", Sqrat::Class< StringQueuedSignalReceiver_type >()
         .Func( "ConnectToSignal", &StringQueuedSignalReceiver_type::ConnectToSignal )

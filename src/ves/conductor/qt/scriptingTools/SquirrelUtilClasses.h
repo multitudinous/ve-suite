@@ -286,10 +286,8 @@ private:
     propertystore::PropertySetPtr m_set;
 };
 
-template< typename T > class QueuedSignalReceiver;
-
-template< typename ReturnType, typename ArgType >
-class QueuedSignalReceiver< ReturnType( ArgType ) >
+template< typename ArgType >
+class QueuedSignalReceiver
 {
 public:
     QueuedSignalReceiver()
@@ -307,11 +305,9 @@ public:
 
     void ConnectToSignal( const std::string& signal_name )
     {
-        typedef ReturnType SignatureType( ArgType );
+        typedef boost::signals2::signal< void( ArgType ) > signal_t;
 
-        typedef boost::signals2::signal< SignatureType > signal_t;
-
-        typename signal_t::slot_type slot_functor( boost::bind( &QueuedSignalReceiver< SignatureType >::_Slot, this, _1 ) );
+        typename signal_t::slot_type slot_functor( boost::bind( &QueuedSignalReceiver< ArgType >::_Slot, this, _1 ) );
 
         switchwire::SlotWrapperBasePtr slot_wrapper( new switchwire::SlotWrapper< signal_t >( &slot_functor ) );
 
@@ -339,7 +335,7 @@ public:
         return m_data;
     }
 
-    ReturnType _Slot( ArgType data )
+    void _Slot( ArgType data )
     {
         boost::mutex::scoped_lock scoped_lock( m_lock );
         m_data = data;
