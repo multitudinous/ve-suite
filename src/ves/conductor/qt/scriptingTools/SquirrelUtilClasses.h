@@ -226,9 +226,9 @@ public:
 
     void OnExit( BaseContext* context );
 
-    BaseState* _OnEvent( BaseContext* context, BaseEvent* event );
+    Sqrat::SharedPtr< BaseState > _OnEvent( BaseContext* context, BaseEvent* event );
 
-    BaseState* OnEvent( BaseContext* context, BaseEvent* event );
+    Sqrat::SharedPtr< BaseState > OnEvent( BaseContext* context, BaseEvent* event );
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -246,7 +246,7 @@ public:
     void HandleEvent( BaseEvent* event );
 
 protected:
-    BaseState* m_state; 
+    Sqrat::SharedPtr< BaseState > m_state;
 };
 ////////////////////////////////////////////////////////////////////////////////
 class CADPropertySetWrapper

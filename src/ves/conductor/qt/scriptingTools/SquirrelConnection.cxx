@@ -187,7 +187,7 @@ void SquirrelConnection::BindSpecialClasses()
     // Add any other map types require to the bottom of this block
     BindSQStdMap< std::string, std::string >( "StringStringMap" );
 
-    Sqrat::RootTable().Bind( "VizPropertySet", Sqrat::Class< VizPropertySetWrapper >()
+    Sqrat::RootTable().Bind( "VizPropertySet", Sqrat::Class< VizPropertySetWrapper >( Sqrat::DefaultVM::Get(), "VizPropertySet" )
         .Func( "CreateNewFeature", &VizPropertySetWrapper::CreateNewFeature )
         .Func( "SetBoolPropertyValue", &VizPropertySetWrapper::SetBoolPropertyValue )
         .Func( "SetIntPropertyValue", &VizPropertySetWrapper::SetIntPropertyValue )
@@ -199,41 +199,41 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "GetUUIDAsString", &VizPropertySetWrapper::GetUUIDAsString )
     );
 
-    Sqrat::RootTable().Bind( "TweakStore", Sqrat::Class< TweakStore >()
+    Sqrat::RootTable().Bind( "TweakStore", Sqrat::Class< TweakStore >( Sqrat::DefaultVM::Get(), "TweakStore" )
         .Func( "OpenTransaction", &TweakStore::OpenTransaction )
         .Func( "CloseTransaction", &TweakStore::CloseTransaction )
     );
 
-    Sqrat::RootTable().Bind( "Sleeper", Sqrat::Class< Sleeper >()
+    Sqrat::RootTable().Bind( "Sleeper", Sqrat::Class< Sleeper >( Sqrat::DefaultVM::Get(), "Sleeper" )
         .StaticFunc( "Sleep", &Sleeper::Sleep )
     );
 
-    Sqrat::RootTable().Bind( "Logger", Sqrat::Class< Logger >()
+    Sqrat::RootTable().Bind( "Logger", Sqrat::Class< Logger >( Sqrat::DefaultVM::Get(), "Logger" )
         .Func( "Info", &Logger::Info )
         .Func( "Notice", &Logger::Notice )
         .Func( "Warning", &Logger::Warning )
         .Func( "Error", &Logger::Error )
     );
 
-    {
+    /*{
         Sqrat::Table namespaceTable;
 
-        Sqrat::Class< BaseEvent > eventClass;
+        Sqrat::Class< BaseEvent > eventClass( Sqrat::DefaultVM::Get(), "Event" );
         namespaceTable.Bind( "Event", eventClass );
 
-        namespaceTable.Bind( "State", Sqrat::Class< BaseState >()
+        namespaceTable.Bind( "State", Sqrat::Class< BaseState >( Sqrat::DefaultVM::Get(), "State" )
             .Func( "OnEnter", &BaseState::_OnEnter )
             .Func( "OnExit", &BaseState::_OnExit )
             .Func( "OnEvent", &BaseState::_OnEvent )
         );
 
-        namespaceTable.Bind( "Context", Sqrat::Class< BaseContext >()
+        namespaceTable.Bind( "Context", Sqrat::Class< BaseContext >( Sqrat::DefaultVM::Get(), "Context" )
             .Func( "SetInitialState", &BaseContext::SetInitialState )
             .Func( "HandleEvent", &BaseContext::HandleEvent )
         );
 
         Sqrat::RootTable().Bind( "StateMachine", namespaceTable );
-    }
+    }*/
 
     {
         Sqrat::Enumeration digitalState;
@@ -284,7 +284,9 @@ void SquirrelConnection::BindSpecialClasses()
 
     typedef QueuedSignalReceiver< gadget::DigitalState::State > DigitalStateQueuedSignalReceiver_type;
 
-    Sqrat::RootTable().Bind( "DigitalStateQueuedSignalReceiver", Sqrat::Class< DigitalStateQueuedSignalReceiver_type >()
+    Sqrat::RootTable().Bind( "DigitalStateQueuedSignalReceiver",
+                             Sqrat::Class< DigitalStateQueuedSignalReceiver_type >( Sqrat::DefaultVM::Get(),
+                                                                                    "QueuedSignalReceiver<gadget::DigitalState::State>" )
         .Func( "ConnectToSignal", &DigitalStateQueuedSignalReceiver_type::ConnectToSignal )
         .Func( "Disconnect", &DigitalStateQueuedSignalReceiver_type::Disconnect )
         .Func( "Pending", &DigitalStateQueuedSignalReceiver_type::Pending )
@@ -293,7 +295,9 @@ void SquirrelConnection::BindSpecialClasses()
 
     typedef QueuedSignalReceiver< gadget::HatState::State > HatStateQueuedSignalReceiver_type;
 
-    Sqrat::RootTable().Bind( "HatStateQueuedSignalReceiver", Sqrat::Class< HatStateQueuedSignalReceiver_type >()
+    Sqrat::RootTable().Bind( "HatStateQueuedSignalReceiver",
+                             Sqrat::Class< HatStateQueuedSignalReceiver_type >( Sqrat::DefaultVM::Get(),
+                                                                                "QueuedSignalReceiver<gadget::HatState::State>" )
         .Func( "ConnectToSignal", &HatStateQueuedSignalReceiver_type::ConnectToSignal )
         .Func( "Disconnect", &HatStateQueuedSignalReceiver_type::Disconnect )
         .Func( "Pending", &HatStateQueuedSignalReceiver_type::Pending )
@@ -302,7 +306,9 @@ void SquirrelConnection::BindSpecialClasses()
 
     typedef QueuedSignalReceiver< float > FloatQueuedSignalReceiver_type;
 
-    Sqrat::RootTable().Bind( "FloatQueuedSignalReceiver", Sqrat::Class< FloatQueuedSignalReceiver_type >()
+    Sqrat::RootTable().Bind( "FloatQueuedSignalReceiver",
+                             Sqrat::Class< FloatQueuedSignalReceiver_type >( Sqrat::DefaultVM::Get(),
+                                                                             "QueuedSignalReceiver<float>" )
         .Func( "ConnectToSignal", &FloatQueuedSignalReceiver_type::ConnectToSignal )
         .Func( "Disconnect", &FloatQueuedSignalReceiver_type::Disconnect )
         .Func( "Pending", &FloatQueuedSignalReceiver_type::Pending )
@@ -311,7 +317,9 @@ void SquirrelConnection::BindSpecialClasses()
 
     typedef QueuedSignalReceiver< std::string > StringQueuedSignalReceiver_type;
 
-    Sqrat::RootTable().Bind( "StringQueuedSignalReceiver", Sqrat::Class< StringQueuedSignalReceiver_type >()
+    Sqrat::RootTable().Bind( "StringQueuedSignalReceiver",
+                             Sqrat::Class< StringQueuedSignalReceiver_type >( Sqrat::DefaultVM::Get(),
+                                                                              "QueuedSignalReceiver<std::string>" )
         .Func( "ConnectToSignal", &StringQueuedSignalReceiver_type::ConnectToSignal )
         .Func( "Disconnect", &StringQueuedSignalReceiver_type::Disconnect )
         .Func( "Pending", &StringQueuedSignalReceiver_type::Pending )
@@ -325,7 +333,7 @@ void SquirrelConnection::runScript( const std::string& scriptText )
     {
         switchwire::SquirrelContext sc;
         //Sqrat::SqratVM vm;
-        Sqrat::DefaultVM::Set( sc.GetVM().getVM() );
+        Sqrat::DefaultVM::Set( sc.GetVM().GetVM() );
 
         ExposeSignalSlotTypes( sc );
         BindSpecialClasses();

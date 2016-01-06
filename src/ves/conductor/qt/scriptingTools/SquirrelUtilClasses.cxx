@@ -179,18 +179,18 @@ void BaseState::OnExit( BaseContext* context )
     }
 }
 
-BaseState* BaseState::_OnEvent( BaseContext* context, BaseEvent* event )
+Sqrat::SharedPtr< BaseState > BaseState::_OnEvent( BaseContext* context, BaseEvent* event )
 {
     // dummy function - Squirrel subclasses that do not override OnEvent() will call this
-    return static_cast< BaseState* >( 0 );    
+    return Sqrat::SharedPtr< BaseState >();
 }
 
-BaseState* BaseState::OnEvent( BaseContext* context, BaseEvent* event )
+Sqrat::SharedPtr< BaseState > BaseState::OnEvent( BaseContext* context, BaseEvent* event )
 {
     try
     {
-        BaseState* new_state = Sqrat::Function( m_instance.value, "OnEvent" )
-            .Evaluate< BaseState*, BaseContext*, BaseEvent* >( context, event );
+        Sqrat::SharedPtr<BaseState> new_state = Sqrat::Function( m_instance.value, "OnEvent" )
+            .Evaluate< BaseState, BaseContext*, BaseEvent* >( context, event );
         return new_state;
     }
     catch( Sqrat::Exception& e )
@@ -220,10 +220,10 @@ void BaseContext::SetInitialState( BaseState* state )
 
 void BaseContext::HandleEvent( BaseEvent* event )
 {
-    if( m_state )
+    if( m_state.Get() )
     {
-        BaseState* new_state = m_state->OnEvent( this, event );
-        if( new_state )
+        Sqrat::SharedPtr< BaseState > new_state = m_state->OnEvent( this, event );
+        if( new_state.Get() )
         {
             m_state->OnExit( this );
             m_state = new_state;
