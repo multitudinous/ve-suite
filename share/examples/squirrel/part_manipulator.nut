@@ -98,10 +98,10 @@ class ActiveState extends State
         m_nodePath = node_path;
         m_logger = Logger();;
 
-        m_leftXAxisReceiver = FloatQueuedSignalReceiver();
-        m_leftYAxisReceiver = FloatQueuedSignalReceiver();
-        //m_rightXAxisReceiver = FloatQueuedSignalReceiver();
-        m_rightYAxisReceiver = FloatQueuedSignalReceiver();
+        m_leftXAxisReceiver = FloatSynchronizedSignalReceiver();
+        m_leftYAxisReceiver = FloatSynchronizedSignalReceiver();
+        //m_rightXAxisReceiver = FloatSynchronizedSignalReceiver();
+        m_rightYAxisReceiver = FloatSynchronizedSignalReceiver();
     }
 
     function OnEnter( context )
@@ -227,8 +227,8 @@ class PartManipulator extends Context
     {
         base.constructor( initial_state );
 
-        m_nodePathReceiver = StringQueuedSignalReceiver();
-        m_hatStateReceiver = HatStateQueuedSignalReceiver();
+        m_nodePathReceiver = StringSynchronizedSignalReceiver();
+        m_hatStateReceiver = HatStateSynchronizedSignalReceiver();
 
         m_nodePathReceiver.ConnectToSignal( "Selection.ObjectPickedSignalAsString" );
         m_hatStateReceiver.ConnectToSignal( "GameController.Hat0" );

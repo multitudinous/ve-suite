@@ -286,48 +286,56 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "EnableLiveProperties", &CADPropertySetWrapper::EnableLiveProperties )
     );*/
 
-    typedef QueuedSignalReceiver< gadget::DigitalState::State > DigitalStateQueuedSignalReceiver_type;
+    typedef SynchronizedSignalReceiver< gadget::DigitalState::State > DigitalStateSynchronizedSignalReceiver_type;
 
-    Sqrat::RootTable().Bind( "DigitalStateQueuedSignalReceiver",
-                             Sqrat::Class< DigitalStateQueuedSignalReceiver_type >( Sqrat::DefaultVM::Get(),
-                                                                                    "QueuedSignalReceiver<gadget::DigitalState::State>" )
-        .Func( "ConnectToSignal", &DigitalStateQueuedSignalReceiver_type::ConnectToSignal )
-        .Func( "Disconnect", &DigitalStateQueuedSignalReceiver_type::Disconnect )
-        .Func( "Pending", &DigitalStateQueuedSignalReceiver_type::Pending )
-        .Func( "Pop", &DigitalStateQueuedSignalReceiver_type::Pop )
+    Sqrat::RootTable().Bind( "DigitalStateSynchronizedSignalReceiver",
+                             Sqrat::Class< DigitalStateSynchronizedSignalReceiver_type >(
+                                 Sqrat::DefaultVM::Get(),
+                                 "SynchronizedSignalReceiver<gadget::DigitalState::State>"
+                             )
+        .Func( "ConnectToSignal", &DigitalStateSynchronizedSignalReceiver_type::ConnectToSignal )
+        .Func( "Disconnect", &DigitalStateSynchronizedSignalReceiver_type::Disconnect )
+        .Func( "Pending", &DigitalStateSynchronizedSignalReceiver_type::Pending )
+        .Func( "Pop", &DigitalStateSynchronizedSignalReceiver_type::Pop )
     );
 
-    typedef QueuedSignalReceiver< gadget::HatState::State > HatStateQueuedSignalReceiver_type;
+    typedef SynchronizedSignalReceiver< gadget::HatState::State > HatStateSynchronizedSignalReceiver_type;
 
-    Sqrat::RootTable().Bind( "HatStateQueuedSignalReceiver",
-                             Sqrat::Class< HatStateQueuedSignalReceiver_type >( Sqrat::DefaultVM::Get(),
-                                                                                "QueuedSignalReceiver<gadget::HatState::State>" )
-        .Func( "ConnectToSignal", &HatStateQueuedSignalReceiver_type::ConnectToSignal )
-        .Func( "Disconnect", &HatStateQueuedSignalReceiver_type::Disconnect )
-        .Func( "Pending", &HatStateQueuedSignalReceiver_type::Pending )
-        .Func( "Pop", &HatStateQueuedSignalReceiver_type::Pop )
+    Sqrat::RootTable().Bind( "HatStateSynchronizedSignalReceiver",
+                             Sqrat::Class< HatStateSynchronizedSignalReceiver_type >(
+                                 Sqrat::DefaultVM::Get(),
+                                 "SynchronizedSignalReceiver<gadget::HatState::State>"
+                             )
+        .Func( "ConnectToSignal", &HatStateSynchronizedSignalReceiver_type::ConnectToSignal )
+        .Func( "Disconnect", &HatStateSynchronizedSignalReceiver_type::Disconnect )
+        .Func( "Pending", &HatStateSynchronizedSignalReceiver_type::Pending )
+        .Func( "Pop", &HatStateSynchronizedSignalReceiver_type::Pop )
     );
 
-    typedef QueuedSignalReceiver< float > FloatQueuedSignalReceiver_type;
+    typedef SynchronizedSignalReceiver< float > FloatSynchronizedSignalReceiver_type;
 
-    Sqrat::RootTable().Bind( "FloatQueuedSignalReceiver",
-                             Sqrat::Class< FloatQueuedSignalReceiver_type >( Sqrat::DefaultVM::Get(),
-                                                                             "QueuedSignalReceiver<float>" )
-        .Func( "ConnectToSignal", &FloatQueuedSignalReceiver_type::ConnectToSignal )
-        .Func( "Disconnect", &FloatQueuedSignalReceiver_type::Disconnect )
-        .Func( "Pending", &FloatQueuedSignalReceiver_type::Pending )
-        .Func( "Pop", &FloatQueuedSignalReceiver_type::Pop )
+    Sqrat::RootTable().Bind( "FloatSynchronizedSignalReceiver",
+                             Sqrat::Class< FloatSynchronizedSignalReceiver_type >(
+                                 Sqrat::DefaultVM::Get(),
+                                 "SynchronizedSignalReceiver<float>"
+                             )
+        .Func( "ConnectToSignal", &FloatSynchronizedSignalReceiver_type::ConnectToSignal )
+        .Func( "Disconnect", &FloatSynchronizedSignalReceiver_type::Disconnect )
+        .Func( "Pending", &FloatSynchronizedSignalReceiver_type::Pending )
+        .Func( "Pop", &FloatSynchronizedSignalReceiver_type::Pop )
     );
 
-    typedef QueuedSignalReceiver< std::string > StringQueuedSignalReceiver_type;
+    typedef SynchronizedSignalReceiver< std::string > StringSynchronizedSignalReceiver_type;
 
-    Sqrat::RootTable().Bind( "StringQueuedSignalReceiver",
-                             Sqrat::Class< StringQueuedSignalReceiver_type >( Sqrat::DefaultVM::Get(),
-                                                                              "QueuedSignalReceiver<std::string>" )
-        .Func( "ConnectToSignal", &StringQueuedSignalReceiver_type::ConnectToSignal )
-        .Func( "Disconnect", &StringQueuedSignalReceiver_type::Disconnect )
-        .Func( "Pending", &StringQueuedSignalReceiver_type::Pending )
-        .Func( "Pop", &StringQueuedSignalReceiver_type::Pop )
+    Sqrat::RootTable().Bind( "StringSynchronizedSignalReceiver",
+                             Sqrat::Class< StringSynchronizedSignalReceiver_type >(
+                                 Sqrat::DefaultVM::Get(),
+                                 "SynchronizedSignalReceiver<std::string>"
+                             )
+        .Func( "ConnectToSignal", &StringSynchronizedSignalReceiver_type::ConnectToSignal )
+        .Func( "Disconnect", &StringSynchronizedSignalReceiver_type::Disconnect )
+        .Func( "Pending", &StringSynchronizedSignalReceiver_type::Pending )
+        .Func( "Pop", &StringSynchronizedSignalReceiver_type::Pop )
     );
 }
 ////////////////////////////////////////////////////////////////////////////////

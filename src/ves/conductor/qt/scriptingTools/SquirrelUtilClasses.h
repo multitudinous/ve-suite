@@ -287,17 +287,17 @@ private:
 };
 
 template< typename ArgType >
-class QueuedSignalReceiver
+class SynchronizedSignalReceiver
 {
 public:
-    QueuedSignalReceiver()
+    SynchronizedSignalReceiver()
         : m_dataIsPending( false )
     {
         ;
     }
 
     // Sqrat's allocators expect bindable C++ objects to be copy-constructable
-    QueuedSignalReceiver( const QueuedSignalReceiver& other )
+    SynchronizedSignalReceiver( const SynchronizedSignalReceiver& other )
         : m_dataIsPending( false )
     {
         ; // don't copy anything from the other object
@@ -307,14 +307,13 @@ public:
     {
         typedef boost::signals2::signal< void( ArgType ) > signal_t;
 
-        typename signal_t::slot_type slot_functor( boost::bind( &QueuedSignalReceiver< ArgType >::_Slot, this, _1 ) );
+        typename signal_t::slot_type slot_functor( boost::bind( &SynchronizedSignalReceiver< ArgType >::_Slot, this, _1 ) );
 
         switchwire::SlotWrapperBasePtr slot_wrapper( new switchwire::SlotWrapper< signal_t >( &slot_functor ) );
 
         switchwire::EventManager::instance()->ConnectSignal( signal_name,
                                                              slot_wrapper,
                                                              this->m_connections );
-
     }
 
     void Disconnect()
