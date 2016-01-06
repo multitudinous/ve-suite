@@ -3,8 +3,6 @@ BASE_DIR="${DEV_BASE_DIR}/sqrat"
 
 SOURCE_RETRIEVAL_METHOD=git
 SOURCE_URL=http://git.code.sf.net/p/scrat/code
-# use the 0.8.92 release of Sqrat
-GIT_REVISION=fd7b60a88d1c70a45e0bb66263d850eed82b9876
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}"
