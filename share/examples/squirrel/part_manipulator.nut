@@ -11,7 +11,7 @@ class State
     function Update() {}
 }
 
-class IdleState extends State//StateMachine.State
+class IdleState extends State
 {
     constructor()
     {
@@ -42,7 +42,7 @@ class IdleState extends State//StateMachine.State
     m_logger = null;
 }
 
-class ReadyState extends State//StateMachine.State
+class ReadyState extends State
 {
     constructor( node_path )
     {
@@ -90,17 +90,13 @@ class ReadyState extends State//StateMachine.State
     m_logger = null;
 }
 
-class ActiveState extends State//StateMachine.State
+class ActiveState extends State
 {
     constructor( node_path )
     {
         base.constructor();
         m_nodePath = node_path;
-        m_logger = Logger();
-
-        //m_cadPropertySet = CADPropertySet();
-        //m_cadPropertySet.SetUUID( m_nodeUUID );
-        //m_cadPropertySet.Load();
+        m_logger = Logger();;
 
         m_leftXAxisReceiver = FloatQueuedSignalReceiver();
         m_leftYAxisReceiver = FloatQueuedSignalReceiver();
@@ -116,8 +112,7 @@ class ActiveState extends State//StateMachine.State
         //m_rightXAxisReceiver.ConnectToSignal( "GameController.Axis2" );
         m_rightYAxisReceiver.ConnectToSignal( "GameController.Axis3" );
 
-        //m_cadPropertySet.EnableLiveProperties( true );
-
+        SetAnalogControlModeSignal.signal( AnalogControlMode.USER_DEFINED );
         // TODO: record the original position of the selected object
     }
 
@@ -128,15 +123,7 @@ class ActiveState extends State//StateMachine.State
         //m_rightXAxisReceiver.Disconnect();
         m_rightYAxisReceiver.Disconnect();
 
-        // save our changes
-        /*if( m_cadPropertySet.Save() )
-        {
-            m_logger.Info( "CADPropertySet saved successfully" );
-        }
-        else
-        {
-            m_logger.Info( "Oops! Couldn't save the CADPropertySet" );
-        }*/
+        SetAnalogControlModeSignal.signal( AnalogControlMode.NAV );
     }
 
     function OnEvent( context, event )
@@ -186,28 +173,21 @@ class ActiveState extends State//StateMachine.State
         if( m_leftXAxisReceiver.Pending() )
         {
             x_delta = ( 0.2 * m_leftXAxisReceiver.Pop() ) - 0.1;
-            //local x = m_cadPropertySet.GetDoublePropertyValue( "Transform_Translation_X" );
-            //m_cadPropertySet.SetDoublePropertyValue( "Transform_Translation_X", x + x_delta );
         }
 
         if( m_leftYAxisReceiver.Pending() )
         {
             y_delta = ( 0.2 * m_leftYAxisReceiver.Pop() ) - 0.1;
-            //local y = m_cadPropertySet.GetDoublePropertyValue( "Transform_Translation_Y" );
-            //m_cadPropertySet.SetDoublePropertyValue( "Transform_Translation_Y", y + ( y_delta * -1.0 ) );
         }
 
         if( m_rightYAxisReceiver.Pending() )
         {
-            m_logger.Info( "z axis" );
+            //m_logger.Info( "z axis" );
             z_delta = ( 0.2 * m_rightYAxisReceiver.Pop() ) - 0.1;
-            //local z = m_cadPropertySet.GetDoublePropertyValue( "Transform_Translation_Z" );
-            //m_cadPropertySet.SetDoublePropertyValue( "Transform_Translation_Z", z + ( z_delta * -1.0 ) );
         }
     }
 
     m_nodePath = null;
-    //m_cadPropertySet = null;
     m_logger = null;
 
     m_leftXAxisReceiver = null;
@@ -241,7 +221,7 @@ class Context
     m_state = null;
 }
 
-class PartManipulator extends Context//StateMachine.Context
+class PartManipulator extends Context
 {
     constructor( initial_state )
     {
@@ -311,7 +291,7 @@ class NodePathEvent extends Event
     m_nodePath = null;
 }
 
-class HatStateEvent extends Event//StateMachine.Event
+class HatStateEvent extends Event
 {
     constructor( hat_state )
     {
@@ -329,8 +309,9 @@ class HatStateEvent extends Event//StateMachine.Event
 
 function Execute()
 {
-    //local part_manipulator = PartManipulator();
-    //part_manipulator.SetInitialState( IdleState() );
+    AnalogControlModeSignalMaker <- AnalogControlModeSignal;
+    AnalogControlModeSignalMaker.RegisterSignal( "GameController.AnalogControlMode", "SetAnalogControlModeSignal" );
+
     local part_manipulator = PartManipulator( IdleState() );
 
     while( 1 )

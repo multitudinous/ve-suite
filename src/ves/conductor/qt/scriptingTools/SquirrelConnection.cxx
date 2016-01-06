@@ -167,6 +167,10 @@ void SquirrelConnection::ExposeSignalSlotTypes( switchwire::SquirrelContext& sc 
     ExposeSlotType_2
             < void ( const bool, const std::vector< double >& ) >
             ( "BoolAndDoubleVectorSlot", sc );
+
+    ExposeSignalType_1
+            < void( ves::xplorer::device::GameControllerCallbacks::AnalogControlMode::Mode ) >
+            ( "AnalogControlModeSignal", sc );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::BindSpecialClasses()

@@ -294,6 +294,10 @@ GameControllerCallbacks::GameControllerCallbacks()
         &m_gameControllerHatSignal,
         "GameController.Hat0",
         switchwire::EventManager::input_SignalType );
+
+    CONNECTSIGNAL_1( "GameController.AnalogControlMode", void( AnalogControlMode::Mode ),
+                     &GameControllerCallbacks::SetAnalogControlMode,
+                     m_connections, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 GameControllerCallbacks::~GameControllerCallbacks()
@@ -342,7 +346,15 @@ void GameControllerCallbacks::OnAxis0Event( const float event )
     m_leftStickX = ( ( event - 0.0f ) / 0.5f ) - 1.f;
     //m_leftStickX *= -1.0;
     //float y = normalizeAxisValue( devState.lY );
-    switch( m_analogControlMode )
+
+    AnalogControlMode::Mode local_mode;
+
+    {
+        boost::mutex::scoped_lock lock( m_analogControlModeLock );
+        local_mode = m_analogControlMode;
+    }
+
+    switch( local_mode )
     {
         case AnalogControlMode::NAV:
         {
@@ -359,6 +371,8 @@ void GameControllerCallbacks::OnAxis0Event( const float event )
             m_updateData.signal( m_success );
             break;
         }
+        case AnalogControlMode::UI:
+        case AnalogControlMode::USER_DEFINED:
         default:
             break;
     }
@@ -383,7 +397,15 @@ void GameControllerCallbacks::OnAxis1Event( const float event )
     m_leftStickY = ( ( event - 0.0f ) / 0.5f ) - 1.f;
     //m_leftStickY *= -1.0;
     //float y = normalizeAxisValue( devState.lY );
-    switch( m_analogControlMode )
+
+    AnalogControlMode::Mode local_mode;
+
+    {
+        boost::mutex::scoped_lock lock( m_analogControlModeLock );
+        local_mode = m_analogControlMode;
+    }
+
+    switch( local_mode )
     {
         case AnalogControlMode::NAV:
         {
@@ -400,8 +422,10 @@ void GameControllerCallbacks::OnAxis1Event( const float event )
             m_updateData.signal( m_success );
             break;
         }
+        case AnalogControlMode::UI:
+        case AnalogControlMode::USER_DEFINED:
         default:
-            break;
+            break;;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -429,7 +453,15 @@ void GameControllerCallbacks::OnAxis2Event( const float event )
     //x = -normalizeAxisValue( devState.lRz );
     //y = normalizeAxisValue( devState.lZ );
     m_rightStickX = ( ( event - 0.0f ) / 0.5f ) - 1.f;
-    switch( m_analogControlMode )
+
+    AnalogControlMode::Mode local_mode;
+
+    {
+        boost::mutex::scoped_lock lock( m_analogControlModeLock );
+        local_mode = m_analogControlMode;
+    }
+
+    switch( local_mode )
     {
         case AnalogControlMode::NAV:
         {
@@ -448,6 +480,10 @@ void GameControllerCallbacks::OnAxis2Event( const float event )
             m_updateData.signal( m_success );
             break;
         }
+        case AnalogControlMode::UI:
+        case AnalogControlMode::USER_DEFINED:
+        default:
+            break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -475,7 +511,15 @@ void GameControllerCallbacks::OnAxis3Event( const float event )
     //x = -normalizeAxisValue( devState.lRz );
     //y = normalizeAxisValue( devState.lZ );
     m_rightStickY = ( ( event - 0.0f ) / 0.5f ) - 1.f;
-    switch( m_analogControlMode )
+
+    AnalogControlMode::Mode local_mode;
+
+    {
+        boost::mutex::scoped_lock lock( m_analogControlModeLock );
+        local_mode = m_analogControlMode;
+    }
+
+    switch( local_mode )
     {
         case AnalogControlMode::NAV:
         {
@@ -494,6 +538,10 @@ void GameControllerCallbacks::OnAxis3Event( const float event )
             m_updateData.signal( m_success );
             break;
         }
+        case AnalogControlMode::UI:
+        case AnalogControlMode::USER_DEFINED:
+        default:
+            break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1125,5 +1173,11 @@ void GameControllerCallbacks::CheckControlState()
 void GameControllerCallbacks::OnPositionEvent( gmtl::Matrix44f mat )
 {
     m_controllerPosition = mat;
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameControllerCallbacks::SetAnalogControlMode( AnalogControlMode::Mode m )
+{
+    boost::mutex::scoped_lock lock( m_analogControlModeLock );
+    m_analogControlMode = m;
 }
 ////////////////////////////////////////////////////////////////////////////////

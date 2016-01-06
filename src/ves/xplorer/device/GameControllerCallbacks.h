@@ -48,6 +48,7 @@
 #include <gmtl/Quat.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/thread/mutex.hpp>
 
 #include <gadget/gadgetParam.h>
 
@@ -307,6 +308,10 @@ private:
     GameControllerButtonSignalMap_type m_gameControllerButtonSignalMap;
     GameControllerAnalogSignalMap_type m_gameControllerAnalogSignalMap;
     GameControllerHatSignal_type m_gameControllerHatSignal;
+
+    void SetAnalogControlMode( AnalogControlMode::Mode );
+
+    boost::mutex m_analogControlModeLock;
 };
 
 } //end device
