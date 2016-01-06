@@ -112,7 +112,7 @@ class ActiveState extends State
         //m_rightXAxisReceiver.ConnectToSignal( "GameController.Axis2" );
         m_rightYAxisReceiver.ConnectToSignal( "GameController.Axis3" );
 
-        SetAnalogControlModeSignal.signal( AnalogControlMode.USER_DEFINED );
+        SetControlModeSignal.signal( ControlMode.USER_DEFINED );
         // TODO: record the original position of the selected object
     }
 
@@ -123,7 +123,7 @@ class ActiveState extends State
         //m_rightXAxisReceiver.Disconnect();
         m_rightYAxisReceiver.Disconnect();
 
-        SetAnalogControlModeSignal.signal( AnalogControlMode.NAV );
+        SetControlModeSignal.signal( ControlMode.NAV );
     }
 
     function OnEvent( context, event )
@@ -309,8 +309,8 @@ class HatStateEvent extends Event
 
 function Execute()
 {
-    AnalogControlModeSignalMaker <- AnalogControlModeSignal;
-    AnalogControlModeSignalMaker.RegisterSignal( "GameController.AnalogControlMode", "SetAnalogControlModeSignal" );
+    ControlModeSignalMaker <- ControlModeSignal;
+    ControlModeSignalMaker.RegisterSignal( "GameController.ControlMode", "SetControlModeSignal" );
 
     local part_manipulator = PartManipulator( IdleState() );
 

@@ -107,7 +107,7 @@ namespace device
 class VE_XPLORER_EXPORTS GameControllerCallbacks : public Device
 {
 public:
-    struct AnalogControlMode {
+    struct ControlMode {
         enum Mode {
             NAV = 0,
             UI = 1,
@@ -287,8 +287,8 @@ private:
     ves::util::BoolSignal_type m_updateData;
     ///Control the data flow
     bool m_success;
-    ///If the analog sticks are being used for nav, to move the cursor, or some script-defined behavior
-    AnalogControlMode::Mode m_analogControlMode;
+    ///If the controller being used for nav, to move the cursor, or some script-defined behavior
+    ControlMode::Mode m_controlMode;
 
     // "raw" button signal type
     // this signal should only be used with Squirrel code; C++ slots should not be doing any conditional
@@ -309,9 +309,9 @@ private:
     GameControllerAnalogSignalMap_type m_gameControllerAnalogSignalMap;
     GameControllerHatSignal_type m_gameControllerHatSignal;
 
-    void SetAnalogControlMode( AnalogControlMode::Mode );
+    void SetControlMode( ControlMode::Mode );
 
-    boost::mutex m_analogControlModeLock;
+    boost::mutex m_controlModeLock;
 };
 
 } //end device

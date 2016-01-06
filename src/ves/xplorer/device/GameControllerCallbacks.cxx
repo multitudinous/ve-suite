@@ -127,7 +127,7 @@ GameControllerCallbacks::GameControllerCallbacks()
     m_buttonMap( new osgwMx::FunctionalMap() ),
     m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() ),
     m_success( false ),
-    m_analogControlMode( AnalogControlMode::NAV )
+    m_controlMode( ControlMode::NAV )
 {
     ConfigureGameControllerDevices();
 
@@ -295,8 +295,8 @@ GameControllerCallbacks::GameControllerCallbacks()
         "GameController.Hat0",
         switchwire::EventManager::input_SignalType );
 
-    CONNECTSIGNAL_1( "GameController.AnalogControlMode", void( AnalogControlMode::Mode ),
-                     &GameControllerCallbacks::SetAnalogControlMode,
+    CONNECTSIGNAL_1( "GameController.ControlMode", void( ControlMode::Mode ),
+                     &GameControllerCallbacks::SetControlMode,
                      m_connections, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -347,16 +347,16 @@ void GameControllerCallbacks::OnAxis0Event( const float event )
     //m_leftStickX *= -1.0;
     //float y = normalizeAxisValue( devState.lY );
 
-    AnalogControlMode::Mode local_mode;
+    ControlMode::Mode local_mode;
 
     {
-        boost::mutex::scoped_lock lock( m_analogControlModeLock );
-        local_mode = m_analogControlMode;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
 
     switch( local_mode )
     {
-        case AnalogControlMode::NAV:
+        case ControlMode::NAV:
         {
             bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY,
                            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
@@ -371,8 +371,8 @@ void GameControllerCallbacks::OnAxis0Event( const float event )
             m_updateData.signal( m_success );
             break;
         }
-        case AnalogControlMode::UI:
-        case AnalogControlMode::USER_DEFINED:
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
         default:
             break;
     }
@@ -398,16 +398,16 @@ void GameControllerCallbacks::OnAxis1Event( const float event )
     //m_leftStickY *= -1.0;
     //float y = normalizeAxisValue( devState.lY );
 
-    AnalogControlMode::Mode local_mode;
+    ControlMode::Mode local_mode;
 
     {
-        boost::mutex::scoped_lock lock( m_analogControlModeLock );
-        local_mode = m_analogControlMode;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
 
     switch( local_mode )
     {
-        case AnalogControlMode::NAV:
+        case ControlMode::NAV:
         {
             bool success = m_mxGamePadStyle->setLeftStick( m_leftStickX, m_leftStickY,
                            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
@@ -422,8 +422,8 @@ void GameControllerCallbacks::OnAxis1Event( const float event )
             m_updateData.signal( m_success );
             break;
         }
-        case AnalogControlMode::UI:
-        case AnalogControlMode::USER_DEFINED:
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
         default:
             break;;
     }
@@ -454,16 +454,16 @@ void GameControllerCallbacks::OnAxis2Event( const float event )
     //y = normalizeAxisValue( devState.lZ );
     m_rightStickX = ( ( event - 0.0f ) / 0.5f ) - 1.f;
 
-    AnalogControlMode::Mode local_mode;
+    ControlMode::Mode local_mode;
 
     {
-        boost::mutex::scoped_lock lock( m_analogControlModeLock );
-        local_mode = m_analogControlMode;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
 
     switch( local_mode )
     {
-        case AnalogControlMode::NAV:
+        case ControlMode::NAV:
         {
             m_rightStickX *= -1.0;
 
@@ -480,8 +480,8 @@ void GameControllerCallbacks::OnAxis2Event( const float event )
             m_updateData.signal( m_success );
             break;
         }
-        case AnalogControlMode::UI:
-        case AnalogControlMode::USER_DEFINED:
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
         default:
             break;
     }
@@ -512,16 +512,16 @@ void GameControllerCallbacks::OnAxis3Event( const float event )
     //y = normalizeAxisValue( devState.lZ );
     m_rightStickY = ( ( event - 0.0f ) / 0.5f ) - 1.f;
 
-    AnalogControlMode::Mode local_mode;
+    ControlMode::Mode local_mode;
 
     {
-        boost::mutex::scoped_lock lock( m_analogControlModeLock );
-        local_mode = m_analogControlMode;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
 
     switch( local_mode )
     {
-        case AnalogControlMode::NAV:
+        case ControlMode::NAV:
         {
             m_rightStickY *= -1.0;
 
@@ -538,8 +538,8 @@ void GameControllerCallbacks::OnAxis3Event( const float event )
             m_updateData.signal( m_success );
             break;
         }
-        case AnalogControlMode::UI:
-        case AnalogControlMode::USER_DEFINED:
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
         default:
             break;
     }
@@ -573,33 +573,50 @@ void GameControllerCallbacks::OnButton0Event( gadget::DigitalState::State event 
     {
         return;
     }
-    
-    if( event == gadget::DigitalState::OFF )
+
+    ControlMode::Mode local_mode;
+
     {
-        return;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
-    //std::cout << "GameControllerCallbacks::OnButton0Event" << std::endl;
-    switch( event )
+
+    switch( local_mode )
     {
-        case gadget::DigitalState::ON:
+        case ControlMode::NAV:
         {
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_ON:
-        {
-            osg::Vec3d scale = m_viewMatrix.getMoveScale();
-            scale -= osg::Vec3d( 0.1, 0.1, 0.1 );
-            if( scale[ 0 ] < 0. )
+            if( event == gadget::DigitalState::OFF )
             {
-                scale = osg::Vec3d( 1., 1., 1. );
+                return;
             }
-            m_viewMatrix.setMoveScale( scale );
-            break;
+            //std::cout << "GameControllerCallbacks::OnButton0Event" << std::endl;
+            switch( event )
+            {
+                case gadget::DigitalState::ON:
+                {
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_ON:
+                {
+                    osg::Vec3d scale = m_viewMatrix.getMoveScale();
+                    scale -= osg::Vec3d( 0.1, 0.1, 0.1 );
+                    if( scale[ 0 ] < 0. )
+                    {
+                        scale = osg::Vec3d( 1., 1., 1. );
+                    }
+                    m_viewMatrix.setMoveScale( scale );
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_OFF:
+                {
+                    break;
+                }
+                default:
+                    break;
+            }
         }
-        case gadget::DigitalState::TOGGLE_OFF:
-        {
-            break;
-        }
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
         default:
             break;
     }
@@ -613,29 +630,46 @@ void GameControllerCallbacks::OnButton1Event( gadget::DigitalState::State event 
     {
         return;
     }
-    
-    if( event == gadget::DigitalState::OFF )
+
+    ControlMode::Mode local_mode;
+
     {
-        return;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
-    //std::cout << "GameControllerCallbacks::OnButton1Event" << std::endl;
-    switch( event )
+
+    switch( local_mode )
     {
-        case gadget::DigitalState::ON:
+        case ControlMode::NAV:
         {
-            UpdateForwardAndUp();
-            m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button12,
-                                         ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
-            break;
+            if( event == gadget::DigitalState::OFF )
+            {
+                return;
+            }
+            //std::cout << "GameControllerCallbacks::OnButton1Event" << std::endl;
+            switch( event )
+            {
+                case gadget::DigitalState::ON:
+                {
+                    UpdateForwardAndUp();
+                    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button12,
+                                                  ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_ON:
+                {
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_OFF:
+                {
+                    break;
+                }
+                default:
+                    break;
+            }
         }
-        case gadget::DigitalState::TOGGLE_ON:
-        {
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_OFF:
-        {
-            break;
-        }
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
         default:
             break;
     }
@@ -649,29 +683,46 @@ void GameControllerCallbacks::OnButton2Event( gadget::DigitalState::State event 
     {
         return;
     }
-    
-    if( event == gadget::DigitalState::OFF )
+
+    ControlMode::Mode local_mode;
+
     {
-        return;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
-    //std::cout << "GameControllerCallbacks::OnButton2Event" << std::endl;
-    switch( event )
+
+    switch( local_mode )
     {
-        case gadget::DigitalState::ON:
+        case ControlMode::NAV:
         {
-            break;
+            if( event == gadget::DigitalState::OFF )
+            {
+                return;
+            }
+            //std::cout << "GameControllerCallbacks::OnButton2Event" << std::endl;
+            switch( event )
+            {
+                case gadget::DigitalState::ON:
+                {
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_ON:
+                {
+                    osg::Vec3d scale = m_viewMatrix.getMoveScale();
+                    scale += osg::Vec3d( 0.1, 0.1, 0.1 );
+                    m_viewMatrix.setMoveScale( scale );
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_OFF:
+                {
+                    break;
+                }
+                default:
+                    break;
+            }
         }
-        case gadget::DigitalState::TOGGLE_ON:
-        {
-            osg::Vec3d scale = m_viewMatrix.getMoveScale();
-            scale += osg::Vec3d( 0.1, 0.1, 0.1 );
-            m_viewMatrix.setMoveScale( scale );
-            break;
-        }
-        case gadget::DigitalState::TOGGLE_OFF:
-        {
-            break;
-        }
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
         default:
             break;
     }
@@ -686,30 +737,47 @@ void GameControllerCallbacks::OnButton3Event( gadget::DigitalState::State event 
         return;
     }
 
-    if( event == gadget::DigitalState::OFF )
+    ControlMode::Mode local_mode;
+
     {
-        return;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
-    //std::cout << "GameControllerCallbacks::OnButton3Event" << std::endl;
-    switch( event )
+
+    switch( local_mode )
     {
-    case gadget::DigitalState::ON:
-    {
-        UpdateForwardAndUp();
-        m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button13,
-                                      ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_ON:
-    {
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_OFF:
-    {
-        break;
-    }
-    default:
-        break;
+        case ControlMode::NAV:
+        {
+            if( event == gadget::DigitalState::OFF )
+            {
+                return;
+            }
+            //std::cout << "GameControllerCallbacks::OnButton3Event" << std::endl;
+            switch( event )
+            {
+                case gadget::DigitalState::ON:
+                {
+                    UpdateForwardAndUp();
+                    m_mxGamePadStyle->setButtons( osgwMx::MxGamePad::Button13,
+                                                  ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime() );
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_ON:
+                {
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_OFF:
+                {
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
+        default:
+            break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -722,30 +790,47 @@ void GameControllerCallbacks::OnButton4Event( gadget::DigitalState::State event 
         return;
     }
 
-    if( event == gadget::DigitalState::OFF )
+    ControlMode::Mode local_mode;
+
     {
-        return;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
-    //std::cout << "GameControllerCallbacks::OnButton4Event" << std::endl;
-    switch( event )
+
+    switch( local_mode )
     {
-    case gadget::DigitalState::ON:
-    {
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_ON:
-    {
-        UpdateForwardAndUp();
-        //_mxCore->setPosition( osg::Vec3( 0., 0., 0. ) );
-        m_mxGamePadStyle->getMxCore()->level();
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_OFF:
-    {
-        break;
-    }
-    default:
-        break;
+        case ControlMode::NAV:
+        {
+            if( event == gadget::DigitalState::OFF )
+            {
+                return;
+            }
+            //std::cout << "GameControllerCallbacks::OnButton4Event" << std::endl;
+            switch( event )
+            {
+                case gadget::DigitalState::ON:
+                {
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_ON:
+                {
+                    UpdateForwardAndUp();
+                    //_mxCore->setPosition( osg::Vec3( 0., 0., 0. ) );
+                    m_mxGamePadStyle->getMxCore()->level();
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_OFF:
+                {
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
+        default:
+            break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -758,28 +843,45 @@ void GameControllerCallbacks::OnButton5Event( gadget::DigitalState::State event 
         return;
     }
 
-    if( event == gadget::DigitalState::OFF )
+    ControlMode::Mode local_mode;
+
     {
-        return;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
-    //std::cout << "GameControllerCallbacks::OnButton5Event" << std::endl;
-    switch( event )
+
+    switch( local_mode )
     {
-    case gadget::DigitalState::ON:
-    {
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_ON:
-    {
-        m_mxGamePadStyle->getMxCore()->reset();
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_OFF:
-    {
-        break;
-    }
-    default:
-        break;
+        case ControlMode::NAV:
+        {
+            if( event == gadget::DigitalState::OFF )
+            {
+                return;
+            }
+            //std::cout << "GameControllerCallbacks::OnButton5Event" << std::endl;
+            switch( event )
+            {
+                case gadget::DigitalState::ON:
+                {
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_ON:
+                {
+                    m_mxGamePadStyle->getMxCore()->reset();
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_OFF:
+                {
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
+        default:
+            break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -857,29 +959,46 @@ void GameControllerCallbacks::OnButton8Event( gadget::DigitalState::State event 
     {
         return;
     }
-    
-    if( event == gadget::DigitalState::OFF )
+
+    ControlMode::Mode local_mode;
+
     {
-        return;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
-    //std::cout << "GameControllerCallbacks::OnButton8Event" << std::endl;
-    switch( event )
+
+    switch( local_mode )
     {
-    case gadget::DigitalState::ON:
-    {
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_ON:
-    {
-        m_hideShowUI.signal();
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_OFF:
-    {
-        break;
-    }
-    default:
-        break;
+        case ControlMode::NAV:
+        {
+            if( event == gadget::DigitalState::OFF )
+            {
+                return;
+            }
+            //std::cout << "GameControllerCallbacks::OnButton8Event" << std::endl;
+            switch( event )
+            {
+                case gadget::DigitalState::ON:
+                {
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_ON:
+                {
+                    m_hideShowUI.signal();
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_OFF:
+                {
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
+        default:
+            break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -925,39 +1044,56 @@ void GameControllerCallbacks::OnButton10Event( gadget::DigitalState::State event
         return;
     }
 
-    if( event == gadget::DigitalState::OFF )
+    ControlMode::Mode local_mode;
+
     {
-        return;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
-    //std::cout << "GameControllerCallbacks::OnButton10Event" << std::endl;
-    switch( event )
+
+    switch( local_mode )
     {
-    case gadget::DigitalState::ON:
-    {
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_ON:
-    {
-        if( m_mxGamePadStyle->getMoveMode() == osgwMx::FunctionalMap::MoveModeOrbit )
+        case ControlMode::NAV:
         {
-            m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeOriented );
-            m_mxGamePadStyle->setStickRate( 5.0 );
+            if( event == gadget::DigitalState::OFF )
+            {
+                return;
+            }
+            //std::cout << "GameControllerCallbacks::OnButton10Event" << std::endl;
+            switch( event )
+            {
+                case gadget::DigitalState::ON:
+                {
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_ON:
+                {
+                    if( m_mxGamePadStyle->getMoveMode() == osgwMx::FunctionalMap::MoveModeOrbit )
+                    {
+                        m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeOriented );
+                        m_mxGamePadStyle->setStickRate( 5.0 );
+                    }
+                    ///Orbit mode
+                    else
+                    {
+                        m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeOrbit );
+                        m_mxGamePadStyle->setStickRate( 1.0 );
+                        m_viewMatrix.lookAtOrbitCenter();
+                    }
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_OFF:
+                {
+                    break;
+                }
+                default:
+                    break;
+            }
         }
-        ///Orbit mode
-        else
-        {
-            m_mxGamePadStyle->setMoveMode( osgwMx::FunctionalMap::MoveModeOrbit );
-            m_mxGamePadStyle->setStickRate( 1.0 );
-            m_viewMatrix.lookAtOrbitCenter();
-        }
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_OFF:
-    {
-        break;
-    }
-    default:
-        break;
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
+        default:
+            break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -970,39 +1106,56 @@ void GameControllerCallbacks::OnButton11Event( gadget::DigitalState::State event
         return;
     }
 
-    if( event == gadget::DigitalState::OFF )
+    ControlMode::Mode local_mode;
+
     {
-        return;
+        boost::mutex::scoped_lock lock( m_controlModeLock );
+        local_mode = m_controlMode;
     }
-    //std::cout << "GameControllerCallbacks::OnButton11Event" << std::endl;
-    switch( event )
+
+    switch( local_mode )
     {
-    case gadget::DigitalState::ON:
-    {
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_ON:
-    {
-        if( m_mxGamePadStyle->getRotateMode() == osgwMx::FunctionalMap::RotateModeOrbit )
+        case ControlMode::NAV:
         {
-            m_mxGamePadStyle->setRotateMode( osgwMx::FunctionalMap::RotateModeLocal );
-            m_buttons = 0;
+            if( event == gadget::DigitalState::OFF )
+            {
+                return;
+            }
+            //std::cout << "GameControllerCallbacks::OnButton11Event" << std::endl;
+            switch( event )
+            {
+                case gadget::DigitalState::ON:
+                {
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_ON:
+                {
+                    if( m_mxGamePadStyle->getRotateMode() == osgwMx::FunctionalMap::RotateModeOrbit )
+                    {
+                        m_mxGamePadStyle->setRotateMode( osgwMx::FunctionalMap::RotateModeLocal );
+                        m_buttons = 0;
+                    }
+                    ///Orbit mode
+                    else
+                    {
+                        m_mxGamePadStyle->setRotateMode( osgwMx::FunctionalMap::RotateModeOrbit );
+                        m_viewMatrix.lookAtOrbitCenter();
+                        m_buttons = 0;
+                    }
+                    break;
+                }
+                case gadget::DigitalState::TOGGLE_OFF:
+                {
+                    break;
+                }
+                default:
+                    break;
+            }
         }
-        ///Orbit mode
-        else
-        {
-            m_mxGamePadStyle->setRotateMode( osgwMx::FunctionalMap::RotateModeOrbit );
-            m_viewMatrix.lookAtOrbitCenter();
-            m_buttons = 0;
-        }
-        break;
-    }
-    case gadget::DigitalState::TOGGLE_OFF:
-    {
-        break;
-    }
-    default:
-        break;
+        case ControlMode::UI:
+        case ControlMode::USER_DEFINED:
+        default:
+            break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1175,9 +1328,9 @@ void GameControllerCallbacks::OnPositionEvent( gmtl::Matrix44f mat )
     m_controllerPosition = mat;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GameControllerCallbacks::SetAnalogControlMode( AnalogControlMode::Mode m )
+void GameControllerCallbacks::SetControlMode( ControlMode::Mode m )
 {
-    boost::mutex::scoped_lock lock( m_analogControlModeLock );
-    m_analogControlMode = m;
+    boost::mutex::scoped_lock lock( m_controlModeLock );
+    m_controlMode = m;
 }
 ////////////////////////////////////////////////////////////////////////////////

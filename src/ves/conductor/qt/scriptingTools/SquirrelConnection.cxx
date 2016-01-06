@@ -169,8 +169,8 @@ void SquirrelConnection::ExposeSignalSlotTypes( switchwire::SquirrelContext& sc 
             ( "BoolAndDoubleVectorSlot", sc );
 
     ExposeSignalType_1
-            < void( ves::xplorer::device::GameControllerCallbacks::AnalogControlMode::Mode ) >
-            ( "AnalogControlModeSignal", sc );
+            < void( ves::xplorer::device::GameControllerCallbacks::ControlMode::Mode ) >
+            ( "ControlModeSignal", sc );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::BindSpecialClasses()
@@ -261,12 +261,12 @@ void SquirrelConnection::BindSpecialClasses()
     }
 
     {
-        Sqrat::Enumeration analogControlMode;
-        analogControlMode.Const( "NAV", ves::xplorer::device::GameControllerCallbacks::AnalogControlMode::NAV );
-        analogControlMode.Const( "UI", ves::xplorer::device::GameControllerCallbacks::AnalogControlMode::UI );
-        analogControlMode.Const( "USER_DEFINED", ves::xplorer::device::GameControllerCallbacks::AnalogControlMode::USER_DEFINED );
+        Sqrat::Enumeration controlMode;
+        controlMode.Const( "NAV", ves::xplorer::device::GameControllerCallbacks::ControlMode::NAV );
+        controlMode.Const( "UI", ves::xplorer::device::GameControllerCallbacks::ControlMode::UI );
+        controlMode.Const( "USER_DEFINED", ves::xplorer::device::GameControllerCallbacks::ControlMode::USER_DEFINED );
 
-        Sqrat::ConstTable().Enum( "AnalogControlMode", analogControlMode );
+        Sqrat::ConstTable().Enum( "ControlMode", controlMode );
     }
 
     /*Sqrat::RootTable().Bind( "CADPropertySet", Sqrat::Class< CADPropertySetWrapper >()
