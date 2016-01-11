@@ -324,7 +324,7 @@ function Execute()
             break;
         }
 
-        Sleeper.Sleep( 10 );
+        Sleeper.Sleep( 100 );
         part_manipulator.Update();
     }
 
