@@ -307,9 +307,10 @@ public:
     {
         typedef boost::signals2::signal< void( ArgType ) > signal_t;
 
-        typename signal_t::slot_type slot_functor( boost::bind( &SynchronizedSignalReceiver< ArgType >::_Slot, this, _1 ) );
+        typename signal_t::slot_type* slot_functor =
+            new typename signal_t::slot_type( boost::bind( &SynchronizedSignalReceiver< ArgType >::_Slot, this, _1 ) );
 
-        switchwire::SlotWrapperBasePtr slot_wrapper( new switchwire::SlotWrapper< signal_t >( &slot_functor ) );
+        switchwire::SlotWrapperBasePtr slot_wrapper( new switchwire::SlotWrapper< signal_t >( slot_functor ) );
 
         switchwire::EventManager::instance()->ConnectSignal( signal_name,
                                                              slot_wrapper,
