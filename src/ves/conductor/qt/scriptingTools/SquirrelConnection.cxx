@@ -337,6 +337,19 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "Pending", &StringSynchronizedSignalReceiver_type::Pending )
         .Func( "Pop", &StringSynchronizedSignalReceiver_type::Pop )
     );
+
+    typedef SynchronizedSignalReceiver< bool > BoolSynchronizedSignalReceiver_type;
+
+    Sqrat::RootTable().Bind( "BoolSynchronizedSignalReceiver",
+                             Sqrat::Class< BoolSynchronizedSignalReceiver_type >(
+                                 Sqrat::DefaultVM::Get(),
+                                 "SynchronizedSignalReceiver<bool>"
+                             )
+        .Func( "ConnectToSignal", &BoolSynchronizedSignalReceiver_type::ConnectToSignal )
+        .Func( "Disconnect", &BoolSynchronizedSignalReceiver_type::Disconnect )
+        .Func( "Pending", &BoolSynchronizedSignalReceiver_type::Pending )
+        .Func( "Pop", &BoolSynchronizedSignalReceiver_type::Pop )
+    );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::runScript( const std::string& scriptText )

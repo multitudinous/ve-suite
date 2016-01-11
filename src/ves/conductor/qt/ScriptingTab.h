@@ -10,6 +10,7 @@
 #ifndef Q_MOC_RUN
 #include <vpr/Thread/Thread.h>
 #include <switchwire/ScopedConnectionList.h>
+#include <switchwire/Event.h>
 #endif
 
 namespace Ui {
@@ -61,6 +62,9 @@ private:
     std::vector< vpr::Thread* > m_threads;
 
     switchwire::ScopedConnectionList m_connections;
+
+    typedef switchwire::Event< void( bool ) > VoidBoolSignalType;
+    VoidBoolSignalType m_destroySignal;
 };
 
 }} // ves::conductor

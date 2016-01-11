@@ -314,9 +314,19 @@ function Execute()
 
     local part_manipulator = PartManipulator( IdleState() );
 
+    local app_exit_signal_receiver = BoolSynchronizedSignalReceiver();
+    app_exit_signal_receiver.ConnectToSignal( "ScriptingTab.Destroy" );
+
     while( 1 )
     {
+        if( app_exit_signal_receiver.Pending() )
+        {
+            break;
+        }
+
         Sleeper.Sleep( 10 );
         part_manipulator.Update();
-    }       
+    }
+
+    app_exit_signal_receiver.Disconnect();
 }

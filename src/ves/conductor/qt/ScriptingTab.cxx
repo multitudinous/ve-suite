@@ -71,14 +71,20 @@ ScriptingTab::ScriptingTab(QWidget *parent) :
     CONNECTSIGNALS_2( "%AssociateScript", void( const std::string&, int ),
                       &ScriptingTab::AssociateScript,
                       m_connections, any_SignalType, normal_Priority );
+
+    switchwire::EventManager::instance()->RegisterSignal(
+        &m_destroySignal,
+        "ScriptingTab.Destroy" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ScriptingTab::~ScriptingTab()
 {
+    m_destroySignal.signal( true );
+
     delete ui;
     for( size_t idx = 0; idx < m_threads.size(); ++idx )
     {
-        m_threads.at( idx )->kill();
+        m_threads.at( idx )->join();
         delete m_threads.at( idx );
     }
 }
