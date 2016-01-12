@@ -95,7 +95,12 @@ class ActiveState extends State
     constructor( node_path )
     {
         base.constructor();
+
         m_nodePath = node_path;
+        m_nodePathArray = split( m_nodePath, "," );
+        m_nodePathArrayLength = m_nodePathArray.len();
+        m_nodePathArrayIndex = m_nodePathArrayLength - 1;
+
         m_logger = Logger();
 
         m_leftXAxisReceiver = FloatSynchronizedSignalReceiver();
@@ -194,9 +199,56 @@ class ActiveState extends State
             //m_logger.Info( "z axis" );
             z_delta = ( 0.2 * m_rightYAxisReceiver.Pop() ) - 0.1;
         }
+
+        if( m_L1ButtonReceiver.Pending() )
+        {
+            local l1_button = m_L1ButtonReceiver.Pop();
+            if( l1_button != m_L1PreviousState && l1_button == DigitalState.ON )
+            {
+                // traverse up node path
+                if( m_nodePathArrayIndex > 0 )
+                {
+                    m_nodePathArrayIndex = m_nodePathArrayIndex - 1;
+
+                    local new_path = GetNodePathForIndex( m_nodePathArrayIndex )
+                    //m_logger.Info( "NEW NODE PATH: " + new_path );
+                }
+            }
+            m_L1PreviousState = l1_button;
+        }
+
+        if( m_R1ButtonReceiver.Pending() )
+        {
+            local r1_button = m_R1ButtonReceiver.Pop();
+            if( r1_button != m_R1PreviousState && r1_button == DigitalState.ON )
+            {
+                // traverse down node path
+                if( m_nodePathArrayIndex < m_nodePathArrayLength - 1 )
+                {
+                    m_nodePathArrayIndex = m_nodePathArrayIndex + 1;
+
+                    local new_path = GetNodePathForIndex( m_nodePathArrayIndex )
+                    //m_logger.Info( "NEW NODE PATH: " + new_path );
+                }
+            }
+            m_R1PreviousState = r1_button;
+        }
+    }
+
+    function GetNodePathForIndex( index )
+    {
+        local path_slice = m_nodePathArray.slice( 0, index + 1 );
+        local path_string = path_slice.reduce( function( previous, current ) {
+            return previous + "," + current;
+        } );
+        return path_string;
     }
 
     m_nodePath = null;
+    m_nodePathArray = null;
+    m_nodePathArrayLength = null;
+    m_nodePathArrayIndex = null;
+
     m_logger = null;
 
     m_leftXAxisReceiver = null;
@@ -206,6 +258,9 @@ class ActiveState extends State
 
     m_L1ButtonReceiver = null;
     m_R1ButtonReceiver = null;
+
+    m_L1PreviousState = DigitalState.OFF;
+    m_R1PreviousState = DigitalState.OFF;
 }
 
 class Context
