@@ -1255,7 +1255,9 @@ void GameControllerCallbacks::ConfigureGameControllerDevices()
             {
                 configuration->load( xplorerBaseDir + "xbox_360_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
             }
-            else if( (joystickType == "Logitech Cordless RumblePad 2") || (joystickType == "Logitech Logitech Cordless RumblePad 2") )
+            else if( joystickType == "Logitech Cordless RumblePad 2"
+                     || joystickType == "Logitech Logitech Cordless RumblePad 2"
+                     || joystickType == "Logitech Logitech RumblePad 2 USB" )
             {
                 configuration->load( xplorerBaseDir + "rumble_pad_js" + boost::lexical_cast< std::string >( i ) + ".jconf" );
             }
