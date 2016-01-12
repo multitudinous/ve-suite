@@ -96,7 +96,7 @@ class ActiveState extends State
     {
         base.constructor();
         m_nodePath = node_path;
-        m_logger = Logger();;
+        m_logger = Logger();
 
         m_leftXAxisReceiver = FloatSynchronizedSignalReceiver();
         m_leftYAxisReceiver = FloatSynchronizedSignalReceiver();
