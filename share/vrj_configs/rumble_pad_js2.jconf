@@ -69,6 +69,10 @@
             <device>Joystick2</device>
             <unit>15</unit>
         </digital_proxy>
+        <hat_proxy name="VESJoystick2Hat0" version="1">
+            <device>Joystick2</device>
+            <unit>0</unit>
+        </hat_proxy>
         <analog_proxy name="VESJoystick2Axis0" version="1">
             <device>Joystick2</device>
             <unit>0</unit>
