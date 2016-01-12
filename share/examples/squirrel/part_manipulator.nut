@@ -102,6 +102,9 @@ class ActiveState extends State
         m_leftYAxisReceiver = FloatSynchronizedSignalReceiver();
         //m_rightXAxisReceiver = FloatSynchronizedSignalReceiver();
         m_rightYAxisReceiver = FloatSynchronizedSignalReceiver();
+
+        m_L1ButtonReceiver = DigitalStateSynchronizedSignalReceiver();
+        m_R1ButtonReceiver = DigitalStateSynchronizedSignalReceiver();
     }
 
     function OnEnter( context )
@@ -111,6 +114,9 @@ class ActiveState extends State
         m_leftYAxisReceiver.ConnectToSignal( "GameController.Axis1" );
         //m_rightXAxisReceiver.ConnectToSignal( "GameController.Axis2" );
         m_rightYAxisReceiver.ConnectToSignal( "GameController.Axis3" );
+
+        m_L1ButtonReceiver.ConnectToSignal( "GameController.Button4" );
+        m_R1ButtonReceiver.ConnectToSignal( "GameController.Button5" );
 
         SetControlModeSignal.signal( ControlMode.USER_DEFINED );
         // TODO: record the original position of the selected object
@@ -122,6 +128,9 @@ class ActiveState extends State
         m_leftYAxisReceiver.Disconnect();
         //m_rightXAxisReceiver.Disconnect();
         m_rightYAxisReceiver.Disconnect();
+
+        m_L1ButtonReceiver.Disconnect();
+        m_R1ButtonReceiver.Disconnect();
 
         SetControlModeSignal.signal( ControlMode.NAV );
     }
@@ -194,6 +203,9 @@ class ActiveState extends State
     m_leftYAxisReceiver = null;
     //m_rightXAxisReceiver = null;
     m_rightYAxisReceiver = null;
+
+    m_L1ButtonReceiver = null;
+    m_R1ButtonReceiver = null;
 }
 
 class Context
