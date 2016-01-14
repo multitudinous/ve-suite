@@ -171,14 +171,6 @@ Selection::Selection()
         ( &m_objectPickedAsStringSignal ),
         "Selection.ObjectPickedSignalAsString" );
 
-    CONNECTSIGNAL_1( "Selection.ObjectPickedSignal", void( osg::NodePath& ),
-                     &Selection::GetNodeUUIDFromNodePath,
-                     m_connections, normal_Priority );
-
-    switchwire::EventManager::instance()->RegisterSignal(
-        ( &m_objectPickedNodeUUIDSignal ),
-        "Selection.ObjectPickedNodeUUIDSignal" );
-
     CONNECTSIGNALS_1( "%HighlightNodeWithStringPath", void( const std::string& ),
                       &Selection::HighlightNodeWithStringPath,
                       m_connections, any_SignalType, high_Priority );
@@ -557,33 +549,6 @@ void Selection::HighlightNode( osg::NodePath& nodePath )
 void Selection::ConvertNodePathToString( osg::NodePath& nodePath )
 {
     m_objectPickedAsStringSignal.signal( osgwTools::nodePathToString( nodePath ) );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Selection::GetNodeUUIDFromNodePath( osg::NodePath& nodePath )
-{
-    if( nodePath.empty() )
-    {
-        // signal with an empty string to indicate that no object was selected
-        m_objectPickedNodeUUIDSignal.signal( "" );
-        return;
-    }
-
-    osg::Node* node = scenegraph::FindVESObject( nodePath );
-    if( node )
-    {
-        // TODO: can I just assume that "VE_XML_ID" is the first element in the
-        // description list and that the second element contains the UUID, instead
-        // of iterating to find "VE_XML_ID"?
-        osg::Node::DescriptionList::const_iterator i = node->getDescriptions().begin();
-        for( i; i != node->getDescriptions().end(); ++i )
-        {
-            if( *i == "VE_XML_ID" )
-            {
-                m_objectPickedNodeUUIDSignal.signal( *(i + 1) );
-                break;
-            }
-        }
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::HighlightNodeWithStringPath( const std::string& nodePath )

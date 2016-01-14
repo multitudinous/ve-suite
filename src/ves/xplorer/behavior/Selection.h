@@ -117,8 +117,6 @@ private:
     void HighlightNodeWithStringPath( const std::string& nodePath );
     ///Convert to the std::string representation of an osg::NodePath
     void ConvertNodePathToString( osg::NodePath& nodePath );
-    ///Get the UUID of the selected node from the osg::NodePath
-    void GetNodeUUIDFromNodePath( osg::NodePath& nodePath );
 
     ///Selection start end point line
     osg::Vec3d m_startPoint;
@@ -134,10 +132,6 @@ private:
     /// Object picked (string representation of NodePath)
     typedef switchwire::Event< void( std::string ) > ObjectPickedAsStringSignal_type;
     ObjectPickedAsStringSignal_type m_objectPickedAsStringSignal;
-
-    /// Node UUID of the picked node
-    typedef switchwire::Event< void( std::string ) > ObjectPickedNodeUUIDSignal_type;
-    ObjectPickedNodeUUIDSignal_type m_objectPickedNodeUUIDSignal;
 
     ///Physics simulator pointer
     scenegraph::PhysicsSimulator& m_physicsSimulator;
