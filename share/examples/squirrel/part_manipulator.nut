@@ -100,7 +100,7 @@ class SelectPartState extends State
             {
                 case HatState.UP:
                 {
-                    //return MovePartState( m_nodePath );
+                    return MovePartState( GetNodePathForIndex( m_nodePathArrayIndex ) );
                     break;
                 }
                 case HatState.LEFT:
@@ -125,12 +125,25 @@ class SelectPartState extends State
                     }
                     break;
                 }
+                case HatState.DOWN:
+                {
+                    return IdleState();
+                }
                 default:
                     break;
             }
         }
       
         return null;
+    }
+
+    function GetNodePathForIndex( index )
+    {
+        local path_slice = m_nodePathArray.slice( 0, index + 1 );
+        local path_string = path_slice.reduce( function( previous, current ) {
+            return previous + "," + current;
+        } );
+        return path_string;
     }
 
     m_nodePathArray = null;
@@ -147,9 +160,6 @@ class MovePartState extends State
         base.constructor();
 
         m_nodePath = node_path;
-        m_nodePathArray = split( m_nodePath, "," );
-        m_nodePathArrayLength = m_nodePathArray.len();
-        m_nodePathArrayIndex = m_nodePathArrayLength - 1;
 
         m_logger = Logger();
 
@@ -192,33 +202,11 @@ class MovePartState extends State
 
     function OnEvent( context, event )
     {
-        // check if an "empty" node path string was received
-        // if so, transition back to IdleState
-        // otherwise, remain in MovePartState
-        if( event instanceof NodePathEvent )
-        {
-            if( event.GetNodePath() == "" )
-            {
-                return IdleState();
-            }
-            else
-            {
-                return MovePartState( event.GetNodePath() );
-            }
-        }
-
-        // check if gadget::HatState::UP was received
-        // if so, transition to SelectPartState
         if( event instanceof HatStateEvent )
         {
-            if( event.GetHatState() == HatState.UP )
-            {
-                return SelectPartState( m_nodePath );
-            }
-
             if( event.GetHatState() == HatState.DOWN )
             {
-                // TODO: reset the object back to its original position
+                return IdleState();
             }
         }
 
@@ -271,19 +259,7 @@ class MovePartState extends State
         }
     }
 
-    function GetNodePathForIndex( index )
-    {
-        local path_slice = m_nodePathArray.slice( 0, index + 1 );
-        local path_string = path_slice.reduce( function( previous, current ) {
-            return previous + "," + current;
-        } );
-        return path_string;
-    }
-
     m_nodePath = null;
-    m_nodePathArray = null;
-    m_nodePathArrayLength = null;
-    m_nodePathArrayIndex = null;
 
     m_logger = null;
 
