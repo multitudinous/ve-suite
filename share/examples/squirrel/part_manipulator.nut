@@ -27,12 +27,12 @@ class IdleState extends State
     function OnEvent( context, event )
     {
         // check if a node path event was received
-        // if so, transition to ReadyState
+        // if so, transition to SelectPartState
         if( event instanceof NodePathEvent )
         {
             if( event.GetNodePath() != "" )
             {
-                return ReadyState( event.GetNodePath() );
+                return SelectPartState( event.GetNodePath() );
             }
         }
 
@@ -42,7 +42,7 @@ class IdleState extends State
     m_logger = null;
 }
 
-class ReadyState extends State
+class SelectPartState extends State
 {
     constructor( node_path )
     {
@@ -53,7 +53,7 @@ class ReadyState extends State
 
     function OnEnter( context )
     {
-        m_logger.Info( "entered ReadyState" );
+        m_logger.Info( "entered SelectPartState" );
     }
 
     function OnEvent( context, event )
@@ -62,24 +62,24 @@ class ReadyState extends State
         {
             // check if an "empty" node path string was received
             // if so, transition back to IdleState
-            // otherwise, remain in ReadyState
+            // otherwise, remain in SelectPartState
             if( event.GetNodePath() == "" )
             {
                 return IdleState();
             }
             else
             {
-                return ReadyState( event.GetNodePath() );
+                return SelectPartState( event.GetNodePath() );
             }
         }
 
         // check if gadget::HatState::UP was received
-        // if so, transition to ActiveState
+        // if so, transition to MovePartState
         if( event instanceof HatStateEvent )
         {
             if( event.GetHatState() == HatState.UP )
             {
-                return ActiveState( m_nodePath );
+                return MovePartState( m_nodePath );
             }
         }
       
@@ -90,7 +90,7 @@ class ReadyState extends State
     m_logger = null;
 }
 
-class ActiveState extends State
+class MovePartState extends State
 {
     constructor( node_path )
     {
@@ -114,7 +114,7 @@ class ActiveState extends State
 
     function OnEnter( context )
     {
-        m_logger.Info( "entered ActiveState" );
+        m_logger.Info( "entered MovePartState" );
         m_leftXAxisReceiver.ConnectToSignal( "GameController.Axis0" );
         m_leftYAxisReceiver.ConnectToSignal( "GameController.Axis1" );
         //m_rightXAxisReceiver.ConnectToSignal( "GameController.Axis2" );
@@ -144,7 +144,7 @@ class ActiveState extends State
     {
         // check if an "empty" node path string was received
         // if so, transition back to IdleState
-        // otherwise, remain in ActiveState
+        // otherwise, remain in MovePartState
         if( event instanceof NodePathEvent )
         {
             if( event.GetNodePath() == "" )
@@ -153,17 +153,17 @@ class ActiveState extends State
             }
             else
             {
-                return ActiveState( event.GetNodePath() );
+                return MovePartState( event.GetNodePath() );
             }
         }
 
         // check if gadget::HatState::UP was received
-        // if so, transition to ReadyState
+        // if so, transition to SelectPartState
         if( event instanceof HatStateEvent )
         {
             if( event.GetHatState() == HatState.UP )
             {
-                return ReadyState( m_nodePath );
+                return SelectPartState( m_nodePath );
             }
 
             if( event.GetHatState() == HatState.DOWN )
