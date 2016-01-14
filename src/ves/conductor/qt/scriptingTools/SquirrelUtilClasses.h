@@ -248,43 +248,6 @@ public:
 protected:
     Sqrat::SharedPtr< BaseState > m_state;
 };
-////////////////////////////////////////////////////////////////////////////////
-class CADPropertySetWrapper
-{
-public:
-    CADPropertySetWrapper();
-
-    void SetBoolPropertyValue( const std::string& key, bool value );
-
-    bool GetBoolPropertyValue( const std::string& key );
-
-    void SetIntPropertyValue( const std::string& key, int value );
-
-    int GetIntPropertyValue( const std::string& key );
-
-    void SetFloatPropertyValue( const std::string& key, float value );
-
-    float GetFloatPropertyValue( const std::string& key );
-
-    void SetDoublePropertyValue( const std::string& key, double value );
-
-    double GetDoublePropertyValue( const std::string& key );
-
-    void SetStringPropertyValue( const std::string& key, std::string value );
-
-    std::string GetStringPropertyValue( const std::string& key );
-
-    void SetUUID( const std::string& uuid );
-
-    bool Load();
-
-    void EmitValueChangedSignals();
-
-    void EnableLiveProperties( bool live );
-
-private:
-    propertystore::PropertySetPtr m_set;
-};
 
 template< typename ArgType >
 class SynchronizedSignalReceiver

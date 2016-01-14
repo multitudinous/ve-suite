@@ -269,23 +269,6 @@ void SquirrelConnection::BindSpecialClasses()
         Sqrat::ConstTable().Enum( "ControlMode", controlMode );
     }
 
-    /*Sqrat::RootTable().Bind( "CADPropertySet", Sqrat::Class< CADPropertySetWrapper >()
-        .Func( "SetBoolPropertyValue", &CADPropertySetWrapper::SetBoolPropertyValue )
-        .Func( "GetBoolPropertyValue", &CADPropertySetWrapper::GetBoolPropertyValue )
-        .Func( "SetIntPropertyValue", &CADPropertySetWrapper::SetIntPropertyValue )
-        .Func( "GetIntPropertyValue", &CADPropertySetWrapper::GetIntPropertyValue )
-        .Func( "SetFloatPropertyValue", &CADPropertySetWrapper::SetFloatPropertyValue )
-        .Func( "GetFloatPropertyValue", &CADPropertySetWrapper::GetFloatPropertyValue )
-        .Func( "SetDoublePropertyValue", &CADPropertySetWrapper::SetDoublePropertyValue )
-        .Func( "GetDoublePropertyValue", &CADPropertySetWrapper::GetDoublePropertyValue )
-        .Func( "SetStringPropertyValue", &CADPropertySetWrapper::SetStringPropertyValue )
-        .Func( "GetStringPropertyValue", &CADPropertySetWrapper::GetStringPropertyValue )
-        .Func( "SetUUID", &CADPropertySetWrapper::SetUUID )
-        .Func( "Load", &CADPropertySetWrapper::Load )
-        .Func( "EmitValueChangedSignals", &CADPropertySetWrapper::EmitValueChangedSignals )
-        .Func( "EnableLiveProperties", &CADPropertySetWrapper::EnableLiveProperties )
-    );*/
-
     typedef SynchronizedSignalReceiver< gadget::DigitalState::State > DigitalStateSynchronizedSignalReceiver_type;
 
     Sqrat::RootTable().Bind( "DigitalStateSynchronizedSignalReceiver",
