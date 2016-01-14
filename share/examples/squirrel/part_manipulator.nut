@@ -30,9 +30,12 @@ class IdleState extends State
         // if so, transition to SelectPartState
         if( event instanceof NodePathEvent )
         {
-            if( event.GetNodePath() != "" )
+            local node_path = event.GetNodePath();
+            if( node_path != "" )
             {
-                return SelectPartState( event.GetNodePath() );
+                local node_path_array = split( node_path, "," );
+                local index = node_path_array.len() - 1;
+                return SelectPartState( node_path_array, index );
             }
         }
 
@@ -44,16 +47,28 @@ class IdleState extends State
 
 class SelectPartState extends State
 {
-    constructor( node_path )
+    constructor( node_path_array, index )
     {
         base.constructor();
-        m_nodePath = node_path;
+
+        m_nodePathArray = node_path_array;
+        m_nodePathArrayLength = m_nodePathArray.len();
+        m_nodePathArrayIndex = index;
+
         m_logger = Logger();
     }
 
     function OnEnter( context )
     {
         m_logger.Info( "entered SelectPartState" );
+
+        local path_slice = m_nodePathArray.slice( 0, m_nodePathArrayIndex + 1 );
+        local path_string = path_slice.reduce( function( previous, current ) {
+            return previous + "," + current;
+        } );
+
+        m_logger.Info( "Node path = " + path_string );
+        HighlightNodeSignal.signal( path_string );
     }
 
     function OnEvent( context, event )
@@ -69,7 +84,9 @@ class SelectPartState extends State
             }
             else
             {
-                return SelectPartState( event.GetNodePath() );
+                local node_path_array = split( event.GetNodePath(), "," );
+                local index = node_path_array.len() - 1;
+                return SelectPartState( node_path_array, index );
             }
         }
 
@@ -77,16 +94,49 @@ class SelectPartState extends State
         // if so, transition to MovePartState
         if( event instanceof HatStateEvent )
         {
-            if( event.GetHatState() == HatState.UP )
+            local hat_state = event.GetHatState();
+
+            switch( hat_state )
             {
-                return MovePartState( m_nodePath );
+                case HatState.UP:
+                {
+                    //return MovePartState( m_nodePath );
+                    break;
+                }
+                case HatState.LEFT:
+                {
+                    // traverse up the node path
+                    if( m_nodePathArrayIndex > 0 )
+                    {
+                        m_nodePathArrayIndex = m_nodePathArrayIndex - 1;
+
+                        return SelectPartState( m_nodePathArray, m_nodePathArrayIndex );
+                    }
+                    break;
+                }
+                case HatState.RIGHT:
+                {
+                    // traverse down the node path
+                    if( m_nodePathArrayIndex < m_nodePathArrayLength - 1 )
+                    {
+                        m_nodePathArrayIndex = m_nodePathArrayIndex + 1;
+
+                        return SelectPartState( m_nodePathArray, m_nodePathArrayIndex );
+                    }
+                    break;
+                }
+                default:
+                    break;
             }
         }
       
         return null;
     }
 
-    m_nodePath = null;
+    m_nodePathArray = null;
+    m_nodePathArrayLength = null;
+    m_nodePathArrayIndex = null;
+
     m_logger = null;
 }
 
@@ -205,15 +255,7 @@ class MovePartState extends State
             local l1_button = m_L1ButtonReceiver.Pop();
             if( l1_button != m_L1PreviousState && l1_button == DigitalState.ON )
             {
-                // traverse up node path
-                if( m_nodePathArrayIndex > 0 )
-                {
-                    m_nodePathArrayIndex = m_nodePathArrayIndex - 1;
 
-                    local new_path = GetNodePathForIndex( m_nodePathArrayIndex )
-                    //m_logger.Info( "NEW NODE PATH: " + new_path );
-                    HighlightNodeSignal.signal( new_path );
-                }
             }
             m_L1PreviousState = l1_button;
         }
@@ -223,15 +265,7 @@ class MovePartState extends State
             local r1_button = m_R1ButtonReceiver.Pop();
             if( r1_button != m_R1PreviousState && r1_button == DigitalState.ON )
             {
-                // traverse down node path
-                if( m_nodePathArrayIndex < m_nodePathArrayLength - 1 )
-                {
-                    m_nodePathArrayIndex = m_nodePathArrayIndex + 1;
 
-                    local new_path = GetNodePathForIndex( m_nodePathArrayIndex )
-                    //m_logger.Info( "NEW NODE PATH: " + new_path );
-                    HighlightNodeSignal.signal( new_path );
-                }
             }
             m_R1PreviousState = r1_button;
         }
