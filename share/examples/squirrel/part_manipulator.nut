@@ -212,6 +212,7 @@ class ActiveState extends State
 
                     local new_path = GetNodePathForIndex( m_nodePathArrayIndex )
                     //m_logger.Info( "NEW NODE PATH: " + new_path );
+                    HighlightNodeSignal.signal( new_path );
                 }
             }
             m_L1PreviousState = l1_button;
@@ -229,6 +230,7 @@ class ActiveState extends State
 
                     local new_path = GetNodePathForIndex( m_nodePathArrayIndex )
                     //m_logger.Info( "NEW NODE PATH: " + new_path );
+                    HighlightNodeSignal.signal( new_path );
                 }
             }
             m_R1PreviousState = r1_button;
@@ -378,6 +380,9 @@ function Execute()
 {
     ControlModeSignalMaker <- ControlModeSignal;
     ControlModeSignalMaker.RegisterSignal( "GameController.ControlMode", "SetControlModeSignal" );
+
+    StringSignalMaker <- StringSignal;
+    StringSignalMaker.RegisterSignal( "PartManipulator.HighlightNodeWithStringPath", "HighlightNodeSignal" );
 
     local part_manipulator = PartManipulator( IdleState() );
 

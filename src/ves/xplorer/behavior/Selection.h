@@ -114,6 +114,7 @@ private:
     void SetCADSelection( bool const& flag );
     ///Highlight the last node in a node path
     void HighlightNode( osg::NodePath& nodePath );
+    void HighlightNodeWithStringPath( const std::string& nodePath );
     ///Convert to the std::string representation of an osg::NodePath
     void ConvertNodePathToString( osg::NodePath& nodePath );
     ///Get the UUID of the selected node from the osg::NodePath

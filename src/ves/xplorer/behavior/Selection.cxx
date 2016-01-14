@@ -178,6 +178,10 @@ Selection::Selection()
     switchwire::EventManager::instance()->RegisterSignal(
         ( &m_objectPickedNodeUUIDSignal ),
         "Selection.ObjectPickedNodeUUIDSignal" );
+
+    CONNECTSIGNALS_1( "%HighlightNodeWithStringPath", void( const std::string& ),
+                      &Selection::HighlightNodeWithStringPath,
+                      m_connections, any_SignalType, high_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Selection::~Selection()
@@ -580,6 +584,13 @@ void Selection::GetNodeUUIDFromNodePath( osg::NodePath& nodePath )
             }
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Selection::HighlightNodeWithStringPath( const std::string& nodePath )
+{
+    osg::NodePath node_path = osgwTools::stringToNodePath( nodePath,
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
+    HighlightNode( node_path );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
