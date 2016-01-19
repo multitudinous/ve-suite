@@ -10,6 +10,8 @@
 
 #include <boost/thread/mutex.hpp>
 
+#include <osg/Matrix>
+
 namespace ves
 {
 namespace xplorer
@@ -39,7 +41,10 @@ private:
 
     switchwire::ScopedConnectionList m_connections;
 
-    boost::mutex m_lock;
+    boost::mutex m_dataLock;
+    boost::mutex m_connectionsLock;
+
+    osg::Matrix m_transform;
 };
 }
 }

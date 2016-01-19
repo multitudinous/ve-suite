@@ -2,6 +2,10 @@
 
 #include <ves/xplorer/data/DatabaseManager.h>
 
+#include <switchwire/OptionalMacros.h>
+
+#include <osg/Vec3d>
+
 namespace ves
 {
 namespace xplorer
@@ -37,7 +41,12 @@ bool PartManipulatorPropertySet::Load()
 
     // TODO: walk up the node path and load any parent PartManipulatorPropertySet
 
-    // TODO: schedule the insertion of a new MatrixTransform node
+    // schedule the insertion of a new MatrixTransform node
+    {
+        boost::mutex::scoped_lock lock( m_connectionsLock );
+        CONNECTSIGNAL_0( "App.LatePreFrame", void(), &PartManipulatorPropertySet::InsertTransformNodeCallback,
+                         m_connections, normal_Priority );
+    }
 }
 
 void PartManipulatorPropertySet::CreateSkeleton()
@@ -57,12 +66,22 @@ void PartManipulatorPropertySet::CreateSkeleton()
 
 void PartManipulatorPropertySet::UpdateTransformCallback()
 {
-    m_connections.DropConnections();
+    // TODO: update the MatrixTransform node with the new matrix
+
+    {
+        boost::mutex::scoped_lock lock( m_connectionsLock );
+        m_connections.DropConnections();
+    }
 }
 
 void PartManipulatorPropertySet::InsertTransformNodeCallback()
 {
     // TODO: create a MatrixTransform node and insert it into the scene graph
+
+    {
+        boost::mutex::scoped_lock lock( m_connectionsLock );
+        m_connections.DropConnections();
+    }
 
     GetProperty( "Transform_Translation_X" )->SignalValueChanged.connect(
         boost::bind( &PartManipulatorPropertySet::CalculateNewTransform, this, _1 )
@@ -83,15 +102,34 @@ void PartManipulatorPropertySet::InsertTransformNodeCallback()
     GetProperty( "Transform_Rotation_Z" )->SignalValueChanged.connect(
         boost::bind( &PartManipulatorPropertySet::CalculateNewTransform, this, _1 )
     );
-
-    m_connections.DropConnections();
 }
 
 void PartManipulatorPropertySet::CalculateNewTransform( propertystore::PropertyPtr prop )
 {
-    // TODO: calculate the new matrix
+    osg::Matrix trans_component = osg::Matrix::translate( boost::any_cast< double >( GetPropertyValue( "Transform_Translation_X" ) ),
+                                                          boost::any_cast< double >( GetPropertyValue( "Transform_Translation_Y" ) ),
+                                                          boost::any_cast< double >( GetPropertyValue( "Transform_Translation_Z" ) ) );
 
-    // TODO: schedule the transfer of the new matrix to the scene graph
+    osg::Matrix rot_component = osg::Matrix::rotate( boost::any_cast< double >( GetPropertyValue( "Transform_Rotation_X" ) ),
+                                                     osg::Vec3d( 1.0, 0.0, 0.0 ),
+                                                     boost::any_cast< double >( GetPropertyValue( "Transform_Rotation_Y" ) ),
+                                                     osg::Vec3d( 0.0, 1.0, 0.0 ),
+                                                     boost::any_cast< double >( GetPropertyValue( "Transform_Rotation_Z" ) ),
+                                                     osg::Vec3d( 0.0, 0.0, 1.0 ) );
+
+    osg::Matrix new_matrix = osg::Matrix::identity() * trans_component * rot_component;
+
+    {
+        boost::mutex::scoped_lock lock( m_dataLock );
+        m_transform = new_matrix;
+    }
+
+    // schedule the transfer of the new matrix to the scene graph
+    {
+        boost::mutex::scoped_lock lock( m_connectionsLock );
+        CONNECTSIGNAL_0( "App.LatePreFrame", void(), &PartManipulatorPropertySet::UpdateTransformCallback,
+                         m_connections, normal_Priority );
+    }
 }
 
 } // namespace data
