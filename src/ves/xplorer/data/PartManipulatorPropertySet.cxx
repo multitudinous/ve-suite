@@ -1,10 +1,18 @@
 #include <ves/xplorer/data/PartManipulatorPropertySet.h>
-
 #include <ves/xplorer/data/DatabaseManager.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <switchwire/OptionalMacros.h>
 
 #include <osg/Vec3d>
+#include <osg/MatrixTransform>
+
+#include <osgwTools/NodePathUtils.h>
+
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/join.hpp>
 
 namespace ves
 {
@@ -14,6 +22,7 @@ namespace data
 {
 
 PartManipulatorPropertySet::PartManipulatorPropertySet()
+    : m_transformNode( new osg::MatrixTransform )
 {
     SetDataManager( DatabaseManager::instance()->GetDataManager() );
     SetTypeName( "PartManipulatorPropertySet" );
@@ -37,15 +46,68 @@ propertystore::PropertySetPtr PartManipulatorPropertySet::CreateNew()
 
 bool PartManipulatorPropertySet::Load()
 {
-    Load();
+    bool did_load = PropertySet::Load();
+
+    if( !did_load )
+    {
+        return false;
+    }
 
     // TODO: walk up the node path and load any parent PartManipulatorPropertySet
 
-    // schedule the insertion of a new MatrixTransform node
+    std::string node_path_string = boost::any_cast< std::string >( GetPropertyValue( "NodePath" ) );
+
+    std::vector< std::string > node_path_string_vector;
+
+    boost::split( node_path_string_vector, node_path_string, boost::is_any_of(",") );
+
+    osg::NodePath node_path = osgwTools::stringToNodePath(
+        node_path_string,
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()
+    );
+
+    if( node_path.size() == node_path_string_vector.size() )
     {
-        boost::mutex::scoped_lock lock( m_connectionsLock );
-        CONNECTSIGNAL_0( "App.LatePreFrame", void(), &PartManipulatorPropertySet::InsertTransformNodeCallback,
-                         m_connections, normal_Priority );
+        // We found our "target" node in the scene graph using the node path.
+        // Insert a MatrixTransform node above it.
+
+        // TODO: get a pointer/reference to the "target" node
+
+        // schedule the insertion of a new MatrixTransform node
+        {
+            boost::mutex::scoped_lock lock( m_connectionsLock );
+            CONNECTSIGNAL_0( "App.LatePreFrame", void(),
+                             &PartManipulatorPropertySet::InsertTransformNodeCallback,
+                             m_connections, normal_Priority );
+        }
+    }
+    else
+    {
+        // We did not find a matching node in the scene graph for the given node path.
+        // It's possible that a PartManipulatorPropertySet for this node has already
+        // been loaded once before, and that the scene has already been altered by
+        // inserting a MatrixTransform above the target node.
+        //
+        // Try modifying the node path to include a MatrixTransform and search for the
+        // target node again.
+
+        std::string to_insert( "MatrixTransform:0" );
+        node_path_string_vector.insert( node_path_string_vector.end(), to_insert );
+
+        std::string modified_node_path_string = boost::join( node_path_string_vector, "," );
+
+        osg::NodePath modified_node_path = osgwTools::stringToNodePath(
+            modified_node_path_string,
+            ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()
+        );
+
+        if( node_path_string_vector.size() == modified_node_path.size() )
+        {
+            // we found the target node using the modified node path
+
+            // TODO: check that the MatrixTransform was created by us
+            // if it is, store a reference to it
+        }
     }
 }
 
@@ -54,6 +116,7 @@ void PartManipulatorPropertySet::CreateSkeleton()
     AddProperty( "ParentUUID", "", "parent uuid" );
 
     AddProperty( "NodePath", "", "node path" );
+    //AddProperty( "ModifiedNodePath", "", "modified node path" );
 
     AddProperty( "Transform_Translation_X", 0.0, "x" );
     AddProperty( "Transform_Translation_Y", 0.0, "y" );
@@ -66,7 +129,10 @@ void PartManipulatorPropertySet::CreateSkeleton()
 
 void PartManipulatorPropertySet::UpdateTransformCallback()
 {
-    // TODO: update the MatrixTransform node with the new matrix
+    {
+        boost::mutex::scoped_lock lock( m_dataLock );
+        m_transformNode->setMatrix( m_transform );
+    }
 
     {
         boost::mutex::scoped_lock lock( m_connectionsLock );
@@ -76,7 +142,7 @@ void PartManipulatorPropertySet::UpdateTransformCallback()
 
 void PartManipulatorPropertySet::InsertTransformNodeCallback()
 {
-    // TODO: create a MatrixTransform node and insert it into the scene graph
+    // TODO: insert the MatrixTransform node into the scene graph
 
     {
         boost::mutex::scoped_lock lock( m_connectionsLock );

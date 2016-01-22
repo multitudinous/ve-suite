@@ -11,6 +11,10 @@
 #include <boost/thread/mutex.hpp>
 
 #include <osg/Matrix>
+#include <osg/ref_ptr>
+
+// forward declaration
+namespace osg { class MatrixTransform; }
 
 namespace ves
 {
@@ -45,6 +49,8 @@ private:
     boost::mutex m_connectionsLock;
 
     osg::Matrix m_transform;
+
+    osg::ref_ptr< osg::MatrixTransform > m_transformNode;
 };
 }
 }
