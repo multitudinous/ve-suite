@@ -10,6 +10,7 @@
 
 #include <boost/thread/mutex.hpp>
 
+#include <osg/Node>
 #include <osg/Matrix>
 #include <osg/ref_ptr>
 
@@ -51,6 +52,8 @@ private:
     osg::Matrix m_transform;
 
     osg::ref_ptr< osg::MatrixTransform > m_transformNode;
+
+    osg::NodePath m_nodePath;
 };
 }
 }

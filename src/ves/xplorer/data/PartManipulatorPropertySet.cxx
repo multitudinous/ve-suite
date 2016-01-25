@@ -9,6 +9,7 @@
 #include <osg/MatrixTransform>
 
 #include <osgwTools/NodePathUtils.h>
+#include <osgwTools/InsertRemove.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
@@ -28,6 +29,8 @@ PartManipulatorPropertySet::PartManipulatorPropertySet()
     SetTypeName( "PartManipulatorPropertySet" );
 
     CreateSkeleton();
+
+    m_transformNode->addDescription( "CreatedByPartManipulatorPropertySet" );
 }
 
 PartManipulatorPropertySet::PartManipulatorPropertySet( const PartManipulatorPropertySet& orig )
@@ -54,6 +57,19 @@ bool PartManipulatorPropertySet::Load()
     }
 
     // TODO: walk up the node path and load any parent PartManipulatorPropertySet
+    std::string parent_uuid = boost::any_cast< std::string >( GetPropertyValue( "ParentUUID" ) );
+
+    if( parent_uuid != "" )
+    {
+        PartManipulatorPropertySet parent;
+        parent.SetUUID( parent_uuid );
+        bool parent_did_load = parent.Load();
+
+        if( !parent_did_load )
+        {
+            return false;
+        }
+    }
 
     std::string node_path_string = boost::any_cast< std::string >( GetPropertyValue( "NodePath" ) );
 
@@ -69,9 +85,8 @@ bool PartManipulatorPropertySet::Load()
     if( node_path.size() == node_path_string_vector.size() )
     {
         // We found our "target" node in the scene graph using the node path.
-        // Insert a MatrixTransform node above it.
 
-        // TODO: get a pointer/reference to the "target" node
+        m_nodePath = node_path;
 
         // schedule the insertion of a new MatrixTransform node
         {
@@ -109,6 +124,8 @@ bool PartManipulatorPropertySet::Load()
             // if it is, store a reference to it
         }
     }
+
+    return true;
 }
 
 void PartManipulatorPropertySet::CreateSkeleton()
@@ -142,7 +159,8 @@ void PartManipulatorPropertySet::UpdateTransformCallback()
 
 void PartManipulatorPropertySet::InsertTransformNodeCallback()
 {
-    // TODO: insert the MatrixTransform node into the scene graph
+    // insert the MatrixTransform node into the scene graph
+    osgwTools::insertAbove( m_nodePath.back(), m_transformNode.get() );
 
     {
         boost::mutex::scoped_lock lock( m_connectionsLock );
