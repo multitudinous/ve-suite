@@ -333,6 +333,27 @@ void SquirrelConnection::BindSpecialClasses()
         .Func( "Pending", &BoolSynchronizedSignalReceiver_type::Pending )
         .Func( "Pop", &BoolSynchronizedSignalReceiver_type::Pop )
     );
+
+    Sqrat::RootTable().Bind( "PartManipulatorPropertySet",
+                             Sqrat::Class< PartManipulatorPropertySetWrapper >(
+                                 Sqrat::DefaultVM::Get(),
+                                 "PartManipulatorPropertySet"
+                             )
+        .Func( "LoadByNodePath", &PartManipulatorPropertySetWrapper::LoadByNodePath )
+        .Func( "GetTranslationX", &PartManipulatorPropertySetWrapper::GetTranslationX )
+        .Func( "GetTranslationY", &PartManipulatorPropertySetWrapper::GetTranslationY )
+        .Func( "GetTranslationZ", &PartManipulatorPropertySetWrapper::GetTranslationZ )
+        .Func( "SetTranslationX", &PartManipulatorPropertySetWrapper::SetTranslationX )
+        .Func( "SetTranslationY", &PartManipulatorPropertySetWrapper::SetTranslationY )
+        .Func( "SetTranslationZ", &PartManipulatorPropertySetWrapper::SetTranslationZ )
+        .Func( "GetRotationX", &PartManipulatorPropertySetWrapper::GetRotationX )
+        .Func( "GetRotationY", &PartManipulatorPropertySetWrapper::GetRotationY )
+        .Func( "GetRotationZ", &PartManipulatorPropertySetWrapper::GetRotationZ )
+        .Func( "SetRotationX", &PartManipulatorPropertySetWrapper::SetRotationX )
+        .Func( "SetRotationY", &PartManipulatorPropertySetWrapper::SetRotationY )
+        .Func( "SetRotationZ", &PartManipulatorPropertySetWrapper::SetRotationZ )
+        .Func( "Save", &PartManipulatorPropertySetWrapper::Save )
+    );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SquirrelConnection::runScript( const std::string& scriptText )

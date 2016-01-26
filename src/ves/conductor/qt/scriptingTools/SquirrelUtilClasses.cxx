@@ -1,7 +1,7 @@
 #include <ves/conductor/qt/scriptingTools/SquirrelUtilClasses.h>
 
 #include <ves/xplorer/data/DatabaseManager.h>
-#include <ves/xplorer/data/CADPropertySet.h>
+#include <ves/xplorer/data/PartManipulatorPropertySet.h>
 #include <ves/conductor/qt/VisFeatureManager.h>
 
 #include <vpr/System.h>
@@ -230,4 +230,80 @@ void BaseContext::HandleEvent( BaseEvent* event )
             m_state->OnEnter( this );
         }
     }
+}
+
+PartManipulatorPropertySetWrapper::PartManipulatorPropertySetWrapper()
+    : m_set( new ves::xplorer::data::PartManipulatorPropertySet )
+{
+
+}
+
+bool PartManipulatorPropertySetWrapper::LoadByNodePath( const std::string& node_path )
+{
+    return m_set->LoadByKey( "NodePath", node_path );
+}
+
+double PartManipulatorPropertySetWrapper::GetTranslationX()
+{
+    return boost::any_cast< double >( m_set->GetPropertyValue( "Transform_Translation_X" ) );
+}
+
+double PartManipulatorPropertySetWrapper::GetTranslationY()
+{
+    return boost::any_cast< double >( m_set->GetPropertyValue( "Transform_Translation_Y" ) );
+}
+
+double PartManipulatorPropertySetWrapper::GetTranslationZ()
+{
+    return boost::any_cast< double >( m_set->GetPropertyValue( "Transform_Translation_Z" ) );
+}
+
+void PartManipulatorPropertySetWrapper::SetTranslationX( double x )
+{
+    m_set->SetPropertyValue( "Transform_Translation_X", x );
+}
+
+void PartManipulatorPropertySetWrapper::SetTranslationY( double y )
+{
+    m_set->SetPropertyValue( "Transform_Translation_Y", y );
+}
+
+void PartManipulatorPropertySetWrapper::SetTranslationZ( double z )
+{
+    m_set->SetPropertyValue( "Transform_Translation_Z", z );
+}
+
+double PartManipulatorPropertySetWrapper::GetRotationX()
+{
+    return boost::any_cast< double >( m_set->GetPropertyValue( "Transform_Rotation_X" ) );
+}
+
+double PartManipulatorPropertySetWrapper::GetRotationY()
+{
+    return boost::any_cast< double >( m_set->GetPropertyValue( "Transform_Rotation_Y" ) );
+}
+
+double PartManipulatorPropertySetWrapper::GetRotationZ()
+{
+    return boost::any_cast< double >( m_set->GetPropertyValue( "Transform_Rotation_Z" ) );
+}
+
+void PartManipulatorPropertySetWrapper::SetRotationX( double x )
+{
+    m_set->SetPropertyValue( "Transform_Rotation_X", x );
+}
+
+void PartManipulatorPropertySetWrapper::SetRotationY( double y )
+{
+    m_set->SetPropertyValue( "Transform_Rotation_Y", y );
+}
+
+void PartManipulatorPropertySetWrapper::SetRotationZ( double z )
+{
+    m_set->SetPropertyValue( "Transform_Rotation_Z", z );
+}
+
+bool PartManipulatorPropertySetWrapper::Save()
+{
+    return m_set->Save();
 }

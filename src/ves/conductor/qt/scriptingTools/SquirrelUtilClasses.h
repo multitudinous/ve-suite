@@ -38,6 +38,7 @@
 // C++ classes that must be exposed to the Squirrel engine.
 
 #include <ves/xplorer/Logging.h>
+#include <ves/xplorer/data/PartManipulatorPropertySet.h>
 
 #include <switchwire/ScopedConnectionList.h>
 #include <switchwire/ConnectSignals.h>
@@ -312,5 +313,33 @@ protected:
     boost::mutex m_lock;
 
     switchwire::ScopedConnectionList m_connections;
+};
+
+class PartManipulatorPropertySetWrapper
+{
+public:
+    PartManipulatorPropertySetWrapper();
+
+    bool LoadByNodePath( const std::string& node_path );
+
+    double GetTranslationX();
+    double GetTranslationY();
+    double GetTranslationZ();
+
+    void SetTranslationX( double x );
+    void SetTranslationY( double y );
+    void SetTranslationZ( double z );
+
+    double GetRotationX();
+    double GetRotationY();
+    double GetRotationZ();
+
+    void SetRotationX( double x );
+    void SetRotationY( double y );
+    void SetRotationZ( double z );
+
+    bool Save();
+private:
+    propertystore::PropertySetPtr m_set;
 };
 }} //ves::conductor
