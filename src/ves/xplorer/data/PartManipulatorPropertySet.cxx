@@ -201,7 +201,7 @@ void PartManipulatorPropertySet::CalculateNewTransform( propertystore::PropertyP
                                                      boost::any_cast< double >( GetPropertyValue( "Transform_Rotation_Z" ) ),
                                                      osg::Vec3d( 0.0, 0.0, 1.0 ) );
 
-    osg::Matrix new_matrix = osg::Matrix::identity() * trans_component * rot_component;
+    osg::Matrix new_matrix = osg::Matrix::identity() * rot_component * trans_component;
 
     {
         boost::mutex::scoped_lock lock( m_dataLock );
