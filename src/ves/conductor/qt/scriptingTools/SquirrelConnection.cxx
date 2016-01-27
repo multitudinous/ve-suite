@@ -240,6 +240,12 @@ void SquirrelConnection::BindSpecialClasses()
     }*/
 
     {
+        const float pi = 3.1415927;
+
+        Sqrat::ConstTable().Const( "PI", pi );
+    }
+
+    {
         Sqrat::Enumeration digitalState;
         digitalState.Const( "OFF", gadget::DigitalState::OFF );
         digitalState.Const( "ON", gadget::DigitalState::ON );
