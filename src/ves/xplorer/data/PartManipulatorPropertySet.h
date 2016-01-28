@@ -34,7 +34,8 @@ public:
 
     virtual propertystore::PropertySetPtr CreateNew();
 
-    virtual bool Load();
+    //virtual bool Load();
+    void InitializeWithNodePath( const std::string& );
 private:
     void CreateSkeleton();
 
@@ -42,6 +43,7 @@ private:
 
     void InsertTransformNodeCallback();
 
+    void ProcessNodePath( propertystore::PropertyPtr );
     void CalculateNewTransform( propertystore::PropertyPtr );
 
     switchwire::ScopedConnectionList m_connections;

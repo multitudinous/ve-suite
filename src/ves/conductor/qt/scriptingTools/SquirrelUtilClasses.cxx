@@ -240,7 +240,13 @@ PartManipulatorPropertySetWrapper::PartManipulatorPropertySetWrapper()
 
 bool PartManipulatorPropertySetWrapper::LoadByNodePath( const std::string& node_path )
 {
-    return m_set->LoadByKey( "NodePath", node_path );
+    bool did_load = m_set->LoadByKey( "NodePath", node_path );
+
+    if( !did_load )
+    {
+        m_set->SetPropertyValue( "NodePath", node_path );
+    }
+    return true;
 }
 
 double PartManipulatorPropertySetWrapper::GetTranslationX()

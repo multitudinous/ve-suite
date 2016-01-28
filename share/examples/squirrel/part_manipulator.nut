@@ -170,6 +170,10 @@ class MovePartState extends State
 
         m_L1ButtonReceiver = DigitalStateSynchronizedSignalReceiver();
         m_R1ButtonReceiver = DigitalStateSynchronizedSignalReceiver();
+
+        m_set = PartManipulatorPropertySet();
+
+        m_rotIncrement = 0;
     }
 
     function OnEnter( context )
@@ -185,6 +189,7 @@ class MovePartState extends State
 
         SetControlModeSignal.signal( ControlMode.USER_DEFINED );
         // TODO: record the original position of the selected object
+        m_set.LoadByNodePath( m_nodePath );
     }
 
     function OnExit( context )
@@ -225,17 +230,21 @@ class MovePartState extends State
         if( m_leftXAxisReceiver.Pending() )
         {
             x_delta = ( 0.2 * m_leftXAxisReceiver.Pop() ) - 0.1;
+            m_set.SetTranslationX( m_set.GetTranslationX() + x_delta );
         }
 
         if( m_leftYAxisReceiver.Pending() )
         {
-            y_delta = ( 0.2 * m_leftYAxisReceiver.Pop() ) - 0.1;
+            // y axis gets inverted
+            y_delta = -1.0 * (( 0.2 * m_leftYAxisReceiver.Pop() ) - 0.1);
+            m_set.SetTranslationY( m_set.GetTranslationY() + y_delta );
         }
 
         if( m_rightYAxisReceiver.Pending() )
         {
-            //m_logger.Info( "z axis" );
-            z_delta = ( 0.2 * m_rightYAxisReceiver.Pop() ) - 0.1;
+            // y axis gets inverted
+            z_delta = -1.0 * (( 0.2 * m_rightYAxisReceiver.Pop() ) - 0.1);
+            m_set.SetTranslationZ( m_set.GetTranslationZ() + z_delta );
         }
 
         if( m_L1ButtonReceiver.Pending() )
@@ -243,7 +252,10 @@ class MovePartState extends State
             local l1_button = m_L1ButtonReceiver.Pop();
             if( l1_button != m_L1PreviousState && l1_button == DigitalState.ON )
             {
-
+                m_rotIncrement = ( m_rotIncrement + 1 ) % 8;
+                //m_logger.Info( "Rotation Increment = " + m_rotIncrement );
+                //m_logger.Info( "PI = " + PI );
+                m_set.SetRotationZ( m_rotIncrement * ( PI / 4.0 ) );
             }
             m_L1PreviousState = l1_button;
         }
@@ -253,11 +265,15 @@ class MovePartState extends State
             local r1_button = m_R1ButtonReceiver.Pop();
             if( r1_button != m_R1PreviousState && r1_button == DigitalState.ON )
             {
-
+                m_rotIncrement = ( m_rotIncrement - 1 ) % 8;
+                //m_logger.Info( "Rotation Increment = " + m_rotIncrement );
+                m_set.SetRotationZ( m_rotIncrement * ( PI / 4.0 ) );
             }
             m_R1PreviousState = r1_button;
         }
     }
+
+    m_set = null;
 
     m_nodePath = null;
 
@@ -273,6 +289,8 @@ class MovePartState extends State
 
     m_L1PreviousState = DigitalState.OFF;
     m_R1PreviousState = DigitalState.OFF;
+
+    m_rotIncrement = null;
 }
 
 class Context
