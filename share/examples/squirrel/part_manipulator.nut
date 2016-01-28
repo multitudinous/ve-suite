@@ -56,6 +56,8 @@ class SelectPartState extends State
         m_nodePathArrayIndex = index;
 
         m_logger = Logger();
+
+        m_transitioningToMove = false;
     }
 
     function OnEnter( context )
@@ -73,7 +75,11 @@ class SelectPartState extends State
 
     function OnExit( context )
     {
-        //RemoveCustomGlowsSignal.signal();
+        // leave the custom glow on if we're transitioning to MovePartState
+        if( !m_transitioningToMove )
+        {
+            RemoveCustomGlowsSignal.signal();
+        }
     }
 
     function OnEvent( context, event )
@@ -105,6 +111,7 @@ class SelectPartState extends State
             {
                 case HatState.UP:
                 {
+                    m_transitioningToMove = true;
                     return MovePartState( GetNodePathForIndex( m_nodePathArrayIndex ) );
                     break;
                 }
@@ -150,6 +157,8 @@ class SelectPartState extends State
         } );
         return path_string;
     }
+
+    m_transitioningToMove = null;
 
     m_nodePathArray = null;
     m_nodePathArrayLength = null;
