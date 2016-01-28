@@ -71,6 +71,11 @@ class SelectPartState extends State
         HighlightNodeSignal.signal( path_string );
     }
 
+    function OnExit( context )
+    {
+        //RemoveCustomGlowsSignal.signal();
+    }
+
     function OnEvent( context, event )
     {
         if( event instanceof NodePathEvent )
@@ -203,6 +208,7 @@ class MovePartState extends State
         m_R1ButtonReceiver.Disconnect();
 
         SetControlModeSignal.signal( ControlMode.NAV );
+        RemoveCustomGlowsSignal.signal();
     }
 
     function OnEvent( context, event )
@@ -411,6 +417,9 @@ function Execute()
 
     StringSignalMaker <- StringSignal;
     StringSignalMaker.RegisterSignal( "PartManipulator.HighlightNodeWithStringPath", "HighlightNodeSignal" );
+
+    VoidSignalMaker <- VoidSignal;
+    VoidSignalMaker.RegisterSignal( "Selection.RemoveCustomGlows", "RemoveCustomGlowsSignal" );
 
     local part_manipulator = PartManipulator( IdleState() );
 

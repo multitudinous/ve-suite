@@ -117,6 +117,8 @@ private:
     void HighlightNodeWithStringPath( const std::string& nodePath );
     ///Convert to the std::string representation of an osg::NodePath
     void ConvertNodePathToString( osg::NodePath& nodePath );
+    ///Remove custom glows
+    void RemoveCustomGlows();
 
     ///Selection start end point line
     osg::Vec3d m_startPoint;

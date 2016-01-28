@@ -174,6 +174,10 @@ Selection::Selection()
     CONNECTSIGNALS_1( "%HighlightNodeWithStringPath", void( const std::string& ),
                       &Selection::HighlightNodeWithStringPath,
                       m_connections, any_SignalType, high_Priority );
+
+    CONNECTSIGNAL_0( "Selection.RemoveCustomGlows", void(),
+                     &Selection::RemoveCustomGlows,
+                     m_connections, high_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Selection::~Selection()
@@ -556,6 +560,14 @@ void Selection::HighlightNodeWithStringPath( const std::string& nodePath )
     osg::NodePath node_path = osgwTools::stringToNodePath( nodePath,
         ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
     HighlightNode( node_path );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Selection::RemoveCustomGlows()
+{
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor highlightRemove(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot(),
+        "", false, true
+    );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }
