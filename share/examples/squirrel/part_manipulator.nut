@@ -388,13 +388,13 @@ class MovePartState extends State
     function ClampAngle( angle )
     {
         local clamped_angle = angle;
-        if( clamped_angle > 2.0 * PI )
+        if( clamped_angle > TWO_PI )
         {
-            clamped_angle = clamped_angle - ( 2.0 * PI );
+            clamped_angle = clamped_angle - TWO_PI;
         }
         else if( clamped_angle < 0.0 )
         {
-            clamped_angle = ( 2.0 * PI ) + clamped_angle;
+            clamped_angle = TWO_PI + clamped_angle;
         }
         return clamped_angle;
     }
@@ -436,6 +436,8 @@ class MovePartState extends State
         "Analog_Left",
         "Analog_Right"
     ];
+
+    TWO_PI = 2.0 * PI;
 }
 
 class Context
