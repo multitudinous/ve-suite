@@ -335,13 +335,17 @@ class MovePartState extends State
         // use the Y axis on the left stick to rotate about the (right-facing) X axis
         if( m_axisReceiverMap["Left_Y"].Pending() )
         {
-
+            rot_x_delta = ( 0.2 * m_axisReceiverMap["Left_Y"].Pop() ) - 0.1;
+            local x_angle = m_set.GetRotationX() + rot_x_delta;
+            m_set.SetRotationX( ClampAngle( x_angle ) );
         }
 
         // use the X axis on the left stick to rotate about the (forward-facing) Y axis
         if( m_axisReceiverMap["Left_X"].Pending() )
         {
-
+            rot_y_delta = ( 0.2 * m_axisReceiverMap["Left_X"].Pop() ) - 0.1;
+            local y_angle = m_set.GetRotationY() + rot_y_delta;
+            m_set.SetRotationY( ClampAngle( y_angle ) );
         }
 
         // use the X axis on the right stick to rotate about the (up-facing) Z axis
