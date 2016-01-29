@@ -182,16 +182,13 @@ class MovePartState extends State
         //m_rightXAxisReceiver = FloatSynchronizedSignalReceiver();
         m_rightYAxisReceiver = FloatSynchronizedSignalReceiver();
 
-        m_L1ButtonReceiver = DigitalStateSynchronizedSignalReceiver();
-        m_R1ButtonReceiver = DigitalStateSynchronizedSignalReceiver();
-
         m_set = PartManipulatorPropertySet();
 
         m_rotIncrement = 0;
 
-        local buttons = ["L1", "R1", "Face_Up", "Face_Down", "Face_Left", "Face_Right", "Stick_Left", "Stick_Right"];
-        foreach( b in buttons )
+        foreach( b in BUTTONS )
         {
+            m_buttonReceiverMap[b] <- DigitalStateSynchronizedSignalReceiver();
             m_previousStateMap[b] <- DigitalState.OFF;
         }
     }
@@ -204,8 +201,8 @@ class MovePartState extends State
         //m_rightXAxisReceiver.ConnectToSignal( "GameController.Axis2" );
         m_rightYAxisReceiver.ConnectToSignal( "GameController.Axis3" );
 
-        m_L1ButtonReceiver.ConnectToSignal( "GameController.Button4" );
-        m_R1ButtonReceiver.ConnectToSignal( "GameController.Button5" );
+        m_buttonReceiverMap["L1"].ConnectToSignal( "GameController.Button4" );
+        m_buttonReceiverMap["R1"].ConnectToSignal( "GameController.Button5" );
 
         SetControlModeSignal.signal( ControlMode.USER_DEFINED );
         // TODO: record the original position of the selected object
@@ -219,8 +216,10 @@ class MovePartState extends State
         //m_rightXAxisReceiver.Disconnect();
         m_rightYAxisReceiver.Disconnect();
 
-        m_L1ButtonReceiver.Disconnect();
-        m_R1ButtonReceiver.Disconnect();
+        foreach( b in BUTTONS )
+        {
+            m_buttonReceiverMap[b].Disconnect();
+        }
 
         SetControlModeSignal.signal( ControlMode.NAV );
         RemoveCustomGlowsSignal.signal();
@@ -268,9 +267,9 @@ class MovePartState extends State
             m_set.SetTranslationZ( m_set.GetTranslationZ() + z_delta );
         }
 
-        if( m_L1ButtonReceiver.Pending() )
+        if( m_buttonReceiverMap["L1"].Pending() )
         {
-            local l1_button = m_L1ButtonReceiver.Pop();
+            local l1_button = m_buttonReceiverMap["L1"].Pop();
             if( l1_button != m_previousStateMap["L1"] && l1_button == DigitalState.ON )
             {
                 m_rotIncrement = ( m_rotIncrement + 1 ) % 8;
@@ -281,9 +280,9 @@ class MovePartState extends State
             m_previousStateMap["L1"] = l1_button;
         }
 
-        if( m_R1ButtonReceiver.Pending() )
+        if( m_buttonReceiverMap["R1"].Pending() )
         {
-            local r1_button = m_R1ButtonReceiver.Pop();
+            local r1_button = m_buttonReceiverMap["R1"].Pop();
             if( r1_button != m_previousStateMap["R1"] && r1_button == DigitalState.ON )
             {
                 m_rotIncrement = ( m_rotIncrement - 1 ) % 8;
@@ -305,12 +304,21 @@ class MovePartState extends State
     //m_rightXAxisReceiver = null;
     m_rightYAxisReceiver = null;
 
-    m_L1ButtonReceiver = null;
-    m_R1ButtonReceiver = null;
-
+    m_buttonReceiverMap = {};
     m_previousStateMap = {};
 
     m_rotIncrement = null;
+
+    BUTTONS = [
+        "L1",
+        "R1",
+        "Face_Up",
+        "Face_Down",
+        "Face_Left",
+        "Face_Right",
+        "Stick_Left",
+        "Stick_Right"
+    ];
 }
 
 class Context
