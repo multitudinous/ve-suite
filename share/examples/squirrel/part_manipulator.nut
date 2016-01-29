@@ -181,6 +181,10 @@ class MovePartState extends State
 
         m_rotIncrement = 0;
 
+        // if true, use analog sticks for translation
+        // if false, use analog sticks for rotation
+        m_analogMode = true;
+
         foreach( a in AXES )
         {
             m_axisReceiverMap[a] <- FloatSynchronizedSignalReceiver();
@@ -204,6 +208,9 @@ class MovePartState extends State
 
         m_buttonReceiverMap["L1"].ConnectToSignal( "GameController.Button4" );
         m_buttonReceiverMap["R1"].ConnectToSignal( "GameController.Button5" );
+
+        m_buttonReceiverMap["Analog_Left"].ConnectToSignal( "GameController.Button10" );
+        m_buttonReceiverMap["Analog_Right"].ConnectToSignal( "GameController.Button11" );
 
         SetControlModeSignal.signal( ControlMode.USER_DEFINED );
         // TODO: record the original position of the selected object
@@ -241,31 +248,34 @@ class MovePartState extends State
 
     function Update()
     {
-        // analog stick values are in the range [0, 1], with 0.5 meaning centered
-        // use 2x - 1 to convert to the range [-1, 1]
-
-        local x_delta = 0.0;
-        local y_delta = 0.0;
-        local z_delta = 0.0;
-
-        if( m_axisReceiverMap["Left_X"].Pending() )
+        if( m_buttonReceiverMap["Analog_Left"].Pending() )
         {
-            x_delta = ( 0.2 * m_axisReceiverMap["Left_X"].Pop() ) - 0.1;
-            m_set.SetTranslationX( m_set.GetTranslationX() + x_delta );
+            local left = m_buttonReceiverMap["Analog_Left"].Pop();
+            if( left != m_previousStateMap["Analog_Left"] && left == DigitalState.ON )
+            {
+                ToggleAnalogMode();
+            }
+            m_previousStateMap["Analog_Left"] = left;
         }
 
-        if( m_axisReceiverMap["Left_Y"].Pending() )
+        if( m_buttonReceiverMap["Analog_Right"].Pending() )
         {
-            // y axis gets inverted
-            y_delta = -1.0 * (( 0.2 * m_axisReceiverMap["Left_Y"].Pop() ) - 0.1);
-            m_set.SetTranslationY( m_set.GetTranslationY() + y_delta );
+            local right = m_buttonReceiverMap["Analog_Right"].Pop();
+            if( right != m_previousStateMap["Analog_Right"] && right == DigitalState.ON )
+            {
+                ToggleAnalogMode();
+            }
+            m_previousStateMap["Analog_Right"] = right;
         }
 
-        if( m_axisReceiverMap["Right_Y"].Pending() )
+        if( m_analogMode )
         {
-            // y axis gets inverted
-            z_delta = -1.0 * (( 0.2 * m_axisReceiverMap["Right_Y"].Pop() ) - 0.1);
-            m_set.SetTranslationZ( m_set.GetTranslationZ() + z_delta );
+            // translation mode
+            UpdateTranslation();
+        }
+        else
+        {
+            // rotation mode
         }
 
         if( m_buttonReceiverMap["L1"].Pending() )
@@ -294,6 +304,50 @@ class MovePartState extends State
         }
     }
 
+    function ToggleAnalogMode()
+    {
+        m_analogMode = !m_analogMode;
+
+        if( m_analogMode )
+        {
+            m_logger.Info( "Translation mode" );
+        }
+        else
+        {
+            m_logger.Info( "Rotation mode" );
+        }
+    }
+
+    function UpdateTranslation()
+    {
+        // analog stick values are in the range [0, 1], with 0.5 meaning centered
+        // use 2x - 1 to convert to the range [-1, 1]
+
+        local x_delta = 0.0;
+        local y_delta = 0.0;
+        local z_delta = 0.0;
+
+        if( m_axisReceiverMap["Left_X"].Pending() )
+        {
+            x_delta = ( 0.2 * m_axisReceiverMap["Left_X"].Pop() ) - 0.1;
+            m_set.SetTranslationX( m_set.GetTranslationX() + x_delta );
+        }
+
+        if( m_axisReceiverMap["Left_Y"].Pending() )
+        {
+            // y axis gets inverted
+            y_delta = -1.0 * (( 0.2 * m_axisReceiverMap["Left_Y"].Pop() ) - 0.1);
+            m_set.SetTranslationY( m_set.GetTranslationY() + y_delta );
+        }
+
+        if( m_axisReceiverMap["Right_Y"].Pending() )
+        {
+            // y axis gets inverted
+            z_delta = -1.0 * (( 0.2 * m_axisReceiverMap["Right_Y"].Pop() ) - 0.1);
+            m_set.SetTranslationZ( m_set.GetTranslationZ() + z_delta );
+        }
+    }
+
     m_set = null;
 
     m_nodePath = null;
@@ -305,6 +359,14 @@ class MovePartState extends State
     m_previousStateMap = {};
 
     m_rotIncrement = null;
+
+    m_analogMode = null;
+
+    // defining an enum here seems to crash Squirrel
+    //enum AnalogStickMode {
+    //    translation,
+    //    rotation
+    //};
 
     AXES = [
         "Left_X",
@@ -320,8 +382,8 @@ class MovePartState extends State
         "Face_Down",
         "Face_Left",
         "Face_Right",
-        "Stick_Left",
-        "Stick_Right"
+        "Analog_Left",
+        "Analog_Right"
     ];
 }
 
