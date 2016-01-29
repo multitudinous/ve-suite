@@ -188,6 +188,12 @@ class MovePartState extends State
         m_set = PartManipulatorPropertySet();
 
         m_rotIncrement = 0;
+
+        local buttons = ["L1", "R1", "Face_Up", "Face_Down", "Face_Left", "Face_Right", "Stick_Left", "Stick_Right"];
+        foreach( b in buttons )
+        {
+            m_previousStateMap[b] <- DigitalState.OFF;
+        }
     }
 
     function OnEnter( context )
@@ -265,26 +271,26 @@ class MovePartState extends State
         if( m_L1ButtonReceiver.Pending() )
         {
             local l1_button = m_L1ButtonReceiver.Pop();
-            if( l1_button != m_L1PreviousState && l1_button == DigitalState.ON )
+            if( l1_button != m_previousStateMap["L1"] && l1_button == DigitalState.ON )
             {
                 m_rotIncrement = ( m_rotIncrement + 1 ) % 8;
                 //m_logger.Info( "Rotation Increment = " + m_rotIncrement );
                 //m_logger.Info( "PI = " + PI );
                 m_set.SetRotationZ( m_rotIncrement * ( PI / 4.0 ) );
             }
-            m_L1PreviousState = l1_button;
+            m_previousStateMap["L1"] = l1_button;
         }
 
         if( m_R1ButtonReceiver.Pending() )
         {
             local r1_button = m_R1ButtonReceiver.Pop();
-            if( r1_button != m_R1PreviousState && r1_button == DigitalState.ON )
+            if( r1_button != m_previousStateMap["R1"] && r1_button == DigitalState.ON )
             {
                 m_rotIncrement = ( m_rotIncrement - 1 ) % 8;
                 //m_logger.Info( "Rotation Increment = " + m_rotIncrement );
                 m_set.SetRotationZ( m_rotIncrement * ( PI / 4.0 ) );
             }
-            m_R1PreviousState = r1_button;
+            m_previousStateMap["R1"] = r1_button;
         }
     }
 
@@ -302,8 +308,7 @@ class MovePartState extends State
     m_L1ButtonReceiver = null;
     m_R1ButtonReceiver = null;
 
-    m_L1PreviousState = DigitalState.OFF;
-    m_R1PreviousState = DigitalState.OFF;
+    m_previousStateMap = {};
 
     m_rotIncrement = null;
 }
