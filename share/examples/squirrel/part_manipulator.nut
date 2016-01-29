@@ -276,31 +276,7 @@ class MovePartState extends State
         else
         {
             // rotation mode
-        }
-
-        if( m_buttonReceiverMap["L1"].Pending() )
-        {
-            local l1_button = m_buttonReceiverMap["L1"].Pop();
-            if( l1_button != m_previousStateMap["L1"] && l1_button == DigitalState.ON )
-            {
-                m_rotIncrement = ( m_rotIncrement + 1 ) % 8;
-                //m_logger.Info( "Rotation Increment = " + m_rotIncrement );
-                //m_logger.Info( "PI = " + PI );
-                m_set.SetRotationZ( m_rotIncrement * ( PI / 4.0 ) );
-            }
-            m_previousStateMap["L1"] = l1_button;
-        }
-
-        if( m_buttonReceiverMap["R1"].Pending() )
-        {
-            local r1_button = m_buttonReceiverMap["R1"].Pop();
-            if( r1_button != m_previousStateMap["R1"] && r1_button == DigitalState.ON )
-            {
-                m_rotIncrement = ( m_rotIncrement - 1 ) % 8;
-                //m_logger.Info( "Rotation Increment = " + m_rotIncrement );
-                m_set.SetRotationZ( m_rotIncrement * ( PI / 4.0 ) );
-            }
-            m_previousStateMap["R1"] = r1_button;
+            UpdateRotation();
         }
     }
 
@@ -311,10 +287,12 @@ class MovePartState extends State
         if( m_analogMode )
         {
             m_logger.Info( "Translation mode" );
+            m_axisReceiverMap["Right_X"].Disconnect();
         }
         else
         {
             m_logger.Info( "Rotation mode" );
+            m_axisReceiverMap["Right_X"].ConnectToSignal( "GameController.Axis2" );
         }
     }
 
@@ -346,6 +324,75 @@ class MovePartState extends State
             z_delta = -1.0 * (( 0.2 * m_axisReceiverMap["Right_Y"].Pop() ) - 0.1);
             m_set.SetTranslationZ( m_set.GetTranslationZ() + z_delta );
         }
+    }
+
+    function UpdateRotation()
+    {
+        local rot_x_delta = 0.0;
+        local rot_y_delta = 0.0;
+        local rot_z_delta = 0.0;
+
+        // use the Y axis on the left stick to rotate about the (right-facing) X axis
+        if( m_axisReceiverMap["Left_Y"].Pending() )
+        {
+
+        }
+
+        // use the X axis on the left stick to rotate about the (forward-facing) Y axis
+        if( m_axisReceiverMap["Left_X"].Pending() )
+        {
+
+        }
+
+        // use the X axis on the right stick to rotate about the (up-facing) Z axis
+        if( m_axisReceiverMap["Right_X"].Pending() )
+        {
+            rot_z_delta = ( 0.2 * m_axisReceiverMap["Right_X"].Pop() ) - 0.1;
+            local z_angle = m_set.GetRotationZ() + rot_z_delta;
+            m_set.SetRotationZ( ClampAngle( z_angle ) );
+        }
+    }
+
+    function SnapRotation()
+    {
+        if( m_buttonReceiverMap["L1"].Pending() )
+        {
+            local l1_button = m_buttonReceiverMap["L1"].Pop();
+            if( l1_button != m_previousStateMap["L1"] && l1_button == DigitalState.ON )
+            {
+                m_rotIncrement = ( m_rotIncrement + 1 ) % 8;
+                //m_logger.Info( "Rotation Increment = " + m_rotIncrement );
+                //m_logger.Info( "PI = " + PI );
+                m_set.SetRotationZ( m_rotIncrement * ( PI / 4.0 ) );
+            }
+            m_previousStateMap["L1"] = l1_button;
+        }
+
+        if( m_buttonReceiverMap["R1"].Pending() )
+        {
+            local r1_button = m_buttonReceiverMap["R1"].Pop();
+            if( r1_button != m_previousStateMap["R1"] && r1_button == DigitalState.ON )
+            {
+                m_rotIncrement = ( m_rotIncrement - 1 ) % 8;
+                //m_logger.Info( "Rotation Increment = " + m_rotIncrement );
+                m_set.SetRotationZ( m_rotIncrement * ( PI / 4.0 ) );
+            }
+            m_previousStateMap["R1"] = r1_button;
+        }
+    }
+
+    function ClampAngle( angle )
+    {
+        local clamped_angle = angle;
+        if( clamped_angle > 2.0 * PI )
+        {
+            clamped_angle = clamped_angle - ( 2.0 * PI );
+        }
+        else if( clamped_angle < 0.0 )
+        {
+            clamped_angle = ( 2.0 * PI ) + clamped_angle;
+        }
+        return clamped_angle;
     }
 
     m_set = null;
