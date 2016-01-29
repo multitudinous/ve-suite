@@ -177,14 +177,14 @@ class MovePartState extends State
 
         m_logger = Logger();
 
-        m_leftXAxisReceiver = FloatSynchronizedSignalReceiver();
-        m_leftYAxisReceiver = FloatSynchronizedSignalReceiver();
-        //m_rightXAxisReceiver = FloatSynchronizedSignalReceiver();
-        m_rightYAxisReceiver = FloatSynchronizedSignalReceiver();
-
         m_set = PartManipulatorPropertySet();
 
         m_rotIncrement = 0;
+
+        foreach( a in AXES )
+        {
+            m_axisReceiverMap[a] <- FloatSynchronizedSignalReceiver();
+        }
 
         foreach( b in BUTTONS )
         {
@@ -196,10 +196,11 @@ class MovePartState extends State
     function OnEnter( context )
     {
         m_logger.Info( "entered MovePartState" );
-        m_leftXAxisReceiver.ConnectToSignal( "GameController.Axis0" );
-        m_leftYAxisReceiver.ConnectToSignal( "GameController.Axis1" );
-        //m_rightXAxisReceiver.ConnectToSignal( "GameController.Axis2" );
-        m_rightYAxisReceiver.ConnectToSignal( "GameController.Axis3" );
+
+        m_axisReceiverMap["Left_X"].ConnectToSignal( "GameController.Axis0" );
+        m_axisReceiverMap["Left_Y"].ConnectToSignal( "GameController.Axis1" );
+        //m_axisReceiverMap["Right_X"].ConnectToSignal( "GameController.Axis2" );
+        m_axisReceiverMap["Right_Y"].ConnectToSignal( "GameController.Axis3" );
 
         m_buttonReceiverMap["L1"].ConnectToSignal( "GameController.Button4" );
         m_buttonReceiverMap["R1"].ConnectToSignal( "GameController.Button5" );
@@ -211,10 +212,10 @@ class MovePartState extends State
 
     function OnExit( context )
     {
-        m_leftXAxisReceiver.Disconnect();
-        m_leftYAxisReceiver.Disconnect();
-        //m_rightXAxisReceiver.Disconnect();
-        m_rightYAxisReceiver.Disconnect();
+        foreach( a in AXES )
+        {
+            m_axisReceiverMap[a].Disconnect();
+        }
 
         foreach( b in BUTTONS )
         {
@@ -247,23 +248,23 @@ class MovePartState extends State
         local y_delta = 0.0;
         local z_delta = 0.0;
 
-        if( m_leftXAxisReceiver.Pending() )
+        if( m_axisReceiverMap["Left_X"].Pending() )
         {
-            x_delta = ( 0.2 * m_leftXAxisReceiver.Pop() ) - 0.1;
+            x_delta = ( 0.2 * m_axisReceiverMap["Left_X"].Pop() ) - 0.1;
             m_set.SetTranslationX( m_set.GetTranslationX() + x_delta );
         }
 
-        if( m_leftYAxisReceiver.Pending() )
+        if( m_axisReceiverMap["Left_Y"].Pending() )
         {
             // y axis gets inverted
-            y_delta = -1.0 * (( 0.2 * m_leftYAxisReceiver.Pop() ) - 0.1);
+            y_delta = -1.0 * (( 0.2 * m_axisReceiverMap["Left_Y"].Pop() ) - 0.1);
             m_set.SetTranslationY( m_set.GetTranslationY() + y_delta );
         }
 
-        if( m_rightYAxisReceiver.Pending() )
+        if( m_axisReceiverMap["Right_Y"].Pending() )
         {
             // y axis gets inverted
-            z_delta = -1.0 * (( 0.2 * m_rightYAxisReceiver.Pop() ) - 0.1);
+            z_delta = -1.0 * (( 0.2 * m_axisReceiverMap["Right_Y"].Pop() ) - 0.1);
             m_set.SetTranslationZ( m_set.GetTranslationZ() + z_delta );
         }
 
@@ -299,15 +300,18 @@ class MovePartState extends State
 
     m_logger = null;
 
-    m_leftXAxisReceiver = null;
-    m_leftYAxisReceiver = null;
-    //m_rightXAxisReceiver = null;
-    m_rightYAxisReceiver = null;
-
+    m_axisReceiverMap = {};
     m_buttonReceiverMap = {};
     m_previousStateMap = {};
 
     m_rotIncrement = null;
+
+    AXES = [
+        "Left_X",
+        "Left_Y",
+        "Right_X",
+        "Right_Y"
+    ];
 
     BUTTONS = [
         "L1",
