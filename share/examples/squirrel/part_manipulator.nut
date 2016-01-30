@@ -278,6 +278,8 @@ class MovePartState extends State
             // rotation mode
             UpdateRotation();
         }
+
+        SnapRotation();
     }
 
     function ToggleAnalogMode()
@@ -364,10 +366,9 @@ class MovePartState extends State
             local l1_button = m_buttonReceiverMap["L1"].Pop();
             if( l1_button != m_previousStateMap["L1"] && l1_button == DigitalState.ON )
             {
-                m_rotIncrement = ( m_rotIncrement + 1 ) % 8;
-                //m_logger.Info( "Rotation Increment = " + m_rotIncrement );
-                //m_logger.Info( "PI = " + PI );
-                m_set.SetRotationZ( m_rotIncrement * ( PI / 4.0 ) );
+                local z_angle = ClampAngle( m_set.GetRotationZ() - PI_OVER_FOUR - 0.01 );
+                z_angle = ceil( z_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
+                m_set.SetRotationZ( z_angle );
             }
             m_previousStateMap["L1"] = l1_button;
         }
@@ -377,9 +378,9 @@ class MovePartState extends State
             local r1_button = m_buttonReceiverMap["R1"].Pop();
             if( r1_button != m_previousStateMap["R1"] && r1_button == DigitalState.ON )
             {
-                m_rotIncrement = ( m_rotIncrement - 1 ) % 8;
-                //m_logger.Info( "Rotation Increment = " + m_rotIncrement );
-                m_set.SetRotationZ( m_rotIncrement * ( PI / 4.0 ) );
+                local z_angle = ClampAngle( m_set.GetRotationZ() + PI_OVER_FOUR + 0.01 );
+                z_angle = floor( z_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
+                m_set.SetRotationZ( z_angle );
             }
             m_previousStateMap["R1"] = r1_button;
         }
@@ -438,6 +439,7 @@ class MovePartState extends State
     ];
 
     TWO_PI = 2.0 * PI;
+    PI_OVER_FOUR = PI / 4.0;
 }
 
 class Context
