@@ -185,6 +185,10 @@ class MovePartState extends State
         // if false, use analog sticks for rotation
         m_analogMode = true;
 
+        // if true, moving the left stick up/down rotates about X
+        // if false, moving the left stick left/right rotates about Y
+        m_rotateAboutXOrY = true;
+
         foreach( a in AXES )
         {
             m_axisReceiverMap[a] <- FloatSynchronizedSignalReceiver();
@@ -256,7 +260,7 @@ class MovePartState extends State
             local left = m_buttonReceiverMap["Analog_Left"].Pop();
             if( left != m_previousStateMap["Analog_Left"] && left == DigitalState.ON )
             {
-                ToggleAnalogMode();
+                ToggleRotateXOrY();
             }
             m_previousStateMap["Analog_Left"] = left;
         }
@@ -301,6 +305,11 @@ class MovePartState extends State
         }
     }
 
+    function ToggleRotateXOrY()
+    {
+        m_rotateAboutXOrY = !m_rotateAboutXOrY;
+    }
+
     function UpdateTranslation()
     {
         // analog stick values are in the range [0, 1], with 0.5 meaning centered
@@ -337,20 +346,25 @@ class MovePartState extends State
         local rot_y_delta = 0.0;
         local rot_z_delta = 0.0;
 
-        // use the Y axis on the left stick to rotate about the (right-facing) X axis
-        if( m_axisReceiverMap["Left_Y"].Pending() )
+        if( m_rotateAboutXOrY )
         {
-            rot_x_delta = ( 0.2 * m_axisReceiverMap["Left_Y"].Pop() ) - 0.1;
-            local x_angle = m_set.GetRotationX() + rot_x_delta;
-            m_set.SetRotationX( ClampAngle( x_angle ) );
+            // use the Y axis on the left stick to rotate about the (right-facing) X axis
+            if( m_axisReceiverMap["Left_Y"].Pending() )
+            {
+                rot_x_delta = ( 0.2 * m_axisReceiverMap["Left_Y"].Pop() ) - 0.1;
+                local x_angle = m_set.GetRotationX() + rot_x_delta;
+                m_set.SetRotationX( ClampAngle( x_angle ) );
+            }
         }
-
-        // use the X axis on the left stick to rotate about the (forward-facing) Y axis
-        if( m_axisReceiverMap["Left_X"].Pending() )
+        else
         {
-            rot_y_delta = ( 0.2 * m_axisReceiverMap["Left_X"].Pop() ) - 0.1;
-            local y_angle = m_set.GetRotationY() + rot_y_delta;
-            m_set.SetRotationY( ClampAngle( y_angle ) );
+            // use the X axis on the left stick to rotate about the (forward-facing) Y axis
+            if( m_axisReceiverMap["Left_X"].Pending() )
+            {
+                rot_y_delta = ( 0.2 * m_axisReceiverMap["Left_X"].Pop() ) - 0.1;
+                local y_angle = m_set.GetRotationY() + rot_y_delta;
+                m_set.SetRotationY( ClampAngle( y_angle ) );
+            }
         }
 
         // use the X axis on the right stick to rotate about the (up-facing) Z axis
@@ -470,6 +484,7 @@ class MovePartState extends State
     m_rotIncrement = null;
 
     m_analogMode = null;
+    m_rotateAboutXOrY = null;
 
     // defining an enum here seems to crash Squirrel
     //enum AnalogStickMode {
