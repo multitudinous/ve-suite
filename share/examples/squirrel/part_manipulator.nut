@@ -208,7 +208,10 @@ class MovePartState extends State
 
         m_buttonReceiverMap["L1"].ConnectToSignal( "GameController.Button4" );
         m_buttonReceiverMap["R1"].ConnectToSignal( "GameController.Button5" );
-
+        m_buttonReceiverMap["Face_Up"].ConnectToSignal( "GameController.Button3" );
+        m_buttonReceiverMap["Face_Down"].ConnectToSignal( "GameController.Button1" );
+        m_buttonReceiverMap["Face_Left"].ConnectToSignal( "GameController.Button0" );
+        m_buttonReceiverMap["Face_Right"].ConnectToSignal( "GameController.Button2" );
         m_buttonReceiverMap["Analog_Left"].ConnectToSignal( "GameController.Button10" );
         m_buttonReceiverMap["Analog_Right"].ConnectToSignal( "GameController.Button11" );
 
@@ -361,6 +364,59 @@ class MovePartState extends State
 
     function SnapRotation()
     {
+        // negative (clockwise) rotation about X
+        if( m_buttonReceiverMap["Face_Up"].Pending() )
+        {
+            local fu_button = m_buttonReceiverMap["Face_Up"].Pop();
+            if( fu_button != m_previousStateMap["Face_Up"] && fu_button == DigitalState.ON )
+            {
+                local x_angle = ClampAngle( m_set.GetRotationX() - PI_OVER_FOUR - 0.01 );
+                x_angle = ceil( x_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
+                m_set.SetRotationX( x_angle );
+            }
+            m_previousStateMap["Face_Up"] = fu_button;
+        }
+
+        // positive (counterclockwise) rotation about X
+        if( m_buttonReceiverMap["Face_Down"].Pending() )
+        {
+            local fd_button = m_buttonReceiverMap["Face_Down"].Pop();
+            if( fd_button != m_previousStateMap["Face_Down"] && fd_button == DigitalState.ON )
+            {
+                local x_angle = ClampAngle( m_set.GetRotationX() + PI_OVER_FOUR + 0.01 );
+                x_angle = floor( x_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
+                m_set.SetRotationX( x_angle );
+            }
+            m_previousStateMap["Face_Down"] = fd_button;
+        }
+
+        // negative (clockwise) rotation about Y
+        if( m_buttonReceiverMap["Face_Left"].Pending() )
+        {
+            local fl_button = m_buttonReceiverMap["Face_Left"].Pop();
+            if( fl_button != m_previousStateMap["Face_Left"] && fl_button == DigitalState.ON )
+            {
+                local y_angle = ClampAngle( m_set.GetRotationY() - PI_OVER_FOUR - 0.01 );
+                y_angle = ceil( y_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
+                m_set.SetRotationY( y_angle );
+            }
+            m_previousStateMap["Face_Left"] = fl_button;
+        }
+
+        // positive (counterclockwise) rotation about Y
+        if( m_buttonReceiverMap["Face_Right"].Pending() )
+        {
+            local fr_button = m_buttonReceiverMap["Face_Right"].Pop();
+            if( fr_button != m_previousStateMap["Face_Right"] && fr_button == DigitalState.ON )
+            {
+                local y_angle = ClampAngle( m_set.GetRotationY() + PI_OVER_FOUR + 0.01 );
+                y_angle = floor( y_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
+                m_set.SetRotationY( y_angle );
+            }
+            m_previousStateMap["Face_Right"] = fr_button;
+        }
+
+        // negative (clockwise) rotation about Z
         if( m_buttonReceiverMap["L1"].Pending() )
         {
             local l1_button = m_buttonReceiverMap["L1"].Pop();
@@ -373,6 +429,7 @@ class MovePartState extends State
             m_previousStateMap["L1"] = l1_button;
         }
 
+        // positive (counterclockwise) rotation about Z
         if( m_buttonReceiverMap["R1"].Pending() )
         {
             local r1_button = m_buttonReceiverMap["R1"].Pop();
