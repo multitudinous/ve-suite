@@ -126,6 +126,8 @@ void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node
         // was not found in the database, and that this node path appears to have
         // *not* been modified by us before
 
+        SetPropertyValue( "NodePath", node_path );
+
         // schedule the insertion of the MatrixTransform node
         {
             boost::mutex::scoped_lock lock( m_connectionsLock );
@@ -138,7 +140,8 @@ void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node
 
 void PartManipulatorPropertySet::CreateSkeleton()
 {
-    AddProperty( "NodePath", "", "node path" );
+    std::string empty_string;
+    AddProperty( "NodePath", empty_string, "node path" );
 
     AddProperty( "Transform_Translation_X", 0.0, "x" );
     AddProperty( "Transform_Translation_Y", 0.0, "y" );
