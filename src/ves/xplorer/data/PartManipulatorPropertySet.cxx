@@ -31,10 +31,6 @@ PartManipulatorPropertySet::PartManipulatorPropertySet()
 
     CreateSkeleton();
 
-    //GetProperty( "NodePath" )->SignalValueChanged.connect(
-    //    boost::bind( &PartManipulatorPropertySet::ProcessNodePath, this, _1 )
-    //);
-
     m_transformNode->addDescription( "CreatedByPartManipulatorPropertySet" );
 }
 
@@ -139,104 +135,10 @@ void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node
         }
     }
 }
-/*bool PartManipulatorPropertySet::Load()
-{
-    bool did_load = PropertySet::Load();
-
-    if( !did_load )
-    {
-        return false;
-    }
-
-    // TODO: walk up the node path and load any parent PartManipulatorPropertySet
-    std::string parent_uuid = boost::any_cast< std::string >( GetPropertyValue( "ParentUUID" ) );
-
-    if( parent_uuid != "" )
-    {
-        PartManipulatorPropertySet parent;
-        parent.SetUUID( parent_uuid );
-        bool parent_did_load = parent.Load();
-
-        if( !parent_did_load )
-        {
-            return false;
-        }
-    }
-
-    std::cout << "CHECKING NODE PATH..." << std::endl << std::flush;
-
-    std::string node_path_string = boost::any_cast< std::string >( GetPropertyValue( "NodePath" ) );
-
-    std::vector< std::string > node_path_string_vector;
-
-    boost::split( node_path_string_vector, node_path_string, boost::is_any_of(",") );
-
-    osg::NodePath node_path = osgwTools::stringToNodePath(
-        node_path_string,
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()
-    );
-
-    osg::NodePath::const_iterator iter;
-
-    std::cout << "FOUND NODE PATH: ";
-    for( iter = node_path.begin(); iter != node_path.end(); iter++ )
-    {
-        std::cout << *iter << ",";
-    }
-    std::cout << std::endl << std::flush;
-
-    if( node_path.size() == node_path_string_vector.size() )
-    {
-        // We found our "target" node in the scene graph using the node path.
-
-        m_nodePath = node_path;
-
-        // schedule the insertion of a new MatrixTransform node
-        {
-            boost::mutex::scoped_lock lock( m_connectionsLock );
-            CONNECTSIGNAL_0( "App.LatePreFrame", void(),
-                             &PartManipulatorPropertySet::InsertTransformNodeCallback,
-                             m_connections, normal_Priority );
-        }
-    }
-    else
-    {
-        // We did not find a matching node in the scene graph for the given node path.
-        // It's possible that a PartManipulatorPropertySet for this node has already
-        // been loaded once before, and that the scene has already been altered by
-        // inserting a MatrixTransform above the target node.
-        //
-        // Try modifying the node path to include a MatrixTransform and search for the
-        // target node again.
-
-        std::string to_insert( "MatrixTransform:0" );
-        node_path_string_vector.insert( node_path_string_vector.end(), to_insert );
-
-        std::string modified_node_path_string = boost::join( node_path_string_vector, "," );
-
-        osg::NodePath modified_node_path = osgwTools::stringToNodePath(
-            modified_node_path_string,
-            ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()
-        );
-
-        if( node_path_string_vector.size() == modified_node_path.size() )
-        {
-            // we found the target node using the modified node path
-
-            // TODO: check that the MatrixTransform was created by us
-            // if it is, store a reference to it
-        }
-    }
-
-    return true;
-}*/
 
 void PartManipulatorPropertySet::CreateSkeleton()
 {
-    //AddProperty( "ParentUUID", "", "parent uuid" );
-
     AddProperty( "NodePath", "", "node path" );
-    //AddProperty( "ModifiedNodePath", "", "modified node path" );
 
     AddProperty( "Transform_Translation_X", 0.0, "x" );
     AddProperty( "Transform_Translation_Y", 0.0, "y" );
@@ -270,58 +172,7 @@ void PartManipulatorPropertySet::InsertTransformNodeCallback()
         m_connections.DropConnections();
     }
 
-    /*GetProperty( "Transform_Translation_X" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
-    );
-    GetProperty( "Transform_Translation_Y" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
-    );
-    GetProperty( "Transform_Translation_Z" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
-    );
-
-    GetProperty( "Transform_Rotation_X" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
-    );
-    GetProperty( "Transform_Rotation_Y" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
-    );
-    GetProperty( "Transform_Rotation_Z" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
-    );*/
     ConnectValueChangedSignals();
-
-    //std::cout << "inserted MatrixTransform node" << std::endl << std::flush;
-}
-
-void PartManipulatorPropertySet::ProcessNodePath( propertystore::PropertyPtr prop )
-{
-    std::string node_path_string = boost::any_cast< std::string >( GetPropertyValue( "NodePath" ) );
-
-    std::cout << "[ProcessNodePath] NodePath = " << node_path_string << std::endl << std::flush;
-
-    //std::vector< std::string > node_path_string_vector;
-
-    //boost::split( node_path_string_vector, node_path_string, boost::is_any_of(",") );
-
-    osg::NodePath node_path = osgwTools::stringToNodePath(
-        node_path_string,
-        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()
-    );
-
-    if( osgwTools::nodePathToString( node_path ) == node_path_string )
-    {
-        // We found our "target" node in the scene graph using the node path.
-        m_nodePath = node_path;
-
-        // schedule the insertion of a new MatrixTransform node
-        {
-            boost::mutex::scoped_lock lock( m_connectionsLock );
-            CONNECTSIGNAL_0( "App.LatePreFrame", void(),
-                             &PartManipulatorPropertySet::InsertTransformNodeCallback,
-                             m_connections, normal_Priority );
-        }
-    }
 }
 
 osg::Matrix PartManipulatorPropertySet::CalculateNewTransform()
@@ -348,24 +199,6 @@ osg::Matrix PartManipulatorPropertySet::CalculateNewTransform()
 
 void PartManipulatorPropertySet::CalculateNewTransformSlot( propertystore::PropertyPtr prop )
 {
-    /*osg::Matrix translation = osg::Matrix::translate( boost::any_cast< double >( GetPropertyValue( "Transform_Translation_X" ) ),
-                                                      boost::any_cast< double >( GetPropertyValue( "Transform_Translation_Y" ) ),
-                                                      boost::any_cast< double >( GetPropertyValue( "Transform_Translation_Z" ) ) );
-
-    osg::Matrix rotation = osg::Matrix::rotate( boost::any_cast< double >( GetPropertyValue( "Transform_Rotation_X" ) ),
-                                                osg::Vec3d( 1.0, 0.0, 0.0 ),
-                                                boost::any_cast< double >( GetPropertyValue( "Transform_Rotation_Y" ) ),
-                                                osg::Vec3d( 0.0, 1.0, 0.0 ),
-                                                boost::any_cast< double >( GetPropertyValue( "Transform_Rotation_Z" ) ),
-                                                osg::Vec3d( 0.0, 0.0, 1.0 ) );
-
-    osg::BoundingBox bbox;
-    bbox.expandBy( m_nodePath.back()->getBound() );
-    osg::Vec3d bbox_center = bbox.center();
-
-    osg::Matrix bbox_trans = osg::Matrix::translate( bbox_center );
-
-    osg::Matrix new_matrix = osg::Matrix::identity() * osg::Matrix::inverse( bbox_trans ) * rotation * bbox_trans * translation;*/
     osg::Matrix new_matrix = CalculateNewTransform();
 
     {

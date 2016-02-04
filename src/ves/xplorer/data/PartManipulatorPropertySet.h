@@ -34,7 +34,6 @@ public:
 
     virtual propertystore::PropertySetPtr CreateNew();
 
-    //virtual bool Load();
     void InitializeWithNodePath( const std::string& );
 private:
     void CreateSkeleton();
@@ -42,8 +41,6 @@ private:
     void UpdateTransformCallback();
 
     void InsertTransformNodeCallback();
-
-    void ProcessNodePath( propertystore::PropertyPtr );
 
     osg::Matrix CalculateNewTransform();
     void CalculateNewTransformSlot( propertystore::PropertyPtr );
@@ -59,8 +56,6 @@ private:
 
     osg::ref_ptr< osg::MatrixTransform > m_transformNode;
     osg::ref_ptr< osg::Node > m_targetNode;
-
-    osg::NodePath m_nodePath;
 };
 }
 }
