@@ -64,6 +64,8 @@ private:
     vpr::Thread* m_partManipThread;
 
     void StartPartManipulatorScript();
+    void StopPartManipulatorScript();
+    void HandleCADSelection( bool const& );
 
     switchwire::ScopedConnectionList m_connections;
 

@@ -82,6 +82,11 @@ ScriptingTab::ScriptingTab(QWidget *parent) :
                      &ScriptingTab::ApplyPartManipulatorPropertySets,
                      m_connections, normal_Priority );
 
+    CONNECTSIGNALS_1( "%CADSelection",
+                      void( bool const& ),
+                      &ScriptingTab::HandleCADSelection,
+                      m_connections, any_SignalType, normal_Priority );
+
     switchwire::EventManager::instance()->RegisterSignal(
         &m_destroySignal,
         "ScriptingTab.Destroy" );
@@ -91,10 +96,7 @@ ScriptingTab::ScriptingTab(QWidget *parent) :
 ////////////////////////////////////////////////////////////////////////////////
 ScriptingTab::~ScriptingTab()
 {
-    m_destroySignal.signal( true );
-
-    m_partManipThread->join();
-    delete m_partManipThread;
+    StopPartManipulatorScript();
 
     delete ui;
     for( size_t idx = 0; idx < m_threads.size(); ++idx )
@@ -244,16 +246,45 @@ void ScriptingTab::ApplyPartManipulatorPropertySets()
 
 void ScriptingTab::StartPartManipulatorScript()
 {
-    std::string part_manip_path;
-    vpr::System::getenv( "XPLORER_BASE_DIR", part_manip_path );
-    part_manip_path += "/share/vesuite/squirrel/part_manipulator.nut";
+    if( !m_partManipThread )
+    {
+        std::string part_manip_path;
+        vpr::System::getenv( "XPLORER_BASE_DIR", part_manip_path );
+        part_manip_path += "/share/vesuite/squirrel/part_manipulator.nut";
 
-    QFile part_manip_file( part_manip_path.c_str() );
-    part_manip_file.open( QIODevice::ReadOnly | QIODevice::Text );
-    QString s;
-    QTextStream in( &part_manip_file );
-    s.append( in.readAll() );
+        QFile part_manip_file( part_manip_path.c_str() );
+        part_manip_file.open( QIODevice::ReadOnly | QIODevice::Text );
+        QString s;
+        QTextStream in( &part_manip_file );
+        s.append( in.readAll() );
 
-    m_partManipThread = new vpr::Thread( boost::bind( &ScriptingTab::runScript, this, s.toStdString() ) );
+        m_partManipThread = new vpr::Thread( boost::bind( &ScriptingTab::runScript, this, s.toStdString() ) );
+    }
+}
+
+void ScriptingTab::StopPartManipulatorScript()
+{
+    if( m_partManipThread )
+    {
+        m_destroySignal.signal( true );
+
+        m_partManipThread->join();
+        delete m_partManipThread;
+        m_partManipThread = NULL;
+    }
+}
+
+void ScriptingTab::HandleCADSelection( bool const& enabled )
+{
+    if( enabled )
+    {
+        std::cout << "Stopping part manipulator script..." << std::endl << std::flush;
+        StopPartManipulatorScript();
+    }
+    else
+    {
+        std::cout << "Starting part manipulator script..." << std::endl << std::flush;
+        StartPartManipulatorScript();
+    }
 }
 }} // ves::conductor
