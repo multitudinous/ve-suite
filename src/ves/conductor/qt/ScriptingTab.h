@@ -61,6 +61,10 @@ private:
     /// Stores thread pointer so we can clean up at the end
     std::vector< vpr::Thread* > m_threads;
 
+    vpr::Thread* m_partManipThread;
+
+    void StartPartManipulatorScript();
+
     switchwire::ScopedConnectionList m_connections;
 
     typedef switchwire::Event< void( bool ) > VoidBoolSignalType;

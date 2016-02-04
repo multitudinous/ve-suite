@@ -106,6 +106,7 @@ install(
 )
 
 add_subdirectory(examples)
+add_subdirectory(squirrel)
 #add_subdirectory(tools)
 
 # icons and .desktop files for Linux (ignore everything else for now)

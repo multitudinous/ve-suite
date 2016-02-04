@@ -4,6 +4,7 @@
 
 #include <QtGui/QFileDialog>
 #include <QtCore/QFile>
+#include <QtCore/QTextStream>
 
 #include <switchwire/EventManager.h>
 #include <switchwire/OptionalMacros.h>
@@ -14,6 +15,7 @@
 #include <ves/xplorer/data/PartManipulatorPropertySet.h>
 
 #include <vpr/Thread/Thread.h>
+#include <vpr/System.h>
 
 namespace ves
 {
@@ -24,7 +26,8 @@ ScriptingTab::ScriptingTab(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ScriptingTab),
     m_currentLoadButton(0),
-    m_fileDialog(0)
+    m_fileDialog(0),
+    m_partManipThread(0)
 {
     ui->setupUi(this);
 
@@ -82,11 +85,16 @@ ScriptingTab::ScriptingTab(QWidget *parent) :
     switchwire::EventManager::instance()->RegisterSignal(
         &m_destroySignal,
         "ScriptingTab.Destroy" );
+
+    StartPartManipulatorScript();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ScriptingTab::~ScriptingTab()
 {
     m_destroySignal.signal( true );
+
+    m_partManipThread->join();
+    delete m_partManipThread;
 
     delete ui;
     for( size_t idx = 0; idx < m_threads.size(); ++idx )
@@ -232,5 +240,20 @@ void ScriptingTab::ApplyPartManipulatorPropertySets()
             static_cast< ves::xplorer::data::PartManipulatorPropertySet* >( set.get() )->InitializeWithNodePath( *i );
         }
     }
+}
+
+void ScriptingTab::StartPartManipulatorScript()
+{
+    std::string part_manip_path;
+    vpr::System::getenv( "XPLORER_BASE_DIR", part_manip_path );
+    part_manip_path += "/share/vesuite/squirrel/part_manipulator.nut";
+
+    QFile part_manip_file( part_manip_path.c_str() );
+    part_manip_file.open( QIODevice::ReadOnly | QIODevice::Text );
+    QString s;
+    QTextStream in( &part_manip_file );
+    s.append( in.readAll() );
+
+    m_partManipThread = new vpr::Thread( boost::bind( &ScriptingTab::runScript, this, s.toStdString() ) );
 }
 }} // ves::conductor
