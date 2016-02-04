@@ -218,6 +218,8 @@ class MovePartState extends State
         m_buttonReceiverMap["Face_Right"].ConnectToSignal( "GameController.Button2" );
         m_buttonReceiverMap["Analog_Left"].ConnectToSignal( "GameController.Button10" );
         m_buttonReceiverMap["Analog_Right"].ConnectToSignal( "GameController.Button11" );
+        m_buttonReceiverMap["Center_Left"].ConnectToSignal( "GameController.Button8" );
+        m_buttonReceiverMap["Center_Right"].ConnectToSignal( "GameController.Button9" );
 
         SetControlModeSignal.signal( ControlMode.USER_DEFINED );
         // TODO: record the original position of the selected object
@@ -287,6 +289,32 @@ class MovePartState extends State
         }
 
         SnapRotation();
+
+        // reset translation
+        if( m_buttonReceiverMap["Center_Left"].Pending() )
+        {
+            local cl_button = m_buttonReceiverMap["Center_Left"].Pop();
+            if( cl_button != m_previousStateMap["Center_Left"] && cl_button == DigitalState.ON )
+            {
+                m_set.SetTranslationX( 0.0 );
+                m_set.SetTranslationY( 0.0 );
+                m_set.SetTranslationZ( 0.0 );
+            }
+            m_previousStateMap["Center_Left"] = cl_button;
+        }
+
+        // reset rotation
+        if( m_buttonReceiverMap["Center_Right"].Pending() )
+        {
+            local cr_button = m_buttonReceiverMap["Center_Right"].Pop();
+            if( cr_button != m_previousStateMap["Center_Right"] && cr_button == DigitalState.ON )
+            {
+                m_set.SetRotationX( 0.0 );
+                m_set.SetRotationY( 0.0 );
+                m_set.SetRotationZ( 0.0 );
+            }
+            m_previousStateMap["Center_Right"] = cr_button;
+        }
     }
 
     function ToggleAnalogMode()
@@ -507,7 +535,9 @@ class MovePartState extends State
         "Face_Left",
         "Face_Right",
         "Analog_Left",
-        "Analog_Right"
+        "Analog_Right",
+        "Center_Left",
+        "Center_Right"
     ];
 
     TWO_PI = 2.0 * PI;
