@@ -10,6 +10,8 @@
 #include <switchwire/Version.h>
 
 #include <ves/conductor/qt/scriptingTools/SquirrelConnection.h>
+#include <ves/xplorer/data/DatabaseManager.h>
+#include <ves/xplorer/data/PartManipulatorPropertySet.h>
 
 #include <vpr/Thread/Thread.h>
 
@@ -71,6 +73,11 @@ ScriptingTab::ScriptingTab(QWidget *parent) :
     CONNECTSIGNALS_2( "%AssociateScript", void( const std::string&, int ),
                       &ScriptingTab::AssociateScript,
                       m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNAL_0( "VesFileLoaded",
+                     void( std::string const & ),
+                     &ScriptingTab::ApplyPartManipulatorPropertySets,
+                     m_connections, normal_Priority );
 
     switchwire::EventManager::instance()->RegisterSignal(
         &m_destroySignal,
@@ -209,4 +216,21 @@ void ScriptingTab::DelayedSetButtonText( QPushButton* button, const QString& tex
     button->setText( text );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void ScriptingTab::ApplyPartManipulatorPropertySets()
+{
+    ves::xplorer::data::DatabaseManager* db_manager = ves::xplorer::data::DatabaseManager::instance();
+
+    if( db_manager->TableExists( "PartManipulatorPropertySet" ) )
+    {
+        std::vector< std::string > paths = db_manager->GetStringVector( "PartManipulatorPropertySet", "NodePath" );
+
+        std::vector< std::string >::const_iterator i;
+
+        for( i = paths.begin(); i != paths.end(); i++ )
+        {
+            propertystore::PropertySetPtr set( new ves::xplorer::data::PartManipulatorPropertySet() );
+            static_cast< ves::xplorer::data::PartManipulatorPropertySet* >( set.get() )->InitializeWithNodePath( *i );
+        }
+    }
+}
 }} // ves::conductor

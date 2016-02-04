@@ -65,6 +65,8 @@ private:
 
     typedef switchwire::Event< void( bool ) > VoidBoolSignalType;
     VoidBoolSignalType m_destroySignal;
+
+    void ApplyPartManipulatorPropertySets();
 };
 
 }} // ves::conductor
