@@ -320,7 +320,7 @@ class PartManipulatorPropertySetWrapper
 public:
     PartManipulatorPropertySetWrapper();
 
-    bool LoadByNodePath( const std::string& node_path );
+    bool InitializeWithNodePath( const std::string& node_path );
 
     double GetTranslationX();
     double GetTranslationY();

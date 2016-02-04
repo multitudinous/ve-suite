@@ -223,11 +223,13 @@ class MovePartState extends State
 
         SetControlModeSignal.signal( ControlMode.USER_DEFINED );
         // TODO: record the original position of the selected object
-        m_set.LoadByNodePath( m_nodePath );
+        m_set.InitializeWithNodePath( m_nodePath );
     }
 
     function OnExit( context )
     {
+        m_set.Save();
+
         foreach( a in AXES )
         {
             m_axisReceiverMap[a].Disconnect();

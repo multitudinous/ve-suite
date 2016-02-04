@@ -44,7 +44,11 @@ private:
     void InsertTransformNodeCallback();
 
     void ProcessNodePath( propertystore::PropertyPtr );
-    void CalculateNewTransform( propertystore::PropertyPtr );
+
+    osg::Matrix CalculateNewTransform();
+    void CalculateNewTransformSlot( propertystore::PropertyPtr );
+
+    void ConnectValueChangedSignals();
 
     switchwire::ScopedConnectionList m_connections;
 
@@ -54,6 +58,7 @@ private:
     osg::Matrix m_transform;
 
     osg::ref_ptr< osg::MatrixTransform > m_transformNode;
+    osg::ref_ptr< osg::Node > m_targetNode;
 
     osg::NodePath m_nodePath;
 };

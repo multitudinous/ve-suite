@@ -238,15 +238,9 @@ PartManipulatorPropertySetWrapper::PartManipulatorPropertySetWrapper()
 
 }
 
-bool PartManipulatorPropertySetWrapper::LoadByNodePath( const std::string& node_path )
+bool PartManipulatorPropertySetWrapper::InitializeWithNodePath( const std::string& node_path )
 {
-    bool did_load = m_set->LoadByKey( "NodePath", node_path );
-
-    if( !did_load )
-    {
-        m_set->SetPropertyValue( "NodePath", node_path );
-    }
-    return true;
+    static_cast< ves::xplorer::data::PartManipulatorPropertySet* >( m_set.get() )->InitializeWithNodePath( node_path );
 }
 
 double PartManipulatorPropertySetWrapper::GetTranslationX()
@@ -311,5 +305,12 @@ void PartManipulatorPropertySetWrapper::SetRotationZ( double z )
 
 bool PartManipulatorPropertySetWrapper::Save()
 {
-    return m_set->Save();
+    if( m_set->IsDirty() )
+    {
+        return m_set->Save();
+    }
+    else
+    {
+        return false;
+    }
 }

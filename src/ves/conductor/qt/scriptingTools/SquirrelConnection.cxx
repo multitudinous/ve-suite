@@ -339,7 +339,7 @@ void SquirrelConnection::BindSpecialClasses()
                                  Sqrat::DefaultVM::Get(),
                                  "PartManipulatorPropertySet"
                              )
-        .Func( "LoadByNodePath", &PartManipulatorPropertySetWrapper::LoadByNodePath )
+        .Func( "InitializeWithNodePath", &PartManipulatorPropertySetWrapper::InitializeWithNodePath )
         .Func( "GetTranslationX", &PartManipulatorPropertySetWrapper::GetTranslationX )
         .Func( "GetTranslationY", &PartManipulatorPropertySetWrapper::GetTranslationY )
         .Func( "GetTranslationZ", &PartManipulatorPropertySetWrapper::GetTranslationZ )

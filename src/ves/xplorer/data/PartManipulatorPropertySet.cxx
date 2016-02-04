@@ -31,9 +31,9 @@ PartManipulatorPropertySet::PartManipulatorPropertySet()
 
     CreateSkeleton();
 
-    GetProperty( "NodePath" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::ProcessNodePath, this, _1 )
-    );
+    //GetProperty( "NodePath" )->SignalValueChanged.connect(
+    //    boost::bind( &PartManipulatorPropertySet::ProcessNodePath, this, _1 )
+    //);
 
     m_transformNode->addDescription( "CreatedByPartManipulatorPropertySet" );
 }
@@ -54,7 +54,90 @@ propertystore::PropertySetPtr PartManipulatorPropertySet::CreateNew()
 
 void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node_path )
 {
+    bool did_load_by_key = LoadByKey( "NodePath", node_path );
 
+    if( did_load_by_key )
+    {
+        // the node path was found in the database
+
+        // locate it in the scene graph
+        osg::NodePath node_path_vector = osgwTools::stringToNodePath(
+            node_path,
+            ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()
+        );
+
+        m_targetNode = node_path_vector.back();
+
+        m_transform = CalculateNewTransform();
+        m_transformNode->setMatrix( m_transform );
+
+        // schedule the insertion of the MatrixTransform node
+        {
+            boost::mutex::scoped_lock lock( m_connectionsLock );
+            CONNECTSIGNAL_0( "App.LatePreFrame", void(),
+                             &PartManipulatorPropertySet::InsertTransformNodeCallback,
+                             m_connections, normal_Priority );
+        }
+    }
+    else
+    {
+        // the node path was not found in the database
+
+        // locate it in the scene graph
+        osg::NodePath node_path_vector = osgwTools::stringToNodePath(
+            node_path,
+            ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()
+        );
+
+        m_targetNode = node_path_vector.back();
+
+        // check if this node has a single parent that's a MatrixTransform created by us
+        if( 1 == m_targetNode->getNumParents() )
+        {
+            if( osg::MatrixTransform* mt = dynamic_cast< osg::MatrixTransform* >( m_targetNode->getParent( 0 ) ) )
+            {
+                osg::Node::DescriptionList descs = m_targetNode->getDescriptions();
+
+                osg::Node::DescriptionList::const_iterator i;
+
+                for( i = descs.begin(); i != descs.end(); i++ )
+                {
+                    if( "CreatedByPartManipulatorPropertySet" == *i )
+                    {
+                        // re-use the existing MatrixTransform and property set
+                        std::vector< std::string > node_path_string_vector;
+
+                        boost::split( node_path_string_vector, node_path, boost::is_any_of(",") );
+
+                        node_path_string_vector.erase( node_path_string_vector.end() - 1 );
+
+                        std::string modified_node_path_string = boost::join( node_path_string_vector, "," );
+
+                        if( LoadByKey( "NodePath", modified_node_path_string ) )
+                        {
+                            m_transformNode = mt;
+                            m_transform = mt->getMatrix();
+
+                            ConnectValueChangedSignals();
+                        }
+
+                        return;
+                    }
+                }
+            }
+        }
+        // if we reach this point, it means that a property set for this node path
+        // was not found in the database, and that this node path appears to have
+        // *not* been modified by us before
+
+        // schedule the insertion of the MatrixTransform node
+        {
+            boost::mutex::scoped_lock lock( m_connectionsLock );
+            CONNECTSIGNAL_0( "App.LatePreFrame", void(),
+                             &PartManipulatorPropertySet::InsertTransformNodeCallback,
+                             m_connections, normal_Priority );
+        }
+    }
 }
 /*bool PartManipulatorPropertySet::Load()
 {
@@ -150,7 +233,7 @@ void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node
 
 void PartManipulatorPropertySet::CreateSkeleton()
 {
-    AddProperty( "ParentUUID", "", "parent uuid" );
+    //AddProperty( "ParentUUID", "", "parent uuid" );
 
     AddProperty( "NodePath", "", "node path" );
     //AddProperty( "ModifiedNodePath", "", "modified node path" );
@@ -180,34 +263,35 @@ void PartManipulatorPropertySet::UpdateTransformCallback()
 void PartManipulatorPropertySet::InsertTransformNodeCallback()
 {
     // insert the MatrixTransform node into the scene graph
-    osgwTools::insertAbove( m_nodePath.back(), m_transformNode.get() );
+    osgwTools::insertAbove( m_targetNode, m_transformNode.get() );
 
     {
         boost::mutex::scoped_lock lock( m_connectionsLock );
         m_connections.DropConnections();
     }
 
-    GetProperty( "Transform_Translation_X" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransform, this, _1 )
+    /*GetProperty( "Transform_Translation_X" )->SignalValueChanged.connect(
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
     );
     GetProperty( "Transform_Translation_Y" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransform, this, _1 )
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
     );
     GetProperty( "Transform_Translation_Z" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransform, this, _1 )
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
     );
 
     GetProperty( "Transform_Rotation_X" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransform, this, _1 )
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
     );
     GetProperty( "Transform_Rotation_Y" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransform, this, _1 )
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
     );
     GetProperty( "Transform_Rotation_Z" )->SignalValueChanged.connect(
-        boost::bind( &PartManipulatorPropertySet::CalculateNewTransform, this, _1 )
-    );
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
+    );*/
+    ConnectValueChangedSignals();
 
-    std::cout << "inserted MatrixTransform node" << std::endl << std::flush;
+    //std::cout << "inserted MatrixTransform node" << std::endl << std::flush;
 }
 
 void PartManipulatorPropertySet::ProcessNodePath( propertystore::PropertyPtr prop )
@@ -240,9 +324,31 @@ void PartManipulatorPropertySet::ProcessNodePath( propertystore::PropertyPtr pro
     }
 }
 
-void PartManipulatorPropertySet::CalculateNewTransform( propertystore::PropertyPtr prop )
+osg::Matrix PartManipulatorPropertySet::CalculateNewTransform()
 {
     osg::Matrix translation = osg::Matrix::translate( boost::any_cast< double >( GetPropertyValue( "Transform_Translation_X" ) ),
+                                                      boost::any_cast< double >( GetPropertyValue( "Transform_Translation_Y" ) ),
+                                                      boost::any_cast< double >( GetPropertyValue( "Transform_Translation_Z" ) ) );
+
+    osg::Matrix rotation = osg::Matrix::rotate( boost::any_cast< double >( GetPropertyValue( "Transform_Rotation_X" ) ),
+                                                osg::Vec3d( 1.0, 0.0, 0.0 ),
+                                                boost::any_cast< double >( GetPropertyValue( "Transform_Rotation_Y" ) ),
+                                                osg::Vec3d( 0.0, 1.0, 0.0 ),
+                                                boost::any_cast< double >( GetPropertyValue( "Transform_Rotation_Z" ) ),
+                                                osg::Vec3d( 0.0, 0.0, 1.0 ) );
+
+    osg::BoundingBox bbox;
+    bbox.expandBy( m_targetNode->getBound() );
+    osg::Vec3d bbox_center = bbox.center();
+
+    osg::Matrix bbox_trans = osg::Matrix::translate( bbox_center );
+
+    return osg::Matrix::identity() * osg::Matrix::inverse( bbox_trans ) * rotation * bbox_trans * translation;
+}
+
+void PartManipulatorPropertySet::CalculateNewTransformSlot( propertystore::PropertyPtr prop )
+{
+    /*osg::Matrix translation = osg::Matrix::translate( boost::any_cast< double >( GetPropertyValue( "Transform_Translation_X" ) ),
                                                       boost::any_cast< double >( GetPropertyValue( "Transform_Translation_Y" ) ),
                                                       boost::any_cast< double >( GetPropertyValue( "Transform_Translation_Z" ) ) );
 
@@ -259,7 +365,8 @@ void PartManipulatorPropertySet::CalculateNewTransform( propertystore::PropertyP
 
     osg::Matrix bbox_trans = osg::Matrix::translate( bbox_center );
 
-    osg::Matrix new_matrix = osg::Matrix::identity() * osg::Matrix::inverse( bbox_trans ) * rotation * bbox_trans * translation;
+    osg::Matrix new_matrix = osg::Matrix::identity() * osg::Matrix::inverse( bbox_trans ) * rotation * bbox_trans * translation;*/
+    osg::Matrix new_matrix = CalculateNewTransform();
 
     {
         boost::mutex::scoped_lock lock( m_dataLock );
@@ -274,6 +381,28 @@ void PartManipulatorPropertySet::CalculateNewTransform( propertystore::PropertyP
     }
 }
 
+void PartManipulatorPropertySet::ConnectValueChangedSignals()
+{
+    GetProperty( "Transform_Translation_X" )->SignalValueChanged.connect(
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
+    );
+    GetProperty( "Transform_Translation_Y" )->SignalValueChanged.connect(
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
+    );
+    GetProperty( "Transform_Translation_Z" )->SignalValueChanged.connect(
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
+    );
+
+    GetProperty( "Transform_Rotation_X" )->SignalValueChanged.connect(
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
+    );
+    GetProperty( "Transform_Rotation_Y" )->SignalValueChanged.connect(
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
+    );
+    GetProperty( "Transform_Rotation_Z" )->SignalValueChanged.connect(
+        boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
+    );
+}
 } // namespace data
 } // namespace xplorer
 } // namespace ves
