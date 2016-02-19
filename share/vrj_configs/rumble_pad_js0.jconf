@@ -69,6 +69,16 @@
          <device>Joystick0</device>
          <unit>15</unit>
       </digital_proxy>
+      <!--
+         Elsewhere in your VR Juggler configuration, create an
+         alias called "VESJoystick0Selection" and map it to one
+         of the physical button proxies for the device.
+      -->
+      <!--
+      <alias name="VESJoystick0Selection" version="1">
+         <proxy>VESJoystick0Digital0</proxy>
+      </alias>
+      -->
       <hat_proxy name="VESJoystick0Hat0" version="1">
          <device>Joystick0</device>
          <unit>0</unit>
@@ -89,14 +99,20 @@
          <device>Joystick0</device>
          <unit>3</unit>
       </analog_proxy>
-       <!--analog_proxy name="VESJoystick0Axis4" version="1">
+      <!--
+         The Logitech Rumble Pad devices do not have analog triggers
+         (axes 4 and 5).
+      -->
+      <!--
+      <analog_proxy name="VESJoystick0Axis4" version="1">
          <device>Joystick0</device>
          <unit>4</unit>
       </analog_proxy>
       <analog_proxy name="VESJoystick0Axis5" version="1">
          <device>Joystick0</device>
          <unit>5</unit>
-      </analog_proxy-->
+      </analog_proxy>
+      -->
    </elements>
 </configuration>
 

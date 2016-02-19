@@ -218,6 +218,8 @@ public:
     /// All GameController events get delivered here
     void OnButton11Event( gadget::DigitalState::State event );
 
+    void OnSelectionButtonEvent( gadget::DigitalState::State event );
+
     void OnHat0Event( gadget::HatState::State event );
 private:
     ///Setup the start and end point for a mouse pick

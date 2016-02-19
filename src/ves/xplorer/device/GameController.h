@@ -94,6 +94,11 @@ private:
     GamePadClickInterface m_button13EventInterface;
     GamePadClickInterface m_button14EventInterface;
 
+    //A "virtual" button, provided by an alias in the VR Juggler config,
+    //to be used to toggle the selection line. The alias should map to
+    //a real button on the device.
+    GamePadClickInterface m_selectionButtonEventInterface;
+
     typedef gadget::HatEventInterface< gadget::event::all_events_tag,
         gadget::event::synchronized_tag > GamePadHatInterface;
     GamePadHatInterface m_hat0EventInterface;
@@ -158,6 +163,8 @@ private:
     void OnButton10Event( gadget::DigitalState::State event );
     /// All GameController events get delivered here
     void OnButton11Event( gadget::DigitalState::State event );
+
+    void OnSelectionButtonEvent( gadget::DigitalState::State event );
 
     void OnHat0Event( gadget::HatState::State event );
 };

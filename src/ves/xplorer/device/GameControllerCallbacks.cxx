@@ -260,6 +260,8 @@ GameControllerCallbacks::GameControllerCallbacks()
     m_gameControllerButtonSignalMap["GameController.Button10"] = new GameControllerButtonSignal_type;
     m_gameControllerButtonSignalMap["GameController.Button11"] = new GameControllerButtonSignal_type;
 
+    m_gameControllerButtonSignalMap["GameController.SelectionButton"] = new GameControllerButtonSignal_type;
+
     m_gameControllerAnalogSignalMap["GameController.Axis0"] = new GameControllerAnalogSignal_type;
     m_gameControllerAnalogSignalMap["GameController.Axis1"] = new GameControllerAnalogSignal_type;
     m_gameControllerAnalogSignalMap["GameController.Axis2"] = new GameControllerAnalogSignal_type;
@@ -1157,6 +1159,11 @@ void GameControllerCallbacks::OnButton11Event( gadget::DigitalState::State event
         default:
             break;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameControllerCallbacks::OnSelectionButtonEvent( gadget::DigitalState::State event )
+{
+    m_gameControllerButtonSignalMap["GameController.SelectionButton"]->signal( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnHat0Event( gadget::HatState::State event )

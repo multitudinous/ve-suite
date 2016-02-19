@@ -69,6 +69,16 @@
          <device>Joystick0</device>
          <unit>15</unit>
       </digital_proxy>
+      <!--
+         Elsewhere in your VR Juggler configuration, create an
+         alias called "VESJoystick0Selection" and map it to one
+         of the physical button proxies for the device.
+      -->
+      <!--
+      <alias name="VESJoystick0Selection" version="1">
+         <proxy>VESJoystick0Digital0</proxy>
+      </alias>
+      -->
       <hat_proxy name="VESJoystick0Hat0" version="1">
          <device>Joystick0</device>
          <unit>0</unit>

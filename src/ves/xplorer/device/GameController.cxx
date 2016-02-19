@@ -74,6 +74,9 @@ void GameController::InitInterfaces( const std::string deviceName )
     
     m_button11EventInterface.init( deviceName + "Digital11" );
 
+    //The "virtual" selection button
+    m_selectionButtonEventInterface.init( deviceName + "Selection" );
+
     //Hat
     m_hat0EventInterface.init( deviceName + "Hat0" );
     
@@ -126,6 +129,9 @@ void GameController::InitInterfaces( const std::string deviceName )
     m_button10EventInterface.addCallback( boost::bind( &GameController::OnButton10Event, this, _1 ) );
     
     m_button11EventInterface.addCallback( boost::bind( &GameController::OnButton11Event, this, _1 ) );
+
+    //"Virtual" selection button
+    m_selectionButtonEventInterface.addCallback( boost::bind( &GameController::OnSelectionButtonEvent, this, _1 ) );
 
     //Hat
     m_hat0EventInterface.addCallback( boost::bind( &GameController::OnHat0Event, this, _1 ) );
@@ -184,6 +190,9 @@ void GameController::ConnectInterfaces( device::GameControllerCallbacks* const c
     
     m_button11EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnButton11Event, controller, _1 ) );
 
+    //"Virtual" selection button
+    m_selectionButtonEventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnSelectionButtonEvent, controller, _1 ) );
+
     //Hat
     m_hat0EventInterface.addCallback( boost::bind( &GameControllerCallbacks::OnHat0Event, controller, _1 ) );
 
@@ -233,6 +242,9 @@ void GameController::DisconnectInterfaces( device::GameControllerCallbacks* cons
     m_button10EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &GameControllerCallbacks::OnButton10Event, controller, _1 ) );
     
     m_button11EventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &GameControllerCallbacks::OnButton11Event, controller, _1 ) );
+
+    //"Virtual" selection button
+    m_selectionButtonEventInterface.removeCallback<gadget::event::digital_event_tag>( boost::bind( &GameControllerCallbacks::OnSelectionButtonEvent, controller, _1 ) );
 
     //Hat
     m_hat0EventInterface.removeCallback<gadget::event::hat_event_tag>( boost::bind( &GameControllerCallbacks::OnHat0Event, controller, _1 ) );
@@ -418,6 +430,15 @@ void GameController::OnButton10Event( gadget::DigitalState::State event )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameController::OnButton11Event( gadget::DigitalState::State event )
+{
+    if( event == gadget::DigitalState::OFF )
+    {
+        return;
+    }
+    m_grabControllSignal.signal( m_controllerMask );
+}
+////////////////////////////////////////////////////////////////////////////////
+void GameController::OnSelectionButtonEvent( gadget::DigitalState::State event )
 {
     if( event == gadget::DigitalState::OFF )
     {
