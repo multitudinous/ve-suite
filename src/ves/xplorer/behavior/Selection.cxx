@@ -145,7 +145,16 @@ Selection::Selection()
                       m_connections, any_SignalType, normal_Priority );
 
     ///Handle some wand signals
-    CONNECTSIGNALS_4( "Wand.ButtonRelease0%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
+
+    // Some guards were added to the keyboard/mouse version of Selection::ProcessSelection() to "filter out" events
+    // if the mouse coordinates haven't changed much. This caused existing Wand code that simulated a mouse event
+    // to trigger selection processing to stop working.
+
+    //CONNECTSIGNALS_4( "Wand.ButtonRelease0%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
+    //                  m_connections, any_SignalType, normal_Priority );
+
+    // Wire up "GameController.SelectionButtonRelease"
+    CONNECTSIGNALS_1( "%SelectionButtonRelease", void( gadget::DigitalState::State ), &Selection::ProcessSelection,
                       m_connections, any_SignalType, normal_Priority );
 
     CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
@@ -298,6 +307,12 @@ bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
     UpdateSelectionLine();
     ProcessSelection();
     return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Selection::ProcessSelection( gadget::DigitalState::State event )
+{
+    UpdateSelectionLine();
+    ProcessSelection();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::UpdateSelectionLine()
