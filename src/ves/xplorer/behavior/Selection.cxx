@@ -146,7 +146,7 @@ Selection::Selection()
 
     ///Handle some wand signals
 
-    CONNECTSIGNALS_4( "Wand.ButtonRelease0%", bool( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
+    CONNECTSIGNALS_4( "Wand.ButtonRelease0%", void( gadget::Keys, int, int, int ), &Selection::ProcessSelection,
                       m_connections, any_SignalType, normal_Priority );
 
     // Wire up "GameController.SelectionButtonRelease"
