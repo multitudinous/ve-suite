@@ -8,6 +8,7 @@
 #include <osg/Vec3d>
 #include <osg/MatrixTransform>
 #include <osg/BoundingBox>
+#include <osg/Quat>
 
 #include <osgwTools/NodePathUtils.h>
 #include <osgwTools/InsertRemove.h>
@@ -64,6 +65,8 @@ void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node
 
         m_targetNode = node_path_vector.back();
 
+        GetLocalToWorldRotation( node_path_vector );
+
         m_transform = CalculateNewTransform();
         m_transformNode->setMatrix( m_transform );
 
@@ -86,6 +89,8 @@ void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node
         );
 
         m_targetNode = node_path_vector.back();
+
+        GetLocalToWorldRotation( node_path_vector );
 
         // check if this node has a single parent that's a MatrixTransform created by us
         if( 1 == m_targetNode->getNumParents() )
@@ -197,7 +202,9 @@ osg::Matrix PartManipulatorPropertySet::CalculateNewTransform()
 
     osg::Matrix bbox_trans = osg::Matrix::translate( bbox_center );
 
-    return osg::Matrix::identity() * osg::Matrix::inverse( bbox_trans ) * rotation * bbox_trans * translation;
+    osg::Matrix trans = m_localToWorldRotation * translation * m_localToWorldRotationInverse;
+
+    return osg::Matrix::identity() * osg::Matrix::inverse( bbox_trans ) * rotation * bbox_trans * trans;
 }
 
 void PartManipulatorPropertySet::CalculateNewTransformSlot( propertystore::PropertyPtr prop )
@@ -238,6 +245,21 @@ void PartManipulatorPropertySet::ConnectValueChangedSignals()
     GetProperty( "Transform_Rotation_Z" )->SignalValueChanged.connect(
         boost::bind( &PartManipulatorPropertySet::CalculateNewTransformSlot, this, _1 )
     );
+}
+
+void PartManipulatorPropertySet::GetLocalToWorldRotation( const osg::NodePath& path )
+{
+    osg::Matrix m = osg::computeLocalToWorld( path );
+
+    osg::Vec3d translation;
+    osg::Quat rotation;
+    osg::Vec3d scale;
+    osg::Quat scale_orientation;
+
+    m.decompose( translation, rotation, scale, scale_orientation );
+
+    m_localToWorldRotation = osg::Matrix( rotation );
+    m_localToWorldRotationInverse = osg::Matrix::inverse( m_localToWorldRotation );
 }
 } // namespace data
 } // namespace xplorer
