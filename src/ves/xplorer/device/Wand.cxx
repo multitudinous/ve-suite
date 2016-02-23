@@ -228,12 +228,6 @@ Wand::Wand()
             switchwire::EventManager::button_SignalType );
     }
 
-    ///Register button release "glue" signal
-    evm->RegisterSignal(
-        &m_wandSelectionButtonReleaseGlueSignal,
-        "Wand.SelectionButtonRelease"
-    );
-
     ///Setup Button On
     for( WandButtonOnSignalMapType::const_iterator
             iter = m_wandButtonOnSignalMap.begin();
@@ -789,10 +783,6 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
         UpdateSelectionLine( false );
 
         ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"] ) ).signal( gadget::MBUTTON1, 0, 0, gadget::KEY_UP );
-
-        // fire the "glue" signal
-        m_wandSelectionButtonReleaseGlueSignal.signal( gadget::DigitalState::TOGGLE_OFF );
-
         m_triggerWandMove = true;
 
         //m_buttonMoveState = 0;

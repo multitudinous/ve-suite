@@ -294,9 +294,6 @@ private:
     /// ButtonRelease signal type
     typedef switchwire::Event< void ( gadget::Keys, int, int, int ) > WandButtonOnSignal_type;
 
-    /// A "glue" signal to wire up existing wand selection button code to the newer stuff in Selection
-    switchwire::Event< void ( gadget::DigitalState::State ) > m_wandSelectionButtonReleaseGlueSignal;
-
     /// MouseDoubleClick signal
     /// Params are: button, x, y, z, state (modifier mask OR'd with button mask)
     typedef switchwire::Event< void ( gadget::Keys, int, int, int, int ) > WandDoubleClickSignal_type;

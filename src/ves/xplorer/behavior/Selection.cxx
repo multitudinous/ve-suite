@@ -154,7 +154,6 @@ Selection::Selection()
     //                  m_connections, any_SignalType, normal_Priority );
 
     // Wire up "GameController.SelectionButtonRelease"
-    //     and "Wand.SelectionButtonRelease"
     CONNECTSIGNALS_1( "%SelectionButtonRelease", void( gadget::DigitalState::State ), &Selection::ProcessSelection,
                       m_connections, any_SignalType, normal_Priority );
 
