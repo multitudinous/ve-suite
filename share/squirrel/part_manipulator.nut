@@ -197,6 +197,7 @@ class MovePartState extends State
         foreach( b in BUTTONS )
         {
             m_buttonReceiverMap[b] <- DigitalStateSynchronizedSignalReceiver();
+            m_previousStateMap[b] <- DigitalState.OFF;
         }
     }
 
@@ -260,18 +261,22 @@ class MovePartState extends State
     {
         if( m_buttonReceiverMap["Analog_Left"].Pending() )
         {
-            if( m_buttonReceiverMap["Analog_Left"].Pop() == DigitalState.TOGGLE_ON )
+            local left = m_buttonReceiverMap["Analog_Left"].Pop();
+            if( left != m_previousStateMap["Analog_Left"] && left == DigitalState.ON )
             {
                 ToggleRotateXOrY();
             }
+            m_previousStateMap["Analog_Left"] = left;
         }
 
         if( m_buttonReceiverMap["Analog_Right"].Pending() )
         {
-            if( m_buttonReceiverMap["Analog_Right"].Pop() == DigitalState.TOGGLE_ON )
+            local right = m_buttonReceiverMap["Analog_Right"].Pop();
+            if( right != m_previousStateMap["Analog_Right"] && right == DigitalState.ON )
             {
                 ToggleAnalogMode();
             }
+            m_previousStateMap["Analog_Right"] = right;
         }
 
         if( m_analogMode )
@@ -290,23 +295,27 @@ class MovePartState extends State
         // reset translation
         if( m_buttonReceiverMap["Center_Left"].Pending() )
         {
-            if( m_buttonReceiverMap["Center_Left"].Pop() == DigitalState.TOGGLE_ON )
+            local cl_button = m_buttonReceiverMap["Center_Left"].Pop();
+            if( cl_button != m_previousStateMap["Center_Left"] && cl_button == DigitalState.ON )
             {
                 m_set.SetTranslationX( 0.0 );
                 m_set.SetTranslationY( 0.0 );
                 m_set.SetTranslationZ( 0.0 );
             }
+            m_previousStateMap["Center_Left"] = cl_button;
         }
 
         // reset rotation
         if( m_buttonReceiverMap["Center_Right"].Pending() )
         {
-            if( m_buttonReceiverMap["Center_Right"].Pop() == DigitalState.TOGGLE_ON )
+            local cr_button = m_buttonReceiverMap["Center_Right"].Pop();
+            if( cr_button != m_previousStateMap["Center_Right"] && cr_button == DigitalState.ON )
             {
                 m_set.SetRotationX( 0.0 );
                 m_set.SetRotationY( 0.0 );
                 m_set.SetRotationZ( 0.0 );
             }
+            m_previousStateMap["Center_Right"] = cr_button;
         }
     }
 
@@ -402,67 +411,79 @@ class MovePartState extends State
         // negative (clockwise) rotation about X
         if( m_buttonReceiverMap["Face_Up"].Pending() )
         {
-            if( m_buttonReceiverMap["Face_Up"].Pop() == DigitalState.TOGGLE_ON )
+            local fu_button = m_buttonReceiverMap["Face_Up"].Pop();
+            if( fu_button != m_previousStateMap["Face_Up"] && fu_button == DigitalState.ON )
             {
                 local x_angle = ClampAngle( m_set.GetRotationX() - PI_OVER_FOUR - 0.01 );
                 x_angle = ceil( x_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
                 m_set.SetRotationX( x_angle );
             }
+            m_previousStateMap["Face_Up"] = fu_button;
         }
 
         // positive (counterclockwise) rotation about X
         if( m_buttonReceiverMap["Face_Down"].Pending() )
         {
-            if( m_buttonReceiverMap["Face_Down"].Pop() == DigitalState.TOGGLE_ON )
+            local fd_button = m_buttonReceiverMap["Face_Down"].Pop();
+            if( fd_button != m_previousStateMap["Face_Down"] && fd_button == DigitalState.ON )
             {
                 local x_angle = ClampAngle( m_set.GetRotationX() + PI_OVER_FOUR + 0.01 );
                 x_angle = floor( x_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
                 m_set.SetRotationX( x_angle );
             }
+            m_previousStateMap["Face_Down"] = fd_button;
         }
 
         // negative (clockwise) rotation about Y
         if( m_buttonReceiverMap["Face_Left"].Pending() )
         {
-            if( m_buttonReceiverMap["Face_Left"].Pop() == DigitalState.TOGGLE_ON )
+            local fl_button = m_buttonReceiverMap["Face_Left"].Pop();
+            if( fl_button != m_previousStateMap["Face_Left"] && fl_button == DigitalState.ON )
             {
                 local y_angle = ClampAngle( m_set.GetRotationY() - PI_OVER_FOUR - 0.01 );
                 y_angle = ceil( y_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
                 m_set.SetRotationY( y_angle );
             }
+            m_previousStateMap["Face_Left"] = fl_button;
         }
 
         // positive (counterclockwise) rotation about Y
         if( m_buttonReceiverMap["Face_Right"].Pending() )
         {
-            if( m_buttonReceiverMap["Face_Right"].Pop() == DigitalState.TOGGLE_ON )
+            local fr_button = m_buttonReceiverMap["Face_Right"].Pop();
+            if( fr_button != m_previousStateMap["Face_Right"] && fr_button == DigitalState.ON )
             {
                 local y_angle = ClampAngle( m_set.GetRotationY() + PI_OVER_FOUR + 0.01 );
                 y_angle = floor( y_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
                 m_set.SetRotationY( y_angle );
             }
+            m_previousStateMap["Face_Right"] = fr_button;
         }
 
         // negative (clockwise) rotation about Z
         if( m_buttonReceiverMap["L1"].Pending() )
         {
-            if( m_buttonReceiverMap["L1"].Pop() == DigitalState.TOGGLE_ON )
+            local l1_button = m_buttonReceiverMap["L1"].Pop();
+            if( l1_button != m_previousStateMap["L1"] && l1_button == DigitalState.ON )
             {
                 local z_angle = ClampAngle( m_set.GetRotationZ() - PI_OVER_FOUR - 0.01 );
                 z_angle = ceil( z_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
                 m_set.SetRotationZ( z_angle );
             }
+            m_previousStateMap["L1"] = l1_button;
         }
 
         // positive (counterclockwise) rotation about Z
         if( m_buttonReceiverMap["R1"].Pending() )
         {
-            if( m_buttonReceiverMap["R1"].Pop() == DigitalState.TOGGLE_ON )
+            local r1_button = m_buttonReceiverMap["R1"].Pop();
+            if( r1_button != m_previousStateMap["R1"] && r1_button == DigitalState.ON )
             {
                 local z_angle = ClampAngle( m_set.GetRotationZ() + PI_OVER_FOUR + 0.01 );
                 z_angle = floor( z_angle / PI_OVER_FOUR ) * PI_OVER_FOUR;
                 m_set.SetRotationZ( z_angle );
             }
+            m_previousStateMap["R1"] = r1_button;
         }
     }
 
@@ -488,6 +509,7 @@ class MovePartState extends State
 
     m_axisReceiverMap = {};
     m_buttonReceiverMap = {};
+    m_previousStateMap = {};
 
     m_rotIncrement = null;
 
