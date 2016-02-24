@@ -302,6 +302,9 @@ GameControllerCallbacks::GameControllerCallbacks()
     CONNECTSIGNAL_1( "GameController.ControlMode", void( ControlMode::Mode ),
                      &GameControllerCallbacks::SetControlMode,
                      m_connections, normal_Priority );
+
+    // assume that there's an alias for the wand proxy called VESJoystickWorkaroundPosition
+    m_workaroundPositionInterface.init( "VESJoystickWorkaroundPosition" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 GameControllerCallbacks::~GameControllerCallbacks()
@@ -1352,7 +1355,13 @@ void GameControllerCallbacks::CheckControlState()
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::OnPositionEvent( gmtl::Matrix44f mat )
 {
-    m_controllerPosition = mat;
+    // we ignore the position data in the event, because it appears to contain no
+    // rotation information
+    //
+    // instead, grab data directly from our workaround PositionInterface
+    //
+    //m_controllerPosition = mat;
+    m_controllerPosition = m_workaroundPositionInterface->getData();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::SetControlMode( ControlMode::Mode m )

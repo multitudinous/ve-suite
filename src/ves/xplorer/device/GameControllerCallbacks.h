@@ -245,6 +245,10 @@ private:
     ///THe position of the controller
     gmtl::Matrix44f m_controllerPosition;
 
+    ///WORKAROUND: a "raw" PositionInterface to get the correct position data from a tracked
+    ///controller
+    gadget::PositionInterface m_workaroundPositionInterface;
+
     /// signal for generating the start and end point for selection and other
     ///interaction tools.
     /// Params are: start point and end point
