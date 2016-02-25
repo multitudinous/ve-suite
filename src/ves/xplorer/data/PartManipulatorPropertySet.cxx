@@ -97,7 +97,7 @@ void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node
         {
             if( osg::MatrixTransform* mt = dynamic_cast< osg::MatrixTransform* >( m_targetNode->getParent( 0 ) ) )
             {
-                osg::Node::DescriptionList descs = m_targetNode->getDescriptions();
+                osg::Node::DescriptionList descs = mt->getDescriptions();
 
                 osg::Node::DescriptionList::const_iterator i;
 
@@ -110,16 +110,27 @@ void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node
 
                         boost::split( node_path_string_vector, node_path, boost::is_any_of(",") );
 
-                        node_path_string_vector.erase( node_path_string_vector.end() - 1 );
+                        std::vector< std::string >::reverse_iterator find_it;
+                        find_it = std::find( node_path_string_vector.rbegin(), node_path_string_vector.rend(), "\"MatrixTransform\"" );
 
-                        std::string modified_node_path_string = boost::join( node_path_string_vector, "," );
-
-                        if( LoadByKey( "NodePath", modified_node_path_string ) )
+                        if( find_it != node_path_string_vector.rend() )
                         {
-                            m_transformNode = mt;
-                            m_transform = mt->getMatrix();
+                            node_path_string_vector.erase( (find_it + 1).base(), (find_it - 1).base() );
+                            std::string modified_node_path_string = boost::join( node_path_string_vector, "," );
 
-                            ConnectValueChangedSignals();
+                            if( LoadByKey( "NodePath", modified_node_path_string ) )
+                            {
+                                m_transformNode = mt;
+                                m_transform = mt->getMatrix();
+
+                                ConnectValueChangedSignals();
+                            }
+                            else
+                            {
+                                std::cout << "ERROR: An existing transform created by us was found, "
+                                          << "but the corresponding property set failed to load"
+                                          << std::endl << std::flush;
+                            }
                         }
 
                         return;
