@@ -79,7 +79,7 @@ ScriptingTab::ScriptingTab(QWidget *parent) :
 
     CONNECTSIGNAL_0( "VesFileLoaded",
                      void( std::string const & ),
-                     &ScriptingTab::ApplyPartManipulatorPropertySets,
+                     &ScriptingTab::ScheduleApplyPartManipulatorPropertySets,
                      m_connections, normal_Priority );
 
     CONNECTSIGNALS_1( "%CADSelection",
@@ -226,6 +226,13 @@ void ScriptingTab::DelayedSetButtonText( QPushButton* button, const QString& tex
     button->setText( text );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void ScriptingTab::ScheduleApplyPartManipulatorPropertySets()
+{
+    CONNECTSIGNAL_0( "ScenegraphChanged", void(),
+                     &ScriptingTab::ApplyPartManipulatorPropertySets,
+                     m_scenegraphChangedConnection, normal_Priority );
+}
+
 void ScriptingTab::ApplyPartManipulatorPropertySets()
 {
     ves::xplorer::data::DatabaseManager* db_manager = ves::xplorer::data::DatabaseManager::instance();
@@ -239,9 +246,22 @@ void ScriptingTab::ApplyPartManipulatorPropertySets()
         for( i = paths.begin(); i != paths.end(); i++ )
         {
             propertystore::PropertySetPtr set( new ves::xplorer::data::PartManipulatorPropertySet() );
+            m_loadingPartManipPropertySets.push_back( set );
             static_cast< ves::xplorer::data::PartManipulatorPropertySet* >( set.get() )->InitializeWithNodePath( *i );
         }
     }
+
+    m_scenegraphChangedConnection.DropConnections();
+
+    CONNECTSIGNAL_0( "App.LatePreFrame", void(),
+                     &ScriptingTab::CleanUpLoadingPartManipPropertySets,
+                     m_cleanupConnection, low_Priority );
+}
+
+void ScriptingTab::CleanUpLoadingPartManipPropertySets()
+{
+    m_loadingPartManipPropertySets.clear();
+    m_cleanupConnection.DropConnections();
 }
 
 void ScriptingTab::StartPartManipulatorScript()

@@ -13,6 +13,8 @@
 #include <switchwire/Event.h>
 #endif
 
+#include <propertystore/PropertySetPtr.h>
+
 namespace Ui {
 class ScriptingTab;
 }
@@ -68,11 +70,17 @@ private:
     void HandleCADSelection( bool const& );
 
     switchwire::ScopedConnectionList m_connections;
+    switchwire::ScopedConnectionList m_scenegraphChangedConnection;
+    switchwire::ScopedConnectionList m_cleanupConnection;
 
     typedef switchwire::Event< void( bool ) > VoidBoolSignalType;
     VoidBoolSignalType m_destroySignal;
 
+    void ScheduleApplyPartManipulatorPropertySets();
     void ApplyPartManipulatorPropertySets();
+    void CleanUpLoadingPartManipPropertySets();
+
+    std::vector< propertystore::PropertySetPtr > m_loadingPartManipPropertySets;
 };
 
 }} // ves::conductor
