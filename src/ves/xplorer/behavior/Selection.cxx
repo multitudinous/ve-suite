@@ -150,8 +150,9 @@ Selection::Selection()
                       m_connections, any_SignalType, normal_Priority );
 
     // Wire up "GameController.SelectionButtonRelease"
-    CONNECTSIGNALS_1( "%SelectionButtonRelease", void( gadget::DigitalState::State ), &Selection::ProcessSelection,
-                      m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNAL_4( "GameController.SelectionButtonRelease", void( gadget::Keys, int, int, int ),
+                     &Selection::ProcessSelection,
+                     m_connections, normal_Priority );
 
     CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
                       m_connections, any_SignalType, normal_Priority );
@@ -303,12 +304,6 @@ bool Selection::ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, in
     UpdateSelectionLine();
     ProcessSelection();
     return false;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Selection::ProcessSelection( gadget::DigitalState::State event )
-{
-    UpdateSelectionLine();
-    ProcessSelection();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Selection::UpdateSelectionLine()

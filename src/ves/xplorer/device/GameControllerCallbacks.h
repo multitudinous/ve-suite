@@ -55,7 +55,7 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Event/AnalogEventInterface.h>
 #include <gadget/Event/DigitalEventInterface.h>
-
+#include <gadget/Type/KeyboardMouse/Keys.h>
 #include <gadget/Event/EventPtr.h>
 
 #include <ves/xplorer/device/GameController.h>
@@ -308,11 +308,17 @@ private:
     // "raw" hat signal type
     typedef switchwire::Event< void ( gadget::HatState::State ) > GameControllerHatSignal_type;
 
+    // selection button signal type
+    typedef switchwire::Event< void ( gadget::Keys, int, int, int ) > GameControllerSelectionButtonSignal_type;
+
     typedef std::map< std::string, GameControllerButtonSignal_type* > GameControllerButtonSignalMap_type;
     typedef std::map< std::string, GameControllerAnalogSignal_type* > GameControllerAnalogSignalMap_type;
+    typedef std::map< std::string, GameControllerSelectionButtonSignal_type* > GameControllerSelectionButtonSignalMap_type;
 
     GameControllerButtonSignalMap_type m_gameControllerButtonSignalMap;
     GameControllerAnalogSignalMap_type m_gameControllerAnalogSignalMap;
+    GameControllerSelectionButtonSignalMap_type m_gameControllerSelectionButtonSignalMap;
+
     GameControllerHatSignal_type m_gameControllerHatSignal;
 
     void SetControlMode( ControlMode::Mode );

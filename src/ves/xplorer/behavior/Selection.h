@@ -96,8 +96,6 @@ public:
 private:
     ///Process keyboard/mouse events
     bool ProcessSelection( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
-    ///Process wand/gamepad selection button release
-    void ProcessSelection( gadget::DigitalState::State );
     ///Register button press
     bool RegisterButtonPress( gadget::Keys buttonKey, int xPos, int yPos, int buttonState );
     ///Process undo events
