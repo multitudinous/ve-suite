@@ -363,6 +363,10 @@ private:
 
     switchwire::ScopedConnectionList m_connections;
 
+    osg::Geode* CreateSelectionLine();
+
+    osg::ref_ptr< osg::MatrixTransform > m_selectionLineTransform;
+
     ///The root node of our scenegraph
     osg::ref_ptr< osg::Group > mRootNode;
 

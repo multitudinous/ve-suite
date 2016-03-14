@@ -129,7 +129,8 @@ SceneManager::SceneManager()
     m_deltaTime( 0 ),
     m_viewMatrix( new osgwMx::MxCore() ),
     m_userHeight( 5.0 ),
-    m_isDesktopClusterControl( true )
+    m_isDesktopClusterControl( true ),
+    m_selectionLineTransform( new osg::MatrixTransform )
 {
     gmtl::Vec3d x_axis( 1.0, 0.0, 0.0 );
     m_zUpTransform = gmtl::makeRot< gmtl::Matrix44d >( gmtl::AxisAngled( gmtl::Math::deg2Rad( 90.0 ), x_axis ) );
@@ -185,6 +186,9 @@ SceneManager::SceneManager()
     CONNECTSIGNAL_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ),
                      &SceneManager::SetSelectionLineStartEndPoint,
                      m_connections, normal_Priority );
+
+    m_selectionLineTransform->addChild( CreateSelectionLine() );
+    m_selectionLineTransform->setNodeMask( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize()
@@ -1035,16 +1039,114 @@ std::vector< osg::ref_ptr< osg::Texture2D > > SceneManager::GetRTTTextures()
 
 void SceneManager::ShowSelectionLine( gadget::Keys key, int x, int y, int state )
 {
-    ;
+    m_selectionLineTransform->setNodeMask( 1 );
 }
 
 void SceneManager::HideSelectionLine( gadget::Keys key, int x, int y, int state )
 {
-    ;
+    m_selectionLineTransform->setNodeMask( 0 );
 }
 
 void SceneManager::SetSelectionLineStartEndPoint( osg::Vec3d start, osg::Vec3d end )
 {
     ;
+}
+
+osg::Geode* SceneManager::CreateSelectionLine()
+{
+    const double SELECTION_LINE_LENGTH = 1000;
+
+    osg::Vec3 start( 0.0, 0.0, 0.0 );
+    osg::Vec3 end( 0.0, SELECTION_LINE_LENGTH, 0. );
+
+    //osg::ref_ptr< osg::Geode > beamGeode = new osg::Geode();
+    osg::Geode* beamGeode( new osg::Geode() );
+    beamGeode->setName( "Selection Line Geode" );
+    osg::ref_ptr< osg::Geometry > beamGeometry = new osg::Geometry();
+    beamGeode->addDrawable( beamGeometry.get() );
+
+    osg::ref_ptr< osg::Vec3Array > beamVertices = new osg::Vec3Array;
+
+    ///Bottom
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] - 0.05, start[ 1 ], start[ 2 ] - 0.05 ) );
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] + 0.05, start[ 1 ], start[ 2 ] - 0.05 ) );
+    beamVertices->push_back(
+        osg::Vec3( end[ 0 ] + 0.05,   end[ 1 ],   end[ 2 ] - 0.05 ) );
+    beamVertices->push_back(
+        osg::Vec3( end[ 0 ] - 0.05,   end[ 1 ],   end[ 2 ] - 0.05 ) );
+
+    ///Top
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] - 0.05, start[ 1 ], start[ 2 ] + 0.05 ) );
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] + 0.05, start[ 1 ], start[ 2 ] + 0.05 ) );
+    beamVertices->push_back(
+        osg::Vec3( end[ 0 ] + 0.05,   end[ 1 ],   end[ 2 ] + 0.05 ) );
+    beamVertices->push_back(
+        osg::Vec3( end[ 0 ] - 0.05,   end[ 1 ],   end[ 2 ] + 0.05 ) );
+
+    beamGeometry->setVertexArray( beamVertices.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamTop =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamTop->push_back( 3 );
+    beamTop->push_back( 2 );
+    beamTop->push_back( 1 );
+    beamTop->push_back( 0 );
+    beamGeometry->addPrimitiveSet( beamTop.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamBottom =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamBottom->push_back( 4 );
+    beamBottom->push_back( 5 );
+    beamBottom->push_back( 6 );
+    beamBottom->push_back( 7 );
+    beamGeometry->addPrimitiveSet( beamBottom.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamLeft =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamLeft->push_back( 4 );
+    beamLeft->push_back( 7 );
+    beamLeft->push_back( 3 );
+    beamLeft->push_back( 0 );
+    beamGeometry->addPrimitiveSet( beamLeft.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamRight =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamRight->push_back( 1 );
+    beamRight->push_back( 2 );
+    beamRight->push_back( 6 );
+    beamRight->push_back( 5 );
+    beamGeometry->addPrimitiveSet( beamRight.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamBack =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamBack->push_back( 5 );
+    beamBack->push_back( 4 );
+    beamBack->push_back( 0 );
+    beamBack->push_back( 1 );
+    beamGeometry->addPrimitiveSet( beamBack.get() );
+
+    osg::ref_ptr< osg::DrawElementsUInt > beamFront =
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
+    beamFront->push_back( 7 );
+    beamFront->push_back( 6 );
+    beamFront->push_back( 2 );
+    beamFront->push_back( 3 );
+    beamGeometry->addPrimitiveSet( beamFront.get() );
+
+    osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array();
+    colors->push_back( osg::Vec4( 1.0f, 0.0f, 1.0f, 1.0f ) );
+
+    osg::ref_ptr< osg::UIntArray > cfdColorIndexArray = new osg::UIntArray();
+    cfdColorIndexArray->push_back( 0 );
+
+    beamGeometry->setColorArray( colors.get() );
+    beamGeometry->setColorIndices( cfdColorIndexArray.get() );
+    beamGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
+
+    return beamGeode;
 }
 ////////////////////////////////////////////////////////////////////////////////
