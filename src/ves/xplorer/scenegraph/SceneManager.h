@@ -47,6 +47,8 @@
 #include <ves/xplorer/scenegraph/highlight/HighlightManager.h>
 #include <ves/xplorer/scenegraph/manipulator/ManipulatorManager.h>
 
+#include <switchwire/ScopedConnectionList.h>
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/FrameStamp>
@@ -77,6 +79,7 @@ class System;
 DIAG_OFF(unused-parameter)
 #include <gadget/Type/PositionInterface.h>
 DIAG_ON(unused-parameter)
+#include <gadget/Type/KeyboardMouse/Keys.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Point.h>
@@ -351,6 +354,12 @@ private:
 
     ///
     vprSingletonHeader( SceneManager );
+
+    void ShowSelectionLine( gadget::Keys, int, int, int );
+
+    void HideSelectionLine( gadget::Keys, int, int, int );
+
+    switchwire::ScopedConnectionList m_connections;
 
     ///The root node of our scenegraph
     osg::ref_ptr< osg::Group > mRootNode;

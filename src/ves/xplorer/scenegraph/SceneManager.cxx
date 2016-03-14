@@ -161,6 +161,22 @@ SceneManager::SceneManager()
     switchwire::EventManager::instance()->RegisterSignal(
         ( &m_updateData ),
         "SceneManager.UpdateData" );
+
+    CONNECTSIGNAL_4( "GameController.SelectionButtonPress", void( gadget::Keys, int, int, int ),
+                     &SceneManager::ShowSelectionLine,
+                     m_connections, normal_Priority );
+
+    CONNECTSIGNAL_4( "GameController.SelectionButtonRelease", void( gadget::Keys, int, int, int ),
+                     &SceneManager::HideSelectionLine,
+                     m_connections, normal_Priority );
+
+    CONNECTSIGNAL_4( "Wand.ButtonPress0", void( gadget::Keys, int, int, int ),
+                     &SceneManager::ShowSelectionLine,
+                     m_connections, normal_Priority );
+
+    CONNECTSIGNAL_4( "Wand.ButtonRelease0", void( gadget::Keys, int, int, int ),
+                     &SceneManager::HideSelectionLine,
+                     m_connections, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize()
@@ -1007,5 +1023,15 @@ void SceneManager::SetRTTTextures( std::vector< osg::ref_ptr< osg::Texture2D > >
 std::vector< osg::ref_ptr< osg::Texture2D > > SceneManager::GetRTTTextures()
 {
     return m_rttTextures;
+}
+
+void SceneManager::ShowSelectionLine( gadget::Keys key, int x, int y, int state )
+{
+    ;
+}
+
+void SceneManager::HideSelectionLine( gadget::Keys key, int x, int y, int state )
+{
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
