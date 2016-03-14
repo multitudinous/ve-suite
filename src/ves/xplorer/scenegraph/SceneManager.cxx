@@ -177,6 +177,14 @@ SceneManager::SceneManager()
     CONNECTSIGNAL_4( "Wand.ButtonRelease0", void( gadget::Keys, int, int, int ),
                      &SceneManager::HideSelectionLine,
                      m_connections, normal_Priority );
+
+    CONNECTSIGNAL_2( "GameController.StartEndPoint", void( osg::Vec3d, osg::Vec3d ),
+                     &SceneManager::SetSelectionLineStartEndPoint,
+                     m_connections, normal_Priority );
+
+    CONNECTSIGNAL_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ),
+                     &SceneManager::SetSelectionLineStartEndPoint,
+                     m_connections, normal_Priority );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize()
@@ -1031,6 +1039,11 @@ void SceneManager::ShowSelectionLine( gadget::Keys key, int x, int y, int state 
 }
 
 void SceneManager::HideSelectionLine( gadget::Keys key, int x, int y, int state )
+{
+    ;
+}
+
+void SceneManager::SetSelectionLineStartEndPoint( osg::Vec3d start, osg::Vec3d end )
 {
     ;
 }
