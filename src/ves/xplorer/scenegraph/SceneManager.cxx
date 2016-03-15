@@ -189,7 +189,6 @@ SceneManager::SceneManager()
 
     m_selectionLineTransform->addChild( CreateSelectionLine() );
     m_selectionLineTransform->setNodeMask( 0 );
-    GetRootNode()->addChild( m_selectionLineTransform.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize()
@@ -469,6 +468,9 @@ void SceneManager::InitScene()
 
     //Create the character controller
     mCharacterController = new CharacterController();
+
+    //Add the selection line transform
+    mRootNode->addChild( m_selectionLineTransform.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetRootNode( osg::Group* rootNode )
