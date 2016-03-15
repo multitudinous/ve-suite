@@ -362,7 +362,7 @@ private:
 
     void HideSelectionLine( gadget::Keys, int, int, int );
 
-    void SetSelectionLineStartEndPoint( osg::Vec3d, osg::Vec3d );
+    void UpdateSelectionLine( osg::Vec3d, osg::Vec3d, osg::Vec3d );
 
     switchwire::ScopedConnectionList m_connections;
 

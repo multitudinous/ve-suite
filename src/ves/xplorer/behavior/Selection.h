@@ -104,6 +104,9 @@ private:
     void ClearPointConstraint();
     ///Setup the start and end point for a mouse pick
     void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
+
+    void PositionForwardAndUpAdapter( osg::Vec3d, osg::Vec3d, osg::Vec3d );
+
     ///Update the selection line
     void UpdateSelectionLine();
     ///Now try and pick the object

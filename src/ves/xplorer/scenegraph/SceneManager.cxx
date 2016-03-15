@@ -179,12 +179,12 @@ SceneManager::SceneManager()
                      &SceneManager::HideSelectionLine,
                      m_connections, normal_Priority );
 
-    CONNECTSIGNAL_2( "GameController.StartEndPoint", void( osg::Vec3d, osg::Vec3d ),
-                     &SceneManager::SetSelectionLineStartEndPoint,
+    CONNECTSIGNAL_3( "GameController.PositionForwardAndUp", void( osg::Vec3d, osg::Vec3d, osg::Vec3d ),
+                     &SceneManager::UpdateSelectionLine,
                      m_connections, normal_Priority );
 
-    CONNECTSIGNAL_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ),
-                     &SceneManager::SetSelectionLineStartEndPoint,
+    CONNECTSIGNAL_3( "Wand.PositionForwardAndUp", void( osg::Vec3d, osg::Vec3d, osg::Vec3d ),
+                     &SceneManager::UpdateSelectionLine,
                      m_connections, normal_Priority );
 
     m_selectionLineTransform->addChild( CreateSelectionLine() );
@@ -1050,9 +1050,20 @@ void SceneManager::HideSelectionLine( gadget::Keys key, int x, int y, int state 
     m_selectionLineTransform->setNodeMask( 0 );
 }
 
-void SceneManager::SetSelectionLineStartEndPoint( osg::Vec3d start, osg::Vec3d end )
+void SceneManager::UpdateSelectionLine( osg::Vec3d pos, osg::Vec3d forward, osg::Vec3d up )
 {
-    ;
+    //std::cout << "position: " << pos << std::endl << std::flush;
+    //std::cout << "forward: " << forward << std::endl << std::flush;
+    //std::cout << "up: " << up << std::endl << std::flush;
+
+    osg::Vec3d x_basis = forward ^ up;
+
+    osg::Matrixd m( x_basis.x(), forward.x(), up.x(), pos.x(),
+                    x_basis.y(), forward.y(), up.y(), pos.y(),
+                    x_basis.z(), forward.z(), up.z(), pos.z(),
+                    0          , 0          , 0     , 1 );
+
+    m_selectionLineTransform->setMatrix( m );
 }
 
 osg::Geode* SceneManager::CreateSelectionLine()

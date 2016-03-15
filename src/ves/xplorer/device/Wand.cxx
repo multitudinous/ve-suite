@@ -255,6 +255,11 @@ Wand::Wand()
         "Wand.StartEndPoint", switchwire::EventManager::unspecified_SignalType );
 
     evm->RegisterSignal(
+        ( &m_positionForwardAndUpSignal ),
+        "Wand.PositionForwardAndUp",
+        switchwire::EventManager::unspecified_SignalType );
+
+    evm->RegisterSignal(
         ( &m_wandMove ),
         "Wand.WandMove", switchwire::EventManager::mouse_SignalType );
 
@@ -640,6 +645,7 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
 
     //SetupStartEndPoint( m_startPoint, m_endPoint );
     m_startEndPointSignal.signal( m_startPoint, m_endPoint );
+    m_positionForwardAndUpSignal.signal( m_position, m_forwardVector, m_upVector );
 
     ///For now we are going to map Wand button 0 to Mouse button 1
     switch( event )
@@ -1307,6 +1313,7 @@ void Wand::LatePreFrameUpdate()
 
     PreProcessNav();
     m_startEndPointSignal.signal( m_startPoint, m_endPoint );
+    m_positionForwardAndUpSignal.signal( m_position, m_forwardVector, m_upVector );
 
     m_wandMove.signal( 0, 0, 0, 0 );
 }
@@ -1386,6 +1393,10 @@ void Wand::UpdateForwardAndUp()
     vjVec = m_sceneManager.GetInvertedNavMatrix() * vjVec;
     //m_sceneManager.GetMxCoreViewMatrix().setDir( dirVec );
     //std::cout << " wand dir " << vjVec << std::endl;
+
+    m_position.set( tempWandPoint.mData[0], tempWandPoint.mData[1], tempWandPoint.mData[2] );
+    m_forwardVector.set( vjVec.mData[0], vjVec.mData[1], vjVec.mData[2] );
+    m_upVector = upVec;
 
     osg::Vec3d moveScale = m_sceneManager.GetMxCoreViewMatrix().getMoveScale();
 

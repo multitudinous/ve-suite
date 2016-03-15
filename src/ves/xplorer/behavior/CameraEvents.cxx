@@ -132,9 +132,13 @@ CameraEvents::CameraEvents()
                                switchwire::BooleanPropagationCombiner, &CameraEvents::ProcessMouseRelease,
                                m_connections, any_SignalType, highest_Priority );
 
-    CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ),
-                      &CameraEvents::SetStartEndPoint,
-                      m_connections, any_SignalType, normal_Priority );
+    //CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ),
+    //                  &CameraEvents::SetStartEndPoint,
+    //                  m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNAL_3( "Wand.PositionForwardAndUp", void( osg::Vec3d, osg::Vec3d, osg::Vec3d ),
+                     &CameraEvents::PositionForwardAndUpAdapter,
+                     m_connections, normal_Priority );
 
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ),
                       &CameraEvents::SetStartEndPoint,
@@ -272,6 +276,12 @@ void CameraEvents::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint 
 {
     m_startPoint = startPoint;
     m_endPoint = endPoint;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEvents::PositionForwardAndUpAdapter( osg::Vec3d pos, osg::Vec3d forward, osg::Vec3d up )
+{
+    osg::Vec3d end_point = pos + ( forward * 1000 );
+    SetStartEndPoint( pos, end_point );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

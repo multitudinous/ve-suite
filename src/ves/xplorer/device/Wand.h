@@ -302,6 +302,9 @@ private:
     typedef switchwire::Event< void ( osg::Vec3d, osg::Vec3d ) > StartEndPointSignal_type;
     StartEndPointSignal_type m_startEndPointSignal;
 
+    typedef switchwire::Event< void( osg::Vec3d, osg::Vec3d, osg::Vec3d ) > PositionForwardAndUpSignal_type;
+    PositionForwardAndUpSignal_type m_positionForwardAndUpSignal;
+
     /// MouseMove signal
     /// Params are: x, y, z, state (modifier mask OR'd with button mask)
     typedef switchwire::Event< void ( int, int, int, int ) > WandMoveSignal_type;
@@ -319,6 +322,11 @@ private:
     osg::Vec3d m_startPoint;
     ///Selection ray end point
     osg::Vec3d m_endPoint;
+
+    osg::Vec3d m_position;
+    osg::Vec3d m_forwardVector;
+    osg::Vec3d m_upVector;
+
     ///Timer to control when wand move events are sent
     Poco::Util::Timer m_wandMoveTimer;
     ///Trigger wand move

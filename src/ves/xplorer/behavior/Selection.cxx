@@ -154,8 +154,12 @@ Selection::Selection()
                      &Selection::ProcessSelection,
                      m_connections, normal_Priority );
 
-    CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
-                      m_connections, any_SignalType, normal_Priority );
+    //CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &Selection::SetStartEndPoint,
+    //                  m_connections, any_SignalType, normal_Priority );
+
+    CONNECTSIGNAL_3( "Wand.PositionForwardAndUp", void( osg::Vec3d, osg::Vec3d, osg::Vec3d ),
+                     &Selection::PositionForwardAndUpAdapter,
+                     m_connections, normal_Priority );
 
     CONNECTSIGNALS_1( "%HighlightAndSetManipulators", void( osg::NodePath& ),
                       &Selection::HighlightAndSetManipulators,
@@ -576,6 +580,12 @@ void Selection::RemoveCustomGlows()
     );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Selection::PositionForwardAndUpAdapter( osg::Vec3d pos, osg::Vec3d forward, osg::Vec3d up )
+{
+    osg::Vec3d end_point = pos + ( forward * 1000 );
+    SetStartEndPoint( pos, end_point );
+}
+
 }
 }
 }

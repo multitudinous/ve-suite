@@ -241,6 +241,8 @@ public:
     ///Connect to the signal that sets the start and end points for the wand
     void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
+    void PositionForwardAndUpAdapter( osg::Vec3d, osg::Vec3d, osg::Vec3d );
+
     ///Test wether the wand ray is interesting the UI plane. This will emit the
     ///bool to let all slots know if the wand ray is within the UI plane.
     bool TestWandIntersection();

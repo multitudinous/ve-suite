@@ -136,8 +136,11 @@ ManipulatorEvents::ManipulatorEvents()
     //    m_connections, any_SignalType, high_Priority );
 
 
-    CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &ManipulatorEvents::SetStartEndPoint,
-                      m_connections, any_SignalType, normal_Priority );
+    //CONNECTSIGNALS_2( "Wand.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &ManipulatorEvents::SetStartEndPoint,
+    //                  m_connections, any_SignalType, normal_Priority );
+    CONNECTSIGNAL_3( "Wand.PositionForwardAndUp", void( osg::Vec3d, osg::Vec3d, osg::Vec3d ),
+                     &ManipulatorEvents::PositionForwardAndUpAdapter,
+                     m_connections, normal_Priority );
 
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &ManipulatorEvents::SetStartEndPoint,
                       m_connections, any_SignalType, normal_Priority );
@@ -276,6 +279,12 @@ void ManipulatorEvents::SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endP
 {
     m_startPoint = startPoint;
     m_endPoint = endPoint;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ManipulatorEvents::PositionForwardAndUpAdapter( osg::Vec3d pos, osg::Vec3d forward, osg::Vec3d up )
+{
+    osg::Vec3d end_point = pos + ( forward * 1000 );
+    SetStartEndPoint( pos, end_point );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

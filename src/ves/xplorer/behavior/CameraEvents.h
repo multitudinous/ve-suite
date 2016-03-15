@@ -104,6 +104,7 @@ private:
 
     void UpdateSelectionLine();
     void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
+    void PositionForwardAndUpAdapter( osg::Vec3d, osg::Vec3d, osg::Vec3d );
 
     ///Selection start end point line
     osg::Vec3d m_startPoint;
