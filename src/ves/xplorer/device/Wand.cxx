@@ -109,8 +109,7 @@ Wand::Wand()
     m_logStream( ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) ) ),
     m_buttonMoveState( 0 ),
     m_periodicWandMove( false ),
-    m_rotationDirection( 1.0 ),
-    m_wandPAT( new osg::MatrixTransform )
+    m_rotationDirection( 1.0 )
 {
     m_wand.init( "VJWand" );
     head.init( "VJHead" );
@@ -336,19 +335,6 @@ void Wand::SetHeadRotationFlag( int input )
     rotationFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::UpdateSelectionLine( bool drawLine )
-{
-    if( drawLine )
-    {
-        m_wandPAT->setNodeMask( 1 );
-        DrawLine( m_startPoint, m_endPoint );
-    }
-    else
-    {
-        m_wandPAT->setNodeMask( 0 );
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 void Wand::ProcessHit()
 {
     osgUtil::LineSegmentIntersector::Intersections& intersections =
@@ -478,6 +464,7 @@ void Wand::ProcessHit()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void Wand::DrawLine( const osg::Vec3d&, const osg::Vec3d& )
 {
     gmtl::Matrix44d vrjWandMat = gmtl::convertTo< double >( m_wand->getData() );
@@ -497,6 +484,7 @@ void Wand::DrawLine( const osg::Vec3d&, const osg::Vec3d& )
 
     //UpdateForwardAndUp();
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 //The current implemention uses VJButton0 to select an object then if VJButton3
 //is pressed the object is translated with the users motion.  Later the
@@ -507,15 +495,16 @@ void Wand::UpdateObjectHandler()
     //Update the juggler location of the wand
     if( digital[ 0 ]->getData() == gadget::Digital::ON )
     {
-        UpdateSelectionLine( true );
-
         ///Push the FOCUS event if we are using manipulators and a dragger is not
         ///active
         if( m_manipulatorManager.IsEnabled() &&
                 !m_manipulatorManager.LeafDraggerIsActive() )
         {
+            osg::MatrixTransform* wandPAT =
+                ves::xplorer::scenegraph::SceneManager::instance()->GetSelectionLineTransform();
+
             osg::ref_ptr< osg::StateSet > stateset =
-                m_wandPAT->getOrCreateStateSet();
+                wandPAT->getOrCreateStateSet();
             if( m_manipulatorManager.Handle( scenegraph::manipulator::Event::FOCUS,
                                              m_beamLineSegment.get() ) )
             {
@@ -525,7 +514,7 @@ void Wand::UpdateObjectHandler()
                     GL_DEPTH_TEST,
                     osg::StateAttribute::OFF |
                     osg::StateAttribute::OVERRIDE );
-                m_wandPAT->setCullingActive( false );
+                wandPAT->setCullingActive( false );
             }
             else
             {
@@ -534,7 +523,7 @@ void Wand::UpdateObjectHandler()
                     GL_DEPTH_TEST,
                     osg::StateAttribute::ON |
                     osg::StateAttribute::OVERRIDE );
-                m_wandPAT->setCullingActive( true );
+                wandPAT->setCullingActive( true );
             }
         }
 
@@ -551,7 +540,6 @@ void Wand::UpdateObjectHandler()
     //Now select and object based on the new wand location
     else if( digital[ 0 ]->getData() == gadget::Digital::TOGGLE_OFF )
     {
-        UpdateSelectionLine( false );
         if( m_manipulatorManager.IsEnabled() &&
                 m_manipulatorManager.LeafDraggerIsActive() )
         {
@@ -659,7 +647,6 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     case gadget::DigitalState::ON:
     {
         //LOG_INFO( "OnWandButton0Event: DigitalState::ON" );
-        UpdateSelectionLine( true );
 
         ( *( m_wandButtonOnSignalMap["Wand.ButtonOn0"] ) ).signal( gadget::MBUTTON1, 0, 0, gadget::BUTTON1_MASK );
 
@@ -677,7 +664,6 @@ void Wand::OnWandButton0Event( gadget::DigitalState::State event )
     case gadget::DigitalState::TOGGLE_OFF:
     {
         //LOG_INFO( "OnWandButton0Event: DigitalState::TOGGLE_OFF" );
-        UpdateSelectionLine( false );
 
         ( *( m_wandButtonReleaseSignalMap["Wand.ButtonRelease0"] ) ).signal( gadget::MBUTTON1, 0, 0, gadget::BUTTON1_MASK );
         m_triggerWandMove = true;
@@ -1306,11 +1292,6 @@ void Wand::PostProcessNav()
     }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::MatrixTransform& Wand::GetWandTransform()
-{
-    return *( m_wandPAT.get() );
-}
-////////////////////////////////////////////////////////////////////////////////
 void Wand::LatePreFrameUpdate()
 {
     //If the wand does not exist
@@ -1326,7 +1307,7 @@ void Wand::LatePreFrameUpdate()
 
     PreProcessNav();
     m_startEndPointSignal.signal( m_startPoint, m_endPoint );
-    //UpdateSelectionLine( true );
+
     m_wandMove.signal( 0, 0, 0, 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////

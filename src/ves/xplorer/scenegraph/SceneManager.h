@@ -330,6 +330,9 @@ public:
     ///Get the depth texture
     std::vector< osg::ref_ptr< osg::Texture2D > > GetRTTTextures();
 
+    ///Get the selection line's parent transform
+    osg::MatrixTransform* GetSelectionLineTransform() const;
+
 protected:
     ///Create the model for the logo
     void _createLogo();

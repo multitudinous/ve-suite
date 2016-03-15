@@ -145,17 +145,6 @@ public:
     ///Set wether when selecting parts if the parts will be turned off
     void SetCADSelectionMode( bool cadSelectionMode );
 
-    ///Return the transform that holds the geode for the wand line
-    osg::MatrixTransform& GetWandTransform();
-
-    ///Identifies selection chosen by wand
-    void UpdateSelectionLine( bool drawLine = true );
-
-    ///Draws a beam from the wand to object
-    ///\param startPoint The start position
-    ///\param endPoint The end position
-    virtual void DrawLine( const osg::Vec3d& startPoint, const osg::Vec3d& endPoint );
-
 protected:
     ///Set the start and end point
     ///\param startPoint The start point
@@ -263,8 +252,6 @@ private:
 
     ///do not know what this does
     osg::ref_ptr< osgUtil::LineSegmentIntersector > m_beamLineSegment;
-    ///Transform to manipulate the selection line
-    osg::ref_ptr< osg::MatrixTransform > m_wandPAT;
 
     ///See if a button has been pushed
     bool m_buttonPushed;

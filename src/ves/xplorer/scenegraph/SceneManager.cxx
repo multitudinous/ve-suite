@@ -1152,4 +1152,9 @@ osg::Geode* SceneManager::CreateSelectionLine()
 
     return beamGeode;
 }
+
+osg::MatrixTransform* SceneManager::GetSelectionLineTransform() const
+{
+    return m_selectionLineTransform.get();
+}
 ////////////////////////////////////////////////////////////////////////////////
