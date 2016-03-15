@@ -189,6 +189,7 @@ SceneManager::SceneManager()
 
     m_selectionLineTransform->addChild( CreateSelectionLine() );
     m_selectionLineTransform->setNodeMask( 0 );
+    GetRootNode()->addChild( m_selectionLineTransform.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize()
