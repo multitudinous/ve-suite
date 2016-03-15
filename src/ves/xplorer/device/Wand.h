@@ -162,9 +162,6 @@ protected:
     ///\param endPoint The end point
     virtual void SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint );
 
-    ///Make the raw geometry for the wand line
-    void MakeWandLine();
-
     ///Roate about arbitrary axis
     void FreeRotateAboutWand( const bool freeRotate = true );
 
