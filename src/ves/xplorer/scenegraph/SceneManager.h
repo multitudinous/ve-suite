@@ -333,6 +333,8 @@ public:
     ///Get the selection line's parent transform
     osg::MatrixTransform* GetSelectionLineTransform() const;
 
+    static const double SELECTION_LINE_LENGTH;
+
 protected:
     ///Create the model for the logo
     void _createLogo();

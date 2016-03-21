@@ -1617,7 +1617,7 @@ void UIManager::UpdateUIQuadPosition()
 ////////////////////////////////////////////////////////////////////////////////
 void UIManager::PositionForwardAndUpAdapter( osg::Vec3d pos, osg::Vec3d forward, osg::Vec3d up )
 {
-    osg::Vec3d end_point = pos + ( forward * 1000 );
+    osg::Vec3d end_point = pos + ( forward * ves::xplorer::scenegraph::SceneManager::SELECTION_LINE_LENGTH );
     SetStartEndPoint( pos, end_point );
 }
 }} // namespace

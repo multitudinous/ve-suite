@@ -97,6 +97,8 @@
 
 using namespace ves::xplorer::scenegraph;
 
+const double SceneManager::SELECTION_LINE_LENGTH = 1000.0;
+
 vprSingletonImpLifetime( SceneManager, 1 );
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1068,8 +1070,6 @@ void SceneManager::UpdateSelectionLine( osg::Vec3d pos, osg::Vec3d forward, osg:
 
 osg::Geode* SceneManager::CreateSelectionLine()
 {
-    const double SELECTION_LINE_LENGTH = 1000;
-
     osg::Vec3 start( 0.0, 0.0, 0.0 );
     osg::Vec3 end( 0.0, SELECTION_LINE_LENGTH, 0. );
 
