@@ -104,6 +104,10 @@ private:
 
     void UpdateSelectionLine();
     void SetStartEndPoint( osg::Vec3d startPoint, osg::Vec3d endPoint );
+
+    ///Convert the new (position, forward vector, up vector) signal format for
+    ///tracked input devices (Wand, GameController) to the "old"
+    ///(start point, end point) format
     void PositionForwardAndUpAdapter( osg::Vec3d, osg::Vec3d, osg::Vec3d );
 
     ///Selection start end point line
