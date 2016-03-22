@@ -161,6 +161,10 @@ Selection::Selection()
                      &Selection::PositionForwardAndUpAdapter,
                      m_connections, normal_Priority );
 
+    CONNECTSIGNAL_3( "GameController.PositionForwardAndUp", void( osg::Vec3d, osg::Vec3d, osg::Vec3d ),
+                     &Selection::PositionForwardAndUpAdapter,
+                     m_connections, normal_Priority );
+
     CONNECTSIGNALS_1( "%HighlightAndSetManipulators", void( osg::NodePath& ),
                       &Selection::HighlightAndSetManipulators,
                       m_connections, any_SignalType, high_Priority );

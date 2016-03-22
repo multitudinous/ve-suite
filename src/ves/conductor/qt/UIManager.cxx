@@ -154,6 +154,10 @@ UIManager::UIManager() :
                      &UIManager::PositionForwardAndUpAdapter,
                      mConnections, normal_Priority );
 
+    CONNECTSIGNAL_3( "GameController.PositionForwardAndUp", void( osg::Vec3d, osg::Vec3d, osg::Vec3d ),
+                     &UIManager::PositionForwardAndUpAdapter,
+                     mConnections, normal_Priority );
+
     // Connect slots to external signals
     CONNECTSIGNALS_0( "%HideShowUI%", void (), &UIManager::ToggleVisibility, mConnections,
                       any_SignalType, highest_Priority );

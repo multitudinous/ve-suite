@@ -142,6 +142,10 @@ ManipulatorEvents::ManipulatorEvents()
                      &ManipulatorEvents::PositionForwardAndUpAdapter,
                      m_connections, normal_Priority );
 
+    CONNECTSIGNAL_3( "GameController.PositionForwardAndUp", void( osg::Vec3d, osg::Vec3d, osg::Vec3d ),
+                     &ManipulatorEvents::PositionForwardAndUpAdapter,
+                     m_connections, normal_Priority );
+
     CONNECTSIGNALS_2( "KeyboardMouse.StartEndPoint", void( osg::Vec3d, osg::Vec3d ), &ManipulatorEvents::SetStartEndPoint,
                       m_connections, any_SignalType, normal_Priority );
 }
