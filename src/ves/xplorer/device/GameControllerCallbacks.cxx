@@ -127,7 +127,10 @@ GameControllerCallbacks::GameControllerCallbacks()
     m_buttonMap( new osgwMx::FunctionalMap() ),
     m_viewMatrix( ves::xplorer::scenegraph::SceneManager::instance()->GetMxCoreViewMatrix() ),
     m_success( false ),
-    m_controlMode( ControlMode::NAV )
+    m_controlMode( ControlMode::NAV ),
+    m_position( osg::Vec3d( 0, 0, 0 ) ),
+    m_forwardVector( osg::Vec3d( 0, 1, 0 ) ),
+    m_upVector( osg::Vec3d( 0, 0, 1 ) )
 {
     ConfigureGameControllerDevices();
 
@@ -316,6 +319,11 @@ GameControllerCallbacks::GameControllerCallbacks()
 
     // assume that there's an alias for the wand proxy called VESJoystickWorkaroundPosition
     m_workaroundPositionInterface.init( "VESJoystickWorkaroundPosition" );
+
+    switchwire::EventManager::instance()->RegisterSignal(
+        &m_positionForwardAndUpSignal,
+        "GameController.PositionForwardAndUp",
+        switchwire::EventManager::unspecified_SignalType );
 }
 ////////////////////////////////////////////////////////////////////////////////
 GameControllerCallbacks::~GameControllerCallbacks()
@@ -1184,6 +1192,9 @@ void GameControllerCallbacks::OnSelectionButtonEvent( gadget::DigitalState::Stat
         return;
     }
 
+    UpdateForwardAndUp();
+    m_positionForwardAndUpSignal.signal( m_position, m_forwardVector, m_upVector );
+
     switch( event )
     {
         case gadget::DigitalState::ON:
@@ -1257,6 +1268,9 @@ void GameControllerCallbacks::UpdateForwardAndUp()
 
     vrjWandMat = myMat * vrjWandMat * zUpMatrix;
 
+    gmtl::Point4d temp_position = gmtl::makeTrans< gmtl::Point4d >( vrjWandMat );
+    temp_position = ves::xplorer::scenegraph::SceneManager::instance()->GetInvertedNavMatrix() * temp_position;
+
     gmtl::Vec3d vjVec;
     vjVec.set( 0.0f, 0.0f, 1.0f );
     gmtl::xform( vjVec, vrjWandMat, vjVec );
@@ -1272,6 +1286,10 @@ void GameControllerCallbacks::UpdateForwardAndUp()
     
     //This matters in 
     m_viewMatrix.setOriented( upVec, dirVec );
+
+    m_position.set( temp_position.mData[0], temp_position.mData[1], temp_position.mData[2] );
+    m_forwardVector = dirVec;
+    m_upVector = upVec;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GameControllerCallbacks::ConfigureGameControllerDevices()

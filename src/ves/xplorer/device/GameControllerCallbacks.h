@@ -321,9 +321,16 @@ private:
 
     GameControllerHatSignal_type m_gameControllerHatSignal;
 
+    typedef switchwire::Event< void( osg::Vec3d, osg::Vec3d, osg::Vec3d ) > PositionForwardAndUpSignal_type;
+    PositionForwardAndUpSignal_type m_positionForwardAndUpSignal;
+
     void SetControlMode( ControlMode::Mode );
 
     boost::mutex m_controlModeLock;
+
+    osg::Vec3d m_position;
+    osg::Vec3d m_forwardVector;
+    osg::Vec3d m_upVector;
 };
 
 } //end device
