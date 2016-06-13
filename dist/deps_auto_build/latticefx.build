@@ -56,6 +56,9 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-Wall" )
     CMAKE_PARAMS+=( -Dcrunchstore_DIR="${crunchstore_INSTALL_DIR}/lib" )
+    # workaround: disable building latticefx apps for now
+    # see https://github.com/mccdo/latticefx/issues/5
+    CMAKE_PARAMS+=( -DLFX_BUILD_APPS=OFF )
     ;;
   Linux)
     CMAKE_PARAMS+=( -DBoost_INCLUDE_DIR="${BOOST_INSTALL_DIR}/include" )
