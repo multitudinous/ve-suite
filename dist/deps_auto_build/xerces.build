@@ -1,8 +1,8 @@
 PACKAGE_NAME=XERCES
-BASE_DIR="${DEV_BASE_DIR}/xerces-c-3.1.2"
+BASE_DIR="${DEV_BASE_DIR}/xerces-c-3.1.3"
 
 SOURCE_RETRIEVAL_METHOD=wget
-SOURCE_URL=http://apache.cs.utah.edu//xerces/c/3/sources/xerces-c-3.1.2.tar.bz2
+SOURCE_URL=http://apache.cs.utah.edu/xerces/c/3/sources/xerces-c-3.1.3.tar.bz2
 SOURCE_FORMAT=bz2
 
 SOURCE_DIR="${BASE_DIR}"
@@ -29,8 +29,8 @@ case $PLATFORM in
     fi
 
     if (( "${VS_VERSION/.*}" < 11 )); then
-      BASE_DIR="${DEV_BASE_DIR}/xerces-c-3.1.1-${ARCH_DIR}-windows-vc-${VS_VERSION}"
-      SOURCE_URL="http://apache.deathculture.net//xerces/c/3/binaries/xerces-c-3.1.1-${ARCH_DIR}-windows-vc-${VS_VERSION}.zip"
+      BASE_DIR="${DEV_BASE_DIR}/xerces-c-3.1.3-${ARCH_DIR}-windows-vc-${VS_VERSION}"
+      SOURCE_URL="http://apache.deathculture.net//xerces/c/3/binaries/xerces-c-3.1.3-${ARCH_DIR}-windows-vc-${VS_VERSION}.zip"
       SOURCE_FORMAT=zip
       BUILD_DIR="${BASE_DIR}"
       INSTALL_DIR="${BASE_DIR}"
