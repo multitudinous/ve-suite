@@ -3,7 +3,7 @@ BASE_DIR="${DEV_BASE_DIR}/bullet-2.80-rev2531"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
-SOURCE_URL=https://storage.googleapis.com/google-code-archive-downloads/v1/code.google.com/bullet/bullet-2.80-rev2531.tgz
+SOURCE_URL=https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/bullet/bullet-2.80-rev2531.tgz
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
