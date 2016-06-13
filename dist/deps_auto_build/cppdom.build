@@ -50,6 +50,8 @@ case $PLATFORM in
     #SCONS_PARAMS+=( var_arch=x64 )
     #SCONS_PARAMS+=( darwin_sdk=/Developer/SDKs/MacOSX10.6.sdk )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
+    # workaround: use Boost.TR1 to get <tr1/unordered_map>
+    CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS_RELEASE="-I ${BOOST_INSTALL_DIR}/include -I ${BOOST_INSTALL_DIR}/include/boost/tr1" )
     ;;
   Linux)
     #SCONS_PARAMS+=( var_arch=x64 )
