@@ -55,7 +55,7 @@ case $PLATFORM in
       CUSTOM_BUILD+=( --64 )
     fi
     ;;
-  Darwin | Linux)
+  Linux)
     BUILD_TARGET="build install"
     PREBUILD_METHOD=configure
     CONFIGURE=../configure.pl
@@ -78,5 +78,20 @@ case $PLATFORM in
     export ACLOCAL_FLAGS="-I $FLAGPOLL_INSTALL_DIR/share/aclocal"
     export PATH=${PATH}:${FLAGPOLL_INSTALL_DIR}/bin
     ;;
-esac
+  Darwin)
+    BUILD_TARGET="build install"
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure.pl
+    CONFIGURE_PARAMS+=( --with-boost="${BOOST_INSTALL_DIR}" )
+    CONFIGURE_PARAMS+=( --with-boost-includes="${BOOST_INSTALL_DIR}/include" )
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    CONFIGURE_PARAMS+=( --with-sdl="${SDL_INSTALL_DIR}" )
 
+    export FLAGPOLL_PATH=${FLAGPOLL_PATH}:${CPPDOM_INSTALL_DIR}/lib64/flagpoll:${GMTL_TRUNK_INSTALL_DIR}/share/flagpoll
+    export ACLOCAL_FLAGS="-I ${FLAGPOLL_INSTALL_DIR}/share/aclocal"
+    export PATH=${PATH}:${FLAGPOLL_INSTALL_DIR}/bin
+
+    # workaround/hack for Mac OS X
+    export CXXFLAGS="-D__gnu_cxx=std -I ${BOOST_INSTALL_DIR}/include/boost/tr1"
+    ;;
+esac
