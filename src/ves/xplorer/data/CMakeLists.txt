@@ -28,6 +28,8 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${propertystore_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${VAPOR_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer_eventmanager)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${latticefx_LIBRARIES})
+target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${XERCESC_LIBRARIES})
+target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer_scenegraph)
 
 include(VESModuleInstall)
 

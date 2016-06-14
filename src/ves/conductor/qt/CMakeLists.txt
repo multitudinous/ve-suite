@@ -113,6 +113,7 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${VRJUGGLER_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${XERCESC_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${BULLET_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${propertystore_LIBRARIES})
+target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${switchwire_LIBRARIES})
 
 if(Squirrel_FOUND AND Sqrat_FOUND)
     # on Windows, Squirrel is built as a shared library, so we have to link to it
@@ -142,4 +143,3 @@ include(VESModuleInstall)
 #        PATTERN ".svn" EXCLUDE)
 
 add_subdirectory(DefaultPlugin)
-
