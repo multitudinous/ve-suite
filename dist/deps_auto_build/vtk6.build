@@ -4,7 +4,7 @@ BASE_DIR="${DEV_BASE_DIR}/VTK-6.3.0"
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
 SOURCE_URL=http://www.vtk.org/files/release/6.3/VTK-6.3.0.tar.gz
-VTK_VERSION_DIR=vtk-6.3
+VTK6_VERSION_DIR=vtk-6.3
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
