@@ -62,10 +62,16 @@ function platform()
         else
           echo "Building 64-bit on x64"
         fi
-      else
-        echo "Building 32-bit on x86"
-        ARCH=32-bit
-        OS_ARCH=x86
+      # `uname -s` on 64-bit Cygwin on Windows 10 returns "CYGWIN_NT-10.0",
+      # so the above if statement fails to detect 64-bit Windows.
+      #
+      # For now, just disable the fallback below that assumes 32-bit and overwrites
+      # ARCH and OS_ARCH -- the arch() function should detect these correctly.
+      #
+      #else
+      #  echo "Building 32-bit on x86"
+      #  ARCH=32-bit
+      #  OS_ARCH=x86
       fi
       PLATFORM=Windows;
       HOME=$USERPROFILE;
@@ -156,6 +162,9 @@ function windows()
       11.0)
         CMAKE_GENERATOR="Visual Studio 11"
         ;;
+      12.0)
+        CMAKE_GENERATOR="Visual Studio 12"
+        ;;
       *)
         echo "Unrecognized VS version: $VS_VERSION" >&2
         kill -SIGINT $$
@@ -177,7 +186,7 @@ function windows()
     echo "Using Python Path $PYTHONPATH"
 
     if [ $ARCH = "64-bit" ]; then
-      REGPATH=${REGPATH}/Wow6432Node
+      REGPATH=${REGPATH}/WOW6432Node
       CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
     fi
 
