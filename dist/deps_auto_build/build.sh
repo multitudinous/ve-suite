@@ -23,7 +23,6 @@ VES_30_PACKAGES+=("boost")
 VES_30_PACKAGES+=("juggler")
 VES_30_PACKAGES+=("osgbullet")
 VES_30_PACKAGES+=("bullet")
-#VES_30_PACKAGES+=("ace+tao")
 VES_30_PACKAGES+=("cppdom")
 VES_30_PACKAGES+=("sdl")
 VES_30_PACKAGES+=("osgworks")
@@ -44,8 +43,7 @@ VES_30_PACKAGES+=("minerva")
 #
 function platform()
 {
-  OS_ARCH=x64
-  PLATFORM=`uname -s`
+  PLATFORM=$( uname -s )
   #http://en.wikipedia.org/wiki/Uname
   case $PLATFORM in
     CYGWIN*)
@@ -53,25 +51,22 @@ function platform()
       if [ ${TMP+x} ]; then unset TMP; fi
       if [ ${TEMP+x} ]; then unset TEMP; fi
 
-      #Test for 64-buit capability
-      if [[ "${PLATFORM}" = *WOW64 ]]; then
-        ARCH=64-bit
+      #Test for 64-bit capability
+      ARCH=$( wmic OS get OSArchitecture /value | grep -Eo '[^=]*$' )
+      if [ ${ARCH} = "64-bit" ]; then
+        CPU_ARCH=x86_amd64
+        OS_ARCH=${CPU_ARCH}
         if [[ "${1}" = 32 ]]; then
           echo "Building 32-bit on x64."
           ARCH=32-bit
+          OS_ARCH=x86
         else
           echo "Building 64-bit on x64"
         fi
-      # `uname -s` on 64-bit Cygwin on Windows 10 returns "CYGWIN_NT-10.0",
-      # so the above if statement fails to detect 64-bit Windows.
-      #
-      # For now, just disable the fallback below that assumes 32-bit and overwrites
-      # ARCH and OS_ARCH -- the arch() function should detect these correctly.
-      #
-      #else
-      #  echo "Building 32-bit on x86"
-      #  ARCH=32-bit
-      #  OS_ARCH=x86
+      else
+        echo "Building 32-bit on x86"
+        CPU_ARCH=x86
+        OS_ARCH=${CPU_ARCH}
       fi
       PLATFORM=Windows;
       HOME=$USERPROFILE;
@@ -155,15 +150,19 @@ function windows()
     case $VS_VERSION in
       9.0)
         CMAKE_GENERATOR="Visual Studio 9 2008"
+        MSVC_VER=1500
         ;;
       10.0)
         CMAKE_GENERATOR="Visual Studio 10"
+        MSVC_VER=1600
         ;;
       11.0)
         CMAKE_GENERATOR="Visual Studio 11"
+        MSVC_VER=1700
         ;;
       12.0)
         CMAKE_GENERATOR="Visual Studio 12"
+        MSVC_VER=1800
         ;;
       *)
         echo "Unrecognized VS version: $VS_VERSION" >&2
@@ -178,23 +177,32 @@ function windows()
     #export Path="${DotNETInstallDir}";${Path}
     MSBUILD="${DotNETInstallDir}/MSBuild.exe"
 
-    declare -a PYTHON_REGPATH=( ${REGROOT}/${REGPATH}/Python/PythonCore/* )
-    export PYTHONHOME=$( awk '{ print }' "${PYTHON_REGPATH[0]}/InstallPath/@" )
-    export PYTHONPATH=$( awk '{ print }' "${PYTHON_REGPATH[0]}/PythonPath/@" )
-    #DRIVE_LETTER="${PYTHONHOME:0:1}"
-    echo "Using Python $PYTHONHOME"
-    echo "Using Python Path $PYTHONPATH"
-
     if [ $ARCH = "64-bit" ]; then
-      REGPATH=${REGPATH}/WOW6432Node
+      REGPATH=${REGPATH}/Wow6432Node
       CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
     fi
 
+    VC_REGPATH=( ${REGROOT}/${REGPATH}/Microsoft/VisualStudio/${VS_VERSION}/Setup/VC/ProductDir )
+    VCInstallDir=$( awk '{ print }' "${VC_REGPATH}" )
     VS_REGPATH=( ${REGROOT}/${REGPATH}/Microsoft/VisualStudio/${VS_VERSION}/InstallDir )
     VSInstallDir=$( awk '{ print }' "${VS_REGPATH}" )
     DEVENV="devenv.com"
+    PATH=${VCInstallDir}:${VSInstallDir}:$PATH
+    #"${VSInstallDir}../../VC/bin/vcvars32.bat"
+    #eval "${VSInstallDir}../../VC/vcvarsall.bat x86"
+    #echo  "${VSInstallDir}../../VC/vcvarsall.bat" x86
 
-    PATH=$PYTHONHOME/Scripts:$PYTHONHOME:${VSInstallDir}:$PATH
+    if (( "${VS_VERSION/.*}" > 10 )); then
+      WIN32_MAKPATH="Program Files"
+      if [ ${CPU_ARCH} != "x86" ]; then
+        WIN32_MAKPATH="${WIN32_MAKPATH} (x86)"
+      fi
+      WIN32_MAKPATH="C:/${WIN32_MAKPATH}/Microsoft SDKs/Windows/v7.1A/Include"
+    fi
+    NMAKE=" \
+        cmd /c \"set INCLUDE=%INCLUDE%;${WIN32_MAKPATH//\//\\}; && \
+        vcvarsall.bat ${OS_ARCH} && \
+        nmake $( echo '$( printf " %s" "${NMAKE_ARGS[@]}" )' )\""
 
     #
     #Setup OSG 3rd party directory
@@ -226,7 +234,7 @@ CMAKE=cmake
 CONFIGURE=./configure
 SCONS=scons
 MAKE=make
-BJAM=bjam
+BJAM=./b2
 
 function bye()
 {
@@ -286,9 +294,12 @@ function unsetvars()
   unset ISS_FILENAME
   unset CMAKE_PARAMS
   if [ ! -z "${CMAKE_GENERATOR}" ]; then CMAKE_PARAMS+=( -G "${CMAKE_GENERATOR}" ); fi
+  if [ $PLATFORM = "Windows" ]; then CMAKE_PARAMS+=( -DCMAKE_MAKE_PROGRAM="${DEVENV}" ); fi
   unset CONFIGURE_PARAMS
   unset MSVC_PROJECT_NAMES
   unset MSVC_SOLUTION
+  unset NMAKE_ARGS
+  unset NMAKE_INST_ARG
   unset SCONS_PARAMS
   unset BJAM_PARAMS
   unset INNO_PARAMS
@@ -296,11 +307,22 @@ function unsetvars()
   unset POST_BUILD_METHOD
   unset SOURCE_REVISION
   unset GIT_BRANCH_VERSION
+  unset GIT_HASH
+  unset SZIP_OUTPUT_DIR
   unset PREBUILD_METHOD
   unset FPC_FILE
   unset VES_INSTALL_PARAMS
   unset CUSTOM_PREBUILD
   unset CUSTOM_BUILD
+  unset BUILD_METHOD
+  unset PROJ_STR
+  unset BUILD_TARGET
+  unset BUILD_DIR
+  unset CFLAGS
+  unset CXXFLAGS
+  unset LDFLAGS
+  unset CL
+  unset LINK
 }
 
 #
@@ -364,7 +386,7 @@ function innosetup()
   INNO_PARAMS+=( "/dVESGROUPNAME=VE-Suite" )
   INNO_PARAMS+=( "/dVEDEVHOME=${VES_SRC_DIR}" )
 
-  if [  $OS_ARCH = "x64" ]; then
+  if [  $ARCH = "64-bit" ]; then
     /cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 5/iscc /Q  "${INNO_PARAMS[@]}" /i${VES_SRC_DIR}/dist/win/iss ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME}
   else
     /cygdrive/c/Program\ Files/Inno\ Setup\ 5/iscc /Q /i${VES_SRC_DIR}/dist/win/iss ${VES_SRC_DIR}/dist/win/iss/${ISS_FILENAME}
@@ -380,7 +402,7 @@ function source_retrieval()
 
       if [ -n "${SOURCE_REVISION:+x}" ]; then
         SVN_CO="${SVN_CO} -r ${SOURCE_REVISION}";
-        echo "using custom command ${SVN_CO}" 
+        echo "using custom command ${SVN_CO}"
       fi
 
       if [ $PLATFORM = "Windows" ]; then
@@ -396,13 +418,23 @@ function source_retrieval()
       ;;
     git)
       cd "${DEV_BASE_DIR}";
-      git clone ${SOURCE_URL} "${BASE_DIR}";
+      if [ $PLATFORM = "Windows" ]; then
+        #Replace "/" with "\" on Windows; this prevents the "C" directory from being created
+        git clone ${SOURCE_URL} "${BASE_DIR//\//\\}";
+      else
+        git clone ${SOURCE_URL} "${BASE_DIR}";
+      fi
       if [ -n "${GIT_BRANCH_VERSION:+x}" ]; then
         cd "${BASE_DIR}";
         git checkout -t origin/${GIT_BRANCH_VERSION}
         git pull
-        echo "using custom command ${GIT_BRANCH_VERSION}" 
-      fi 
+        echo "using custom command ${GIT_BRANCH_VERSION}"
+      fi
+      if [ -n "${GIT_HASH:+x}" ]; then
+        cd "${BASE_DIR}";
+        git checkout ${GIT_HASH}
+        echo "using hash ${GIT_HASH}"
+      fi
       ;;
     private-svn)
       cd "${DEV_BASE_DIR}";
@@ -419,7 +451,7 @@ function source_retrieval()
         echo "We have already downloaded $package for ${BASE_DIR}";
         return;
       fi
-      # Settings (proxy etc.) for wget can be edited using /etc/wgetrc 
+      # Settings (proxy etc.) for wget can be edited using /etc/wgetrc
       echo "${WGET_METHOD}"
       eval "${WGET_METHOD}" "${SOURCE_URL}"
       case ${SOURCE_FORMAT} in
@@ -454,6 +486,28 @@ function source_retrieval()
             mv "${PACKAGE_BASE_DIR_NAME}" "${BASE_DIR}";
           fi
           ;;
+        7z)
+          SZIP_CMD="7z x $( basename ${SOURCE_URL} )"
+          if [ -n "${SZIP_OUTPUT_DIR:+x}" ]; then
+            SZIP_CMD="${SZIP_CMD} -o${SZIP_OUTPUT_DIR}";
+          fi
+          ${SZIP_CMD}
+          rm -f $( basename ${SOURCE_URL} );
+          ;;
+        xz)
+          xz -df `basename ${SOURCE_URL}` | tar -x;
+            #rm -f `basename ${SOURCE_URL}`;
+          ;;
+        bin)
+          TEMPBASENAME=`basename ${SOURCE_URL}`
+          sh "${TEMPBASENAME}";
+          rm -f "${TEMPBASENAME}";
+          #if [ -d "${BASE_DIR}" ]; then
+          #  echo "The BASE_DIR for $package already exists.";
+          #else
+          #  mv "${PACKAGE_BASE_DIR_NAME}" "${BASE_DIR}";
+          #fi
+          ;;
         *)
           echo "Source format ${SOURCE_FORMAT} not supported";
           ;;
@@ -468,7 +522,7 @@ function source_retrieval()
 function e()
 {
   package=$1
-  
+
   #is this option really a package
   if [ ! -e "$package" ]; then
     echo "$package is not a package.";
@@ -512,7 +566,7 @@ function e()
     if [ ! -z "${POST_RETRIEVAL_METHOD}" ]; then
         echo "Running the POST_RETRIEVAL_METHOD for $package."
         cd "${SOURCE_DIR}";
-        eval "${POST_RETRIEVAL_METHOD}"
+        for cmd in "${POST_RETRIEVAL_METHOD[@]}"; do eval "${cmd}"; done
     fi
   fi
 
@@ -677,6 +731,13 @@ function e()
         cd "${BUILD_DIR}";
         eval "${MAKE} ${JCMD} ${BUILD_TARGET}";
         ;;
+      nmake)
+        cd "${BUILD_DIR}";
+        eval "${NMAKE}";
+        if [ -n "${NMAKE_INST_ARG:+x}" ]; then
+          eval "${NMAKE::${#NMAKE}-1} ${NMAKE_INST_ARG}\"";
+        fi
+        ;;
       scons)
         cd "${BUILD_DIR}";
         ${SCONS} "${SCONS_PARAMS[@]}" ${BUILD_TARGET} ${JCMD};
@@ -711,7 +772,7 @@ function e()
     if [ ! -z "${POST_BUILD_METHOD}" ]; then
       echo "Running the POST_BUILD_METHOD for $package."
       cd "${BUILD_DIR}";
-      eval "${POST_BUILD_METHOD}"
+      for cmd in "${POST_BUILD_METHOD[@]}"; do eval "${cmd}"; done
     fi
   fi
 
@@ -752,18 +813,22 @@ function e()
             ;;
         esac
         ;;
+      nmake)
+        cd "${BUILD_DIR}";
+        eval "${NMAKE::${#NMAKE}-1} clean\"";
+        ;;
       *)
         echo "Clean method ${BUILD_METHOD} unsupported";
         ;;
     esac
   fi
-  
+
   #Build the ctag files
   if [ "${build_ctag_files}" = "yes" ]; then
-    cd ${INSTALL_DIR}/include; 
+    cd ${INSTALL_DIR}/include;
     ctags $package;
   fi
-  
+
   #
   # Build the installer file
   #
@@ -801,9 +866,9 @@ function e()
     #if [ -z "${BUILD_DIR}" ]; then echo "BUILD_DIR undefined in package $package"; return; fi
     #if [ ! -d "${BUILD_DIR}" ]; then echo "${BUILD_DIR} non existent."; return; fi
     if [ -z "${INSTALL_DIR}" ]; then echo "INSTALL_DIR undefined in package $package"; return; fi
-    #if [ ! -d "${INSTALL_DIR}" ]; then echo "${INSTALL_DIR} non existent."; return; fi
+    if [ ! -d "${INSTALL_DIR}" ]; then echo "${INSTALL_DIR} non existent."; return; fi
     if [ ! -d "${DEPS_INSTALL_DIR}" ]; then mkdir -p "${DEPS_INSTALL_DIR}"; fi
-    
+
     case $PLATFORM in
       Windows )
         if [ -z "${ISS_FILENAME}" ]; then echo "ISS_FILENAME undefined in package $package"; return; fi
@@ -913,7 +978,7 @@ shift $(($OPTIND - 1))
 
 echo -e "\n          Kernel: $PLATFORM $ARCH"
 if [ $PLATFORM = "Windows" ]; then
-  #echo "VCInstallDir: $VCInstallDir"
+  echo "VCInstallDir: $VCInstallDir"
   echo "DotNETInstallDir: $DotNETInstallDir"
 fi
 echo -e "    DEV_BASE_DIR: ${DEV_BASE_DIR}"
@@ -945,10 +1010,11 @@ export_config_vars()
 
 if [ "${build_auto_installer}" = "yes" ] ; then
   # just pass in an arbitrary package to make e() happy
-  e ace+tao.build
+  e osg.build
 else
   export_config_vars *.build
-
+  
+  test "${PLATFORM}" == "Linux" && PATH=${java_INSTALL_DIR}/bin:${swig_INSTALL_DIR}/bin:${PATH};
   for p in $@; do
     cd "${PRESENT_DIR}"
     e "${p}";
