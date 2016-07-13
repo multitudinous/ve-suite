@@ -178,7 +178,7 @@ function windows()
     MSBUILD="${DotNETInstallDir}/MSBuild.exe"
 
     if [ $ARCH = "64-bit" ]; then
-      REGPATH=${REGPATH}/Wow6432Node
+      REGPATH=${REGPATH}/WOW6432Node
       CMAKE_GENERATOR="${CMAKE_GENERATOR} Win64"
     fi
 
