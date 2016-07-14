@@ -651,7 +651,7 @@ function e()
         ;;
       bjam)
         cd "${SOURCE_DIR}";
-        "${BJAM_PREBUILD}";
+        "${BJAM_PREBUILD}" "${BJAM_PREBUILD_PARAMS[@]}";
         ;;
       custom)
         cd "${SOURCE_DIR}";
