@@ -302,6 +302,7 @@ function unsetvars()
   unset NMAKE_INST_ARG
   unset SCONS_PARAMS
   unset BJAM_PARAMS
+  unset BJAM_PREBUILD_PARAMS
   unset INNO_PARAMS
   unset POST_RETRIEVAL_METHOD
   unset POST_BUILD_METHOD
