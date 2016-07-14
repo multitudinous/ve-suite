@@ -1,22 +1,21 @@
 PACKAGE_NAME=BOOST
-BASE_DIR="${DEV_BASE_DIR}/boost_1_53_0"
+BASE_DIR="${DEV_BASE_DIR}/boost_1_59_0"
 
 SOURCE_RETRIEVAL_METHOD=wget
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
 INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
-BOOST_VERSION_DIR=boost-1_53
+BOOST_VERSION_DIR=boost-1_59
 
 PREBUILD_METHOD=bjam
 BUILD_METHOD=bjam
-
-BJAM=./bjam
 
 BJAM_PARAMS+=( variant=release )
 BJAM_PARAMS+=( link=shared,static )
 BJAM_PARAMS+=( threading=multi )
 BJAM_PARAMS+=( runtime-link=shared )
+BJAM_PARAMS+=( --build-dir="${BUILD_DIR}" )
 BJAM_PARAMS+=( --prefix="${INSTALL_DIR}" )
 if [ "$ARCH" = "64-bit" ]; then
   BJAM_PARAMS+=( address-model=64 )
@@ -32,26 +31,40 @@ VES_INSTALL_PARAMS+=( lib )
 
 case $PLATFORM in
   Windows)
-    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_53_0.zip
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_59_0.zip
     SOURCE_FORMAT=zip
 
-    BJAM_PREBUILD=./bootstrap.bat
+    BOOTSTRAP_ARG="vc$(cut -f 1 -d . <<< ${VS_VERSION})"
+
+    BJAM_PREBUILD=${WINDIR}/system32/cmd.exe
+    BJAM_PREBUILD_PARAMS+=( /C )
+    BJAM_PREBUILD_PARAMS+=( bootstrap.bat )
+    BJAM_PREBUILD_PARAMS+=( ${BOOTSTRAP_ARG} )
     BJAM_PARAMS+=( embed-manifest=on )
     BJAM_PARAMS+=( toolset=msvc-${VS_VERSION} )
     #There is an actual file called INSTALL in boost src dir
     BUILD_TARGET=install
+
+    #tools\build\src\tools\msvc.jam calls [ os.environ TEMP ]...
+    export TEMP="/tmp"
+
+    #Cleanup environment
+    POST_BUILD_METHOD=( "unset TEMP" )
     ;;
   Darwin)
-    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_53_0.tar.bz2
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.bz2
     SOURCE_FORMAT=bz2
 
     BJAM_PREBUILD=./bootstrap.sh
-    BJAM_PARAMS+=( toolset=darwin )
+    BJAM_PARAMS+=( toolset=clang )
+    BJAM_PARAMS+=( cxxflags="-std=c++11 -stdlib=libc++" )
+    BJAM_PARAMS+=( linkflags="-stdlib=libc++" )
     ;;
   Linux)
-    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_53_0.tar.bz2
+    SOURCE_URL=http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.bz2
     SOURCE_FORMAT=bz2
 
     BJAM_PREBUILD=./bootstrap.sh
+    BJAM_PARAMS+=( cxxflags="-std=c++11" )
     ;;
 esac
