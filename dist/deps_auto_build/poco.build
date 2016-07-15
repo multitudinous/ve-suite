@@ -1,5 +1,5 @@
 PACKAGE_NAME=POCO
-BASE_DIR="${DEV_BASE_DIR}/poco-1.6.1"
+BASE_DIR="${DEV_BASE_DIR}/poco-1.6.1-release"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
@@ -15,14 +15,13 @@ case $PLATFORM in
   Windows)
     # ./buildwin.cmd  90 build shared release Win32 nosamples devenv
 
-    unset PROJ_STR
-    unset BUILD_TARGET
-    unset PREBUILD_METHOD
+    PREBUILD_METHOD=custom
     BUILD_METHOD=devenv
     MSVC_CONFIG=release_shared
+
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
-      #PLATFORM_SUFFIX=
+      PLATFORM_SUFFIX=""
       INSTALL_DIR_BIN=bin
       INSTALL_DIR_LIB=lib
     else
@@ -32,61 +31,81 @@ case $PLATFORM in
       INSTALL_DIR_LIB=lib64
     fi
 
-    #CppUnit
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/CppUnit/CppUnit${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #Foundation
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/Foundation/Foundation${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #XML
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/XML/XML${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #JSON
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/JSON/JSON${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #Util
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/Util/Util${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #Net
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/Net/Net${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #Crypto
-    #MSVC_SOLUTION+=( "${SOURCE_DIR}/Crypto/Crypto${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #NetSSL_OpenSSL
-    #MSVC_SOLUTION+=( "${SOURCE_DIR}/NetSSL_OpenSSL/NetSSL_OpenSSL${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #Data
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/Data${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #Data/SQLite
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/SQLite/SQLite${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #Data/ODBC
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/ODBC/ODBC${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #Data/MySQL
-    #MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/MySQL/MySQL${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
-    #Zip
-    MSVC_SOLUTION+=( "${SOURCE_DIR}/Zip/Zip${PLATFORM_SUFFIX}_vs${VS_VERSION//./}.sln" )
+    VS_SUFFIX=${VS_VERSION//./}
 
-    POST_BUILD_METHOD="mkdir -p ${INSTALL_DIR} && \
-      cp -R ../Foundation/include ${INSTALL_DIR}/. && \
-      cp -R ../XML/include ${INSTALL_DIR}/. && \
-      cp -R ../JSON/include ${INSTALL_DIR}/. && \
-      cp -R ../Util/include ${INSTALL_DIR}/. && \
-      cp -R ../Net/include ${INSTALL_DIR}/. && \
-      cp -R ../Data/include ${INSTALL_DIR}/. && \
-      cp -R ../Data/SQLite/include ${INSTALL_DIR}/. && \
-      cp -R ../Data/ODBC/include ${INSTALL_DIR}/. && \
-      cp -R ../Zip/include ${INSTALL_DIR}/. && \
-      cp -R -T ../${INSTALL_DIR_BIN} ${INSTALL_DIR}/bin && \
-      cp -R -T ../${INSTALL_DIR_LIB} ${INSTALL_DIR}/lib"
+    #CppUnit
+    MSVC_SOLUTION=( "${SOURCE_DIR}/CppUnit/CppUnit${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #Foundation
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Foundation/Foundation${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #XML
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/XML/XML${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #JSON
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/JSON/JSON${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #Util
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Util/Util${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #Net
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Net/Net${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #Crypto
+    #MSVC_SOLUTION+=( "${SOURCE_DIR}/Crypto/Crypto${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #NetSSL_OpenSSL
+    #MSVC_SOLUTION+=( "${SOURCE_DIR}/NetSSL_OpenSSL/NetSSL_OpenSSL${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #Data
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/Data${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #Data/SQLite
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/SQLite/SQLite${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #Data/ODBC
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/ODBC/ODBC${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #Data/MySQL
+    #MSVC_SOLUTION+=( "${SOURCE_DIR}/Data/MySQL/MySQL${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+    #Zip
+    MSVC_SOLUTION+=( "${SOURCE_DIR}/Zip/Zip${PLATFORM_SUFFIX}_vs${VS_SUFFIX}.sln" )
+
+    if (( "${VS_VERSION/.*}" > 14 )); then
+      CUSTOM_PREBUILD=( "${MSVC_SOLUTION[@]/#/${DEVENV} }" )
+      CUSTOM_PREBUILD=( "${CUSTOM_PREBUILD[@]/%/ /upgrade}" )
+    fi
+
+    POST_BUILD_METHOD=( "mkdir -p ${INSTALL_DIR}" )
+    POST_BUILD_METHOD+=( "cp -R ../Foundation/include ${INSTALL_DIR}/." )
+    POST_BUILD_METHOD+=( "cp -R ../XML/include ${INSTALL_DIR}/." )
+    POST_BUILD_METHOD+=( "cp -R ../JSON/include ${INSTALL_DIR}/." )
+    POST_BUILD_METHOD+=( "cp -R ../Util/include ${INSTALL_DIR}/." )
+    POST_BUILD_METHOD+=( "cp -R ../Net/include ${INSTALL_DIR}/." )
+    POST_BUILD_METHOD+=( "cp -R ../Data/include ${INSTALL_DIR}/." )
+    POST_BUILD_METHOD+=( "cp -R ../Data/SQLite/include ${INSTALL_DIR}/." )
+    POST_BUILD_METHOD+=( "cp -R ../Data/ODBC/include ${INSTALL_DIR}/." )
+    POST_BUILD_METHOD+=( "cp -R ../Zip/include ${INSTALL_DIR}/." )
+    POST_BUILD_METHOD+=( "cp -R -T ../${INSTALL_DIR_BIN} ${INSTALL_DIR}/bin" )
+    POST_BUILD_METHOD+=( "cp -R -T ../${INSTALL_DIR_LIB} ${INSTALL_DIR}/lib" )
 
     SKIP_FPC_INSTALL="no"
     FPC_FILE=POCO.fpc
     ;;
   Darwin)
-    PREBUILD_METHOD=cmake
-    CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
-    CMAKE_PARAMS+=( -DENABLE_DATA_MYSQL=OFF )
-    CMAKE_PARAMS+=( -DENABLE_DATA_ODBC=OFF )
-    CMAKE_PARAMS+=( -DENABLE_MONGODB=OFF )
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --no-tests )
+    CONFIGURE_PARAMS+=( --no-samples )
+    #For ODBC support install iODBC
+    CONFIGURE_PARAMS+=( --omit=Data/MySQL )
+    #CONFIGURE_PARAMS+=( --config=Darwin64 )
+    CONFIGURE_PARAMS+=( --config=Darwin64-clang-libc++ )
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    #Specific hack for missing commit in 1.6.1: c2a49cbc635d8dc894763624c061be5ae8a1a01c
+    export LIBPREFIX=lib
+    #Cleanup environment
+    POST_BUILD_METHOD=( "unset LIBPREFIX" )
     ;;
   Linux)
-
-    PREBUILD_METHOD=cmake
-    CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
-    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
+    PREBUILD_METHOD=configure
+    CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( --no-tests )
+    CONFIGURE_PARAMS+=( --no-samples )
+    CONFIGURE_PARAMS+=( --omit=Data/MySQL )
+    CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
+    #Specific hack for missing commit in 1.6.1: c2a49cbc635d8dc894763624c061be5ae8a1a01c
+    export LIBPREFIX=lib
+    #Cleanup environment
+    POST_BUILD_METHOD=( "unset LIBPREFIX" )
     ;;
 esac
