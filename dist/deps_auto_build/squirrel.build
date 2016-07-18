@@ -3,7 +3,7 @@ BASE_DIR="${DEV_BASE_DIR}/SQUIRREL3"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
-SOURCE_URL=https://sourceforge.net/projects/squirrel/files/squirrel3/squirrel%203.1%20stable/squirrel_3_1_stable.tar.gz
+SOURCE_URL=http://sourceforge.net/projects/squirrel/files/squirrel3/squirrel%203.0.7%20stable/squirrel_3_0_7_stable.tar.gz
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
