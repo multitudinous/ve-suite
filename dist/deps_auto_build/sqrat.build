@@ -1,9 +1,8 @@
 PACKAGE_NAME=sqrat
-BASE_DIR="${DEV_BASE_DIR}/sqrat-0.8.3"
+BASE_DIR="${DEV_BASE_DIR}/sqrat"
 
-SOURCE_RETRIEVAL_METHOD=wget
-SOURCE_FORMAT=tgz
-SOURCE_URL=http://sourceforge.net/projects/scrat/files/Sqrat/Sqrat%200.8/sqrat-0.8.3.tar.gz
+SOURCE_RETRIEVAL_METHOD=git
+SOURCE_URL=http://git.code.sf.net/p/scrat/code
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}"
