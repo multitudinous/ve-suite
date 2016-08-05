@@ -12,7 +12,7 @@ PREBUILD_METHOD=cmake
 
 SKIP_FPC_INSTALL="yes"
 
-POST_RETRIEVAL_METHOD+=( "cp ${VES_SRC_DIR}/share/patches/squirrel/* ${BASE_DIR}/." )
+#POST_RETRIEVAL_METHOD+=( "cp ${VES_SRC_DIR}/share/patches/squirrel/* ${BASE_DIR}/." )
 
 CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
 
