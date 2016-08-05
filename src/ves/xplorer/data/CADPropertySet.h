@@ -71,9 +71,9 @@ private:
     ///Create the skeleton
     void CreateSkeleton();
     ///Add dynamic analysis data
-    void AddDynamicAnalysisData( propertystore::PropertyPtr& property );
+    void AddDynamicAnalysisData( propertystore::PropertyPtr property );
     ///Handle uniform scale changes
-    void Scale( propertystore::PropertyPtr& property );
+    void Scale( propertystore::PropertyPtr property );
 
     ves::util::ThreeStringSignal_type* m_animateCAD;
 };

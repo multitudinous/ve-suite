@@ -66,10 +66,10 @@ public:
 
 protected:
     ///Handle loading transient texture data
-    void LoadVTIScalars( propertystore::PropertyPtr& property );
+    void LoadVTIScalars( propertystore::PropertyPtr property );
 
     ///Handle uniform scaling events
-    void Scale( propertystore::PropertyPtr& property );
+    void Scale( propertystore::PropertyPtr property );
 
 private:
     ///Create skeleton
