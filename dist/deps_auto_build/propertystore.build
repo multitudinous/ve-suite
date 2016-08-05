@@ -30,13 +30,16 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -Dswitchwire_DIR="${switchwire_INSTALL_DIR}/lib" )
     CMAKE_PARAMS+=( -Dcrunchstore_DIR="${crunchstore_INSTALL_DIR}/lib" )
 
+    # search the PATH for the qmake executable
+    QMAKE=$(cygpath --windows --absolute $(which qmake.exe &> /dev/null))
+
+    CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="${QMAKE}" )
+
     MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
       MSVC_PLATFORM=Win32
-      CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.4_x86/bin/qmake.exe" )
     else
       MSVC_PLATFORM=x64
-      CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.4_x64/bin/qmake.exe" )
     fi
     MSVC_SOLUTION="propertystore.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
