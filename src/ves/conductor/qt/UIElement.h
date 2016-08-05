@@ -49,8 +49,10 @@
 
 #include <gadget/Type/KeyboardMouse/Keys.h>
 
+#ifndef Q_MOC_RUN
 #include <switchwire/ScopedConnectionList.h>
 #include <switchwire/InteractionEvent.h>
+#endif
 
 namespace osg
 {
