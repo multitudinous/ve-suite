@@ -31,7 +31,7 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -Dcrunchstore_DIR="${crunchstore_INSTALL_DIR}/lib" )
 
     # search the PATH for the qmake executable
-    QMAKE=$(cygpath --windows --absolute $(which qmake.exe &> /dev/null))
+    QMAKE=$(cygpath --windows --absolute $(which qmake.exe &> /dev/null) &> /dev/null)
 
     CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="${QMAKE}" )
 
