@@ -128,6 +128,7 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC qwt)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC osgQtTree)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_open_xml)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer_default)
+target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer_data)
 
 # explicitly link to the pthread library on Linux
 # fixes link failure for ves_xplorer with GCC 4.7

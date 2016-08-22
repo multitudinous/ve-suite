@@ -241,6 +241,10 @@ PartManipulatorPropertySetWrapper::PartManipulatorPropertySetWrapper()
 bool PartManipulatorPropertySetWrapper::InitializeWithNodePath( const std::string& node_path )
 {
     static_cast< ves::xplorer::data::PartManipulatorPropertySet* >( m_set.get() )->InitializeWithNodePath( node_path );
+
+    // TODO: Fix PartManipulatorPropertySet::InitializeWithNodePath() to actually return a boolean
+    // For now, just always return `true`
+    return true;
 }
 
 double PartManipulatorPropertySetWrapper::GetTranslationX()

@@ -14,6 +14,8 @@
 #include <osg/Matrix>
 #include <osg/ref_ptr>
 
+#include <ves/VEConfig.h>
+
 // forward declaration
 namespace osg { class MatrixTransform; }
 
@@ -23,7 +25,7 @@ namespace xplorer
 {
 namespace data
 {
-class PartManipulatorPropertySet : public propertystore::PropertySet
+class VE_DATA_EXPORTS PartManipulatorPropertySet : public propertystore::PropertySet
 {
 public:
     PartManipulatorPropertySet();
