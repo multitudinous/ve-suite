@@ -230,7 +230,7 @@ void CADPropertySet::CreateSkeleton()
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADPropertySet::Scale( propertystore::PropertyPtr& property )
+void CADPropertySet::Scale( propertystore::PropertyPtr property )
 {
     bool uniform = boost::any_cast<bool>( GetPropertyValue( "Transform_Scale_Uniform" ) );
     if( uniform )
@@ -255,7 +255,7 @@ void CADPropertySet::Scale( propertystore::PropertyPtr& property )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADPropertySet::AddDynamicAnalysisData( propertystore::PropertyPtr& )
+void CADPropertySet::AddDynamicAnalysisData( propertystore::PropertyPtr )
 {
     std::string const fileName =
         boost::any_cast<std::string>( GetPropertyValue( "DynamicAnalysisData" ) );

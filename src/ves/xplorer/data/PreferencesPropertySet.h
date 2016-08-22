@@ -67,11 +67,11 @@ public:
 
 private:
     ///Enable method
-    void EnableNearFarRatio( propertystore::PropertyPtr& property );
+    void EnableNearFarRatio( propertystore::PropertyPtr property );
     ///Enable method
-    void EnableBackgroundColor( propertystore::PropertyPtr& property );
+    void EnableBackgroundColor( propertystore::PropertyPtr property );
     ///Enable method
-    void EnableDraggerScaling( propertystore::PropertyPtr& property );
+    void EnableDraggerScaling( propertystore::PropertyPtr property );
 
     ///Relay method for passing signals on to xplorer
     void PropagateBackgroundColorChanged();
@@ -97,7 +97,7 @@ private:
     void PropagateNearFarRatioChanged();
     ///Relay method for passing signals on to xplorer
     //void UpdateLODScaling( propertystore::PropertyPtr property );
-    void SaveChanges( propertystore::PropertyPtr& property );
+    void SaveChanges( propertystore::PropertyPtr property );
 
 private:
     ///Create the skeleton

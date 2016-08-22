@@ -30,7 +30,7 @@ case $PLATFORM in
 
     CUSTOM_PREBUILD+=( "if [ -f ${OPTIONS_FILE} ]; then rm ${OPTIONS_FILE}; fi;" )
     CUSTOM_PREBUILD+=( "echo \"options['BOOST_ROOT'] = r'\$(cygpath -w ${BOOST_INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
-    CUSTOM_PREBUILD+=( "echo \"options['BOOST_VERSION'] = r'1_53'\" >> ${OPTIONS_FILE};" )
+    CUSTOM_PREBUILD+=( "echo \"options['BOOST_VERSION'] = r'${BOOST_VERSION}'\" >> ${OPTIONS_FILE};" )
     CUSTOM_PREBUILD+=( "echo \"options['CPPDOM_ROOT'] = r'\$(cygpath -w ${CPPDOM_INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
     CUSTOM_PREBUILD+=( "echo \"options['GMTL_ROOT'] = r'\$(cygpath -w ${GMTL_INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
     CUSTOM_PREBUILD+=( "echo \"options['SDL_ROOT'] = r'\$(cygpath -w ${SDL_INSTALL_DIR})'\" >> ${OPTIONS_FILE};" )
@@ -43,6 +43,7 @@ case $PLATFORM in
     PYTHON_EXE=/cygdrive/c/Python27/python.exe
 
     CUSTOM_BUILD+=( ${PYTHON_EXE} )
+    CUSTOM_BUILD+=( -i )
     CUSTOM_BUILD+=( ./build_windows.py )
     CUSTOM_BUILD+=( --build=ReleaseDLL )
     CUSTOM_BUILD+=( --options-file=./ves-vrj-build-options )

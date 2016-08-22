@@ -257,7 +257,7 @@ void DatasetPropertySet::EnableLiveProperties( bool live )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DatasetPropertySet::LoadVTIScalars( propertystore::PropertyPtr& )
+void DatasetPropertySet::LoadVTIScalars( propertystore::PropertyPtr )
 {
     if( !m_isLive )
     {
@@ -301,7 +301,7 @@ void DatasetPropertySet::LoadVTIScalars( propertystore::PropertyPtr& )
     Save();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DatasetPropertySet::Scale( propertystore::PropertyPtr& property )
+void DatasetPropertySet::Scale( propertystore::PropertyPtr property )
 {
     bool uniform = boost::any_cast<bool>( GetPropertyValue( "Transform_Scale_Uniform" ) );
     if( uniform )
