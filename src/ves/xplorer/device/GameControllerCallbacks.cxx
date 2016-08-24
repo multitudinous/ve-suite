@@ -149,8 +149,13 @@ GameControllerCallbacks::GameControllerCallbacks()
     m_buttonMap->configure( osgwMx::MxGamePad::Button13, osgwMx::FunctionalMap::MoveDownAtRate );
     ///Initialize the gamepad class
     m_mxGamePadStyle->setFunctionalMap( m_buttonMap.get() );
-    m_mxGamePadStyle->setStickRate( 5.0 );
-    m_mxGamePadStyle->setStickDeadZone( 0.05f );
+    //m_mxGamePadStyle->setStickRate( 5.0 );
+    //
+    // A stick rate of 5.0 resulted in overly-sensitive gamepad controls in RIA's cave. Try reducing
+    // the rate to 1.0, and set the rotation rate to 30 deg/sec.
+    m_mxGamePadStyle->setStickRates( 1.0, 30.0 );
+    // use an 10% dead zone
+    m_mxGamePadStyle->setStickDeadZone( 0.1f );
     m_mxGamePadStyle->setMxCore( &m_viewMatrix );
 
     //MoveModeLiteral - moves in opengl / eye space
