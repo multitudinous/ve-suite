@@ -472,7 +472,15 @@ void Selection::HighlightAndSetManipulators( osg::NodePath& nodePath )
     //Need to do this for multi-pass techniques
     if( m_sceneManager.IsRTTOn() )
     {
-        newSelectedDCS->SetTechnique( "Glow" );
+        // For now we are going to just disable the pink glow shader
+        // when a user selects an object. When the pink and red glow
+        // shader effects overlap, it can make the red glow hard to
+        // see, which is hurts the usability of the part manipulation
+        // feature.
+        //
+        // @TODO: Can we somehow make the pink glow shader conditional
+        //        based on what device sent the button release signal?
+        //newSelectedDCS->SetTechnique( "Glow" );
     }
     else
     {
