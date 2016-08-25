@@ -246,6 +246,22 @@ class MovePartState extends State
 
     function OnEvent( context, event )
     {
+        // Leave MovePartState if the user selects another part
+        if( event instanceof NodePathEvent )
+        {
+            if( event.GetNodePath() == "" )
+            {
+                return IdleState();
+            }
+            else
+            {
+                local node_path_array = split( event.GetNodePath(), "," );
+                local index = node_path_array.len() - 1;
+                return SelectPartState( node_path_array, index );
+            }
+        }
+
+        // The user can also press down on the d-pad to leave MovePartState
         if( event instanceof HatStateEvent )
         {
             if( event.GetHatState() == HatState.DOWN )
