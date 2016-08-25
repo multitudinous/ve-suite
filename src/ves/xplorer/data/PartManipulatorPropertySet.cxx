@@ -146,6 +146,24 @@ void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node
                                 m_transformNode = mt;
                                 m_transform = mt->getMatrix();
 
+                                // recover the X, Y, Z values for the property set from the current matrix
+                                //
+                                // @TODO: recover rotation values
+                                osg::Vec3d translation;
+                                osg::Quat rotation;
+                                osg::Vec3d scale;
+                                osg::Quat scale_orientation;
+
+                                m_transform.decompose( translation, rotation, scale, scale_orientation );
+
+                                osg::Matrix trans = m_localToWorldRotationInverse * osg::Matrix::translate( translation ) * m_localToWorldRotation;
+
+                                trans.decompose( translation, rotation, scale, scale_orientation );
+
+                                SetPropertyValue( "Transform_Translation_X", translation.x() );
+                                SetPropertyValue( "Transform_Translation_Y", translation.y() );
+                                SetPropertyValue( "Transform_Translation_Z", translation.z() );
+
                                 ConnectValueChangedSignals();
                             }
                         }
