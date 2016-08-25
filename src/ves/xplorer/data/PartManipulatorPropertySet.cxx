@@ -135,9 +135,18 @@ void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node
                             }
                             else
                             {
-                                std::cout << "ERROR: An existing transform created by us was found, "
-                                          << "but the corresponding property set failed to load"
+                                std::cout << "WARNING: An existing transform created by us was found, "
+                                          << "but a property set for the corresponding node path was "
+                                          << "not found."
                                           << std::endl << std::flush;
+
+                                // Assume that we can just "overwrite" an old property set with this
+                                // current one, even though we presumably modified this node before.
+                                SetPropertyValue( "NodePath", modified_node_path_string );
+                                m_transformNode = mt;
+                                m_transform = mt->getMatrix();
+
+                                ConnectValueChangedSignals();
                             }
                         }
 
