@@ -115,7 +115,15 @@ void PartManipulatorPropertySet::InitializeWithNodePath( const std::string& node
 
                         if( find_it != node_path_string_vector.rend() )
                         {
-                            node_path_string_vector.erase( (find_it + 1).base(), (find_it - 1).base() );
+                            if ( find_it == node_path_string_vector.rbegin() )
+                            {
+                                node_path_string_vector.pop_back();
+                            }
+                            else
+                            {
+                                node_path_string_vector.erase( (find_it + 1).base(), (find_it - 1).base() );
+                            }
+
                             std::string modified_node_path_string = boost::join( node_path_string_vector, "," );
 
                             if( LoadByKey( "NodePath", modified_node_path_string ) )
