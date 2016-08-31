@@ -1060,10 +1060,14 @@ void SceneManager::UpdateSelectionLine( osg::Vec3d pos, osg::Vec3d forward, osg:
 
     osg::Vec3d x_basis = forward ^ up;
 
-    osg::Matrixd m( x_basis.x(), forward.x(), up.x(), pos.x(),
-                    x_basis.y(), forward.y(), up.y(), pos.y(),
-                    x_basis.z(), forward.z(), up.z(), pos.z(),
-                    0          , 0          , 0     , 1 );
+    x_basis.normalize();
+    forward.normalize();
+    up.normalize();
+
+    osg::Matrixd m( x_basis.x(), x_basis.y(), x_basis.z(), 0.0,
+                    forward.x(), forward.y(), forward.z(), 0.0,
+                    up.x(),      up.y(),      up.z(),      0.0,
+                    pos.x(),     pos.y(),     pos.z(),     1.0 );
 
     m_selectionLineTransform->setMatrix( m );
 }
