@@ -77,6 +77,8 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer_default)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_conductor_qtui)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${APPKIT_LIBRARY})
 
+target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC osvr::osvrClientKitCpp)
+
 include(VESModuleInstall)
 
 if(APPLE)
@@ -86,4 +88,3 @@ if(APPLE)
     SET_SOURCE_FILES_PROPERTIES(${PROJECT_SOURCE_DIR}/dist/darwin/PkgInfo PROPERTIES MACOSX_PACKAGE_LOCATION Resources/..)
     SET_SOURCE_FILES_PROPERTIES(Info.plist PROPERTIES MACOSX_PACKAGE_LOCATION Resources/..)
 endif(APPLE)
-

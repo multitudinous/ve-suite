@@ -74,6 +74,8 @@ DIAG_ON(unused-parameter)
 #include <Poco/Logger.h>
 #include <Poco/SplitterChannel.h>
 
+#include <osvr/ClientKit/Context.h>
+
 #ifdef __APPLE__
 #define VES_QT_APP 1
 #endif
@@ -398,6 +400,8 @@ private:
     int m_screenHeight;
     ///Set whether we are the master or a slave
     bool m_isMaster;
+
+    boost::shared_ptr< osvr::clientkit::ClientContext > m_osvrContext;
 };
 } //end xplorer
 } //end ves

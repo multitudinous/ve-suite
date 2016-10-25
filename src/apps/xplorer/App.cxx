@@ -163,12 +163,27 @@
 #include <latticefx/core/LogMacros.h>
 #include <latticefx/core/PagingThread.h>
 
+#include <osvr/ClientKit/Interface.h>
+
 using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::xplorer;
 using namespace ves::xplorer::volume;
 using namespace ves::xplorer::network;
 using namespace ves::xplorer::scenegraph;
+
+namespace ves {
+namespace xplorer {
+namespace vrcallbacks {
+  void tracker_callback( void *userdata,
+                         const OSVR_TimeValue *timestamp,
+                         const OSVR_PoseReport *report )
+  {
+    std::cout << "got tracker" << std::endl << std::flush;
+  }
+}
+}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variables_map vm, Poco::SplitterChannel* splitter )
@@ -197,7 +212,8 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_exitApp( false ),
     m_vm( vm ),
     m_logSplitter( splitter ),
-    m_isMaster( true )
+    m_isMaster( true ),
+    m_osvrContext( new osvr::clientkit::ClientContext("com.agsolver.vesuite") )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO( "Starting App" );
@@ -332,6 +348,10 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     CONNECTSIGNALS_2( "%NearFarRatio", void( bool const&, double const& ),
                       &ves::xplorer::App::SetNearFarRatio,
                       m_connections, any_SignalType, normal_Priority );
+
+    //osvr::clientkit::Interface head_iface = m_osvrContext->getInterface("/me/head");
+
+    //head_iface.registerCallback(&ves::xplorer::vrcallbacks::tracker_callback, NULL );
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -667,6 +687,7 @@ void App::preFrame()
 ////////////////////////////////////////////////////////////////////////////////
 void App::latePreFrame()
 {
+    m_osvrContext->update();
     VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame", 20 );
     vprDEBUG( vesDBG, 3 ) << "|App::latePreFrame" << std::endl << vprDEBUG_FLUSH;
     ///////////////////////

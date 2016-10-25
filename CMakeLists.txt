@@ -109,7 +109,9 @@ find_package(XercesC REQUIRED)
 
 find_package(VRJuggler-OpenGL 3.0 REQUIRED)
 
-include_directories( 
+find_package(osvr REQUIRED)
+
+include_directories(
     ${Boost_INCLUDE_DIRS}
     ${POCO_INCLUDE_DIR}
     ${PROJECT_SOURCE_DIR}/src)
@@ -160,4 +162,3 @@ set(VES_EXPORT_LIBRARY_TARGETS ves_open_xml ves_xplorer_eventmanager ves_xplorer
 set(VES_CONFIGURE_VARS CMAKE_INSTALL_LIBDIR)
 
 include(VESInstallAutoDiscoveryTools)
-
