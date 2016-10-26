@@ -165,6 +165,8 @@
 
 #include <osvr/ClientKit/Interface.h>
 
+//#include <osg/io_utils>
+
 using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::xplorer;
@@ -179,7 +181,18 @@ namespace vrcallbacks {
                          const OSVR_TimeValue *timestamp,
                          const OSVR_PoseReport *report )
   {
-    std::cout << "got tracker" << std::endl << std::flush;
+    //std::cout << "got tracker" << std::endl << std::flush;
+    osg::Quat quat( osvrQuatGetX( &( report->pose.rotation ) ),
+                    osvrQuatGetY( &( report->pose.rotation ) ),
+                    osvrQuatGetZ( &( report->pose.rotation ) ),
+                    osvrQuatGetW( &( report->pose.rotation ) ) );
+
+    osg::Matrix pose = osg::Matrix::translate( report->pose.translation.data[0],
+                                               report->pose.translation.data[1],
+                                               report->pose.translation.data[2] )
+                       * osg::Matrix::rotate( quat );
+
+    //std::cout << pose << std::endl << std::flush;
   }
 }
 }
