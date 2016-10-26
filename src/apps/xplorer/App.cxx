@@ -349,9 +349,9 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
                       &ves::xplorer::App::SetNearFarRatio,
                       m_connections, any_SignalType, normal_Priority );
 
-    //osvr::clientkit::Interface head_iface = m_osvrContext->getInterface("/me/head");
+    osvr::clientkit::Interface head_iface = m_osvrContext->getInterface("/me/head");
 
-    //head_iface.registerCallback(&ves::xplorer::vrcallbacks::tracker_callback, NULL );
+    head_iface.registerCallback(&ves::xplorer::vrcallbacks::tracker_callback, NULL );
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
