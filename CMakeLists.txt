@@ -110,6 +110,7 @@ find_package(XercesC REQUIRED)
 find_package(VRJuggler-OpenGL 3.0 REQUIRED)
 
 find_package(osvr REQUIRED)
+find_package(osvrRenderManager REQUIRED)
 
 include_directories(
     ${Boost_INCLUDE_DIRS}

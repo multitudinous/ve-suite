@@ -75,6 +75,7 @@ DIAG_ON(unused-parameter)
 #include <Poco/SplitterChannel.h>
 
 #include <osvr/ClientKit/Context.h>
+#include <osvr/RenderKit/RenderManager.h>
 
 #ifdef __APPLE__
 #define VES_QT_APP 1
@@ -402,6 +403,7 @@ private:
     bool m_isMaster;
 
     boost::shared_ptr< osvr::clientkit::ClientContext > m_osvrContext;
+    boost::shared_ptr< osvr::renderkit::RenderManager > m_osvrRenderManager;
 };
 } //end xplorer
 } //end ves

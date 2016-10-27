@@ -164,7 +164,6 @@
 #include <latticefx/core/PagingThread.h>
 
 #include <osvr/ClientKit/Interface.h>
-
 //#include <osg/io_utils>
 
 using namespace ves::open::xml;
@@ -365,6 +364,8 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     osvr::clientkit::Interface head_iface = m_osvrContext->getInterface("/me/head");
 
     head_iface.registerCallback(&ves::xplorer::vrcallbacks::tracker_callback, NULL );
+
+    m_osvrRenderManager.reset( osvr::renderkit::createRenderManager(m_osvrContext->get(), "OpenGL") );
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
