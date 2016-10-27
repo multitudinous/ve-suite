@@ -46,7 +46,7 @@ if( MSVC )
     find_library( SONIX_LIBRARY_DEBUG NAMES "sonix_d-${SONIX_VERSION_STRING}"
                   HINTS ${sonix_FLAGPOLL_LIBRARY_DIRS} )
     find_package_handle_standard_args( Sonix
-                                       REQUIRED_VARS SONIX_LIBRARY_DIRS SONIX_INCLUDE_DIR
+                                       REQUIRED_VARS SONIX_LIBRARY SONIX_INCLUDE_DIR
                                        VERSION_VAR sonix_FLAGPOLL_MODULE_VERSION
                                        FAIL_MESSAGE ${SONIX_FAIL_MESSAGE} )
     if( SONIX_LIBRARY_DEBUG )
