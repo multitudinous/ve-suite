@@ -77,8 +77,10 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer_default)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_conductor_qtui)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${APPKIT_LIBRARY})
 
+include_directories(${SDL_INCLUDE_DIR})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC osvr::osvrClientKitCpp)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC osvrRenderManager::osvrRenderManager)
+target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${SDL_LIBRARY})
 
 include(VESModuleInstall)
 

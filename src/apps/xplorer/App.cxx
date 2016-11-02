@@ -164,6 +164,11 @@
 #include <latticefx/core/PagingThread.h>
 
 #include <osvr/ClientKit/Interface.h>
+#include <osvr/RenderKit/GraphicsLibraryOpenGL.h>
+
+#include <SDL.h>
+#include <SDL_opengl.h>
+
 //#include <osg/io_utils>
 
 using namespace ves::open::xml;
@@ -365,7 +370,19 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
 
     head_iface.registerCallback(&ves::xplorer::vrcallbacks::tracker_callback, NULL );
 
-    m_osvrRenderManager.reset( osvr::renderkit::createRenderManager(m_osvrContext->get(), "OpenGL") );
+    SDL_Init(SDL_INIT_EVERYTHING);
+
+    SDL_Window *vrPlaceholderWindow = SDL_CreateWindow(
+      "VR Placeholder Window (not used)", 30, 30, 400, 100,
+      SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+
+    SDL_GLContext vrPlaceholderGLContext = SDL_GL_CreateContext(vrPlaceholderWindow);
+
+    SDL_GL_MakeCurrent(vrPlaceholderWindow, vrPlaceholderGLContext);
+
+    m_vrPlaceholderGLContext = wglGetCurrentContext();
+
+    m_osvrRenderManager.reset( osvr::renderkit::createRenderManager( m_osvrContext->get(), "OpenGL" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -426,6 +443,8 @@ osg::Group* App::getScene()
 void App::contextInit()
 {
     //vrj::OsgApp::contextInit();
+    wglShareLists(m_vrPlaceholderGLContext, wglGetCurrentContext());
+
     const unsigned int unique_context_id =
         vrj::opengl::DrawManager::instance()->getCurrentContext();
     std::cout << "|\tContext initialized " << unique_context_id << std::endl;

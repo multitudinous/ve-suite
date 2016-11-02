@@ -111,6 +111,7 @@ find_package(VRJuggler-OpenGL 3.0 REQUIRED)
 
 find_package(osvr REQUIRED)
 find_package(osvrRenderManager REQUIRED)
+find_package(SDL REQUIRED)
 
 include_directories(
     ${Boost_INCLUDE_DIRS}

@@ -404,6 +404,8 @@ private:
 
     boost::shared_ptr< osvr::clientkit::ClientContext > m_osvrContext;
     boost::shared_ptr< osvr::renderkit::RenderManager > m_osvrRenderManager;
+
+    HGLRC m_vrPlaceholderGLContext;
 };
 } //end xplorer
 } //end ves
