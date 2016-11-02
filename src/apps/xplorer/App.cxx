@@ -443,7 +443,10 @@ osg::Group* App::getScene()
 void App::contextInit()
 {
     //vrj::OsgApp::contextInit();
-    wglShareLists(m_vrPlaceholderGLContext, wglGetCurrentContext());
+    {
+        vpr::Guard < vpr::Mutex > guard( mValueLock );
+        wglShareLists(m_vrPlaceholderGLContext, wglGetCurrentContext());
+    }
 
     const unsigned int unique_context_id =
         vrj::opengl::DrawManager::instance()->getCurrentContext();
