@@ -405,6 +405,9 @@ private:
     boost::shared_ptr< osvr::clientkit::ClientContext > m_osvrContext;
     boost::shared_ptr< osvr::renderkit::RenderManager > m_osvrRenderManager;
 
+    vrj::opengl::ContextData< std::vector< osvr::renderkit::RenderBuffer > > m_renderManagerRenderBuffers;
+    vrj::opengl::ContextData< std::vector< osvr::renderkit::RenderInfo > > m_renderManagerRenderInfo;
+
     HGLRC m_vrPlaceholderGLContext;
 };
 } //end xplorer

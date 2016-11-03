@@ -528,6 +528,22 @@ void App::contextInit()
 
     _tbvHandler->SetPBuffer( _pbuffer );
 #endif
+
+    {
+        std::vector< osvr::renderkit::RenderInfo > render_info;
+
+        m_osvrContext->update();
+        render_info = m_osvrRenderManager->GetRenderInfo();
+
+        for( size_t i = 0; i < render_info.size(); i++ )
+        {
+            osvr::renderkit::RenderBuffer render_buffer;
+            render_buffer.OpenGL = new osvr::renderkit::RenderBufferOpenGL;
+            //render_buffer.OpenGL->colorBufferName = // GLuint color buffer handle
+
+            ( *m_renderManagerRenderBuffers ).push_back( render_buffer );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::contextClose()
