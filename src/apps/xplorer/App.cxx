@@ -380,9 +380,32 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
 
     SDL_GL_MakeCurrent(vrPlaceholderWindow, vrPlaceholderGLContext);
 
-    m_vrPlaceholderGLContext = wglGetCurrentContext();
+    {
+        HGLRC sdl_context = wglGetCurrentContext();
+
+        if( NULL == sdl_context )
+        {
+            std::cerr << "SDL wglGetCurrentContext() returned NULL" << std::endl << std::flush;
+        }
+        else
+        {
+            m_vrPlaceholderGLContext = sdl_context;
+        }
+    }
+
 
     m_osvrRenderManager.reset( osvr::renderkit::createRenderManager( m_osvrContext->get(), "OpenGL" ) );
+
+    osvr::renderkit::RenderManager::OpenResults ret = m_osvrRenderManager->OpenDisplay();
+
+    if( ret.status == osvr::renderkit::RenderManager::OpenStatus::FAILURE )
+    {
+        std::cerr << "RenderManager could not open display" << std::endl << std::flush;
+    }
+
+    // in order for wglShareLists() to work, our "placeholder" GL context with which
+    // we want to set up sharing cannot be current in this thread
+    SDL_GL_MakeCurrent(vrPlaceholderWindow, NULL);
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -443,14 +466,33 @@ osg::Group* App::getScene()
 void App::contextInit()
 {
     //vrj::OsgApp::contextInit();
-    {
-        vpr::Guard < vpr::Mutex > guard( mValueLock );
-        wglShareLists(m_vrPlaceholderGLContext, wglGetCurrentContext());
-    }
-
     const unsigned int unique_context_id =
         vrj::opengl::DrawManager::instance()->getCurrentContext();
     std::cout << "|\tContext initialized " << unique_context_id << std::endl;
+
+    {
+        vpr::Guard < vpr::Mutex > guard( mValueLock );
+
+        HGLRC current_context = wglGetCurrentContext();
+
+        if( NULL == current_context )
+        {
+            std::cerr << "wglGetCurrentContext() returned NULL" << std::endl << std::flush;
+        }
+        else
+        {
+            BOOL success = wglShareLists(m_vrPlaceholderGLContext, current_context);
+
+            if( TRUE == success )
+            {
+                std::cout << "wglShareLists() succeeded" << std::endl << std::flush;
+            }
+            else
+            {
+                std::cerr << "wglShareLists() failed: " << GetLastError() << std::endl << std::flush;
+            }
+        }
+    }
 
     //Create new context specific scene viewer
     osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView() );
