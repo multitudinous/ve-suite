@@ -169,6 +169,8 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
+#include "VRCameraManager.h"
+
 //#include <osg/io_utils>
 
 using namespace ves::open::xml;
@@ -515,6 +517,8 @@ void App::contextInit()
 
         //ves::conductor::UIManager::instance()->AddUIToNode( camera );
         m_numContexts += 1;
+
+        *m_vrCameraManager = new VRCameraManager();
     }
 
     ( *sceneViewer ) = new_sv;
@@ -535,11 +539,14 @@ void App::contextInit()
         m_osvrContext->update();
         render_info = m_osvrRenderManager->GetRenderInfo();
 
+        ( *m_vrCameraManager )->Initialize( render_info );
+
         for( size_t i = 0; i < render_info.size(); i++ )
         {
             osvr::renderkit::RenderBuffer render_buffer;
             render_buffer.OpenGL = new osvr::renderkit::RenderBufferOpenGL;
             //render_buffer.OpenGL->colorBufferName = // GLuint color buffer handle
+            render_buffer.OpenGL->colorBufferName = ( *m_vrCameraManager )->GetColorBufferID( i, unique_context_id );
 
             ( *m_renderManagerRenderBuffers ).push_back( render_buffer );
         }
@@ -559,6 +566,8 @@ void App::contextClose()
     {
         vpr::Guard< vpr::Mutex > sv_guard( mValueLock );
         m_numContexts -= 1;
+
+        delete *m_vrCameraManager;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

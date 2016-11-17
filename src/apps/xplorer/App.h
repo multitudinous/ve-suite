@@ -107,6 +107,8 @@ namespace ves
 {
 namespace xplorer
 {
+class VRCameraManager;
+
 namespace volume
 {
 #ifdef _PBUFFER
@@ -407,6 +409,7 @@ private:
 
     vrj::opengl::ContextData< std::vector< osvr::renderkit::RenderBuffer > > m_renderManagerRenderBuffers;
     vrj::opengl::ContextData< std::vector< osvr::renderkit::RenderInfo > > m_renderManagerRenderInfo;
+    vrj::opengl::ContextData< ves::xplorer::VRCameraManager* > m_vrCameraManager;
 
     HGLRC m_vrPlaceholderGLContext;
 };
