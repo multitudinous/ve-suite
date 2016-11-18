@@ -541,7 +541,7 @@ void App::contextInit()
 
         ( *m_vrCameraManager )->Initialize( render_info );
 
-        for( size_t i = 0; i < render_info.size(); i++ )
+        for( std::size_t i = 0; i < render_info.size(); i++ )
         {
             osvr::renderkit::RenderBuffer render_buffer;
             render_buffer.OpenGL = new osvr::renderkit::RenderBufferOpenGL;
@@ -549,6 +549,13 @@ void App::contextInit()
             render_buffer.OpenGL->colorBufferName = ( *m_vrCameraManager )->GetColorBufferID( i, unique_context_id );
 
             ( *m_renderManagerRenderBuffers ).push_back( render_buffer );
+        }
+
+        bool success = m_osvrRenderManager->RegisterRenderBuffers( *m_renderManagerRenderBuffers );
+
+        if( !success )
+        {
+            std::cerr << "FAILED to register render buffers with RenderManager" << std::endl << std::flush;
         }
     }
 }
@@ -790,7 +797,6 @@ void App::preFrame()
 ////////////////////////////////////////////////////////////////////////////////
 void App::latePreFrame()
 {
-    m_osvrContext->update();
     VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame", 20 );
     vprDEBUG( vesDBG, 3 ) << "|App::latePreFrame" << std::endl << vprDEBUG_FLUSH;
     ///////////////////////
@@ -1082,6 +1088,30 @@ void App::latePreFrame()
         const vrj::opengl::WindowPtr window = userData->getGlWindow();
         m_windowIsOpen = window->isOpen();
     }*/
+
+    m_osvrContext->update();
+    ( *m_renderManagerRenderInfo ) = m_osvrRenderManager->GetRenderInfo();
+
+    for( std::size_t i = 0; i < ( *m_renderManagerRenderInfo ).size(); i++ )
+    {
+        osg::Camera* camera = ( *m_vrCameraManager )->GetRTTCamera( i );
+
+        GLdouble projection[16];
+        osvr::renderkit::OSVR_Projection_to_OpenGL(
+            projection,
+            ( *m_renderManagerRenderInfo )[i].projection
+        );
+        osg::Matrix osg_projection( projection );
+
+        GLdouble view[16];
+        osvr::renderkit::OSVR_PoseState_to_OpenGL(
+            view, ( *m_renderManagerRenderInfo )[i].pose
+        );
+        osg::Matrix osg_view( view );
+
+        camera->setProjectionMatrix( osg_projection );
+        camera->setViewMatrix( osg_view );
+    }
 
     vprDEBUG( vesDBG, 3 ) << "|End App::latePreFrame"
                           << std::endl << vprDEBUG_FLUSH;
@@ -1423,6 +1453,16 @@ void App::draw()
     //GLenum errorEnum = glGetError();
     //vprDEBUG( vesDBG, 3 ) <<  << errorEnum & GL_NO_ERROR
     //<< std::endl << vprDEBUG_FLUSH;
+    {
+        bool success = m_osvrRenderManager->PresentRenderBuffers(
+            *m_renderManagerRenderBuffers,
+            *m_renderManagerRenderInfo
+        );
+
+        if( !success ) {
+            std::cerr << "PresentRenderBuffers() FAILED" << std::endl << std::flush;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::update()
