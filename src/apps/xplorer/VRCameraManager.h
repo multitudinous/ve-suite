@@ -23,6 +23,7 @@ public:
 
     GLuint GetColorBufferID( std::size_t eye_pos, const unsigned int context_id );
     osg::Camera* GetRTTCamera( std::size_t eye_pos );
+    bool ColorBuffersReady( const unsigned int context_id );
 private:
     osg::Camera* SetupRTTCamera( osvr::renderkit::RenderInfo& render_info );
   

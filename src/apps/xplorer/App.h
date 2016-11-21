@@ -77,6 +77,8 @@ DIAG_ON(unused-parameter)
 #include <osvr/ClientKit/Context.h>
 #include <osvr/RenderKit/RenderManager.h>
 
+#include "VRCameraManager.h"
+
 #ifdef __APPLE__
 #define VES_QT_APP 1
 #endif
@@ -107,7 +109,7 @@ namespace ves
 {
 namespace xplorer
 {
-class VRCameraManager;
+//class VRCameraManager;
 
 namespace volume
 {
@@ -407,9 +409,17 @@ private:
     boost::shared_ptr< osvr::clientkit::ClientContext > m_osvrContext;
     boost::shared_ptr< osvr::renderkit::RenderManager > m_osvrRenderManager;
 
-    vrj::opengl::ContextData< std::vector< osvr::renderkit::RenderBuffer > > m_renderManagerRenderBuffers;
-    vrj::opengl::ContextData< std::vector< osvr::renderkit::RenderInfo > > m_renderManagerRenderInfo;
-    vrj::opengl::ContextData< ves::xplorer::VRCameraManager* > m_vrCameraManager;
+    //vrj::opengl::ContextData< std::vector< osvr::renderkit::RenderBuffer > > m_renderManagerRenderBuffers;
+    //vrj::opengl::ContextData< std::vector< osvr::renderkit::RenderInfo > > m_renderManagerRenderInfo;
+    //vrj::opengl::ContextData< ves::xplorer::VRCameraManager* > m_vrCameraManager;
+    //vrj::opengl::ContextData< bool > m_vrCanRender;
+    //vrj::opengl::ContextData< bool > m_vrCamerasAttached;
+    std::vector< osvr::renderkit::RenderBuffer > m_renderManagerRenderBuffers;
+    std::vector< osvr::renderkit::RenderInfo > m_renderManagerRenderInfo;
+    boost::shared_ptr< ves::xplorer::VRCameraManager > m_vrCameraManager;
+    bool m_vrCanPresent;
+    bool m_vrBuffersRegistered;
+    bool m_vrCamerasAttached;
 
     HGLRC m_vrPlaceholderGLContext;
 };
