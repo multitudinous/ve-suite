@@ -27,7 +27,7 @@ osg::Camera* VRCameraManager::SetupRTTCamera( osvr::renderkit::RenderInfo& rende
 {
     osg::Camera* camera = new osg::Camera;
 
-    camera->setClearColor( osg::Vec4( 1.0f, 0.0f, 0.0f, 1.0f ) );
+    camera->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
     camera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     camera->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
     camera->setRenderOrder( osg::Camera::POST_RENDER );
