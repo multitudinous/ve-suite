@@ -412,6 +412,13 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_vrCanPresent = false;
     m_vrBuffersRegistered = false;
     m_vrCamerasAttached = false;
+
+    std::vector< osvr::renderkit::RenderInfo > render_info;
+
+    m_osvrContext->update();
+    render_info = m_osvrRenderManager->GetRenderInfo();
+
+    m_vrCameraManager->Initialize( render_info );
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -535,6 +542,17 @@ void App::contextInit()
 
     _tbvHandler->SetPBuffer( _pbuffer );
 #endif
+
+    osg::Camera* left = m_vrCameraManager->GetRTTCamera( 0 );
+    osg::Camera* right = m_vrCameraManager->GetRTTCamera( 1 );
+
+    osg::Camera::BufferAttachmentMap map = left->getBufferAttachmentMap();
+    osg::Texture* texture_ptr = map[osg::Camera::COLOR_BUFFER]._texture.get();
+    texture_ptr->apply( *(( *sceneViewer )->getState()) );
+
+    map = right->getBufferAttachmentMap();
+    texture_ptr = map[osg::Camera::COLOR_BUFFER]._texture.get();
+    texture_ptr->apply( *(( *sceneViewer )->getState()) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::contextClose()
@@ -747,6 +765,9 @@ void App::initScene()
 
     //Hand current root node UIManager so it can create UI subgraph
     m_UIManager->Initialize( 0 );
+
+    std::cout << "VRCameraManager::InitScene()" << std::endl << std::flush;
+    m_vrCameraManager->InitScene();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::preFrame()
@@ -1065,7 +1086,7 @@ void App::latePreFrame()
         m_windowIsOpen = window->isOpen();
     }*/
 
-    if( m_vrCamerasAttached == true )
+    if( /*m_vrCamerasAttached*/m_render == true )
     {
         m_osvrContext->update();
         m_renderManagerRenderInfo = m_osvrRenderManager->GetRenderInfo();
@@ -1182,40 +1203,36 @@ void App::contextPreDraw()
                     lfx::core::PagingThread::instance()->setTransforms( projectionMatrixOSG, vp.get() );
                 }*/
 
-                if( m_render == true && m_vrCamerasAttached == false )
+                if( /*m_vrCamerasAttached*/m_render == true && m_vrBuffersRegistered == false )
                 {
-                    std::cout << "ATTACHING VR RTT CAMERAS" << std::endl << std::flush;
-                    std::vector< osvr::renderkit::RenderInfo > render_info;
+                  const unsigned int unique_context_id =
+                      vrj::opengl::DrawManager::instance()->getCurrentContext();
 
-                    m_osvrContext->update();
-                    render_info = m_osvrRenderManager->GetRenderInfo();
+                    if( m_vrCameraManager->ColorBuffersReady( unique_context_id ) )
+                    {
+                        std::cout << "COLOR BUFFERS ARE READY" << std::endl << std::flush;
+                        for( std::size_t i = 0; i < 2; i++ )
+                        {
+                            osvr::renderkit::RenderBuffer render_buffer;
+                            render_buffer.OpenGL = new osvr::renderkit::RenderBufferOpenGL;
+                            //render_buffer.OpenGL->colorBufferName = // GLuint color buffer handle
+                            render_buffer.OpenGL->colorBufferName = m_vrCameraManager->GetColorBufferID( i, unique_context_id );
 
-                    m_vrCameraManager->Initialize( render_info );
-                    osg::Group* root = ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
-                    osg::Group* model_root = ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot();
-                    osg::Camera* left = m_vrCameraManager->GetRTTCamera( 0 );
-                    osg::Camera* right = m_vrCameraManager->GetRTTCamera( 1 );
+                            m_renderManagerRenderBuffers.push_back( render_buffer );
+                        }
 
-                    osg::Camera::BufferAttachmentMap map = left->getBufferAttachmentMap();
-                    osg::Texture* texture_ptr = map[osg::Camera::COLOR_BUFFER]._texture.get();
-                    texture_ptr->apply( *(( *sceneViewer )->getState()) );
+                        bool success = m_osvrRenderManager->RegisterRenderBuffers( m_renderManagerRenderBuffers );
 
-                    map = right->getBufferAttachmentMap();
-                    texture_ptr = map[osg::Camera::COLOR_BUFFER]._texture.get();
-                    texture_ptr->apply( *(( *sceneViewer )->getState()) );
-                    //left->addChild( model_root );
-                    //right->addChild( model_root );
-                    left->addChild( new osg::Group );
-                    right->addChild( new osg::Group );
-                    //( *sceneViewer )->getCamera()->addChild( left );
-                    //( *sceneViewer )->getCamera()->addChild( right );
-                    osg::Group* vr_camera_group = new osg::Group;
-                    vr_camera_group->addChild( left );
-                    vr_camera_group->addChild( right );
-                    model_root->addChild( vr_camera_group );
-
-                    m_vrCamerasAttached = true;
-                    std::cout << "ATTACH SUCCESSFUL" << std::endl << std::flush;
+                        if( success )
+                        {
+                            std::cout << "RegisterRenderBuffers() SUCCEEDED" << std::endl << std::flush;
+                        }
+                        else
+                        {
+                            std::cerr << "FAILED to register render buffers with RenderManager" << std::endl << std::flush;
+                        }
+                        m_vrBuffersRegistered = true;
+                    }
                 }
             }
 
@@ -1244,38 +1261,6 @@ void App::contextPreDraw()
         ( *sceneViewer )->setNearFarRatio( m_nearFarRatio );
     }
 
-
-    if( m_vrCamerasAttached == true && m_vrBuffersRegistered == false )
-    {
-      const unsigned int unique_context_id =
-          vrj::opengl::DrawManager::instance()->getCurrentContext();
-
-        if( m_vrCameraManager->ColorBuffersReady( unique_context_id ) )
-        {
-            std::cout << "COLOR BUFFERS ARE READY" << std::endl << std::flush;
-            for( std::size_t i = 0; i < 2; i++ )
-            {
-                osvr::renderkit::RenderBuffer render_buffer;
-                render_buffer.OpenGL = new osvr::renderkit::RenderBufferOpenGL;
-                //render_buffer.OpenGL->colorBufferName = // GLuint color buffer handle
-                render_buffer.OpenGL->colorBufferName = m_vrCameraManager->GetColorBufferID( i, unique_context_id );
-
-                m_renderManagerRenderBuffers.push_back( render_buffer );
-            }
-
-            bool success = m_osvrRenderManager->RegisterRenderBuffers( m_renderManagerRenderBuffers );
-
-            if( success )
-            {
-                std::cout << "RegisterRenderBuffers() SUCCEEDED" << std::endl << std::flush;
-            }
-            else
-            {
-                std::cerr << "FAILED to register render buffers with RenderManager" << std::endl << std::flush;
-            }
-            m_vrBuffersRegistered = true;
-        }
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parallel in a multiple context situation
@@ -1293,7 +1278,7 @@ void App::draw()
         return;
     }
 
-    //std::cout << "----------Draw-----------" << std::endl;
+    //std::cout << "----------Draw-----------" << std::endl << std::flush;
     VPR_PROFILE_GUARD_HISTORY( "App::draw", 20 );
     glClear( GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 

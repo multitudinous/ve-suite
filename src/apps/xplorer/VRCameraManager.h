@@ -20,6 +20,7 @@ public:
     VRCameraManager();
   
     void Initialize( std::vector< osvr::renderkit::RenderInfo >& render_info );
+    void InitScene();
 
     GLuint GetColorBufferID( std::size_t eye_pos, const unsigned int context_id );
     osg::Camera* GetRTTCamera( std::size_t eye_pos );
