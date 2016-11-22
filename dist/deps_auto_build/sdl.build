@@ -3,7 +3,7 @@ BASE_DIR="${DEV_BASE_DIR}/SDL2-2.0.3"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
-SOURCE_URL=http://www.libsdl.org/release/SDL2-2.0.4.tar.gz
+SOURCE_URL=http://www.libsdl.org/release/SDL2-2.0.5.tar.gz
 
 SOURCE_DIR="${BASE_DIR}"
 BUILD_DIR="${BASE_DIR}/build-${ARCH}"
