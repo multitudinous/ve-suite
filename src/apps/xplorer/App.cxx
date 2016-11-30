@@ -543,16 +543,7 @@ void App::contextInit()
     _tbvHandler->SetPBuffer( _pbuffer );
 #endif
 
-    osg::Camera* left = m_vrCameraManager->GetRTTCamera( 0 );
-    osg::Camera* right = m_vrCameraManager->GetRTTCamera( 1 );
-
-    osg::Camera::BufferAttachmentMap map = left->getBufferAttachmentMap();
-    osg::Texture* texture_ptr = map[osg::Camera::COLOR_BUFFER]._texture.get();
-    texture_ptr->apply( *(( *sceneViewer )->getState()) );
-
-    map = right->getBufferAttachmentMap();
-    texture_ptr = map[osg::Camera::COLOR_BUFFER]._texture.get();
-    texture_ptr->apply( *(( *sceneViewer )->getState()) );
+    m_vrCameraManager->ContextInit( *( ( *sceneViewer )->getState() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::contextClose()

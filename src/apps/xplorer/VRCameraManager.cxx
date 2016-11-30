@@ -169,3 +169,9 @@ void VRCameraManager::InitScene()
     root->addChild( left );
     root->addChild( right );
 }
+
+void VRCameraManager::ContextInit( osg::State& state )
+{
+    m_colorTextures[0]->apply( state );
+    m_colorTextures[1]->apply( state );
+}

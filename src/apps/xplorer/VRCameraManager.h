@@ -21,6 +21,7 @@ public:
   
     void Initialize( std::vector< osvr::renderkit::RenderInfo >& render_info );
     void InitScene();
+    void ContextInit( osg::State& state );
 
     GLuint GetColorBufferID( std::size_t eye_pos, const unsigned int context_id );
     osg::Camera* GetRTTCamera( std::size_t eye_pos );
