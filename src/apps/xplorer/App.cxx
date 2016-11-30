@@ -409,9 +409,7 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
 
     m_vrCameraManager.reset( new VRCameraManager );
 
-    m_vrCanPresent = false;
     m_vrBuffersRegistered = false;
-    m_vrCamerasAttached = false;
 
     std::vector< osvr::renderkit::RenderInfo > render_info;
 
@@ -1194,7 +1192,7 @@ void App::contextPreDraw()
                     lfx::core::PagingThread::instance()->setTransforms( projectionMatrixOSG, vp.get() );
                 }*/
 
-                if( /*m_vrCamerasAttached*/m_render == true && m_vrBuffersRegistered == false )
+                if( m_render == true && m_vrBuffersRegistered == false )
                 {
                   const unsigned int unique_context_id =
                       vrj::opengl::DrawManager::instance()->getCurrentContext();
