@@ -1075,7 +1075,7 @@ void App::latePreFrame()
         m_windowIsOpen = window->isOpen();
     }*/
 
-    if( /*m_vrCamerasAttached*/m_render == true )
+    if( m_render == true )
     {
         m_osvrContext->update();
         m_renderManagerRenderInfo = m_osvrRenderManager->GetRenderInfo();
