@@ -181,23 +181,44 @@ using namespace ves::xplorer::scenegraph;
 namespace ves {
 namespace xplorer {
 namespace vrcallbacks {
-  void tracker_callback( void *userdata,
-                         const OSVR_TimeValue *timestamp,
-                         const OSVR_PoseReport *report )
-  {
-    //std::cout << "got tracker" << std::endl << std::flush;
-    osg::Quat quat( osvrQuatGetX( &( report->pose.rotation ) ),
-                    osvrQuatGetY( &( report->pose.rotation ) ),
-                    osvrQuatGetZ( &( report->pose.rotation ) ),
-                    osvrQuatGetW( &( report->pose.rotation ) ) );
+    void tracker_callback( void *userdata,
+                           const OSVR_TimeValue *timestamp,
+                           const OSVR_PoseReport *report )
+    {
+        //std::cout << "got tracker" << std::endl << std::flush;
+        osg::Quat quat( osvrQuatGetX( &( report->pose.rotation ) ),
+                        osvrQuatGetY( &( report->pose.rotation ) ),
+                        osvrQuatGetZ( &( report->pose.rotation ) ),
+                        osvrQuatGetW( &( report->pose.rotation ) ) );
 
-    osg::Matrix pose = osg::Matrix::translate( report->pose.translation.data[0],
-                                               report->pose.translation.data[1],
-                                               report->pose.translation.data[2] )
-                       * osg::Matrix::rotate( quat );
+        osg::Matrix pose = osg::Matrix::translate( report->pose.translation.data[0],
+                                                   report->pose.translation.data[1],
+                                                   report->pose.translation.data[2] )
+                           * osg::Matrix::rotate( quat );
 
-    //std::cout << pose << std::endl << std::flush;
-  }
+        //std::cout << pose << std::endl << std::flush;
+    }
+
+    void trackpad_analog_x( void *userdata,
+                            const OSVR_TimeValue *timestamp,
+                            const OSVR_AnalogReport *report )
+    {
+        //std::cout << "Trackpad Analog X Value: " << report->state << std::endl;
+    }
+
+    void trackpad_analog_y( void *userdata,
+                            const OSVR_TimeValue *timestamp,
+                            const OSVR_AnalogReport *report )
+    {
+        //std::cout << "Trackpad Analog Y Value: " << report->state << std::endl;
+    }
+
+    void trackpad_button( void *userdata,
+                          const OSVR_TimeValue *timestamp,
+                          const OSVR_ButtonReport *report )
+    {
+        //std::cout << "Trackpad Button Value: " << (report->state ? "on" : "off") << std::endl;
+    }
 }
 }
 }
@@ -366,9 +387,26 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
                       &ves::xplorer::App::SetNearFarRatio,
                       m_connections, any_SignalType, normal_Priority );
 
-    //osvr::clientkit::Interface head_iface = m_osvrContext->getInterface("/me/head");
+    {
+        //osvr::clientkit::Interface head_iface = m_osvrContext->getInterface("/me/head");
+        //head_iface.registerCallback(&ves::xplorer::vrcallbacks::tracker_callback, NULL );
 
-    //head_iface.registerCallback(&ves::xplorer::vrcallbacks::tracker_callback, NULL );
+        osvr::clientkit::Interface trackpad_left_x_analog_iface = m_osvrContext->getInterface( "/controller/left/trackpad/x" );
+        osvr::clientkit::Interface trackpad_left_y_analog_iface = m_osvrContext->getInterface( "/controller/left/trackpad/y" );
+        osvr::clientkit::Interface trackpad_left_button_iface = m_osvrContext->getInterface( "/controller/left/trackpad/button" );
+
+        trackpad_left_x_analog_iface.registerCallback( &ves::xplorer::vrcallbacks::trackpad_analog_x, NULL );
+        trackpad_left_y_analog_iface.registerCallback( &ves::xplorer::vrcallbacks::trackpad_analog_y, NULL );
+        trackpad_left_button_iface.registerCallback( &ves::xplorer::vrcallbacks::trackpad_button, NULL );
+
+        osvr::clientkit::Interface trackpad_right_x_analog_iface = m_osvrContext->getInterface( "/controller/right/trackpad/x" );
+        osvr::clientkit::Interface trackpad_right_y_analog_iface = m_osvrContext->getInterface( "/controller/right/trackpad/y" );
+        osvr::clientkit::Interface trackpad_right_button_iface = m_osvrContext->getInterface( "/controller/right/trackpad/button" );
+
+        trackpad_right_x_analog_iface.registerCallback( &ves::xplorer::vrcallbacks::trackpad_analog_x, NULL );
+        trackpad_right_y_analog_iface.registerCallback( &ves::xplorer::vrcallbacks::trackpad_analog_y, NULL );
+        trackpad_right_button_iface.registerCallback( &ves::xplorer::vrcallbacks::trackpad_button, NULL );
+    }
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
