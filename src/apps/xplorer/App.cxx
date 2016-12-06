@@ -187,15 +187,20 @@ namespace vrcallbacks {
     {
         osgwMx::MxCore* mx_core = static_cast< osgwMx::MxCore* >( userdata );
 
+        const osg::Vec3d up( 0.0, 1.0, 0.0 );
+
         osg::Quat quat( osvrQuatGetX( &( report->pose.rotation ) ),
                         osvrQuatGetY( &( report->pose.rotation ) ),
                         osvrQuatGetZ( &( report->pose.rotation ) ),
                         osvrQuatGetW( &( report->pose.rotation ) ) );
 
         osg::Vec3d forward = quat * osg::Vec3d( 0.0, 0.0, -1.0 );
-        osg::Vec3d up = quat * osg::Vec3d( 0.0, 1.0, 0.0 );
 
-        mx_core->setOriented( forward, up );
+        // project the forward vector onto the ground (XZ) plane
+        osg::Vec3d proj_forward = osg::Vec3d( forward.x(), 0.0, forward.z() );
+        proj_forward.normalize();
+
+        mx_core->setOriented( proj_forward, up );
     }
 
     void trackpad_analog_x( void *userdata,
