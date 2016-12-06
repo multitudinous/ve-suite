@@ -185,18 +185,17 @@ namespace vrcallbacks {
                            const OSVR_TimeValue *timestamp,
                            const OSVR_PoseReport *report )
     {
-        //std::cout << "got tracker" << std::endl << std::flush;
+        osgwMx::MxCore* mx_core = static_cast< osgwMx::MxCore* >( userdata );
+
         osg::Quat quat( osvrQuatGetX( &( report->pose.rotation ) ),
                         osvrQuatGetY( &( report->pose.rotation ) ),
                         osvrQuatGetZ( &( report->pose.rotation ) ),
                         osvrQuatGetW( &( report->pose.rotation ) ) );
 
-        osg::Matrix pose = osg::Matrix::translate( report->pose.translation.data[0],
-                                                   report->pose.translation.data[1],
-                                                   report->pose.translation.data[2] )
-                           * osg::Matrix::rotate( quat );
+        osg::Vec3d forward = quat * osg::Vec3d( 0.0, 0.0, -1.0 );
+        osg::Vec3d up = quat * osg::Vec3d( 0.0, 1.0, 0.0 );
 
-        //std::cout << pose << std::endl << std::flush;
+        mx_core->setOriented( forward, up );
     }
 
     void trackpad_analog_x( void *userdata,
@@ -251,7 +250,8 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_vm( vm ),
     m_logSplitter( splitter ),
     m_isMaster( true ),
-    m_osvrContext( new osvr::clientkit::ClientContext("com.agsolver.vesuite") )
+    m_osvrContext( new osvr::clientkit::ClientContext( "com.agsolver.vesuite" ) ),
+    m_vrMxCore( new osgwMx::MxCore )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO( "Starting App" );
@@ -388,8 +388,12 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
                       m_connections, any_SignalType, normal_Priority );
 
     {
-        //osvr::clientkit::Interface head_iface = m_osvrContext->getInterface("/me/head");
-        //head_iface.registerCallback(&ves::xplorer::vrcallbacks::tracker_callback, NULL );
+        osvr::clientkit::Interface head_iface = m_osvrContext->getInterface( "/me/head" );
+
+        head_iface.registerCallback(
+            &ves::xplorer::vrcallbacks::tracker_callback,
+            static_cast< void* >( m_vrMxCore.get() )
+        );
 
         osvr::clientkit::Interface trackpad_left_x_analog_iface = m_osvrContext->getInterface( "/controller/left/trackpad/x" );
         osvr::clientkit::Interface trackpad_left_y_analog_iface = m_osvrContext->getInterface( "/controller/left/trackpad/y" );

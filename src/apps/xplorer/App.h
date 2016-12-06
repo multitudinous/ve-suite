@@ -77,6 +77,8 @@ DIAG_ON(unused-parameter)
 #include <osvr/ClientKit/Context.h>
 #include <osvr/RenderKit/RenderManager.h>
 
+#include <osgwMx/MxGamePad.h>
+
 #include "VRCameraManager.h"
 
 #ifdef __APPLE__
@@ -415,6 +417,9 @@ private:
     bool m_vrBuffersRegistered;
 
     HGLRC m_vrPlaceholderGLContext;
+
+    osg::ref_ptr< osgwMx::MxGamePad > m_vrMxGamePad;
+    osg::ref_ptr< osgwMx::MxCore > m_vrMxCore;
 };
 } //end xplorer
 } //end ves
