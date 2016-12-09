@@ -1169,10 +1169,24 @@ void App::latePreFrame()
             osvr::renderkit::OSVR_PoseState_to_OpenGL(
                 view, m_renderManagerRenderInfo[i].pose
             );
-            osg::Matrix osg_view( view );
+
+            // rotate 180 degress about -Z axis
+            const osg::Matrix rot = osg::Matrix::rotate(
+                osg::DegreesToRadians( 180.0 ),
+                osg::Vec3d( 0.0, 0.0, -1.0 )
+            );
+
+            // rotate -90 degress about +X axis
+            const osg::Matrix rot2 = osg::Matrix::rotate(
+                osg::DegreesToRadians( -90.0 ),
+                osg::Vec3d( 1.0, 0.0, 0.0 )
+            );
+
+            // @TODO: figure out **WHY** I need to correct the view matrix rotation
+            osg::Matrix corrected_view = rot * rot2 * osg::Matrix( view );
 
             camera->setProjectionMatrix( osg_projection );
-            camera->setViewMatrix( osg_view );
+            camera->setViewMatrix( corrected_view );
         }
     }
 
