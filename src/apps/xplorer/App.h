@@ -419,7 +419,7 @@ private:
     HGLRC m_vrPlaceholderGLContext;
 
     osg::ref_ptr< osgwMx::MxGamePad > m_vrMxGamePad;
-    osg::ref_ptr< osgwMx::MxCore > m_vrMxCore;
+    osg::ref_ptr< osgwMx::FunctionalMap > m_vrButtonMap;
 };
 } //end xplorer
 } //end ves

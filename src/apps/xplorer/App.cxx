@@ -187,8 +187,6 @@ namespace vrcallbacks {
     {
         osgwMx::MxCore* mx_core = static_cast< osgwMx::MxCore* >( userdata );
 
-        const osg::Vec3d up( 0.0, 1.0, 0.0 );
-
         osg::Quat quat( osvrQuatGetX( &( report->pose.rotation ) ),
                         osvrQuatGetY( &( report->pose.rotation ) ),
                         osvrQuatGetZ( &( report->pose.rotation ) ),
@@ -200,7 +198,7 @@ namespace vrcallbacks {
         osg::Vec3d proj_forward = osg::Vec3d( forward.x(), 0.0, forward.z() );
         proj_forward.normalize();
 
-        mx_core->setOriented( proj_forward, up );
+        mx_core->setOriented( proj_forward );
     }
 
     // rotate with the trackpad X-axis
@@ -237,6 +235,34 @@ namespace vrcallbacks {
     {
         //std::cout << "Trackpad Button Value: " << (report->state ? "on" : "off") << std::endl;
     }
+
+    void button_up( void *userdata,
+                    const OSVR_TimeValue *timestamp,
+                    const OSVR_ButtonReport *report )
+    {
+        osgwMx::MxGamePad* mx_gamepad = static_cast< osgwMx::MxGamePad* >( userdata );
+
+        // TODO: set a flag with the button state so that holding the button will
+        // move continuously
+        mx_gamepad->setButtons(
+            osgwMx::MxGamePad::Button0,
+            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
+        );
+    }
+
+    void button_down( void *userdata,
+                      const OSVR_TimeValue *timestamp,
+                      const OSVR_ButtonReport *report )
+    {
+        osgwMx::MxGamePad* mx_gamepad = static_cast< osgwMx::MxGamePad* >( userdata );
+
+        // TODO: set a flog with the button state so that holding the button will
+        // move continuously
+        mx_gamepad->setButtons(
+            osgwMx::MxGamePad::Button1,
+            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
+        );
+    }
 }
 }
 }
@@ -270,8 +296,8 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_logSplitter( splitter ),
     m_isMaster( true ),
     m_osvrContext( new osvr::clientkit::ClientContext( "com.agsolver.vesuite" ) ),
-    m_vrMxCore( new osgwMx::MxCore ),
-    m_vrMxGamePad( new osgwMx::MxGamePad )
+    m_vrMxGamePad( new osgwMx::MxGamePad ),
+    m_vrButtonMap( new osgwMx::FunctionalMap )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO( "Starting App" );
@@ -412,17 +438,17 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
 
         head_iface.registerCallback(
             &ves::xplorer::vrcallbacks::tracker_callback,
-            static_cast< void* >( m_vrMxCore.get() )
+            static_cast< void* >( m_vrMxGamePad.get()->getMxCore() )
         );
 
         osvr::clientkit::Interface trackpad_left_x_analog_iface = m_osvrContext->getInterface( "/controller/left/trackpad/x" );
         osvr::clientkit::Interface trackpad_left_y_analog_iface = m_osvrContext->getInterface( "/controller/left/trackpad/y" );
         osvr::clientkit::Interface trackpad_left_button_iface = m_osvrContext->getInterface( "/controller/left/trackpad/button" );
 
-        trackpad_left_x_analog_iface.registerCallback(
+        /*trackpad_left_x_analog_iface.registerCallback(
             &ves::xplorer::vrcallbacks::trackpad_analog_x,
             static_cast< void* >( m_vrMxGamePad.get() )
-        );
+        );*/
         trackpad_left_y_analog_iface.registerCallback(
             &ves::xplorer::vrcallbacks::trackpad_analog_y,
             static_cast< void* >( m_vrMxGamePad.get() )
@@ -433,15 +459,39 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
         osvr::clientkit::Interface trackpad_right_y_analog_iface = m_osvrContext->getInterface( "/controller/right/trackpad/y" );
         osvr::clientkit::Interface trackpad_right_button_iface = m_osvrContext->getInterface( "/controller/right/trackpad/button" );
 
-        trackpad_right_x_analog_iface.registerCallback(
+        /*trackpad_right_x_analog_iface.registerCallback(
             &ves::xplorer::vrcallbacks::trackpad_analog_x,
             static_cast< void* >( m_vrMxGamePad.get() )
-        );
+        );*/
         trackpad_right_y_analog_iface.registerCallback(
             &ves::xplorer::vrcallbacks::trackpad_analog_y,
             static_cast< void* >( m_vrMxGamePad.get() )
         );
         trackpad_right_button_iface.registerCallback( &ves::xplorer::vrcallbacks::trackpad_button, NULL );
+
+        osvr::clientkit::Interface left_button_grip_iface = m_osvrContext->getInterface( "/controller/left/grip" );
+        osvr::clientkit::Interface right_button_grip_iface = m_osvrContext->getInterface( "/controller/right/grip" );
+
+        left_button_grip_iface.registerCallback(
+            &ves::xplorer::vrcallbacks::button_up,
+            static_cast< void* >( m_vrMxGamePad.get() )
+        );
+        right_button_grip_iface.registerCallback(
+            &ves::xplorer::vrcallbacks::button_up,
+            static_cast< void* >( m_vrMxGamePad.get() )
+        );
+
+        osvr::clientkit::Interface left_button_menu_iface = m_osvrContext->getInterface( "/controller/left/menu" );
+        osvr::clientkit::Interface right_button_menu_iface = m_osvrContext->getInterface( "/controller/right/menu" );
+
+        left_button_menu_iface.registerCallback(
+            &ves::xplorer::vrcallbacks::button_down,
+            static_cast< void* >( m_vrMxGamePad.get() )
+        );
+        right_button_menu_iface.registerCallback(
+            &ves::xplorer::vrcallbacks::button_down,
+            static_cast< void* >( m_vrMxGamePad.get() )
+        );
     }
 
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -491,6 +541,21 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     render_info = m_osvrRenderManager->GetRenderInfo();
 
     m_vrCameraManager->Initialize( render_info );
+
+    osgwMx::MxCore* mx_core = m_vrMxGamePad->getMxCore();
+    mx_core->setInitialValues(
+        osg::Vec3d( 0.0, 1.0, 0.0 ),  // up vector
+        osg::Vec3d( 0.0, 0.0, -1.0 ), // forward vector
+        osg::Vec3d( 0.0, 0.0, 0.0 )   // position
+    );
+    mx_core->reset();
+
+    m_vrMxGamePad->setMoveMode( osgwMx::FunctionalMap::MoveModeOriented );
+
+    m_vrButtonMap->configure( osgwMx::MxGamePad::Button0, osgwMx::FunctionalMap::MoveUpAtRate );
+    m_vrButtonMap->configure( osgwMx::MxGamePad::Button1, osgwMx::FunctionalMap::MoveDownAtRate );
+
+    m_vrMxGamePad->setFunctionalMap( m_vrButtonMap.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -1185,8 +1250,11 @@ void App::latePreFrame()
             // @TODO: figure out **WHY** I need to correct the view matrix rotation
             osg::Matrix corrected_view = rot * rot2 * osg::Matrix( view );
 
+            osg::Matrix& mx_core_mat = m_vrMxGamePad->getMxCore()->getMatrix();
+            osg::Matrix corrected_view_with_nav = mx_core_mat * corrected_view;
+
             camera->setProjectionMatrix( osg_projection );
-            camera->setViewMatrix( corrected_view );
+            camera->setViewMatrix( corrected_view_with_nav );
         }
     }
 
