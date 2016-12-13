@@ -420,6 +420,9 @@ private:
 
     osg::ref_ptr< osgwMx::MxGamePad > m_vrMxGamePad;
     osg::ref_ptr< osgwMx::FunctionalMap > m_vrButtonMap;
+
+    bool m_vrNavUpButton;
+    bool m_vrNavDownButton;
 };
 } //end xplorer
 } //end ves

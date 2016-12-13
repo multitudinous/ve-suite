@@ -236,32 +236,20 @@ namespace vrcallbacks {
         //std::cout << "Trackpad Button Value: " << (report->state ? "on" : "off") << std::endl;
     }
 
-    void button_up( void *userdata,
-                    const OSVR_TimeValue *timestamp,
-                    const OSVR_ButtonReport *report )
+    void button_navupdown( void *userdata,
+                           const OSVR_TimeValue *timestamp,
+                           const OSVR_ButtonReport *report )
     {
-        osgwMx::MxGamePad* mx_gamepad = static_cast< osgwMx::MxGamePad* >( userdata );
+        bool* toggle = static_cast< bool* >( userdata );
 
-        // TODO: set a flag with the button state so that holding the button will
-        // move continuously
-        mx_gamepad->setButtons(
-            osgwMx::MxGamePad::Button0,
-            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
-        );
-    }
-
-    void button_down( void *userdata,
-                      const OSVR_TimeValue *timestamp,
-                      const OSVR_ButtonReport *report )
-    {
-        osgwMx::MxGamePad* mx_gamepad = static_cast< osgwMx::MxGamePad* >( userdata );
-
-        // TODO: set a flog with the button state so that holding the button will
-        // move continuously
-        mx_gamepad->setButtons(
-            osgwMx::MxGamePad::Button1,
-            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
-        );
+        if( report->state )
+        {
+            *toggle = true;
+        }
+        else
+        {
+            *toggle = false;
+        }
     }
 }
 }
@@ -297,7 +285,9 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_isMaster( true ),
     m_osvrContext( new osvr::clientkit::ClientContext( "com.agsolver.vesuite" ) ),
     m_vrMxGamePad( new osgwMx::MxGamePad ),
-    m_vrButtonMap( new osgwMx::FunctionalMap )
+    m_vrButtonMap( new osgwMx::FunctionalMap ),
+    m_vrNavUpButton( false ),
+    m_vrNavDownButton( false )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO( "Starting App" );
@@ -473,24 +463,24 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
         osvr::clientkit::Interface right_button_grip_iface = m_osvrContext->getInterface( "/controller/right/grip" );
 
         left_button_grip_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::button_up,
-            static_cast< void* >( m_vrMxGamePad.get() )
+            &ves::xplorer::vrcallbacks::button_navupdown,
+            static_cast< void* >( &m_vrNavUpButton )
         );
         right_button_grip_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::button_up,
-            static_cast< void* >( m_vrMxGamePad.get() )
+            &ves::xplorer::vrcallbacks::button_navupdown,
+            static_cast< void* >( &m_vrNavUpButton )
         );
 
         osvr::clientkit::Interface left_button_menu_iface = m_osvrContext->getInterface( "/controller/left/menu" );
         osvr::clientkit::Interface right_button_menu_iface = m_osvrContext->getInterface( "/controller/right/menu" );
 
         left_button_menu_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::button_down,
-            static_cast< void* >( m_vrMxGamePad.get() )
+            &ves::xplorer::vrcallbacks::button_navupdown,
+            static_cast< void* >( &m_vrNavDownButton )
         );
         right_button_menu_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::button_down,
-            static_cast< void* >( m_vrMxGamePad.get() )
+            &ves::xplorer::vrcallbacks::button_navupdown,
+            static_cast< void* >( &m_vrNavDownButton )
         );
     }
 
@@ -1255,6 +1245,21 @@ void App::latePreFrame()
 
             camera->setProjectionMatrix( osg_projection );
             camera->setViewMatrix( corrected_view_with_nav );
+        }
+
+        if( m_vrNavUpButton == true )
+        {
+            m_vrMxGamePad->setButtons(
+                osgwMx::MxGamePad::Button0,
+                ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
+            );
+        }
+        else if( m_vrNavDownButton == true )
+        {
+            m_vrMxGamePad->setButtons(
+                osgwMx::MxGamePad::Button1,
+                ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
+            );
         }
     }
 
