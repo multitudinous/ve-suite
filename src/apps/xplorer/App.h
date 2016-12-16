@@ -423,6 +423,9 @@ private:
 
     bool m_vrNavUpButton;
     bool m_vrNavDownButton;
+    bool m_vrTrackpadButton;
+    OSVR_AnalogState m_vrTrackpadX;
+    OSVR_AnalogState m_vrTrackpadY;
 };
 } //end xplorer
 } //end ves

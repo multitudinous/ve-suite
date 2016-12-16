@@ -181,9 +181,9 @@ using namespace ves::xplorer::scenegraph;
 namespace ves {
 namespace xplorer {
 namespace vrcallbacks {
-    void tracker_callback( void *userdata,
-                           const OSVR_TimeValue *timestamp,
-                           const OSVR_PoseReport *report )
+    void head_tracker( void *userdata,
+                       const OSVR_TimeValue *timestamp,
+                       const OSVR_PoseReport *report )
     {
         osgwMx::MxCore* mx_core = static_cast< osgwMx::MxCore* >( userdata );
 
@@ -192,64 +192,44 @@ namespace vrcallbacks {
                         osvrQuatGetZ( &( report->pose.rotation ) ),
                         osvrQuatGetW( &( report->pose.rotation ) ) );
 
+        // native OSVR coordinates are in Z-out space
         osg::Vec3d forward = quat * osg::Vec3d( 0.0, 0.0, -1.0 );
 
-        // project the forward vector onto the ground (XZ) plane
-        osg::Vec3d proj_forward = osg::Vec3d( forward.x(), 0.0, forward.z() );
+        // rotate -90 degress about +X axis
+        const osg::Matrix rot = osg::Matrix::rotate(
+            osg::DegreesToRadians( -90.0 ),
+            osg::Vec3d( 1.0, 0.0, 0.0 )
+        );
+
+        // flip the forward vector into Z-up space
+        forward = rot * forward;
+
+        // project the forward vector onto the ground (XY) plane
+        osg::Vec3d proj_forward = osg::Vec3d( forward.x(), forward.y(), 0.0 );
         proj_forward.normalize();
 
         mx_core->setOriented( proj_forward );
     }
 
-    // rotate with the trackpad X-axis
-    void trackpad_analog_x( void *userdata,
-                            const OSVR_TimeValue *timestamp,
-                            const OSVR_AnalogReport *report )
+    void analog( void *userdata,
+                 const OSVR_TimeValue *timestamp,
+                 const OSVR_AnalogReport *report )
     {
-        osgwMx::MxGamePad* mx_gamepad = static_cast< osgwMx::MxGamePad* >( userdata );
+        OSVR_AnalogState* analog = static_cast< OSVR_AnalogState* >( userdata );
 
-        // TODO: guard this with the trackpad button state?
-        mx_gamepad->setRightStick(
-            report->state, 0.0,
-            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
-        );
-    }
-
-    // move with the trackpad Y-axis
-    void trackpad_analog_y( void *userdata,
-                            const OSVR_TimeValue *timestamp,
-                            const OSVR_AnalogReport *report )
-    {
-        osgwMx::MxGamePad* mx_gamepad = static_cast< osgwMx::MxGamePad* >( userdata );
-
-        // TODO: guard this with the trackpad button state?
-        mx_gamepad->setLeftStick(
-            0.0, report->state,
-            ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
-        );
-    }
-
-    void trackpad_button( void *userdata,
-                          const OSVR_TimeValue *timestamp,
-                          const OSVR_ButtonReport *report )
-    {
-        //std::cout << "Trackpad Button Value: " << (report->state ? "on" : "off") << std::endl;
-    }
-
-    void button_navupdown( void *userdata,
-                           const OSVR_TimeValue *timestamp,
-                           const OSVR_ButtonReport *report )
-    {
-        bool* toggle = static_cast< bool* >( userdata );
-
-        if( report->state )
+        if( report->state != 0.0 )
         {
-            *toggle = true;
+            *analog = report->state;
         }
-        else
-        {
-            *toggle = false;
-        }
+    }
+
+    void button( void *userdata,
+                 const OSVR_TimeValue *timestamp,
+                 const OSVR_ButtonReport *report )
+    {
+        bool* button = static_cast< bool* >( userdata );
+
+        *button = ( report->state ) ? true : false;
     }
 }
 }
@@ -287,7 +267,10 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_vrMxGamePad( new osgwMx::MxGamePad ),
     m_vrButtonMap( new osgwMx::FunctionalMap ),
     m_vrNavUpButton( false ),
-    m_vrNavDownButton( false )
+    m_vrNavDownButton( false ),
+    m_vrTrackpadButton( false ),
+    m_vrTrackpadX( 0.0 ),
+    m_vrTrackpadY( 0.0 )
 {
     m_logStream = ves::xplorer::LogStreamPtr( new Poco::LogStream( m_logger ) );
     LOG_INFO( "Starting App" );
@@ -427,7 +410,7 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
         osvr::clientkit::Interface head_iface = m_osvrContext->getInterface( "/me/head" );
 
         head_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::tracker_callback,
+            &ves::xplorer::vrcallbacks::head_tracker,
             static_cast< void* >( m_vrMxGamePad.get()->getMxCore() )
         );
 
@@ -435,39 +418,45 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
         osvr::clientkit::Interface trackpad_left_y_analog_iface = m_osvrContext->getInterface( "/controller/left/trackpad/y" );
         osvr::clientkit::Interface trackpad_left_button_iface = m_osvrContext->getInterface( "/controller/left/trackpad/button" );
 
-        /*trackpad_left_x_analog_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::trackpad_analog_x,
-            static_cast< void* >( m_vrMxGamePad.get() )
-        );*/
-        trackpad_left_y_analog_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::trackpad_analog_y,
-            static_cast< void* >( m_vrMxGamePad.get() )
+        trackpad_left_x_analog_iface.registerCallback(
+            &ves::xplorer::vrcallbacks::analog,
+            static_cast< void* >( &m_vrTrackpadX )
         );
-        trackpad_left_button_iface.registerCallback( &ves::xplorer::vrcallbacks::trackpad_button, NULL );
+        trackpad_left_y_analog_iface.registerCallback(
+            &ves::xplorer::vrcallbacks::analog,
+            static_cast< void* >( &m_vrTrackpadY )
+        );
+        trackpad_left_button_iface.registerCallback(
+            &ves::xplorer::vrcallbacks::button,
+            static_cast< void* >( &m_vrTrackpadButton )
+        );
 
         osvr::clientkit::Interface trackpad_right_x_analog_iface = m_osvrContext->getInterface( "/controller/right/trackpad/x" );
         osvr::clientkit::Interface trackpad_right_y_analog_iface = m_osvrContext->getInterface( "/controller/right/trackpad/y" );
         osvr::clientkit::Interface trackpad_right_button_iface = m_osvrContext->getInterface( "/controller/right/trackpad/button" );
 
-        /*trackpad_right_x_analog_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::trackpad_analog_x,
-            static_cast< void* >( m_vrMxGamePad.get() )
-        );*/
-        trackpad_right_y_analog_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::trackpad_analog_y,
-            static_cast< void* >( m_vrMxGamePad.get() )
+        trackpad_right_x_analog_iface.registerCallback(
+            &ves::xplorer::vrcallbacks::analog,
+            static_cast< void* >( &m_vrTrackpadX )
         );
-        trackpad_right_button_iface.registerCallback( &ves::xplorer::vrcallbacks::trackpad_button, NULL );
+        trackpad_right_y_analog_iface.registerCallback(
+            &ves::xplorer::vrcallbacks::analog,
+            static_cast< void* >( &m_vrTrackpadY )
+        );
+        trackpad_right_button_iface.registerCallback(
+            &ves::xplorer::vrcallbacks::button,
+            static_cast< void* >( &m_vrTrackpadButton )
+        );
 
         osvr::clientkit::Interface left_button_grip_iface = m_osvrContext->getInterface( "/controller/left/grip" );
         osvr::clientkit::Interface right_button_grip_iface = m_osvrContext->getInterface( "/controller/right/grip" );
 
         left_button_grip_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::button_navupdown,
+            &ves::xplorer::vrcallbacks::button,
             static_cast< void* >( &m_vrNavUpButton )
         );
         right_button_grip_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::button_navupdown,
+            &ves::xplorer::vrcallbacks::button,
             static_cast< void* >( &m_vrNavUpButton )
         );
 
@@ -475,11 +464,11 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
         osvr::clientkit::Interface right_button_menu_iface = m_osvrContext->getInterface( "/controller/right/menu" );
 
         left_button_menu_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::button_navupdown,
+            &ves::xplorer::vrcallbacks::button,
             static_cast< void* >( &m_vrNavDownButton )
         );
         right_button_menu_iface.registerCallback(
-            &ves::xplorer::vrcallbacks::button_navupdown,
+            &ves::xplorer::vrcallbacks::button,
             static_cast< void* >( &m_vrNavDownButton )
         );
     }
@@ -1257,6 +1246,21 @@ void App::latePreFrame()
                 osgwMx::MxGamePad::Button1,
                 ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
             );
+        }
+
+        if( m_vrTrackpadButton == true )
+        {
+            // move with the trackpad Y-axis
+            m_vrMxGamePad->setLeftStick(
+                0.0, m_vrTrackpadY,
+                ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
+            );
+
+            // rotate with the trackpad X-axis
+            /*m_vrMxGamePad->setRightStick(
+                m_vrTrackpadX, 0.0,
+                ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
+            );*/
         }
     }
 
