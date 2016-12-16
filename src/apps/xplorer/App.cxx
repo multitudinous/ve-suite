@@ -533,10 +533,12 @@ App::App( int argc, char* argv[], bool enableRTT, boost::program_options::variab
     m_vrCameraManager->Initialize( render_info );
 
     osgwMx::MxCore* mx_core = m_vrMxGamePad->getMxCore();
+
+    // our navigation matrix will be in Z-up space
     mx_core->setInitialValues(
-        osg::Vec3d( 0.0, 1.0, 0.0 ),  // up vector
-        osg::Vec3d( 0.0, 0.0, -1.0 ), // forward vector
-        osg::Vec3d( 0.0, 0.0, 0.0 )   // position
+        osg::Vec3d( 0.0, 0.0, 1.0 ), // up vector
+        osg::Vec3d( 0.0, 1.0, 0.0 ), // forward vector
+        osg::Vec3d( 0.0, 0.0, 0.0 )  // position
     );
     mx_core->reset();
 
@@ -1225,23 +1227,18 @@ void App::latePreFrame()
                 view, m_renderManagerRenderInfo[i].pose
             );
 
-            // rotate 180 degress about -Z axis
-            const osg::Matrix rot = osg::Matrix::rotate(
-                osg::DegreesToRadians( 180.0 ),
-                osg::Vec3d( 0.0, 0.0, -1.0 )
-            );
-
             // rotate -90 degress about +X axis
-            const osg::Matrix rot2 = osg::Matrix::rotate(
+            const osg::Matrix rot = osg::Matrix::rotate(
                 osg::DegreesToRadians( -90.0 ),
                 osg::Vec3d( 1.0, 0.0, 0.0 )
             );
 
-            // @TODO: figure out **WHY** I need to correct the view matrix rotation
-            osg::Matrix corrected_view = rot * rot2 * osg::Matrix( view );
+            // Flip OSVR view matrix from Z-out to Z-up space
+            // @TODO: figure out why I need to do this?
+            osg::Matrix corrected_view = rot * osg::Matrix( view );
 
             osg::Matrix& mx_core_mat = m_vrMxGamePad->getMxCore()->getMatrix();
-            osg::Matrix corrected_view_with_nav = mx_core_mat * corrected_view;
+            osg::Matrix corrected_view_with_nav = osg::Matrix::translate( mx_core_mat.getTrans() ) * corrected_view;
 
             camera->setProjectionMatrix( osg_projection );
             camera->setViewMatrix( corrected_view_with_nav );
