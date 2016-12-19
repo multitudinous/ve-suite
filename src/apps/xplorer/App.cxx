@@ -1252,11 +1252,12 @@ void App::latePreFrame()
         {
             // move with the trackpad Y-axis
             m_vrMxGamePad->setLeftStick(
-                0.0, m_vrTrackpadY,
+                -1.0 * m_vrTrackpadX, m_vrTrackpadY,
                 ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
             );
 
-            // rotate with the trackpad X-axis
+            // don't attempt to rotate with the trackpad X-axis -- it has disorienting
+            // and possibly nausea-inducing effects
             /*m_vrMxGamePad->setRightStick(
                 m_vrTrackpadX, 0.0,
                 ves::xplorer::scenegraph::SceneManager::instance()->GetDeltaFrameTime()
