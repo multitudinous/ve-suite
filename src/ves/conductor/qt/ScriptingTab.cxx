@@ -77,26 +77,26 @@ ScriptingTab::ScriptingTab(QWidget *parent) :
                       &ScriptingTab::AssociateScript,
                       m_connections, any_SignalType, normal_Priority );
 
-    CONNECTSIGNAL_0( "VesFileLoaded",
-                     void( std::string const & ),
-                     &ScriptingTab::ScheduleApplyPartManipulatorPropertySets,
-                     m_connections, normal_Priority );
+    //CONNECTSIGNAL_0( "VesFileLoaded",
+    //                 void( std::string const & ),
+    //                 &ScriptingTab::ScheduleApplyPartManipulatorPropertySets,
+    //                 m_connections, normal_Priority );
 
-    CONNECTSIGNALS_1( "%CADSelection",
-                      void( bool const& ),
-                      &ScriptingTab::HandleCADSelection,
-                      m_connections, any_SignalType, normal_Priority );
+    //CONNECTSIGNALS_1( "%CADSelection",
+    //                  void( bool const& ),
+    //                  &ScriptingTab::HandleCADSelection,
+    //                  m_connections, any_SignalType, normal_Priority );
 
     switchwire::EventManager::instance()->RegisterSignal(
         &m_destroySignal,
         "ScriptingTab.Destroy" );
 
-    StartPartManipulatorScript();
+    //StartPartManipulatorScript();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ScriptingTab::~ScriptingTab()
 {
-    StopPartManipulatorScript();
+    //StopPartManipulatorScript();
 
     delete ui;
     for( size_t idx = 0; idx < m_threads.size(); ++idx )
