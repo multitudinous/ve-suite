@@ -2,7 +2,6 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <!--
       <input_manager name="IM SDL Joystick" version="2">
          <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
          <driver>SdlJoystick_drv</driver>
@@ -27,7 +26,6 @@
          <min>0.0</min>
          <max>255.0</max>
       </sdl_joystick>
-      -->
       <user name="User1" version="1">
          <head_position>VJHead</head_position>
          <interocular_distance>0.0</interocular_distance>
@@ -561,3 +559,4 @@
       </simulated_positional_device>
    </elements>
 </configuration>
+
