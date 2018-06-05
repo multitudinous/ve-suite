@@ -41,10 +41,6 @@ case $PLATFORM in
     CMAKE_PARAMS+=( -DBOOST_ALL_DYN_LINK=ON )
     CMAKE_PARAMS+=( -Dcrunchstore_DIR="${crunchstore_INSTALL_DIR}/lib" )
     CMAKE_PARAMS+=( -DQT_QMAKE_EXECUTABLE="C:/dev/deps/Qt/4.8.4_x64/bin/qmake.exe" )
-    CMAKE_PARAMS+=( -DLFX_BUILD_APPS=OFF )
-    CMAKE_PARAMS+=( -DLFX_BUILD_EXAMPLES=OFF )
-    CMAKE_PARAMS+=( -DLFX_BUILD_TESTS=OFF )
-
 
     MSVC_CONFIG="${BUILD_TYPE}"
     if [ ${ARCH} = "32-bit" ]; then
