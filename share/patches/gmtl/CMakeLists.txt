@@ -105,9 +105,9 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gmtl.fpc"
         DESTINATION "share/flagpoll"
         COMPONENT development)
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gmtl.pc"
-        DESTINATION "lib/pkgconfig"
-        COMPONENT development)
+#install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gmtl.pc"
+#        DESTINATION "lib/pkgconfig"
+#        COMPONENT development)
 
 install(FILES gmtl-config
         DESTINATION ${gmtl_INSTALL_BINDIR}
