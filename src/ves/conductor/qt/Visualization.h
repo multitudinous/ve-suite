@@ -40,7 +40,10 @@
 #include <propertystore/PropertySetPtr.h>
 
 #include <ves/xplorer/Logging.h>
+
+#ifndef Q_MOC_RUN
 #include <switchwire/ScopedConnectionList.h>
+#endif
 
 #include <vector>
 #include <string>

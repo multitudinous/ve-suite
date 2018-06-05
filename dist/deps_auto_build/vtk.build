@@ -3,7 +3,7 @@ BASE_DIR="${DEV_BASE_DIR}/VTK-5.10"
 
 SOURCE_RETRIEVAL_METHOD=wget
 SOURCE_FORMAT=tgz
-SOURCE_URL=http://www.vtk.org/files/release/5.10/vtk-5.10.0.tar.gz
+SOURCE_URL=http://www.vtk.org/files/release/5.10/vtk-5.10.1.tar.gz
 VTK_VERSION_DIR=vtk-5.10
 
 SOURCE_DIR="${BASE_DIR}"
@@ -30,6 +30,15 @@ VES_INSTALL_PARAMS+=( lib )
 
 case $PLATFORM in
   Windows)
+    # get a patched version of VTK 5.10 for Visual Studio 2013
+    if [ "${VS_VERSION}" == "12.0" ]
+    then
+      SOURCE_RETRIEVAL_METHOD=git
+      SOURCE_URL=https://github.com/bilke/VTK
+
+      CMAKE_PARAMS+=( -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}" )
+    fi
+
     SKIP_FPC_INSTALL="no"
     CMAKE_PARAMS+=( -DCMAKE_CONFIGURATION_TYPES="${BUILD_TYPE}" )
     MSVC_CONFIG="${BUILD_TYPE}"

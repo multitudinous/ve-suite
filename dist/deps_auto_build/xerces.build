@@ -1,9 +1,8 @@
 PACKAGE_NAME=XERCES
-BASE_DIR="${DEV_BASE_DIR}/xerces-c-3.1.1"
+BASE_DIR="${DEV_BASE_DIR}/xerces-c-3.1.4"
 
 SOURCE_RETRIEVAL_METHOD=wget
-SOURCE_URL=http://www.ecoficial.com/apachemirror/xerces/c/3/sources/xerces-c-3.1.1.tar.gz
-SOURCE_URL=http://apache.cs.utah.edu//xerces/c/3/sources/xerces-c-3.1.1.tar.gz
+SOURCE_URL=https://archive.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.4.tar.gz
 SOURCE_FORMAT=tgz
 
 SOURCE_DIR="${BASE_DIR}"
@@ -12,51 +11,43 @@ INSTALL_DIR="${BASE_DIR}/install-${ARCH}"
 
 if [ -d "${INSTALL_DIR}"/lib64 ]
 then
-    VES_INSTALL_PARAMS+=( lib64 )
+  VES_INSTALL_PARAMS+=( lib64 )
 else
-    VES_INSTALL_PARAMS+=( lib )
+  VES_INSTALL_PARAMS+=( lib )
 fi
 
 case $PLATFORM in
   Windows)
+    VSINT="${VS_VERSION/.*}"
     if [ ${ARCH} = "32-bit" ]; then
       ARCH_DIR=x86
       MSVC_PLATFORM=Win32
-      BUILD_STR="Build/Win32/VC10/Release"
+      BUILD_STR="Build/Win32/VC${VSINT}/Release"
     else
       ARCH_DIR=x86_64
       MSVC_PLATFORM=x64
-      BUILD_STR="Build/Win64/VC10/Release"
+      BUILD_STR="Build/Win64/VC${VSINT}/Release"
     fi
 
-    if (( "${VS_VERSION/.*}" < 11 )); then
-      BASE_DIR="${DEV_BASE_DIR}/xerces-c-3.1.1-${ARCH_DIR}-windows-vc-${VS_VERSION}"
-      SOURCE_URL="http://apache.deathculture.net//xerces/c/3/binaries/xerces-c-3.1.1-${ARCH_DIR}-windows-vc-${VS_VERSION}.zip"
-      SOURCE_FORMAT=zip
-      BUILD_DIR="${BASE_DIR}"
-      INSTALL_DIR="${BASE_DIR}"
-      #POST_RETRIEVAL_METHOD="mkdir -p ${INSTALL_DIR} && mv ./bin ${INSTALL_DIR}/. && mv ./lib ${INSTALL_DIR}/. && mv ./include ${INSTALL_DIR}/. && mv ./share ${INSTALL_DIR}/."
-    else
-      unset PROJ_STR
-      unset BUILD_TARGET
-      PREBUILD_METHOD=custom
-      BUILD_METHOD=devenv
-
-      MSVC_SOLUTION+=( "${SOURCE_DIR}/projects/Win32/VC10/xerces-all/xerces-all.sln" )
-
+    PREBUILD_METHOD=custom
+    if (( ${VSINT} > 12 )); then
+      MSVC_SOLUTION=( "${SOURCE_DIR}/projects/Win32/VC12/xerces-all/xerces-all.sln" )
       CUSTOM_PREBUILD=( "${MSVC_SOLUTION[@]/#/${DEVENV} }" )
       CUSTOM_PREBUILD=( "${CUSTOM_PREBUILD[@]/%/ /upgrade}" )
-      POST_BUILD_METHOD="\
-        mkdir -p ${INSTALL_DIR} && \
-        mkdir -p ${INSTALL_DIR}/include && \
-        mkdir -p ${INSTALL_DIR}/lib && \
-        cd ../src/xercesc && \
-        find ./ -type f -name '*.hpp' -o -name '*.c' | cpio -pdm ${INSTALL_DIR}/include/xercesc && \
-        cd "${BUILD_DIR}" && \
-        cp ../${BUILD_STR}/*.lib ${INSTALL_DIR}/lib/. && \
-        cp ../${BUILD_STR}/*.pdb ${INSTALL_DIR}/lib/. && \
-        cp ../${BUILD_STR}/*.dll ${INSTALL_DIR}/lib/."
+    else
+      MSVC_SOLUTION=( "${SOURCE_DIR}/projects/Win32/VC${VSINT}/xerces-all/xerces-all.sln" )
     fi
+
+    BUILD_METHOD=devenv
+    POST_BUILD_METHOD=( "mkdir -p ${INSTALL_DIR}" )
+    POST_BUILD_METHOD+=( "mkdir -p ${INSTALL_DIR}/include" )
+    POST_BUILD_METHOD+=( "mkdir -p ${INSTALL_DIR}/lib" )
+    POST_BUILD_METHOD+=( "cd ../src/xercesc" )
+    POST_BUILD_METHOD+=( "find ./ -type f -name '*.hpp' -o -name '*.c' | cpio -pdm ${INSTALL_DIR}/include/xercesc" )
+    POST_BUILD_METHOD+=( "cd "${BUILD_DIR}"" )
+    POST_BUILD_METHOD+=( "cp ../${BUILD_STR}/*.lib ${INSTALL_DIR}/lib/." )
+    POST_BUILD_METHOD+=( "cp ../${BUILD_STR}/*.pdb ${INSTALL_DIR}/lib/." )
+    POST_BUILD_METHOD+=( "cp ../${BUILD_STR}/*.dll ${INSTALL_DIR}/lib/." )
 
     FPC_FILE=xerces.fpc
     SKIP_FPC_INSTALL="no"

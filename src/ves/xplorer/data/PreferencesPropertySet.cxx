@@ -369,7 +369,7 @@ void PreferencesPropertySet::CreateSkeleton()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::EnableNearFarRatio( propertystore::PropertyPtr& property )
+void PreferencesPropertySet::EnableNearFarRatio( propertystore::PropertyPtr property )
 {
     bool value = boost::any_cast<bool>( property->GetValue() );
 
@@ -385,7 +385,7 @@ void PreferencesPropertySet::EnableNearFarRatio( propertystore::PropertyPtr& pro
     PropagateNearFarRatioChanged();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::EnableBackgroundColor( propertystore::PropertyPtr& property )
+void PreferencesPropertySet::EnableBackgroundColor( propertystore::PropertyPtr property )
 {
     bool value = boost::any_cast<bool>( property->GetValue() );
 
@@ -405,7 +405,7 @@ void PreferencesPropertySet::EnableBackgroundColor( propertystore::PropertyPtr& 
     PropagateBackgroundColorChanged();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::EnableDraggerScaling( propertystore::PropertyPtr& property )
+void PreferencesPropertySet::EnableDraggerScaling( propertystore::PropertyPtr property )
 {
     bool value = boost::any_cast<bool>( property->GetValue() );
 
@@ -463,7 +463,7 @@ void PreferencesPropertySet::PropagateCameraPositionOrientationChanged()
     m_cameraPositionOrientationChangedSignal->signal( view, pos );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PreferencesPropertySet::SaveChanges( propertystore::PropertyPtr& )
+void PreferencesPropertySet::SaveChanges( propertystore::PropertyPtr )
 {
     Save();
 }

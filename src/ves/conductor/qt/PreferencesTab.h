@@ -40,7 +40,9 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QModelIndex>
 
+#ifndef Q_MOC_RUN
 #include <switchwire/ScopedConnectionList.h>
+#endif
 
 namespace Ui
 {

@@ -168,7 +168,7 @@ void CameraSettingsPropertySet::EnableLiveProperties( bool live )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraSettingsPropertySet::NearValidator( propertystore::PropertyPtr&, boost::any newValue )
+bool CameraSettingsPropertySet::NearValidator( propertystore::PropertyPtr, boost::any newValue )
 {
     double nearVal = boost::any_cast< double >( newValue );
     double farVal = boost::any_cast< double >( GetPropertyValue( "Projection_FarPlane" ) );
@@ -181,7 +181,7 @@ bool CameraSettingsPropertySet::NearValidator( propertystore::PropertyPtr&, boos
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CameraSettingsPropertySet::FarValidator( propertystore::PropertyPtr&, boost::any newValue )
+bool CameraSettingsPropertySet::FarValidator( propertystore::PropertyPtr, boost::any newValue )
 {
     double nearVal = boost::any_cast< double >( GetPropertyValue( "Projection_NearPlane" ) );
     double farVal = boost::any_cast< double >( newValue );
@@ -194,7 +194,7 @@ bool CameraSettingsPropertySet::FarValidator( propertystore::PropertyPtr&, boost
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraSettingsPropertySet::ProjectionChanged( propertystore::PropertyPtr& )
+void CameraSettingsPropertySet::ProjectionChanged( propertystore::PropertyPtr )
 {
     SaveNoOverride();
     m_projectionChangedSignal.signal( m_UUIDString );
