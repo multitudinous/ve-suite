@@ -94,16 +94,6 @@ ENDFOREACH(it)
 
 list(APPEND srcs ${UICED})
 
-# workaround for conflicts between C++11 and the connect() macro
-# in old Qt releases
-# see "User-defined literals and whitespace" at:
-# http://gcc.gnu.org/gcc-4.7/porting_to.html
-if( CMAKE_COMPILER_IS_GNUCXX )
-    set_source_files_properties( ${srcs}
-                                 PROPERTIES
-                                 COMPILE_FLAGS "-std=c++03" )
-endif()
-
 add_library(${VES_TARGET_NAME} SHARED ${srcs} ${VES_PUBLIC_HEADERS})
 # target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${BOOST_LIBRARIES} ${POCO_LIBRARIES})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${OSG_LIBRARIES})
