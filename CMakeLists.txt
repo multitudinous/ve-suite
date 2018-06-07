@@ -10,6 +10,10 @@ set(ves_SUB_VERSION 0)
 set(ves_VERSION ${ves_MAJOR_VERSION}.${ves_MINOR_VERSION}.${ves_SUB_VERSION})
 set(VES_PACKAGE_VERSION ${ves_VERSION})
 
+#Force the use of C++11
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 11)
+
 #Set the include directory so that switchwire can be used as a sub project
 if( NOT(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME}) )
     set(ves_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src" PARENT_SCOPE)
