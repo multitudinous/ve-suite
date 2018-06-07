@@ -113,6 +113,8 @@ find_package(XercesC REQUIRED)
 
 find_package(VRJuggler-OpenGL 3.0 REQUIRED)
 
+find_package(X11)
+
 include_directories( 
     ${Boost_INCLUDE_DIRS}
     ${POCO_INCLUDE_DIR}
