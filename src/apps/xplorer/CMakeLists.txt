@@ -69,7 +69,9 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_open_xml)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_xplorer_default)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_conductor_qtui)
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${APPKIT_LIBRARY})
-
+if(X11_FOUND)
+    target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${X11_LIBRARIES})
+endif()
 include(VESModuleInstall)
 
 if(APPLE)
