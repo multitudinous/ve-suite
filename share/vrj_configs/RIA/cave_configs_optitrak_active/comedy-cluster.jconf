@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="comedy config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <cluster_manager name="Cluster Configuration" version="3">
+         <plugin_path>${VJ_BASE_DIR}/lib/gadgeteer/plugins/</plugin_path>
+         <plugin_path>${VJ_BASE_DIR}/lib/gadgeteer-2.0/plugins/</plugin_path>
+         <plugin_path>${VJ_BASE_DIR}/lib/gadgeteer-2.1.29/plugins/</plugin_path>
+         <plugin>RIMPlugin</plugin>
+         <plugin>ApplicationDataManager</plugin>
+	<!--
+         <cluster_node>Node(viz1)</cluster_node>
+         <cluster_node>Node(viz2)</cluster_node>
+         <cluster_node>Node(viz3)</cluster_node>
+         <cluster_node>Node(viz4)</cluster_node>
+         <cluster_node>Node(viz0)</cluster_node>
+	-->
+         <use_software_swap_lock>false</use_software_swap_lock>
+      </cluster_manager>
+      <input_manager name="InputManager0" version="2">
+         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers/</driver_path>
+         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer-2.0/drivers/</driver_path>
+         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer-2.1.29/drivers/</driver_path>
+         <driver>OptiTrack_drv</driver>
+         <driver>LinuxJoydev_drv</driver>
+         <!--<driver>SdlJoystick_drv</driver>-->
+      </input_manager>
+   </elements>
+</configuration>
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="comedy cluster" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <include>viz.jconf</include>
+   <!--
+   <include>viz0.jconf</include>
+   <include>viz1.jconf</include>
+   <include>viz2.jconf</include>
+   <include>viz3.jconf</include>
+   <include>viz4.jconf</include>
+   -->
+   <include>tracked.jconf</include>
+   <include>comedy-cluster.jconf</include>
+   <elements />
+</configuration>
+

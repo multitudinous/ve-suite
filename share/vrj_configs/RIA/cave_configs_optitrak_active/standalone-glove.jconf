@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="/Users/dshipton/Projects/vrj-trunk/standalone-glove.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <alias name="GloveA-LeftHand" version="1">
+         <proxy>ISenseGloveAProxy</proxy>
+      </alias>
+      <position_proxy name="ISenseGloveAProxy" version="1">
+         <device>InterSenseAPI-Active</device>
+         <unit>3</unit>
+         <position_filters>
+            <position_transform_filter name="glovea_proxy_transform" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>-90.0</post_rotation>
+               <post_rotation>90.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <alias name="GloveB-RightHand" version="1">
+         <proxy>ISenseGloveBProxy</proxy>
+      </alias>
+      <position_proxy name="ISenseGloveBProxy" version="1">
+         <device>InterSenseAPI-Active</device>
+         <unit>2</unit>
+         <position_filters>
+            <position_transform_filter name="gloveb_proxy_transform" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>-90.0</post_rotation>
+               <post_rotation>90.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <data_glove_ultra_wireless name="5DTDataGlove0" version="1">
+         <port>/dev/ttyUSB0</port>
+         <baud>115200</baud>
+         <min>0.0</min>
+         <max>1.0</max>
+         <port_a_enabled>true</port_a_enabled>
+         <port_b_enabled>true</port_b_enabled>
+      </data_glove_ultra_wireless>
+      <analog_proxy name="GloveProxy0" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>0</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy1" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>1</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy2" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>2</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy3" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>3</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy4" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>4</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy5" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>5</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy6" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>6</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy7" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>7</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy8" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>8</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy9" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>9</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy10" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>10</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy11" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>11</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy12" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>12</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy13" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>13</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy14" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>14</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy15" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>15</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy16" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>16</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy17" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>17</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy18" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>18</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy19" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>19</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy20" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>20</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy21" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>21</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy22" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>22</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy23" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>23</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy24" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>24</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy25" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>25</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy26" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>26</unit>
+      </analog_proxy>
+      <analog_proxy name="GloveProxy27" version="1">
+         <device>5DTDataGlove0</device>
+         <unit>27</unit>
+      </analog_proxy>
+      <alias name="GloveA-ThumbMCP" version="1">
+         <proxy>GloveProxy0</proxy>
+      </alias>
+      <alias name="GloveA-ThumbPIP" version="1">
+         <proxy>GloveProxy1</proxy>
+      </alias>
+      <alias name="GloveA-ThumbIndexAbduction" version="1">
+         <proxy>GloveProxy2</proxy>
+      </alias>
+      <alias name="GloveA-IndexMCP" version="1">
+         <proxy>GloveProxy3</proxy>
+      </alias>
+      <alias name="GloveA-IndexPIP" version="1">
+         <proxy>GloveProxy4</proxy>
+      </alias>
+      <alias name="GloveA-IndexMiddleAbduction" version="1">
+         <proxy>GloveProxy5</proxy>
+      </alias>
+      <alias name="GloveA-MiddleMCP" version="1">
+         <proxy>GloveProxy6</proxy>
+      </alias>
+      <alias name="GloveA-MiddlePIP" version="1">
+         <proxy>GloveProxy7</proxy>
+      </alias>
+      <alias name="GloveA-MiddleRingAbduction" version="1">
+         <proxy>GloveProxy8</proxy>
+      </alias>
+      <alias name="GloveA-RingMCP" version="1">
+         <proxy>GloveProxy9</proxy>
+      </alias>
+      <alias name="GloveA-RingPIP" version="1">
+         <proxy>GloveProxy10</proxy>
+      </alias>
+      <alias name="GloveA-RingPinkyAbduction" version="1">
+         <proxy>GloveProxy11</proxy>
+      </alias>
+      <alias name="GloveA-PinkyMCP" version="1">
+         <proxy>GloveProxy12</proxy>
+      </alias>
+      <alias name="GloveA-PinkyPIP" version="1">
+         <proxy>GloveProxy13</proxy>
+      </alias>
+      <alias name="GloveB-ThumbMCP" version="1">
+         <proxy>GloveProxy14</proxy>
+      </alias>
+      <alias name="GloveB-ThumbPIP" version="1">
+         <proxy>GloveProxy15</proxy>
+      </alias>
+      <alias name="GloveB-ThumbIndexAbduction" version="1">
+         <proxy>GloveProxy16</proxy>
+      </alias>
+      <alias name="GloveB-IndexMCP" version="1">
+         <proxy>GloveProxy17</proxy>
+      </alias>
+      <alias name="GloveB-IndexPIP" version="1">
+         <proxy>GloveProxy18</proxy>
+      </alias>
+      <alias name="GloveB-IndexMiddleAbduction" version="1">
+         <proxy>GloveProxy19</proxy>
+      </alias>
+      <alias name="GloveB-MiddleMCP" version="1">
+         <proxy>GloveProxy20</proxy>
+      </alias>
+      <alias name="GloveB-MiddlePIP" version="1">
+         <proxy>GloveProxy21</proxy>
+      </alias>
+      <alias name="GloveB-MiddleRingAbduction" version="1">
+         <proxy>GloveProxy22</proxy>
+      </alias>
+      <alias name="GloveB-RingMCP" version="1">
+         <proxy>GloveProxy23</proxy>
+      </alias>
+      <alias name="GloveB-RingPIP" version="1">
+         <proxy>GloveProxy24</proxy>
+      </alias>
+      <alias name="GloveB-RingPinkyAbduction" version="1">
+         <proxy>GloveProxy25</proxy>
+      </alias>
+      <alias name="GloveB-PinkyMCP" version="1">
+         <proxy>GloveProxy26</proxy>
+      </alias>
+      <alias name="GloveB-PinkyPIP" version="1">
+         <proxy>GloveProxy27</proxy>
+      </alias>
+   </elements>
+</configuration>
+
