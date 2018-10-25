@@ -54,12 +54,30 @@ case $PLATFORM in
     MSVC_SOLUTION="VTK.sln"
     #MSVC_PROJECT_NAMES+=( INSTALL )
     ;;
-  Darwin | Linux)
+  Darwin)
     SKIP_FPC_INSTALL="yes"
     CMAKE_PARAMS+=( -DVTK_USE_SYSTEM_ZLIB=ON )
     CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
     CMAKE_PARAMS+=( -DPROJ_USE_PTHREADS=ON )
     CMAKE_PARAMS+=( -DVTK_USE_64BIT_IDS=ON )
+    #CMAKE_PARAMS+=( -DCMAKE_REQUIRE_LARGE_FILE_SUPPORT=ON )
+    #CMAKE_PARAMS+=( -DVTK_REQUIRE_LARGE_FILE_SUPPORT=ON )
+    ;;
+  Linux)
+    SKIP_FPC_INSTALL="yes"
+    CMAKE_PARAMS+=( -DVTK_USE_SYSTEM_ZLIB=ON )
+    CMAKE_PARAMS+=( -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" )
+    CMAKE_PARAMS+=( -DPROJ_USE_PTHREADS=ON )
+    CMAKE_PARAMS+=( -DVTK_USE_64BIT_IDS=ON )
+
+    # Don't build with OSMesa support
+    CMAKE_PARAMS+=( -DVTK_OPENGL_HAS_OSMESA=OFF )
+
+    # Workaround for build failure on Rendering/vtkXOpenGLRenderWindow.cxx
+    # on RHEL/CentOS 7. This define is used elsewhere in GL-related VTK code,
+    # but for some reason is absent on that one file.
+    CMAKE_PARAMS+=( -DCMAKE_CXX_FLAGS="-DGLX_GLXEXT_LEGACY" )
+
     #CMAKE_PARAMS+=( -DCMAKE_REQUIRE_LARGE_FILE_SUPPORT=ON )
     #CMAKE_PARAMS+=( -DVTK_REQUIRE_LARGE_FILE_SUPPORT=ON )
     ;;
