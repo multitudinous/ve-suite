@@ -36,6 +36,8 @@ case $PLATFORM in
   Linux)
     PREBUILD_METHOD=configure
     CONFIGURE=../configure
+    CONFIGURE_PARAMS+=( CXXFLAGS=-fpermissive )
+    CONFIGURE_PARAMS+=( --disable-dl-freetype )
     CONFIGURE_PARAMS+=( --prefix="${INSTALL_DIR}" )
     ;;
 esac
