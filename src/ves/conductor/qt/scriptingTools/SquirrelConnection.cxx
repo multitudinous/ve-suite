@@ -176,7 +176,7 @@ void SquirrelConnection::BindSpecialClasses()
     BindSQStdMap< std::string, std::string >( "StringStringMap" );
 
     typedef VizPropertySetWrapper psw;
-    Sqrat::Class< psw > psClass;
+    Sqrat::Class< psw > psClass( Sqrat::DefaultVM::Get(), "VizPropertySet" );
     psClass.Func( "CreateNewFeature", &psw::CreateNewFeature );
     psClass.Func( "SetBoolPropertyValue", &psw::SetBoolPropertyValue );
     psClass.Func( "SetIntPropertyValue", &psw::SetIntPropertyValue );
@@ -188,12 +188,12 @@ void SquirrelConnection::BindSpecialClasses()
     psClass.Func( "GetUUIDAsString", &psw::GetUUIDAsString );
     Sqrat::RootTable().Bind( "VizPropertySet", psClass );
 
-    Sqrat::Class< TweakStore > tsClass;
+    Sqrat::Class< TweakStore > tsClass( Sqrat::DefaultVM::Get(), "TweakStore" );
     tsClass.Func( "OpenTransaction", &TweakStore::OpenTransaction );
     tsClass.Func( "CloseTransaction", &TweakStore::CloseTransaction );
     Sqrat::RootTable().Bind( "TweakStore", tsClass );
 
-    Sqrat::Class< Sleeper > sleepClass;
+    Sqrat::Class< Sleeper > sleepClass( Sqrat::DefaultVM::Get(), "Sleeper" );
     sleepClass.Func( "Sleep", &Sleeper::Sleep );
     Sqrat::RootTable().Bind( "Sleeper", sleepClass );
 }
@@ -202,7 +202,7 @@ void SquirrelConnection::runScript( const std::string& scriptText )
 {
     switchwire::SquirrelContext sc;
     //Sqrat::SqratVM vm;
-    Sqrat::DefaultVM::Set( sc.GetVM().getVM() );
+    Sqrat::DefaultVM::Set( sc.GetVM().GetVM() );
 
     ExposeSignalSlotTypes( sc );
     BindSpecialClasses();
