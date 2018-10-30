@@ -44,7 +44,6 @@
 #include <switchwire/ConnectSignals.h>
 #include <propertystore/PropertySetPtr.h>
 
-#include <sqrat.h>
 #include <Poco/ConsoleChannel.h>
 
 #include <gadget/Type/DigitalData.h>
@@ -188,66 +187,6 @@ public:
 private:
     Poco::Logger& m_logger;
     ves::xplorer::LogStreamPtr m_logStream;
-};
-
-// see http://squirrel-lang.org/forums/default.aspx?g=posts&m=7099
-class BaseObject
-{
-public:
-    BaseObject();
-
-protected:
-    Sqrat::Var< Sqrat::Object& > m_instance;
-};
-
-class BaseEvent
-{
-public:
-    BaseEvent();
-};
-
-// forward declaration
-class BaseContext;
-
-////////////////////////////////////////////////////////////////////////////////
-/** \brief The BaseState class
-  * Provides a framework for implementing the State design pattern
-  * https://en.wikipedia.org/wiki/State_pattern
-**/
-class BaseState : public BaseObject
-{
-public:
-    BaseState();
-
-    void _OnEnter( BaseContext* context );
-
-    void OnEnter( BaseContext* context );
-
-    void _OnExit( BaseContext* context );
-
-    void OnExit( BaseContext* context );
-
-    Sqrat::SharedPtr< BaseState > _OnEvent( BaseContext* context, BaseEvent* event );
-
-    Sqrat::SharedPtr< BaseState > OnEvent( BaseContext* context, BaseEvent* event );
-};
-
-////////////////////////////////////////////////////////////////////////////////
-/** \brief The BaseContext class
-  * Provides a framework for implementing the State design pattern
-  * https://en.wikipedia.org/wiki/State_pattern
-**/
-class BaseContext
-{
-public:
-    BaseContext();
-
-    void SetInitialState( BaseState* state );
-
-    void HandleEvent( BaseEvent* event );
-
-protected:
-    Sqrat::SharedPtr< BaseState > m_state;
 };
 
 template< typename ArgType >
