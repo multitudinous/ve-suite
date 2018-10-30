@@ -28,8 +28,8 @@ list(APPEND srcs ${${VES_TARGET_NAME}_MOCCED})
 QT4_ADD_RESOURCES( ${VES_TARGET_NAME}_RCCED DefaultPluginIcons.qrc )
 list(APPEND srcs ${${VES_TARGET_NAME}_RCCED})
 
-QT4_WRAP_UI( UICED DefaultPlugin_UIDialog.ui)
-list(APPEND srcs ${UICED})
+QT4_WRAP_UI( ${VES_TARGET_NAME}_UICED DefaultPlugin_UIDialog.ui)
+list(APPEND srcs ${${VES_TARGET_NAME}_UICED})
 
 add_library(${VES_TARGET_NAME} MODULE ${srcs} ${VES_PRIVATE_HEADERS})
 target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${BOOST_LIBRARIES} ${POCO_LIBRARIES})
@@ -39,4 +39,3 @@ target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ves_conductor_qtui)
 set_target_properties( ${VES_TARGET_NAME} PROPERTIES SUFFIX ".bundle")
 
 include(VESModuleInstall)
-

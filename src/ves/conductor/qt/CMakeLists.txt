@@ -85,12 +85,7 @@ set( UI_FILES
     CameraTab.ui
     ScriptingTab.ui)
 
-#QT4_WRAP_UI( UICED ${UI_FILES})
-FOREACH(it ${UI_FILES})
-    get_filename_component(PARENT_DIR ${it} PATH)
-    get_filename_component(FNAME ${it} NAME_WE)
-    EXECUTE_PROCESS(COMMAND ${QT_UIC_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${it} -o ${CMAKE_CURRENT_BINARY_DIR}/${PARENT_DIR}/ui_${FNAME}.h)
-ENDFOREACH(it)
+QT4_WRAP_UI( UICED ${UI_FILES})
 
 list(APPEND srcs ${UICED})
 
@@ -132,4 +127,3 @@ include(VESModuleInstall)
 #        PATTERN ".svn" EXCLUDE)
 
 add_subdirectory(DefaultPlugin)
-
