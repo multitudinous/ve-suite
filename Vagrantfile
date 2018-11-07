@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "centos/7"
+  config.vm.box = "bento/centos-7.5"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -45,6 +45,8 @@ Vagrant.configure("2") do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 
+  config.vm.synced_folder ".", "/vagrant", mount_options: ["ro"]
+
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
@@ -76,4 +78,11 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
+
+  config.vm.provision "shell", inline: <<~SHELL
+    sudo yum -y install epel-release
+    sudo yum -y install cmake3 git gcc-c++ mesa-libGL-devel mesa-libGLU-devel zlib-devel libXt-devel
+
+    sudo ln -s /usr/bin/cmake3 /usr/local/bin/cmake
+  SHELL
 end
