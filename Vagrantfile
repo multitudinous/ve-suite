@@ -81,7 +81,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", inline: <<~SHELL
     sudo yum -y install epel-release
-    sudo yum -y install cmake3 git gcc-c++ mesa-libGL-devel mesa-libGLU-devel zlib-devel libXt-devel
+    sudo yum -y install cmake3 git subversion gcc-c++ mesa-libGL-devel mesa-libGLU-devel zlib-devel libpng-devel libXt-devel openssl-devel
 
     sudo ln -s /usr/bin/cmake3 /usr/local/bin/cmake
   SHELL
