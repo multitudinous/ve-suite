@@ -77,8 +77,6 @@ set( UI_FILES
     RecentFiles.ui
     TreeTab.ui
     PreferencesTab.ui
-    plugin/PluginSelectionTab.ui
-    plugin/PluginPorts.ui
     MainWindow.ui
     Visualization.ui
     Constraints.ui
@@ -87,7 +85,21 @@ set( UI_FILES
 
 QT4_WRAP_UI( UICED ${UI_FILES})
 
-list(APPEND srcs ${UICED})
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/plugin/ui_PluginSelectionTab.h
+    COMMAND ${QT_UIC_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/plugin/PluginSelectionTab.ui -o ${CMAKE_CURRENT_BINARY_DIR}/plugin/ui_PluginSelectionTab.h
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/plugin/PluginSelectionTab.ui
+)
+set(PluginSelectionTab_UICED ${CMAKE_CURRENT_BINARY_DIR}/plugin/ui_PluginSelectionTab.h)
+
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/plugin/ui_PluginPorts.h
+    COMMAND ${QT_UIC_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/plugin/PluginPorts.ui -o ${CMAKE_CURRENT_BINARY_DIR}/plugin/ui_PluginPorts.h
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/plugin/PluginPorts.ui
+)
+set(PluginPorts_UICED ${CMAKE_CURRENT_BINARY_DIR}/plugin/ui_PluginPorts.h)
+
+list(APPEND srcs ${UICED} ${PluginSelectionTab_UICED} ${PluginPorts_UICED})
 
 add_library(${VES_TARGET_NAME} SHARED ${srcs} ${VES_PUBLIC_HEADERS})
 # target_link_libraries(${VES_TARGET_NAME} LINK_PUBLIC ${BOOST_LIBRARIES} ${POCO_LIBRARIES})
