@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 function usage()
 {
@@ -16,7 +17,9 @@ echo "
 "
 }
 
-SCRIPT_DIR=$(dirname $0)
+pushd $(pwd) > /dev/null
+SCRIPT_DIR=$(cd $(dirname $0); pwd -P)
+popd > /dev/null
 
 VES_INSTALL_PREFIX=""
 VES_DEPS_TAR_FILE=""
@@ -125,6 +128,9 @@ cp ${SCRIPT_DIR}/README.txt ${INSTALLER_PAYLOAD_DIR}
 
 # tar up the VE-Suite install and add it to the payload directory
 echo "Archiving the VE-Suite install..."
+
+pushd $(pwd) > /dev/null
+
 cd ${VES_INSTALL_PREFIX}
 tar cf ${INSTALLER_PAYLOAD_DIR}/ve-suite.tar bin/ lib64/ share/
 
@@ -139,10 +145,19 @@ do
     cp ${tarfile} ${INSTALLER_EXTRA_PAYLOAD_DIR}
 done
 
+popd > /dev/null
+
 echo "Archiving the payload..."
+
+pushd $(pwd) > /dev/null
+
 cd ${INSTALLER_PAYLOAD_DIR}
 tar cf ../payload.tar ./*
-cd ..
+
+popd > /dev/null
+
+pushd $(pwd) > /dev/null
+cd ${INSTALLER_ROOT_DIR}/installer
 
 if [ -e "payload.tar" ]
 then
@@ -152,16 +167,19 @@ then
     if [ -e "payload.tar.bz2" ]
     then
         echo "Creating the self-extracting installer..."
-        cat ${CURRENT_WORKING_DIR}/${SCRIPT_DIR}/decompress.bash payload.tar.bz2 > ${CURRENT_WORKING_DIR}/${installer_file_name}
+        cat ${SCRIPT_DIR}/decompress.bash payload.tar.bz2 > ${CURRENT_WORKING_DIR}/${installer_file_name}
         chmod +x ${CURRENT_WORKING_DIR}/${installer_file_name}
     else
         echo "payload.tar.bz2 does not exist!"
         exit 1
     fi
+
 else
     echo "payload.tar does not exist!"
     exit 1
 fi
+
+popd > /dev/null
 
 echo "VE-Suite self-extracting installer created at ${CURRENT_WORKING_DIR}/${installer_file_name}"
 

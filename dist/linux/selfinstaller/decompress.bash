@@ -68,7 +68,7 @@ tail -n+${ARCHIVE} $0 | bzcat | tar x -C ${DECOMPRESS_DIR}
 
 echo "Finished decompressing"
 
-CURRENT_WORKING_DIR=$(pwd)
+pushd $(pwd) > /dev/null
 cd ${DECOMPRESS_DIR}
 if [ ${place_env_file_at_install_root} = 1 ]
 then
@@ -76,8 +76,8 @@ then
 else
     ./install.bash -p ${INSTALL_PREFIX} -e
 fi
+popd > /dev/null
 
-cd ${CURRENT_WORKING_DIR}
 rm -rf ${DECOMPRESS_DIR}
 
 exit 0
