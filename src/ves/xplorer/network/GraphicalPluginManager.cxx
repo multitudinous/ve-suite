@@ -122,9 +122,14 @@ void GraphicalPluginManager::Initialize()
 
     mAvailableModules = new cfdVEAvailModules();
 
+    // something's fishy with vpr::GUID::toString(), and on a RHEL/CentOS 7
+    // C++ toolchain, having the toString() call in the stream insertion
+    // operator chain causes a segfault deep in the ostream library. As a
+    // workaround, copy the GUID string before inserting it into the stream.
+    std::string guid = vpr::GUID( vpr::GUID::generateTag ).toString();
+
     std::ostringstream dirStringStream;
-    dirStringStream << "VEClient-" << vpr::System::getHostname()
-                    << "-" <<  vpr::GUID( vpr::GUID::generateTag ).toString();
+    dirStringStream << "VEClient-" << vpr::System::getHostname() << "-" << guid;
     m_UINAME = dirStringStream.str();
 
     //Delete everything before loading things up
