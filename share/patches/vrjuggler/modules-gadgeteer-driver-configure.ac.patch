@@ -1,0 +1,13 @@
+diff --git a/modules/gadgeteer/drivers/configure.ac b/modules/gadgeteer/drivers/configure.ac
+index e653441247..1fb09714c3 100644
+--- a/modules/gadgeteer/drivers/configure.ac
++++ b/modules/gadgeteer/drivers/configure.ac
+@@ -382,7 +382,7 @@ if test "x${_with_vrpn}" != "xno" ; then
+       if test "x$PLATFORM" = "xIRIX" ; then
+          TEST_VRPN_LIBS="-all -lvrpn -lm"
+       else
+-         TEST_VRPN_LIBS="-lvrpn -lm"
++         TEST_VRPN_LIBS="-lvrpn -lquat -lm"
+       fi
+ 
+       LDFLAGS="-L$VRPNROOT/lib $LDFLAGS"
