@@ -240,7 +240,7 @@ BOOL __stdcall DllMain( HINSTANCE module, DWORD reason, LPVOID reserved )
 ///that this shared library lives in the \c lib subdirectory of the vrkit
 ///installation. Therefore, the root of the vrkit installation is the parent
 ///of the directory containing this shared library.
-extern "C" void __attribute( ( constructor ) ) vrkitLibraryInit()
+extern "C" void __attribute__(( constructor )) vrkitLibraryInit_xplorer()
 {
     fs::path base_dir;
     const char* env_dir = std::getenv( "XPLORER_BASE_DIR" );
@@ -262,9 +262,9 @@ extern "C" void __attribute( ( constructor ) ) vrkitLibraryInit()
         info.dli_fname = 0;
         const int result =
 #if defined(__GNUC__) && __GNUC_MAJOR__ < 4
-            dladdr( ( void* ) &vrkitLibraryInit, &info );
+            dladdr( ( void* ) &vrkitLibraryInit_xplorer, &info );
 #else
-            dladdr( reinterpret_cast<void*>( &vrkitLibraryInit ), &info );
+            dladdr( reinterpret_cast<void*>( &vrkitLibraryInit_xplorer ), &info );
 #endif
         // NOTE: dladdr(3) really does return a non-zero value on success.
         if( 0 != result )
